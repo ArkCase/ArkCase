@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -12,11 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import javax.servlet.http.HttpServletResponse;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
-import java.io.IOException;
 
 /**
  * Created by sergey.kolomiets  on 5/26/15.
@@ -33,8 +32,7 @@ public class LdapConfigurationRetrieveDirectories {
           MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public String retrieveDirectories(
-            HttpServletResponse response) throws IOException, AcmLdapConfigurationException {
+    public String retrieveDirectories() throws IOException, AcmLdapConfigurationException {
 
         try {
 

@@ -35,6 +35,9 @@ public interface EcmFileConstants
 
     String SUCCESS_DELETE_MSG = "File deleted successfully: ";
 
+    String SUCCESS_CHANGE_STATUS_TO_RECORD_MSG = "DECLARED AS RECORD";
+
+
     String FIND_CONTAINER_QUERY =
             "SELECT e FROM AcmContainer e WHERE e.containerObjectId = :objectId AND e.containerObjectType = :objectType";
 
@@ -60,6 +63,8 @@ public interface EcmFileConstants
 
     String OBJECT_FILE_TYPE = "FILE";
 
+    String OBJECT_FOLDER_TYPE = "FOLDER";
+
     String EVENT_TYPE_TAG_UPDATE = "com.armedia.acm.tag.updated";
     String EVENT_TYPE_ACTIVE_VERSION_SET = "com.armedia.acm.file.version.set";
 
@@ -71,6 +76,7 @@ public interface EcmFileConstants
     String NEW_FILE_NAME = "newFileName";
     String FILE_NAME = "fileName";
     String INPUT_STREAM = "inputStream";
+    String RECORD = "RECORD";
 
     String IP_ADDRESS_ATTRIBUTE = "acm_ip_address";
 

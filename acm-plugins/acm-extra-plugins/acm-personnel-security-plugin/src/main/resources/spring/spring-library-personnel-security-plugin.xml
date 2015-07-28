@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 
     <bean id="clearanceVerificationSystemExportService"
@@ -11,7 +11,6 @@
 
     <bean id="personAssociationDao" class="com.armedia.acm.plugins.person.dao.PersonAssociationDao"/>
     <bean id="complaintDao" class="com.armedia.acm.plugins.complaint.dao.ComplaintDao"/>
-    <bean id="caseFileDao" class="com.armedia.acm.plugins.casefile.dao.CaseFileDao"/>
     <bean id="taskDao" class="com.armedia.acm.plugins.task.service.impl.ActivitiTaskDao"/>
     <bean id="caseFileStateService" class="com.armedia.acm.plugins.personnelsecurity.casestatus.service.CaseFileStateService">
         <property name="changeCaseFileStateService" ref="changeCaseFileStateService"/>

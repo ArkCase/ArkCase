@@ -24,8 +24,15 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
+    @TableGenerator(name = "acm_notification_gen",
+            table = "acm_notification_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_notification",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_notification_gen")
     @Column(name = "cm_notification_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 

@@ -100,6 +100,24 @@ public interface EcmFileService
                                          String sortDirection, int startRow, int maxRows) throws AcmListObjectsFailedException;
 
 
+    AcmCmisObjectList listFileFolderByCategory(Authentication auth,
+                                                 AcmContainer container,
+                                                 String sortBy,
+                                                 String sortDirection,
+                                                 int startRow,
+                                                 int maxRows,
+                                                 String category) throws AcmListObjectsFailedException;;
+
+    void declareFileAsRecord(Long fileId, Authentication authentication)
+            throws AcmObjectNotFoundException;
+
+    void declareFolderAsRecord(Long folderId, Authentication authentication,String parentObjectType, Long parentObjectId)
+            throws AcmObjectNotFoundException, AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException;
+
+    AcmCmisObjectList allFilesForFolder(Authentication auth,
+                                        AcmContainer container, Long folderId)
+            throws AcmListObjectsFailedException;
+
     EcmFile copyFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId ) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId ) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;

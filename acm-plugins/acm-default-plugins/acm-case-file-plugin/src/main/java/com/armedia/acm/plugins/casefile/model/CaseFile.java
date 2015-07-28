@@ -11,16 +11,21 @@ import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
@@ -31,11 +36,11 @@ import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,15 +50,26 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name="acm_case_file")
+@Table(name = "acm_case_file")
 @XmlRootElement(name = "caseFile")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.casefile.model.CaseFile")
 public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity
 {
     private static final long serialVersionUID = -6035628455385955008L;
 
     @Id
+    @TableGenerator(name = "case_file_gen",
+            table = "acm_case_file_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_case_file",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "case_file_gen")
     @Column(name = "cm_case_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "cm_case_number", insertable = true, updatable = false)
@@ -104,7 +120,10 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType = CaseFileConstants.OBJECT_TYPE;
 
-    @OneToMany (cascade = CascadeType.ALL, orphanRemoval=true)
+    @Column(name = "cm_class_name")
+    private String className;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({
             @JoinColumn(name = "cm_object_id"),
             @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
@@ -114,7 +133,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     @Column(name = "cm_due_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dueDate;
-    
+
     @Transient
     private ChangeCaseStatus changeCaseStatus;
 
@@ -132,8 +151,11 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     @Transient
     private String ecmFolderPath;
 
-    @OneToMany (cascade = CascadeType.ALL)
-    @JoinColumn(name = "cm_person_assoc_parent_id")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumns({
+            @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_case_id"),
+            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")
+    })
     @OrderBy("created ASC")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
@@ -181,12 +203,12 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     @PrePersist
     protected void beforeInsert()
     {
-        if ( getStatus() == null || getStatus().trim().isEmpty() )
+        if (getStatus() == null || getStatus().trim().isEmpty())
         {
             setStatus("DRAFT");
         }
 
-        if ( getOriginator() != null )
+        if (getOriginator() != null)
         {
             personAssociationResolver(getOriginator());
         }
@@ -196,23 +218,23 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
 
     private void setupChildPointers()
     {
-        for ( ObjectAssociation childObject : childObjects )
+        for (ObjectAssociation childObject : childObjects)
         {
             childObject.setParentId(getId());
             childObject.setParentName(getCaseNumber());
             childObject.setParentType(getObjectType());
         }
-        for ( PersonAssociation persAssoc : personAssociations)
+        for (PersonAssociation persAssoc : personAssociations)
         {
             personAssociationResolver(persAssoc);
         }
-        for ( AcmParticipant ap : getParticipants() )
+        for (AcmParticipant ap : getParticipants())
         {
             ap.setObjectId(getId());
             ap.setObjectType(getObjectType());
         }
 
-        if ( getContainer() != null )
+        if (getContainer() != null)
         {
             getContainer().setContainerObjectId(getId());
             getContainer().setContainerObjectType(getObjectType());
@@ -226,16 +248,16 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
         setupChildPointers();
     }
 
-    private void personAssociationResolver (PersonAssociation personAssoc)
+    private void personAssociationResolver(PersonAssociation personAssoc)
     {
         personAssoc.setParentId(getId());
         personAssoc.setParentType(getObjectType());
 
         if (personAssoc.getPerson().getPersonAssociations() == null)
         {
-        	personAssoc.getPerson().setPersonAssociations(new ArrayList<PersonAssociation>());
+            personAssoc.getPerson().setPersonAssociations(new ArrayList<PersonAssociation>());
         }
-        
+
         personAssoc.getPerson().getPersonAssociations().addAll(Arrays.asList(personAssoc));
     }
 
@@ -264,11 +286,13 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
         this.container = container;
     }
 
-    public PersonAssociation getOriginator() {
+    public PersonAssociation getOriginator()
+    {
         return originator;
     }
 
-    public void setOriginator(PersonAssociation originator) {
+    public void setOriginator(PersonAssociation originator)
+    {
         this.originator = originator;
     }
 
@@ -402,36 +426,44 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
         this.disposition = disposition;
     }
 
-    public String getPriority() {
+    public String getPriority()
+    {
         return priority;
     }
 
-    public void setPriority(String priority) {
+    public void setPriority(String priority)
+    {
         this.priority = priority;
     }
 
-    public String getDetails() {
+    public String getDetails()
+    {
         return details;
     }
 
-    public void setDetails(String details) {
+    public void setDetails(String details)
+    {
         this.details = details;
     }
 
-    public Date getIncidentDate() {
+    public Date getIncidentDate()
+    {
         return incidentDate;
     }
 
-    public void setIncidentDate(Date incidentDate) {
+    public void setIncidentDate(Date incidentDate)
+    {
         this.incidentDate = incidentDate;
     }
 
     @Override
-    public List<AcmParticipant> getParticipants() {
+    public List<AcmParticipant> getParticipants()
+    {
         return participants;
     }
 
-    public void setParticipants(List<AcmParticipant> participants) {
+    public void setParticipants(List<AcmParticipant> participants)
+    {
         this.participants = participants;
     }
 
@@ -440,11 +472,11 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     {
         List<ObjectAssociation> retval = new ArrayList<>();
 
-        if ( getChildObjects() != null )
+        if (getChildObjects() != null)
         {
-            for ( ObjectAssociation child : childObjects )
+            for (ObjectAssociation child : childObjects)
             {
-                if ( "REFERENCE".equals(child.getAssociationType()) )
+                if ("REFERENCE".equals(child.getAssociationType()))
                 {
                     retval.add(child);
                 }
@@ -455,27 +487,33 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     }
 
 
-    public ChangeCaseStatus getChangeCaseStatus() {
-		return changeCaseStatus;
-	}
+    public ChangeCaseStatus getChangeCaseStatus()
+    {
+        return changeCaseStatus;
+    }
 
-	public void setChangeCaseStatus(ChangeCaseStatus changeCaseStatus) {
-		this.changeCaseStatus = changeCaseStatus;
-	}
+    public void setChangeCaseStatus(ChangeCaseStatus changeCaseStatus)
+    {
+        this.changeCaseStatus = changeCaseStatus;
+    }
 
-	public List<String> getApprovers() {
+    public List<String> getApprovers()
+    {
         return approvers;
     }
 
-    public void setApprovers(List<String> approvers) {
+    public void setApprovers(List<String> approvers)
+    {
         this.approvers = approvers;
     }
 
-    public Date getDueDate() {
+    public Date getDueDate()
+    {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(Date dueDate)
+    {
         this.dueDate = dueDate;
     }
 
@@ -537,6 +575,16 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     public void setNextCourtDate(Date nextCourtDate)
     {
         this.nextCourtDate = nextCourtDate;
+    }
+
+    public String getClassName()
+    {
+        return className;
+    }
+
+    public void setClassName(String className)
+    {
+        this.className = className;
     }
 
     @Override

@@ -1021,12 +1021,12 @@ CaseFile.View = CaseFile.View || {
                         title: $.t("casefile:people.table.field.type")
                         ,options: CaseFile.Model.Lookup.getPersonTypes
                     }
-                    ,familyName: {
-                        title: $.t("casefile:people.table.field.last-name")
-                        ,width: '15%'
-                    }
                     ,givenName: {
                         title: $.t("casefile:people.table.field.first-name")
+                        ,width: '15%'
+                    }
+                    ,familyName: {
+                        title: $.t("casefile:people.table.field.last-name")
                         ,width: '15%'
                     }
                 }
@@ -2842,7 +2842,7 @@ CaseFile.View = CaseFile.View || {
                         for (var i = 0; i < events.length; i++) {
                             var Record = {};
                             Record.eventType = Acm.goodValue(events[i].eventType);
-                            Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate,$.t("common:date.short"));
+                            Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate,$.t("common:date.full"));
                             Record.user = App.Model.Users.getUserFullName(Acm.goodValue(events[i].userId));
                             jtData.Records.push(Record);
                         }

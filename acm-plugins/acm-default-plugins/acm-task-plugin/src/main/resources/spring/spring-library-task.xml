@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="taskPluginProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
@@ -26,7 +24,6 @@
         <property name="parameters">
             <list/>
         </property>
-
     </bean>
     <bean id="sendActivitiTasksToSolrAction" class="com.armedia.acm.event.AcmAction">
         <property name="actionId" value="SEND_ACTIVITI_TASKS_TO_SOLR"/>
@@ -35,7 +32,6 @@
         <property name="parameters">
             <list/>
         </property>
-
     </bean>
 
     <bean id="createTaskContainerFolder" class="com.armedia.acm.event.AcmAction">
@@ -45,7 +41,6 @@
         <property name="parameters">
             <list/>
         </property>
-
     </bean>
 
     <!-- event handlers -->
@@ -187,6 +182,7 @@
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="taskBusinessRule" ref="taskBusinessRule"/>
         <property name="taskExtractor" ref="extractAcmTaskFromEvent"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="priorityLevelToNumberMap">
             <map>
                 <entry key="Low" value="10"/>
@@ -219,6 +215,7 @@
     
     <bean id="extractAcmTaskFromEvent" class="com.armedia.acm.plugins.task.service.impl.ExtractAcmTaskFromEvent">
         <property name="dao" ref="acmTaskDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="taskToSolrTransformer" class="com.armedia.acm.plugins.task.service.impl.TaskToSolrTransformer">
@@ -232,10 +229,7 @@
     </bean>
     
     <bean id="taskChangeStatusListener" class="com.armedia.acm.plugins.task.service.TaskChangeStatusListener">
-    	<property name="acmFolderService" ref="acmFolderService"/>
-    	<property name="acmContainerDao" ref="acmContainerFolderDao"/>
-    	 <lookup-method name="getMuleClient" bean="muleClient"/>
-    	 <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    	<property name="muleContextManager" ref="muleContextManager"/>
     </bean>
     
     <bean id="taskAssigneeChangeChecker" class="com.armedia.acm.plugins.task.service.TaskAssigneeChangeChecker">

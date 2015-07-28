@@ -6,31 +6,31 @@
 
     <changeSet id="01-history-service-tables" author="riste.tutureski">
         <createTable tableName="acm_history">
-            <column name="cm_history_id" type="NUMBER(32,0)">
+            <column name="cm_history_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_history_id"/>
             </column>
-            <column name="cm_history_person_id" type="NUMBER(32,0)">
+            <column name="cm_history_person_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_history_object_id" type="NUMBER(32,0)">
+            <column name="cm_history_object_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_history_object_type" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_history_start_date" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_history_start_date" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_history_end_date" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_history_end_date" type="${timestampType}">
                 <constraints nullable="true"/>
             </column>
-            <column name="cm_history_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_history_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_history_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_history_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_history_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_history_modifier" type="VARCHAR(1024)">
@@ -41,12 +41,12 @@
                                  constraintName="fk_history_person_id"
                                  referencedTableName="acm_person"
                                  referencedColumnNames="cm_person_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
     
     <changeSet id="02-history-service-change-nullable-value-object-id" author="riste.tutureski">
-    	<dropNotNullConstraint tableName="acm_history" columnName="cm_history_object_id"/>
+    	<dropNotNullConstraint tableName="acm_history" columnName="cm_history_object_id" columnDataType="${fkIdType}"/>
     </changeSet>
     
     <changeSet id="03-history-service-add-person-type" author="riste.tutureski">
@@ -55,5 +55,15 @@
     			<constraints nullable="true"/>
     		</column>
     	</addColumn>
+    </changeSet>
+    <changeSet id="04-acm_history-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_history_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_history_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_history"></column>
+        </insert>
     </changeSet>
 </databaseChangeLog>

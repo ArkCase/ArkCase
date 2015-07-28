@@ -32,7 +32,7 @@ public class BpmnFileAddedMonitor implements ApplicationListener<ConfigurationFi
                 if (log.isDebugEnabled()) {
                     log.debug("... finished deploying from: " + eventFile.getCanonicalPath());
                 }
-            } catch (IOException | ActivitiException e) {
+            } catch (Throwable e) {
                 log.error("Could not deploy Activiti definition file: " + e.getMessage(), e);
             }
         }

@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.model;
 
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
@@ -42,10 +43,12 @@ public class AcmUser implements Serializable, AcmLdapEntity
     @Column(name = "cm_user_directory_name", updatable = false)
     private String userDirectoryName;
 
+    @JsonFormat(pattern = AcmUsersConstants.SOLR_DATE_FORMAT)
     @Column(name = "cm_user_created", insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
+    @JsonFormat(pattern = AcmUsersConstants.SOLR_DATE_FORMAT)
     @Column(name = "cm_user_modified")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;

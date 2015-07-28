@@ -41,12 +41,6 @@ Costsheet.Model = {
         ,nodeType: function(objSolr) {
             return Costsheet.Model.DOC_TYPE_COSTSHEET;
         }
-        ,nodeTitle: function(objSolr) {
-            return Acm.goodValue(objSolr.name);
-        }
-        ,nodeToolTip: function(objSolr) {
-            return Acm.goodValue(objSolr.name);
-        }
         ,objToSolr: function(objData) {
             var solr = {};
             solr.create_tdt = objData.created;
@@ -58,9 +52,6 @@ Costsheet.Model = {
         }
         ,validateObjData: function(data) {
             return Costsheet.Model.Detail.validateCostsheet(data);
-        }
-        ,nodeTypeMap: function() {
-            return Costsheet.Model.Tree.Key.nodeTypeMap;
         }
     }
 
@@ -95,21 +86,6 @@ Costsheet.Model = {
             ,NODE_TYPE_PART_PERSON          : "person"
             ,NODE_TYPE_PART_EXPENSES        : "costSummary"
 
-
-
-            ,nodeTypeMap: [
-                {nodeType: "prevPage"            ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
-                ,{nodeType: "nextPage"           ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
-                ,{nodeType: "p"                  ,icon: ""                 ,tabIds: ["tabBlank"]}
-                ,{nodeType: "p/COSTSHEET"        ,icon: "fa fa-money icon"
-                    ,tabIds: ["tabDetail"
-                        ,"tabPerson"
-                        ,"tabCostSummary"
-                    ]}
-                ,{nodeType: "p/COSTSHEET/detail"            ,icon: "",tabIds: ["tabDetail"]}
-                ,{nodeType: "p/COSTSHEET/person"            ,icon: "",tabIds: ["tabPerson"]}
-                ,{nodeType: "p/COSTSHEET/costSummary"       ,icon: "",tabIds: ["tabCostSummary"]}
-            ]
         }
     }
 

@@ -6,15 +6,15 @@
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       xmlns:context="http://www.springframework.org/schema/context"
       xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
-      xmlns:spring="http://www.springframework.org/schema/beans" version="CE-3.5.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+      xmlns:spring="http://www.springframework.org/schema/beans" version="CE-3.7.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
 http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
 http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
-http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
 
     <context:property-placeholder
             properties-ref="alfrescoRmaPluginProperties"
@@ -89,6 +89,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <flow-ref name="create-or-find-record-folder" doc:name="Create Record Folder"/>
 
         <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Category folder id: #[flowVars['category-folder-id']]"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Category folder name: #[flowVars['category-folder-name']]"/>
         <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Record folder id: #[flowVars['record-folder-id']]"/>
 
     </flow>
@@ -139,29 +140,32 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                     ref="alfresco-complete-record"
                     contentType="application/json; charset=UTF-8"
                     mimeType="application/json">
-                <logger level="DEBUG" message="Complete record payload: #[message.payload]"/>
+                <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Complete record payload: #[message.payload]"/>
                 <response>
                     <json:json-to-object-transformer name="getJsonFromCompleteRecord" returnClass="java.util.Map"/>
                 </response>
             </http:outbound-endpoint>
         </enricher>
-        <logger level="DEBUG" doc:name="Log complete record results" message="Alfresco complete record results - #[flowVars['rma-complete-results']]" />
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" doc:name="Log complete record results" message="Alfresco complete record results - #[flowVars['rma-complete-results']]" />
 
     </sub-flow>
 
     <sub-flow name="set-rma-params" doc:name="set-rma-params">
         <set-variable variableName="category-folder-name" value="#[message.payload.categoryFolder]" doc:name="Cat. Folder"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Category folder (in payload): #[message.payload.categoryFolder]"/>
         <set-variable variableName="record-folder-name" value="#[message.payload.recordFolder]" doc:name="Rec Folder"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Record folder name (in payload): #[message.payload.recordFolder]"/>
         <set-variable variableName="alf-rma-publication-date" value="#[org.mule.util.DateUtils.formatTimeStamp(message.payload.publishedDate,&quot;yyyy-MM-dd'T'11:00:00.000-05:00&quot;)]" doc:name="Pub. Date"/>
         <set-variable variableName="alf-rma-date-received" value="#[org.mule.util.DateUtils.formatTimeStamp(message.payload.receivedDate,&quot;yyyy-MM-dd'T'11:00:00.000-05:00&quot;)]" doc:name="Date Recd."/>
         <set-variable variableName="alf-originator" value="#[message.payload.originator]" doc:name="Originator"/>
         <set-variable variableName="alf-origin-org" value="#[message.payload.originatorOrg]" doc:name="Organization"/>
         <set-variable variableName="record-folder-rma-id" value="#[flowVars['record-folder-name']]_#[flowVars['category-folder-name']]" doc:name="Rec Folder RMA ID"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Record folder rma id: #[flowVars['record-folder-name']]_#[flowVars['category-folder-name']]"/>
         <set-variable variableName="alfStore" value="#[idx=org.mule.util.StringUtils.indexOf(message.payload.ecmFileId, &quot;://&quot;); org.mule.util.StringUtils.substring(message.payload.ecmFileId, idx + 3)]" doc:name="Alf Store"/>
         <set-variable variableName="alfNamespace" value="#[idx=org.mule.util.StringUtils.indexOf(message.payload.ecmFileId, &quot;://&quot;); org.mule.util.StringUtils.substring(message.payload.ecmFileId, 0, idx)]" doc:name="Alf UUID"/>
         <set-variable variableName="ecmFileId" value="#[message.payload.ecmFileId]" doc:name="ECM File Id"/>
 
-        <logger level="DEBUG" message="Alfresco version: #[message.inboundProperties['alfresco_rma_module_version']]"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Alfresco version: #[message.inboundProperties['alfresco_rma_module_version']]"/>
         <choice doc:name="Set RMA properties based on RMA module version">
             <when expression="message.inboundProperties['alfresco_rma_module_version'] == '2.3'">
                 <set-variable variableName="alf-set-data-msg" value="{ &quot;prop_dod_publicationDate&quot;: &quot;#[flowVars['alf-rma-publication-date']]&quot;, &quot;prop_dod_originator&quot;: &quot;#[flowVars['alf-originator']]&quot;, &quot;prop_dod_originatingOrganization&quot;: &quot;#[flowVars['alf-origin-org']]&quot;, &quot;prop_dod_dateReceived&quot;: &quot;#[flowVars['alf-rma-date-received']]&quot; }" doc:name="Data JSON"/>
@@ -171,12 +175,12 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                 <set-variable variableName="alf-set-data-msg" value="{ &quot;prop_rma_publicationDate&quot;: &quot;#[flowVars['alf-rma-publication-date']]&quot;, &quot;prop_rma_originator&quot;: &quot;#[flowVars['alf-originator']]&quot;, &quot;prop_rma_originatingOrganization&quot;: &quot;#[flowVars['alf-origin-org']]&quot;, &quot;prop_rma_dateReceived&quot;: &quot;#[flowVars['alf-rma-date-received']]&quot; }" doc:name="Data JSON"/>
             </otherwise>
         </choice>
-        <logger level="DEBUG" message="object store: #[flowVars['alfStore']]" doc:name="Logger"/>
-        <logger level="DEBUG" message="object namespace: #[flowVars['alfNamespace']]" doc:name="Logger"/>
-        <logger level="DEBUG" message="category folder: #[flowVars['category-folder-name']]" doc:name="Logger"/>
-        <logger level="DEBUG" message="record folder: #[flowVars['record-folder-name']]" doc:name="Logger"/>
-        <logger level="DEBUG" message="record folder rma id: #[flowVars['record-folder-rma-id']]" doc:name="Logger"/>
-        <logger level="DEBUG" message="file id: #[flowVars['ecmFileId']]" doc:name="Logger"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="object store: #[flowVars['alfStore']]" doc:name="Logger"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="object namespace: #[flowVars['alfNamespace']]" doc:name="Logger"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="category folder: #[flowVars['category-folder-name']]" doc:name="Logger"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="record folder: #[flowVars['record-folder-name']]" doc:name="Logger"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="record folder rma id: #[flowVars['record-folder-rma-id']]" doc:name="Logger"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="file id: #[flowVars['ecmFileId']]" doc:name="Logger"/>
     </sub-flow>
 
     <sub-flow name="create-or-find-record-folder" doc:name="create-or-find-record-folder">
@@ -196,7 +200,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             </http:outbound-endpoint>
             <choice doc:name="Choice">
                 <when expression="message.inboundProperties['http.status'] == '200'">
-                    <logger level="DEBUG" message="record folder response: #[message.payload]" doc:name="Logger"/>
+                    <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="record folder response: #[message.payload]" doc:name="Logger"/>
                     <set-variable variableName="record-folder-id" value="#[message.payload.persistedObject]" doc:name="Variable"/>
                 </when>
                 <otherwise>
@@ -207,7 +211,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                 </otherwise>
             </choice>
         </processor-chain>
-        <logger level="DEBUG" doc:name="Log record folder id" message="Record folder id - #[flowVars['record-folder-id']]"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" doc:name="Log record folder id" message="Record folder id - #[flowVars['record-folder-id']]"/>
 
     </sub-flow>
 
@@ -216,7 +220,8 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <enricher doc:name="get category folder id" source="#[message.payload.id]" target="#[flowVars['category-folder-id']]">
             <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/${rma.root.folder}/#[flowVars['category-folder-name']]"/>
         </enricher>
-        <logger level="DEBUG" doc:name="Log category folder ID" message="Category folder results - #[flowVars['category-folder-id']]"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" doc:name="Log category folder ID" message="Category folder results - #[flowVars['category-folder-id']]"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Category folder (in sub flow find-category-folder): #[flowVars['category-folder-id']]"/>
 
     </sub-flow>
 
@@ -225,7 +230,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <enricher doc:name="get parent folder id" source="#[message.payload]" target="#[flowVars['invest-folder-id']]">
             <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/${rma.root.folder}"/>
         </enricher>
-        <logger level="DEBUG" doc:name="Log acm folder id" message="ACM folder id - #[flowVars['invest-folder-id'].id]"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" doc:name="Log acm folder id" message="ACM folder id - #[flowVars['invest-folder-id'].id]"/>
     </sub-flow>
 
 
@@ -255,7 +260,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                 </http:outbound-endpoint>
             </until-successful>
         </enricher>
-        <logger level="DEBUG" doc:name="Log move results" message="Alfresco move to record folder results - #[flowVars['rma-move-success']]" />
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" doc:name="Log move results" message="Alfresco move to record folder results - #[flowVars['rma-move-success']]" />
 
     </sub-flow>
 
@@ -275,7 +280,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                 </response>
             </http:outbound-endpoint>
         </enricher>
-        <logger level="DEBUG" doc:name="Log Results" message="Alfresco set metadata results - #[flowVars['rma-set-data-success']]" />
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" doc:name="Log Results" message="Alfresco set metadata results - #[flowVars['rma-set-data-success']]" />
     </sub-flow>
     <sub-flow name="declare-record" doc:name="declare-record">
         <set-payload value="#['{&quot;actionedUponNode&quot;: &quot;' + flowVars['ecmFileId'] + '&quot;, &quot;actionDefinitionName&quot;: &quot;create-record&quot;, &quot;parameterValues&quot;: {}}']" doc:name="Setup Declare Request"/>
@@ -286,7 +291,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                 </response>
             </http:outbound-endpoint>
         </enricher>
-        <logger level="DEBUG" doc:name="Log Results" message="Alfresco declare record results - #[flowVars['rma-declare-success']]" />
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" doc:name="Log Results" message="Alfresco declare record results - #[flowVars['rma-declare-success']]" />
     </sub-flow>
     <sub-flow name="get-alfresco-ticket" doc:name="get-alfresco-ticket">
         <enricher doc:name="set ticket value">
@@ -300,7 +305,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             </http:outbound-endpoint>
             <enrich source="#[idx=org.mule.util.StringUtils.indexOf(message.payload, &quot;ticket&quot;) + 7; org.mule.util.StringUtils.substring(message.payload, idx, org.mule.util.StringUtils.length(message.payload) - 10)]" target="#[flowVars['alfTicket']]" />
         </enricher>
-        <logger message="Alfresco login attempt results - #[flowVars['alfTicket']]" level="DEBUG" doc:name="Log Ticket Value"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" message="Alfresco login attempt results - #[flowVars['alfTicket']]" level="DEBUG" doc:name="Log Ticket Value"/>
     </sub-flow>
 
 </mule>

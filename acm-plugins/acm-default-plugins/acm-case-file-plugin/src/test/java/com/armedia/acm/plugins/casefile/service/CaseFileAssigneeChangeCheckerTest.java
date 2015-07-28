@@ -3,22 +3,19 @@
  */
 package com.armedia.acm.plugins.casefile.service;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.capture;
-import static org.junit.Assert.assertEquals;
-
-import org.easymock.Capture;
-import org.easymock.EasyMockSupport;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
 import com.armedia.acm.service.objecthistory.dao.AcmObjectHistoryDao;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
+import org.easymock.Capture;
+import org.easymock.EasyMockSupport;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 /**
  * @author riste.tutureski
@@ -58,13 +55,13 @@ public class CaseFileAssigneeChangeCheckerTest extends EasyMockSupport {
 		AcmObjectHistory currentHistory = new AcmObjectHistory();
 		currentHistory.setObjectType(objectType);
 		
-		String currentHistoryJson = "{\"id\":" + objectId.toString() + ",\"caseNumber\":\"" + objectName + "\",\"title\":\"" + objectTitle + "\",\"participants\":[{\"participantType\":\"assignee\",\"participantLdapId\":\"" + newAssignee + "\"}]}";
+		String currentHistoryJson = "{\"id\":" + objectId.toString() + ",\"className\": \"com.armedia.acm.plugins.casefile.model.CaseFile\", \"caseNumber\":\"" + objectName + "\",\"title\":\"" + objectTitle + "\",\"participants\":[{\"participantType\":\"assignee\",\"participantLdapId\":\"" + newAssignee + "\"}]}";
 		currentHistory.setObjectString(currentHistoryJson);
 		
 		AcmObjectHistory previousHistory = new AcmObjectHistory();
 		previousHistory.setObjectType(objectType);
 		
-		String previousHistoryJson = "{\"id\":" + objectId.toString() + ",\"caseNumber\":\"" + objectName + "\",\"title\":\"" + objectTitle + "\",\"participants\":[{\"participantType\":\"assignee\",\"participantLdapId\":\"" + oldAssignee + "\"}]}";
+		String previousHistoryJson = "{\"id\":" + objectId.toString() + ",\"className\": \"com.armedia.acm.plugins.casefile.model.CaseFile\", \"caseNumber\":\"" + objectName + "\",\"title\":\"" + objectTitle + "\",\"participants\":[{\"participantType\":\"assignee\",\"participantLdapId\":\"" + oldAssignee + "\"}]}";
 		previousHistory.setObjectString(previousHistoryJson);
 		
 		AcmObjectHistoryEvent event = new AcmObjectHistoryEvent(currentHistory);

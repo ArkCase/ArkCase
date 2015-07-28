@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<!-- VirtualViewer HTML5 Version 1.X.Y -->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="apple-touch-icon" href="resources/apple-touch-icon-precomposed-green.png" />
+
+    <title data-localize="windowTitle">VirtualViewer HTML5</title>
+
+    <link rel="shortcut icon" href="resources/VirtualViewer.ico" />
+
+    <link type="text/css" href="css/3rdparty/snowbound/jquery-ui-1.10.3.custom.css" rel="stylesheet" />
+    <!-- <link type="text/css" href="css/jquery.tooltip.css" rel="stylesheet" /> -->
+    <link type="text/css" href="css/3rdparty/jquery.clearableTextField.css" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="css/dialog.css" />
+
+    <link rel="stylesheet" type="text/css" href="css/webviewer.css" />
+    <link rel="stylesheet" type="text/css" href="css/toolbar.css" />
+
+    <!-- XXX: BE SURE TO UPDATE resources/print.html WHEN UPGRADING JQUERY -->
+    <script type="text/javascript" src="js/3rdparty/jquery-1.11.1.min.js"></script>
+    <!-- XXX: BE SURE TO UPDATE resources/print.html WHEN UPGRADING JQUERY -->
+
+    <script type="text/javascript" src="js/3rdparty/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="js/3rdparty/jquery.contextmenu.r2.js"></script>
+    <script type="text/javascript" src="js/3rdparty/jquery.hotkeys.js"></script>
+    <script type="text/javascript" src="js/3rdparty/jquery.localize.js"></script>
+    <script type="text/javascript" src="js/3rdparty/jquery.clearableTextField.js"></script>
+    <script type="text/javascript" src="js/3rdparty/jquery.hammer.min.js"></script>
+
+    <script type="text/javascript" src="js/3rdparty/json2.js"></script>
+
+    <script type="text/javascript" src="js/3rdparty/browserdetect.js"></script>
+
+    <script type="text/javascript" src="js/3rdparty/modernizr.js"></script>
+
+    <script type="text/javascript" src="js/3rdparty/URI.js"></script>
+
+    <script type="text/javascript" src="js/3rdparty/console-shim.min.js"></script>
+
+    <script type="text/javascript" src="js/vvDefines.js"></script>
+    <script type="text/javascript" src="config.js"></script>
+    <script type="text/javascript" src="js/vvUtility.js"></script>
+    <script type="text/javascript" src="js/vvAnnotationPainter.js"></script>
+    <script type="text/javascript" src="js/vvPoint.js"></script>
+    <script type="text/javascript" src="js/vvBoundingBox.js"></script>
+    <script type="text/javascript" src="js/vvDocViewState.js"></script>
+    <script type="text/javascript" src="js/vvDocumentModel.js"></script>
+
+    <script type="text/javascript" src="js/annotations.js"></script>
+    <script type="text/javascript" src="js/webviewer.js"></script>
+
+
+    <!--[if lte IE 8]>
+    <meta http-equiv="imagetoolbar" content="no" />
+    <script type="text/javascript" src="js/3rdparty/excanvas.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/webviewer.css" />
+    <link rel="stylesheet" type="text/css" href="css/ie-toolbar.css" />
+    <link rel="stylesheet" type="text/css" href="css/ie8hacks.css" />
+    <![endif]-->
+
+    <!--[if IE 6]>
+    <link rel="stylesheet" type="text/css" href="css/ie6hacks.css" />
+    <![endif]-->
+
+    <!--[if IE 7]>
+    <link rel="stylesheet" type="text/css" href="css/ie6hacks.css" />
+    <link rel="stylesheet" type="text/css" href="css/ie7hacks.css" />
+    <![endif]-->
+</head>
+
+<body onload="virtualViewer.initViaURL()">
+<div id="virtualViewerMain">
+    <div id="vvToolbar">
+        <div id="vvSaveDocumentButton"
+             onclick="javascript:myFlexSnap.saveAllDocuments(true)"
+             data-localize="utilityToolbar.saveDocument"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Save Document">&nbsp;</div>
+
+        <div id="vvExportDocumentButton"
+             onclick="javascript:myFlexSnap.exportDocument()"
+             data-localize="utilityToolbar.exportDocument"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Export Document">&nbsp;</div>
+
+        <div id="vvSendDocumentButton"
+             onclick="javascript:myFlexSnap.sendDocument()"
+             data-localize="utilityToolbar.sendDocument"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Send Document">&nbsp;</div>
+
+
+        <div id="vvEmailDocumentButton"
+             onclick="javascript:myFlexSnap.showEmailDialog()"
+             data-localize="utilityToolbar.emailDocument"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Email Document">&nbsp;</div>
+
+        <div id="vvPrintButton"
+             onclick="javascript:myFlexSnap.printDocument()"
+             data-localize="utilityToolbar.printDocument"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Print">&nbsp;</div>
+
+        <div class="vvToolbarSeparator"
+             data-localize="utilityToolbar.separator"
+             title="">&nbsp;</div>
+
+        <div id="vvZoomInButton"
+             onclick="javascript:myFlexSnap.zoomIn()"
+             data-localize="utilityToolbar.zoomIn"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Zoom In">&nbsp;</div>
+
+        <div id="vvZoomOutButton"
+             onclick="javascript:myFlexSnap.zoomOut()"
+             data-localize="utilityToolbar.zoomOut"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Zoom Out">&nbsp;</div>
+
+        <div id="vvRubberbandZoomButton"
+             onclick="javascript:myFlexSnap.zoomRubberband()"
+             data-localize="utilityToolbar.rubberbandZoom"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Rubberband Zoom">&nbsp;</div>
+
+        <div class="vvToolbarSeparator"
+             data-localize="utilityToolbar.separator"
+             title="">&nbsp;</div>
+
+        <div id="vvFitWindowButton"
+             onclick="javascript:myFlexSnap.fitWindow()"
+             data-localize="utilityToolbar.fitToWindow"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Fit to Window">&nbsp;</div>
+
+        <div id="vvFitHeightButton"
+             onclick="javascript:myFlexSnap.fitHeight()"
+             data-localize="utilityToolbar.fitToHeight"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Fit to Height">&nbsp;</div>
+
+        <div id="vvFitWidthButton"
+             onclick="javascript:myFlexSnap.fitWidth()"
+             data-localize="utilityToolbar.fitToWidth"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Fit to Width">&nbsp;</div>
+
+        <div class="vvToolbarSeparator"
+             data-localize="utilityToolbar.separator"
+             title="">&nbsp;</div>
+
+        <div id="vvGoToFirstPageButton"
+             onclick="javascript:myFlexSnap.firstPage()"
+             data-localize="utilityToolbar.goToFirstPage"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Go to First Page">&nbsp;</div>
+
+        <div id="vvGoToPreviousPageButton"
+             onclick="javascript:myFlexSnap.previousPage()"
+             data-localize="utilityToolbar.goToPreviousPage"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Go to Previous Page">&nbsp;</div>
+
+        <div id="vvJumpToPage">
+            <input id="vvJumpToPageInput"
+                   type="text"
+                   size="3"
+                   name="vvJumpToPageInput" />
+            <div id="vvJumpToPageLabel">
+                / <span id="vvJumpToPageTotal"></span>
+            </div>
+
+        </div>
+
+        <div id="vvGoToNextPageButton"
+             onclick="javascript:myFlexSnap.nextPage()"
+             data-localize="utilityToolbar.goToNextPage"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Go to Next Page">&nbsp;</div>
+
+        <div id="vvGoToLastPageButton"
+             onclick="javascript:myFlexSnap.lastPage()"
+             data-localize="utilityToolbar.goToLastPage"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Go to Last Page">&nbsp;</div>
+
+        <div class="vvToolbarSeparator"
+             data-localize="utilityToolbar.separator"
+             title="">&nbsp;</div>
+
+        <div id="vvRotatePageRightButton"
+             onclick="javascript:myFlexSnap.rotateClock()"
+             data-localize="utilityToolbar.rotateRight"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Rotate Right">&nbsp;</div>
+
+        <div id="vvRotatePageLeftButton"
+             onclick="javascript:myFlexSnap.rotateCounter()"
+             data-localize="utilityToolbar.rotateLeft"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Rotate Left">&nbsp;</div>
+
+        <div id="vvPictureControlsButton"
+             title="Picture Controls"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             data-localize="utilityToolbar.pictureControls"></div>
+
+        <div class="vvToolbarSeparator"
+             data-localize="utilityToolbar.separator"
+             title="">&nbsp;</div>
+
+        <div id="vvImageInfoButton"
+             onclick="javascript:myFlexSnap.toggleImageInfo()"
+             data-localize="utilityToolbar.toggleImageInfo"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Image Info">&nbsp;</div>
+
+        <div id="vvAboutButton"
+             onclick="javascript:myFlexSnap.showAboutDialog()"
+             data-localize="utilityToolbar.showAboutDialog"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="About">&nbsp;</div>
+
+        <div id="vvThumbToggleButton"
+             onclick="javascript:myFlexSnap.toggleThumbnailPanel()"
+             data-localize="utilityToolbar.toggleThumbnailPanel"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Toggle Thumbnails">&nbsp;</div>
+    </div>
+
+    <div id="vvAnnToolbar">
+        <div id="vvAnnStickyNoteButton"
+             onclick="javascript:myFlexSnap.addAnnotation('Sticky Note')"
+             data-localize="annToolbar.stickyNote"
+             class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
+             title="Sticky Note">&nbsp;</div>
+
+        <div id="vvAnnTextButton"
+             data-localize="annToolbar.textEdit"
+             class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
+             title="Text Edit">&nbsp;</div>
+
+        <div id="vvAnnImageRubberStampButton"
+             data-localize="annToolbar.imageRubberStamp"
+             class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
+             title="Image Rubber Stamp">&nbsp;</div>
+
+        <div class="vvToolbarSeparator"
+             data-localize="utilityToolbar.separator"
+             title="">&nbsp;</div>
+
+        <div id="vvAnnLineButton"
+             onclick="javascript:myFlexSnap.addAnnotation('Line')"
+             data-localize="annToolbar.line"
+             class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
+             title="Line">&nbsp;</div>
+
+        <div id="vvAnnArrowButton"
+             onclick="javascript:myFlexSnap.addAnnotation('Arrow')"
+             data-localize="annToolbar.arrow"
+             class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
+             title="Arrow">&nbsp;</div>
+
+        <div id="vvAnnFreehandButton"
+             onclick="javascript:myFlexSnap.addAnnotation('Freehand')"
+             data-localize="annToolbar.freehand"
+             class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
+             title="Freehand">&nbsp;</div>
+
+        <div id="vvAnnHighlightRectButton"
+             onclick="javascript:myFlexSnap.addAnnotation('HighlightRectangle')"
+             data-localize="annToolbar.highlightRectangle"
+             class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
+             title="Highlight Rectangle">&nbsp;</div>
+
+        <div class="vvToolbarSeparator"
+             data-localize="utilityToolbar.separator"
+             title="">&nbsp;</div>
+
+        <div id="vvAnnFilledRectButton"
+             onclick="javascript:myFlexSnap.addAnnotation('FilledRectangle')"
+             data-localize="annToolbar.filledRectangle"
+             class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
+             title="Filled Rectangle">&nbsp;</div>
+
+        <div id="vvAnnFilledEllipseButton"
+             onclick="javascript:myFlexSnap.addAnnotation('FilledEllipse')"
+             data-localize="annToolbar.filledEllipse"
+             class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
+             title="Filled Ellipse">&nbsp;</div>
+
+        <div id="vvAnnFilledPolygonButton"
+             onclick="javascript:myFlexSnap.addAnnotation('FilledPolygon')"
+             data-localize="annToolbar.filledPolygon"
+             class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
+             title="Filled Polygon">&nbsp;</div>
+
+        <div class="vvToolbarSeparator"
+             data-localize="utilityToolbar.separator"
+             title="">&nbsp;</div>
+
+        <div id="vvAnnRectButton"
+             onclick="javascript:myFlexSnap.addAnnotation('Rectangle')"
+             data-localize="annToolbar.rectangle"
+             class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
+             title="Rectangle">&nbsp;</div>
+
+        <div id="vvAnnEllipseButton"
+             onclick="javascript:myFlexSnap.addAnnotation('Ellipse')"
+             data-localize="annToolbar.ellipse"
+             class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
+             title="Ellipse">&nbsp;</div>
+
+        <div id="vvAnnPolygonButton"
+             onclick="javascript:myFlexSnap.addAnnotation('Polygon')"
+             data-localize="annToolbar.polygon"
+             class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
+             title="Polygon">&nbsp;</div>
+
+        <div class="vvToolbarSeparator"
+             data-localize="utilityToolbar.separator"
+             title="">&nbsp;</div>
+
+        <div id="vvLayerManagerButton"
+             onclick="javascript:myFlexSnap.toggleLayerManager()"
+             data-localize="annToolbar.layerManager"
+             class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
+             title="Layer Manager">&nbsp;</div>
+    </div>
+
+    <div id="vvImageAndThumbs">
+        <div id="vvImagePanel">
+            <ul id="vvImageTabs">
+                <!-- The tabs will go here -->
+            </ul>
+
+            <div id="vvOuterDiv">
+                <div id="vvDummyScroller"></div>
+                <div id="vvInnerDiv">
+                    <canvas id="vvImageCanvas" class="vvCanvas"></canvas>
+                    <div id="vvTextAnnotationContainer"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="vvThumbs">
+            <ul id="vvThumbsTabs" style="visibility: hidden">
+                <!-- visibility set above to avoid FOUC -->
+                <li id="vvPageThumbsTab"><a data-localize="thumbnails.pageTab" href="#vvPageThumbs">Pages</a></li>
+                <li id="vvDocThumbsTab"><a data-localize="thumbnails.documentTab" href="#vvDocThumbs">Docs</a></li>
+                <li id="vvSearchTab"><a data-localize="thumbnails.searchTab" href="#vvSearch"><div id="vvSearchTabIcon" class="vvSVGable" title="Search Tab"></div></a></li>
+            </ul>
+
+            <div id="vvPageThumbs">
+                <table id="vvPageThumbsInternal"></table>
+            </div>
+
+            <div id="vvDocThumbs">
+                <table id="vvDocThumbsInternal"></table>
+            </div>
+
+            <div id="vvSearch" style="visibility: hidden">
+                <!-- visibility set above to avoid FOUC -->
+                <div id="vvSearchControls">
+                    <div id="vvSearchTermProgress">
+
+                        <div id="vvSearchTerm">
+                            <input id="vvSearchTermField" type="text" name="vvSearchTerm" />
+
+                            <input data-localize="search.startSearch"
+                                   id="vvSearchStart"
+                                   class="vvSearchButton vvSVGable"
+                                   type="button"
+                                   value="vvSearchStart"
+                                   title="Go" />
+                        </div>
+
+                        <div id="vvSearchProgress">
+                            <span id="vvSearchProgressText"></span>
+                            <span id="vvSearchProgressCancel" class="vvSVGable" style="visibility: hidden"></span>
+                            <!-- visibility set above to avoid FOUC -->
+                        </div>
+                    </div>
+
+                    <div id="vvSearchNextPreviousButtons">
+                        <input data-localize="search.previousMatch"
+                               id="vvSearchPrevious"
+                               class="vvSearchButton vvSVGable"
+                               type="button"
+                               value="vvSearchPrevious"
+                               title="Previous Match" />
+
+                        <input data-localize="search.nextMatch"
+                               id="vvSearchNext"
+                               class="vvSearchButton vvSVGable"
+                               type="button"
+                               value="vvSearchNext"
+                               title="Next Match" />
+                    </div>
+                </div>
+
+                <div id="vvSearchResults">
+                    <table id="vvSearchInternal"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="contextMenu" id="vvThumbContextMenu" style="display: none">
+    <ul>
+        <li data-localize="thumbContextMenu.selectAll" id="vvSelectPagesAll">Select All</li>
+        <li data-localize="thumbContextMenu.selectNone" id="vvSelectPagesNone">Select None</li>
+        <li data-localize="thumbContextMenu.cut" id="vvCutPages">Cut</li>
+        <li data-localize="thumbContextMenu.copy" id="vvCopyPages">Copy</li>
+        <li data-localize="thumbContextMenu.delete" id="vvDeletePages">Delete</li>
+        <li data-localize="thumbContextMenu.insertBefore" id="vvInsertPagesBefore">Insert Before</li>
+        <li data-localize="thumbContextMenu.insertAfter" id="vvInsertPagesAfter">Insert After</li>
+        <li data-localize="thumbContextMenu.newDocument" id="vvCopyPagesToNewDocument">Copy to New Document</li>
+        <li data-localize="thumbContextMenu.cutNewDocument" id="vvCutPagesToNewDocument">Cut to New Document</li>
+    </ul>
+</div>
+
+<div class="contextMenu" id="vvSelectTextContextMenu" style="display: none">
+    <ul>
+        <li id="vvSelectTextMenuCopy">Copy</li>
+    </ul>
+</div>
+
+<div class="contextMenu" id="vvAnnContextMenu" style="display: none">
+    <ul>
+        <li id="vvAnnContextMenuDelete">Delete</li>
+        <li id="vvAnnContextMenuEditText">Edit Text</li>
+        <li id="vvAnnContextMenuProperties">Properties</li>
+    </ul>
+</div>
+
+<div class="contextMenu" id="vvTextAnnContextMenu" style="display: none">
+    <ul id="vvTextAnnContextMenuList">
+        <li data-localize="textAnnContextMenu.newTextAnn" id="vvTextAnnContextMenuAdd">Add New Text</li>
+    </ul>
+</div>
+
+<div class="contextMenu" id="vvImageRubberStampContextMenu" style="display: none">
+    <ul id="vvImageRubberStampContextMenuList">
+    </ul>
+</div>
+
+<div id="vvWaitIndicator">
+    <img src="resources/loader.gif" alt="Wait Indicator" /><span data-localize="loadWaitDialog" id="vvWaitIndicatorText">Please wait while your image is loaded.</span>
+</div>
+
+<div id="vvSaveDocumentDialog">
+    <img src="resources/loader.gif" alt="Wait Indicator" /><div data-localize="saveWaitDialog" id="vvSaveDocumentDialogText">Please wait while your document is saved.</div>
+</div>
+
+<div id="vvPrintIndicator">
+    <img src="resources/loader.gif" alt="Wait Indicator" /><span data-localize="printWaitDialog" id="vvPrintIndicatorText">Please wait while your document is printed.</span>
+</div>
+
+<div id="vvEmailIndicator">
+    <span data-localize="emailWaitDialog" id="vvEmailIndicatorText">Please wait while your document is emailed.</span>
+</div>
+
+<div id="vvEmptyEmailFields">
+    <span data-localize="emptyEmailFieldsDialog" id="vvEmptyEmailFieldsText"></span>
+</div>
+
+<div id="vvDeleteAnnotationDialog">
+    <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><div data-localize="deleteAnnDialog" id="vvDeleteAnnotationDialogText">Are you sure you wish to delete this annotation?</div>
+</div>
+
+<div id="vvConfirmChangesDialog">
+    <span style="float:left; margin:0 7px 20px 0;"></span><div data-localize="confirmChangesDialog" id="vvConformChangesDialogText"></div>
+</div>
+
+<div id="vvDisableToolbarDialog">
+    <div data-localize="disableToolbarDialog" id="vvDisableToolbarDialogText"></div>
+</div>
+
+<div id="vvEmailDialog">
+    <div id="vvEmailInnerDiv">
+        <span data-localize="emailDialog.sendFieldCaption">Send </span>
+        <span id="vvEmailDocumentName"> </span>
+        <br>
+        <form id="vvEmailForm" name="vvEmailForm" action="" method="post" target="_blank">
+
+            <fieldset id="vvEmailBasicFieldset">
+                <!-- No caption for the main fields field set
+                        <legend><b> Basic </b> </legend>
+                -->
+		    <span id="vvEmailBasicFields">
+			<span class="vvEmailCaption"><span data-localize="emailDialog.fromFieldCaption">From</span>:</span><span class="vvFullWidthField"><input type="text" id="vvEmailFrom" name="emailFromAddresses" disabled="disabled"></span>
+			<span class="vvEmailCaption"><span data-localize="emailDialog.toFieldCaption">To</span>:</span><span class="vvFullWidthField"><input type="text" id="vvEmailTo" name="emailToAddresses"></span>
+		<!-- <span class="vvEmailCaption"><span data-localize="emailDialog.ccFieldCaption">CC</span>:</span><span id="vvFullWidthField"><input type="text" id="vvEmailCC" name="emailCCAddresses"></span>
+			 <span class="vvEmailCaption"><span data-localize="emailDialog.bccFieldCaption">BCC</span>:</span><span id="vvFullWidthField"><input type="text" id="vvEmailBCC" name="emailBCCAddresses"></span>
+		-->	<span class="vvEmailCaption"><span data-localize="emailDialog.subjectFieldCaption">Subject</span>:</span><span class="vvFullWidthField"><input type="text" id="vvEmailSubject" name="emailSubject"></span>
+			<textarea id="vvEmailBody" name="emailBody" rows="5" cols="57"></textarea>
+
+		    </span>
+            </fieldset>
+
+
+            <fieldset id="vvEmailFormatFieldset">
+                <legend><b> <span data-localize="pageRangeFields.format">Format</span>  </b> </legend>
+
+                <input id="vvEmailPDFSelected"
+                       type="radio"
+                       name="vvEmailFormat"
+                       value="vvEmailPDFSelected"
+                       checked="checked" />
+                <span data-localize="emailDialog.pdf">PDF</span>
+                <input id="vvEmailTIFFSelected"
+                       type="radio"
+                       name="vvEmailFormat"
+                       value="vvEmailTIFFSelected" />
+                <span data-localize="emailDialog.tiff">TIFF</span>
+                <input id="vvEmailOriginalSelected"
+                       type="radio"
+                       name="vvEmailFormat"
+                       value="vvEmailOriginalSelected" />
+                   <span id="vvEmailOriginalText"
+                         data-localize="emailDialog.original">Original</span>
+            </fieldset>
+
+
+            <fieldset id="vvEmailAnnotationsFieldset">
+                <legend><b> <span data-localize="pageRangeFields.annotations">Annotations</span> </b> </legend>
+
+                <div id="vvEmailAnnotationsFields">
+                    <input id="vvEmailAnnotationsSelected" type="checkbox" name="vvEmailAnnotations" value="vvEmailAnnotationsSelected" checked="checked" /> <span data-localize="printDialog.includeAnnotations">Include Annotations</span>
+                    <div id="vvEmailOptionsAnnotationsTypeCheckboxes">
+                        <input id="vvEmailAnnotationsTypeText" type="checkbox" name="vvEmailAnnotationsTypeText" value="vvEmailAnnotationsTypeTextSelected" checked="checked" /> <span data-localize="printDialog.text">Text</span>
+                        <input id="vvEmailAnnotationsTypeNonText" type="checkbox" name="vvEmailAnnotationsTypeNonText" value="vvEmailAnnotationsTypeNonTextSelected" checked="checked" /> <span data-localize="printDialog.nonText">Non-Text</span>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+<div id="vvExportDialog">
+    <!-- action below will be inserted here dynamically -->
+    <form id="vvExportForm" name="vvExportForm" action="" method="post" target="_blank">
+		<span id="vvExportFormHiddenFields">
+		<!-- hidden fields will be inserted here dynamically -->
+		</span>
+
+        <fieldset id="vvExportOptionsPagesFieldSet">
+            <legend><b> <span data-localize="pageRangeFields.pages">Pages</span> </b> </legend>
+		    <span id="vvExportOptionsPagesFields">
+                <input type="radio" id="vvExportRangeAll" name="exportRangeType" value="all" checked> <span data-localize="pageRangeFields.allPages">All Pages</span><br>
+	            <input type="radio" id="vvExportRangeComplex" name="exportRangeType" value="complex"> <span data-localize="pageRangeFields.pages">Pages</span> <input id="vvExportComplex" class="complexRange" type="text" name="vvExportComplex" /><br>
+	            <input type="radio" id="vvExportRangeCurrent" name="exportRangeType" value="current"> <span data-localize="pageRangeFields.currentPage">Current Page</span>
+		    </span>
+
+        </fieldset>
+
+
+
+        <fieldset id="vvExportOptionsFormatRadio">
+            <legend><b> <span data-localize="pageRangeFields.format">Format</span>  </b> </legend>
+
+            <input id="vvExportPDFSelected"
+                   type="radio"
+                   name="vvExportFormat"
+                   value="vvExportPDFSelected"
+                   checked="checked" />
+            <span data-localize="exportDialog.pdf">PDF</span>
+            <input id="vvExportTIFFSelected"
+                   type="radio"
+                   name="vvExportFormat"
+                   value="vvExportTIFFSelected" />
+            <span data-localize="exportDialog.tiff">TIFF</span>
+            <input id="vvExportOriginalSelected"
+                   type="radio"
+                   name="vvExportFormat"
+                   value="vvExportOriginalSelected" />
+                   <span id="vvExportOriginalText"
+                         data-localize="exportDialog.original">Original</span>
+        </fieldset>
+
+        <fieldset id="vvExportOptionsAnnotationsFieldset">
+            <legend><b> <span data-localize="pageRangeFields.annotations">Annotations</span> </b> </legend>
+
+
+
+            <div id="vvExportOptionsAnnotationsCheckbox">
+                <input id="vvExportAnnotationsSelected" type="checkbox" name="vvExportAnnotations" value="vvExportAnnotationsSelected" checked="checked" /> <span data-localize="printDialog.includeAnnotations">Include Annotations</span>
+                <div id="vvExportOptionsAnnotationsTypeCheckboxes">
+                    <input id="vvExportAnnotationsTypeText" type="checkbox" name="vvExportAnnotationsTypeText" value="vvExportAnnotationsTypeTextSelected" checked="checked" /> <span data-localize="printDialog.text">Text</span>
+                    <input id="vvExportAnnotationsTypeNonText" type="checkbox" name="vvExportAnnotationsTypeNonText" value="vvExportAnnotationsTypeNonTextSelected" checked="checked" /> <span data-localize="printDialog.nonText">Non-Text</span>
+                </div>
+            </div>
+
+
+        </fieldset>
+
+    </form>
+
+</div>
+
+<div id="vvLocalPrintDialog">
+    <div id="vvPrintOptionsPageLabelText">
+        <span data-localize="printDialog.pages">Pages: </span><input id="vvPrintFirstPage" type="text" name="vvPrintFirstPage" />
+        <span data-localize="printDialog.to">to</span><input id="vvPrintLastPage" type="text" name="vvPrintLastPage" />
+    </div>
+
+    <div id="vvPrintOptionsColorRadio">
+        <input id="vvPrintColorSelected" type="radio" name="vvPrintColor" value="vvPrintColorSelected" /> <span data-localize="printDialog.color">Color</span>
+        <input id="vvPrintGraySelected" type="radio" name="vvPrintColor" value="vvPrintGraySelected" checked="checked" /> <span data-localize="printDialog.grayscale">Grayscale</span>
+    </div>
+
+    <div id="vvPrintOptionsAnnotationsCheckbox">
+        <input id="vvPrintAnnotationsSelected" type="checkbox" name="vvPrintAnnotations" value="vvPrintAnnotationsSelected" checked="checked" /> <span data-localize="printDialog.includeAnnotations">Include Annotations</span>
+        <div id="vvPrintOptionsAnnotationsTypeCheckboxes">
+            <input id="vvPrintAnnotationsTypeText" type="checkbox" name="vvPrintAnnotationsTypeText" value="vvPrintAnnotationsTypeTextSelected" checked="checked" /> <span data-localize="printDialog.includeAnnotationsTypeText">Text</span>
+            <input id="vvPrintAnnotationsTypeNonText" type="checkbox" name="vvPrintAnnotationsTypeNonText" value="vvPrintAnnotationsTypeNonTextSelected" checked="checked" /> <span data-localize="printDialog.includeAnnotationsTypeNonText">Non-Text</span>
+        </div>
+    </div>
+</div>
+
+<div id="vvNewPrintDialog">
+    <form id="vvNewPrintForm" name="vvNewPrintForm" action="AjaxServlet" method="post" target="_blank">
+
+		<span id="vvNewPrintFormHiddenFields">
+		<!-- hidden fields will be inserted here dynamically -->
+		</span>
+
+
+        <fieldset id="vvNewPrintOptionsPrinterFieldSet">
+            <legend><b> <span data-localize="printDialog.destination">Destination</span> </b> </legend>
+            <div id="vvNewPrintOptionsPrinterInnerDiv">
+                <div id="vvNewPrintOptionsPrinterRadio">
+                    <input id="vvNewPrintPrinterExport" type="radio" name="vvNewPrintMethod" value="vvNewPrintPrinterExport" checked /> <span data-localize="printDialog.pdf">Save as PDF</span>
+                    <br>
+                    <input id="vvNewPrintPrinterServer" type="radio" name="vvNewPrintMethod" value="vvNewPrintPrinterServer" /> <span data-localize="printDialog.printer">Printer</span>
+                    <span id="vvNewPrintServerPrinterSelection"></span>
+                </div>
+            </div>
+        </fieldset>
+
+
+        <fieldset id="vvNewPrintOptionsPagesFieldSet">
+            <legend><b>  <span data-localize="pageRangeFields.pages">Pages</span> </b> </legend>
+            <div id="vvNewPrintOptionsPagesInnerDiv">
+                <input type="radio" id="vvNewPrintRangeAll" name="rangetype" value="all" checked> <span data-localize="pageRangeFields.allPages">All Pages</span> <br>
+                <input type="radio" id="vvNewPrintRangeComplex" name="rangetype" value="complex"> <span data-localize="pageRangeFields.pages">Pages</span> <input id="vvNewPrintComplex" class="complexRange" type="text" name="vvNewPrintComplex" /><br>
+                <input type="radio" id="vvNewPrintRangeCurrent" name="rangetype" value="current"> <span data-localize="pageRangeFields.currentPage">Current Page</span>
+            </div>
+        </fieldset>
+
+
+        <fieldset id="vvNewPrintOptionsColorFieldSet">
+            <legend><b><span data-localize="printDialog.color">Color</span></b> </legend>
+
+            <div id="vvNewPrintOptionsColorRadio">
+                <input id="vvNewPrintColorSelected" type="radio" name="vvNewPrintColor" value="vvNewPrintColorSelected" checked="checked"/> <span data-localize="printDialog.color">Color</span>
+                <input id="vvNewPrintGraySelected" type="radio" name="vvNewPrintColor" value="vvNewPrintGraySelected"  /> <span data-localize="printDialog.grayscale">Grayscale</span>
+            </div>
+        </fieldset>
+
+        <fieldset id="vvNewPrintOptionsAnnotationsFieldSet">
+            <legend><b> <span data-localize="pageRangeFields.annotations">Annotations</span> </b> </legend>
+            <div id="vvNewPrintOptionsAnnotationsInnerDiv">
+                <div id="vvNewPrintOptionsAnnotationsCheckbox">
+                    <input id="vvNewPrintAnnotationsSelected" type="checkbox" name="vvNewPrintAnnotations" value="vvNewPrintAnnotationsSelected" checked="checked" /> <span data-localize="printDialog.includeAnnotations">Include Annotations</span>
+                    <div id="vvNewPrintOptionsAnnotationsTypeCheckboxes">
+                        <input id="vvNewPrintAnnotationsTypeText" type="checkbox" name="vvNewPrintAnnotationsTypeText" value="vvNewPrintAnnotationsTypeTextSelected" checked="checked" /> <span data-localize="printDialog.text">Text</span>
+                        <input id="vvNewPrintAnnotationsTypeNonText" type="checkbox" name="vvNewPrintAnnotationsTypeNonText" value="vvNewPrintAnnotationsTypeNonTextSelected" checked="checked" /> <span data-localize="printDialog.nonText">Non-Text</span>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+    </form>
+</div>
+
+
+
+<div id="vvAboutDialog">
+    <div id="vvAboutDialogContents" class="vvSVGable">
+        <div id="vvAboutDialogText"></div>
+    </div>
+</div>
+
+<div id="vvKeyboardHints">
+    <div id="vvKeyboardHintsContents">
+        <div id="vvKeyboardHintsText"></div>
+    </div>
+</div>
+
+<div id="vvImageInfoDialog">
+    <div id="vvImageInfoContents">
+        <div id="vvImageInfoText"></div>
+    </div>
+</div>
+
+
+
+<div id="vvClipboard">
+    <div id="vvClipboardContents">
+        <textarea id="vvClipboardTextarea" readonly="readonly"></textarea>
+    </div>
+</div>
+
+
+<div id="vvNewDocumentDialog">
+    <div id="vvNewDocumentDialogName">
+        <span data-localize="newDocumentDialog.documentId">Document ID</span>: <input id="vvNewDocumentDialogNameInput" type="text" name="vvNewDocumentDialogNameInput" />
+    </div>
+    <div data-localize="newDocumentDialog.error" id="vvNewDocumentDialogError">Please enter a valid Document ID!</div>
+</div>
+
+<div id="vvPictureControlsDialog">
+    <table id="vvPictureControlsMenu">
+        <tr>
+            <td>
+                <div id="vvBrightness"
+                     data-localize="pictureControls.brightnessIcon"
+                     class="vvPictureControlsIcon vvSVGable"
+                     title="Brightness">&nbsp;
+                </div>
+
+                <div id="vvBrightnessSlider"
+                     data-localize="pictureControls.brightnessSlider"
+                     class="vvPictureControlsSlider"
+                     title="Brightness Slider">&nbsp;
+                </div>
+
+   		 			<span id="vvBrightnessDisplay"
+                          data-localize="pictureControls.brightnessValue"
+                          class="vvPictureControlsValueDisplay"
+                          title="Brightness">0</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="vvContrast"
+                     data-localize="pictureControls.contrastIcon"
+                     class="vvPictureControlsIcon vvSVGable"
+                     title="Contrast">&nbsp;
+                </div>
+
+                <div id="vvContrastSlider"
+                     data-localize="pictureControls.contrastSlider"
+                     class="vvPictureControlsSlider"
+                     title="Contrast Slider">&nbsp;
+                </div>
+
+   		 			<span id="vvContrastDisplay"
+                          data-localize="pictureControls.contrastValue"
+                          class="vvPictureControlsValueDisplay"
+                          title="Contrast">0</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="vvGamma"
+                     data-localize="pictureControls.gammaIcon"
+                     class="vvPictureControlsIcon vvSVGable"
+                     title="Gamma">&nbsp;
+                </div>
+
+                <div id="vvGammaSlider"
+                     data-localize="pictureControls.gammaIcon"
+                     class="vvPictureControlsSlider"
+                     title="Gamma Slider">&nbsp;
+                </div>
+
+   		 			<span id="vvGammaDisplay"
+                          data-localize="pictureControls.gammaValue"
+                          class="vvPictureControlsValueDisplay"
+                          title="Gamma">0</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="vvAnnPopUp">
+    <input data-localize="annPopUp.editText"
+           id="vvAnnTextEditButton"
+           class="vvAnnPopUpButton"
+           type="button"
+           value="Edit Text"
+           title="Edit Text" />
+
+    <div id="vvAnnColor">
+        <div data-localize="annPopUp.lineColorGroupLabel.value"
+             id="vvAnnLineColorLabel">Line Color:</div>
+        <div data-localize="annPopUp.borderColorGroupLabel.value"
+             id="vvAnnBorderColorLabel">Border Color:</div>
+        <div data-localize="annPopUp.fillColorGroupLabel.value"
+             id="vvAnnFillColorLabel">Fill Color:</div>
+        <div data-localize="annPopUp.fontColorGroupLabel.value"
+             id="vvAnnTextColorLabel">Font Color:</div>
+
+            <span data-localize="annPopUp.colorGrid.more"
+                  id="vvAnnColorMoreLink">More Colors...</span>
+
+        <div id="vvAnnColorCustom">
+                <span data-localize="annPopUp.colorGrid.custom"
+                      id="vvAnnColorCustomLabel">Custom:</span>
+            <input id="vvAnnColorCustomInput"
+                   type="text"
+                   maxlength="6"
+                   size="6"
+                   value=""
+                   title="" />
+        </div>
+    </div>
+
+    <div id="vvAnnThickness">
+        <div data-localize="annPopUp.lineSizeGroupLabel.value"
+             id="vvAnnLineSizeLabel">Line Size: <span id="vvAnnLineSizeValue">3</span></div>
+        <div data-localize="annPopUp.borderSizeGroupLabel.value"
+             id="vvAnnBorderSizeLabel">Border Size: <span id="vvAnnBorderSizeValue">1</span></div>
+
+        <div class="vvAnnThicknessCell" style="left:10px; width:10px;">
+            <div class="vvAnnThicknessElement" style="width: 1px;">
+            </div>
+        </div>
+        <div class="vvAnnThicknessCell" style="left:25px; width:10px;">
+            <div class="vvAnnThicknessElement" style="width: 2px;">
+            </div>
+        </div>
+        <div class="vvAnnThicknessCell" style="left:40px; width:10px;">
+            <div class="vvAnnThicknessElement" style="width: 3px;">
+            </div>
+        </div>
+        <div class="vvAnnThicknessCell" style="left:55px; width:10px;">
+            <div class="vvAnnThicknessElement" style="width: 4px;">
+            </div>
+        </div>
+        <div class="vvAnnThicknessCell" style="left:70px; width:10px;">
+            <div class="vvAnnThicknessElement" style="width: 5px;">
+            </div>
+        </div>
+        <div class="vvAnnThicknessCell" style="left:85px; width:10px;">
+            <div class="vvAnnThicknessElement" style="width: 6px;">
+            </div>
+        </div>
+        <div class="vvAnnThicknessCell" style="left:100px; width:10px;">
+            <div class="vvAnnThicknessElement" style="width: 7px;">
+            </div>
+        </div>
+        <div class="vvAnnThicknessCell" style="left:115px; width:10px;">
+            <div class="vvAnnThicknessElement" style="width: 8px;">
+            </div>
+        </div>
+        <div class="vvAnnThicknessCell" style="left:130px; width:10px;">
+            <div class="vvAnnThicknessElement" style="width: 9px;">
+            </div>
+        </div>
+    </div>
+
+    <div id="vvAnnText">
+        <div id="vvAnnTextFace">
+            <div data-localize="annPopUp.fontFaceLabel.value" id="vvAnnTextFaceLabel">Font: </div>
+            <div id="vvAnnTextFaceValue">
+                <select id="vvAnnTextFaceSelect">
+                </select>
+            </div>
+        </div>
+
+        <div id="vvAnnTextSize">
+            <div data-localize="annPopUp.fontSizeLabel.value" id="vvAnnTextSizeLabel">Font Size: </div>
+            <div id="vvAnnTextSizeValue">
+                <select id="vvAnnTextSizeSelect">
+                </select>
+            </div>
+        </div>
+
+        <form id="vvAnnTextStyle">
+            <input id="vvAnnTextStyleBold" type="checkbox" name="Bold" value="Bold" /><b data-localize="annPopUp.bold">Bold</b>
+            <input id="vvAnnTextStyleItalic" type="checkbox" name="Italic" value="Italic" /><i data-localize="annPopUp.italic">Italic</i>
+            <!--<input id="vvAnnTextStyleUnderline" type="checkbox" name="Underline" value="Underline" /><u data-localize="annPopUp.underline">Underline</u></input>-->
+        </form>
+
+    </div>
+
+    <input data-localize="annPopUp.deleteAnn"
+           id="vvAnnDeleteButton"
+           class="vvAnnPopUpButton"
+           type="button"
+           value="Delete"
+           title="Delete" />
+</div>
+
+<div id="vvLayerManagerDiv">
+    <div id="vvLayerManagerActiveLayerFieldTitle"
+         data-localize="layerManager.activeLayer">Active Layer: </div>
+    <form id="vvLayerManagerActiveLayerField" action="%20">
+        <select id="vvLayerManagerActiveLayerSelect"></select>
+        <input id="vvLayerManagerAddLayerButton" type="button"
+               onmousedown="javascript:myFlexSnap.buttonDown('vvLayerManagerAddLayerButton')"
+               onmouseup="javascript:myFlexSnap.buttonUp('vvLayerManagerAddLayerButton')"
+               value="+"
+               class="layerManagerButton"
+               data-localize="layerManager.addLayer"
+               title="Create New Layer" />
+        <input id="vvLayerManagerDeleteLayerButton" type="button"
+               onmousedown="javascript:myFlexSnap.buttonDown('vvLayerManagerDeleteLayerButton')"
+               onmouseup="javascript:myFlexSnap.buttonUp('vvLayerManagerDeleteLayerButton')"
+               value="-"
+               class="layerManagerButton"
+               data-localize="layerManager.deleteLayer"
+               title="Delete Layer" />
+        <input id="vvLayerManagerRenameLayerButton" type="button"
+               onmousedown="javascript:myFlexSnap.buttonDown('vvLayerManagerRenameLayerButton')"
+               onmouseup="javascript:myFlexSnap.buttonUp('vvLayerManagerRenameLayerButton')"
+               value="N"
+               class="layerManagerButton"
+               data-localize="layerManager.renameLayer"
+               title="Rename Layer" />
+        <input id="vvLayerManagerRedactLayerButton" type="button"
+               onmousedown="javascript:myFlexSnap.buttonDown('vvLayerManagerRedactLayerButton')"
+               onmouseup="javascript:myFlexSnap.buttonUp('vvLayerManagerRedactLayerButton')"
+               value="R"
+               class="layerManagerButton"
+               data-localize="layerManager.redactLayer"
+               title="Redact Layer" />
+    </form>
+
+
+    <div data-localize="layerManager.layerVisibility"
+         id="vvLayerManagerVisibilityControlTitle">Layer Visibility: </div><form id="vvLayerManagerVisibilityControl" action="%20">
+</form>
+</div>
+
+<div id="vvSafariSVGWorkaround"></div>
+</body>
+</html>

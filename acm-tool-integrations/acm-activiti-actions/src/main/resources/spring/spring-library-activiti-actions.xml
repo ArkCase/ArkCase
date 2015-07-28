@@ -12,12 +12,9 @@
                 <value>processDefinitionKey</value>
             </list>
         </property>
-
     </bean>
 
-    <bean id="startBusinessProcessImpl" class="com.armedia.acm.activiti.StartBusinessProcess">
-        <property name="runtimeService" ref="activitiRuntimeService"/>
-    </bean>
+
 
 
 

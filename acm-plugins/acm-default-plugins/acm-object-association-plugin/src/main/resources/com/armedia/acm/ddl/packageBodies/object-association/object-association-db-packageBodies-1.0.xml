@@ -4,7 +4,7 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-update-association-names-package-body" author="dmiller" runOnChange="true">
+    <changeSet id="01-update-association-names-package-body" author="dmiller" runOnChange="true" dbms="oracle">
         <createProcedure>
             CREATE OR REPLACE PACKAGE BODY pkg_update_association_names
             AS

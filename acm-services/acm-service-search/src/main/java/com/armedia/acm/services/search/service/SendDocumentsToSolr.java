@@ -1,15 +1,13 @@
 package com.armedia.acm.services.search.service;
 
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
-import com.armedia.acm.spring.SpringContextHolder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,14 +19,13 @@ import java.util.List;
  */
 public class SendDocumentsToSolr
 {
-    private SpringContextHolder contextHolder;
-
-    private MuleClient muleClient;
+    private MuleContextManager muleContextManager;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final ObjectMapper mapper = new ObjectMapperFactory().createObjectMapper();
 
+    // this method is used from Mule, do not delete it!
     public String asJsonArray(SolrBaseDocument document) throws JsonProcessingException
     {
         log.debug("Converting a document to a JSON array");
@@ -42,8 +39,6 @@ public class SendDocumentsToSolr
     {
         sendToJmsQueue(solrDocuments, "jms://solrAdvancedSearch.in");
     }
-
-
 
     public void sendSolrQuickSearchDocuments(List<SolrDocument> solrDocuments)
     {
@@ -110,8 +105,7 @@ public class SendDocumentsToSolr
             {
                 log.debug("Sending JSON to SOLR: " + json);
             }
-
-            getMuleClient().dispatch(queueName, json, null);
+            getMuleContextManager().dispatch(queueName, json);
             if ( log.isDebugEnabled() )
             {
                 log.debug("Returning JSON: " + json);
@@ -128,7 +122,7 @@ public class SendDocumentsToSolr
             if ( log.isDebugEnabled() ) {
                 log.debug("Sending POJO to SOLR: " + solrDocument);
             }
-            getMuleClient().dispatch(queueName, solrDocument, null);
+            getMuleContextManager().dispatch(queueName, solrDocument);
         }
         catch ( MuleException e ) {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
@@ -140,7 +134,8 @@ public class SendDocumentsToSolr
         try
         {
             String json = mapper.writeValueAsString(solrDocuments);
-            getMuleClient().dispatch(queueName, json, null);
+
+            getMuleContextManager().dispatch(queueName, json);
             if ( log.isDebugEnabled() )
             {
                 log.debug("Returning JSON: " + json);
@@ -152,25 +147,13 @@ public class SendDocumentsToSolr
         }
     }
 
-    public synchronized MuleClient getMuleClient()
+    public MuleContextManager getMuleContextManager()
     {
-        if ( muleClient == null )
-        {
-            muleClient = getContextHolder().getAllBeansOfType(MuleClient.class).values().iterator().next();
-        }
-
-        return muleClient;
+        return muleContextManager;
     }
 
-
-    public SpringContextHolder getContextHolder()
+    public void setMuleContextManager(MuleContextManager muleContextManager)
     {
-        return contextHolder;
+        this.muleContextManager = muleContextManager;
     }
-
-    public void setContextHolder(SpringContextHolder contextHolder)
-    {
-        this.contextHolder = contextHolder;
-    }
-
 }
