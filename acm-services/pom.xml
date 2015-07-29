@@ -41,6 +41,8 @@
         <module>acm-service-costsheet</module>
         <module>acm-service-ms-outlook-integration</module>
         <module>acm-service-config</module>
+        <module>acm-service-form-configuration</module>
+        <module>acm-service-object-change-status</module>
     </modules>
 
 

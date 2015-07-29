@@ -1,8 +1,11 @@
 package com.armedia.acm.activiti.services.dao;
 
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
-import com.armedia.acm.data.AcmAbstractDao;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -10,11 +13,16 @@ import java.util.List;
 /**
  * Created by nebojsha on 14.04.2015.
  */
-public class AcmBpmnDao extends AcmAbstractDao<AcmProcessDefinition> {
+public class AcmBpmnDao  {
 
-    @Override
-    protected Class<AcmProcessDefinition> getPersistenceClass() {
-        return AcmProcessDefinition.class;
+    @PersistenceContext
+    private EntityManager em;
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public AcmProcessDefinition save(AcmProcessDefinition toSave)
+    {
+        AcmProcessDefinition saved = em.merge(toSave);
+        return saved;
     }
 
 
@@ -94,5 +102,15 @@ public class AcmBpmnDao extends AcmAbstractDao<AcmProcessDefinition> {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public EntityManager getEm()
+    {
+        return em;
+    }
+
+    public void setEm(EntityManager em)
+    {
+        this.em = em;
     }
 }
