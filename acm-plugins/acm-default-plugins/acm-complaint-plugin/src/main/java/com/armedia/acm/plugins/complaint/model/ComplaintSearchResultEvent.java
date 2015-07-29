@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.complaint.model;
 
-import com.armedia.acm.event.AcmEvent;
+import com.armedia.acm.core.model.AcmEvent;
 
 import java.util.Date;
 

@@ -3,17 +3,18 @@
  */
 package com.armedia.acm.service.objecthistory.model;
 
+import com.armedia.acm.core.model.AcmEvent;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.armedia.acm.event.AcmEvent;
 
 /**
  * @author riste.tutureski
  *
  */
-public class AcmAssigneeChangeEvent extends AcmEvent{
+public class AcmAssigneeChangeEvent extends AcmEvent
+{
 
 	private static final long serialVersionUID = -969356637766220472L;
 	

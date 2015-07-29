@@ -1,13 +1,15 @@
 package com.armedia.acm.plugins.dashboard.model.widget;
 
-import com.armedia.acm.event.AcmEvent;
+
+import com.armedia.acm.core.model.AcmEvent;
 
 import java.util.Date;
 
 /**
  * Created by marjan.stefanoski on 9/22/2014.
  */
-public class WidgetRolePersistenceEvent extends AcmEvent {
+public class WidgetRolePersistenceEvent extends AcmEvent
+{
     private static final String OBJECT_TYPE = "WIDGET_ROLE";
 
     public WidgetRolePersistenceEvent(WidgetRole source) {

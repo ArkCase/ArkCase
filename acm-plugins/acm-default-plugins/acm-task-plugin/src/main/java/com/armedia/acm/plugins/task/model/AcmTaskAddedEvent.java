@@ -1,11 +1,12 @@
 package com.armedia.acm.plugins.task.model;
 
-import com.armedia.acm.event.AcmEvent;
+import com.armedia.acm.core.model.AcmEvent;
 
 /**
  * Created by marjan.stefanoski on 11.02.2015.
  */
-public class AcmTaskAddedEvent extends AcmEvent {
+public class AcmTaskAddedEvent extends AcmEvent
+{
 
     private static final String EVENT_TYPE = "com.armedia.acm.task.added";
 

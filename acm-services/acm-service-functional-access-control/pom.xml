@@ -46,6 +46,12 @@
             <artifactId>spring-security-core</artifactId>
         </dependency>
 
+         <!-- commons -->
+         <dependency>
+             <groupId>commons-lang</groupId>
+             <artifactId>commons-lang</artifactId>
+         </dependency>
+
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
