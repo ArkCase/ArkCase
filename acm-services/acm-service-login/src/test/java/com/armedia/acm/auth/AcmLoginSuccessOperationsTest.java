@@ -69,6 +69,7 @@ public class AcmLoginSuccessOperationsTest extends EasyMockSupport
 
         expect(mockRequest.getSession(true)).andReturn(mockSession);
         mockSession.setAttribute("acm_application", app);
+        mockSession.setAttribute("acm_object_types", "[]");
 
         replayAll();
 
