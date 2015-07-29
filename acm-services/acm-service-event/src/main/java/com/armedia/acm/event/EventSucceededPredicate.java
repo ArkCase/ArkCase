@@ -1,5 +1,6 @@
 package com.armedia.acm.event;
 
+import com.armedia.acm.core.model.AcmEvent;
 import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,15 +1,9 @@
 package com.armedia.acm.core;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -18,8 +12,6 @@ import org.slf4j.LoggerFactory;
 public class AcmApplication implements Serializable
 {
     private static final long serialVersionUID = -4533090175042467646L;
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private String applicationName;
     private List<AcmUserAction> topbarActions;
@@ -75,28 +67,6 @@ public class AcmApplication implements Serializable
 
     public void setIssueCollectorFlag(Boolean issueCollectorFlag) {
         this.issueCollectorFlag = issueCollectorFlag;
-    }
-
-//    public String toJson() {
-//        String json = "[]";
-//        ObjectMapper om = new ObjectMapper();
-//        try {
-//            json =  om.writeValueAsString(this);
-//        } catch (JsonProcessingException e) {
-//            log.error(e.getMessage());
-//        }
-//        return json;
-//    }
-
-    public String getObjectTypesAsJson() {
-        String json = "[]";
-        ObjectMapper om = new ObjectMapper();
-        try {
-            json =  om.writeValueAsString(getObjectTypes());
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage());
-        }
-        return json;
     }
 
     public List<AcmObjectType> getBusinessObjects()

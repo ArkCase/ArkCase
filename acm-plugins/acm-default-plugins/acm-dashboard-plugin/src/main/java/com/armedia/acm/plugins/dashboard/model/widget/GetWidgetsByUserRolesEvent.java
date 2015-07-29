@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.dashboard.model.widget;
 
 import com.armedia.acm.event.AcmEvent;
-import com.armedia.acm.plugins.dashboard.model.Dashboard;
 
 import java.util.Date;
 import java.util.List;

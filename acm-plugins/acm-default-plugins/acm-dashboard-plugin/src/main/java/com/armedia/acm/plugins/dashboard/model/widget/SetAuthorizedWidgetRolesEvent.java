@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.dashboard.model.widget;
 import com.armedia.acm.event.AcmEvent;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by marjan.stefanoski on 10/7/2014.

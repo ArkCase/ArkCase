@@ -1,9 +1,6 @@
 package com.armedia.acm.plugins.task.model;
 
-import com.armedia.acm.activiti.AcmTaskEvent;
 import com.armedia.acm.event.AcmEvent;
-
-import java.util.Date;
 
 /**
  * Created by marjan.stefanoski on 11.02.2015.
