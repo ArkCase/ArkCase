@@ -1,4 +1,4 @@
-package com.armedia.acm.service.outlook.exception;
+package com.armedia.acm.core.exceptions;
 
 /**
  * Created by armdev on 4/20/15.

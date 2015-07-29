@@ -1,6 +1,7 @@
 package com.armedia.acm.crypto;
 
-import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
+
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 
 /**
  * Created by nebojsha on 09.05.2015.

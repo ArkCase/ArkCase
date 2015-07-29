@@ -9,7 +9,6 @@ import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookFolder;
 import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
 import com.armedia.acm.service.outlook.service.OutlookFolderService;
-import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
