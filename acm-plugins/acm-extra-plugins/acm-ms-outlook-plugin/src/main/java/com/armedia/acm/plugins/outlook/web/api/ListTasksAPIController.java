@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.outlook.web.api;
 
-import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
@@ -36,7 +36,8 @@ public class ListTasksAPIController {
             @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
             Authentication authentication,
             HttpSession session
-    ) throws AcmEncryptionException {
+    ) throws AcmEncryptionException
+    {
 
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");

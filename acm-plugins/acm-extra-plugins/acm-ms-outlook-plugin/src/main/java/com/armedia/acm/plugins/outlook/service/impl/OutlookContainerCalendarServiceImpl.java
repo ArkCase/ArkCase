@@ -1,10 +1,10 @@
 package com.armedia.acm.plugins.outlook.service.impl;
 
+import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
+import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
-import com.armedia.acm.service.outlook.exception.AcmOutlookCreateItemFailedException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookItemNotFoundException;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookFolder;
 import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
@@ -51,7 +51,8 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
     public OutlookFolder createFolder(
                                       String folderName,
                                       AcmContainer container,
-                                      List<AcmParticipant> participants) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException {
+                                      List<AcmParticipant> participants) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException
+    {
 
         OutlookFolder outlookFolder = new OutlookFolder();
         outlookFolder.setDisplayName(folderName);

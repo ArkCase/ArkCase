@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.outlook.web.api;
 
-import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
@@ -32,7 +32,8 @@ public class CreateCalendarAppointmentAPIController {
     public OutlookCalendarItem createCalendarAppointment(
             @RequestBody OutlookCalendarItem in,
             Authentication authentication,
-            HttpSession session) throws AcmEncryptionException {
+            HttpSession session) throws AcmEncryptionException
+    {
 
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
