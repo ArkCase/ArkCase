@@ -1,6 +1,8 @@
 ark-web.iml
 
-bower_components/
+# Node, npm and bower folders
 etc/
 node/
 node_modules/
+
+src/main/webapp/lib/
