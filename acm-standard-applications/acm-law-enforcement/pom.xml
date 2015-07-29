@@ -301,8 +301,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-object-change-status</artifactId>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-object-change-status</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
