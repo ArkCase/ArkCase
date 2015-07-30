@@ -1,4 +1,4 @@
-package com.armedia.acm.event;
+package com.armedia.acm.core.model;
 
 import org.springframework.context.ApplicationEvent;
 

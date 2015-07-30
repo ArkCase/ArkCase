@@ -1,4 +1,4 @@
-package com.armedia.acm.service.outlook.exception;
+package com.armedia.acm.core.exceptions;
 
 
 public class AcmOutlookListItemsFailedException extends AcmOutlookException {

@@ -1,13 +1,14 @@
 package com.armedia.acm.plugins.casefile.model;
 
-import com.armedia.acm.event.AcmEvent;
+import com.armedia.acm.core.model.AcmEvent;
 
 import java.util.Date;
 
 /**
  * Created by marjan.stefanoski on 11.02.2015.
  */
-public class FileAddedEvent extends AcmEvent {
+public class FileAddedEvent extends AcmEvent
+{
 
     private static final String EVENT_TYPE = "com.armedia.acm.casefile.file.added";
 
