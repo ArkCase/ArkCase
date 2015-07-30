@@ -1,20 +1,24 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.alfrescorma.model.AcmRecord;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.*;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -27,6 +31,7 @@ public class AlfrescoRecordsService
 
     private EcmFileService ecmFileService;
     private Properties alfrescoRmaProperties;
+    private Map<String, Object> alfrescoRmaPropertiesMap;
     private MuleContextManager muleContextManager;
     private EcmFileDao ecmFileDao;
 
@@ -48,14 +53,11 @@ public class AlfrescoRecordsService
     public void declareAllFilesInFolderAsRecords(AcmCmisObjectList folder,AcmContainer container, Date receiveDate,
                                                   String recordFolderName)
     {
-        declareAsRecords(folder,container,receiveDate,recordFolderName);
+        declareAsRecords(folder, container, receiveDate, recordFolderName);
     }
 
     public void declareAsRecords(AcmCmisObjectList files,AcmContainer container, Date receiveDate,
                                  String recordFolderName){
-
-        Map<String, Object> messageProperties = getRmaMessageProperties();
-        log.info("Found messageProperties : " + messageProperties);
 
         for ( AcmCmisObject file : files.getChildren() )
         {
@@ -97,7 +99,8 @@ public class AlfrescoRecordsService
                         log.trace("Sending JMS message.");
                     }
 
-                    getMuleContextManager().dispatch(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, messageProperties);
+                    getMuleContextManager().send(
+                            AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, getAlfrescoRmaPropertiesMap());
                     setFileStatusAsRecord(file.getObjectId());
                     if ( log.isTraceEnabled() )
                     {
@@ -134,12 +137,6 @@ public class AlfrescoRecordsService
         }
     }
 
-    public Map<String, Object> getRmaMessageProperties()
-    {
-        String rmaModuleVersion = getAlfrescoRmaProperties().getProperty(AlfrescoRmaPluginConstants.RMA_MODULE_VERSION_KEY);
-        return Collections.singletonMap("alfresco_rma_module_version", rmaModuleVersion);
-    }
-
     public boolean checkIntegrationEnabled(String integrationPointKey)
     {
         String integrationEnabledKey = "alfresco.rma.integration.enabled";
@@ -173,6 +170,17 @@ public class AlfrescoRecordsService
     public void setAlfrescoRmaProperties(Properties alfrescoRmaProperties)
     {
         this.alfrescoRmaProperties = alfrescoRmaProperties;
+
+        if ( alfrescoRmaProperties != null )
+        {
+            Map<String, Object> stringObjectMap = new HashMap<>();
+            alfrescoRmaProperties.
+                    entrySet().
+                    stream().
+                    filter((entry) -> entry.getKey() != null).
+                    forEach((entry) -> stringObjectMap.put((String) entry.getKey(), entry.getValue()));
+            setAlfrescoRmaPropertiesMap(stringObjectMap);
+        }
     }
 
     public Properties getAlfrescoRmaProperties()
@@ -189,4 +197,13 @@ public class AlfrescoRecordsService
         this.ecmFileDao = ecmFileDao;
     }
 
+    public Map<String, Object> getAlfrescoRmaPropertiesMap()
+    {
+        return alfrescoRmaPropertiesMap;
+    }
+
+    protected void setAlfrescoRmaPropertiesMap(Map<String, Object> alfrescoRmaPropertiesMap)
+    {
+        this.alfrescoRmaPropertiesMap = alfrescoRmaPropertiesMap;
+    }
 }

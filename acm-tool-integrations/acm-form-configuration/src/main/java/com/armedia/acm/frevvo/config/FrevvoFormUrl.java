@@ -3,9 +3,8 @@
  */
 package com.armedia.acm.frevvo.config;
 
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -98,7 +97,7 @@ public class FrevvoFormUrl implements FormUrl {
 		
 		String tenant = getTenant();
 		String user = getDesignerUser();
-		String applicationId = getApplicationId();
+		String applicationId = plain == false ? (String) properties.get(formName + ".application.id") : (String) getPlainFormProperties().get(formName + ".application.id");
 		String type = plain == false ? (String) properties.get(formName + ".type") : (String) getPlainFormProperties().get(formName + ".type");
 		String mode = plain == false ? (String) properties.get(formName + ".mode") : (String) getPlainFormProperties().get(formName + ".mode");
 		String token = this.authenticationTokenService.getTokenForAuthentication(authentication);
@@ -252,11 +251,18 @@ public class FrevvoFormUrl implements FormUrl {
 		return null;
 	}
 	
-	public String getApplicationId()
+	public List<String> getPlainFormApplicationIds()
 	{
-		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.APPLICATION_ID)) 
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.PLAIN_FORM_APPLICATION_IDS))
 		{
-			return (String) getProperties().get(FrevvoFormConstants.APPLICATION_ID);
+			String applicationIdsAsString = (String) getProperties().get(FrevvoFormConstants.PLAIN_FORM_APPLICATION_IDS);
+			if (applicationIdsAsString != null && !applicationIdsAsString.isEmpty())
+			{
+				String[] applicationIdsAsArray = applicationIdsAsString.split(",", -1);
+				List<String> applicationIds = Arrays.asList(applicationIdsAsArray);
+
+				return applicationIds.stream().map(element -> element.trim()).collect(Collectors.toList());
+			}
 		}
 		
 		return null;
