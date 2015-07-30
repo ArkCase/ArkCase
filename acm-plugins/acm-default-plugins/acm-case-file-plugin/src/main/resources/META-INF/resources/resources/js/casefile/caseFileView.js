@@ -2061,11 +2061,15 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE    ,this.onModelSavedAssignee);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_GROUP	    ,this.onModelSavedGroup);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT      ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_GROUPS        ,this.onModelRetrievedGroups);
         }
         ,onInitialized: function() {
         }
 
         ,onModelRetrievedObject: function(objData) {
+            AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+        }
+        ,onModelRetrievedGroups: function(objData) {
             AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
         }
         ,onModelSavedAssignee: function(caseFileId, assginee) {
