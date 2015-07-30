@@ -1,8 +1,8 @@
 package com.armedia.acm.plugins.profile.service;
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.crypto.AcmCryptoUtils;
-import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
@@ -21,7 +21,8 @@ public class UserOrgServiceImpl implements UserOrgService {
     private AcmCryptoUtils acmCryptoUtils;
 
     @Override
-    public OutlookDTO retrieveOutlookPassword(Authentication authentication) throws AcmEncryptionException {
+    public OutlookDTO retrieveOutlookPassword(Authentication authentication) throws AcmEncryptionException
+    {
 
         OutlookDTO retval = userOrgDao.retrieveOutlookPassword(authentication);
 

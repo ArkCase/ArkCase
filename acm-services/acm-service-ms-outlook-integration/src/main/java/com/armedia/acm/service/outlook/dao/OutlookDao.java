@@ -1,9 +1,9 @@
 package com.armedia.acm.service.outlook.dao;
 
-import com.armedia.acm.service.outlook.exception.AcmOutlookConnectionFailedException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookCreateItemFailedException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookFindItemsFailedException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookItemNotFoundException;
+import com.armedia.acm.core.exceptions.AcmOutlookConnectionFailedException;
+import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
+import com.armedia.acm.core.exceptions.AcmOutlookFindItemsFailedException;
+import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
 import com.armedia.acm.service.outlook.model.OutlookContactItem;

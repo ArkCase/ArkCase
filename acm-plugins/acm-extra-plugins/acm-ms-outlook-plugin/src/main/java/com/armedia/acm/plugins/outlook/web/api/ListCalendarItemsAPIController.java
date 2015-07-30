@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.outlook.web.api;
 
-import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;

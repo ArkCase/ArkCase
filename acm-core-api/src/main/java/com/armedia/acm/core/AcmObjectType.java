@@ -1,7 +1,5 @@
 package com.armedia.acm.core;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.List;
 
 /**
@@ -62,7 +60,7 @@ public class AcmObjectType
         this.iconName = iconName;
     }
 
-    @JsonIgnore
+//    @JsonIgnore
     public List<AcmObjectState> getStates()
     {
         return states;
@@ -73,7 +71,7 @@ public class AcmObjectType
         this.states = states;
     }
 
-    @JsonIgnore
+//    @JsonIgnore
     public List<AcmParticipantType> getParticipantTypes()
     {
         return participantTypes;

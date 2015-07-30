@@ -1,8 +1,7 @@
 package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
-import com.armedia.acm.event.AcmEvent;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.core.model.AcmEvent;
 import org.springframework.security.core.Authentication;
 
 import java.util.Date;
