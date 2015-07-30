@@ -1,6 +1,7 @@
 package com.armedia.acm.activiti;
 
-import com.armedia.acm.event.AcmEvent;
+
+import com.armedia.acm.core.model.AcmEvent;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

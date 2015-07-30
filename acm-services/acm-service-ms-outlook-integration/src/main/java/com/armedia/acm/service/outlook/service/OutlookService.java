@@ -1,18 +1,17 @@
 package com.armedia.acm.service.outlook.service;
 
+import com.armedia.acm.core.exceptions.AcmOutlookConnectionFailedException;
+import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
+import com.armedia.acm.core.exceptions.AcmOutlookException;
+import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
+import com.armedia.acm.core.exceptions.AcmOutlookListItemsFailedException;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
-import com.armedia.acm.service.outlook.exception.AcmOutlookConnectionFailedException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookCreateItemFailedException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookItemNotFoundException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookListItemsFailedException;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
 import com.armedia.acm.service.outlook.model.OutlookContactItem;
 import com.armedia.acm.service.outlook.model.OutlookMailItem;
 import com.armedia.acm.service.outlook.model.OutlookResults;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
-
 import microsoft.exchange.webservices.data.enumeration.DeleteMode;
 import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
 import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;

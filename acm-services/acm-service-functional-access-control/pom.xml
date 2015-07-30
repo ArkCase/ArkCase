@@ -20,11 +20,6 @@
             <artifactId>acm-spring-data-source</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-core-object-model</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
 		<dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-users</artifactId>
@@ -45,6 +40,12 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
         </dependency>
+
+         <!-- commons -->
+         <dependency>
+             <groupId>commons-lang</groupId>
+             <artifactId>commons-lang</artifactId>
+         </dependency>
 
         <!-- logging -->
         <dependency>

@@ -14,88 +14,16 @@
     <description>Service returns configuration settings</description>
 
     <dependencies>
-        <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>com.armedia.acm.acm-tool-integrations</groupId>-->
-            <!--<artifactId>acm-spring-data-source</artifactId>-->
-            <!--<version>${acm.version}</version>-->
-            <!--<scope>runtime</scope>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>com.armedia.acm.acm-services</groupId>-->
-            <!--<artifactId>acm-service-data</artifactId>-->
-            <!--<version>${acm.version}</version>-->
-        <!--</dependency>-->
-
 
         <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-plugin-manager</artifactId>
+            <groupId>com.armedia.acm</groupId>
+            <artifactId>acm-core-api</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>com.armedia.acm.acm-services</groupId>-->
-            <!--<artifactId>acm-service-event</artifactId>-->
-            <!--<version>${acm.version}</version>-->
-        <!--</dependency>-->
-
         <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-cmis-configuration</artifactId>
+            <groupId>com.armedia.acm</groupId>
+            <artifactId>acm-web</artifactId>
             <version>${acm.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>-->
-            <!--<artifactId>acm-object-association-plugin</artifactId>-->
-            <!--<version>${acm.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>com.armedia.acm.acm-services</groupId>-->
-            <!--<artifactId>acm-service-configuration</artifactId>-->
-            <!--<version>${acm.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>com.armedia.acm.acm-services</groupId>-->
-            <!--<artifactId>acm-service-ecm</artifactId>-->
-            <!--<version>${acm.version}</version>-->
-        <!--</dependency>-->
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-core-object-model</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <!--<dependency>-->
-            <!--<groupId>com.armedia.acm</groupId>-->
-            <!--<artifactId>acm-web</artifactId>-->
-            <!--<version>${acm.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>com.armedia.acm.acm-tool-integrations</groupId>-->
-            <!--<artifactId>acm-spring-data-source</artifactId>-->
-            <!--<version>${acm.version}</version>-->
-        <!--</dependency>-->
-
-
-        <!-- bean validation -->
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>javax.el-api</artifactId>
         </dependency>
 
         <!-- logging -->
@@ -104,36 +32,12 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
-        <!-- json -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>${org.json.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>${jackson-mapper-asl.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${fasterxml-jackson-core.version}</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${fasterxml-jackson-core.version}</version>
-        </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>com.google.code.gson</groupId>-->
-            <!--<artifactId>gson</artifactId>-->
-            <!--<version>${gson.version}</version>-->
-        <!--</dependency>-->
 
         <!-- servlet -->
         <dependency>
@@ -141,8 +45,6 @@
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
-
-
 
         <!-- testing -->
         <dependency>
@@ -154,12 +56,6 @@
             <artifactId>spring-test</artifactId>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>com.oracle</groupId>-->
-            <!--<artifactId>jdbc</artifactId>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
-
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -169,22 +65,16 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.codehaus.castor</groupId>
-            <artifactId>castor-xml</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-oxm</artifactId>
-            <scope>test</scope>
-        </dependency>
 
     </dependencies>
 

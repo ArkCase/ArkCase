@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.dashboard.model;
 
-import com.armedia.acm.event.AcmEvent;
+import com.armedia.acm.core.model.AcmEvent;
 
 import java.util.Date;
 
@@ -8,7 +8,8 @@ import java.util.Date;
  * Created by marst on 7/31/14.
  */
 
-public class DashboardPersistenceEvent extends AcmEvent {
+public class DashboardPersistenceEvent extends AcmEvent
+{
 
     private static final String OBJECT_TYPE = "DASHBOARD";
 
