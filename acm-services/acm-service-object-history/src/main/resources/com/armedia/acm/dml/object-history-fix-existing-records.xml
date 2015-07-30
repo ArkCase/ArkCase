@@ -1,0 +1,18 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!--
+        this is necessary because for JPA+JSON extensibility we added "@class" attribute
+        which later was renamed to "className", and the history records which contain
+        "@class" attribute are causing unmarshalling errors
+    -->
+    <changeSet id="01-object-history-content-replace" author="ilinpetar">
+        <sql>
+            UPDATE acm_object_history SET cm_object_string = REPLACE(cm_object_string, '"@class"', '"className"')
+            WHERE cm_object_string LIKE '%"@class"%';
+        </sql>
+    </changeSet>
+</databaseChangeLog>
