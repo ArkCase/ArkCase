@@ -19,6 +19,8 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
                 doc:name="JMS"/>
         <timer-interceptor/>
 
+        <flow-ref name="set-alfresco-properties" doc:name="Set RMA params"/>
+
         <set-variable variableName="record-folder-name" value="#[message.payload.folderName]" doc:name="Rec Folder"/>
         <set-variable variableName="category-folder-name" value="#[message.payload.categoryFolder]" doc:name="Category Folder"/>
         <set-variable variableName="record-folder-rma-id" value="#[flowVars['record-folder-name']]_#[flowVars['category-folder-name']]" doc:name="Rec Folder RMA ID"/>
@@ -48,6 +50,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 
     <sub-flow name="declare-and-complete-record" doc:name="declare-and-complete-record">
 
+        <flow-ref name="set-alfresco-properties" doc:name="Set RMA params"/>
         <flow-ref name="set-rma-params" doc:name="Set RMA params"/>
         <flow-ref name="get-alfresco-ticket" doc:name="Get Ticket"/>
         <logger category="com.armedia" level="INFO" message="Ticket results: #[flowVars['alfTicket']]"/>
@@ -91,7 +94,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 
     </sub-flow>
 
-    <sub-flow name="set-rma-params" doc:name="set-rma-params">
+    <sub-flow name="set-alfresco-properties" doc:name="Store Alfresco connection properties in flow variables">
         <logger level="DEBUG" category="com.armedia.acm.plugins.alfrescorma.mule" message="Ark RMA User: #[message.inboundProperties['alfresco_user']]"/>
         <set-variable variableName="alfresco.host" value="#[message.inboundProperties['alfresco_host']]"/>
         <set-variable variableName="alfresco.port" value="#[message.inboundProperties['alfresco_port']]"/>
@@ -99,6 +102,10 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
         <set-variable variableName="rma.root.folder" value="#[message.inboundProperties['rma_root_folder']]"/>
         <set-variable variableName="alfresco.user" value="#[message.inboundProperties['alfresco_user']]"/>
         <set-variable variableName="alfresco.password" value="#[message.inboundProperties['alfresco_password']]"/>
+    </sub-flow>
+
+    <sub-flow name="set-rma-params" doc:name="set-rma-params">
+
         <logger category="com.armedia.acm.plugins.alfrescorma.mule" level="DEBUG" message="User: #[flowVars['alfresco.user']] #[flowVars['alfresco.password']]"/>
         <set-variable variableName="category-folder-name" value="#[message.payload.categoryFolder]" doc:name="Cat. Folder"/>
         <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Category folder (in payload): #[message.payload.categoryFolder]"/>
