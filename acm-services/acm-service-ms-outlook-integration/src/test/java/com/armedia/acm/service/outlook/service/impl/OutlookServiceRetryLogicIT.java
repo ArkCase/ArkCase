@@ -1,11 +1,9 @@
 package com.armedia.acm.service.outlook.service.impl;
 
+import com.armedia.acm.core.exceptions.AcmOutlookException;
+import com.armedia.acm.core.exceptions.AcmOutlookFindItemsFailedException;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
-import com.armedia.acm.service.outlook.exception.AcmOutlookException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookFindItemsFailedException;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.service.outlook.model.OutlookResults;
-import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
@@ -21,8 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.ArrayList;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;

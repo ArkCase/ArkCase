@@ -1,13 +1,13 @@
 package com.armedia.acm.plugins.ecm.model.event;
 
-
-import com.armedia.acm.event.AcmEvent;
+import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 
 import java.util.Date;
 
-public class AcmFolderPersistenceEvent extends AcmEvent {
+public class AcmFolderPersistenceEvent extends AcmEvent
+{
 
 
     public AcmFolderPersistenceEvent(AcmFolder source, String userId, String ipAddress) {

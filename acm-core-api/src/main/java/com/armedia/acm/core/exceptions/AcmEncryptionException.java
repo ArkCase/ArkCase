@@ -1,4 +1,4 @@
-package com.armedia.acm.crypto.exceptions;
+package com.armedia.acm.core.exceptions;
 
 public class AcmEncryptionException extends Exception {
 

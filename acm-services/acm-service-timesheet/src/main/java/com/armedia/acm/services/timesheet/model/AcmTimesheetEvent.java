@@ -5,14 +5,15 @@ package com.armedia.acm.services.timesheet.model;
 
 import java.util.Date;
 
-import com.armedia.acm.event.AcmEvent;
+import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 
 /**
  * @author riste.tutureski
  *
  */
-public class AcmTimesheetEvent extends AcmEvent {
+public class AcmTimesheetEvent extends AcmEvent
+{
 
 	private static final long serialVersionUID = 7323464693900974967L;
 	

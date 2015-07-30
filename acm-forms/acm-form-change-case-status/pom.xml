@@ -16,9 +16,9 @@
   	
   	<dependencies>
     	<!-- acm -->
-    	<dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-form-configuration</artifactId>
+        <dependency>
+            <groupId>com.armedia.acm.com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-form-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
         
@@ -33,10 +33,10 @@
             <artifactId>acm-service-users</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+
         <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-object-change-status</artifactId>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-object-change-status</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

@@ -5,7 +5,7 @@ package com.armedia.acm.form.changecasestatus.model;
 
 import java.util.Date;
 
-import com.armedia.acm.event.AcmEvent;
+import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 
@@ -13,7 +13,8 @@ import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
  * @author riste.tutureski
  *
  */
-public class ChangeCaseStatusFormEvent extends AcmEvent {
+public class ChangeCaseStatusFormEvent extends AcmEvent
+{
 	
 	
 	private static final long serialVersionUID = 9214955996048509545L;
