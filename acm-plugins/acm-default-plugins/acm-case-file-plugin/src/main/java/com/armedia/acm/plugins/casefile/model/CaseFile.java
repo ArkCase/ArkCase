@@ -121,7 +121,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     private String objectType = CaseFileConstants.OBJECT_TYPE;
 
     @Column(name = "cm_class_name")
-    private String className;
+    private String className = this.getClass().getName();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({
@@ -626,7 +626,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
                 ", container=" + container +
                 ", courtroomName='" + courtroomName + '\'' +
                 ", responsibleOrganization='" + responsibleOrganization + '\'' +
-                ", nextCourtDate=" + nextCourtDate +
+                ", nextCourtDate=" + nextCourtDate + '\'' +
+                ", className='" + className +
                 '}';
     }
 }

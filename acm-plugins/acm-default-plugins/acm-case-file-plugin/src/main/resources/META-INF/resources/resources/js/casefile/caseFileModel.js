@@ -1364,11 +1364,13 @@ CaseFile.Model = CaseFile.Model || {
         }
         
         ,refreshAssigneesAndGroups: function() {
-        	var caseFileId = CaseFile.View.getActiveCaseFileId();
-        	
+        	var caseFileId = CaseFile.Model.getCaseFileId();
+        	var caseFile = CaseFile.Model.getCaseFile();
+        	if(Acm.isNotEmpty(caseFileId) && CaseFile.Model.Detail.validateCaseFile(caseFile)){
+        	    
         	var assignees = CaseFile.Model.Lookup.getAssignees(caseFileId);
             if (Acm.isEmpty(assignees)) {
-                CaseFile.Service.Lookup.retrieveAssignees();
+                CaseFile.Service.Lookup.retrieveAssignees(caseFile);
             } else {
                 CaseFile.Controller.modelFoundAssignees(assignees);
             }
@@ -1379,6 +1381,9 @@ CaseFile.Model = CaseFile.Model || {
             } else {
                 CaseFile.Controller.modelRetrievedGroups(groups);
             }
+        	}
+        	
+
         }
     }
 
