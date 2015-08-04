@@ -617,6 +617,18 @@ DocTree.View = DocTree.View || {
     ,setEditing: function(isEditing) {
         this._isEditing = isEditing;
     }
+    
+    ,mapDocumentType: function(documentType) { // maps document types case_file and roi (afdp-1249)
+    	var mappedType = documentType;
+    	var caseFileMapping = DocTree.Model.Config.caseMapping;
+    	var roiMapping = DocTree.Model.Config.roiMapping;
+    	if (documentType && documentType.trim().toLowerCase() == 'case_file') {
+    		mappedType = caseFileMapping;
+    	} else if (documentType && documentType.trim().toLowerCase() == 'roi') {
+    		mappedType = roiMapping;
+    	}
+    	return mappedType;
+    }
 
     ,CLIPBOARD : null
     ,_getDefaultTreeArgs: function() {
@@ -664,7 +676,7 @@ DocTree.View = DocTree.View || {
                 if (DocTree.View.isFolderNode(node)) {
                     ;
                 } else if (DocTree.View.isFileNode(node)) {
-                    $tdList.eq(3).text(node.data.type);
+                    $tdList.eq(3).text(DocTree.View.mapDocumentType(node.data.type)); // document type is mapped (afdp-1249)
                     $tdList.eq(4).text(Acm.getDateFromDatetime(node.data.created,$.t("common:date.short")));
                     $tdList.eq(5).text(App.Model.Users.getUserFullName(Acm.goodValue(node.data.creator)));
 
