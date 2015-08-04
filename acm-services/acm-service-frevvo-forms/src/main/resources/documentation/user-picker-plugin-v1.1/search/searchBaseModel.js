@@ -5,10 +5,6 @@
  */
 SearchBase.Model = {
     create : function(args) {
-        if (args.url) {
-            this.API_FACET_SEARCH = args.url;
-        }
-
         this.cacheResult = new Acm.Model.CacheFifo();
 
         var si = this.getDefaultSearchInfo();
@@ -17,23 +13,26 @@ SearchBase.Model = {
             this.setFixedFilters(args.filters);
             this.addFixedFilters(si.filters);
         }
+
+        Acm.Dispatcher.replaceEventListener(SearchBase.Controller.VIEW_SUBMITTED_QUERY          ,this.onViewSubmittedQuery);
+        Acm.Dispatcher.replaceEventListener(SearchBase.Controller.VIEW_CHANGED_FACET_SELECTION  ,this.onViewChangedFacetSelection);
+
+        if (SearchBase.Service.create) {SearchBase.Service.create(args);}
     }
     ,onInitialized: function() {
+        if (SearchBase.Service.onInitialized) {SearchBase.Service.onInitialized();}
     }
-
-    ,submittedQuery: function(term) {
+    ,onViewSubmittedQuery: function(term) {
         var si = SearchBase.Model.getSearchInfo();
         if (!Acm.compare(term, si.q)) {
             si.q = term;
             si.filters = [];
             SearchBase.Model.addFixedFilters(si.filters);
             SearchBase.Model.setFacetUpToDate(false);
-            return true;
         }
-        return false;
     }
-    ,changedFacetSelection: function(selected) {
-        //todo: ??? compare selected with si.filters; if same, do nothing and return false
+    ,onViewChangedFacetSelection: function(selected) {
+        //todo: ??? compare selected with si.filters; if same, do nothing and return
 
         SearchBase.Model.setFacetUpToDate(false);
 
@@ -63,7 +62,6 @@ SearchBase.Model = {
         }
 
         SearchBase.Model.addFixedFilters(si.filters);
-        return true;
     }
 
 
@@ -84,9 +82,9 @@ SearchBase.Model = {
             q: null
             ,start: 0
             ,n: 16
-            ,s: null
             ,total: 0
             ,filters: []
+            ,sorters: []
         };
     }
 
@@ -301,7 +299,7 @@ SearchBase.Model = {
         }
 		return facet_queries;
 	}
-    
+
     ,makeFacet: function(facetSearch) {
         var facet = {
             facet_queries  : []
@@ -314,12 +312,12 @@ SearchBase.Model = {
             facet.facet_fields    = this._parseFacetEntries(facetSearch.responseHeader.params["facet.field"]);
             facet.facet_dates     = this._parseFacetEntries(facetSearch.responseHeader.params["facet.date"]);
             facet.facet_ranges    = this._parseFacetEntries(facetSearch.responseHeader.params["facet.range"]);
-            
-            // The Facet Query section is no longer present in the user picker (afdp-1250)
+
+			// The Facet Query section is no longer present in the user picker (afdp-1250)
 			// Obtains the facet query (create date, modified date) information from the facet search results
 			//var raw_facet_queries = this._parseFacetEntries(facetSearch.responseHeader.params["facet.query"]);
 			//facet.facet_queries = this.extractFacetQueries(facetSearch, raw_facet_queries);
-
+			
             var label = null;
             for (var i = 0; i < facet.facet_fields.length; i++) {
                 facet.facet_fields[i].values = [];
@@ -492,11 +490,11 @@ SearchBase.Model = {
             return false;
         }
 
-        // The Facet Query section is no longer present in the user picker (afdp-1250)
+		// The Facet Query section is no longer present in the user picker (afdp-1250)
         /*if (Acm.isEmpty(data.facet_queries)) {
             return false;
         }*/
-        
+		
         if (Acm.isEmpty(data.facet_fields)) {
             return false;
         }
@@ -511,53 +509,5 @@ SearchBase.Model = {
     }
 
 
-    ,API_FACET_SEARCH       : "/api/v1/plugin/search/facetedSearch?q="
-
-    ,facetSearchListAction : function(searchInfo, postData, jtParams, sortMap, dataMaker, cacheKey) {
-        var data = SearchBase.Model.cacheResult.get(cacheKey);
-        if (data) {
-            SearchBase.Controller.modelChangedResult(data);
-            var searchResult = data.response;
-            searchInfo.total = searchResult.numFound;
-            return Acm.Promise.donePromise(dataMaker(searchResult)).promise();
-        }
-
-        var url = SearchBase.Model.API_FACET_SEARCH;
-        url += searchInfo.q + "*";              //search results start with q. If q is wildcard, it still works
-
-        //for test
-        //url = App.getContextPath() + "/resources/facetSearch.json?q=xyz";
-
-        var filterParam = SearchBase.Model.makeFilterParam(searchInfo.filters);
-        url += filterParam;
-
-        return AcmEx.Model.JTable.serviceListAction(url, postData, jtParams, sortMap
-            ,function(data) {
-                if (!data.hasError) {
-                    if (SearchBase.Model.validateFacetSearchData(data)) {
-                        if (0 == data.responseHeader.status) {
-                            //response.start should match to jtParams.jtStartIndex
-                            //response.docs.length should be <= jtParams.jtPageSize
-
-                            var searchResult = data.response;
-                            searchInfo.total = searchResult.numFound;
-
-                            //var page = Acm.goodValue(jtParams.jtStartIndex, 0);
-                            //SearchBase.Model.cacheResult.put(page, searchResult);
-                            SearchBase.Model.cacheResult.put(cacheKey, data);
-                            SearchBase.Controller.modelChangedResult(data);
-                            return dataMaker(searchResult);
-
-//                            if (!SearchBase.Model.isFacetUpToDate()) {
-//                                var facet = SearchBase.Model.makeFacet(data);
-//                                SearchBase.Controller.modeChangedFacet(Acm.Service.responseWrapper(data, facet));
-//                                SearchBase.Model.setFacetUpToDate(true);
-//                            }
-                        }
-                    } //end validate
-                }
-            }
-        );
-    }
 };
 
