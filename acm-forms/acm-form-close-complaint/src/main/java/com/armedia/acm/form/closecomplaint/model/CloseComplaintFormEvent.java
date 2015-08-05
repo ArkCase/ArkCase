@@ -1,6 +1,6 @@
 package com.armedia.acm.form.closecomplaint.model;
 
-import com.armedia.acm.event.AcmEvent;
+import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 

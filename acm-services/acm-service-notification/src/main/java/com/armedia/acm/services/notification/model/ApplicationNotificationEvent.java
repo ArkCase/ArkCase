@@ -1,7 +1,6 @@
 package com.armedia.acm.services.notification.model;
 
-import com.armedia.acm.event.AcmEvent;
-
+import com.armedia.acm.core.model.AcmEvent;
 
 public class ApplicationNotificationEvent extends AcmEvent
 {

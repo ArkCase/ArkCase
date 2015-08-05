@@ -1,12 +1,14 @@
 package com.armedia.acm.plugins.dashboard.model;
 
-import com.armedia.acm.event.AcmEvent;
+import com.armedia.acm.core.model.AcmEvent;
+
 import java.util.Date;
 
 /**
  * Created by marst on 7/31/14.
  */
-public class GetDashbordByUserIdEvent extends AcmEvent {
+public class GetDashbordByUserIdEvent extends AcmEvent
+{
 
     private static final String EVENT_TYPE = "com.armedia.acm.dashboard.getByUserId";
 

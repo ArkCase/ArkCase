@@ -1,84 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http"
-      xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+<mule xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      xmlns:json="http://www.mulesoft.org/schema/mule/json"
+      xmlns:http="http://www.mulesoft.org/schema/mule/http"
       xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-      xmlns:context="http://www.springframework.org/schema/context"
       xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
-      xmlns:spring="http://www.springframework.org/schema/beans" version="CE-3.7.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+      version="CE-3.7.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
 http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
-http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
-http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
-
-    <context:property-placeholder
-            properties-ref="alfrescoRmaPluginProperties"
-            ignore-unresolvable="true"
-            local-override="false"
-            order="5"/>
-
-
-    <spring:beans>
-        <spring:bean id="memoryObjectStore" class="org.mule.util.store.SimpleMemoryObjectStore"/>
-
-        <spring:bean id="alfrescoRmaPluginProperties"
-              class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
-            <!-- note: must leave "file:" at the start of the file name for spring
-            to be able to read the file; otherwise it will try to read from the
-            classpath -->
-            <spring:property name="location" value="file:${user.home}/.acm/alfrescoRmaPlugin.properties"/>
-            <spring:property name="ignoreResourceNotFound" value="true"/>
-            <spring:property name="localOverride" value="false"/>
-            <spring:property name="properties">
-                <spring:props>
-                    <spring:prop key="alfresco.host">localhost</spring:prop>
-                    <spring:prop key="alfresco.port">8080</spring:prop>
-                    <spring:prop key="alfresco.user">admin</spring:prop>
-                    <spring:prop key="alfresco.password">AdM!n</spring:prop>
-                    <spring:prop key="alfresco.contextRoot">alfresco</spring:prop>
-                    <spring:prop key="rma.root.folder">ACM</spring:prop>
-                </spring:props>
-            </spring:property>
-        </spring:bean>
-    </spring:beans>
-
-    <http:endpoint name="alfresco-ticket"
-                   address="http://${alfresco.host}:${alfresco.port}/${alfresco.contextRoot}/s/api/login?u=${alfresco.user}&amp;pw=${alfresco.password}" doc:name="http-decl-recrd">
-    </http:endpoint>
-    <http:endpoint name="alfresco-declare-record"
-                   address="http://${alfresco.host}:${alfresco.port}/${alfresco.contextRoot}/s/api/actionQueue?alf_ticket=#[flowVars['alfTicket']]" doc:name="http-get-ticket" exchange-pattern="request-response" method="POST">
-        <reconnect/>
-    </http:endpoint>
-    <http:endpoint name="alfresco-set-record-data"
-                   address="http://${alfresco.host}:${alfresco.port}/${alfresco.contextRoot}/s/api/node/#[flowVars['alfNamespace']]/#[flowVars['alfStore']]//formprocessor?alf_ticket=#[flowVars['alfTicket']]"
-                   doc:name="http-set-data" exchange-pattern="request-response" method="POST">
-        <reconnect/>
-    </http:endpoint>
-    <http:endpoint name="alfresco-move-to-record-folder"
-                   address="http://${alfresco.host}:${alfresco.port}/${alfresco.contextRoot}/s/slingshot/doclib/action/move-to/site/rm/documentLibrary/${rma.root.folder}/#[flowVars['category-folder-name']]/#[flowVars['record-folder-name']]?alf_ticket=#[flowVars['alfTicket']]"
-                   doc:name="alf-move-to-record-folder" exchange-pattern="request-response" method="POST">
-        <reconnect/>
-    </http:endpoint>
-    <http:endpoint name="alfresco-create-record-folder"
-                   address="http://${alfresco.host}:${alfresco.port}/${alfresco.contextRoot}/s/api/type/rma%3arecordFolder/formprocessor?alf_ticket=#[flowVars['alfTicket']]"
-                   doc:name="alf-create-record-folder" exchange-pattern="request-response" method="POST">
-        <reconnect/>
-    </http:endpoint>
-    <http:endpoint name="alfresco-complete-record"
-                   address="http://${alfresco.host}:${alfresco.port}/${alfresco.contextRoot}/s/api/rma/actions/ExecutionQueue?alf_ticket=#[flowVars['alfTicket']]"
-                   doc:name="alf-complete-record" exchange-pattern="request-response" method="POST">
-        <reconnect/>
-    </http:endpoint>
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
 
     <flow name="jms-create-record-folder" doc:name="JMS Create Record Folder">
         <jms:inbound-endpoint queue="rmaFolder.in" exchange-pattern="one-way" connector-ref="ActiveMQ-ACM"
                 doc:name="JMS"/>
         <timer-interceptor/>
+
+        <flow-ref name="set-alfresco-properties" doc:name="Set RMA params"/>
 
         <set-variable variableName="record-folder-name" value="#[message.payload.folderName]" doc:name="Rec Folder"/>
         <set-variable variableName="category-folder-name" value="#[message.payload.categoryFolder]" doc:name="Category Folder"/>
@@ -97,6 +38,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     <flow name="jms-declare-and-complete-record" doc:name="jms-declare-and-complete-record" doc:description="The JMS endpoint for declaring a record.  The record declaration is done via a subflow.  This allows us to setup other inbound endpoints for declaring a record, all of which delegate to the same declare-record subflow.">
         <jms:inbound-endpoint queue="rmaRecord.in" exchange-pattern="request-response"
                               connector-ref="ActiveMQ-ACM" doc:name="JMS" />
+        <logger level="DEBUG" category="com.armedia.acm.plugins.alfrescorma.mule"/>
         <timer-interceptor/>
         <echo-component doc:name="Echo"/>
 
@@ -108,6 +50,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 
     <sub-flow name="declare-and-complete-record" doc:name="declare-and-complete-record">
 
+        <flow-ref name="set-alfresco-properties" doc:name="Set RMA params"/>
         <flow-ref name="set-rma-params" doc:name="Set RMA params"/>
         <flow-ref name="get-alfresco-ticket" doc:name="Get Ticket"/>
         <logger category="com.armedia" level="INFO" message="Ticket results: #[flowVars['alfTicket']]"/>
@@ -137,20 +80,33 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                     method="POST"
                     doc:name="complete record"
                     encoding="UTF-8"
-                    ref="alfresco-complete-record"
+                    address="http://#[flowVars['alfresco.host']]:#[flowVars['alfresco.port']]/#[flowVars['alfresco.contextRoot']]/s/api/rma/actions/ExecutionQueue?alf_ticket=#[flowVars['alfTicket']]"
                     contentType="application/json; charset=UTF-8"
                     mimeType="application/json">
-                <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Complete record payload: #[message.payload]"/>
                 <response>
+                    <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Complete record payload: #[message.payload]"/>
                     <json:json-to-object-transformer name="getJsonFromCompleteRecord" returnClass="java.util.Map"/>
                 </response>
+                <reconnect/>
             </http:outbound-endpoint>
         </enricher>
         <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" doc:name="Log complete record results" message="Alfresco complete record results - #[flowVars['rma-complete-results']]" />
 
     </sub-flow>
 
+    <sub-flow name="set-alfresco-properties" doc:name="Store Alfresco connection properties in flow variables">
+        <logger level="DEBUG" category="com.armedia.acm.plugins.alfrescorma.mule" message="Ark RMA User: #[message.inboundProperties['alfresco_user']]"/>
+        <set-variable variableName="alfresco.host" value="#[message.inboundProperties['alfresco_host']]"/>
+        <set-variable variableName="alfresco.port" value="#[message.inboundProperties['alfresco_port']]"/>
+        <set-variable variableName="alfresco.contextRoot" value="#[message.inboundProperties['alfresco_contextRoot']]"/>
+        <set-variable variableName="rma.root.folder" value="#[message.inboundProperties['rma_root_folder']]"/>
+        <set-variable variableName="alfresco.user" value="#[message.inboundProperties['alfresco_user']]"/>
+        <set-variable variableName="alfresco.password" value="#[message.inboundProperties['alfresco_password']]"/>
+    </sub-flow>
+
     <sub-flow name="set-rma-params" doc:name="set-rma-params">
+
+        <logger category="com.armedia.acm.plugins.alfrescorma.mule" level="DEBUG" message="User: #[flowVars['alfresco.user']] #[flowVars['alfresco.password']]"/>
         <set-variable variableName="category-folder-name" value="#[message.payload.categoryFolder]" doc:name="Cat. Folder"/>
         <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Category folder (in payload): #[message.payload.categoryFolder]"/>
         <set-variable variableName="record-folder-name" value="#[message.payload.recordFolder]" doc:name="Rec Folder"/>
@@ -165,7 +121,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <set-variable variableName="alfNamespace" value="#[idx=org.mule.util.StringUtils.indexOf(message.payload.ecmFileId, &quot;://&quot;); org.mule.util.StringUtils.substring(message.payload.ecmFileId, 0, idx)]" doc:name="Alf UUID"/>
         <set-variable variableName="ecmFileId" value="#[message.payload.ecmFileId]" doc:name="ECM File Id"/>
 
-        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Alfresco version: #[message.inboundProperties['alfresco_rma_module_version']]"/>
+        <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Alfresco version:  #[message.inboundProperties['alfresco_rma_module_version']]"/>
         <choice doc:name="Set RMA properties based on RMA module version">
             <when expression="message.inboundProperties['alfresco_rma_module_version'] == '2.3'">
                 <set-variable variableName="alf-set-data-msg" value="{ &quot;prop_dod_publicationDate&quot;: &quot;#[flowVars['alf-rma-publication-date']]&quot;, &quot;prop_dod_originator&quot;: &quot;#[flowVars['alf-originator']]&quot;, &quot;prop_dod_originatingOrganization&quot;: &quot;#[flowVars['alf-origin-org']]&quot;, &quot;prop_dod_dateReceived&quot;: &quot;#[flowVars['alf-rma-date-received']]&quot; }" doc:name="Data JSON"/>
@@ -191,12 +147,13 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                     method="POST"
                     doc:name="create record folder"
                     encoding="UTF-8"
-                    ref="alfresco-create-record-folder"
+                    address="http://#[flowVars['alfresco.host']]:#[flowVars['alfresco.port']]/#[flowVars['alfresco.contextRoot']]/s/api/type/rma%3arecordFolder/formprocessor?alf_ticket=#[flowVars['alfTicket']]"
                     contentType="application/json; charset=UTF-8"
                     mimeType="application/json">
                 <response>
                     <json:json-to-object-transformer name="getJsonFromRecordFolder" returnClass="java.util.Map"/>
                 </response>
+                <reconnect/>
             </http:outbound-endpoint>
             <choice doc:name="Choice">
                 <when expression="message.inboundProperties['http.status'] == '200'">
@@ -205,7 +162,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                 </when>
                 <otherwise>
                     <processor-chain doc:name="Folder Lookup">
-                        <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/${rma.root.folder}/#[flowVars['category-folder-name']]/#[flowVars['record-folder-name']]"/>
+                        <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/#[flowVars['rma.root.folder']]/#[flowVars['category-folder-name']]/#[flowVars['record-folder-name']]"/>
                         <set-variable variableName="record-folder-id" value="#[message.payload.id]" doc:name="Variable"/>
                     </processor-chain>
                 </otherwise>
@@ -218,7 +175,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     <sub-flow name="find-category-folder" doc:name="find-category-folder">
 
         <enricher doc:name="get category folder id" source="#[message.payload.id]" target="#[flowVars['category-folder-id']]">
-            <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/${rma.root.folder}/#[flowVars['category-folder-name']]"/>
+            <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/#[flowVars['rma.root.folder']]/#[flowVars['category-folder-name']]"/>
         </enricher>
         <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" doc:name="Log category folder ID" message="Category folder results - #[flowVars['category-folder-id']]"/>
         <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" message="Category folder (in sub flow find-category-folder): #[flowVars['category-folder-id']]"/>
@@ -228,7 +185,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 
     <sub-flow name="get-parent-folder" doc:name="get-parent-folder">
         <enricher doc:name="get parent folder id" source="#[message.payload]" target="#[flowVars['invest-folder-id']]">
-            <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/${rma.root.folder}"/>
+            <cmis:get-object-by-path config-ref="acmCmisConnector"  doc:name="CMIS" path="/Sites/rm/documentLibrary/#[flowVars['rma.root.folder']]"/>
         </enricher>
         <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" doc:name="Log acm folder id" message="ACM folder id - #[flowVars['invest-folder-id'].id]"/>
     </sub-flow>
@@ -250,13 +207,14 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                         method="POST"
                         doc:name="move to record folder"
                         encoding="UTF-8"
-                        ref="alfresco-move-to-record-folder"
+                        address="http://#[flowVars['alfresco.host']]:#[flowVars['alfresco.port']]/#[flowVars['alfresco.contextRoot']]/s/slingshot/doclib/action/move-to/site/rm/documentLibrary/#[flowVars['rma.root.folder']]/#[flowVars['category-folder-name']]/#[flowVars['record-folder-name']]?alf_ticket=#[flowVars['alfTicket']]"
                         contentType="application/json; charset=UTF-8"
                         mimeType="application/json">
                     <logger level="DEBUG" message="Payload: #[message.payload]"/>
                     <response>
                         <json:json-to-object-transformer name="getJsonFromMove" returnClass="java.util.Map"/>
                     </response>
+                    <reconnect/>
                 </http:outbound-endpoint>
             </until-successful>
         </enricher>
@@ -272,12 +230,13 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                     method="POST"
                     doc:name="set metadata"
                     encoding="UTF-8"
-                    ref="alfresco-set-record-data"
+                    address="http://#[flowVars['alfresco.host']]:#[flowVars['alfresco.port']]/#[flowVars['alfresco.contextRoot']]/s/api/node/#[flowVars['alfNamespace']]/#[flowVars['alfStore']]//formprocessor?alf_ticket=#[flowVars['alfTicket']]"
                     contentType="application/json; charset=UTF-8"
                     mimeType="application/json">
                 <response>
                     <json:json-to-object-transformer name="getjsonfrommetadata" returnClass="java.util.Map"/>
                 </response>
+                <reconnect/>
             </http:outbound-endpoint>
         </enricher>
         <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" doc:name="Log Results" message="Alfresco set metadata results - #[flowVars['rma-set-data-success']]" />
@@ -285,10 +244,16 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     <sub-flow name="declare-record" doc:name="declare-record">
         <set-payload value="#['{&quot;actionedUponNode&quot;: &quot;' + flowVars['ecmFileId'] + '&quot;, &quot;actionDefinitionName&quot;: &quot;create-record&quot;, &quot;parameterValues&quot;: {}}']" doc:name="Setup Declare Request"/>
         <enricher doc:name="add declare results to message" source="#[message.payload.data.status]" target="#[flowVars['rma-declare-success']]">
-            <http:outbound-endpoint exchange-pattern="request-response"   method="POST"  doc:name="declare record" encoding="UTF-8" ref="alfresco-declare-record">
+            <http:outbound-endpoint
+                    exchange-pattern="request-response"
+                    method="POST"
+                    doc:name="declare record"
+                    encoding="UTF-8"
+                    address="http://#[flowVars['alfresco.host']]:#[flowVars['alfresco.port']]/#[flowVars['alfresco.contextRoot']]/s/api/actionQueue?alf_ticket=#[flowVars['alfTicket']]">
                 <response>
                     <json:json-to-object-transformer name="getjson" returnClass="java.util.Map"/>
                 </response>
+                <reconnect/>
             </http:outbound-endpoint>
         </enricher>
         <logger category="com.armedia.acm.plugins.alfrescorma" level="DEBUG" doc:name="Log Results" message="Alfresco declare record results - #[flowVars['rma-declare-success']]" />
@@ -298,10 +263,12 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 
             <http:outbound-endpoint exchange-pattern="request-response"
                                     method="GET"
-                                    doc:name="get ticket" ref="alfresco-ticket">
+                                    address="http://#[flowVars['alfresco.host']]:#[flowVars['alfresco.port']]/#[flowVars['alfresco.contextRoot']]/s/api/login?u=#[flowVars['alfresco.user']]&amp;pw=#[flowVars['alfresco.password']]"
+                                    doc:name="get ticket" >
                 <response>
                     <object-to-string-transformer/>
                 </response>
+                <reconnect/>
             </http:outbound-endpoint>
             <enrich source="#[idx=org.mule.util.StringUtils.indexOf(message.payload, &quot;ticket&quot;) + 7; org.mule.util.StringUtils.substring(message.payload, idx, org.mule.util.StringUtils.length(message.payload) - 10)]" target="#[flowVars['alfTicket']]" />
         </enricher>

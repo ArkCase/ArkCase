@@ -1,5 +1,6 @@
 package com.armedia.acm.event;
 
+import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.mule.api.MuleException;

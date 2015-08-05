@@ -1,7 +1,5 @@
 package com.armedia.acm.plugins.profile.model;
 
-import com.armedia.acm.event.AcmEvent;
-
 /**
  * Created by marjan.stefanoski on 31.10.2014.
  */
