@@ -55,11 +55,11 @@ document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/profi
 document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/profile/profileView.js"></script>');
 
 // Import User Picker Plugin
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.0/search/searchBase.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.0/search/searchBaseController.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.0/search/searchBaseModel.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.0/search/searchBaseService.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.0/search/searchBaseView.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.1/search/searchBase.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.1/search/searchBaseController.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.1/search/searchBaseModel.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.1/search/searchBaseService.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.1/search/searchBaseView.js"></script>');
 
 // Frevvo Patch
 document.writeln('<script type="text/javascript" src="/frevvo/arkcase/patch/form.pack.js.patch"></script>');
