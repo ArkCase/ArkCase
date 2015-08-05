@@ -854,18 +854,8 @@ DocTree.Model = DocTree.Model || {
         create: function(args) {
         }
         ,onInitialized: function() {
-        	var configCategory = "caseFile";
-        	App.Model.Config.requestConfig(configCategory).done(function(data) { // retrieves the case_file/roi doc type mapping config (afdp-1249)
-       		 var cfg = App.Model.Config.getConfig(configCategory);
-                if (Acm.isNotEmpty(cfg)) {
-                    DocTree.Model.Config.caseMapping = Acm.goodValue(cfg["casefile.doctype.mapping.case"], "");
-                    DocTree.Model.Config.roiMapping = Acm.goodValue(cfg["casefile.doctype.mapping.roi"], "");
-                }
-       	    });
         }
 
-        ,roiMapping: ""
-        ,caseMapping: ""
         ,DEFAULT_MAX_ROWS: 1000
         ,DEFAULT_SORT_BY: "name"
         ,DEFAULT_SORT_DIRECTION: "ASC"
