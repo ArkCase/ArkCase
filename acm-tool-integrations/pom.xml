@@ -25,10 +25,8 @@
         <module>acm-spring-classpath-copier</module>
         <module>acm-spring-context-holder</module>
         <module>acm-spring-data-source</module>
-        <module>acm-form-configuration</module>
         <module>acm-report-configuration</module>
     	<module>acm-object-converter</module>
-        <module>acm-object-change-status</module>
         <module>acm-encryption</module>
         <module>acm-email</module>
         <module>acm-reload-properties</module>

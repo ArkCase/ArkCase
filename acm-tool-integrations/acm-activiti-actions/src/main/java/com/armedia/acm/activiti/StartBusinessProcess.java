@@ -1,6 +1,6 @@
 package com.armedia.acm.activiti;
 
-import com.armedia.acm.event.AcmEvent;
+import com.armedia.acm.core.model.AcmEvent;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.mule.api.annotations.expressions.Lookup;

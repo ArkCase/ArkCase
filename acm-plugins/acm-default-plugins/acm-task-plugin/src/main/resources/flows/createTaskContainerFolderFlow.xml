@@ -24,7 +24,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         </on-redelivery-attempts-exceeded>
     </rollback-exception-strategy>
 
-    <configuration defaultExceptionStrategy-ref="taskContainerFolderRollbackStrategy"/>
+    <!--<configuration defaultExceptionStrategy-ref="taskContainerFolderRollbackStrategy"/>-->
 
     <flow name="jmsCreateTaskContainerFolder"
           doc:name="Create Task Container Folder"
@@ -58,6 +58,8 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         </scripting:transformer>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Created container folder for task."/>
+
+        <exception-strategy ref="taskContainerFolderRollbackStrategy"/>
     </flow>
 
 </mule>

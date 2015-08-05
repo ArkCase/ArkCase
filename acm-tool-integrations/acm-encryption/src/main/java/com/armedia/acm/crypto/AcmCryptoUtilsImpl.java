@@ -1,7 +1,7 @@
 package com.armedia.acm.crypto;
 
-import com.armedia.acm.crypto.exceptions.AcmEncryptionBadKeyOrDataException;
-import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
+import com.armedia.acm.core.exceptions.AcmEncryptionBadKeyOrDataException;
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -24,7 +24,8 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils {
      * @inheritDoc
      */
     @Override
-    public byte[] encryptData(byte[] passPhrase, byte[] data, boolean addNonce) throws AcmEncryptionException {
+    public byte[] encryptData(byte[] passPhrase, byte[] data, boolean addNonce) throws AcmEncryptionException
+    {
 
         //we must use only 16 bytes for the key or we need to install "Cryptography Extension (JCE) Unlimited Strength."
         passPhrase = Arrays.copyOfRange(passPhrase, 0, 16);

@@ -24,7 +24,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-        "classpath:/spring/spring-web-acm-web.xml",
         "classpath:/spring/spring-library-authenticationtoken-test.xml"
 })
 public class GetAuthenticationTokenAPIControllerTest extends EasyMockSupport

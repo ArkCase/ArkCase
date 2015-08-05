@@ -15,11 +15,6 @@
     <dependencies>
         <!-- acm -->
         <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-event</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-activiti-spring-configuration</artifactId>
             <version>${acm.version}</version>

@@ -67,7 +67,7 @@ public class AcmFileDeclareRequestListener implements ApplicationListener<EcmFil
         record.setReceivedDate(ecmFileDeclareRequestEvent.getEventDate());
         record.setRecordFolder(ecmFileDeclareRequestEvent.getParentObjectName());
 
-        Map<String, Object> messageProperties = getAlfrescoRecordsService().getRmaMessageProperties();
+        Map<String, Object> messageProperties = getAlfrescoRecordsService().getAlfrescoRmaPropertiesMap();
 
         try
         {
@@ -75,7 +75,7 @@ public class AcmFileDeclareRequestListener implements ApplicationListener<EcmFil
             {
                 log.trace("sending JMS message.");
             }
-            getMuleContextManager().dispatch(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, messageProperties);
+            getMuleContextManager().send(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, messageProperties);
             ecmFileDeclareRequestEvent.getSource().setStatus(EcmFileConstants.RECORD);
             getEcmFileDao().save(ecmFileDeclareRequestEvent.getSource());
             log.info("File with ID: " + ecmFileDeclareRequestEvent.getSource().getId() + " declared as RECORD");

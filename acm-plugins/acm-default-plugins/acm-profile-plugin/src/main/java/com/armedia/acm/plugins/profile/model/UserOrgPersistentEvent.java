@@ -1,13 +1,14 @@
 package com.armedia.acm.plugins.profile.model;
 
-import com.armedia.acm.event.AcmEvent;
+import com.armedia.acm.core.model.AcmEvent;
 
 import java.util.Date;
 
 /**
  * Created by marjan.stefanoski on 20.10.2014.
  */
-public class UserOrgPersistentEvent extends AcmEvent {
+public class UserOrgPersistentEvent extends AcmEvent
+{
 
     public UserOrgPersistentEvent(UserOrg source) {
         super(source);

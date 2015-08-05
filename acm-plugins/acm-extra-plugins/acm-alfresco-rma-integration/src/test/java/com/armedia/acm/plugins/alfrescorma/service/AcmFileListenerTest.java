@@ -78,12 +78,12 @@ public class AcmFileListenerTest extends EasyMockSupport
 
         expect(mockService.getAlfrescoRmaProperties()).andReturn(p).atLeastOnce();
 
-        expect(mockService.getRmaMessageProperties()).andReturn(Collections.emptyMap());
+        expect(mockService.getAlfrescoRmaPropertiesMap()).andReturn(Collections.emptyMap());
 
-        mockMuleContextManager.dispatch(
+        expect(mockMuleContextManager.send(
                 eq(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT),
                 capture(captureRecord),
-                eq(Collections.emptyMap()));
+                eq(Collections.emptyMap()))).andReturn(null);
 
         replayAll();
 

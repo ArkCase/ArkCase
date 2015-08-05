@@ -55,12 +55,7 @@ CaseFile.Service = {
             }
             return true;
         }
-        ,retrieveAssignees : function() {
-        	var caseFile = CaseFile.View.getActiveCaseFile();
-        	if (caseFile == null) {
-        		return null;
-        	}
-        	
+        ,retrieveAssignees : function(caseFile) {
         	var groupGetParameter = CaseFile.Service.Lookup._createGroupGetParameter(caseFile);
         	var currentAssigneeGetParameter = CaseFile.Service.Lookup._createCurrentAssigneeGetParameter(caseFile);
         	
