@@ -22,6 +22,7 @@ public class TaskUiController
     private Logger log = LoggerFactory.getLogger(getClass());
     private AcmPlugin plugin;
     private FormUrl formUrl;
+    private Map<String, Object> notificationProperties;
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView openTaskList()
@@ -67,6 +68,9 @@ public class TaskUiController
         //frevvo form URLs
         mv.addObject("editCloseComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT, false));
         mv.addObject("changeCaseStatusFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CHANGE_CASE_STATUS, false));
+        mv.addObject("allowMailFilesAsAttachments",getNotificationProperties().get("notification.allowMailFilesAsAttachments"));
+        mv.addObject("allowMailFilesToExternalAddresses", getNotificationProperties().get("notification.allowMailFilesToExternalAddresses"));
+
         return mv;
     }
 
@@ -97,5 +101,13 @@ public class TaskUiController
 
     public void setPlugin(AcmPlugin plugin) {
         this.plugin = plugin;
+    }
+
+    public Map<String, Object> getNotificationProperties() {
+        return notificationProperties;
+    }
+
+    public void setNotificationProperties(Map<String, Object> notificationProperties) {
+        this.notificationProperties = notificationProperties;
     }
 }

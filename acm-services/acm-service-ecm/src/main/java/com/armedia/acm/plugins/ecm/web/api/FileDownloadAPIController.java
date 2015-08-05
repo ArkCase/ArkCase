@@ -43,6 +43,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     public void downloadFileById(
             @RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline,
             @PathVariable("ecmFileId") Long fileId,
+            @RequestParam(value= "acm_email_ticket", required = false, defaultValue = "") String acm_email_ticket,
             Authentication authentication,
             HttpSession httpSession,
             HttpServletResponse response

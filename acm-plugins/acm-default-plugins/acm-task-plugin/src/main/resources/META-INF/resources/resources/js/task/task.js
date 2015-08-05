@@ -25,6 +25,8 @@ var Task = Task || {
         if (DocTree.create) {
             DocTree.create({name: "task"
                 ,fileTypes: Task.View.MicroData.fileTypes
+                ,allowMailFilesAsAttachments : Task.View.MicroData.allowMailFilesAsAttachments
+                ,allowMailFilesToExternalAddresses : Task.View.MicroData.allowMailFilesToExternalAddresses
             });
         }
 

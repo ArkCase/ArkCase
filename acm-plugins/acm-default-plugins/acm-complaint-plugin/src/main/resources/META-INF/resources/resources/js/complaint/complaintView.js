@@ -62,6 +62,8 @@ Complaint.View = Complaint.View || {
             this.arkcaseUrl      = Acm.Object.MicroData.get("arkcaseUrl");
             this.arkcasePort      = Acm.Object.MicroData.get("arkcasePort");
 
+            this.allowMailFilesAsAttachments      = Acm.Object.MicroData.get("allowMailFilesAsAttachments");
+            this.allowMailFilesToExternalAddresses      = Acm.Object.MicroData.get("allowMailFilesToExternalAddresses");
             this.formUrls = {};
             this.formUrls.closeComplaintFormUrl          = Acm.Object.MicroData.get("closeComplaintFormUrl");
             this.formUrls.editCloseComplaintFormUrl      = Acm.Object.MicroData.get("editCloseComplaintFormUrl");

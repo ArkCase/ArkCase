@@ -13,6 +13,10 @@ public class EmailNotificationDto {
     private String note;
     private List<String> users;
     private List<String> emailAddresses;
+    private List<String> urls;
+    private String header;
+    private String footer;
+    private List<Long> fileIds;
 
     public String getTitle() {
         return title;
@@ -59,5 +63,38 @@ public class EmailNotificationDto {
 
     public void setObjectId(Long objectId) {
         this.objectId = objectId;
+    }
+
+    public List<String> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(List<String> urls) {
+        this.urls = urls;
+    }
+
+
+    public String getHeader() {
+        return header;
+    }
+
+    public void setHeader(String header) {
+        this.header = header;
+    }
+
+    public String getFooter() {
+        return footer;
+    }
+
+    public void setFooter(String footer) {
+        this.footer = footer;
+    }
+
+    public List<Long> getFileIds() {
+        return fileIds;
+    }
+
+    public void setFileIds(List<Long> fileIds) {
+        this.fileIds = fileIds;
     }
 }
