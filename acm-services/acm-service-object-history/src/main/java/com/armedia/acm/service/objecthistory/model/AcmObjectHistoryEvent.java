@@ -3,15 +3,16 @@
  */
 package com.armedia.acm.service.objecthistory.model;
 
-import java.util.Date;
+import com.armedia.acm.core.model.AcmEvent;
 
-import com.armedia.acm.event.AcmEvent;
+import java.util.Date;
 
 /**
  * @author riste.tutureski
  *
  */
-public class AcmObjectHistoryEvent extends AcmEvent {
+public class AcmObjectHistoryEvent extends AcmEvent
+{
 
 	private static final String OBJECT_TYPE = "OBJECT_HISTORY";
 	

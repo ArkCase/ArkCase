@@ -15,7 +15,6 @@
     <modules>
         <module>acm-service-audit</module>
         <module>acm-service-configuration</module>
-        <module>acm-service-core-object-model</module>
         <module>acm-service-data</module>
         <module>acm-service-data-access-control</module>
         <module>acm-service-ecm</module>
@@ -41,6 +40,8 @@
         <module>acm-service-costsheet</module>
         <module>acm-service-ms-outlook-integration</module>
         <module>acm-service-config</module>
+        <module>acm-service-form-configuration</module>
+        <module>acm-service-object-change-status</module>
     </modules>
 
 

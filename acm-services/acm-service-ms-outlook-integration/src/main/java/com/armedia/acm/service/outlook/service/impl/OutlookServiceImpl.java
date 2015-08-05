@@ -1,16 +1,17 @@
 package com.armedia.acm.service.outlook.service.impl;
 
+import com.armedia.acm.core.exceptions.AcmOutlookConnectionFailedException;
+import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
+import com.armedia.acm.core.exceptions.AcmOutlookException;
+import com.armedia.acm.core.exceptions.AcmOutlookFindItemsFailedException;
+import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
+import com.armedia.acm.core.exceptions.AcmOutlookListItemsFailedException;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
-import com.armedia.acm.service.outlook.exception.AcmOutlookConnectionFailedException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookCreateItemFailedException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookFindItemsFailedException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookItemNotFoundException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookListItemsFailedException;
 import com.armedia.acm.service.outlook.model.*;
 import com.armedia.acm.service.outlook.service.OutlookFolderService;
 import com.armedia.acm.service.outlook.service.OutlookService;
-
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
@@ -35,7 +36,6 @@ import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +53,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private OutlookDao dao;
+    private EcmFileService ecmFileService;
 
     @Override
     public OutlookResults<OutlookMailItem> findMailItems(AcmOutlookUser user, int start, int maxItems, String sortField,
@@ -303,15 +304,12 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         }
 
         for (Long attachmentId: emailWithAttachmentsDTO.getAttachmentIds()) {
-            //InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
-            //EcmFile ecmFile = getEcmFileService().findById(attachmentId);
-            //emailMessage.getAttachments().addFileAttachment(ecmFile.getFileName(), contents);
+            InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
+            EcmFile ecmFile = getEcmFileService().findById(attachmentId);
+            emailMessage.getAttachments().addFileAttachment(ecmFile.getFileName(), contents);
+            emailMessage.send();
         }
 
-        //test
-        //emailMessage.getAttachments().addFileAttachment("C:\\Users\\manoj.dhungana\\Desktop\\test.txt");
-
-        emailMessage.send();
         //use this if a copy of the sent email is needed
         //emailMessage.sendAndSaveCopy();
     }
@@ -474,39 +472,39 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         }
 
     }
-    
+
     @Override
-	public void deleteAllItemsFoundByExtendedProperty(String folderId, AcmOutlookUser user,
+    public void deleteAllItemsFoundByExtendedProperty(String folderId, AcmOutlookUser user,
                                                       ExtendedPropertyDefinition extendedPropertyDefinition,
                                                       Object extendedPropertyValue)
     {
         // disconnectAndRetry is not needed here since this method calls other public methods in this service class,
         // and does not call any DAO methods.
-    	try
-    	{
-	    	SearchFilter filter = new SearchFilter.IsEqualTo(extendedPropertyDefinition, extendedPropertyValue);
-			
-			OutlookResults<OutlookCalendarItem> results;
-			// In case there are more than one, remove all (this cannot be the case, only one will exist, but do this to be 100% sure)
-			do 
-			{
-				// This code always will remove the items if found. For that reason "start" and "maxItems" are set to 0 and 50.
-				// There is no sense to change "start" index in the next iteration because the next iteration some of them will be removed
-				results = findCalendarItems(folderId, user, 0, 50, null, false, filter);	
-				
-				if (results != null && results.getItems() != null)
-				{
-					results.getItems().stream().forEach(element -> deleteItem(user, element.getId(), DeleteMode.HardDelete));
-				}
-			} 
-			while (results != null && results.getItems() != null && results.getItems().size() > 0);
-    	}
-    	catch (Exception e) 
-    	{
-    		log.error("Error while removing all items found by extended property.", e);
-		}
-		
-	}
+        try
+        {
+            SearchFilter filter = new SearchFilter.IsEqualTo(extendedPropertyDefinition, extendedPropertyValue);
+
+            OutlookResults<OutlookCalendarItem> results;
+            // In case there are more than one, remove all (this cannot be the case, only one will exist, but do this to be 100% sure)
+            do
+            {
+                // This code always will remove the items if found. For that reason "start" and "maxItems" are set to 0 and 50.
+                // There is no sense to change "start" index in the next iteration because the next iteration some of them will be removed
+                results = findCalendarItems(folderId, user, 0, 50, null, false, filter);
+
+                if (results != null && results.getItems() != null)
+                {
+                    results.getItems().stream().forEach(element -> deleteItem(user, element.getId(), DeleteMode.HardDelete));
+                }
+            }
+            while (results != null && results.getItems() != null && results.getItems().size() > 0);
+        }
+        catch (Exception e)
+        {
+            log.error("Error while removing all items found by extended property.", e);
+        }
+
+    }
 
     @Override
     public void deleteAppointmentItem(AcmOutlookUser user, String appointmentId, Boolean recurring, DeleteMode deleteMode)
@@ -697,8 +695,6 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         return outlookFolderPermission;
     }
 
-
-
     public OutlookDao getDao()
     {
         return dao;
@@ -710,4 +706,11 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         this.dao = dao;
     }
 
+    public EcmFileService getEcmFileService() {
+        return ecmFileService;
+    }
+
+    public void setEcmFileService(EcmFileService ecmFileService) {
+        this.ecmFileService = ecmFileService;
+    }
 }

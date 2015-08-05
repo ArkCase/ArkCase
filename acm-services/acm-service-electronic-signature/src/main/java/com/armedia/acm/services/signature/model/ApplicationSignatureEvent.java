@@ -1,6 +1,6 @@
 package com.armedia.acm.services.signature.model;
 
-import com.armedia.acm.event.AcmEvent;
+import com.armedia.acm.core.model.AcmEvent;
 
 public class ApplicationSignatureEvent extends AcmEvent
 {

@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.outlook.web.api;
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -55,22 +55,7 @@ public class SendEmailWithAttachmentsAPIController {
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
 
         try{
-            ExchangeService service = dao.connect(outlookUser);
-            EmailMessage emailMessage = new EmailMessage(service);
-            for (String emailAddress: in.getEmailAddresses()) {
-                emailMessage.getToRecipients().add(emailAddress);
-            }
-            emailMessage.setSubject(in.getSubject());
-            emailMessage.setBody(MessageBody.getMessageBodyFromText(in.getBody()));
-
-            for (Long attachmentId: in.getAttachmentIds()) {
-                InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
-                EcmFile ecmFile = getEcmFileService().findById(attachmentId);
-                emailMessage.getAttachments().addFileAttachment(ecmFile.getFileName(), contents);
-                emailMessage.send();
-            }
-            //use this if a copy of sent email is needed
-            //emailMessage.sendAndSaveCopy();
+            getOutlookService().sendEmailWithAttachments(in,outlookUser);
         }
         catch(Exception e){
             throw new AcmOutlookSendEmailWithAttachmentsFailedException("Could not send emails with attachment,among other things check your request body. Exception message is : " + e.getMessage(), e);

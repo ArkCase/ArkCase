@@ -146,11 +146,22 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 		PlainConfigurationForm form = new PlainConfigurationForm();
 		
 		LOG.debug("Start taking the application and forms from Frevvo.");
-		String applicationId = getFrevvoService().getFormUrl().getApplicationId();
-		getFrevvoService().login();
-		ApplicationEntry application = getFrevvoService().getApplication(applicationId);
-		List<FormTypeEntry> forms = getFrevvoService().getPlainForms(application);
-		getFrevvoService().logout();
+		List<String> applicationIds = getFrevvoService().getFormUrl().getPlainFormApplicationIds();
+		final List<FormTypeEntry> forms = new ArrayList<>();
+
+		if (applicationIds != null && !applicationIds.isEmpty())
+		{
+			getFrevvoService().login();
+			applicationIds.stream().forEach(applicationId -> {
+				ApplicationEntry application = getFrevvoService().getApplication(applicationId);
+				List<FormTypeEntry> _forms = getFrevvoService().getPlainForms(application);
+				if (_forms != null)
+				{
+					forms.addAll(_forms);
+				}
+			});
+			getFrevvoService().logout();
+		}
 		
 		form.setFormOptions(getKeyValuePairsForForms(forms));
 		
@@ -224,18 +235,20 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 		
 		FormTypeEntry formEntry = null;
 		SchemaEntry schemaEntry = null;
+		ApplicationEntry applicationEntry = null;
 		if (formId != null && !formId.isEmpty())
 		{
 			LOG.debug("Start taking the form information from Frevvo.");
 			getFrevvoService().login();
 			formEntry = getFrevvoService().getForm(formId);
 			schemaEntry = getFrevvoService().getSchema(formId);
+			applicationEntry = getFrevvoService().getApplication(getFrevvoService().getFormApplicationId(formEntry));
 			getFrevvoService().logout();
 		}
 		
-		if (formEntry != null && schemaEntry != null)
+		if (formEntry != null && schemaEntry != null && applicationEntry != null)
 		{
-			form = getPlainConfigurationFormFactory().convertFromFormTypeEntry(formEntry, schemaEntry);
+			form = getPlainConfigurationFormFactory().convertFromFormTypeEntry(formEntry, schemaEntry, applicationEntry);
 		}
 		
 		JSONObject json = createResponse(form);
@@ -251,6 +264,7 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 		
 		if (forms != null)
 		{
+			getFrevvoService().login();
 			for (FormTypeEntry form : forms)
 			{
 				String mode = getRequest().getParameter("mode");
@@ -264,10 +278,19 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 				
 				if (registeredForm == null)
 				{
-					String keyValuePair = form.getId() + "=" + form.getTitle().getPlainText();
+					String applicationName = "";
+					ApplicationEntry applicationEntry = getFrevvoService().getApplication(getFrevvoService().getFormApplicationId(form));
+
+					if (applicationEntry != null)
+					{
+						applicationName = " (" + applicationEntry.getTitle().getPlainText() + ")";
+					}
+
+					String keyValuePair = form.getId() + "=" + form.getTitle().getPlainText() + applicationName;
 					keyValuePairs.add(keyValuePair);
 				}
 			}
+			getFrevvoService().logout();
 		}
 		
 		return keyValuePairs;
@@ -304,6 +327,8 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 		properties.put(key + ".id", form.getFormId() == null ? "" : form.getFormId());
 		properties.put(key + ".name", form.getName() == null ? "" : form.getName());
 		properties.put(key + ".type", form.getType() == null ? "" : form.getType());
+		properties.put(key + ".application.id", form.getApplicationId() == null ? "" : form.getApplicationId());
+		properties.put(key + ".application.name", form.getApplicationName() == null ? "" : form.getApplicationName());
 		properties.put(key + ".mode", form.getMode() == null ? "" : form.getMode());
 		properties.put(key + ".description." + form.getTarget(), form.getDescription() == null ? "" : form.getDescription());
 		

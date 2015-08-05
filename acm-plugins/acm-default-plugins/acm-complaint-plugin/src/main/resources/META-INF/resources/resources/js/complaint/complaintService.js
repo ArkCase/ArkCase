@@ -50,12 +50,7 @@ Complaint.Service = {
             }
             return true;
         }
-        ,retrieveAssignees : function() {
-        	var complaint = Complaint.View.getActiveComplaint();
-        	if (complaint == null) {
-        		return null;
-        	}
-        	
+        ,retrieveAssignees : function(complaint) {
         	var groupGetParameter = Complaint.Service.Lookup._createGroupGetParameter(complaint);
         	var currentAssigneeGetParameter = Complaint.Service.Lookup._createCurrentAssigneeGetParameter(complaint);
         	

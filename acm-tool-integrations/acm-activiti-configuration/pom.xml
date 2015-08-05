@@ -15,11 +15,7 @@
     </description>
 
     <dependencies>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-event</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-spring-data-source</artifactId>
@@ -36,8 +32,8 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-data</artifactId>
+            <groupId>com.armedia.acm</groupId>
+            <artifactId>acm-core-api</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
@@ -75,6 +71,11 @@
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <version>${easymock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule</groupId>
+            <artifactId>mule-core</artifactId>
             <scope>test</scope>
         </dependency>
 

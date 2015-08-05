@@ -1,5 +1,7 @@
 package com.armedia.acm.service.outlook.exception;
 
+import com.armedia.acm.core.exceptions.AcmOutlookException;
+
 /**
  * Created by manoj.dhungana on 7/28/15.
  */

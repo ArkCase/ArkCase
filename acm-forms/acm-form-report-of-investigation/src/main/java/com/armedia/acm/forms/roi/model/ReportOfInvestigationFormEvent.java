@@ -3,7 +3,7 @@
  */
 package com.armedia.acm.forms.roi.model;
 
-import com.armedia.acm.event.AcmEvent;
+import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 
@@ -13,7 +13,8 @@ import java.util.Date;
  * @author riste.tutureski
  *
  */
-public class ReportOfInvestigationFormEvent extends AcmEvent {
+public class ReportOfInvestigationFormEvent extends AcmEvent
+{
 
 
 	private static final long serialVersionUID = 1192631656494031812L;

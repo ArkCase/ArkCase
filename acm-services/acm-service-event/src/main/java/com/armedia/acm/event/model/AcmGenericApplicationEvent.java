@@ -1,6 +1,7 @@
 package com.armedia.acm.event.model;
 
-import com.armedia.acm.event.AcmEvent;
+
+import com.armedia.acm.core.model.AcmEvent;
 
 /**
  * Created by armdev on 6/26/15.
