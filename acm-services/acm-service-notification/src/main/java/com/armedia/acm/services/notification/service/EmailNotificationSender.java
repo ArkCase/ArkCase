@@ -6,12 +6,15 @@ package com.armedia.acm.services.notification.service;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.notification.model.EmailNotificationDto;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +31,9 @@ public class EmailNotificationSender implements NotificationSender {
     private PropertyFileManager propertyFileManager;
     private String notificationPropertyFileLocation;
     private MuleContextManager muleContextManager;
-	
+	private AuthenticationTokenService authenticationTokenService;
+
+
 	@Override
 	public Notification send(Notification notification) 
 	{
@@ -72,6 +77,23 @@ public class EmailNotificationSender implements NotificationSender {
 		return notification;
 	}
 
+	public String makeNote(EmailNotificationDto emailNotificationDto, Authentication authentication){
+		String note="";
+		String token = generateAuthenticationToken(authentication);
+		note += emailNotificationDto.getHeader();
+
+		for(String url: emailNotificationDto.getUrls()){
+			note= url+ "?acm_ticket=" + token + "\n";
+		}
+		note+= emailNotificationDto.getFooter();
+		return note;
+	}
+
+
+	public String generateAuthenticationToken(Authentication authentication){
+		return getAuthenticationTokenService().getTokenForAuthentication(authentication);
+	}
+
 	public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter() {
 		return auditPropertyEntityAdapter;
 	}
@@ -106,5 +128,13 @@ public class EmailNotificationSender implements NotificationSender {
 	public void setMuleContextManager(MuleContextManager muleContextManager)
 	{
 		this.muleContextManager = muleContextManager;
+	}
+
+	public AuthenticationTokenService getAuthenticationTokenService() {
+		return authenticationTokenService;
+	}
+
+	public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService) {
+		this.authenticationTokenService = authenticationTokenService;
 	}
 }

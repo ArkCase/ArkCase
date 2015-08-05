@@ -3,9 +3,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <bean id="applicationRoleToUserGroupProperties"
           class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean" >
@@ -38,7 +38,11 @@
             class="com.armedia.acm.auth.AcmGrantedAuthoritiesMapper"
             init-method="initBean">
         <property name="applicationRoleToUserGroupProperties" ref="applicationRoleToUserGroupProperties"/>
+        <property name="activeMapping" ref="activeMapping" />
     </bean>
+
+    <util:map id="activeMapping" value-type="java.util.Map&lt;java.lang.String, java.util.List&lt;java.lang.String&lt;&lt;">
+    </util:map>
 
     <bean id="acmAuthenticationManager" class="com.armedia.acm.auth.AcmAuthenticationManager">
         <property name="springContextHolder" ref="acmContextHolder"/>
@@ -58,6 +62,9 @@
         <property name="authenticationDetailsSource" ref="acmAuthenticationDetailsFactory"/>
         <property name="loginSuccessEventListener" ref="acmLoginSuccessListener"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
+        <property name="authenticationTokenDao" ref="authenticationTokenDao" />
+        <property name="muleContextManager" ref="muleContextManager" />
+        <property name="acmGrantedAuthoritiesMapper" ref="acmAuthoritiesMapper" />
     </bean>
 
     <bean id="acmAuditPropertyInterceptor" class="com.armedia.acm.auth.AcmAuditPropertyInterceptor">

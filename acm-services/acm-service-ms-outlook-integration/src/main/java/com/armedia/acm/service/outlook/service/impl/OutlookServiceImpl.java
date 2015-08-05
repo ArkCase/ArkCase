@@ -7,15 +7,7 @@ import com.armedia.acm.service.outlook.exception.AcmOutlookException;
 import com.armedia.acm.service.outlook.exception.AcmOutlookFindItemsFailedException;
 import com.armedia.acm.service.outlook.exception.AcmOutlookItemNotFoundException;
 import com.armedia.acm.service.outlook.exception.AcmOutlookListItemsFailedException;
-import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
-import com.armedia.acm.service.outlook.model.OutlookContactItem;
-import com.armedia.acm.service.outlook.model.OutlookFolder;
-import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
-import com.armedia.acm.service.outlook.model.OutlookItem;
-import com.armedia.acm.service.outlook.model.OutlookMailItem;
-import com.armedia.acm.service.outlook.model.OutlookResults;
-import com.armedia.acm.service.outlook.model.OutlookTaskItem;
+import com.armedia.acm.service.outlook.model.*;
 import com.armedia.acm.service.outlook.service.OutlookFolderService;
 import com.armedia.acm.service.outlook.service.OutlookService;
 
@@ -39,6 +31,7 @@ import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
 import microsoft.exchange.webservices.data.exception.ServiceLocalException;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.FolderPermission;
+import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
@@ -46,6 +39,7 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -295,6 +289,31 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
         return results;
 
+    }
+
+    @Override
+    public void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user) throws Exception{
+        ExchangeService service = connect(user);
+        EmailMessage emailMessage = new EmailMessage(service);
+        emailMessage.setSubject(emailWithAttachmentsDTO.getSubject());
+        emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getBody()));
+
+        for (String emailAddress: emailWithAttachmentsDTO.getEmailAddresses()) {
+            emailMessage.getToRecipients().add(emailAddress);
+        }
+
+        for (Long attachmentId: emailWithAttachmentsDTO.getAttachmentIds()) {
+            //InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
+            //EcmFile ecmFile = getEcmFileService().findById(attachmentId);
+            //emailMessage.getAttachments().addFileAttachment(ecmFile.getFileName(), contents);
+        }
+
+        //test
+        //emailMessage.getAttachments().addFileAttachment("C:\\Users\\manoj.dhungana\\Desktop\\test.txt");
+
+        emailMessage.send();
+        //use this if a copy of the sent email is needed
+        //emailMessage.sendAndSaveCopy();
     }
 
     @Override
@@ -678,6 +697,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         return outlookFolderPermission;
     }
 
+
+
     public OutlookDao getDao()
     {
         return dao;
@@ -688,4 +709,5 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     {
         this.dao = dao;
     }
+
 }

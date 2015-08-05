@@ -1,0 +1,81 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-create-acm-authentication-tokens-table" author="mnj11">
+
+        <createTable tableName="acm_authentication_tokens">
+
+            <column name="cm_authentication_token_id" type="${idType}">
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_authentication_token"/>
+            </column>
+
+            <column name="cm_authentication_token_created" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_authentication_token_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_authentication_token_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_authentication_token_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_authentication_token_key" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_authentication_token_email" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_authentication_token_password" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="cm_authentication_token_status" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="cm_authentication_token_file_id" type="${fkIdType}">
+                <constraints nullable="true"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+    <changeSet id="02-acm_authentication_tokens-id" author="mnj11">
+        <createTable tableName="acm_authentication_tokens_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_authentication_tokens_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_authentication_tokens"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="03-acm_authentication_tokens-constraint-file-id" author="mnj11">
+        <preConditions>
+            <and>
+                <tableExists tableName="acm_file"/>
+                <columnExists tableName="acm_authentication_tokens" columnName="cm_authentication_token_file_id"/>
+            </and>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="acm_authentication_tokens" baseColumnNames="cm_authentication_token_file_id"
+                                 constraintName="fk_authentication_token_file_id"
+                                 referencedTableName="acm_file"
+                                 referencedColumnNames="cm_file_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+
+</databaseChangeLog>

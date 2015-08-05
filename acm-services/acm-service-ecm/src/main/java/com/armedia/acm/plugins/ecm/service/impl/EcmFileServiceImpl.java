@@ -19,6 +19,7 @@ import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -206,6 +207,22 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 			throw e;
 		}
 	}
+
+    @Override
+    public InputStream downloadAsInputStream(Long id) throws MuleException
+    {
+        try
+        {
+            EcmFile ecmFile = getEcmFileDao().find(id);
+            InputStream content = getEcmFileTransaction().downloadFileTransactionAsInputStream(ecmFile);
+
+            return content;
+        }
+        catch (MuleException e)
+        {
+            throw e;
+        }
+    }
 
     @Override
     public String createFolder(String folderPath) throws AcmCreateObjectFailedException

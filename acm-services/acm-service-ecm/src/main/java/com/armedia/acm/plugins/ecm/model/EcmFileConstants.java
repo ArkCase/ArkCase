@@ -83,4 +83,6 @@ public interface EcmFileConstants
     String FILE = "file";
 
     String COPY_FILE_EXCEPTION_INBOUND_PROPERTY = "copyFileException";
+
+    String ACTIVE = "ACTIVE";
 }
