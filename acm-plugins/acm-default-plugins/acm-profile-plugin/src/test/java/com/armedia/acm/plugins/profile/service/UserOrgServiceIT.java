@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.profile.service;
 
-import com.armedia.acm.crypto.exceptions.AcmEncryptionBadKeyOrDataException;
+import com.armedia.acm.core.exceptions.AcmEncryptionBadKeyOrDataException;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import org.easymock.EasyMockSupport;

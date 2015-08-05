@@ -2645,6 +2645,7 @@ Complaint.View = Complaint.View || {
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_ADDED_PARTICIPANT      ,this.onModelModifiedParticipants);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_UPDATED_PARTICIPANT    ,this.onModelModifiedParticipants);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_DELETED_PARTICIPANT    ,this.onModelModifiedParticipants);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_GROUPS        ,this.onModelRetrievedGroups);
         }
         ,onInitialized: function() {
         }
@@ -2653,6 +2654,9 @@ Complaint.View = Complaint.View || {
             AcmEx.Object.JTable.load(Complaint.View.Participants.$divParticipants);
         }
         ,onModelRetrievedObject: function(objData) {
+            AcmEx.Object.JTable.load(Complaint.View.Participants.$divParticipants);
+        }
+        ,onModelRetrievedGroups:function(objData){
             AcmEx.Object.JTable.load(Complaint.View.Participants.$divParticipants);
         }
         ,onModelSavedAssignee: function(complaintId, assginee) {

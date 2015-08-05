@@ -67,8 +67,7 @@ public class AcmFileListener implements ApplicationListener<EcmFileAddedEvent>
         record.setReceivedDate(ecmFileAddedEvent.getEventDate());
         record.setRecordFolder(ecmFileAddedEvent.getParentObjectName());
 
-        Map<String, Object> messageProperties = getAlfrescoRecordsService().getRmaMessageProperties();
-
+        Map<String, Object> messageProperties = getAlfrescoRecordsService().getAlfrescoRmaPropertiesMap();
 
         try
         {
@@ -77,7 +76,7 @@ public class AcmFileListener implements ApplicationListener<EcmFileAddedEvent>
                 log.trace("sending JMS message.");
             }
 
-            getMuleContextManager().dispatch(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, messageProperties);
+            getMuleContextManager().send(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, messageProperties);
             if ( log.isTraceEnabled() )
             {
                 log.trace("done");
