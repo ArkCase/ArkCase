@@ -1,6 +1,5 @@
 package com.armedia.acm.services.pipeline;
 
-import com.armedia.acm.core.AcmExtensible;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.slf4j.Logger;
@@ -12,7 +11,7 @@ import java.util.ListIterator;
 /**
  * Created by Petar Ilin <petar.ilin@armedia.com> on 26.07.2015.
  */
-public class PipelineManager<T extends AcmExtensible>
+public class PipelineManager<T>
 {
     /**
      * List of handlers executed before saving the entity to database.

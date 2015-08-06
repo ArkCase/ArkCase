@@ -1,6 +1,5 @@
 package com.armedia.acm.services.pipeline.handler;
 
-import com.armedia.acm.core.AcmExtensible;
 import com.armedia.acm.services.pipeline.PipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
@@ -8,7 +7,7 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
  * Interface that all handlers for particular entity type must implement.
  * Created by Petar Ilin <petar.ilin@armedia.com> on 26.07.2015.
  */
-public interface PipelineHandler<T extends AcmExtensible>
+public interface PipelineHandler<T>
 {
     /**
      * Execute handler actions.

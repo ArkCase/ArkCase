@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.complaint.model;
 
-import com.armedia.acm.core.AcmExtensible;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -50,7 +49,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "acm_complaint")
-public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmExtensible
+public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity
 {
     private static final long serialVersionUID = -1154137631399833851L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
