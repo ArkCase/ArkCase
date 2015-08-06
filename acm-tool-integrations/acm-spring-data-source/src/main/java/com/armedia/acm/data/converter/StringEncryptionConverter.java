@@ -13,6 +13,7 @@ import java.util.Objects;
  * Created by nebojsha on 05.08.2015.
  */
 public class StringEncryptionConverter implements AttributeConverter<String, byte[]> {
+    private static Boolean databasePlatformSupported;
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private static AcmCryptoUtils acmCryptoUtils;
@@ -28,19 +29,24 @@ public class StringEncryptionConverter implements AttributeConverter<String, byt
     @Override
     public String convertToEntityAttribute(byte[] dbData) {
         try {
-            Objects.requireNonNull(encryptionPassphrase, "PassPhrase must be not null.");
-            Objects.requireNonNull(acmCryptoUtils, "AcmCryptoUtils must be not null.");
-            return new String(acmCryptoUtils.decryptInputStreamWithPGP(new ByteArrayInputStream(dbData), encryptionPassphrase.toCharArray()));
+            Objects.requireNonNull(databasePlatformSupported, "DatabasePlatformSupported must not be null.");
+            Objects.requireNonNull(encryptionEnabled, "EncryptionEnabled must not be null.");
+            Objects.requireNonNull(encryptionPassphrase, "PassPhrase must not be null.");
+            Objects.requireNonNull(acmCryptoUtils, "AcmCryptoUtils must not be null.");
+            if (encryptionEnabled)
+                return new String(acmCryptoUtils.decryptInputStreamWithPGP(new ByteArrayInputStream(dbData), encryptionPassphrase.toCharArray()));
+            else return new String(dbData);
         } catch (AcmEncryptionBadKeyOrDataException e) {
             log.error("Error decrypting data.", e);
         }
         return null;
     }
 
-    public static void setAcmDecryptionProperties(Boolean encryptionEnabled, AcmCryptoUtils acmCryptoUtils, String encryptionPassphrase) {
+    public static void setAcmDecryptionProperties(Boolean encryptionEnabled, AcmCryptoUtils acmCryptoUtils, String encryptionPassphrase, Boolean databasePlatformSupported) {
         StringEncryptionConverter.acmCryptoUtils = acmCryptoUtils;
         StringEncryptionConverter.encryptionPassphrase = encryptionPassphrase;
         StringEncryptionConverter.encryptionEnabled = encryptionEnabled;
+        StringEncryptionConverter.databasePlatformSupported = databasePlatformSupported;
     }
 
     public static AcmCryptoUtils getAcmCryptoUtils() {
@@ -53,5 +59,9 @@ public class StringEncryptionConverter implements AttributeConverter<String, byt
 
     public static String getEncryptionPassphrase() {
         return encryptionPassphrase;
+    }
+
+    public static Boolean getDatabasePlatformSupported() {
+        return databasePlatformSupported;
     }
 }

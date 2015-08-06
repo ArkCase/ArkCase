@@ -51,6 +51,7 @@ public class EncryptColumnEntityAdapterTest extends EasyMockSupport {
         adapter.setEncryptionDBFunction("pgp_sym_encrypt");
         adapter.setEncryptionPassphrase("passphrase");
         adapter.setEncryptionProperties("compress-algo=1, cipher-algo=aes256");
+        adapter.setDatabasePlatformSupported(true);
     }
 
     @Test
@@ -62,10 +63,7 @@ public class EncryptColumnEntityAdapterTest extends EasyMockSupport {
         assertEquals("pgp_sym_encrypt", adapter.getEncryptionDBFunction());
         assertEquals("passphrase", adapter.getEncryptionPassphrase());
 
-        //given
         DescriptorEvent event = createMock(DescriptorEvent.class);
-        AbstractSession session = createMock(AbstractSession.class);
-        Platform platform = createMock(PostgreSQLPlatform.class);
         TestEntity entity = new TestEntity();
         ClassDescriptor classDescriptor = createMock(ClassDescriptor.class);
         DescriptorQueryManager queryManager = createMock(DescriptorQueryManager.class);
@@ -76,10 +74,7 @@ public class EncryptColumnEntityAdapterTest extends EasyMockSupport {
         Set fields = new LinkedHashSet<>();
         Collections.addAll(fields, new DatabaseField("id", "table"), new DatabaseField("name", "table"), new DatabaseField("lastName", "table"), new DatabaseField("gender", "table"));
 
-        //when
-        EasyMock.expect(event.getSession()).andReturn(session);
-        EasyMock.expect(session.getDatasourcePlatform()).andReturn(platform);
-        EasyMock.expect(platform.isPostgreSQL()).andReturn(true);
+
         EasyMock.expect(event.getObject()).andReturn(entity).anyTimes();
         EasyMock.expect(event.getClassDescriptor()).andReturn(classDescriptor);
         EasyMock.expect(classDescriptor.getQueryManager()).andReturn(queryManager);
@@ -108,8 +103,8 @@ public class EncryptColumnEntityAdapterTest extends EasyMockSupport {
 
         replayAll();
 
-        //than
         adapter.aboutToInsert(event);
 
+        verifyAll();
     }
 }
