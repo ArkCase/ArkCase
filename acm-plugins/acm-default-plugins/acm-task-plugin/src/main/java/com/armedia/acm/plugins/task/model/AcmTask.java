@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.task.model;
 
-import com.armedia.acm.core.AcmExtensible;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class AcmTask implements AcmAssignedObject, Serializable, AcmExtensible
+public class AcmTask implements AcmAssignedObject, Serializable
 {
     private static final long serialVersionUID = 8087833770464474147L;
 
