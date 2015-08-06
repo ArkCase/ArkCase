@@ -11,9 +11,13 @@
 
     <groupId>com.armedia.acm</groupId>
     <artifactId>acm-user-interface</artifactId>
-    <packaging>war</packaging>
+    <packaging>pom</packaging>
     <name>ACM User Interface</name>
     <description>Angular-based extensible web UI, which consumes ArkCase services.</description>
 
+    <modules>
+        <module>ark-surf-connector</module>
+        <module>ark-web</module>
+    </modules>
 
 </project>
