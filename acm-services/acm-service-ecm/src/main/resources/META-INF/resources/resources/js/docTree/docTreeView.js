@@ -656,6 +656,19 @@ DocTree.View = DocTree.View || {
     ,setEditing: function(isEditing) {
         this._isEditing = isEditing;
     }
+    
+    ,getDocumentTypeDisplayLabel: function(documentType) { // looks up the display label for the given document type (afdp-1249)
+    	var labelMappings = DocTree.View.fileTypes;
+    	if (documentType && Acm.isArray(labelMappings)) {
+    		documentType = documentType.trim().toLowerCase();
+    	    for (var i = 0; i < labelMappings.length; i++) {
+    		    if (labelMappings[i]["type"] && labelMappings[i]["type"].trim().toLowerCase() == documentType) {
+    			    return labelMappings[i]["label"];
+    		    }
+    	    }
+    	}
+    	return documentType; // label could not be found, the raw document type will be displayed
+    }
 
     ,CLIPBOARD : null
     ,_getDefaultTreeArgs: function() {
@@ -703,7 +716,7 @@ DocTree.View = DocTree.View || {
                 if (DocTree.View.isFolderNode(node)) {
                     ;
                 } else if (DocTree.View.isFileNode(node)) {
-                    $tdList.eq(3).text(node.data.type);
+                    $tdList.eq(3).text(DocTree.View.getDocumentTypeDisplayLabel(node.data.type)); // document type is mapped (afdp-1249)
                     $tdList.eq(4).text(Acm.getDateFromDatetime(node.data.created,$.t("common:date.short")));
                     $tdList.eq(5).text(App.Model.Users.getUserFullName(Acm.goodValue(node.data.creator)));
 
