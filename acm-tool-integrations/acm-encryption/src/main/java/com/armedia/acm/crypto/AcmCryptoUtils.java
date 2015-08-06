@@ -3,8 +3,11 @@ package com.armedia.acm.crypto;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionBadKeyOrDataException;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import org.bouncycastle.openpgp.PGPException;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchProviderException;
 
 /**
  * Created by nebojsha on 09.05.2015.
@@ -36,4 +39,12 @@ public interface AcmCryptoUtils {
      */
     byte[] decryptInputStreamWithPGP(InputStream in,
                                      char[] passPhrase) throws AcmEncryptionBadKeyOrDataException;
+
+    byte[] encryptWithPGP(
+            byte[] clearData,
+            char[] passPhrase,
+            String fileName,
+            int algorithm,
+            boolean armor)
+            throws AcmEncryptionBadKeyOrDataException;
 }

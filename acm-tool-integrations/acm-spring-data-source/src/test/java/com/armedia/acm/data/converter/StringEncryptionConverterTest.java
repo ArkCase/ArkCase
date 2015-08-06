@@ -34,18 +34,12 @@ public class StringEncryptionConverterTest {
 
     @Test
     public void testConvert() throws IOException {
-        //just compare if they are not null
         StringEncryptionConverter converter = new StringEncryptionConverter();
-        String attribute = "some_value";
-        byte[] strBytes = converter.convertToDatabaseColumn(attribute);
-        assertArrayEquals(attribute.getBytes(), strBytes);
+        String attribute = "value to be encrypted";
+        byte[] encryptedBytes = converter.convertToDatabaseColumn(attribute);
 
-
-        Resource encryptedFile = new ClassPathResource("encrypted.bin");
-        assertTrue(encryptedFile.exists());
-
-        String decrypted = converter.convertToEntityAttribute(Files.readAllBytes(encryptedFile.getFile().toPath()));
-        assertEquals("text", decrypted);
+        String decrypted = converter.convertToEntityAttribute(encryptedBytes);
+        assertEquals(attribute, decrypted);
 
     }
 

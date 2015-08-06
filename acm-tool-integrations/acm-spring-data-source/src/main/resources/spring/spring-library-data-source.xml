@@ -139,14 +139,6 @@
     </bean>
 
     <bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>
-    <bean id="encryptColumnEntityAdapter" class="com.armedia.acm.data.EncryptColumnEntityAdapter">
-        <property name="encryptionProperties" value="${database.encryption_properties}"/>
-        <property name="encryptionDBFunction" value="${database.encryption_function}"/>
-        <property name="encryptionEnabled" value="${database.encryption_enabled}"/>
-        <property name="encryptionPassphrase" value="${database.encryption_passphrase}"/>
-        <property name="databasePlatformSupported" value="${database.platform_supported}"/>
-    </bean>
-
 
     <bean id="springEntityListenerConfigurer" class="com.armedia.acm.data.SpringEntityListenerConfigurer">
         <property name="springContextHolder" ref="acmContextHolder"/>
@@ -156,7 +148,6 @@
             <list>
                 <ref bean="objectChangesBySessionAccumulator"/>
                 <ref bean="auditPropertyEntityAdapter"/>
-                <ref bean="encryptColumnEntityAdapter"/>
             </list>
         </property>
     </bean>
@@ -168,7 +159,7 @@
                 <value type="java.lang.Boolean">${database.encryption_enabled}</value>
                 <ref bean="acmCryptoUtils"/>
                 <value type="java.lang.String">${database.encryption_passphrase}</value>
-                <value type="java.lang.Boolean">${database.platform_supported}</value>
+                <value type="java.lang.Boolean">${database.encryption_supported}</value>
 
             </list>
         </property>
