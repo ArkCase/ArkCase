@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.task.model;
 
+import com.armedia.acm.core.AcmExtensible;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class AcmTask implements AcmAssignedObject, Serializable
+public class AcmTask implements AcmAssignedObject, Serializable, AcmExtensible
 {
     private static final long serialVersionUID = 8087833770464474147L;
 
@@ -28,7 +29,7 @@ public class AcmTask implements AcmAssignedObject, Serializable
     private String attachedToObjectName;
     private Long attachedToObjectId;
     private String assignee;
-    private String owner;					//creator
+    private String owner;                    //creator
     private String businessProcessName;
     private Long businessProcessId;
     private boolean adhocTask;
@@ -249,11 +250,13 @@ public class AcmTask implements AcmAssignedObject, Serializable
         this.details = details;
     }
 
-    public String getAttachedToObjectName() {
+    public String getAttachedToObjectName()
+    {
         return attachedToObjectName;
     }
 
-    public void setAttachedToObjectName(String attachedToObjectName) {
+    public void setAttachedToObjectName(String attachedToObjectName)
+    {
         this.attachedToObjectName = attachedToObjectName;
     }
 
@@ -271,21 +274,25 @@ public class AcmTask implements AcmAssignedObject, Serializable
         return taskId;
     }
 
-	public String getOwner() {
-		return owner;
-	}
+    public String getOwner()
+    {
+        return owner;
+    }
 
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
+    public void setOwner(String owner)
+    {
+        this.owner = owner;
+    }
 
-	public Date getCreateDate() {
-		return createDate;
-	}
+    public Date getCreateDate()
+    {
+        return createDate;
+    }
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+    public void setCreateDate(Date createDate)
+    {
+        this.createDate = createDate;
+    }
 
     public String getWorkflowRequestType()
     {

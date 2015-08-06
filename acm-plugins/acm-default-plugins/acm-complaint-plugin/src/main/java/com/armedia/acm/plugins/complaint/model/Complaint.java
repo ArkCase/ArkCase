@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.complaint.model;
 
+import com.armedia.acm.core.AcmExtensible;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -12,13 +13,30 @@ import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
-
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +50,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "acm_complaint")
-public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity
+public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmExtensible
 {
     private static final long serialVersionUID = -1154137631399833851L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -120,8 +138,8 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
      */
     @Transient
     private List<String> approvers;
-    
-    @OneToMany (cascade = CascadeType.ALL)
+
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumns({
             @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_complaint_id"),
             @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")
@@ -132,7 +150,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType = ComplaintConstants.OBJECT_TYPE;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({
             @JoinColumn(name = "cm_object_id"),
             @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
@@ -145,10 +163,10 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
 
     @Column(name = "cm_tag")
     private String tag;
-    
+
     @Column(name = "cm_frequency")
     private String frequency;
-    
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_address_id")
     private PostalAddress location;
@@ -165,16 +183,16 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     @Column(name = "cm_complaint_restricted_flag", nullable = false)
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = false;
-        
+
     @PrePersist
     protected void beforeInsert()
     {
-        if ( getStatus() == null || getStatus().trim().isEmpty() )
+        if (getStatus() == null || getStatus().trim().isEmpty())
         {
             setStatus("DRAFT");
         }
 
-        if ( getOriginator() != null )
+        if (getOriginator() != null)
         {
             personAssociationResolver(getOriginator());
         }
@@ -184,21 +202,21 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
 
     private void setupChildPointers()
     {
-        for ( ObjectAssociation childObject : childObjects )
+        for (ObjectAssociation childObject : childObjects)
         {
             childObject.setParentId(complaintId);
         }
-        for ( PersonAssociation persAssoc : personAssociations)
+        for (PersonAssociation persAssoc : personAssociations)
         {
             personAssociationResolver(persAssoc);
         }
-        for ( AcmParticipant ap : getParticipants() )
+        for (AcmParticipant ap : getParticipants())
         {
             ap.setObjectId(getComplaintId());
             ap.setObjectType(getObjectType());
         }
 
-        if ( getContainer() != null )
+        if (getContainer() != null)
         {
             getContainer().setContainerObjectId(getComplaintId());
             getContainer().setContainerObjectType(getObjectType());
@@ -233,7 +251,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     {
         this.complaintNumber = complaintNumber;
 
-        if ( getContainer() != null )
+        if (getContainer() != null)
         {
             getContainer().setContainerObjectTitle(complaintNumber);
         }
@@ -323,7 +341,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     public void setModified(Date modified)
     {
         this.modified = modified;
-   }
+    }
 
     @Override
     public String getModifier()
@@ -405,49 +423,50 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
         return complaintId;
     }
 
-    public List<PersonAssociation> getPersonAssociations() 
+    public List<PersonAssociation> getPersonAssociations()
     {
         return personAssociations;
     }
 
-    public void setPersonAssociations(List<PersonAssociation> personAssociations) {
+    public void setPersonAssociations(List<PersonAssociation> personAssociations)
+    {
         this.personAssociations = personAssociations;
-    }   
-    
-    private void personAssociationResolver (PersonAssociation personAssoc)
+    }
+
+    private void personAssociationResolver(PersonAssociation personAssoc)
     {
         personAssoc.setParentId(getComplaintId());
         personAssoc.setParentType(ComplaintConstants.OBJECT_TYPE);
 
         if (personAssoc.getPerson().getPersonAssociations() == null)
         {
-        	personAssoc.getPerson().setPersonAssociations(new ArrayList<PersonAssociation>());
+            personAssoc.getPerson().setPersonAssociations(new ArrayList<PersonAssociation>());
         }
-        
+
         personAssoc.getPerson().getPersonAssociations().addAll(Arrays.asList(personAssoc));
     }
-       
+
     public Date getDueDate()
     {
         return dueDate;
     }
-    
-    public void setDueDate(Date dueDate) 
+
+    public void setDueDate(Date dueDate)
     {
         this.dueDate = dueDate;
     }
-    
+
     public String getTag()
     {
         return tag;
-}
+    }
 
     public void setTag(String tag)
     {
         this.tag = tag;
     }
 
-    public String getFrequency() 
+    public String getFrequency()
     {
         return frequency;
     }
@@ -457,16 +476,18 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
         this.frequency = frequency;
     }
 
-    public PostalAddress getLocation() {
-		return location;
-	}
+    public PostalAddress getLocation()
+    {
+        return location;
+    }
 
-	public void setLocation(PostalAddress location) {
-		this.location = location;
-	}
+    public void setLocation(PostalAddress location)
+    {
+        this.location = location;
+    }
 
     @Override
-	public List<AcmParticipant> getParticipants()
+    public List<AcmParticipant> getParticipants()
     {
         return participants;
     }
@@ -505,7 +526,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     @Override
     public void setContainer(AcmContainer container)
     {
-        if ( container != null )
+        if (container != null)
         {
             container.setContainerObjectType(getObjectType());
         }
