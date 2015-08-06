@@ -95,6 +95,7 @@
         <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
         <puppycrawl.version>6.8.1</puppycrawl.version>
         <log4j.version>2.2</log4j.version>
+        <bouncycastle.version>1.52</bouncycastle.version>
     </properties>
 
     <organization>
