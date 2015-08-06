@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="arkCaseAuthenticator" class="com.armedia.acm.userinterface.connector.ArkCaseAuthenticator" />
+
+       <bean id="arkCaseAuthenticationProvider" class="com.armedia.acm.userinterface.connector.ArkCaseAuthenticationProvider">
+              <!-- "connector.service" is taken from surf context. The import is in "acm-user-interface/src/main/resources/spring/surf/surf-config.xml -->
+              <property name="connectorService" ref="connector.service" />
+              <property name="arkCaseAuthenticator" ref="arkCaseAuthenticator" />
+       </bean>
+
+</beans>
