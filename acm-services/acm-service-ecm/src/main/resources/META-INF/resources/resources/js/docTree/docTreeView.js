@@ -123,7 +123,9 @@ DocTree.View = DocTree.View || {
                     else{
                         var emailData = DocTree.View.Email.makeEmailData(emailAddresses, nodes);
                         if(Acm.isNotEmpty(DocTree.View.allowMailFilesAsAttachments) && Acm.compare("true", DocTree.View.allowMailFilesAsAttachments.toLowerCase())) {
-                            DocTree.Model.sendEmailWithAttachments(emailData);
+                            DocTree.Model.sendEmailWithAttachments(emailData).done(function(){
+                                Acm.MessageBoard.show($.t("doctree:email.success"));
+                            });
                         }
                         else{
                             DocTree.Model.sendEmail(emailData).fail(function(failed){
@@ -300,7 +302,7 @@ DocTree.View = DocTree.View || {
             if(Acm.isNotEmpty(DocTree.View.arkcasePort)){
                 url += ":" + Acm.goodValue(DocTree.View.arkcasePort);
             }
-            url+= App.getContextPath() + "/api/v1/plugin/ecm/download?ecmFileId=";
+            url+= App.getContextPath() + DocTree.Model.API_DOWNLOAD_DOCUMENT_;
             return url;
         }
     }

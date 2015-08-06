@@ -4,9 +4,9 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-create-acm-authentication-tokens-table" author="mnj11">
+    <changeSet id="01-create-acm-authentication-token-table" author="mnj11">
 
-        <createTable tableName="acm_authentication_tokens">
+        <createTable tableName="acm_authentication_token">
 
             <column name="cm_authentication_token_id" type="${idType}">
                 <constraints
@@ -51,30 +51,6 @@
             </column>
 
         </createTable>
-    </changeSet>
-    <changeSet id="02-acm_authentication_tokens-id" author="mnj11">
-        <createTable tableName="acm_authentication_tokens_id">
-            <column name="cm_seq_num" type="${idType}"/>
-            <column name="cm_seq_name" type="VARCHAR(255)"/>
-        </createTable>
-        <insert tableName="acm_authentication_tokens_id">
-            <column name="cm_seq_num" value="100"></column>
-            <column name="cm_seq_name" value="acm_authentication_tokens"></column>
-        </insert>
-    </changeSet>
-    <changeSet id="03-acm_authentication_tokens-constraint-file-id" author="mnj11">
-        <preConditions>
-            <and>
-                <tableExists tableName="acm_file"/>
-                <columnExists tableName="acm_authentication_tokens" columnName="cm_authentication_token_file_id"/>
-            </and>
-        </preConditions>
-        <addForeignKeyConstraint baseTableName="acm_authentication_tokens" baseColumnNames="cm_authentication_token_file_id"
-                                 constraintName="fk_authentication_token_file_id"
-                                 referencedTableName="acm_file"
-                                 referencedColumnNames="cm_file_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
 

@@ -7,6 +7,7 @@ import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenCon
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.users.service.group.GroupService;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.json.JSONArray;
@@ -58,6 +59,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     private AuthenticationTokenDao authenticationTokenDao;
     private MuleContextManager muleContextManager;
     private AcmGrantedAuthoritiesMapper acmGrantedAuthoritiesMapper;
+//    private GroupService groupService;
 
     public AcmBasicAndTokenAuthenticationFilter(AuthenticationManager authenticationManager)
     {
@@ -101,6 +103,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                                 authenticationToken.setModifier(authenticationToken.getCreator());
                                 authenticationToken.setModified(new Date());
                                 getAuthenticationTokenDao().save(authenticationToken);
+                                return;
                             }
                             try
                             {
@@ -346,4 +349,12 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     public void setAcmGrantedAuthoritiesMapper(AcmGrantedAuthoritiesMapper acmGrantedAuthoritiesMapper) {
         this.acmGrantedAuthoritiesMapper = acmGrantedAuthoritiesMapper;
     }
+
+    /*public GroupService getGroupService() {
+        return groupService;
+    }
+
+    public void setGroupService(GroupService groupService) {
+        this.groupService = groupService;
+    }*/
 }

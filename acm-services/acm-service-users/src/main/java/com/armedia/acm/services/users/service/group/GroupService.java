@@ -7,6 +7,8 @@ import java.util.Set;
 
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import org.mule.api.MuleException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 /**
  * @author riste.tutureski
@@ -30,4 +32,12 @@ public interface GroupService {
 	 * @return
 	 */
 	public Set<AcmUser> updateMembersWithDatabaseInfo(Set<AcmUser> members);
+
+	/**
+	 * Retrieve all LDAP groups that a user belongs to
+	 *
+	 * @param usernamePasswordAuthenticationToken
+	 * @return LDAP groups
+	 */
+//	public String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException;
 }
