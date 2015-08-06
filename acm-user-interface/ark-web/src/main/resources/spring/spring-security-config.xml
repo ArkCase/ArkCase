@@ -20,8 +20,16 @@
 
     <!-- arkCaseAuthenticationProvider is defined in spring-library-surf-connector.xml -->
 
-    <http
-            auto-config="true">
+    <http pattern="/proxy/**" auto-config="true" create-session="stateless">
+        <intercept-url pattern="/proxy/**" access="ROLE_USER_INTERFACE" />
+        <http-basic/>
+        <logout
+                logout-url="/logout"
+                delete-cookies="JSESSIONID"
+                invalidate-session="true"/>
+    </http>
+
+    <http auto-config="true">
         <intercept-url pattern="/**" access="ROLE_USER_INTERFACE" />
         <form-login
                 login-page="/login"
