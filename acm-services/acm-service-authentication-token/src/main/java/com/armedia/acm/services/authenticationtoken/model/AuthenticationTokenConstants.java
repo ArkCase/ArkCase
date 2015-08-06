@@ -6,4 +6,8 @@ package com.armedia.acm.services.authenticationtoken.model;
 public interface AuthenticationTokenConstants {
     String EMAIL_LINKS = "EMAIL_LINKS";
 
+    String ACTIVE = "ACTIVE";
+
+    String EXPIRED = "EXPIRED";
+
 }

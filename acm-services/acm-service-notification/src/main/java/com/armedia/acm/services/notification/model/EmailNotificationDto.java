@@ -13,7 +13,7 @@ public class EmailNotificationDto {
     private String note;
     private List<String> users;
     private List<String> emailAddresses;
-    private List<String> urls;
+    private String baseUrl;
     private String header;
     private String footer;
     private List<Long> fileIds;
@@ -65,14 +65,13 @@ public class EmailNotificationDto {
         this.objectId = objectId;
     }
 
-    public List<String> getUrls() {
-        return urls;
+    public String getBaseUrl() {
+        return baseUrl;
     }
 
-    public void setUrls(List<String> urls) {
-        this.urls = urls;
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
-
 
     public String getHeader() {
         return header;

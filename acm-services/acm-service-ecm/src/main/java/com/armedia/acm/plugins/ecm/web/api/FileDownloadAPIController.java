@@ -38,11 +38,11 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/download/byId/{ecmFileId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/download", method = RequestMethod.GET)
     @ResponseBody
     public void downloadFileById(
             @RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline,
-            @PathVariable("ecmFileId") Long fileId,
+            @RequestParam(value= "ecmFileId", required = true, defaultValue = "0") Long fileId,
             @RequestParam(value= "acm_email_ticket", required = false, defaultValue = "") String acm_email_ticket,
             Authentication authentication,
             HttpSession httpSession,
