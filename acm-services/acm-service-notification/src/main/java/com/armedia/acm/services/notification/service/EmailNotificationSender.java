@@ -113,7 +113,7 @@ public class EmailNotificationSender implements NotificationSender {
 	}
 
 	public String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, EmailNotificationDto emailNotificationDto, Authentication authentication){
-		String token = getAuthenticationTokenService().getTokenForAuthentication(authentication);
+		String token = getAuthenticationTokenService().getUncachedTokenForAuthentication(authentication);
 		saveAuthenticationToken(emailAddress,fileId,token);
 		return token;
 	}

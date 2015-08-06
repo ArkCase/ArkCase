@@ -193,6 +193,10 @@
             ,"defaultValue": "Enter an email address OR search for users within ArkCase."
             ,"description": ""
         }
+        ,"success":{"value": "Email sent successfully"
+            ,"defaultValue": "Email sent successfully"
+            ,"description": ""
+        }
         ,"btnTextGo": {"value": "Go!"
             ,"defaultValue": "Go!"
             ,"description": ""

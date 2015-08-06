@@ -10,21 +10,21 @@ import java.util.Date;
 
 
 @Entity
-@Table(name = "acm_authentication_tokens")
+@Table(name = "acm_authentication_token")
 public class AuthenticationToken implements Serializable, AcmEntity
 
 {
     private static final long serialVersionUID = -1154137631399833851L;
 
     @Id
-    @TableGenerator(name = "acm_authentication_tokens_gen",
-            table = "acm_authentication_tokens_id",
+    @TableGenerator(name = "acm_authentication_token_gen",
+            table = "acm_authentication_token_id",
             pkColumnName = "cm_seq_name",
             valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_authentication_tokens",
+            pkColumnValue = "acm_authentication_token",
             initialValue = 100,
             allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_authentication_tokens_gen")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_authentication_token_gen")
     @Column(name = "cm_authentication_token_id")
     private Long id;
 

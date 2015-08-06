@@ -85,7 +85,7 @@ public interface EcmFileService
      * @usage Needed to create attachments for Exchange Web Services (EWS)
      */
 
-    InputStream downloadAsInputStream(Long id) throws MuleException;
+    InputStream downloadAsInputStream(Long id) throws MuleException, AcmUserActionFailedException;
 
 
     /**
