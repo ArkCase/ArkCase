@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="pipelineContext" class="com.armedia.acm.services.pipeline.PipelineContext">
+    <bean id="pipelineTaskContext" class="com.armedia.acm.services.pipeline.PipelineContext">
         <!--property name="taskDao" ref="taskDao"/-->
     </bean>
 
@@ -16,7 +16,7 @@
 
     <!-- task pipeline manager -->
     <bean id="taskPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
-        <property name="pipelineContext" ref="pipelineContext"/>
+        <property name="pipelineContext" ref="pipelineTaskContext"/>
         <property name="preSaveHandlers">
             <list>
                 <ref bean="taskPreSaveHandler"/>
