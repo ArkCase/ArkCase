@@ -3,9 +3,12 @@ package com.armedia.acm.auth;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.service.SearchResults;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.json.JSONArray;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -30,6 +33,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -82,63 +86,73 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
 
     public void validateEmailTicketAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException, MuleException{
         String emailToken = ServletRequestUtils.getStringParameter(request, "acm_email_ticket");
-        String fileId = ServletRequestUtils.getStringParameter(request, "itemNum");
+        String fileId = ServletRequestUtils.getStringParameter(request, "ecmFileId");
         if( emailToken != null){
             List<AuthenticationToken> authenticationTokens = getAuthenticationTokenDao().findAuthenticationTokenByKey(emailToken);
             if(authenticationTokens != null){
                 for(AuthenticationToken authenticationToken : authenticationTokens){
-                    if(emailToken.equals(authenticationToken.getKey()) ){
-                        //&& fileId.equals(authenticationToken.getFileId()
-                        try
-                        {
-                            if ( logger.isTraceEnabled() )
-                            {
-                                log.trace("starting token auth for email links");
+                    if((AuthenticationTokenConstants.ACTIVE).equals(authenticationToken.getStatus())){
+                        if(emailToken.equals(authenticationToken.getKey())
+                                && fileId.equals(authenticationToken.getFileId().toString())){
+                            int days = Days.daysBetween(new DateTime(authenticationToken.getCreated()), new DateTime()).getDays();
+                            //token expires after 3 days
+                            if(days > 3){
+                                authenticationToken.setStatus(AuthenticationTokenConstants.EXPIRED);
+                                authenticationToken.setModifier(authenticationToken.getCreator());
+                                authenticationToken.setModified(new Date());
+                                getAuthenticationTokenDao().save(authenticationToken);
                             }
                             try
                             {
-                                Authentication authentication;
-                                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authenticationToken.getCreator(), authenticationToken.getCreator());
-                                String ldapGroups = getLdapGroupsForUser(usernamePasswordAuthenticationToken);
-                                SearchResults searchResults = new SearchResults();
-                                JSONArray docs = searchResults.getDocuments(ldapGroups);
-                                List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-                                if (docs != null)
+                                if ( logger.isTraceEnabled() )
                                 {
-                                    for (int i = 0; i < docs.length(); i++)
-                                    {
-                                        grantedAuthorities.add(new SimpleGrantedAuthority(searchResults.extractString(docs.getJSONObject(i), SearchConstants.PROPERTY_NAME)));
-                                    }
+                                    log.trace("starting token auth for email links");
                                 }
-                                authentication=new UsernamePasswordAuthenticationToken(authenticationToken.getCreator(), authenticationToken.getCreator(), getAcmGrantedAuthoritiesMapper().mapAuthorities(grantedAuthorities));
-                                SecurityContextHolder.getContext().setAuthentication(authentication);
-                                onSuccessfulAuthentication(request, response, authentication);
+                                try
+                                {
+                                    Authentication authentication;
+                                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authenticationToken.getCreator(), authenticationToken.getCreator());
+                                    String ldapGroups = getLdapGroupsForUser(usernamePasswordAuthenticationToken);
+                                    SearchResults searchResults = new SearchResults();
+                                    JSONArray docs = searchResults.getDocuments(ldapGroups);
+                                    List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+                                    if (docs != null)
+                                    {
+                                        for (int i = 0; i < docs.length(); i++)
+                                        {
+                                            grantedAuthorities.add(new SimpleGrantedAuthority(searchResults.extractString(docs.getJSONObject(i), SearchConstants.PROPERTY_NAME)));
+                                        }
+                                    }
+                                    authentication=new UsernamePasswordAuthenticationToken(authenticationToken.getCreator(), authenticationToken.getCreator(), getAcmGrantedAuthoritiesMapper().mapAuthorities(grantedAuthorities));
+                                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                                    onSuccessfulAuthentication(request, response, authentication);
+                                }
+                                catch (IllegalArgumentException e)
+                                {
+                                    throw new PreAuthenticatedCredentialsNotFoundException(e.getMessage(), e);
+                                }
                             }
-                            catch (IllegalArgumentException e)
+                            catch (AuthenticationException failed)
                             {
-                                throw new PreAuthenticatedCredentialsNotFoundException(e.getMessage(), e);
-                            }
-                        }
-                        catch (AuthenticationException failed)
-                        {
-                            SecurityContextHolder.clearContext();
-                            if ( logger.isTraceEnabled() )
-                            {
-                                logger.trace("Authentication request failed: " + failed);
-                            }
+                                SecurityContextHolder.clearContext();
+                                if ( logger.isTraceEnabled() )
+                                {
+                                    logger.trace("Authentication request failed: " + failed);
+                                }
 
-                            onUnsuccessfulAuthentication(request, response, failed);
+                                onUnsuccessfulAuthentication(request, response, failed);
 
-                            if ( isIgnoreFailure() )
-                            {
-                                chain.doFilter(request, response);
-                            }
-                            else
-                            {
-                                getAuthenticationEntryPoint().commence(request, response, failed);
-                            }
+                                if ( isIgnoreFailure() )
+                                {
+                                    chain.doFilter(request, response);
+                                }
+                                else
+                                {
+                                    getAuthenticationEntryPoint().commence(request, response, failed);
+                                }
 
-                            return;
+                                return;
+                            }
                         }
                     }
                 }

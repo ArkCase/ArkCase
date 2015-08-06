@@ -11,6 +11,8 @@ public class EmailWithAttachmentsDTO {
     private String objectType;
     private Long objectId;
     private String subject;
+    private String header;
+    private String footer;
     private String body;
     private List<String> users;
     private List<String> emailAddresses;
@@ -68,4 +70,21 @@ public class EmailWithAttachmentsDTO {
     public void setObjectId(Long objectId) {
         this.objectId = objectId;
     }
+
+    public String getHeader() {
+        return header;
+    }
+
+    public void setHeader(String header) {
+        this.header = header;
+    }
+
+    public String getFooter() {
+        return footer;
+    }
+
+    public void setFooter(String footer) {
+        this.footer = footer;
+    }
+
 }

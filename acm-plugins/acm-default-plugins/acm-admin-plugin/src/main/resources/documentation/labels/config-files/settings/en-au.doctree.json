@@ -217,8 +217,8 @@
             ,"defaultValue": "Click to enter time"
             ,"description": ""
         }
-        ,"header-for-email-with-links": {"value": "Please follow the links below to view the document(s): "
-            ,"defaultValue": "Please follow the links below to view the document(s): "
+        ,"header-for-email-with-links": {"value": "Please follow the links below to view the document(s). Links expire in 3 days."
+            ,"defaultValue": "Please follow the links below to view the document(s). Links expire in 3 days."
             ,"description": ""
         }
         ,"footer-for-email-with-links": {"value": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
@@ -231,13 +231,13 @@
             ,"description": ""
         },
         "header-for-email-with-attachment":{
-            "value": "Hello,"
-            ,"defaultValue": "Hello,"
+            "value": "Hello,<br />"
+            ,"defaultValue": "Hello,<br />"
             ,"description": ""
         },
         "body-for-email-with-attachment":{
-            "value": "Please find attached the documents sent to you from ArkCase"
-            ,"defaultValue": "Please find attached the documents sent to you from ArkCase"
+            "value": "Please find attached the documents sent to you from ArkCase.<br /><br />"
+            ,"defaultValue": "Please find attached the documents sent to you from ArkCase.<br /><br />"
             ,"description": ""
         }
         ,"footer-for-email-with-attachment":{

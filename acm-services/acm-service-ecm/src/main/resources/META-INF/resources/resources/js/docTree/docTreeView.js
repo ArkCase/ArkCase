@@ -123,9 +123,7 @@ DocTree.View = DocTree.View || {
                     else{
                         var emailData = DocTree.View.Email.makeEmailData(emailAddresses, nodes);
                         if(Acm.isNotEmpty(DocTree.View.allowMailFilesAsAttachments) && Acm.compare("true", DocTree.View.allowMailFilesAsAttachments.toLowerCase())) {
-                            DocTree.Model.sendEmailWithAttachments(emailData);/*.fail(function(failed){
-                                Acm.MessageBoard.show($.t("doctree:error.email-delivery") + failed + "\n" + $.t("doctree:error.email-retry"));
-                            });*/
+                            DocTree.Model.sendEmailWithAttachments(emailData);
                         }
                         else{
                             DocTree.Model.sendEmail(emailData).fail(function(failed){
@@ -257,7 +255,8 @@ DocTree.View = DocTree.View || {
             var emailData = {};
             emailData.emailAddresses = emailAddresses;
             emailData.title = Acm.goodValue(title, "ArkCase Documents");
-            emailData.urls = DocTree.View.Email._makeUrls(nodes);
+            emailData.fileIds = DocTree.View.Email._extractFileIds(nodes);
+            emailData.baseUrl =DocTree.View.Email._makeBaseUrl();
             emailData.header = $.t("doctree:email.header-for-email-with-links") + "\n\n";
             emailData.footer = "\n\n" + $.t("doctree:email.footer-for-email-with-links");
             emailNotifications.push(emailData);
@@ -267,7 +266,9 @@ DocTree.View = DocTree.View || {
             var emailData = {};
             emailData.emailAddresses = emailAddresses;
             emailData.subject = $.t("doctree:email.subject-for-email-with-attachment");
-            emailData.body = $.t("doctree:email.header-for-email-with-attachment") + "\n" + $.t("doctree:email.body-for-email-with-attachment") + "\n\n\n" + $.t("doctree:email.footer-for-email-with-attachment") ;
+            emailData.body = $.t("doctree:email.body-for-email-with-attachment");
+            emailData.header = $.t("doctree:email.header-for-email-with-attachment");
+            emailData.footer = $.t("doctree:email.footer-for-email-with-attachment");
             emailData.emailAddresses = emailAddresses;
             var attachmentIds = [];
             if(Acm.isArray(nodes)){
@@ -282,41 +283,25 @@ DocTree.View = DocTree.View || {
             emailData.attachmentIds = attachmentIds;
             return emailData;
         }
-        ,_makeUrls: function(nodes){
-            var urls=[];
+        ,_extractFileIds: function(nodes){
+            var fileIds=[];
             if(Acm.isArray(nodes)){
                 for(var i = 0; i < nodes.length; i++){
-                    var title = Acm.goodValue(nodes[i].data.name) + "\n";
-                    var url = Acm.goodValue(DocTree.View.arkcaseUrl);
-                    if(Acm.isNotEmpty(DocTree.View.arkcasePort)){
-                        url += ":" + Acm.goodValue(DocTree.View.arkcasePort);
-                    }
-                    url+= App.getContextPath() + "/plugin/document/" + Acm.goodValue(nodes[i].data.objectId);
-                    urls.push(url);
+                    fileIds.push(Acm.goodValue(nodes[i].data.objectId));
                 }
             }
             else{
-                var title = Acm.goodValue(nodes.data.name) + "\n";
-                var url = Acm.goodValue(DocTree.View.arkcaseUrl);
-                if(Acm.isNotEmpty(DocTree.View.arkcasePort)){
-                    url += ":" + Acm.goodValue(DocTree.View.arkcasePort);
-                }
-                url+= App.getContextPath() + "/plugin/document/" + Acm.goodValue(nodes.data.objectId);
-                urls.push(url);
+                fileIds.push(Acm.goodValue(nodes.data.objectId));
             }
-            return urls;
+            return fileIds;
         }
-        ,_extractDocumentId: function(nodes){
-            var documentIds=[];
-            if(Acm.isArray(nodes)){
-                for(var i = 0; i < nodes.length; i++){
-                    documentIds.push(Acm.goodValue(nodes[i].data.objectId));
-                }
+        ,_makeBaseUrl: function(){
+            var url = Acm.goodValue(DocTree.View.arkcaseUrl);
+            if(Acm.isNotEmpty(DocTree.View.arkcasePort)){
+                url += ":" + Acm.goodValue(DocTree.View.arkcasePort);
             }
-            else{
-                documentIds.push(Acm.goodValue(nodes[i].data.objectId));
-            }
-            return documentIds;
+            url+= App.getContextPath() + "/api/v1/plugin/ecm/download?ecmFileId=";
+            return url;
         }
     }
 
@@ -2421,7 +2406,13 @@ DocTree.View = DocTree.View || {
     }
 
     ,_doDownload: function(node) {
-        DocTree.View.$formDownloadDoc.attr("action", App.getContextPath() + DocTree.Model.API_DOWNLOAD_DOCUMENT_ + node.data.objectId);
+        var url = App.getContextPath() + DocTree.Model.API_DOWNLOAD_DOCUMENT_ + node.data.objectId;
+        DocTree.View.$formDownloadDoc.attr("action", url);
+        this.$input = $('<input>').attr({
+            id: 'fileId',
+            name: 'ecmFileId',
+        });
+        this.$input.val(node.data.objectId).appendTo(this.$formDownloadDoc);
         DocTree.View.$formDownloadDoc.submit();
     }
 

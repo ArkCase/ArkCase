@@ -23,7 +23,7 @@ DocTree.Model = DocTree.Model || {
     ,API_DELETE_FOLDER_               : "/api/latest/service/ecm/folder/"
     ,API_UPLOAD_FILE                  : "/api/latest/service/ecm/upload"
     ,API_REPLACE_FILE_                : "/api/latest/service/ecm/replace/"                       //  {fileToBeReplacedId}
-    ,API_DOWNLOAD_DOCUMENT_           : "/api/v1/plugin/ecm/download/byId/"
+    ,API_DOWNLOAD_DOCUMENT_           : "/api/v1/plugin/ecm/download?ecmFileId="
     ,API_DELETE_FILE_                 : "/api/latest/service/ecm/id/"
     ,API_RENAME_FOLDER_               : "/api/latest/service/ecm/folder/"                        //  {folderId}/{newFolderName}
     ,API_RENAME_FILE_                 : "/api/latest/service/ecm/file/"                          //  {objectId}/{newName}/{extension}

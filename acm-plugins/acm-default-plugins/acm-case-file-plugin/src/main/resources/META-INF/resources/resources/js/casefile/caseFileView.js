@@ -2917,7 +2917,7 @@ CaseFile.View = CaseFile.View || {
         , onInitialized: function () {
         }
 
-        ,API_DOWNLOAD_DOCUMENT_      : "/api/latest/plugin/ecm/download/byId/"
+        ,API_DOWNLOAD_DOCUMENT_      : "/api/latest/plugin/ecm/download?ecmFileId="
 
         , onModelRetrievedObject: function (objData) {
             AcmEx.Object.JTable.load(CaseFile.View.Correspondence.$divCorrespondence);

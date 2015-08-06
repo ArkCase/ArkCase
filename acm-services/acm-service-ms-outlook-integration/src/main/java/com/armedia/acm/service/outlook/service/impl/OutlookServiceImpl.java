@@ -297,7 +297,9 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         ExchangeService service = connect(user);
         EmailMessage emailMessage = new EmailMessage(service);
         emailMessage.setSubject(emailWithAttachmentsDTO.getSubject());
-        emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getBody()));
+        emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getHeader()
+                + emailWithAttachmentsDTO.getBody()
+                + emailWithAttachmentsDTO.getFooter()));
 
         for (String emailAddress: emailWithAttachmentsDTO.getEmailAddresses()) {
             emailMessage.getToRecipients().add(emailAddress);
@@ -307,10 +309,13 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
             EcmFile ecmFile = getEcmFileService().findById(attachmentId);
             emailMessage.getAttachments().addFileAttachment(ecmFile.getFileName(), contents);
-            emailMessage.send();
         }
+        emailMessage.sendAndSaveCopy();
 
-        //use this if a copy of the sent email is needed
+
+        //use the first method if you don't require a copy
+        // use the second if a copy of the sent email is needed
+        //emailMessage.send();
         //emailMessage.sendAndSaveCopy();
     }
 
