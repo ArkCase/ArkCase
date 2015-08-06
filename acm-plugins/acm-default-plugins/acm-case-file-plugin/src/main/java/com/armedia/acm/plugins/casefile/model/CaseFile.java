@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.casefile.model;
 
+import com.armedia.acm.core.AcmExtensible;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -56,7 +57,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.casefile.model.CaseFile")
-public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity
+public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmExtensible
 {
     private static final long serialVersionUID = -6035628455385955008L;
 

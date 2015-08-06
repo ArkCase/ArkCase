@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="pipelineContext" class="com.armedia.acm.services.pipeline.PipelineContext">
+        <!--property name="taskDao" ref="taskDao"/-->
+    </bean>
+
+    <!-- pre-save handlers -->
+    <bean id="taskPreSaveHandler"
+          class="com.armedia.acm.services.pipeline.handler.task.TaskPreSaveHandler"/>
+    <!-- post-save handlers -->
+    <bean id="taskPostSaveHandler"
+          class="com.armedia.acm.services.pipeline.handler.task.TaskPostSaveHandler"/>
+
+    <!-- task pipeline manager -->
+    <bean id="taskPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
+        <property name="pipelineContext" ref="pipelineContext"/>
+        <property name="preSaveHandlers">
+            <list>
+                <ref bean="taskPreSaveHandler"/>
+            </list>
+        </property>
+        <property name="postSaveHandlers">
+            <list>
+                <ref bean="taskPostSaveHandler"/>
+            </list>
+        </property>
+    </bean>
+</beans>
