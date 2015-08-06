@@ -13,8 +13,6 @@
     <!-- post-save handlers -->
     <bean id="complaintPostSaveHandler"
           class="com.armedia.acm.services.pipeline.handler.complaint.ComplaintPostSaveHandler"/>
-    <bean id="complaintPostSaveHandler2"
-          class="com.armedia.acm.services.pipeline.handler.complaint.ComplaintPostSaveHandler"/>
 
     <!-- complaint pipeline manager -->
     <bean id="complaintPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
@@ -27,7 +25,6 @@
         <property name="postSaveHandlers">
             <list>
                 <ref bean="complaintPostSaveHandler"/>
-                <ref bean="complaintPostSaveHandler2"/>
             </list>
         </property>
     </bean>
