@@ -22,6 +22,7 @@ public class EncryptColumnEntityAdapter extends DescriptorEventAdapter {
     private Map<Object, Boolean> entityCache = new ConcurrentHashMap<>();
     private Map<Object, List<String>> cachedEntitiesWithEncryptedColumns = new ConcurrentHashMap<>();
     private Boolean encryptionEnabled;
+    private Boolean databasePlatformSupported;
     private String encryptionProperties;
     private String encryptionDBFunction;
     private String encryptionPassphrase;
@@ -32,10 +33,10 @@ public class EncryptColumnEntityAdapter extends DescriptorEventAdapter {
 
         if (!checkPropertiesSet())
             return;
-        if (!checkDBSupportedForEncryption(event))
+        if (!databasePlatformSupported.booleanValue())
             return;
 
-        if (encryptionEnabled) {
+        if (encryptionEnabled.booleanValue()) {
             if (entityCache.containsKey(event.getObject()) && entityCache.get(event.getObject()) == Boolean.FALSE) {
                 //this entity doesn't have fields to be encrypted
                 return;
@@ -55,10 +56,10 @@ public class EncryptColumnEntityAdapter extends DescriptorEventAdapter {
         super.aboutToUpdate(event);
         if (!checkPropertiesSet())
             return;
-        if (!checkDBSupportedForEncryption(event))
+        if (!databasePlatformSupported.booleanValue())
             return;
 
-        if (encryptionEnabled) {
+        if (encryptionEnabled.booleanValue()) {
             if (entityCache.containsKey(event.getObject()) && entityCache.get(event.getObject()) == Boolean.FALSE) {
                 //this entity doesn't have fields to be encrypted
                 return;
@@ -73,14 +74,6 @@ public class EncryptColumnEntityAdapter extends DescriptorEventAdapter {
         }
     }
 
-    private boolean checkDBSupportedForEncryption(DescriptorEvent event) {
-        //if we want to support additional db just add || event.getSession().getDatasourcePlatform().isMySQL() to the isSupportedDB
-        boolean isSupportedDB = event.getSession().getDatasourcePlatform().isPostgreSQL();
-        if (!isSupportedDB)
-            log.debug("{} database platform is not supported for encryption", event.getSession().getDatasourcePlatform().getClass().getName());
-        return isSupportedDB;
-    }
-
     private boolean checkPropertiesSet() {
         //add additional properties here to log if not set
         if (encryptionEnabled == null)
@@ -92,6 +85,14 @@ public class EncryptColumnEntityAdapter extends DescriptorEventAdapter {
         }
         if (encryptionDBFunction == null) {
             log.warn("Encryption enabled but encryption db function not set.");
+            checked = false;
+        }
+        if (databasePlatformSupported == null) {
+            log.warn("Encryption enabled but database platform supported is not set.");
+            checked = false;
+        }
+        if (encryptionPassphrase == null) {
+            log.warn("Encryption enabled but passphrase is not set.");
             checked = false;
         }
         return checked;
@@ -165,6 +166,14 @@ public class EncryptColumnEntityAdapter extends DescriptorEventAdapter {
 
     public void setEncryptionPassphrase(String encryptionPassphrase) {
         this.encryptionPassphrase = encryptionPassphrase;
+    }
+
+    public Boolean getDatabasePlatformSupported() {
+        return databasePlatformSupported;
+    }
+
+    public void setDatabasePlatformSupported(Boolean databasePlatformSupported) {
+        this.databasePlatformSupported = databasePlatformSupported;
     }
 
     public String getEncryptionProperties() {

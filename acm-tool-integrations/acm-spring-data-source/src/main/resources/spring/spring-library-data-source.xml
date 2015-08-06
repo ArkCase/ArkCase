@@ -144,6 +144,7 @@
         <property name="encryptionDBFunction" value="${database.encryption_function}"/>
         <property name="encryptionEnabled" value="${database.encryption_enabled}"/>
         <property name="encryptionPassphrase" value="${database.encryption_passphrase}"/>
+        <property name="databasePlatformSupported" value="${database.platform_supported}"/>
     </bean>
 
 
@@ -167,6 +168,8 @@
                 <value type="java.lang.Boolean">${database.encryption_enabled}</value>
                 <ref bean="acmCryptoUtils"/>
                 <value type="java.lang.String">${database.encryption_passphrase}</value>
+                <value type="java.lang.Boolean">${database.platform_supported}</value>
+
             </list>
         </property>
     </bean>
