@@ -194,7 +194,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                 validateEmailTicketAuthentication(request,response,chain);
             }
             catch(MuleException e){
-
+                log.error("Could not validate email ticket" + e.getMessage(), e);
             }
         }
 
