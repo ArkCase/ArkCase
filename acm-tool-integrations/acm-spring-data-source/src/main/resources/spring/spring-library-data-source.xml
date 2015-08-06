@@ -139,6 +139,12 @@
     </bean>
 
     <bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>
+    <bean id="encryptColumnEntityAdapter" class="com.armedia.acm.data.EncryptColumnEntityAdapter">
+        <property name="encryptionProperties" value="${database.encryption_properties}"/>
+        <property name="encryptionDBFunction" value="${database.encryption_function}"/>
+        <property name="encryptionEnabled" value="${database.encryption_enabled}"/>
+        <property name="encryptionPassphrase" value="${database.encryption_passphrase}"/>
+    </bean>
 
 
     <bean id="springEntityListenerConfigurer" class="com.armedia.acm.data.SpringEntityListenerConfigurer">
@@ -149,6 +155,18 @@
             <list>
                 <ref bean="objectChangesBySessionAccumulator"/>
                 <ref bean="auditPropertyEntityAdapter"/>
+                <ref bean="encryptColumnEntityAdapter"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="com.armedia.acm.data.converter.StringEncryptionConverter.setAcmDecryptionProperties"/>
+        <property name="arguments">
+            <list>
+                <value type="java.lang.Boolean">${database.encryption_enabled}</value>
+                <ref bean="acmCryptoUtils"/>
+                <value type="java.lang.String">${database.encryption_passphrase}</value>
             </list>
         </property>
     </bean>
