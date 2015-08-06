@@ -231,13 +231,13 @@
             ,"description": ""
         },
         "header-for-email-with-attachment":{
-            "value": "Hello,<br />"
-            ,"defaultValue": "Hello,<br />"
+            "value": "Hello,"
+            ,"defaultValue": "Hello,"
             ,"description": ""
         },
         "body-for-email-with-attachment":{
-            "value": "Please find attached the documents sent to you from ArkCase.<br /><br />"
-            ,"defaultValue": "Please find attached the documents sent to you from ArkCase.<br /><br />"
+            "value": "Please find attached the documents sent to you from ArkCase."
+            ,"defaultValue": "Please find attached the documents sent to you from ArkCase."
             ,"description": ""
         }
         ,"footer-for-email-with-attachment":{

@@ -25,10 +25,7 @@ import microsoft.exchange.webservices.data.core.service.schema.ContactSchema;
 import microsoft.exchange.webservices.data.core.service.schema.EmailMessageSchema;
 import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
 import microsoft.exchange.webservices.data.core.service.schema.TaskSchema;
-import microsoft.exchange.webservices.data.enumeration.DeleteMode;
-import microsoft.exchange.webservices.data.enumeration.EmailAddressKey;
-import microsoft.exchange.webservices.data.enumeration.PhoneNumberKey;
-import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
+import microsoft.exchange.webservices.data.enumeration.*;
 import microsoft.exchange.webservices.data.exception.ServiceLocalException;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.FolderPermission;
@@ -297,10 +294,10 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         ExchangeService service = connect(user);
         EmailMessage emailMessage = new EmailMessage(service);
         emailMessage.setSubject(emailWithAttachmentsDTO.getSubject());
-        emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getHeader()
-                + emailWithAttachmentsDTO.getBody()
+        emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getHeader() + "\r\r"
+                + emailWithAttachmentsDTO.getBody() + "\r\r\r"
                 + emailWithAttachmentsDTO.getFooter()));
-
+        emailMessage.getBody().setBodyType(BodyType.Text);
         for (String emailAddress: emailWithAttachmentsDTO.getEmailAddresses()) {
             emailMessage.getToRecipients().add(emailAddress);
         }
