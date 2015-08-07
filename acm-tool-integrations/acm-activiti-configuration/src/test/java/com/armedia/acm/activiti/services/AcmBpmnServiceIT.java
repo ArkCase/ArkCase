@@ -8,7 +8,6 @@ import org.activiti.engine.RepositoryService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.util.FileUtils;
@@ -38,18 +37,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-activiti-configuration.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-context-holder.xml",
-        "/spring/spring-library-property-file-manager.xml"
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class AcmBpmnServiceIT {

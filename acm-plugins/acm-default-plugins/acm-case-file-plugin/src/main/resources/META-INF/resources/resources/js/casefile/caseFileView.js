@@ -1021,12 +1021,12 @@ CaseFile.View = CaseFile.View || {
                         title: $.t("casefile:people.table.field.type")
                         ,options: CaseFile.Model.Lookup.getPersonTypes
                     }
-                    ,familyName: {
-                        title: $.t("casefile:people.table.field.last-name")
-                        ,width: '15%'
-                    }
                     ,givenName: {
                         title: $.t("casefile:people.table.field.first-name")
+                        ,width: '15%'
+                    }
+                    ,familyName: {
+                        title: $.t("casefile:people.table.field.last-name")
                         ,width: '15%'
                     }
                 }
@@ -2061,11 +2061,15 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE    ,this.onModelSavedAssignee);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_GROUP	    ,this.onModelSavedGroup);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT      ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_GROUPS        ,this.onModelRetrievedGroups);
         }
         ,onInitialized: function() {
         }
 
         ,onModelRetrievedObject: function(objData) {
+            AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+        }
+        ,onModelRetrievedGroups: function(objData) {
             AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
         }
         ,onModelSavedAssignee: function(caseFileId, assginee) {
@@ -2510,15 +2514,18 @@ CaseFile.View = CaseFile.View || {
             }
         }
         ,onClickBtnAdHocTaskAction: function(action, taskId){
-            if("COMPLETE" == action){
-                CaseFile.Model.Tasks.completeTask(taskId, CaseFile.View.Tasks.currentKey).done(function(task){
-                    AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
-                });
-            }
-            else if("DELETE" == action){
-                CaseFile.Model.Tasks.deleteTask(taskId, CaseFile.View.Tasks.currentKey).done(function(task){
-                    AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
-                });
+                if("SUBMIT" == action){
+                var selection = $("#actionList").find("option:selected").text()
+                if(selection=="DELETE"){
+                    CaseFile.Model.Tasks.deleteTask(taskId, CaseFile.View.Tasks.currentKey).done(function(task){
+                        AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
+                    });
+                }
+                else if(selection=="COMPLETE"){
+                    CaseFile.Model.Tasks.completeTask(taskId, CaseFile.View.Tasks.currentKey).done(function(task){
+                       AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
+                   });
+                }
             }
         }
         ,onClickBtnTaskWithOutcome : function(outcome,taskId) {
@@ -2530,9 +2537,9 @@ CaseFile.View = CaseFile.View || {
                 }
             }
             for(var i = 0; i < task.availableOutcomes.length; i++){
-                var availableOutcome = task.availableOutcomes[i];
-                if(availableOutcome.name == outcome) {
-                    task.taskOutcome = availableOutcome;
+             var availableOutcome = task.availableOutcomes[i];
+                if(availableOutcome.description == $("#actionList").find("option:selected").text()) {
+                   task.taskOutcome = availableOutcome;
                 }
             }
             if(task.taskOutcome){
@@ -2547,14 +2554,22 @@ CaseFile.View = CaseFile.View || {
                     if(myTasks[i].taskId == taskId){
                         var task = myTasks[i];
                         if(task.adhocTask == true && task.completed == false){
-                            html = "<div class='btn-group-task'><button class='btn btn-default btn-sm adhoc' id='COMPLETE' title='" + $.t("casefile:tasks.buttons.complete-task") + "'>"+ $.t("casefile:tasks.buttons.complete") +"</button></div>";
-                            html += "<div class='btn-group-task'><button class='btn btn-default btn-sm adhoc' id='DELETE' title='" + $.t("casefile:tasks.buttons.delete-task") + "'>"+ $.t("casefile:tasks.buttons.delete") +"</button></div>";
+                           html = "<div class='btn-group-task'><select id='actionList'>";
+                           html +="<option  value='Complete Task' selected >"+"COMPLETE"+"</option>";
+                           html +="<option  value='Delete Task' >"+"DELETE"+"</option>";
+
+                           html +="</select></div>";
+                           html += "<div class='btn-group-task'><button class='btn btn-default btn-sm adhoc' id='SUBMIT' title='SUBMIT'>"+ "SUBMIT" +"</button></div>";
+                           
                         }
                         else if(task.adhocTask == false && task.completed == false && task.availableOutcomes != null){
                             var availableOutcomes = task.availableOutcomes;
+                            html += "<div class='btn-group-task'><select  id='actionList'>";
                             for(var j = 0; j < availableOutcomes.length; j++ ){
-                                html += "<div class='btn-group-task'><button class='btn btn-default btn-sm businessProcess' id='" + availableOutcomes[j].name + "' title='" + availableOutcomes[j].description + "'>" + availableOutcomes[j].description + "</button></div>";
+                                html += "<option value='"+availableOutcomes[j].description+"'>"+ availableOutcomes[j].description + "</option>";
                             }
+                            html +="</select></div>";
+                            html += "<div class='btn-group-task'><button class='btn btn-default btn-sm businessProcess' id='SUBMIT' title='SUBMIT'>"+ "SUBMIT" +"</button></div>";
                         }
                     }
                 }
@@ -2842,7 +2857,7 @@ CaseFile.View = CaseFile.View || {
                         for (var i = 0; i < events.length; i++) {
                             var Record = {};
                             Record.eventType = Acm.goodValue(events[i].eventType);
-                            Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate,$.t("common:date.short"));
+                            Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate,$.t("common:date.full"));
                             Record.user = App.Model.Users.getUserFullName(Acm.goodValue(events[i].userId));
                             jtData.Records.push(Record);
                         }

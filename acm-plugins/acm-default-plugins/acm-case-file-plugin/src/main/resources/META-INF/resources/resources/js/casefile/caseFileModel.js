@@ -568,7 +568,7 @@ CaseFile.Model = CaseFile.Model || {
 
     ,Notes: {
         create : function() {
-            this.cacheNoteList = new Acm.Model.CacheFifo(16);
+            this.cacheNoteList = new Acm.Model.CacheFifo({maxSize: 16});
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_NOTE     , this.onViewAddedNote);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_NOTE   , this.onViewUpdatedNote);
@@ -729,7 +729,7 @@ CaseFile.Model = CaseFile.Model || {
 
     ,Tasks: {
         create : function() {
-            this.cacheTaskSolr = new Acm.Model.CacheFifo(16);
+            this.cacheTaskSolr = new Acm.Model.CacheFifo({maxSize: 16});
             this.cacheMyTasks = new Acm.Model.CacheFifo();
         }
         ,onInitialized: function() {
@@ -905,7 +905,7 @@ CaseFile.Model = CaseFile.Model || {
 
     ,Documents: {
         create : function() {
-            this.cachePlainForms = new Acm.Model.CacheFifo(1);
+            this.cachePlainForms = new Acm.Model.CacheFifo({maxSize: 1});
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_LODGED_DOCUMENTS      , this.onViewLodgedDocuments);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_REJECTED_DOCUMENTS    , this.onViewRejectedDocuments);
         }
@@ -962,7 +962,7 @@ CaseFile.Model = CaseFile.Model || {
 
     ,Correspondence: {
         create : function() {
-            this.cacheCorrespondences = new Acm.Model.CacheFifo(16);
+            this.cacheCorrespondences = new Acm.Model.CacheFifo({maxSize: 16});
             //Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLICKED_ADD_CORRESPONDENCE, this.onViewClickedAddCorrespondence);
         }
         ,onInitialized: function() {
@@ -974,7 +974,7 @@ CaseFile.Model = CaseFile.Model || {
 //                CaseFile.Service.Correspondence.createCorrespondence(caseFile, templateName);
 //            }
 //        }
-        ,API_RETRIEVE_CORRESPONDENCE      : "/api/latest/service/ecm/folder/"
+        ,API_RETRIEVE_CORRESPONDENCE      : "/api/latest/service/ecm/bycategory/"
         ,API_CREATE_CORRESPONDENCE        : "/api/latest/service/correspondence"
 
         ,correspondenceListAction : function(caseFileId, postData, jtParams, sortMap, dataMaker, cacheKey) {
@@ -1126,7 +1126,7 @@ CaseFile.Model = CaseFile.Model || {
 
     ,History: {
         create : function() {
-            this.cacheHistory = new Acm.Model.CacheFifo(16);
+            this.cacheHistory = new Acm.Model.CacheFifo({maxSize: 16});
         }
         ,onInitialized: function() {
         }
@@ -1364,11 +1364,13 @@ CaseFile.Model = CaseFile.Model || {
         }
         
         ,refreshAssigneesAndGroups: function() {
-        	var caseFileId = CaseFile.View.getActiveCaseFileId();
-        	
+        	var caseFileId = CaseFile.Model.getCaseFileId();
+        	var caseFile = CaseFile.Model.getCaseFile();
+        	if(Acm.isNotEmpty(caseFileId) && CaseFile.Model.Detail.validateCaseFile(caseFile)){
+        	    
         	var assignees = CaseFile.Model.Lookup.getAssignees(caseFileId);
             if (Acm.isEmpty(assignees)) {
-                CaseFile.Service.Lookup.retrieveAssignees();
+                CaseFile.Service.Lookup.retrieveAssignees(caseFile);
             } else {
                 CaseFile.Controller.modelFoundAssignees(assignees);
             }
@@ -1379,6 +1381,9 @@ CaseFile.Model = CaseFile.Model || {
             } else {
                 CaseFile.Controller.modelRetrievedGroups(groups);
             }
+        	}
+        	
+
         }
     }
 

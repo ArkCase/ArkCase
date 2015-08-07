@@ -12,8 +12,8 @@
                 constraintName="fk_audit_property_audit_log"
                 referencedTableName="acm_audit_log"
                 referencedColumnNames="cm_audit_id"
-                deferrable="true"
-                initiallyDeferred="true" />
+                deferrable="${deferrable}"
+                initiallyDeferred="${initially.deferred}" />
     </changeSet>
 
 

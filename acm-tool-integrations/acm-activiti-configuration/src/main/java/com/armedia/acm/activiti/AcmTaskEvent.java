@@ -36,4 +36,6 @@ public interface AcmTaskEvent extends Serializable
 
     String getBusinessProcessName();
 
+    String getUserId();
+
 }

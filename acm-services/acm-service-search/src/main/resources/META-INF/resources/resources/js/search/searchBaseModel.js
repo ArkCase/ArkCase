@@ -270,6 +270,38 @@ SearchBase.Model = {
 //        return true;
 //    }
 
+    ,extractFacetQueries: function(facetSearch, raw_facet_queries) { // Facet queries are no longer used for the user picker (afdp-1250)
+	    var label = null;
+        var labelLast = null;
+        var facet_queries = [];
+        var n = -1;
+        for (var i = 0; i < raw_facet_queries.length; i++) {
+            var key = raw_facet_queries[i].label;
+            if (key) {
+                var ar = key.split(", ");
+                if (2 == ar.length) {
+                    label = ar[0];
+                    if (label != labelLast) {
+                        n++;
+                        facet_queries[n] = {};
+                        facet_queries[n].label  = ar[0];
+                        facet_queries[n].key    = raw_facet_queries[i].key;
+                        facet_queries[n].count  = 0;
+                        facet_queries[n].values = [];
+                        labelLast = label;
+                    }
+                    var value = {};
+                    value.name = ar[1];
+                    value.count = facetSearch.facet_counts.facet_queries[key];
+                    value.def = raw_facet_queries[i].def;
+                    facet_queries[n].values.push(value);
+                    facet_queries[n].count += value.count;
+                }
+            }
+        }
+		return facet_queries;
+	}
+    
     ,makeFacet: function(facetSearch) {
         var facet = {
             facet_queries  : []
@@ -279,46 +311,21 @@ SearchBase.Model = {
         };
 
         if (SearchBase.Model.validateFacetSearchData(facetSearch)) {
-            var raw_facet_queries = this._parseFacetEntries(facetSearch.responseHeader.params["facet.query"]);
             facet.facet_fields    = this._parseFacetEntries(facetSearch.responseHeader.params["facet.field"]);
             facet.facet_dates     = this._parseFacetEntries(facetSearch.responseHeader.params["facet.date"]);
             facet.facet_ranges    = this._parseFacetEntries(facetSearch.responseHeader.params["facet.range"]);
+            
+            // The Facet Query section is no longer present in the user picker (afdp-1250)
+			// Obtains the facet query (create date, modified date) information from the facet search results
+			//var raw_facet_queries = this._parseFacetEntries(facetSearch.responseHeader.params["facet.query"]);
+			//facet.facet_queries = this.extractFacetQueries(facetSearch, raw_facet_queries);
 
             var label = null;
-            var labelLast = null;
-            facet.facet_queries = [];
-            var n = -1;
-            for (var i = 0; i < raw_facet_queries.length; i++) {
-                var key = raw_facet_queries[i].label;
-                if (key) {
-                    var ar = key.split(", ");
-                    if (2 == ar.length) {
-                        label = ar[0];
-                        if (label != labelLast) {
-                            n++;
-                            facet.facet_queries[n] = {};
-                            facet.facet_queries[n].label  = ar[0];
-                            facet.facet_queries[n].key    = raw_facet_queries[i].key;
-                            facet.facet_queries[n].count  = 0;
-                            facet.facet_queries[n].values = [];
-                            labelLast = label;
-                        }
-                        var value = {};
-                        value.name = ar[1];
-                        value.count = facetSearch.facet_counts.facet_queries[key];
-                        value.def = raw_facet_queries[i].def;
-                        facet.facet_queries[n].values.push(value);
-                        facet.facet_queries[n].count += value.count;
-                    }
-                }
-            }
-
-
             for (var i = 0; i < facet.facet_fields.length; i++) {
                 facet.facet_fields[i].values = [];
                 facet.facet_fields[i].count = 0;
                 var key = (facet.facet_fields[i].label)? facet.facet_fields[i].label : facet.facet_fields[i].key;
-                if (key) {
+                if (key && Acm.goodValue(facet.facet_fields[i].label) != 'Status') { // The Status facet field is no longer present for users (afdp-1250)
                     var ar = facetSearch.facet_counts.facet_fields[key];
                     if (Acm.isArray(ar)) {
                         for (var j = 0; j < ar.length; j+=2) {
@@ -485,9 +492,11 @@ SearchBase.Model = {
             return false;
         }
 
-        if (Acm.isEmpty(data.facet_queries)) {
+        // The Facet Query section is no longer present in the user picker (afdp-1250)
+        /*if (Acm.isEmpty(data.facet_queries)) {
             return false;
-        }
+        }*/
+        
         if (Acm.isEmpty(data.facet_fields)) {
             return false;
         }
@@ -505,8 +514,11 @@ SearchBase.Model = {
     ,API_FACET_SEARCH       : "/api/v1/plugin/search/facetedSearch?q="
 
     ,facetSearchListAction : function(searchInfo, postData, jtParams, sortMap, dataMaker, cacheKey) {
-        var searchResult = SearchBase.Model.cacheResult.get(cacheKey);
-        if (searchResult) {
+        var data = SearchBase.Model.cacheResult.get(cacheKey);
+        if (data) {
+            SearchBase.Controller.modelChangedResult(data);
+            var searchResult = data.response;
+            searchInfo.total = searchResult.numFound;
             return Acm.Promise.donePromise(dataMaker(searchResult)).promise();
         }
 
@@ -532,7 +544,7 @@ SearchBase.Model = {
 
                             //var page = Acm.goodValue(jtParams.jtStartIndex, 0);
                             //SearchBase.Model.cacheResult.put(page, searchResult);
-                            SearchBase.Model.cacheResult.put(cacheKey, searchResult);
+                            SearchBase.Model.cacheResult.put(cacheKey, data);
                             SearchBase.Controller.modelChangedResult(data);
                             return dataMaker(searchResult);
 

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +30,7 @@ public class LinkFormsWorkflowsUpdateConfiguration {
     })
     @ResponseBody
     public String updateConfiguration(
-            @RequestBody String resource,
-            HttpServletResponse response) throws IOException, AcmLinkFormsWorkflowException {
+            @RequestBody String resource) throws IOException, AcmLinkFormsWorkflowException {
 
         try {
 

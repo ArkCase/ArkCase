@@ -1,10 +1,12 @@
 package com.armedia.acm.activiti;
 
-import com.armedia.acm.event.AcmEvent;
+import com.armedia.acm.core.model.AcmEvent;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.mule.api.annotations.expressions.Lookup;
 import org.mule.api.annotations.param.InboundHeaders;
 import org.mule.api.annotations.param.Payload;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
@@ -18,11 +20,11 @@ public class StartBusinessProcess implements ApplicationEventPublisherAware
 {
     private ApplicationEventPublisher applicationEventPublisher;
 
-    private RuntimeService runtimeService;
 
     public void startBusinessProcess(
             @Payload AcmEvent acmEvent,
-            @InboundHeaders("*") Map<String, Object> muleHeaders)
+            @InboundHeaders("*") Map<String, Object> muleHeaders,
+            @Lookup("arkContext") ApplicationContext arkContext)
     {
 
         Boolean eventWasSuccessful = (Boolean) muleHeaders.get("EVENT_SUCCEEDED");
@@ -41,7 +43,9 @@ public class StartBusinessProcess implements ApplicationEventPublisherAware
 
         Map<String, Object> messageHeaders = filterMuleAndJmsHeaders(muleHeaders);
 
-        ProcessInstance pi = getRuntimeService().startProcessInstanceByKey(businessProcessKey, messageHeaders);
+        RuntimeService runtimeService = arkContext.getBean("activitiRuntimeService", RuntimeService.class);
+
+        ProcessInstance pi = runtimeService.startProcessInstanceByKey(businessProcessKey, messageHeaders);
 
         BusinessProcessStartedEvent event = new BusinessProcessStartedEvent(pi);
         event.setSucceeded(true);
@@ -58,7 +62,7 @@ public class StartBusinessProcess implements ApplicationEventPublisherAware
         Map<String, Object> messageHeaders = new HashMap<>();
         for ( Map.Entry<String, Object> header : muleHeaders.entrySet() )
         {
-            if ( !header.getKey().startsWith("MULE_") && !header.getKey().startsWith("JMS") )
+            if ( !header.getKey().startsWith("MULE_") && !header.getKey().startsWith("JMS") && !header.getKey().equals("activitiRuntimeService"))
             {
                 messageHeaders.put(header.getKey(), header.getValue());
             }
@@ -75,15 +79,5 @@ public class StartBusinessProcess implements ApplicationEventPublisherAware
     public ApplicationEventPublisher getApplicationEventPublisher()
     {
         return applicationEventPublisher;
-    }
-
-    public RuntimeService getRuntimeService()
-    {
-        return runtimeService;
-    }
-
-    public void setRuntimeService(RuntimeService runtimeService)
-    {
-        this.runtimeService = runtimeService;
     }
 }

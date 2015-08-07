@@ -4,7 +4,7 @@
 	<parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-tool-integrations</artifactId>
-        <version>3.0.32</version>
+        <version>3.0.33</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     
@@ -40,10 +40,10 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
     </dependencies>
 </project>

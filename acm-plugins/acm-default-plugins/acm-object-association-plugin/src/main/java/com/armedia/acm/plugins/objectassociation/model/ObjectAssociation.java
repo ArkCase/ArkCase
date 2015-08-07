@@ -2,16 +2,7 @@ package com.armedia.acm.plugins.objectassociation.model;
 
 import com.armedia.acm.data.AcmEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -25,7 +16,14 @@ public class ObjectAssociation implements AcmEntity, Serializable
 
     @Id
     @Column(name = "cm_association_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableGenerator(name = "acm_object_association_gen",
+            table = "acm_object_association_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_object_association",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_object_association_gen")
     private Long associationId;
 
     @Column(name = "cm_association_status")

@@ -1,13 +1,13 @@
 package com.armedia.acm.service.outlook.dao.impl;
 
+import com.armedia.acm.core.exceptions.AcmOutlookConnectionFailedException;
+import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
+import com.armedia.acm.core.exceptions.AcmOutlookException;
+import com.armedia.acm.core.exceptions.AcmOutlookFindItemsFailedException;
+import com.armedia.acm.core.exceptions.AcmOutlookItemNotDeletedException;
+import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
+import com.armedia.acm.core.exceptions.AcmOutlookModifyItemFailedException;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
-import com.armedia.acm.service.outlook.exception.AcmOutlookConnectionFailedException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookCreateItemFailedException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookFindItemsFailedException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookItemNotDeletedException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookItemNotFoundException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookModifyItemFailedException;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
 import com.armedia.acm.service.outlook.model.OutlookContactItem;
@@ -15,7 +15,6 @@ import com.armedia.acm.service.outlook.model.OutlookFolder;
 import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
 import com.armedia.acm.service.outlook.model.OutlookItem;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
-
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
@@ -46,14 +45,12 @@ import microsoft.exchange.webservices.data.property.complex.ItemId;
 import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import microsoft.exchange.webservices.data.property.complex.recurrence.pattern.Recurrence;
 import microsoft.exchange.webservices.data.property.complex.time.OlsonTimeZoneDefinition;
-import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
 import microsoft.exchange.webservices.data.property.definition.PropertyDefinition;
 import microsoft.exchange.webservices.data.search.FindFoldersResults;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.FolderView;
 import microsoft.exchange.webservices.data.search.ItemView;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +60,6 @@ import org.springframework.cache.annotation.Cacheable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -155,7 +151,8 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
             String sortProperty,
             boolean sortAscending,
             SearchFilter filter)
-            throws AcmOutlookFindItemsFailedException {
+            throws AcmOutlookFindItemsFailedException
+    {
 
         Folder folder = getFolder(service, wellKnownFolderName);
         return findItems(service, folder, extraFieldsToRetrieve, start, maxItems, sortProperty, sortAscending, filter);
@@ -224,7 +221,8 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
     }
 
     @Override
-    public OutlookCalendarItem createCalendarAppointment(ExchangeService service, Folder folder, OutlookCalendarItem calendarItem) throws AcmOutlookCreateItemFailedException {
+    public OutlookCalendarItem createCalendarAppointment(ExchangeService service, Folder folder, OutlookCalendarItem calendarItem) throws AcmOutlookCreateItemFailedException
+    {
         try {
 
             Appointment appointment = new Appointment(service);
@@ -401,7 +399,8 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
     @Override
     public void deleteFolder(ExchangeService service,
                              String folderId,
-                             DeleteMode deleteMode) throws AcmOutlookItemNotFoundException {
+                             DeleteMode deleteMode) throws AcmOutlookItemNotFoundException
+    {
         try {
             service.deleteFolder(new FolderId(folderId), deleteMode);
         } catch (Exception e) {

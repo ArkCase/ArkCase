@@ -1,8 +1,8 @@
 package com.armedia.acm.plugins.outlook.service;
 
+import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
+import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.service.outlook.exception.AcmOutlookCreateItemFailedException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookItemNotFoundException;
 import com.armedia.acm.service.outlook.model.OutlookFolder;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import microsoft.exchange.webservices.data.enumeration.DeleteMode;

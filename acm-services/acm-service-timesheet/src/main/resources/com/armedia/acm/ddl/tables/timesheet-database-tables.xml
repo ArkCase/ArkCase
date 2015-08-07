@@ -4,30 +4,31 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+
 	<changeSet id="01-create-timesheet-table" author="riste.tutureski">
 	     <createTable tableName="acm_timesheet">
-	         <column name="cm_timesheet_id" type="NUMBER(32,0)">
+	         <column name="cm_timesheet_id" type="${idType}">
 	             <constraints primaryKey="true" primaryKeyName="pk_cm_timesheet_id"/>
 	         </column>
 	         <column name="cm_timesheet_user_id" type="VARCHAR(1024)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_timesheet_start_date" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_timesheet_start_date" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_timesheet_end_date" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_timesheet_end_date" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_timesheet_status" type="VARCHAR(1024)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_timesheet_created" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_timesheet_created" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_timesheet_creator" type="VARCHAR(1024)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_timesheet_modified" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_timesheet_modified" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_timesheet_modifier" type="VARCHAR(1024)">
@@ -38,10 +39,10 @@
 
 	 <changeSet id="02-create-time-table" author="riste.tutureski">
 	     <createTable tableName="acm_time">
-	         <column name="cm_time_id" type="NUMBER(32,0)">
+	         <column name="cm_time_id" type="${idType}">
 	             <constraints primaryKey="true" primaryKeyName="pk_cm_time_id"/>
 	         </column>
-	         <column name="cm_time_timesheet_id" type="NUMBER(32,0))">
+	         <column name="cm_time_timesheet_id" type="${fkIdType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_time_code" type="VARCHAR(1024)">
@@ -50,19 +51,19 @@
 	         <column name="cm_time_type" type="VARCHAR(1024)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_time_date" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_time_date" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_time_value" type="NUMBER(32,0)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_time_created" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_time_created" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_time_creator" type="VARCHAR(1024)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_time_modified" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_time_modified" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_time_modifier" type="VARCHAR(1024)">
@@ -73,8 +74,8 @@
                                  constraintName="fk_time_timesheet_id"
                                  referencedTableName="acm_timesheet"
                                  referencedColumnNames="cm_timesheet_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
 	 </changeSet>
 	 
 	 <changeSet id="03-change-time-value-type-precision" author="riste.tutureski">
@@ -96,7 +97,7 @@
 	 
 	 <changeSet id="05-add-object_id-column-in-acm-time-table" author="riste.tutureski">
 	 	<addColumn tableName="acm_time">
-	 		<column name="cm_time_object_id" type="NUMBER(32,0)">
+	 		<column name="cm_time_object_id" type="${fkIdType}">
 	 			<!-- Set nullable to true because other that Complaint and Case, we have Other types 
 	 			which don't have any ID in database -->
 	 			<constraints nullable="true"/>
@@ -106,17 +107,37 @@
 	 
 	 <changeSet id="06-add-container-id-in-acm-timesheet-table" author="riste.tutureski">
         <addColumn tableName="acm_timesheet">
-            <column name="cm_container_id" type="NUMBER(32,0)"/>
+            <column name="cm_container_id" type="${fkIdType}"/>
         </addColumn>
     </changeSet>
 
     <changeSet id="07-object-type-in-acm-timesheet-table" author="nebojsha.davidovikj">
         <addColumn tableName="acm_timesheet">
-            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="TIMESHEET"/>
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="TIMESHEET">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
-        <addNotNullConstraint columnName="cm_object_type"
-                              defaultNullValue="TIMESHEET"
-                              tableName="acm_timesheet"/>
     </changeSet>
 
+    <changeSet id="08-acm_timesheet-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_timesheet_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_timesheet_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_timesheet"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="09-acm_time-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_time_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_time_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_time"></column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

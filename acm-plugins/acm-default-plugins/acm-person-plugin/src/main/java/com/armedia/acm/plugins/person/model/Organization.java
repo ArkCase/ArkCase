@@ -6,15 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.slf4j.Logger;
@@ -32,8 +24,15 @@ public class Organization implements Serializable, AcmEntity
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
+    @TableGenerator(name = "acm_organization_gen",
+            table = "acm_organization_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_organization",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_organization_gen")
     @Column(name = "cm_organization_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long organizationId;
    
     @Column(name = "cm_organization_type")

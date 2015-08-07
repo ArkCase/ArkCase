@@ -6,7 +6,6 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -26,16 +25,19 @@ import static org.junit.Assert.*;
  * Created by armdev on 4/22/14.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
-        "/spring/spring-library-ecm-file.xml",
-        "/spring/spring-library-context-holder.xml",
-        "/spring/spring-library-search.xml",
-        "/spring/spring-library-property-file-manager.xml",
-        "/spring/spring-library-data-access-control.xml",
-        "/spring/spring-library-particpants.xml",
-        "/spring/spring-library-folder-watcher.xml",
-        "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-drools-monitor.xml"
+    @ContextConfiguration(name = "spring",
+            locations = {"/spring/spring-library-data-source.xml",
+                    "/spring/spring-library-ecm-file.xml",
+                    "/spring/spring-library-context-holder.xml",
+                    "/spring/spring-library-search.xml",
+                    "/spring/spring-library-property-file-manager.xml",
+                    "/spring/spring-library-data-access-control.xml",
+                    "/spring/spring-library-particpants.xml",
+                    "/spring/spring-library-folder-watcher.xml",
+                    "/spring/spring-library-activiti-configuration.xml",
+                    "/spring/spring-library-drools-monitor.xml",
+                    "/spring/spring-library-ecm-plugin-test-mule.xml",
+                    "/spring/spring-library-acm-encryption.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class EcmFileDaoIT
