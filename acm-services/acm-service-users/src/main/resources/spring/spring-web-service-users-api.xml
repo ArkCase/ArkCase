@@ -3,6 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
+    <bean id="getUserInfoAPIController" class="com.armedia.acm.services.users.web.api.GetUserInfoAPIController"/>
+
     <bean id="findUsersWithPrivilegeAPIController" class="com.armedia.acm.services.users.web.api.FindUsersWithPrivilegeAPIController">
         <property name="pluginManager" ref="acmPluginManager"/>
         <property name="userDao" ref="userJpaDao"/>
