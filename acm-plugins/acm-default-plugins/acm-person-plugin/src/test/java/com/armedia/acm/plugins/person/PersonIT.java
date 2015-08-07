@@ -25,7 +25,8 @@ import static org.junit.Assert.assertNotNull;
                                    "/spring/spring-library-person.xml",
                                    "/spring/spring-library-person-plugin-test-mule.xml",
                                    "/spring/spring-library-context-holder.xml",
-                                   "/spring/spring-library-property-file-manager.xml"
+                                   "/spring/spring-library-property-file-manager.xml",
+                                   "/spring/spring-library-acm-encryption.xml"
                                    })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class PersonIT
