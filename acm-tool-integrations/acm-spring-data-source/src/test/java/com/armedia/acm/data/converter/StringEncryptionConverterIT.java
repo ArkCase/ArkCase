@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml"
 })
-public class StringEncryptionConverterTest {
+public class StringEncryptionConverterIT {
 
     @Test
     public void testStaticMethodInject() {
