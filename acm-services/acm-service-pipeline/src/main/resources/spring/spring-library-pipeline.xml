@@ -12,10 +12,16 @@
     </bean>
 
     <!-- copy (even if they already exist) all Spring configuration files that match this pattern -->
-    <bean id="acmBuiltinDeployer" class="com.armedia.acm.spring.SpringClasspathCopier">
+    <bean id="acmSpringLibraryCopier" class="com.armedia.acm.spring.SpringClasspathCopier">
         <property name="resolver" ref="acmBuiltinPathMatchingResolver"/>
         <property name="deployFolder" ref="acmBuiltinFolder"/>
-        <property name="resourcePattern" value="classpath*:/spring/spring-library-*-pipeline.xml"/>
+        <property name="resourcePattern" value="classpath*:/spring/spring-library-*.xml"/>
+        <property name="forceCopy" value="true"/>
+    </bean>
+    <bean id="acmSpringWebCopier" class="com.armedia.acm.spring.SpringClasspathCopier">
+        <property name="resolver" ref="acmBuiltinPathMatchingResolver"/>
+        <property name="deployFolder" ref="acmBuiltinFolder"/>
+        <property name="resourcePattern" value="classpath*:/spring/spring-web-*.xml"/>
         <property name="forceCopy" value="true"/>
     </bean>
 
