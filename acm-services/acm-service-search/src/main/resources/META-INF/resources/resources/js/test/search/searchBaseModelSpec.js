@@ -257,27 +257,27 @@ describe("SearchBase.Model", function() {
     });
 
 
-    it("SearchBase.Model: onViewChangedFacetSelection", function() {
+    it("SearchBase.Model: changedFacetSelection", function() {
         var si = SearchBase.Model.getSearchInfo();
 
         var selected = null;
-        SearchBase.Model.onViewChangedFacetSelection(selected);
+        SearchBase.Model.changedFacetSelection(selected);
         expect(si.filters).toEqual([]);
 
         selected = [];
-        SearchBase.Model.onViewChangedFacetSelection(selected);
+        SearchBase.Model.changedFacetSelection(selected);
         expect(si.filters).toEqual([]);
 
         si.filter = [];
         selected = [{type:"facet_fields", name:"Object Type", value:"CASE_FILE"}];
-        SearchBase.Model.onViewChangedFacetSelection(selected);
+        SearchBase.Model.changedFacetSelection(selected);
         expect(si.filters).toEqual([{key:"Object Type", values:["CASE_FILE"]}]);
 
         si.filter = [];
         selected = [{type:"facet_fields", name:"Object Type", value:"CASE_FILE"}
             ,{type:"facet_fields", name:"Object Type", value:"TASK"}
         ];
-        SearchBase.Model.onViewChangedFacetSelection(selected);
+        SearchBase.Model.changedFacetSelection(selected);
         expect(si.filters).toEqual([{key:"Object Type", values:["CASE_FILE","TASK"]}]);
 
         si.filters = [];
@@ -285,7 +285,7 @@ describe("SearchBase.Model", function() {
             ,{type:"facet_fields", name:"Object Type", value:"TASK"}
             ,{type:"facet_fields", name:"Status", value:"valid"}
         ];
-        SearchBase.Model.onViewChangedFacetSelection(selected);
+        SearchBase.Model.changedFacetSelection(selected);
         expect(si.filters).toEqual([{key:"Object Type", values:["CASE_FILE","TASK"]}
             ,{key:"Status", values:["valid"]}
         ]);

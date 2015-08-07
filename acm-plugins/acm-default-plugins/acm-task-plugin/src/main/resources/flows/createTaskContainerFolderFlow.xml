@@ -4,7 +4,7 @@
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
       xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
-      version="CE-3.5.0"
+      version="CE-3.7.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
@@ -24,7 +24,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         </on-redelivery-attempts-exceeded>
     </rollback-exception-strategy>
 
-    <configuration defaultExceptionStrategy-ref="taskContainerFolderRollbackStrategy"/>
+    <!--<configuration defaultExceptionStrategy-ref="taskContainerFolderRollbackStrategy"/>-->
 
     <flow name="jmsCreateTaskContainerFolder"
           doc:name="Create Task Container Folder"
@@ -46,9 +46,9 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                 <scripting:text><![CDATA[
 
                     // ensure we set the right modifier and creator for any objects we end up inserting or updating
-                    registry.auditPropertyEntityAdapter.setUserId(message.getInboundProperty("ACM_USER"));
+                    muleContext.registry.get("arkContext").getBean("auditPropertyEntityAdapter").setUserId(message.getInboundProperty("ACM_USER"));
 
-                    registry.acmTaskDao.createFolderForTaskEvent(message.payload);
+                    muleContext.registry.get("arkContext").getBean("acmTaskDao").createFolderForTaskEvent(message.payload);
 
                     return payload;
                     ]]>
@@ -58,6 +58,8 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         </scripting:transformer>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Created container folder for task."/>
+
+        <exception-strategy ref="taskContainerFolderRollbackStrategy"/>
     </flow>
 
 </mule>

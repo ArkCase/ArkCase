@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.0.32</version>
+        <version>3.0.33</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -17,7 +17,6 @@
         <module>acm-activemq-configuration</module>
         <module>acm-activiti-actions</module>
         <module>acm-activiti-configuration</module>
-        <module>acm-activiti-mule-listener</module>
         <module>acm-cmis-configuration</module>
         <module>acm-drools-rule-monitor</module>
         <module>acm-files-folder-watcher</module>
@@ -26,12 +25,12 @@
         <module>acm-spring-classpath-copier</module>
         <module>acm-spring-context-holder</module>
         <module>acm-spring-data-source</module>
-        <module>acm-form-configuration</module>
         <module>acm-report-configuration</module>
     	<module>acm-object-converter</module>
-        <module>acm-object-change-status</module>
         <module>acm-encryption</module>
         <module>acm-email</module>
+        <module>acm-reload-properties</module>
+        <module>acm-snowbound-integration</module>
     </modules>
 
 </project>

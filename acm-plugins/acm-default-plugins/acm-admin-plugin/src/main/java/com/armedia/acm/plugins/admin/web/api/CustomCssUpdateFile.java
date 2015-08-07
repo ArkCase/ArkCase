@@ -1,13 +1,15 @@
 package com.armedia.acm.plugins.admin.web.api;
 
-import com.armedia.acm.plugins.admin.exception.CustomCssException;
+import com.armedia.acm.plugins.admin.exception.AcmCustomCssException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -25,8 +27,7 @@ public class CustomCssUpdateFile {
     })
     @ResponseBody
     public String updateFile(
-            @RequestBody String resource,
-            HttpServletResponse response) throws IOException, CustomCssException {
+            @RequestBody String resource) throws IOException, AcmCustomCssException {
 
         try {
             customCssService.updateFile(resource);
@@ -35,7 +36,7 @@ public class CustomCssUpdateFile {
             if (log.isErrorEnabled()){
                 log.error("Can't update custom CSS file", e);
             }
-            throw new CustomCssException("Can't update custom CSS file", e);
+            throw new AcmCustomCssException("Can't update custom CSS file", e);
         }
     }
 

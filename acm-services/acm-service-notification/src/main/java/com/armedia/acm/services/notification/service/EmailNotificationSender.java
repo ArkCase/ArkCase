@@ -3,19 +3,18 @@
  */
 package com.armedia.acm.services.notification.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
-import com.armedia.acm.services.notification.model.Notification;
-import com.armedia.acm.services.notification.model.NotificationConstants;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author riste.tutureski
@@ -28,7 +27,7 @@ public class EmailNotificationSender implements NotificationSender {
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private PropertyFileManager propertyFileManager;
     private String notificationPropertyFileLocation;
-    private MuleClient muleClient;
+    private MuleContextManager muleContextManager;
 	
 	@Override
 	public Notification send(Notification notification) 
@@ -47,8 +46,8 @@ public class EmailNotificationSender implements NotificationSender {
 			messageProps.put("from", getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY, null));
 			messageProps.put("to", notification.getUserEmail());
 			messageProps.put("subject", notification.getTitle());
-			
-			MuleMessage received = getMuleClient().send("vm://sendEmail.in", notification.getNote(), messageProps);
+
+			MuleMessage received = getMuleContextManager().send("vm://sendEmail.in", notification.getNote(), messageProps);
 			
 			exception = received.getInboundProperty("sendEmailException");
 		} 
@@ -99,12 +98,13 @@ public class EmailNotificationSender implements NotificationSender {
 		this.notificationPropertyFileLocation = notificationPropertyFileLocation;
 	}
 
-	public MuleClient getMuleClient() {
-		return muleClient;
+	public MuleContextManager getMuleContextManager()
+	{
+		return muleContextManager;
 	}
 
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
+	public void setMuleContextManager(MuleContextManager muleContextManager)
+	{
+		this.muleContextManager = muleContextManager;
 	}
-
 }

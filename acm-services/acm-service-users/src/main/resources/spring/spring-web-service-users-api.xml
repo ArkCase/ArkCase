@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="getUserInfoAPIController" class="com.armedia.acm.services.users.web.api.GetUserInfoAPIController"/>
 
     <bean id="findUsersWithPrivilegeAPIController" class="com.armedia.acm.services.users.web.api.FindUsersWithPrivilegeAPIController">
         <property name="pluginManager" ref="acmPluginManager"/>
@@ -15,17 +17,17 @@
     
     <bean id="getGroupAPIController" class="com.armedia.acm.services.users.web.api.group.GetGroupAPIController">
     	<property name="groupDao" ref="groupDao" />
-    	<property name="muleClient" ref="muleClient" />
+    	<property name="muleContextManager" ref="muleContextManager" />
     </bean>
     
     <bean id="getGroupSupervisorAPIController" class="com.armedia.acm.services.users.web.api.group.GetGroupSupervisorAPIController">
     	<property name="groupDao" ref="groupDao" />
-    	<property name="muleClient" ref="muleClient" />
+    	<property name="muleContextManager" ref="muleContextManager" />
     </bean>
     
     <bean id="getGroupMembersAPIController" class="com.armedia.acm.services.users.web.api.group.GetGroupMembersAPIController">
     	<property name="groupDao" ref="groupDao" />
-    	<property name="muleClient" ref="muleClient" />
+    	<property name="muleContextManager" ref="muleContextManager" />
     </bean>
 
     <bean id="saveGroupAPIController" class="com.armedia.acm.services.users.web.api.group.SaveGroupAPIController">

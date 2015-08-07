@@ -9,8 +9,8 @@
                                  constraintName="fk_object_history_user_id"
                                  referencedTableName="acm_user"
                                  referencedColumnNames="cm_user_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="02-create-object-history-index" author="riste.tutureski">
@@ -39,7 +39,7 @@
     </changeSet>
 
     <changeSet id="07-remove-nullable-for-newasignee-in-assignment-table" author="riste.tutureski" logicalFilePath="/com/armedia/acm/ddl/tables/object-history-service-database-tables.xml">
-        <dropNotNullConstraint tableName="acm_assignment" columnName="cm_assignment_new_assignee"/>
+        <dropNotNullConstraint tableName="acm_assignment" columnName="cm_assignment_new_assignee" columnDataType="VARCHAR(1024)"/>
     </changeSet>
 
 </databaseChangeLog>

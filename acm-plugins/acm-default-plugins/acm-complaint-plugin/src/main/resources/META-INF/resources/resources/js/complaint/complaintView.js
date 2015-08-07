@@ -2292,7 +2292,7 @@ Complaint.View = Complaint.View || {
                     if(Complaint.Model.History.validateEvent(events[i])){
                         var Record = {};
                         Record.eventType = Acm.goodValue(events[i].eventType);
-                        Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate,$.t("common:date.short"));
+                        Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate,$.t("common:date.full"));
                         Record.user = App.Model.Users.getUserFullName(Acm.goodValue(events[i].userId));
 
                         jtData.Records.push(Record);
@@ -2643,6 +2643,7 @@ Complaint.View = Complaint.View || {
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_ADDED_PARTICIPANT      ,this.onModelModifiedParticipants);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_UPDATED_PARTICIPANT    ,this.onModelModifiedParticipants);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_DELETED_PARTICIPANT    ,this.onModelModifiedParticipants);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_GROUPS        ,this.onModelRetrievedGroups);
         }
         ,onInitialized: function() {
         }
@@ -2651,6 +2652,9 @@ Complaint.View = Complaint.View || {
             AcmEx.Object.JTable.load(Complaint.View.Participants.$divParticipants);
         }
         ,onModelRetrievedObject: function(objData) {
+            AcmEx.Object.JTable.load(Complaint.View.Participants.$divParticipants);
+        }
+        ,onModelRetrievedGroups:function(objData){
             AcmEx.Object.JTable.load(Complaint.View.Participants.$divParticipants);
         }
         ,onModelSavedAssignee: function(complaintId, assginee) {

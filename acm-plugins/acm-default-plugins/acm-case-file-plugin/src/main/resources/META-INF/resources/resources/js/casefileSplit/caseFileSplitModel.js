@@ -161,7 +161,7 @@ CaseFileSplit.Model = CaseFileSplit.Model || {
 
     ,Notes: {
         create : function() {
-            this.cacheNoteList = new Acm.Model.CacheFifo(4);
+            this.cacheNoteList = new Acm.Model.CacheFifo();
         }
         ,onInitialized: function() {
         }

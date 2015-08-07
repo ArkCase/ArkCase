@@ -5,11 +5,9 @@ package com.armedia.acm.plugins.alfrescorma.model;
  */
 public interface AlfrescoRmaPluginConstants
 {
-    String RMA_MODULE_VERSION_KEY = "alfresco.rma.rma-module-version";
+    String CATEGORY_FOLDER_PROPERTY_KEY_PREFIX = "rma_categoryFolder_";
 
-    String CATEGORY_FOLDER_PROPERTY_KEY_PREFIX = "rma.categoryFolder.";
-
-    String PROPERTY_ORIGINATOR_ORG = "rma.default.originator.org";
+    String PROPERTY_ORIGINATOR_ORG = "rma_default_originator_org";
 
     String DEFAULT_ORIGINATOR_ORG = "Armedia LLC";
 
@@ -18,8 +16,11 @@ public interface AlfrescoRmaPluginConstants
 
     String CASE_CLOSED_EVENT = "com.armedia.acm.casefile.event.closed";
 
-    String CASE_CLOSE_INTEGRATION_KEY = "alfresco.rma.declare-records-on-case-close";
-    String COMPLAINT_CLOSE_INTEGRATION_KEY = "alfresco.rma.declare-records-on-complaint-close";
-    String COMPLAINT_FOLDER_INTEGRATION_KEY = "alfresco.rma.create-record-folder-on-complaint-create";
-    String FILE_INTEGRATION_KEY = "alfresco.rma.declare-record-folder-on-file-upload";
+    String CASE_CLOSE_INTEGRATION_KEY = "alfresco_rma_declare_records_on_case_close";
+    String COMPLAINT_CLOSE_INTEGRATION_KEY = "alfresco_rma_declare_records_on_complaint_close";
+    String COMPLAINT_FOLDER_INTEGRATION_KEY = "alfresco_rma_create_record_folder_on_complaint_create";
+    String FILE_INTEGRATION_KEY = "alfresco_rma_declare_record_folder_on_file_upload";
+    String FILE_DECLARE_REQUEST_INTEGRATION_KEY = "alfresco_rma_declare_file_record_on_declare_request";
+    String FOLDER_DECLARE_REQUEST_INTEGRATION_KEY = "alfresco_rma_declare_folder_record_on_declare_request";
+
 }

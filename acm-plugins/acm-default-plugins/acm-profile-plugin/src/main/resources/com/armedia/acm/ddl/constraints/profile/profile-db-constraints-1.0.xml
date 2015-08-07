@@ -11,20 +11,20 @@
                                  constraintName="fk_user"
                                  referencedTableName="acm_user"
                                  referencedColumnNames="cm_user_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
 
         <addForeignKeyConstraint baseTableName="acm_user_org"
                                  baseColumnNames="cm_organization"
                                  constraintName="fk_organization"
                                  referencedTableName="acm_organization"
                                  referencedColumnNames="cm_organization_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
 
     </changeSet>
 
-    <changeSet id="profile-constraints-02-enforce-valid-profile-id" author="dmiller">
+    <changeSet id="profile-constraints-02-enforce-valid-profile-id" author="dmiller" dbms="oracle">
         <preConditions>
             <and>
                 <tableExists tableName="acm_file"/>
@@ -33,15 +33,15 @@
         </preConditions>
         <sql>
             UPDATE acm_user_org
-            SET cm_ecm_fileid = NULL
-            WHERE cm_ecm_fileid NOT IN (SELECT cm_file_id FROM acm_file)
+            SET cm_ecm_file_id = NULL
+            WHERE cm_ecm_file_id NOT IN (SELECT cm_file_id FROM acm_file)
         </sql>
-        <addForeignKeyConstraint baseTableName="acm_user_org" baseColumnNames="cm_ecm_fileid"
+        <addForeignKeyConstraint baseTableName="acm_user_org" baseColumnNames="cm_ecm_file_id"
                                  constraintName="fk_user_org_fileid"
                                  referencedTableName="acm_file"
                                  referencedColumnNames="cm_file_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="profile-constraints-03-container-foreign-key" author="dmiller">
@@ -56,7 +56,7 @@
                                  constraintName="fk_user_org_container"
                                  referencedTableName="acm_container"
                                  referencedColumnNames="cm_container_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 </databaseChangeLog>

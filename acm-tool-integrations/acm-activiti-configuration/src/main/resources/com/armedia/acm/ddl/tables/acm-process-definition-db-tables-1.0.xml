@@ -1,12 +1,12 @@
 <databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-create-process-definitions-table" author="nebojsha.davidovikj">
         <createTable tableName="acm_process_definition">
-            <column name="cm_pd_id" type="NUMBER(32,0)" >
+            <column name="cm_pd_id" type="${idType}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_process_definition"/>
@@ -14,40 +14,50 @@
             <column name="cm_pd_description" type="VARCHAR(1024)">
                 <constraints nullable="true"/>
             </column>
-			<column name="cm_pd_name" type="VARCHAR(1024)">
+            <column name="cm_pd_name" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-			<column name="cm_pd_version" type="NUMBER(16,0)">
+            <column name="cm_pd_version" type="NUMBER(16,0)">
                 <constraints nullable="false"/>
             </column>
-			<column name="cm_pd_key" type="VARCHAR(1024)">
+            <column name="cm_pd_key" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-			 <column name="cm_pd_deployment_id" type="VARCHAR(1024)">
+            <column name="cm_pd_deployment_id" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-			<column name="cm_pd_file_name" type="VARCHAR(1024)">
+            <column name="cm_pd_file_name" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-			<column name="cm_pd_is_active" type="BOOLEAN" defaultValue="false">
+            <column name="cm_pd_is_active" type="BOOLEAN" defaultValue="false">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_pd_md5_hex" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
-			<column name="cm_pd_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_pd_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_pd_creator" type="VARCHAR(1024)">
                 <constraints nullable="true"/>
             </column>
-            <column name="cm_pd_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_pd_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_pd_modifier" type="VARCHAR(1024)">
                 <constraints nullable="true"/>
             </column>
         </createTable>
+    </changeSet>
+    <changeSet id="01-create-process-definitions-table-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_process_definition_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_process_definition_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_process_definition"></column>
+        </insert>
     </changeSet>
 </databaseChangeLog>
 

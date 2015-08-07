@@ -222,6 +222,11 @@ describe("Acm", function()
 //        expect(Acm.equals(arr1, arr5)).toEqual(false);
     });
 
+    var _triggerEvent10Times = function() {
+        for (var i = 0; i < 10; i++) {
+            Acm.Timer.triggerEvent();
+        }
+    };
 
     it("Test Acm.Timer: listener", function() {
         var listenerName1 = "listener1";
@@ -230,14 +235,14 @@ describe("Acm", function()
         var triggeredEventCount2 = 0;
 
         Acm.Timer.registerListener(listenerName1
-            ,3
+            ,3000
             ,function() {
                 triggeredEventCount1++;
                 return false;
             }
         );
         Acm.Timer.registerListener(listenerName2
-            ,2
+            ,2000
             ,function() {
                 triggeredEventCount2++;
                 return true;
@@ -245,55 +250,55 @@ describe("Acm", function()
         );
 
         //two listeners should have countDown 2 and 1
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(0);
         expect(triggeredEventCount2).toEqual(0);
 
         //listener1 should have countDown 1;
         //listener2 has 0, event triggered and set back to 2
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(0);
         expect(triggeredEventCount2).toEqual(1);
 
         //listener1 countDown reaches 0, event triggered and remove from listener list;
         //listener2 countDown to 1, no event
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(1);
 
         //listener1 is gone, no event
         //listener2 countDown to 0, event triggered again and every 2 triggers
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(2);
 
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(2);
 
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(3);
 
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(3);
 
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(4);
 
         //remove listener2, no more events expected after this
         Acm.Timer.removeListener(listenerName2);
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(4);
 
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(4);
 
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(4);
     });
@@ -316,64 +321,64 @@ describe("Acm", function()
             return false;
         }
         Acm.Timer.registerListener(listenerName1
-            ,3
+            ,3000
             ,callback
         );
         Acm.Timer.registerListener(listenerName2
-            ,2
+            ,2000
             ,callback
         );
 
         //two listeners should have countDown 2 and 1
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(0);
         expect(triggeredEventCount2).toEqual(0);
 
         //listener1 should have countDown 1;
         //listener2 has 0, event triggered and set back to 2
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(0);
         expect(triggeredEventCount2).toEqual(1);
 
         //listener1 countDown reaches 0, event triggered and remove from listener list;
         //listener2 countDown to 1, no event
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(1);
 
         //listener1 is gone, no event
         //listener2 countDown to 0, event triggered again and every 2 triggers
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(2);
 
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(2);
 
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(3);
 
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(3);
 
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(4);
 
         //remove listener2, no more events expected after this
         Acm.Timer.removeListener(listenerName2);
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(4);
 
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(4);
 
-        Acm.Timer.triggerEvent();
+        _triggerEvent10Times();
         expect(triggeredEventCount1).toEqual(1);
         expect(triggeredEventCount2).toEqual(4);
     });

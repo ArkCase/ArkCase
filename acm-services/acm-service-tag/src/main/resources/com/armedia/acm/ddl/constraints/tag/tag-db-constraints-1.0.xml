@@ -10,7 +10,7 @@
                                  constraintName="fk_tag_id"
                                  referencedTableName="acm_tag"
                                  referencedColumnNames="cm_tag_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 </databaseChangeLog>

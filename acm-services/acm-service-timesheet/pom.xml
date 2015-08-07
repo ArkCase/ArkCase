@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-services</artifactId>
-        <version>3.0.32</version>
+        <version>3.0.33</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -25,13 +25,8 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-core-object-model</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-form-configuration</artifactId>
+            <groupId>com.armedia.acm.com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-form-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
@@ -45,8 +40,13 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-object-change-status</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-object-change-status</artifactId>
+            <artifactId>acm-reload-properties</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
@@ -60,12 +60,7 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        
+
         <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
         <dependency>
             <groupId>org.liquibase</groupId>

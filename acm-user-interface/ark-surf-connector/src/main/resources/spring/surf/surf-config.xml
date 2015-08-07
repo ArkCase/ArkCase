@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+       <bean id="arkSurfConfig" class="org.springframework.extensions.config.source.FileConfigSource">
+              <constructor-arg index="0" value="${user.home}/.acm-ui/app-config/org/springframework/extensions/webscripts/spring-webscripts-config.xml"/>
+       </bean>
+       <!-- Import Web Scripts Framework -->
+       <import resource="classpath*:org/springframework/extensions/webscripts/*-context.xml" />
+
+       <!-- Import Surf Framework -->
+       <import resource="classpath*:org/springframework/extensions/surf/*-context.xml" />
+
+       <!-- this bean overrides a Surf-defined bean, so we can load our webscripts config from a file -->
+       <bean id="webframework.configsource" class="org.springframework.extensions.config.source.UrlConfigSource">
+              <constructor-arg>
+                     <list>
+                            <!-- the next value is the one we added for ArkCase -->
+                            <value>file:${user.home}/.acm-ui/surf-config/spring-webscripts-config.xml</value>
+
+                            <!-- remaining values are from the default Surf file -->
+                            <!-- Spring Web Scripts -->
+                            <value>classpath:org/springframework/extensions/webscripts/spring-webscripts-config.xml</value>
+                            <value>classpath:META-INF/spring-webscripts-config-custom.xml</value>
+                            <value>jar:*!/META-INF/spring-webscripts-config-custom.xml</value>
+
+                            <!-- Spring Surf -->
+                            <value>classpath:org/springframework/extensions/surf/spring-surf-config.xml</value>
+                            <value>classpath:org/springframework/extensions/surf/spring-surf-config-remote.xml</value>
+                            <value>classpath:META-INF/spring-surf-config-custom.xml</value>
+                            <value>jar:*!/META-INF/spring-surf-config-custom.xml</value>
+
+                            <!-- Surf Autowire Support -->
+                            <value>webapp:WEB-INF/surf.xml</value>
+
+                     </list>
+              </constructor-arg>
+       </bean>
+
+
+</beans>

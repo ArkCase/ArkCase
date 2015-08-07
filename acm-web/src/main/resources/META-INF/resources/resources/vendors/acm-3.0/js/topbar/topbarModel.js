@@ -90,8 +90,8 @@ Topbar.Model = {
             }
         }
 
-        ,_pullInterval: 16
-        ,_pullIntervalMax: 1024
+        ,_pullInterval: 16000
+        ,_pullIntervalMax: 1024000
         ,_rows: 5
         ,_pull: function(interval) {
             Acm.Timer.useTimer("AsnWatch"
@@ -114,7 +114,7 @@ Topbar.Model = {
                     Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
                 }
             } else {
-                Topbar.Model.Asn._pullInterval = 16;
+                Topbar.Model.Asn._pullInterval = 16000;
                 Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
             }
         }

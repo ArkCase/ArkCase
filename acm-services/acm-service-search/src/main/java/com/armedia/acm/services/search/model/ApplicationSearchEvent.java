@@ -1,10 +1,12 @@
 package com.armedia.acm.services.search.model;
 
+import com.armedia.acm.core.model.AcmEvent;
+
 import java.util.Date;
 
-import com.armedia.acm.event.AcmEvent;
 
-public class ApplicationSearchEvent extends AcmEvent {
+public class ApplicationSearchEvent extends AcmEvent
+{
     /**
      * 
      */
