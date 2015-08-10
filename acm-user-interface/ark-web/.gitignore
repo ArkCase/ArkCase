@@ -15,3 +15,6 @@ src/main/webapp/dist/
 # Don't commit CSS. CSS should be produced rom SCSS files
 src/main/webapp/assets/css/
 src/main/webapp/modules/*/css/
+
+# Don't include generated includes
+src/main/webapp/WEB-INF/views/includes/
