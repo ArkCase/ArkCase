@@ -140,7 +140,6 @@
 
     <bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>
 
-
     <bean id="springEntityListenerConfigurer" class="com.armedia.acm.data.SpringEntityListenerConfigurer">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="entityManagerFactory" ref="acmEntityManager"/>
@@ -149,6 +148,19 @@
             <list>
                 <ref bean="objectChangesBySessionAccumulator"/>
                 <ref bean="auditPropertyEntityAdapter"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="com.armedia.acm.data.converter.StringEncryptionConverter.setAcmDecryptionProperties"/>
+        <property name="arguments">
+            <list>
+                <value type="java.lang.Boolean">${database.encryption_enabled}</value>
+                <ref bean="acmCryptoUtils"/>
+                <value type="java.lang.String">${database.encryption_passphrase}</value>
+                <value type="java.lang.Boolean">${database.encryption_supported}</value>
+
             </list>
         </property>
     </bean>
