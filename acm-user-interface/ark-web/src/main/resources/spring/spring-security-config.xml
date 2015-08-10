@@ -20,8 +20,11 @@
 
     <!-- arkCaseAuthenticationProvider is defined in spring-library-surf-connector.xml -->
 
-    <http
-            auto-config="true">
+    <!-- We don't need to setup basic authentication access to the /proxy URL, since customers that want to call
+         ArkCase services programmatically can just call the Ark war directly, they wouldn't proxy through Ark-UI -->
+
+
+    <http auto-config="true">
         <intercept-url pattern="/**" access="ROLE_USER_INTERFACE" />
         <form-login
                 login-page="/login"

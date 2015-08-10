@@ -3,6 +3,6 @@
     <title></title>
 </head>
 <body>
-Ticket: ${ticket}
+Ticket: ${ticket} &nbsp; <a href="<%= request.getContextPath()%>/logout">Logout</a>
 </body>
 </html>

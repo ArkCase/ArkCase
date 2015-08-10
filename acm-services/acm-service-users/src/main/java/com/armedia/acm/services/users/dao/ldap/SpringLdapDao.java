@@ -73,11 +73,11 @@ public class SpringLdapDao
             }
 
             AcmLdapEntity ldapEntity = (AcmLdapEntity) template.lookup(memberDn, mapper);
-            ldapEntity.setDistinguishedName(memberDn);
 
             // The context mapper returns null if the group member is a disabled user
             if (ldapEntity != null)
             {
+                ldapEntity.setDistinguishedName(memberDn);
                 retval.add(ldapEntity);
             }
         }
