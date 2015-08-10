@@ -24,8 +24,6 @@ public class SpringClasspathCopier implements ApplicationContextAware
 
     private PathMatchingResourcePatternResolver resolver;
 
-    private boolean forceCopy;
-
     private transient Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -57,7 +55,7 @@ public class SpringClasspathCopier implements ApplicationContextAware
                 }
 
                 File target = new File(getDeployFolder() + File.separator + resourceFilename);
-                if (!target.exists() || forceCopy)
+                if (!target.exists())
                 {
                     if (log.isDebugEnabled())
                     {
@@ -106,15 +104,5 @@ public class SpringClasspathCopier implements ApplicationContextAware
     public void setResolver(PathMatchingResourcePatternResolver resolver)
     {
         this.resolver = resolver;
-    }
-
-    public boolean isForceCopy()
-    {
-        return forceCopy;
-    }
-
-    public void setForceCopy(boolean forceCopy)
-    {
-        this.forceCopy = forceCopy;
     }
 }
