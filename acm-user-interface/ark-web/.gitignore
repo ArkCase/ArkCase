@@ -1,8 +1,17 @@
+# IDEA config file
 ark-web.iml
 
-# Node, npm and bower folders
+# Node and npm folders
 etc/
 node/
 node_modules/
 
+# Bower vendor dependencies folder
 src/main/webapp/lib/
+
+# Compiled JS and CSS files for production
+src/main/webapp/dist/
+
+# Don't commit CSS. CSS should be produced rom SCSS files
+src/main/webapp/assets/css/
+src/main/webapp/modules/*/css/
