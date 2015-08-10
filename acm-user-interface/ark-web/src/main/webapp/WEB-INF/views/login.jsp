@@ -8,7 +8,14 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title data-i18n="login:page-title">ACM | ArkCase | User Interface</title>
+  <title>ACM | ArkCase | User Interface</title>
+
+    <link rel="stylesheet" href="<%= request.getContextPath()%>/lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="<%= request.getContextPath()%>/assets/css/login.css">
+    <script src="<%= request.getContextPath()%>/lib/jquery/dist/jquery.js"></script>
+    <script src="<%= request.getContextPath()%>/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="<%= request.getContextPath()%>/assets/js/login.js"></script>
+
 </head>
 <body>
     ${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}

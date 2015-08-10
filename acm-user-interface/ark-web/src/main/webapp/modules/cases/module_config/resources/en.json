@@ -1,0 +1,65 @@
+{
+  "cases": {
+    "title": "Cases",
+    "restrict": "Restrict?",
+    "close.button": "Close Complaint",
+    "subscribe.button": "Subscribe"
+  },
+  "cases.comp.calendar": {
+    "title": "Calendar"
+  },
+  "cases.comp.correspondence": {
+    "title": "Correspondence"
+  },
+  "cases.comp.cost": {
+    "title": "Cost"
+  },
+  "cases.comp.details": {
+    "title": "Details",
+    "msg": {
+      "noDetails": "No Details"
+    }
+  },
+  "cases.comp.documents": {
+    "title": "Documents"
+  },
+  "cases.comp.history": {
+    "title": "History",
+    "table.columns": {
+      "eventDate": "Date",
+      "userId": "User"
+    }
+  },
+  "cases.comp.info": {
+    "caseId": "Case id:",
+    "courtRoomName": "Court Room Name:"
+  },
+  "cases.comp.notes": {
+    "title": "Notes"
+  },
+  "cases.comp.participants": {
+    "title": "Participants"
+  },
+  "cases.comp.people": {
+    "title": "People"
+  },
+  "cases.comp.references": {
+    "title": "References"
+  },
+  "cases.comp.tasks": {
+    "title": "Tasks",
+    "table.columns": {
+      "id": "ID",
+      "title": "Title",
+      "assignee": "Assignee",
+      "created": "Created",
+      "priority": "Priority",
+      "due": "Due",
+      "status": "Status",
+      "action": "Action"
+    }
+  },
+  "cases.comp.time": {
+    "title": "Time"
+  }
+}
