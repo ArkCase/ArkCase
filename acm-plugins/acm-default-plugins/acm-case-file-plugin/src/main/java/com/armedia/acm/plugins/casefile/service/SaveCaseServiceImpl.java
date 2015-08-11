@@ -25,11 +25,12 @@ public class SaveCaseServiceImpl implements SaveCaseService
     @Transactional
     public CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress) throws PipelineProcessException
     {
-        CaseFilePipelineContext pipelineContext = (CaseFilePipelineContext) pipelineManager.getPipelineContext();
-        // populate the missing context attributes
+        CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
+        // populate the context
         pipelineContext.setNewCase(in.getId() == null);
         pipelineContext.setAuthentication(auth);
         pipelineContext.setIpAddress(ipAddress);
+        pipelineManager.setPipelineContext(pipelineContext);
 
         pipelineManager.onPreSave(in);
 
