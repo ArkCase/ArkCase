@@ -11,22 +11,22 @@ import java.util.ListIterator;
 /**
  * Created by Petar Ilin <petar.ilin@armedia.com> on 26.07.2015.
  */
-public class PipelineManager<T>
+public class PipelineManager<T, S extends PipelineContext>
 {
     /**
      * List of handlers executed before saving the entity to database.
      */
-    private List<PipelineHandler<T>> preSaveHandlers;
+    private List<PipelineHandler<T, S>> preSaveHandlers;
 
     /**
      * List of handlers executed after saving the entity to database.
      */
-    private List<PipelineHandler<T>> postSaveHandlers;
+    private List<PipelineHandler<T, S>> postSaveHandlers;
 
     /**
      * Pipeline context.
      */
-    private PipelineContext pipelineContext;
+    private S pipelineContext;
 
     /**
      * Logger instance.
@@ -43,12 +43,12 @@ public class PipelineManager<T>
     public void onPreSave(T entity) throws PipelineProcessException
     {
         log.debug("Pre-save handler of [{}] started", entity);
-        ListIterator<PipelineHandler<T>> it = preSaveHandlers.listIterator();
+        ListIterator<PipelineHandler<T, S>> it = preSaveHandlers.listIterator();
         try
         {
             while (it.hasNext())
             {
-                PipelineHandler<T> preSaveHandler = it.next();
+                PipelineHandler<T, S> preSaveHandler = it.next();
                 log.debug("Pre-save handler: [{}] processing", preSaveHandler.getClass().getName());
                 preSaveHandler.execute(entity, pipelineContext);
             }
@@ -58,7 +58,7 @@ public class PipelineManager<T>
             // iterate backwards starting with last iterator position
             while (it.hasPrevious())
             {
-                PipelineHandler<T> preSaveHandler = it.previous();
+                PipelineHandler<T, S> preSaveHandler = it.previous();
                 log.debug("Pre-save handler: [{}] rolling back", preSaveHandler.getClass().getName());
                 preSaveHandler.rollback(entity, pipelineContext);
             }
@@ -78,12 +78,12 @@ public class PipelineManager<T>
     public void onPostSave(T entity) throws PipelineProcessException
     {
         log.debug("Post-save handler of [{}] started", entity);
-        ListIterator<PipelineHandler<T>> it = postSaveHandlers.listIterator();
+        ListIterator<PipelineHandler<T, S>> it = postSaveHandlers.listIterator();
         try
         {
             while (it.hasNext())
             {
-                PipelineHandler<T> postSaveHandler = it.next();
+                PipelineHandler<T, S> postSaveHandler = it.next();
                 log.debug("Post-save handler: [{}] processing", postSaveHandler.getClass().getName());
                 postSaveHandler.execute(entity, pipelineContext);
             }
@@ -93,7 +93,7 @@ public class PipelineManager<T>
             // iterate backwards starting with last iterator position
             while (it.hasPrevious())
             {
-                PipelineHandler<T> postSaveHandler = it.previous();
+                PipelineHandler<T, S> postSaveHandler = it.previous();
                 log.debug("Post-save handler: [{}] rolling back", postSaveHandler.getClass().getName());
                 postSaveHandler.rollback(entity, pipelineContext);
             }
@@ -108,7 +108,7 @@ public class PipelineManager<T>
      *
      * @param preSaveHandlers
      */
-    public void setPreSaveHandlers(List<PipelineHandler<T>> preSaveHandlers)
+    public void setPreSaveHandlers(List<PipelineHandler<T, S>> preSaveHandlers)
     {
         this.preSaveHandlers = preSaveHandlers;
     }
@@ -118,7 +118,7 @@ public class PipelineManager<T>
      *
      * @param postSaveHandlers
      */
-    public void setPostSaveHandlers(List<PipelineHandler<T>> postSaveHandlers)
+    public void setPostSaveHandlers(List<PipelineHandler<T, S>> postSaveHandlers)
     {
         this.postSaveHandlers = postSaveHandlers;
     }
@@ -126,7 +126,7 @@ public class PipelineManager<T>
     /**
      * Case file saving context getter.
      */
-    public PipelineContext getPipelineContext()
+    public S getPipelineContext()
     {
         return pipelineContext;
     }
@@ -136,7 +136,7 @@ public class PipelineManager<T>
      *
      * @param pipelineContext
      */
-    public void setPipelineContext(PipelineContext pipelineContext)
+    public void setPipelineContext(S pipelineContext)
     {
         this.pipelineContext = pipelineContext;
     }

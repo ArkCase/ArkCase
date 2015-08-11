@@ -5,7 +5,7 @@ import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.services.pipeline.PipelineContext;
+import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.apache.commons.lang.StringUtils;
@@ -16,43 +16,51 @@ import org.slf4j.LoggerFactory;
  * Create Outlook folder and update participants for a Case File.
  * Created by Petar Ilin <petar.ilin@armedia.com> on 11.08.2015.
  */
-public class CaseFileOutlookHandler implements PipelineHandler<CaseFile>
+public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFilePipelineContext>
 {
+    /**
+     * Auto create folder for case file flag.
+     */
+    private boolean autoCreateFolderForCaseFile;
+
+    /**
+     * Outlook calendar service
+     */
+    private OutlookContainerCalendarService outlookContainerCalendarService;
+
     /**
      * Logger instance.
      */
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public void execute(CaseFile entity, PipelineContext pipelineContext) throws PipelineProcessException
+    public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
-        CaseFilePipelineContext context = (CaseFilePipelineContext) pipelineContext;
-
         //create calendar folder
-        if (context.isAutoCreateFolderForCaseFile() && context.isNewCase())
+        if (autoCreateFolderForCaseFile && pipelineContext.isNewCase())
         {
-            createOutlookFolder(entity, context);
+            createOutlookFolder(entity, pipelineContext);
         }
 
-        if (!context.isNewCase() && !StringUtils.isEmpty(entity.getContainer().getCalendarFolderId()))
+        if (!pipelineContext.isNewCase() && !StringUtils.isEmpty(entity.getContainer().getCalendarFolderId()))
         {
             //update folder participants
-            updateOutlookFolderParticipants(entity, context);
+            updateOutlookFolderParticipants(entity, pipelineContext);
         }
 
     }
 
     @Override
-    public void rollback(CaseFile entity, PipelineContext pipelineContext) throws PipelineProcessException
+    public void rollback(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
-
+        // TODO: delete Outlook/Calendar folder
     }
 
-    private void createOutlookFolder(CaseFile caseFile, CaseFilePipelineContext context)
+    private void createOutlookFolder(CaseFile caseFile, CaseFilePipelineContext pipelineContext)
     {
         try
         {
-            context.getOutlookContainerCalendarService().createFolder(caseFile.getTitle() + "(" + caseFile.getCaseNumber() + ")",
+            outlookContainerCalendarService.createFolder(caseFile.getTitle() + "(" + caseFile.getCaseNumber() + ")",
                     caseFile.getContainer(), caseFile.getParticipants());
         } catch (AcmOutlookItemNotFoundException e)
         {
@@ -63,12 +71,12 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile>
         }
     }
 
-    private void updateOutlookFolderParticipants(CaseFile caseFile, CaseFilePipelineContext context)
+    private void updateOutlookFolderParticipants(CaseFile caseFile, CaseFilePipelineContext pipelineContext)
     {
         try
         {
             AcmContainer container = caseFile.getContainer();
-            context.getOutlookContainerCalendarService().updateFolderParticipants(container.getCalendarFolderId(),
+            outlookContainerCalendarService.updateFolderParticipants(container.getCalendarFolderId(),
                     caseFile.getParticipants());
         } catch (AcmOutlookItemNotFoundException e)
         {
@@ -76,4 +84,23 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile>
         }
     }
 
+    public boolean isAutoCreateFolderForCaseFile()
+    {
+        return autoCreateFolderForCaseFile;
+    }
+
+    public void setAutoCreateFolderForCaseFile(boolean autoCreateFolderForCaseFile)
+    {
+        this.autoCreateFolderForCaseFile = autoCreateFolderForCaseFile;
+    }
+
+    public OutlookContainerCalendarService getOutlookContainerCalendarService()
+    {
+        return outlookContainerCalendarService;
+    }
+
+    public void setOutlookContainerCalendarService(OutlookContainerCalendarService outlookContainerCalendarService)
+    {
+        this.outlookContainerCalendarService = outlookContainerCalendarService;
+    }
 }

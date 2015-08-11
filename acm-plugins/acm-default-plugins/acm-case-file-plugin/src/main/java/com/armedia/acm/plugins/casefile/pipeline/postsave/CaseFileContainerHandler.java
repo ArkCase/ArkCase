@@ -1,9 +1,9 @@
 package com.armedia.acm.plugins.casefile.pipeline.postsave;
 
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.services.pipeline.PipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
@@ -11,10 +11,10 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
  * Ensure that Case File container exists..
  * Created by Petar Ilin <petar.ilin@armedia.com> on 11.08.2015.
  */
-public class CaseFileContainerHandler implements PipelineHandler<CaseFile>
+public class CaseFileContainerHandler implements PipelineHandler<CaseFile, CaseFilePipelineContext>
 {
     @Override
-    public void execute(CaseFile entity, PipelineContext pipelineContext) throws PipelineProcessException
+    public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
         if (entity.getContainer() == null)
         {
@@ -34,8 +34,8 @@ public class CaseFileContainerHandler implements PipelineHandler<CaseFile>
     }
 
     @Override
-    public void rollback(CaseFile entity, PipelineContext pipelineContext) throws PipelineProcessException
+    public void rollback(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
-
+        // nothing to do here, there is no rollback action to be executed
     }
 }
