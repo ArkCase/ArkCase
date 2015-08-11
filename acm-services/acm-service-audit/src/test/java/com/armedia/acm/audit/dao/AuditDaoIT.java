@@ -18,7 +18,8 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-context-holder.xml",
-        "/spring/spring-library-property-file-manager.xml"
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml"
 })
 public class AuditDaoIT
 {

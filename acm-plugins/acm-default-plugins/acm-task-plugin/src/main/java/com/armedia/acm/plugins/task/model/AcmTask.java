@@ -28,7 +28,7 @@ public class AcmTask implements AcmAssignedObject, Serializable
     private String attachedToObjectName;
     private Long attachedToObjectId;
     private String assignee;
-    private String owner;					//creator
+    private String owner;                    //creator
     private String businessProcessName;
     private Long businessProcessId;
     private boolean adhocTask;
@@ -249,11 +249,13 @@ public class AcmTask implements AcmAssignedObject, Serializable
         this.details = details;
     }
 
-    public String getAttachedToObjectName() {
+    public String getAttachedToObjectName()
+    {
         return attachedToObjectName;
     }
 
-    public void setAttachedToObjectName(String attachedToObjectName) {
+    public void setAttachedToObjectName(String attachedToObjectName)
+    {
         this.attachedToObjectName = attachedToObjectName;
     }
 
@@ -271,21 +273,25 @@ public class AcmTask implements AcmAssignedObject, Serializable
         return taskId;
     }
 
-	public String getOwner() {
-		return owner;
-	}
+    public String getOwner()
+    {
+        return owner;
+    }
 
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
+    public void setOwner(String owner)
+    {
+        this.owner = owner;
+    }
 
-	public Date getCreateDate() {
-		return createDate;
-	}
+    public Date getCreateDate()
+    {
+        return createDate;
+    }
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+    public void setCreateDate(Date createDate)
+    {
+        this.createDate = createDate;
+    }
 
     public String getWorkflowRequestType()
     {

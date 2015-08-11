@@ -14,37 +14,25 @@
 
     <!-- The login page itself, along with the JavaScript and images that
          appear on the login page, do not have to be protected.  -->
-    <!--<http security="none" pattern="/login" />-->
-    <!--<http security="none" pattern="/login.jsp" />-->
-    <!--&lt;!&ndash;<http security="none" pattern="/login.jsp" />&ndash;&gt;-->
-    <!--<http security="none" pattern="/assets/**" />-->
-    <!--&lt;!&ndash;<http security="none" pattern="/directives/**" />&ndash;&gt;-->
-    <!--<http security="none" pattern="/dist/**" />-->
-    <!--<http security="none" pattern="/lib/**" />-->
-    <!--&lt;!&ndash;<http security="none" pattern="/modules/**" />&ndash;&gt;-->
-    <!--&lt;!&ndash;<http security="none" pattern="/services/**" />&ndash;&gt;-->
-    <!--&lt;!&ndash;<http security="none" pattern="/application.js" />&ndash;&gt;-->
-    <!--&lt;!&ndash;<http security="none" pattern="/config.js" />&ndash;&gt;-->
-    <!--&lt;!&ndash;<http security="none" pattern="/home.html" />&ndash;&gt;-->
-    <!--<http security="none" pattern="/resources/**" />-->
-    <!--<http security="none" pattern="resources/lib/bootstrap/dist/css/**" />-->
-    <http security="none" pattern="/**" />
+    <http security="none" pattern="/login" />
+    <http security="none" pattern="/login.html" />
+    <http security="none" pattern="/login.jsp" />
 
     <!-- arkCaseAuthenticationProvider is defined in spring-library-surf-connector.xml -->
 
-    <!--<http-->
-            <!--auto-config="true">-->
-        <!--<intercept-url pattern="/**" access="ROLE_USER_INTERFACE" />-->
-        <!--<form-login-->
-                <!--login-page="/login.jsp"-->
-                <!--default-target-url="/home.html"-->
-                <!--always-use-default-target="true"-->
-                <!--authentication-failure-url="/login?login_error=1"/>-->
-        <!--<logout-->
-                <!--logout-url="/logout"-->
-                <!--delete-cookies="JSESSIONID"-->
-                <!--invalidate-session="true"/>-->
-    <!--</http>-->
+    <http
+            auto-config="true">
+        <intercept-url pattern="/**" access="ROLE_USER_INTERFACE" />
+        <form-login
+                login-page="/login"
+                default-target-url="/home"
+                always-use-default-target="true"
+                authentication-failure-url="/login?login_error=1"/>
+        <logout
+                logout-url="/logout"
+                delete-cookies="JSESSIONID"
+                invalidate-session="true"/>
+    </http>
 
     <authentication-manager>
         <authentication-provider ref="arkCaseAuthenticationProvider" />
