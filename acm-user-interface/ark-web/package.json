@@ -1,7 +1,7 @@
 {
-  "name": "ArkCase Frontend",
+  "name": "ArkCaseFrontend",
   "version": "0.0.1",
-  "devDependencies": {
+  "dependencies": {
     "npm": "~3.2.1",
     "bower": "~1.4.1",
     "karma": "~0.13.8",
