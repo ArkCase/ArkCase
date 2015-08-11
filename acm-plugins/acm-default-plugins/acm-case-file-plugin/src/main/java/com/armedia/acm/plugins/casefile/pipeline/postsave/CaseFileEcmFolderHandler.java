@@ -29,7 +29,8 @@ public class CaseFileEcmFolderHandler implements PipelineHandler<CaseFile>
         {
             try
             {
-                context.getEcmFileService().createFolder(entity.getEcmFolderPath());
+                String folderId = context.getEcmFileService().createFolder(entity.getEcmFolderPath());
+                entity.getContainer().getFolder().setCmisFolderId(folderId);
             } catch (AcmCreateObjectFailedException e)
             {
                 throw new PipelineProcessException(e);
