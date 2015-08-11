@@ -108,5 +108,5 @@ module.exports = function(grunt){
 
     // Build task.
     //grunt.registerTask('build', ['renderHome', 'sass', 'lint', 'loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
-    grunt.registerTask('build', ['sass', 'renderHome']);
+    grunt.registerTask('default', ['loadConfig', 'sass', 'renderHome']);
 };

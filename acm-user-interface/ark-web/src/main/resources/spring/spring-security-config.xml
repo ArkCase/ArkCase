@@ -15,7 +15,9 @@
     <!-- The login page itself, along with the JavaScript and images that
          appear on the login page, do not have to be protected.  -->
     <http security="none" pattern="/login" />
-    <http security="none" pattern="/resources/**" />
+    <http security="none" pattern="/resources/assets/css/login.css" />
+    <http security="none" pattern="/resources/lib/bootstrap/dist/css/bootstrap.css" />
+    <http security="none" pattern="/resources/assets/img/logo.png" />
 
     <!-- arkCaseAuthenticationProvider is defined in spring-library-surf-connector.xml -->
 
