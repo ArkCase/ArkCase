@@ -1,0 +1,14 @@
+<div ng-controller="AdministrationController">
+    <h2>Administration</h2>
+    <div class="clearfix">
+        <div class="col-xs-3">
+            <div class="scroll-body" slimscroll="{height: '800px'}" ng-include="'modules/administration/views/modules-list.client.view.html'">
+            </div>
+        </div>
+
+        <div class="col-xs-9">
+            <div ng-include="'modules/administration/views/module-info.client.view.html'">
+            </div>
+        </div>
+    </div>
+</div>

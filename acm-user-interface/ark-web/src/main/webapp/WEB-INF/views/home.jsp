@@ -1,10 +1,8 @@
 <html>
 <head>
     <title></title>
-    <%@include file="includes/application.css.jsp"%>
-    <%@include file="includes/application.js.jsp"%>
 </head>
 <body>
-Ticket: ${ticket}
+Ticket: ${ticket} &nbsp; <a href="<%= request.getContextPath()%>/logout">Logout</a>
 </body>
 </html>

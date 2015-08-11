@@ -52,11 +52,11 @@ module.exports.getGlobbedFiles = function(globPatterns, removeRoot) {
 /**
  * Get the modules JavaScript files
  */
-module.exports.getJavaScriptAssets = function(includeTests) {
-    var output = this.getGlobbedFiles(this.assets.lib.js.concat(this.assets.js), 'src/main/webapp/');
+module.exports.getJavaScriptAssets = function() {
+    var output = this.getGlobbedFiles(this.assets.lib.js.concat(this.assets.js), 'src/main/webapp/resources/');
 
-    var jsModules = this.getGlobbedFiles(this.assets.jsModules, 'src/main/webapp/modules/');
-    var jsCustomModules = this.getGlobbedFiles(this.assets.jsCustomModules, 'src/main/webapp/custom_modules/');
+    var jsModules = this.getGlobbedFiles(this.assets.jsModules, 'src/main/webapp/resources/modules/');
+    var jsCustomModules = this.getGlobbedFiles(this.assets.jsCustomModules, 'src/main/webapp/resources/custom_modules/');
 
     //  Remove duplicated JS files from modules
     jsModules = _.difference(jsModules, jsCustomModules);
@@ -82,5 +82,5 @@ module.exports.getJavaScriptAssets = function(includeTests) {
  * Get the modules CSS files
  */
 module.exports.getCSSAssets = function() {
-    return this.getGlobbedFiles(this.assets.lib.css.concat(this.assets.css), 'public/');
+    return this.getGlobbedFiles(this.assets.lib.css.concat(this.assets.css), 'src/main/webapp/resources/');
 };
