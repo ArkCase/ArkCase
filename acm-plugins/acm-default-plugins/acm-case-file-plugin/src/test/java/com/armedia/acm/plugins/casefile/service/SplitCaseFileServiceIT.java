@@ -19,6 +19,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,38 +44,39 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 
-    @ContextConfiguration(name="spring",
-            locations = {
-                    "/spring/spring-library-activiti-configuration.xml",
-                    "/spring/spring-library-activiti-actions.xml",
-                    "/spring/spring-mule-activemq.xml",
-                    "/spring/spring-library-case-file.xml",
-                    "/spring/spring-library-data-source.xml",
-                    "/spring/spring-library-ecm-file.xml",
-                    "/spring/spring-library-user-service.xml",
-                    "/spring/spring-library-context-holder.xml",
-                    "/spring/spring-library-search.xml",
-                    "/spring/spring-library-data-access-control.xml",
-                    "/spring/spring-library-folder-watcher.xml",
-                    "/spring/spring-library-drools-monitor.xml",
-                    "/spring/spring-library-merge-case-test-IT.xml",
-                    "/spring/spring-library-ms-outlook-integration.xml",
-                    "/spring/spring-library-ms-outlook-plugin.xml",
-                    "/spring/spring-library-object-history.xml",
-                    "/spring/spring-library-particpants.xml",
-                    "/spring/spring-library-person.xml",
-                    "/spring/spring-library-property-file-manager.xml",
-                    "/spring/spring-library-profile.xml",
-                    "/spring/spring-library-acm-encryption.xml",
-                    "/spring/spring-library-task.xml",
-                    "/spring/spring-library-note.xml",
-                    "/spring/spring-library-event.xml",
-                    "/spring/test-case-file-context.xml"
-  }
+@ContextConfiguration(name = "spring",
+        locations = {
+                "/spring/spring-library-activiti-configuration.xml",
+                "/spring/spring-library-activiti-actions.xml",
+                "/spring/spring-mule-activemq.xml",
+                "/spring/spring-library-case-file.xml",
+                "/spring/spring-library-data-source.xml",
+                "/spring/spring-library-ecm-file.xml",
+                "/spring/spring-library-user-service.xml",
+                "/spring/spring-library-context-holder.xml",
+                "/spring/spring-library-search.xml",
+                "/spring/spring-library-data-access-control.xml",
+                "/spring/spring-library-folder-watcher.xml",
+                "/spring/spring-library-drools-monitor.xml",
+                "/spring/spring-library-merge-case-test-IT.xml",
+                "/spring/spring-library-ms-outlook-integration.xml",
+                "/spring/spring-library-ms-outlook-plugin.xml",
+                "/spring/spring-library-object-history.xml",
+                "/spring/spring-library-particpants.xml",
+                "/spring/spring-library-person.xml",
+                "/spring/spring-library-property-file-manager.xml",
+                "/spring/spring-library-profile.xml",
+                "/spring/spring-library-acm-encryption.xml",
+                "/spring/spring-library-task.xml",
+                "/spring/spring-library-note.xml",
+                "/spring/spring-library-event.xml",
+                "/spring/test-case-file-context.xml"
+        }
 )
 
 @TransactionConfiguration(defaultRollback = true)
-public class SplitCaseFileServiceIT extends EasyMock {
+public class SplitCaseFileServiceIT extends EasyMock
+{
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -105,7 +107,8 @@ public class SplitCaseFileServiceIT extends EasyMock {
 
     @Test
     @Transactional
-    public void splitCaseTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException {
+    public void splitCaseTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException, PipelineProcessException
+    {
         auditAdapter.setUserId("auditUser");
         auth = createMock(Authentication.class);
         ipAddress = "127.0.0.1";
@@ -214,7 +217,8 @@ public class SplitCaseFileServiceIT extends EasyMock {
         CaseFile originalCase = caseFileDao.find(sourceId);
 
         ObjectAssociation sourceOa = null;
-        for (ObjectAssociation oa : originalCase.getChildObjects()) {
+        for (ObjectAssociation oa : originalCase.getChildObjects())
+        {
             if ("COPY_TO".equals(oa.getCategory()))
                 sourceOa = oa;
         }
@@ -223,7 +227,8 @@ public class SplitCaseFileServiceIT extends EasyMock {
         assertEquals(sourceOa.getTargetId().longValue(), copyCaseFile.getId().longValue());
 
         ObjectAssociation copyOa = null;
-        for (ObjectAssociation oa : copyCaseFile.getChildObjects()) {
+        for (ObjectAssociation oa : copyCaseFile.getChildObjects())
+        {
             if ("COPY_FROM".equals(oa.getCategory()))
                 copyOa = oa;
         }
@@ -232,8 +237,10 @@ public class SplitCaseFileServiceIT extends EasyMock {
         assertEquals(copyOa.getTargetId().longValue(), originalCase.getId().longValue());
         assertTrue(copyCaseFile.getParticipants().size() >= 3);
         AcmParticipant assignee = null;
-        for (AcmParticipant ap : copyCaseFile.getParticipants()) {
-            if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType())) {
+        for (AcmParticipant ap : copyCaseFile.getParticipants())
+        {
+            if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType()))
+            {
                 assignee = ap;
                 break;
             }

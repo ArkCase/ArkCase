@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.casefile.service;
 
 import com.armedia.acm.plugins.casefile.model.CaseFile;
-import org.mule.api.MuleException;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,5 +11,5 @@ import org.springframework.transaction.annotation.Transactional;
 public interface SaveCaseService
 {
     @Transactional
-    CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress) throws MuleException;
+    CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress) throws PipelineProcessException;
 }
