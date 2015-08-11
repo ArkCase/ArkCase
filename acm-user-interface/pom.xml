@@ -18,9 +18,4 @@
         <module>ark-surf-connector</module>
         <module>ark-web</module>
     </modules>
-    <properties>
-        <frontend-maven-plugin-version>0.0.23</frontend-maven-plugin-version>
-        <node-version>v0.12.2</node-version>
-        <npm-version>2.7.6</npm-version>
-    </properties>
 </project>
