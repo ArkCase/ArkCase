@@ -56,8 +56,7 @@ public class ArkCaseAuthenticationProvider implements AuthenticationProvider {
         catch (Exception e)
         {
             LOG.error("Error while authenticating ... ", e);
-            AuthenticationException authExc = new AuthenticationException("Unable to authenticate on ArkCase system") {};
-            throw authExc;
+            throw new AuthenticationException(e.getMessage()) {};
         }
     }
 

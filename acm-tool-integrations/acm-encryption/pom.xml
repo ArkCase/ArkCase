@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-tool-integrations</artifactId>
-        <version>3.0.33-SNAPSHOT</version>
+        <version>3.0.34-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -19,6 +19,12 @@
             <groupId>com.armedia.acm</groupId>
             <artifactId>acm-core-api</artifactId>
             <version>${acm.version}</version>
+        </dependency>
+
+        <!-- logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <!-- Apache commons -->
@@ -56,6 +62,17 @@
             <artifactId>spring-context</artifactId>
         </dependency>
 
+        <!--Crypto libs-->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpg-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -36,7 +36,8 @@ import static org.junit.Assert.*;
                     "/spring/spring-library-folder-watcher.xml",
                     "/spring/spring-library-activiti-configuration.xml",
                     "/spring/spring-library-drools-monitor.xml",
-                    "/spring/spring-library-ecm-plugin-test-mule.xml"
+                    "/spring/spring-library-ecm-plugin-test-mule.xml",
+                    "/spring/spring-library-acm-encryption.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class EcmFileDaoIT
