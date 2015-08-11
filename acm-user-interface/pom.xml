@@ -6,7 +6,6 @@
         <version>3.0.34-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.armedia.acm</groupId>
     <artifactId>acm-user-interface</artifactId>
     <packaging>pom</packaging>
@@ -17,5 +16,4 @@
         <module>ark-surf-connector</module>
         <module>ark-web</module>
     </modules>
-
 </project>
