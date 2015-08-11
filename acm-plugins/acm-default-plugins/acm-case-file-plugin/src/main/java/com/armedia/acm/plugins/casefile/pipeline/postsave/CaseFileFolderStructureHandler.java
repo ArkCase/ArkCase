@@ -1,7 +1,5 @@
 package com.armedia.acm.plugins.casefile.pipeline.postsave;
 
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -40,7 +38,6 @@ public class CaseFileFolderStructureHandler implements PipelineHandler<CaseFile>
         {
             context.getCaseFileEventUtility().raiseEvent(entity, "updated", new Date(), context.getIpAddress(), auth.getName(), auth);
         }
-
     }
 
     @Override
@@ -53,20 +50,17 @@ public class CaseFileFolderStructureHandler implements PipelineHandler<CaseFile>
     private void createFolderStructure(CaseFile caseFile, CaseFilePipelineContext context)
     {
         if (context.getFolderStructureAsString() != null && !context.getFolderStructureAsString().isEmpty())
+        {
             try
             {
                 log.debug("Folder Structure [{}]" + context.getFolderStructureAsString());
                 JSONArray folderStructure = new JSONArray(context.getFolderStructureAsString());
-                AcmContainer container = getContainer(caseFile, context);
+                AcmContainer container = context.getEcmFileService().getOrCreateContainer(caseFile.getObjectType(), caseFile.getId());
                 context.getAcmFolderService().addFolderStructure(container, container.getFolder(), folderStructure);
             } catch (Exception e)
             {
                 log.error("Cannot create folder structure.", e);
             }
-    }
-
-    private AcmContainer getContainer(CaseFile caseFile, CaseFilePipelineContext context) throws AcmCreateObjectFailedException, AcmUserActionFailedException
-    {
-        return context.getEcmFileService().getOrCreateContainer(caseFile.getObjectType(), caseFile.getId());
+        }
     }
 }
