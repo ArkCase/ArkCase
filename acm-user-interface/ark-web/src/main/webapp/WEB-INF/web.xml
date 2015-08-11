@@ -10,25 +10,27 @@
     </listener>
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:/spring/surf/surf-config.xml, classpath*:/spring/spring-library-*.xml, classpath:/spring/spring-security-config.xml</param-value>
+        <!--<param-value>classpath:/spring/surf/surf-config.xml, classpath*:/spring/spring-library-*.xml</param-value>-->
+        <param-value>classpath:/spring/spring-security-config.xml</param-value>
+        <!--<param-value>classpath:/spring/surf/surf-config.xml, classpath*:/spring/spring-library-*.xml, classpath:/spring/spring-security-config.xml</param-value>-->
     </context-param>
 
-    <servlet>
-        <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>
-                classpath:/spring/appServlet/servlet-context.xml, classpath*:spring/spring-web-*.xml
-            </param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
+    <!--<servlet>-->
+        <!--<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>-->
+        <!--<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>-->
+        <!--<init-param>-->
+            <!--<param-name>contextConfigLocation</param-name>-->
+            <!--<param-value>-->
+                <!--classpath:/spring/appServlet/servlet-context.xml, classpath*:spring/spring-web-*.xml-->
+            <!--</param-value>-->
+        <!--</init-param>-->
+        <!--<load-on-startup>1</load-on-startup>-->
+    <!--</servlet>-->
 
-    <servlet-mapping>
-        <servlet-name>Spring MVC Dispatcher Servlet</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>Spring MVC Dispatcher Servlet</servlet-name>-->
+        <!--<url-pattern>/login</url-pattern>-->
+    <!--</servlet-mapping>-->
 
 
     <!--
@@ -44,7 +46,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!-- this may be necessary for Tomcat 7 deployments -->
+     this may be necessary for Tomcat 7 deployments
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>/j_spring_security_check</url-pattern>
