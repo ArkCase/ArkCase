@@ -1,4 +1,4 @@
-package com.armedia.acm.services.pipeline.diff;
+package com.armedia.acm.spring;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;

@@ -8,10 +8,10 @@
 
     <!--
        Copy all Spring configuration files that match this pattern to:
-        1. $HOME/.acm/custom/classes/spring-builtin-configuration if they are provided with the WAR file
-        2. $HOME/.acm/custom/classes/spring-custom-configuration if they are outside the WAR file
+        1. $HOME/.acm/default-config/spring if they are provided with the WAR file
+        2. $HOME/.acm/custom-config/spring if they are outside the WAR file
     -->
-    <bean id="acmSpringConfigCopier" class="com.armedia.acm.services.pipeline.diff.SpringConfigCopier">
+    <bean id="acmSpringConfigCopier" class="com.armedia.acm.spring.SpringConfigCopier">
         <property name="resolver" ref="acmBuiltinPathMatchingResolver"/>
         <property name="resourcePatterns">
             <list value-type="java.lang.String">
@@ -22,6 +22,6 @@
     </bean>
 
     <!-- compare if there are some customizations and create diff files -->
-    <bean id="acmConfigurationComparator" class="com.armedia.acm.services.pipeline.diff.ConfigurationComparator"/>
+    <bean id="acmConfigurationComparator" class="com.armedia.acm.spring.ConfigurationComparator"/>
 
 </beans>
