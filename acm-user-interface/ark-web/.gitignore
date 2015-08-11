@@ -7,14 +7,14 @@ node/
 node_modules/
 
 # Bower vendor dependencies folder
-src/main/webapp/lib/
+src/main/webapp/resources/lib/
 
 # Compiled JS and CSS files for production
-src/main/webapp/dist/
+src/main/webapp/resources/dist/
 
 # Don't commit CSS. CSS should be produced rom SCSS files
-src/main/webapp/assets/css/
-src/main/webapp/modules/*/css/
+src/main/webapp/resources/assets/css/
+src/main/webapp/resources/modules/*/css/
 
-# Don't include generated includes
-src/main/webapp/WEB-INF/views/includes/
+# Don't include generated home html page
+src/main/webapp/resources/home.html
