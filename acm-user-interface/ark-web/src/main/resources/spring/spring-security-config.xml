@@ -15,8 +15,7 @@
     <!-- The login page itself, along with the JavaScript and images that
          appear on the login page, do not have to be protected.  -->
     <http security="none" pattern="/login" />
-    <http security="none" pattern="/login.html" />
-    <http security="none" pattern="/login.jsp" />
+    <http security="none" pattern="/resources/**" />
 
     <!-- arkCaseAuthenticationProvider is defined in spring-library-surf-connector.xml -->
 
@@ -25,7 +24,7 @@
         <intercept-url pattern="/**" access="ROLE_USER_INTERFACE" />
         <form-login
                 login-page="/login"
-                default-target-url="/home"
+                default-target-url="/resources/home.html"
                 always-use-default-target="true"
                 authentication-failure-url="/login?login_error=1"/>
         <logout

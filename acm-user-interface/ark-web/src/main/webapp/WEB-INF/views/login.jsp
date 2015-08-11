@@ -17,7 +17,7 @@
 <body>
 <div class="login-wrapper">
     <div class="text-center">
-        <img src="assets/img/logo.png">
+        <img src="<%= request.getContextPath()%>/resources/assets/img/logo.png">
     </div>
     <header class="text-center">
         <strong>Enter your username and password.</strong>

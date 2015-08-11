@@ -115,11 +115,12 @@
 
                     <execution>
                         <id>grunt build</id>
+                        <phase>generate-resources</phase>
                             <goals>
                                 <goal>grunt</goal>
                             </goals>
                             <configuration>
-                            <arguments>--no-color</arguments>
+                            <arguments>--no-color --force</arguments>
                         </configuration>
                     </execution>
                 </executions>
