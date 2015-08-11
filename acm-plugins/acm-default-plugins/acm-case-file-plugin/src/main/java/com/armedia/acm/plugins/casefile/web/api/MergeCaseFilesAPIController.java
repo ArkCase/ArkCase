@@ -1,13 +1,12 @@
 package com.armedia.acm.plugins.casefile.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.exceptions.MergeCaseFilesException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.MergeCaseOptions;
 import com.armedia.acm.plugins.casefile.service.MergeCaseService;
-import com.armedia.acm.plugins.profile.model.UserOrgConstants;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
@@ -25,7 +23,8 @@ import java.util.Objects;
 
 @Controller
 @RequestMapping({"/api/v1/plugin/merge-casefiles", "/api/latest/plugin/merge-casefiles"})
-public class MergeCaseFilesAPIController {
+public class MergeCaseFilesAPIController
+{
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private MergeCaseService mergeCaseService;
@@ -34,10 +33,11 @@ public class MergeCaseFilesAPIController {
     @RequestMapping(method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE})
     @ResponseBody
     public CaseFile mergeCaseFiles(
-           @RequestBody MergeCaseOptions mergeCaseOptions,
+            @RequestBody MergeCaseOptions mergeCaseOptions,
             HttpSession session,
             Authentication auth
-    ) throws MuleException, MergeCaseFilesException, AcmCreateObjectFailedException, AcmUserActionFailedException {
+    ) throws MuleException, MergeCaseFilesException, AcmCreateObjectFailedException, AcmUserActionFailedException, PipelineProcessException
+    {
 
         Objects.requireNonNull(mergeCaseOptions.getSourceCaseFileId(), "Source Id should not be null");
         Objects.requireNonNull(mergeCaseOptions.getTargetCaseFileId(), "Target Id should not be null");
@@ -47,7 +47,8 @@ public class MergeCaseFilesAPIController {
     }
 
 
-    public void setMergeCaseService(MergeCaseService mergeCaseService) {
+    public void setMergeCaseService(MergeCaseService mergeCaseService)
+    {
         this.mergeCaseService = mergeCaseService;
     }
 }
