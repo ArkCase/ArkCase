@@ -108,9 +108,6 @@
 
 
     <!-- pre-save handlers -->
-    <bean id="complaintAuditHandler" class="com.armedia.acm.plugins.complaint.pipeline.presave.ComplaintAuditHandler">
-        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-    </bean>
     <bean id="complaintContainerHandler"
           class="com.armedia.acm.plugins.complaint.pipeline.presave.ComplaintContainerHandler"/>
     <!-- post-save handlers -->
@@ -125,7 +122,6 @@
     <bean id="complaintPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
-                <ref bean="complaintAuditHandler"/>
                 <ref bean="complaintContainerHandler"/>
             </list>
         </property>
