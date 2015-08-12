@@ -7,7 +7,7 @@
   "description": "Configurable ArkCase application",
   "license": "Proprietary software",
   "dependencies": {
-    "angular": "~1.4.3",
+    "angular": "~1.4.4",
     "bootstrap": "~3.3.5",
     "lodash": "~3.10.0",
     "angular-resource": "~1.4.3",
@@ -26,7 +26,7 @@
     "angular-ui-grid": "~3.0.1"
   },
   "resolutions": {
-    "angular": "1.4.3",
+    "angular": "1.4.4",
     "angular-ui-utils": "~3.0.0"
   }
 }

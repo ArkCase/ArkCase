@@ -1,7 +1,23 @@
 'use strict';
 var appRoot = require('app-root-path');
+var path = require('path');
+
 
 module.exports = {
+
+    config: {
+        modulesConfigFolder: 'src/main/webapp/resources/modules_config/config/',
+        modulesConfigFile: 'src/main/webapp/resources/modules_config/config/modules.json',
+        modulesPermissionsFolder: 'src/main/webapp/resources/modules_config/permission/',
+        modulesSchemasFolder: 'src/main/webapp/resources/modules_config/schemas/'
+    },
+
+    modules: {
+        defaultModulesFolder: 'src/main/webapp/resources/modules/',
+        customModulesFolder: 'src/main/webapp/resources/custom_modules/'
+    },
+
+
     homePage: {
         title: "ArkCase Application",
         template: 'templates/home.tpl.html',
