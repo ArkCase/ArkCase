@@ -27,15 +27,17 @@
     <!--[if lt IE 9]>
     <script src="lib/html5shiv/dist/html5shiv-printshiv.js"></script>
     <![endif]-->
+    <base href="/arkcase/">
 </head>
 
 <body class="ng-cloak">
-<header data-ng-include="'/modules/core/views/header.client.view.html'" class="navbar navbar-fixed-top navbar-arkcase"></header>
+
+<header data-ng-include="'modules/core/views/header.client.view.html'" class="navbar navbar-fixed-top navbar-arkcase"></header>
 
 <div class="page-wrapper">
-    <div class="leftnav-menu" ng-include="'/modules/core/views/left-navigation.client.view.html'"></div>
+    <div class="leftnav-menu" ng-include="'modules/core/views/left-navigation.client.view.html'"></div>
     <div class="page-content">
-        {% block content %}{% endblock %}
+        <section data-ui-view></section>
     </div>
 </div>
 

@@ -5,7 +5,7 @@ module.exports = {
     homePage: {
         title: "ArkCase Application",
         template: 'templates/home.tpl.html',
-        target: 'src/main/webapp/resources/home.html'
+        target: 'src/main/webapp/home.html'
     },
 
     assets: {

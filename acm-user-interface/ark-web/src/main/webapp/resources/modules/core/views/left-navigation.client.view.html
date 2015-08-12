@@ -6,7 +6,7 @@
     <div class="text-muted text-sm">Navigation</div>
     <ul class="nav nav-main">
         <li ng-repeat="item in menu.items | orderBy: 'position' " ng-class="{ active: $state.includes(item.link)}">
-            <a  href="/#!/{{item.link}}" title="{{item.title}}" class="auto">
+            <a  href="{{baseUrl}}#!/{{item.link}}" title="{{item.title}}" class="auto">
                 <i class="i i-statistics icon"> </i>
                 <strong>{{item.title}}</strong>
             </a>

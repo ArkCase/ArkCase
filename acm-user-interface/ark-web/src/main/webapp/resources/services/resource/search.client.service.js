@@ -2,11 +2,11 @@
 
 angular.module('services').factory('SearchService', ['$resource',
     function ($resource) {
-        return $resource('acm/api/latest/plugin/search', {}, {
+        return $resource('proxy/arkcase/api/latest/plugin/search', {}, {
             queryFacetedSearch: {
                 method: 'GET',
                 cache: true,
-                url: 'acm/api/v1/plugin/search/facetedSearch?q=:searchString&filters=fq="Object Type"::objectType&fq="Owner"::owner&start=:startWith&n=:count',
+                url: 'proxy/arkcase/api/v1/plugin/search/facetedSearch?q=:searchString&filters=fq="Object Type"::objectType&fq="Owner"::owner&start=:startWith&n=:count',
                 isArray: false,
                 transformResponse: function (data, headerGetter) {
                     var result = {};

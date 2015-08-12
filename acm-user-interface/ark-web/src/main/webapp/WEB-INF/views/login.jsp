@@ -11,13 +11,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>ACM | ArkCase | User Interface</title>
 
-    <link rel="stylesheet" href="<%= request.getContextPath()%>/resources/lib/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="<%= request.getContextPath()%>/resources/assets/css/login.css">
+    <link rel="stylesheet" href="<%= request.getContextPath()%>/lib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="<%= request.getContextPath()%>/assets/css/login.css">
 </head>
 <body>
 <div class="login-wrapper">
     <div class="text-center">
-        <img src="<%= request.getContextPath()%>/resources/assets/img/logo.png">
+        <img src="<%= request.getContextPath()%>/assets/img/logo.png">
     </div>
     <header class="text-center">
         <strong>Enter your username and password.</strong>

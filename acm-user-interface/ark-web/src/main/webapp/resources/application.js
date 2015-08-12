@@ -10,7 +10,8 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 
         // Initialize angular-translate
         $translateProvider.useLoader('$translatePartialLoader', {
-            urlTemplate: '/api/config/resources/{part}/{lang}'
+            urlTemplate:'modules_config/config/modules/{part}/resources/{lang}.json'
+//            urlTemplate: '/api/config/resources/{part}/{lang}'
         });
 
         $translateProvider.preferredLanguage('en');

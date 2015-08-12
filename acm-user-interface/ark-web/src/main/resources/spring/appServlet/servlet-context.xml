@@ -10,6 +10,14 @@
     <mvc:view-controller path="/login" view-name="login"/>
     <mvc:view-controller path="/logout" view-name="login"/>
     <mvc:view-controller path="/home" view-name="home"/>
+    <mvc:resources mapping="/assets/**" location="/resources/assets/"/>
+    <mvc:resources mapping="/directives/**"  location="/resources/directives/"/>
+    <mvc:resources mapping="/lib/**"  location="/resources/lib/"/>
+    <mvc:resources mapping="/modules/**"  location="/resources/modules/"/>
+    <mvc:resources mapping="/modules_config/**"  location="/resources/modules_config/"/>
+    <mvc:resources mapping="/services/**"  location="/resources/services/"/>
+    <mvc:resources mapping="/application.js"  location="/resources/"/>
+    <mvc:resources mapping="/config.js"  location="/resources/"/>
 
     <mvc:default-servlet-handler />
 
