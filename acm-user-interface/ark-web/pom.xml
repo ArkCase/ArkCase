@@ -113,16 +113,16 @@
                         </configuration>
                     </execution>
 
-                    <!--<execution>-->
-                        <!--<id>grunt build</id>-->
-                        <!--<phase>generate-resources</phase>-->
-                            <!--<goals>-->
-                                <!--<goal>grunt</goal>-->
-                            <!--</goals>-->
-                            <!--<configuration>-->
-                            <!--<arguments>sass renderHome &#45;&#45;no-color &#45;&#45;force</arguments>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
+                    <execution>
+                        <id>grunt build</id>
+                        <phase>generate-resources</phase>
+                            <goals>
+                                <goal>grunt</goal>
+                            </goals>
+                            <configuration>
+                            <arguments>sass renderHome</arguments>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
