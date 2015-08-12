@@ -2,31 +2,31 @@
 
 angular.module('services').factory('ComplaintsService', ['$resource',
 	function($resource) {
-		return $resource('acm/api/latest/plugin',{
+		return $resource('proxy/arkcase/api/latest/plugin',{
 		},{
 			get: {
 				method: 'GET',
 				cache: true,
-				url: 'acm/api/latest/plugin/complaint/byId/:id',
+				url: 'proxy/arkcase/api/latest/plugin/complaint/byId/:id',
 				isArray: false
 			},
 
 			queryAudit: {
 				method: 'GET',
 				cache: true,
-				url: 'acm/api/latest/plugin/audit/COMPLAINT/:id?start=:startWith&n=:count'
+				url: 'proxy/arkcase/api/latest/plugin/audit/COMPLAINT/:id?start=:startWith&n=:count'
 			},
 
 			queryTasks: {
 				method: 'GET',
 				cache: true,
-				url: 'acm/api/latest/plugin/search/children?parentType=COMPLAINT&childType=TASK&parentId=:id&start=:startWith&n=:count'
+				url: 'proxy/arkcase/api/latest/plugin/search/children?parentType=COMPLAINT&childType=TASK&parentId=:id&start=:startWith&n=:count'
 			},
 
 			queryComplaints: {
 				method: 'GET',
 				cache: true,
-				url: 'acm/api/latest/plugin/search/COMPLAINT?start=0&n=50&s=sort-created-date-desc&filters=my-complaints-assigned',
+				url: 'proxy/arkcase/api/latest/plugin/search/COMPLAINT?start=0&n=50&s=sort-created-date-desc&filters=my-complaints-assigned',
 				isArray: true,
 				transformResponse: function(data, headerGetter){
 					var result = [];

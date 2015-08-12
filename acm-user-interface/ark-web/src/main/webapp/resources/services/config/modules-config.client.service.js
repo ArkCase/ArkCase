@@ -7,20 +7,20 @@ angular.module('services').factory('ConfigService', ['$resource',
 			getModule: {
 				method: 'GET',
 				cache: false,
-				url: 'api/config/modules/:moduleId',
+				url: 'modules_config/config/modules/:moduleId/config.json',
 				isArray: false
 			},
 
 			queryModules: {
 				method: 'GET',
 				cache: true,
-				url: 'api/config/modules',
+				url: 'modules_config/config/modules.json',
 				isArray: true
 			},
 
 			updateModule: {
 				method: 'PUT',
-				url: 'api/config/modules/:moduleId',
+				url: 'modules_config/config/modules/:moduleId/config.json',
 				isArray: false
 			}
         });

@@ -7,7 +7,7 @@ angular.module('services').factory('SchemasService', ['$resource',
             getSchema: {
                 method: 'GET',
                 cache: false,
-                url: 'api/config/schemas/:schemaId',
+                url: 'modules_config/schemas/{schemaId}.json',
                 isArray: false
             }
         });

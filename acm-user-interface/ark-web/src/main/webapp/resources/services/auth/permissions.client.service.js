@@ -2,12 +2,12 @@
 
 angular.module('services').factory('PermissionsService', ['$resource',
     function($resource) {
-        return $resource('api/permissions',{
+        return $resource('modules_config/permissions/modules.json',{
         },{
             queryPermissions: {
                 method: 'GET',
                 cache: true,
-                url: 'api/permissions',
+                url: 'modules_config/permissions/modules.json',
                 isArray: false
             }
         });
