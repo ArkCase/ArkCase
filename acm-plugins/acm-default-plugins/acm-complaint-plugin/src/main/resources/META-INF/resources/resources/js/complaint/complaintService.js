@@ -229,8 +229,10 @@ Complaint.Service = {
         ,saveIncidentDate: function(complaintId, incidentDate) {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
-            	incidentDate.setMinutes(incidentDate.getMinutes() + incidentDate.getTimezoneOffset()); // correct timezone offset issue (afdp-1276)
-                complaint.incidentDate = incidentDate.toISOString();
+            	if (Acm.isNotEmpty(incidentDate)) { // correct incident date issue by negating timezone offset (afdp-1276)
+            	    incidentDate.setMinutes(incidentDate.getMinutes() + incidentDate.getTimezoneOffset());
+            	}
+            	complaint.incidentDate = incidentDate;
                 this._saveComplaint(complaintId, complaint
                     ,function(data) {
                         Complaint.Controller.modelSavedIncidentDate(complaintId, Acm.Service.responseWrapper(data, data.incidentDate));
