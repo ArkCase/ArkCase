@@ -1,21 +1,18 @@
 package com.armedia.acm.plugins.complaint.service;
 
-import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
+import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
+import com.armedia.acm.services.pipeline.PipelineManager;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Implement transactional responsibilities for the SaveComplaintController.
- *
+ * <p>
  * JPA does all database writes at commit time.  Therefore, if the transaction demarcation was in the controller,
  * exceptions would not be raised until after the controller method returns; i.e. the exception message goes write
  * to the browser.  Also, separating transaction management (in this class) and exception handling (in the
@@ -23,43 +20,51 @@ import java.util.Map;
  */
 public class SaveComplaintTransaction
 {
-    private MuleContextManager muleContextManager;
+    private ComplaintDao complaintDao;
+
+    private PipelineManager pipelineManager;
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional
     public Complaint saveComplaint(
             Complaint complaint,
             Authentication authentication)
-            throws MuleException
+            throws PipelineProcessException
     {
-        complaint.setModified(new Date());
-        complaint.setModifier(authentication.getName());
+        ComplaintPipelineContext pipelineContext = new ComplaintPipelineContext();
+        // populate the context
+        pipelineContext.setAuthentication(authentication);
+        pipelineManager.setPipelineContext(pipelineContext);
 
-        Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("acmUser", authentication);
 
-        MuleMessage received = getMuleContextManager().send("vm://saveComplaint.in", complaint, messageProps);
+        pipelineManager.onPreSave(complaint);
 
-        Complaint saved = received.getPayload(Complaint.class);
-        MuleException e = received.getInboundProperty("saveException");
+        Complaint saved = complaintDao.save(complaint);
+        log.info("Complaint saved '{}'", saved);
 
-        if ( e != null )
-        {
-            throw e;
-        }
+        pipelineManager.onPostSave(saved);
 
         return saved;
-
     }
 
-
-    public MuleContextManager getMuleContextManager()
+    public ComplaintDao getComplaintDao()
     {
-        return muleContextManager;
+        return complaintDao;
     }
 
-    public void setMuleContextManager(MuleContextManager muleContextManager)
+    public void setComplaintDao(ComplaintDao complaintDao)
     {
-        this.muleContextManager = muleContextManager;
+        this.complaintDao = complaintDao;
     }
 
+    public PipelineManager getPipelineManager()
+    {
+        return pipelineManager;
+    }
+
+    public void setPipelineManager(PipelineManager pipelineManager)
+    {
+        this.pipelineManager = pipelineManager;
+    }
 }
