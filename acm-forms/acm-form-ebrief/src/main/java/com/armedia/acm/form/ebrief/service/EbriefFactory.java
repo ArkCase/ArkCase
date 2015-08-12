@@ -24,7 +24,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.plugins.person.model.PersonIdentification;
+import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.xml.DefendantPerson;
 import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
 import com.armedia.acm.plugins.person.service.PersonService;
@@ -182,8 +182,8 @@ public class EbriefFactory extends FrevvoFormFactory{
 							    	   DefendantPerson defendant = new DefendantPerson(element);
 							    	   defendant.setType(EbriefConstants.DEFENDANT);
 							    	 
-							    	   List<PersonIdentification> personIdentifications = element.getPersonIdentification();
-							    	   defendant = (DefendantPerson) getPersonService().setPersonIdentifications(personIdentifications, defendant);
+							    	   List<Identification> identifications = element.getIdentifications();
+							    	   defendant = (DefendantPerson) getPersonService().setPersonIdentifications(identifications, defendant);
 										
 							    	   return defendant;
 							       })

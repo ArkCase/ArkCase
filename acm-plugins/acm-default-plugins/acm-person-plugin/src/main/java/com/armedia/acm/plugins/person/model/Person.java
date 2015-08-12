@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.person.model;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import com.armedia.acm.service.history.model.AcmHistory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.slf4j.Logger;
@@ -121,8 +120,15 @@ public class Person implements Serializable, AcmEntity
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="person")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="person")
-    private List<PersonIdentification> personIdentification = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(
+            name = "acm_person_identification",
+            joinColumns = { @JoinColumn(name="cm_person_id", referencedColumnName = "cm_person_id") },
+            inverseJoinColumns = { @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)
+            }
+    )
+    private List<Identification> identifications = new ArrayList<>();
     
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -144,11 +150,6 @@ public class Person implements Serializable, AcmEntity
         {
             pa.setPerson(this);
         }
-
-        for (PersonIdentification pi : getPersonIdentification() )
-        {
-            pi.setPerson(this);
-        }
     }
 
     @PreUpdate
@@ -157,11 +158,6 @@ public class Person implements Serializable, AcmEntity
         for ( PersonAlias pa : getPersonAliases() )
         {
             pa.setPerson(this);
-        }
-
-        for (PersonIdentification pi : getPersonIdentification() )
-        {
-            pi.setPerson(this);
         }
     }
 
@@ -424,12 +420,12 @@ public class Person implements Serializable, AcmEntity
     }
 
     @XmlTransient
-    public List<PersonIdentification> getPersonIdentification() {
-        return personIdentification;
+    public List<Identification> getIdentifications() {
+        return identifications;
     }
 
-    public void setPersonIdentification(List<PersonIdentification> personIdentification) {
-        this.personIdentification = personIdentification;
+    public void setIdentifications(List<Identification> identifications) {
+        this.identifications = identifications;
     }
     
     public Person returnBase()

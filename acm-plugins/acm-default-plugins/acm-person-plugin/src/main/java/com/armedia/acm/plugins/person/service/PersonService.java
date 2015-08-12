@@ -6,7 +6,7 @@ package com.armedia.acm.plugins.person.service;
 import java.util.List;
 
 import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.PersonIdentification;
+import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
 
 /**
@@ -40,10 +40,10 @@ public interface PersonService {
 	/**
 	 * This method will set all person identifications values in the appropriate field in Person object using reflection
 	 * 
-	 * @param personIdentifications
+	 * @param identifications
 	 * @param person
 	 */
-	public Person setPersonIdentifications(List<PersonIdentification> personIdentifications, Person person);
+	public Person setPersonIdentifications(List<Identification> identifications, Person person);
 	
 	/**
 	 * The method will return the type of the person created via Frevvo form.

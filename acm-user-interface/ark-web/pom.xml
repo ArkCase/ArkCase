@@ -120,7 +120,7 @@
                                 <goal>grunt</goal>
                             </goals>
                             <configuration>
-                            <arguments>sass renderHome --no-color --force</arguments>
+                            <arguments>sass renderHome</arguments>
                         </configuration>
                     </execution>
                 </executions>
