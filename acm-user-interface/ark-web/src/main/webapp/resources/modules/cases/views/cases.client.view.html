@@ -1,0 +1,33 @@
+<div ng-controller="CasesController">
+    <h2>{{'cases.title' | translate}}</h2>
+    <div class="clearfix">
+        <div class="col-xs-3">
+            <div class="scroll-body" slimscroll="{height: '800px'}" ng-include="'modules/cases/views/cases-list.client.view.html'">
+            </div>
+        </div>
+
+        <section class="col-xs-9">
+            <div class="well">
+                <div ng-include="'modules/cases/views/components/case-info.client.view.html'"></div>
+            </div>
+            <div>
+                <div class="col-xs-4">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"> {{'cases.restrict' | translate}}
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-xs-4 col-xs-offset-4 text-right">
+                    <button class="btn btn-xs btn-default">{{'cases.close.button' | translate}}</button>
+                    <button class="btn btn-xs btn-default">{{'cases.subscribe.button' | translate}}</button>
+                </div>
+            </div>
+
+            <div class="col-xs-12" >
+                <div class="scroll-body" slimscroll="{height: '800px'}"  data-ui-view></div>
+            </div>
+        </section>
+    </div>
+</div>
