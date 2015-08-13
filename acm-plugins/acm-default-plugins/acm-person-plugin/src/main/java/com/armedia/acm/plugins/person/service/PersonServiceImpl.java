@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.armedia.acm.frevvo.config.FrevvoFormUtils;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.PersonIdentification;
+import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
 
 /**
@@ -39,9 +39,9 @@ public class PersonServiceImpl implements PersonService {
 			if (key != null && value != null && !value.trim().isEmpty() )
 			{
 				boolean exists = false;
-				if ( person.getPersonIdentification() != null )
+				if ( person.getIdentifications() != null )
 				{
-					for ( PersonIdentification pi : person.getPersonIdentification() )
+					for ( Identification pi : person.getIdentifications() )
 					{
 						if ( key.equals(pi.getIdentificationType())  )
 						{
@@ -54,17 +54,17 @@ public class PersonServiceImpl implements PersonService {
 	
 				if ( ! exists )
 				{
-					if ( person.getPersonIdentification() == null )
+					if ( person.getIdentifications() == null )
 					{
-						person.setPersonIdentification(new ArrayList<PersonIdentification>());
+						person.setIdentifications(new ArrayList<Identification>());
 					}
 					
-					PersonIdentification pi = new PersonIdentification();
+					Identification pi = new Identification();
 					pi.setIdentificationNumber(value);
 					pi.setIdentificationType(key);
-					pi.setPerson(person);
+
 					
-					person.getPersonIdentification().add(pi);
+					person.getIdentifications().add(pi);
 				}
 			}
 		}
@@ -88,7 +88,7 @@ public class PersonServiceImpl implements PersonService {
 				}
 				personFromDatabase = addPersonIdentification(key, value, personFromDatabase);
 				
-				person.setPersonIdentification(personFromDatabase.getPersonIdentification());
+				person.setIdentifications(personFromDatabase.getIdentifications());
 			}
 		}
 		
@@ -96,16 +96,16 @@ public class PersonServiceImpl implements PersonService {
 	}
 	
 	@Override
-	public Person setPersonIdentifications(List<PersonIdentification> personIdentifications, Person person) 
+	public Person setPersonIdentifications(List<Identification> identifications, Person person)
 	{
-		if (personIdentifications != null && person != null)
+		if (identifications != null && person != null)
 		{
-			for (PersonIdentification personIdentification : personIdentifications)
+			for (Identification identification : identifications)
 			{
 				try
 				{
-					String key = personIdentification.getIdentificationType();
-					String value = personIdentification.getIdentificationNumber();
+					String key = identification.getIdentificationType();
+					String value = identification.getIdentificationNumber();
 					
 					person = (Person) FrevvoFormUtils.set(person, key, value);
 				}
