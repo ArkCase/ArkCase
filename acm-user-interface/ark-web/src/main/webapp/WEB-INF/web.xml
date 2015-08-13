@@ -19,7 +19,7 @@
         <init-param>
             <param-name>contextConfigLocation</param-name>
             <param-value>
-                classpath:/spring/appServlet/servlet-context.xml, classpath*:spring/spring-web-*.xml
+                classpath:/spring/appServlet/servlet-context.xml
             </param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
@@ -44,7 +44,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!-- this may be necessary for Tomcat 7 deployments -->
+     <!--this may be necessary for Tomcat 7 deployments-->
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>/j_spring_security_check</url-pattern>

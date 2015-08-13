@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="acmBuiltinPathMatchingResolver"
+          class="org.springframework.core.io.support.PathMatchingResourcePatternResolver"/>
+
+    <!--
+       Copy all Spring configuration files that match this pattern to:
+        1. $HOME/.acm/default-config/spring if they are provided with the WAR file
+        2. $HOME/.acm/custom-config/spring if they are outside the WAR file
+    -->
+    <bean id="acmSpringConfigCopier" class="com.armedia.acm.spring.SpringConfigCopier">
+        <property name="resolver" ref="acmBuiltinPathMatchingResolver"/>
+        <property name="resourcePatterns">
+            <list value-type="java.lang.String">
+                <value>classpath*:/spring/spring-library-*.xml</value>
+                <value>classpath*:/spring/spring-web-*.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- compare if there are some customizations and create diff files -->
+    <bean id="acmConfigurationComparator" class="com.armedia.acm.spring.ConfigurationComparator"/>
+
+</beans>
