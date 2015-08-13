@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.person.model;
 
 import com.armedia.acm.data.AcmEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,28 +12,23 @@ import java.util.Date;
  * Created by marjan.stefanoski on 09.12.2014.
  */
 @Entity
-@Table(name = "acm_person_identification")
-public class PersonIdentification  implements Serializable, AcmEntity {
+@Table(name = "acm_identification")
+public class Identification implements Serializable, AcmEntity {
 
     private static final long serialVersionUID = 3413715007864370940L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
-    @TableGenerator(name = "acm_person_identification_gen",
-            table = "acm_person_identification_id",
+    @TableGenerator(name = "acm_identification_gen",
+            table = "acm_identification_id",
             pkColumnName = "cm_seq_name",
             valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_person_identification",
+            pkColumnValue = "acm_identification",
             initialValue = 100,
             allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_person_identification_gen")
-    @Column(name = "cm_person_identification_id")
-    private Long personIdentificationID;
-
-    @JsonIgnore
-    @ManyToOne(cascade = { CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
-    @JoinColumn(name="cm_person", nullable = false)
-    private Person person;
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_identification_gen")
+    @Column(name = "cm_identification_id")
+    private Long identificationID;
 
     @Column(name = "cm_id_type")
     private String identificationType;
@@ -49,18 +43,18 @@ public class PersonIdentification  implements Serializable, AcmEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date identificationYearIssued;
 
-    @Column(name = "cm_person_id_created", nullable = false, insertable = true, updatable = false)
+    @Column(name = "cm_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @Column(name = "cm_person_id_creator", insertable = true, updatable = false)
+    @Column(name = "cm_creator", insertable = true, updatable = false)
     private String creator;
 
-    @Column(name = "cm_person_id_modified", nullable = false)
+    @Column(name = "cm_modified", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @Column(name = "cm_person_id_modifier")
+    @Column(name = "cm_modifier")
     private String modifier;
 
     @Override
@@ -103,12 +97,12 @@ public class PersonIdentification  implements Serializable, AcmEntity {
         this.modifier = modifier;
     }
 
-    public Long getPersonIdentificationID() {
-        return personIdentificationID;
+    public Long getIdentificationID() {
+        return identificationID;
     }
 
-    public void setPersonIdentificationID(Long personIdentificationID) {
-        this.personIdentificationID = personIdentificationID;
+    public void setIdentificationID(Long identificationID) {
+        this.identificationID = identificationID;
     }
 
     public String getIdentificationType() {
@@ -141,13 +135,5 @@ public class PersonIdentification  implements Serializable, AcmEntity {
 
     public void setIdentificationYearIssued(Date identificationYearIssued) {
         this.identificationYearIssued = identificationYearIssued;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
     }
 }

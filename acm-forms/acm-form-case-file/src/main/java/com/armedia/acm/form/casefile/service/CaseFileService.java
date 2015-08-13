@@ -17,7 +17,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import com.armedia.acm.plugins.person.dao.PersonIdentificationDao;
+import com.armedia.acm.plugins.person.dao.IdentificationDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.xml.InitiatorPerson;
@@ -45,13 +45,13 @@ import java.util.List;
 public class CaseFileService extends FrevvoFormAbstractService
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
-    private CaseFileFactory caseFileFactory;
-    private SaveCaseService saveCaseService;
-    private AcmHistoryDao acmHistoryDao;
-    private CaseFileDao caseFileDao;
-    private PersonIdentificationDao personIdentificationDao;
-    private FileWorkflowBusinessRule fileWorkflowBusinessRule;
+	private Logger LOG = LoggerFactory.getLogger(getClass());
+	private CaseFileFactory caseFileFactory;
+	private SaveCaseService saveCaseService;
+	private AcmHistoryDao acmHistoryDao;
+	private CaseFileDao caseFileDao;
+	private IdentificationDao identificationDao;
+	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
 
     private RuntimeService activitiRuntimeService;
 
@@ -198,11 +198,18 @@ public class CaseFileService extends FrevvoFormAbstractService
 
         // Init People information
         caseFileForm.setPeople(initPeople());
-
+     
         JSONObject json = createResponse(caseFileForm);
 
         return json;
     }
+	public IdentificationDao getIdentificationDao() {
+		return identificationDao;
+	}
+
+	public void setIdentificationDao(IdentificationDao personIdentificationDao) {
+		this.identificationDao = personIdentificationDao;
+	}
 
     private InitiatorPerson initInitiator()
     {
@@ -418,17 +425,6 @@ public class CaseFileService extends FrevvoFormAbstractService
     public void setCaseFileDao(CaseFileDao caseFileDao)
     {
         this.caseFileDao = caseFileDao;
-    }
-
-    public PersonIdentificationDao getPersonIdentificationDao()
-    {
-        return personIdentificationDao;
-    }
-
-    public void setPersonIdentificationDao(
-            PersonIdentificationDao personIdentificationDao)
-    {
-        this.personIdentificationDao = personIdentificationDao;
     }
 
     public FileWorkflowBusinessRule getFileWorkflowBusinessRule()

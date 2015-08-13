@@ -1,0 +1,29 @@
+@import "variables";
+
+.leftnav-menu {
+  width: $leftnav-menu-width;
+  display: table-cell;
+  height: 100%;
+  background-color: $leftnav-menu-bg;
+  color: $leftnav-menu-color;
+  a {
+    color: $leftnav-menu-color;
+  }
+
+  // active items color
+  li.active {
+    background-color: $leftnav-menu-active-bg;
+    color: $leftnav-menu-active-color;
+    a {
+      color: $leftnav-menu-active-color;
+    }
+  }
+  // hover item
+   > li > a:hover, >li > a:focus {
+    background-color: $leftnav-menu-hover-bg;
+    color: $leftnav-menu-hover-color;
+    a {
+      color: $leftnav-menu-hover-color;
+    }
+  }
+}
