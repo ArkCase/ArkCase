@@ -1,0 +1,15 @@
+<div ng-controller="CaseDetailsController">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <div class="panel-title">{{'cases.comp.details.title' | translate}}</div>
+        </div>
+        <div class="panel-body">
+            <div ng-if="!details || details.length == 0">
+                <i>{{'cases.comp.details.msg.noDetails' | translate}}</i>
+            </div>
+            <div ng-if="details" ng-bind-html="details">
+            </div>
+        </div>
+    </div>
+
+</div>

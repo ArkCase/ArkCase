@@ -1,0 +1,14 @@
+<div ng-controller="CaseInfoController">
+    <div class="clearfix">
+        <div class="col-sm-6">
+            <h4 ng-cloak>{{caseInfo.title}} ({{caseInfo.status}})</h4>
+        </div>
+        <div class="col-sm-6">
+            <b>{{'cases.comp.info.caseId' | translate}}</b>{{case.name}}
+        </div>
+    </div>
+
+    <div class="clearfix">
+        <div class="col-md-4"><b>{{'cases.comp.info.courtRoomName' | translate}}</b> {{caseInfo.courtroomName}}</div>
+    </div>
+</div>
