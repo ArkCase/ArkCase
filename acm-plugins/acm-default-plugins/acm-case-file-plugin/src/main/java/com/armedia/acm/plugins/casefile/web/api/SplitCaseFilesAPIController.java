@@ -8,6 +8,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.SplitCaseOptions;
 import com.armedia.acm.plugins.casefile.service.SplitCaseService;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,8 @@ import java.util.Objects;
 
 @Controller
 @RequestMapping({"/api/v1/plugin/copyCaseFile", "/api/latest/plugin/copyCaseFile"})
-public class SplitCaseFilesAPIController {
+public class SplitCaseFilesAPIController
+{
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private SplitCaseService splitCaseService;
@@ -33,10 +35,11 @@ public class SplitCaseFilesAPIController {
     @RequestMapping(method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE})
     @ResponseBody
     public CaseFile splitCaseFiles(
-           @RequestBody SplitCaseOptions splitCaseOptions,
+            @RequestBody SplitCaseOptions splitCaseOptions,
             HttpSession session,
             Authentication auth
-    ) throws MuleException, AcmCreateObjectFailedException, AcmUserActionFailedException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException {
+    ) throws MuleException, AcmCreateObjectFailedException, AcmUserActionFailedException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException, PipelineProcessException
+    {
 
         Objects.requireNonNull(splitCaseOptions.getCaseFileId(), "Case file for splitting should not be null");
         String ipAddress = (String) session.getAttribute("acm_ip_address");
@@ -45,7 +48,8 @@ public class SplitCaseFilesAPIController {
     }
 
 
-    public void setSplitCaseService(SplitCaseService splitCaseService) {
+    public void setSplitCaseService(SplitCaseService splitCaseService)
+    {
         this.splitCaseService = splitCaseService;
     }
 }

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="caseFilePluginProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -14,15 +13,16 @@
         <property name="localOverride" value="false"/>
         <property name="properties">
             <props>
-                <prop key="casefile.case-types">Agricultural,Arson,Better Business Dispute,Domestic Dispute,Government,Local,Pollution</prop>
-            	<prop key="casefile.folder.structure"></prop>
-            	<prop key="casefile.tree.root.name.expression"></prop>
-            	<prop key="casefile.next.court.hearing.date.calendar.subject">Court Hearing Date</prop>
+                <prop key="casefile.case-types">Agricultural,Arson,Better Business Dispute,Domestic
+                    Dispute,Government,Local,Pollution
+                </prop>
+                <prop key="casefile.folder.structure"></prop>
+                <prop key="casefile.tree.root.name.expression"></prop>
             </props>
         </property>
     </bean>
 
-    <bean id="caseFileDao" class="com.armedia.acm.plugins.casefile.dao.CaseFileDao"/>  
+    <bean id="caseFileDao" class="com.armedia.acm.plugins.casefile.dao.CaseFileDao"/>
     <bean id="changeCaseStatusDao" class="com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao"/>
     <bean id="dispositionDao" class="com.armedia.acm.plugins.casefile.dao.DispositionDao"/>
 
@@ -31,14 +31,15 @@
     <bean id="changeCaseFileStateService" class="com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService">
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
         <property name="dao" ref="caseFileDao"/>
-        <property name="changeCaseStatusDao" ref="changeCaseStatusDao" />
+        <property name="changeCaseStatusDao" ref="changeCaseStatusDao"/>
     </bean>
     <bean id="caseFileToSolrTransformer" class="com.armedia.acm.plugins.casefile.service.CaseFileToSolrTransformer">
         <property name="userDao" ref="userJpaDao"/>
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
     </bean>
-    <bean id="dispositionToSolrTransformer" class="com.armedia.acm.plugins.casefile.service.DispositionToSolrTransformer">
+    <bean id="dispositionToSolrTransformer"
+          class="com.armedia.acm.plugins.casefile.service.DispositionToSolrTransformer">
         <property name="dispositionDao" ref="dispositionDao"/>
     </bean>
 
@@ -60,21 +61,49 @@
         <property name="ruleSpreadsheetFilename" value="drools-split-case-file-rules.xlsx"/>
     </bean>
 
+    <!-- post-save handlers -->
+    <bean id="caseFileRulesHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileRulesHandler">
+        <property name="saveRule" ref="saveCaseFileBusinessRule"/>
+    </bean>
+    <bean id="caseFileContainerHandler"
+          class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileContainerHandler"/>
+    <bean id="caseFileEcmFolderHandler"
+          class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileEcmFolderHandler">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+    <bean id="caseFileOutlookHandler"
+          class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileOutlookHandler">
+        <property name="autoCreateFolderForCaseFile" value="${casefile.auto_create_calendar_folder}"/>
+        <property name="outlookContainerCalendarService" ref="outlookContainerService"/>
+    </bean>
+    <bean id="caseFileFolderStructureHandler"
+          class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileFolderStructureHandler">
+        <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+        <property name="folderStructureAsString" value="${casefile.folder.structure}"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="acmFolderService" ref="acmFolderService"/>
+    </bean>
+
+    <bean id="caseFilePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
+        <property name="preSaveHandlers">
+            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                <!-- empty list, no pre-save handlers -->
+            </list>
+        </property>
+        <property name="postSaveHandlers">
+            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                <ref bean="caseFileRulesHandler"/>
+                <ref bean="caseFileContainerHandler"/>
+                <ref bean="caseFileEcmFolderHandler"/>
+                <ref bean="caseFileOutlookHandler"/>
+                <ref bean="caseFileFolderStructureHandler"/>
+            </list>
+        </property>
+    </bean>
+
     <bean id="saveCaseService" class="com.armedia.acm.plugins.casefile.service.SaveCaseServiceImpl">
         <property name="caseFileDao" ref="caseFileDao"/>
-        <property name="saveRule" ref="saveCaseFileBusinessRule"/>
-        <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
-        <property name="outlookService" ref="outlookService"/>
-        <property name="outlookContainerCalendarService" ref="outlookContainerService"/>
-        <property name="userDao" ref="userJpaDao"/>
-        <property name="userOrgService" ref="acmUserOrgService"/>
-        <property name="autoCreateFolderForCaseFile" value="${casefile.auto_create_calendar_folder}"/>
-        <property name="autoDeleteFolderAfterCaseClosed" value="${casefile.delete_calendar_folder_after_case_closed}"/>
-        <property name="acmFolderService" ref="acmFolderService" />
-        <property name="ecmFileService" ref="ecmFileService"/>
-		<property name="folderStructureAsString" value="${casefile.folder.structure}" />
-		<property name="nextCourtHearingDateCalendarSubject" value="${casefile.next.court.hearing.date.calendar.subject}" />
+        <property name="pipelineManager" ref="caseFilePipelineManager"/>
     </bean>
 
     <bean id="mergeCaseService" class="com.armedia.acm.plugins.casefile.service.MergeCaseServiceImpl">
@@ -98,27 +127,30 @@
         <property name="splitCaseFileBusinessRule" ref="splitCaseFileBusinessRule"/>
     </bean>
 
-    <bean id="changeCaseStatusProcessEndListener" class="com.armedia.acm.plugins.casefile.service.ChangeCaseStatusProcessEndListener">
-    	<property name="changeCaseFileStateService" ref="changeCaseFileStateService" />
+    <bean id="changeCaseStatusProcessEndListener"
+          class="com.armedia.acm.plugins.casefile.service.ChangeCaseStatusProcessEndListener">
+        <property name="changeCaseFileStateService" ref="changeCaseFileStateService"/>
     </bean>
-    
+
     <bean id="caseFileHistoryListener" class="com.armedia.acm.plugins.casefile.service.CaseFileHistoryListener">
-    	<property name="acmObjectHistoryService" ref="acmObjectHistoryService" />
+        <property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>
         <property name="nonHistoryGeneratingEvents">
             <list>
                 <value>com.armedia.acm.casefile.event.search</value>
             </list>
         </property>
     </bean>
-    
-    <bean id="caseFileAssigneeChangeChecker" class="com.armedia.acm.plugins.casefile.service.CaseFileAssigneeChangeChecker">
-    	<property name="acmObjectHistoryDao" ref="acmObjectHistoryDao" />
-    	<property name="eventPublisher" ref="acmObjectHistoryEventPublisher" />
-    	<property name="acmAssignmentDao" ref="acmAssignmentDao" />
+
+    <bean id="caseFileAssigneeChangeChecker"
+          class="com.armedia.acm.plugins.casefile.service.CaseFileAssigneeChangeChecker">
+        <property name="acmObjectHistoryDao" ref="acmObjectHistoryDao"/>
+        <property name="eventPublisher" ref="acmObjectHistoryEventPublisher"/>
+        <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
     </bean>
 
-    <bean id="caseFileDataAccessUpdateLocator" class="com.armedia.acm.plugins.casefile.service.CaseFileDataAccessUpdateLocator">
+    <bean id="caseFileDataAccessUpdateLocator"
+          class="com.armedia.acm.plugins.casefile.service.CaseFileDataAccessUpdateLocator">
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
-    
+
 </beans>

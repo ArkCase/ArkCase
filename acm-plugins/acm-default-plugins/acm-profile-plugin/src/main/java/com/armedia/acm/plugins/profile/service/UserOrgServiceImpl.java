@@ -8,6 +8,8 @@ import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Base64;
 
@@ -21,6 +23,7 @@ public class UserOrgServiceImpl implements UserOrgService {
     private AcmCryptoUtils acmCryptoUtils;
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public OutlookDTO retrieveOutlookPassword(Authentication authentication) throws AcmEncryptionException
     {
 
