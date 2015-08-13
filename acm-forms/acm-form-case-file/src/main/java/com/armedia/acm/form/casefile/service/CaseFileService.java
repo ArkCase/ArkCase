@@ -32,7 +32,7 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import com.armedia.acm.plugins.person.dao.PersonIdentificationDao;
+import com.armedia.acm.plugins.person.dao.IdentificationDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.xml.InitiatorPerson;
@@ -53,7 +53,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 	private SaveCaseService saveCaseService;
 	private AcmHistoryDao acmHistoryDao;
 	private CaseFileDao caseFileDao;
-	private PersonIdentificationDao personIdentificationDao;
+	private IdentificationDao identificationDao;
 	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
 
 	private RuntimeService activitiRuntimeService;
@@ -420,13 +420,13 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		this.caseFileDao = caseFileDao;
 	}
 
-	public PersonIdentificationDao getPersonIdentificationDao() {
-		return personIdentificationDao;
+	public IdentificationDao getIdentificationDao() {
+		return identificationDao;
 	}
 
-	public void setPersonIdentificationDao(
-			PersonIdentificationDao personIdentificationDao) {
-		this.personIdentificationDao = personIdentificationDao;
+	public void setIdentificationDao(
+            IdentificationDao identificationDao) {
+		this.identificationDao = identificationDao;
 	}
 
 	public FileWorkflowBusinessRule getFileWorkflowBusinessRule()
