@@ -3,7 +3,7 @@
 <web-app>
     <servlet>
         <servlet-name>AjaxServlet</servlet-name>
-        <servlet-class>com.snowbound.ajax.servlet.AjaxServlet</servlet-class>
+        <servlet-class>com.armedia.acm.snowbound.ArkCaseAjaxServlet</servlet-class>
         <init-param>
             <param-name>codebase</param-name>
             <param-value>http://repovm:8083/VirtualViewerJavaHTML5</param-value>
