@@ -3,6 +3,23 @@
  */
 package com.armedia.acm.form.casefile.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpSession;
+
+import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
+
+import org.activiti.engine.RuntimeService;
+import org.json.JSONObject;
+import org.mule.api.MuleException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.form.casefile.model.CaseFilePSForm;
 import com.armedia.acm.form.casefile.model.ps.AddressHistory;
@@ -17,7 +34,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import com.armedia.acm.plugins.person.dao.PersonIdentificationDao;
+import com.armedia.acm.plugins.person.dao.IdentificationDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.service.history.model.AcmHistory;
@@ -41,13 +58,13 @@ import java.util.List;
 public class CaseFilePSService extends FrevvoFormAbstractService
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
-    private CaseFilePSFactory caseFilePSFactory;
-    private SaveCaseService saveCaseService;
-    private AcmHistoryDao acmHistoryDao;
-    private CaseFileDao caseFileDao;
-    private PersonIdentificationDao personIdentificationDao;
-    private FileWorkflowBusinessRule fileWorkflowBusinessRule;
+	private Logger LOG = LoggerFactory.getLogger(getClass());
+	private CaseFilePSFactory caseFilePSFactory;
+	private SaveCaseService saveCaseService;
+	private AcmHistoryDao acmHistoryDao;
+	private CaseFileDao caseFileDao;
+	private IdentificationDao identificationDao;
+	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
 
     private RuntimeService activitiRuntimeService;
 
@@ -432,15 +449,15 @@ public class CaseFilePSService extends FrevvoFormAbstractService
         this.caseFileDao = caseFileDao;
     }
 
-    public PersonIdentificationDao getPersonIdentificationDao()
+    public IdentificationDao getIdentificationDao()
     {
-        return personIdentificationDao;
+        return identificationDao;
     }
 
-    public void setPersonIdentificationDao(
-            PersonIdentificationDao personIdentificationDao)
+    public void setIdentificationDao(
+            IdentificationDao personIdentificationDao)
     {
-        this.personIdentificationDao = personIdentificationDao;
+        this.identificationDao = personIdentificationDao;
     }
 
     public FileWorkflowBusinessRule getFileWorkflowBusinessRule()

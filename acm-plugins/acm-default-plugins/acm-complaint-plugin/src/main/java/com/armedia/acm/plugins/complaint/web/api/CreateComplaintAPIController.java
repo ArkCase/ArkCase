@@ -6,8 +6,7 @@ import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.ComplaintService;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
-
-import org.mule.api.MuleException;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
-@RequestMapping( { "/api/v1/plugin/complaint", "/api/latest/plugin/complaint"})
+@RequestMapping({"/api/v1/plugin/complaint", "/api/latest/plugin/complaint"})
 public class CreateComplaintAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -37,9 +36,9 @@ public class CreateComplaintAPIController
             Authentication auth
     ) throws AcmCreateObjectFailedException
     {
-        if ( log.isTraceEnabled() )
+        if (log.isTraceEnabled())
         {
-            log.trace("Got a complaint: " + in +"; complaint ID: '" + in.getComplaintId() + "'");
+            log.trace("Got a complaint: " + in + "; complaint ID: '" + in.getComplaintId() + "'");
             log.trace("complaint type: " + in.getComplaintType());
         }
 
@@ -48,7 +47,7 @@ public class CreateComplaintAPIController
         try
         {
             Complaint saved = getComplaintTransaction().saveComplaint(in, auth);
-  
+
             // Update Frevvo XML file
             getComplaintService().updateXML(saved, auth, ComplaintForm.class);
 
@@ -61,7 +60,7 @@ public class CreateComplaintAPIController
 
             return saved;
 
-        } catch ( MuleException | TransactionException e)
+        } catch (PipelineProcessException | TransactionException e)
         {
             log.error("Could not save complaint: " + e.getMessage(), e);
             getEventPublisher().publishComplaintEvent(in, auth, isInsert, false);
@@ -91,11 +90,13 @@ public class CreateComplaintAPIController
         this.eventPublisher = eventPublisher;
     }
 
-	public ComplaintService getComplaintService() {
-		return complaintService;
-	}
+    public ComplaintService getComplaintService()
+    {
+        return complaintService;
+    }
 
-	public void setComplaintService(ComplaintService complaintService) {
-		this.complaintService = complaintService;
-	}
+    public void setComplaintService(ComplaintService complaintService)
+    {
+        this.complaintService = complaintService;
+    }
 }
