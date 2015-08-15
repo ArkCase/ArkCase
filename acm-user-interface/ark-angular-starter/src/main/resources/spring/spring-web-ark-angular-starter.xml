@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <!--<bean id="angularResourceCopierProperties"-->
+    <!--class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>-->
+
+    <bean id="angularResourceCopier" class="com.armedia.acm.userinterface.angular.AngularResourceCopier">
+        <property name="tempFolderPath" value="#{ systemProperties ['user.home'] }/.acm-ui/tmp"/>
+        <property name="deployFolderPath" value="#{ systemProperties ['user.home'] }/.acm-ui/custom"/>
+        <property name="frontEndCommandsToBeExecuted">
+            <list>
+                <value>npm install</value>
+                <value>node_modules/bower/bin/bower install</value>
+                <value>node_modules/grunt-cli/bin/grunt</value>
+            </list>
+        </property>
+        <property name="resourceFoldersToCopyFromArchive">
+            <list>
+                <value>assets</value>
+                <value>directives</value>
+                <value>modules</value>
+                <value>deploy_tools</value>
+                <value>modules_config</value>
+                <value>services</value>
+            </list>
+        </property>
+        <property name="assembledFoldersToCopyToDeployment">
+            <list>
+                <value>assets</value>
+                <value>directives</value>
+                <value>lib</value>
+                <value>modules</value>
+                <value>modules_config</value>
+                <value>services</value>
+            </list>
+        </property>
+        <property name="filesToCopyFromArchive">
+            <list>
+                <value>application.js</value>
+                <value>config.js</value>
+            </list>
+        </property>
+        <property name="assembledFilesToCopyToDeployment">
+            <list>
+                <value>home.html</value>
+                <value>application.js</value>
+                <value>config.js</value>
+            </list>
+        </property>
+
+
+    </bean>
+</beans>
