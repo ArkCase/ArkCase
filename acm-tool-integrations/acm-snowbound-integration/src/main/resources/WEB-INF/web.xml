@@ -184,7 +184,7 @@
         </init-param>
         <init-param>
             <param-name>customImageRubberStamps</param-name>
-            <param-value>Approved,Confidential,Denied,InitialHere,Pending,Received,SignHere,Urgent</param-value>
+            <param-value>Approved,Confidential,Denied,InitialHere,Pending,Received,SignHere,Urgent,DateTime</param-value>
         </init-param>
         <init-param>
             <param-name>Approved</param-name>
@@ -217,6 +217,10 @@
         <init-param>
             <param-name>Urgent</param-name>
             <param-value>Urgent,589,274,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/Urgent.png</param-value>
+        </init-param>
+        <init-param>
+            <param-name>DateTime</param-name>
+            <param-value>Current Date/Time,300,30,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/DateTime.png</param-value>
         </init-param>
         <init-param>
             <param-name>validNetworkPrinters</param-name>
@@ -264,5 +268,14 @@
     <servlet-mapping>
         <servlet-name>AjaxServlet</servlet-name>
         <url-pattern>/AjaxServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DateTimePngServlet</servlet-name>
+        <servlet-class>com.armedia.acm.snowbound.DateTimePngServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DateTimePngServlet</servlet-name>
+        <url-pattern>/resources/stamps/DateTime.png</url-pattern>
     </servlet-mapping>
 </web-app>
