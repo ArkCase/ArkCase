@@ -64,7 +64,7 @@ public class GroupServiceImpl implements GroupService {
 		return updatedMembers;
 	}
 
-	/*@Override
+	@Override
 	public String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException {
 
 		if (logger.isInfoEnabled())
@@ -94,7 +94,6 @@ public class GroupServiceImpl implements GroupService {
 
 		throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
 	}
-*/
 
 
 	public UserDao getUserDao() {

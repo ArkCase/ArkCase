@@ -190,8 +190,8 @@
             ,"defaultValue": "Add New Recipients"
             ,"description": ""
         }
-        ,"prompt": {"value": "Enter an email address OR search for users within ArkCase."
-            ,"defaultValue": "Enter an email address OR search for users within ArkCase."
+        ,"prompt": {"value": "Search for users within ArkCase."
+            ,"defaultValue": "Search for users within ArkCase."
             ,"description": ""
         }
         ,"success":{"value": "Email sent successfully"
