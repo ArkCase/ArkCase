@@ -1,5 +1,7 @@
 package com.armedia.acm.snowbound;
 
+import com.snowbound.snapserv.transport.Base64Processor;
+
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -7,18 +9,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Create PNG image of current date/time, allows overriding the default format.
- *  * (PNG generation code used from TextToImage class)
- *
+ * * (PNG generation code used from TextToImage class)
+ * <p>
  * Override default format example: http://hostname/path-to-servlet/DateTime.png?format=yyyy/MM/dd
- *
+ * <p>
+ * Send base64 encoded string: http://hostname/path-to-servlet/DateTime.png?base64=true
+ * <p>
  * TODO: allow overriding other properties, such as font face, font size and others...
- *
+ * <p>
  * Created by Petar Ilin <petar.ilin@armedia.com> on 17.08.2015.
  */
 public class DateTimePngServlet extends HttpServlet
@@ -70,7 +75,23 @@ public class DateTimePngServlet extends HttpServlet
         g2d.drawString(text, 0, fm.getAscent());
         g2d.dispose();
 
-        resp.setContentType("image/png");
-        ImageIO.write(img, "png", resp.getOutputStream());
+        // prevent caching
+        resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        resp.setHeader("Pragma", "no-cache");
+        resp.setHeader("Expires", "0");
+
+        if (req.getParameter("base64") == null)
+        {
+            // return PNG image
+            resp.setContentType("image/png");
+            ImageIO.write(img, "png", resp.getOutputStream());
+        } else
+        {
+            // return the image as Base64 encoded string
+            resp.setContentType("text/plain");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(img, "png", baos);
+            resp.getWriter().write(Base64Processor.encode(baos.toByteArray()));
+        }
     }
 }
