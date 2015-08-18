@@ -23,6 +23,7 @@
 
     <bean id="sendEmailNotification" class="com.armedia.acm.services.notification.web.api.EmailNotificationAPIController">
         <property name="emailNotificationSender" ref="emailNotificationSender"/>
+        <property name="authenticationTokenService" ref="authenticationTokenService" />
     </bean>
 
     <bean id="notificationUiController" class="com.armedia.acm.services.notification.web.NotificationUiController">

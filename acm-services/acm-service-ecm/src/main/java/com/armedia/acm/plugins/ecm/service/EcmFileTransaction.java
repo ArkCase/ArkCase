@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
@@ -42,4 +43,7 @@ public interface EcmFileTransaction
                 throws MuleException;
         
         String downloadFileTransaction(EcmFile ecmFile) throws MuleException;
+
+        InputStream downloadFileTransactionAsInputStream(EcmFile ecmFile) throws MuleException;
+
 }
