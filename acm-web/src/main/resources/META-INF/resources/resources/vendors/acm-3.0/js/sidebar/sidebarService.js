@@ -20,8 +20,8 @@ Sidebar.Service = {
         }
 
         ,API_RETRIEVE_PROFILE_INFO_          : "/api/latest/plugin/profile/get/"
-        ,API_DOWNLOAD_PICTURE_BEGIN_         : "/api/latest/plugin/ecm/download/byId/"
-        ,API_DOWNLOAD_PICTURE_END            : "?inline=true"
+        ,API_DOWNLOAD_PICTURE_BEGIN_         : "/api/latest/plugin/ecm/download?ecmFileId="
+        ,API_DOWNLOAD_PICTURE_END            : "&inline=true"
 
         ,getPictureUrl: function(ecmFileId) {
             if (0 >= ecmFileId) {

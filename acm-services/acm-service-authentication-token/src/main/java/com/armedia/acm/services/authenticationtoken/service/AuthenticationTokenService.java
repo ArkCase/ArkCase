@@ -28,6 +28,12 @@ public class AuthenticationTokenService
         return key;
     }
 
+    public String getUncachedTokenForAuthentication(Authentication auth)
+    {
+        String key = UUID.randomUUID().toString();
+        return key;
+    }
+
     /**
      * Retrieve the authentication object corresponding to a token.  The token should have been previously retrieved
      * by a call to getTokenForAuthentication.

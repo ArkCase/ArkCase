@@ -1108,7 +1108,7 @@ Complaint.Service = {
         }
 
         ,API_UPLOAD_FILE            : "/api/latest/service/ecm/upload"
-        ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
+        ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download?ecmFileId="
         ,API_RETRIEVE_DOCUMENT_      : "/api/latest/service/ecm/folder/"
 
         ,retrieveDocumentsDeferred : function(complaintId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
