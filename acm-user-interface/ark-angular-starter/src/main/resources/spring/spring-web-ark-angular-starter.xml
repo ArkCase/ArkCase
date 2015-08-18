@@ -3,27 +3,41 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <!--<bean id="angularResourceCopierProperties"-->
-    <!--class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>-->
+
+    <bean id="osProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="properties">
+            <props>
+                <prop key="operatingSystemFrontEndCommandSuffix">
+                    #{ systemProperties['os.name'].startsWith('Windows') ? '.cmd' : '' }
+                </prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="angularResourceCopierProperties"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties" ref="osProperties"/>
+    </bean>
 
     <bean id="angularResourceCopier" class="com.armedia.acm.userinterface.angular.AngularResourceCopier">
         <property name="tempFolderPath" value="#{ systemProperties ['user.home'] }/.acm-ui/tmp"/>
         <property name="deployFolderPath" value="#{ systemProperties ['user.home'] }/.acm-ui/custom"/>
         <property name="frontEndCommandsToBeExecuted">
             <list>
-                <value>npm install</value>
-                <value>node_modules/bower/bin/bower install</value>
-                <value>node_modules/grunt-cli/bin/grunt</value>
+                <value>npm${operatingSystemFrontEndCommandSuffix} --no-color install</value>
+                <value>node_modules/bower/bin/bower${operatingSystemFrontEndCommandSuffix} --no-color install</value>
+                <value>node_modules/grunt-cli/bin/grunt${operatingSystemFrontEndCommandSuffix} --no-color</value>
             </list>
         </property>
         <property name="resourceFoldersToCopyFromArchive">
             <list>
                 <value>assets</value>
+                <value>config</value>
                 <value>directives</value>
                 <value>modules</value>
-                <value>deploy_tools</value>
                 <value>modules_config</value>
+                <value>scss</value>
                 <value>services</value>
+                <value>templates</value>
             </list>
         </property>
         <property name="assembledFoldersToCopyToDeployment">
@@ -38,8 +52,14 @@
         </property>
         <property name="filesToCopyFromArchive">
             <list>
+                <value>.bowerrc</value>
+                <value>.csslintrc</value>
+                <value>.jshintrc</value>
                 <value>application.js</value>
+                <value>bower.json</value>
                 <value>config.js</value>
+                <value>Gruntfile.js</value>
+                <value>package.json</value>
             </list>
         </property>
         <property name="assembledFilesToCopyToDeployment">
