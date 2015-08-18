@@ -67,6 +67,10 @@
     </bean>
 
     <!-- Senders Definition -->
+
+    <!--<bean id="authenticationTokenDao" class="com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao"/>-->
+    <bean id="authenticationTokenDao" class="com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao"/>
+
     <bean id="emailNotificationSender" class="com.armedia.acm.services.notification.service.EmailNotificationSender">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="propertyFileManager">
@@ -74,6 +78,8 @@
         </property>
         <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
         <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="authenticationTokenService" ref="authenticationTokenService" />
+        <property name="authenticationTokenDao" ref="authenticationTokenDao" />
     </bean>
 
 </beans>
