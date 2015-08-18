@@ -33,7 +33,7 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.plugins.person.model.PersonIdentification;
+import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.xml.GeneralOrganization;
 import com.armedia.acm.plugins.person.service.PersonService;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
@@ -233,17 +233,17 @@ public class CaseFilePSFactory extends FrevvoFormFactory
 			
 			String employeeId = null;
 			String ssn = null;
-			if (person.getPersonIdentification() != null)
+			if (person.getIdentifications() != null)
 			{
-				for (PersonIdentification personIdentification : person.getPersonIdentification())
+				for (Identification identification : person.getIdentifications())
 				{
-					if (PERSON_IDENTIFICATION_EMPLOYEE_ID.equals(personIdentification.getIdentificationType()))
+					if (PERSON_IDENTIFICATION_EMPLOYEE_ID.equals(identification.getIdentificationType()))
 					{
-						employeeId = personIdentification.getIdentificationNumber();
+						employeeId = identification.getIdentificationNumber();
 					}
-					else if (PERSON_IDENTIFICATION_SSN.equals(personIdentification.getIdentificationType()))
+					else if (PERSON_IDENTIFICATION_SSN.equals(identification.getIdentificationType()))
 					{
-						ssn = personIdentification.getIdentificationNumber();
+						ssn = identification.getIdentificationNumber();
 					}
 				}
 			}

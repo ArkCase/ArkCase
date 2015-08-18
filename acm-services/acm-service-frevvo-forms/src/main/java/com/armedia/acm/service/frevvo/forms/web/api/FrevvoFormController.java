@@ -33,7 +33,7 @@ import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.person.dao.PersonDao;
-import com.armedia.acm.plugins.person.dao.PersonIdentificationDao;
+import com.armedia.acm.plugins.person.dao.IdentificationDao;
 import com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -106,7 +106,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
     private AcmHistoryDao acmHistoryDao;
     
     private ObjectAssociationDao objectAssociationDao;
-    private PersonIdentificationDao personIdentificationDao;
+    private IdentificationDao identificationDao;
 
 	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
 
@@ -459,13 +459,13 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 		this.objectAssociationDao = objectAssociationDao;
 	}
 
-	public PersonIdentificationDao getPersonIdentificationDao() {
-		return personIdentificationDao;
+	public IdentificationDao getIdentificationDao() {
+		return identificationDao;
 	}
 
-	public void setPersonIdentificationDao(
-			PersonIdentificationDao personIdentificationDao) {
-		this.personIdentificationDao = personIdentificationDao;
+	public void setIdentificationDao(
+            IdentificationDao identificationDao) {
+		this.identificationDao = identificationDao;
 	}
 
 	public FileWorkflowBusinessRule getFileWorkflowBusinessRule()

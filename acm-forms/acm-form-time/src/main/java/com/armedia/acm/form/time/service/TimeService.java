@@ -66,7 +66,7 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 		Date periodDate = null;
 		try 
 		{
-			SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormats.FREVVO_DATE_FORMAT);
+			SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormats.TIMESHEET_DATE_FORMAT);
 			
 			if (period == null || "".equals(period))
 			{

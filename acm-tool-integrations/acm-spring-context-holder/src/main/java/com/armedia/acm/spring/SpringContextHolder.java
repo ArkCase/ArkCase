@@ -29,8 +29,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class SpringContextHolder implements ApplicationContextAware, ApplicationListener<AbstractConfigurationFileEvent>, ApplicationEventPublisherAware {
+public class SpringContextHolder implements ApplicationContextAware, ApplicationListener<AbstractConfigurationFileEvent>, ApplicationEventPublisherAware
+{
     private ApplicationContext toplevelContext;
     private Map<String, AbstractApplicationContext> childContextMap =
             new ConcurrentHashMap<String, AbstractApplicationContext>();
@@ -39,8 +42,10 @@ public class SpringContextHolder implements ApplicationContextAware, Application
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
-    public void onApplicationEvent(AbstractConfigurationFileEvent fileEvent) {
-        if (log.isDebugEnabled()) {
+    public void onApplicationEvent(AbstractConfigurationFileEvent fileEvent)
+    {
+        if (log.isDebugEnabled())
+        {
             log.debug("Event type: " + fileEvent.getClass().getName());
             log.debug("event base filename: " + fileEvent.getBaseFileName());
         }
@@ -55,78 +60,103 @@ public class SpringContextHolder implements ApplicationContextAware, Application
 
     }
 
-    private void checkIfSpringConfigWasModified(AbstractConfigurationFileEvent fileEvent, File eventFile) {
-        if (fileEvent instanceof ConfigurationFileChangedEvent) {
-            if (isSpringConfigFile(eventFile)) {
-                try {
+    private void checkIfSpringConfigWasModified(AbstractConfigurationFileEvent fileEvent, File eventFile)
+    {
+        if (fileEvent instanceof ConfigurationFileChangedEvent)
+        {
+            if (isSpringConfigFile(eventFile))
+            {
+                try
+                {
                     removeContext(eventFile.getName());
                     addContextFromFile(eventFile);
-                } catch (IOException e) {
+                } catch (IOException e)
+                {
                     log.error("Could not add context from file: " + e.getMessage(), e);
                 }
-            } else if (isSpringConfigFolderModified(eventFile)) {
-                try {
+            } else if (isSpringConfigFolderModified(eventFile))
+            {
+                try
+                {
                     removeContext(eventFile.getParentFile().getName());
                     addContextFromFolder(eventFile.getParentFile());
-                } catch (IOException e) {
+                } catch (IOException e)
+                {
                     log.error("Could not add context from folder: " + e.getMessage(), e);
                 }
             }
         }
     }
 
-    private void checkIfSpringConfigWasDeleted(AbstractConfigurationFileEvent fileEvent, File eventFile) {
-        if (fileEvent instanceof ConfigurationFileDeletedEvent && (isSpringConfigFile(eventFile) || isSpringConfigFolderDeleted(eventFile))) {
+    private void checkIfSpringConfigWasDeleted(AbstractConfigurationFileEvent fileEvent, File eventFile)
+    {
+        if (fileEvent instanceof ConfigurationFileDeletedEvent && (isSpringConfigFile(eventFile) || isSpringConfigFolderDeleted(eventFile)))
+        {
             removeContext(eventFile.getName());
         }
     }
 
-    private void checkIfSpringConfigWasAdded(AbstractConfigurationFileEvent fileEvent, File eventFile) {
-        if (fileEvent instanceof ConfigurationFileAddedEvent && (isSpringConfigFile(eventFile) || isSpringConfigFolderAdded(eventFile))) {
-            try {
+    private void checkIfSpringConfigWasAdded(AbstractConfigurationFileEvent fileEvent, File eventFile)
+    {
+        if (fileEvent instanceof ConfigurationFileAddedEvent && (isSpringConfigFile(eventFile) || isSpringConfigFolderAdded(eventFile)))
+        {
+            try
+            {
                 if (eventFile.isDirectory())
                     addContextFromFolder(eventFile);
                 else
                     addContextFromFile(eventFile);
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 log.error("Could not add context from file: " + e.getMessage(), e);
             }
         }
     }
 
-    private boolean isSpringConfigFile(File eventFile) {
-        return eventFile.getParentFile().getName().equals("spring") &&
-                eventFile.getName().startsWith("spring-config") &&
-                eventFile.getName().endsWith(".xml");
+    // parent folder is "spring" and name is like spring-config-*[-*].xml
+    Pattern pattern = Pattern.compile(".*\\.acm/spring/spring-config(-\\w+)+\\.xml");
+
+    private boolean isSpringConfigFile(File eventFile)
+    {
+        Matcher matcher = pattern.matcher(eventFile.toURI().getPath());
+        return matcher.matches();
     }
 
-    private boolean isSpringConfigFolderAdded(File eventFile) {
+    private boolean isSpringConfigFolderAdded(File eventFile)
+    {
         return eventFile.isDirectory() && eventFile.getName().startsWith("spring-config");
     }
 
-    private boolean isSpringConfigFolderDeleted(File eventFile) {
+    private boolean isSpringConfigFolderDeleted(File eventFile)
+    {
         return eventFile.getName().startsWith("spring-config");
     }
 
-    private boolean isSpringConfigFolderModified(File eventFile) {
-        if (eventFile.isFile()) {
+    private boolean isSpringConfigFolderModified(File eventFile)
+    {
+        if (eventFile.isFile())
+        {
             return eventFile.getParentFile().getName().startsWith("spring-config");
-        } else {
+        } else
+        {
             return eventFile.isDirectory() && eventFile.getName().startsWith("spring-config");
         }
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
+    {
         log.debug("Got the application context");
         toplevelContext = applicationContext;
     }
 
-    public <T> Map<String, T> getAllBeansOfType(Class<T> type) {
+    public <T> Map<String, T> getAllBeansOfType(Class<T> type)
+    {
         log.debug("Looking for beans of type: " + type.getName());
         Map<String, T> beans = toplevelContext.getBeansOfType(type);
 
-        for (AbstractApplicationContext childContext : childContextMap.values()) {
+        for (AbstractApplicationContext childContext : childContextMap.values())
+        {
             Map<String, T> childBeans = childContext.getBeansOfType(type);
             beans.putAll(childBeans);
         }
@@ -135,7 +165,8 @@ public class SpringContextHolder implements ApplicationContextAware, Application
         return Collections.unmodifiableMap(beans);
     }
 
-    public void addContextFromFolder(File configFile) throws IOException, BeansException {
+    public void addContextFromFolder(File configFile) throws IOException, BeansException
+    {
         log.info("Adding context from folder " + configFile.getCanonicalPath());
 
         List<String> configFiles = Files
@@ -144,11 +175,13 @@ public class SpringContextHolder implements ApplicationContextAware, Application
                         && p.toFile().getName().startsWith("spring-")
                         && p.toFile().getName().endsWith("xml"))
                 .map(p -> {
-                    try {
+                    try
+                    {
                         // the canonical path will be an absolute path.  But it will start with a / on Linux,
                         // which Spring will treat as a relative path.  Must start with file: to force an absolute path.
                         return "file:" + p.toFile().getCanonicalPath();
-                    } catch (IOException e) {
+                    } catch (IOException e)
+                    {
                         throw new UncheckedIOException(e);
                     }
                 })
@@ -158,7 +191,8 @@ public class SpringContextHolder implements ApplicationContextAware, Application
         addContextFromFiles(configFile.getName(), configFiles.toArray(new String[configFiles.size()]));
     }
 
-    public void addContextFromFile(File configFile) throws IOException, BeansException {
+    public void addContextFromFile(File configFile) throws IOException, BeansException
+    {
         log.info("Adding context from file " + configFile.getCanonicalPath());
 
         // the canonical path will be an absolute path.  But it will start with a / on Linux,
@@ -166,25 +200,30 @@ public class SpringContextHolder implements ApplicationContextAware, Application
         addContextFromFiles(configFile.getName(), "file:" + configFile.getCanonicalPath());
     }
 
-    public void addContextFromFiles(String name, String... filesPaths) {
+    public void addContextFromFiles(String name, String... filesPaths)
+    {
         if (filesPaths == null || filesPaths.length < 1)
             throw new AcmContextHolderException("files must not be null or empty. Reason[" + (filesPaths == null ? "null" : "empty") + "]");
         log.info("Adding context with name" + name + " and files.length = " + filesPaths.length);
 
-        try {
+        try
+        {
             AbstractApplicationContext child = new FileSystemXmlApplicationContext(
                     filesPaths, true, toplevelContext);
             childContextMap.put(name, child);
             applicationEventPublisher.publishEvent(new ContextAddedEvent(this, name));
-        } catch (BeansException be) {
+        } catch (BeansException be)
+        {
             log.error("Could not load Spring context from files '" + Arrays.toString(filesPaths) + "' due to " +
                     "error '" + be.getMessage() + "'", be);
             //throw be;
         }
     }
 
-    public void removeContext(String configFileName) {
-        if (childContextMap.containsKey(configFileName)) {
+    public void removeContext(String configFileName)
+    {
+        if (childContextMap.containsKey(configFileName))
+        {
             log.info("Removing child context created from file " + configFileName);
             AbstractApplicationContext child = childContextMap.get(configFileName);
             childContextMap.remove(configFileName);
@@ -194,7 +233,8 @@ public class SpringContextHolder implements ApplicationContextAware, Application
     }
 
     @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
         log.debug("The application event publisher has been set!");
         this.applicationEventPublisher = applicationEventPublisher;
     }
