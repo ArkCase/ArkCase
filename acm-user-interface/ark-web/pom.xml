@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>acm-user-interface</artifactId>
         <groupId>com.armedia.acm</groupId>
@@ -24,6 +25,11 @@
         <dependency>
             <groupId>com.armedia.acm.acm-user-interface</groupId>
             <artifactId>ark-surf-connector</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-user-interface</groupId>
+            <artifactId>ark-angular-starter</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
@@ -68,64 +74,5 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <resources>
-        </resources>
-        <plugins>
-            <plugin>
-                <groupId>com.github.eirslett</groupId>
-                <artifactId>frontend-maven-plugin</artifactId>
-                <version>${frontend-maven-plugin-version}</version>
-                <configuration>
-                    <!--<workingDirectory>src/main/webapp</workingDirectory>-->
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>install node and npm</id>
-                        <goals>
-                            <goal>install-node-and-npm</goal>
-                        </goals>
-                        <configuration>
-                            <nodeVersion>${node-version}</nodeVersion>
-                            <npmVersion>${npm-version}</npmVersion>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>npm install</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <!-- Optional configuration which provides for running any npm command -->
-                        <configuration>
-                            <arguments>install</arguments>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>bower install</id>
-                        <goals>
-                            <goal>bower</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>install</arguments>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>grunt build</id>
-                        <phase>generate-resources</phase>
-                            <goals>
-                                <goal>grunt</goal>
-                            </goals>
-                            <configuration>
-                            <arguments>sass renderHome</arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

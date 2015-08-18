@@ -23,7 +23,8 @@ import java.util.List;
 /**
  * Created by riste.tutureski on 8/5/2015.
  */
-public class ArkCaseAuthenticationProvider implements AuthenticationProvider {
+public class ArkCaseAuthenticationProvider implements AuthenticationProvider
+{
 
     private Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -52,11 +53,12 @@ public class ArkCaseAuthenticationProvider implements AuthenticationProvider {
             Authentication auth = new UsernamePasswordAuthenticationToken(connectorSession, password, grantedAuthorities);
 
             return auth;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             LOG.error("Error while authenticating ... ", e);
-            throw new AuthenticationException(e.getMessage()) {};
+            throw new AuthenticationException(e.getMessage())
+            {
+            };
         }
     }
 
