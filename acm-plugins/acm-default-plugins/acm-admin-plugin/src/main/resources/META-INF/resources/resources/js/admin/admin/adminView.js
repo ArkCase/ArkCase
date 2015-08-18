@@ -221,7 +221,14 @@ Admin.View = Admin.View || {
             ,onClickRemoveGroup: function(node){
                 if(node.title != "" && node.title != null){
                     var groupId = node.title;
-                    Admin.Controller.viewRemovedGroup(groupId);
+                    Acm.Dialog.confirm("Are you sure to delete the AdHoc Group: "+node.title
+                    ,function(result) {
+                        if (result == true) {
+                            Admin.Controller.viewRemovedGroup(groupId);
+                        } else {
+                        }
+                    }
+                 ,"Delete Group Reminder");
                 }
             }
             ,onClickRemoveMember: function(node){
