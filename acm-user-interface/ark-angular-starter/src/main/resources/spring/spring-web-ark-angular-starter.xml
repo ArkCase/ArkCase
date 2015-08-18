@@ -11,7 +11,10 @@
                     #{ systemProperties['os.name'].startsWith('Windows') ? '.cmd' : '' }
                 </prop>
                 <prop key="frontEndCommandPrefix">
-                    #{ systemProperties['os.name'].startsWith('Windows') ? 'cmd /C node_modules\\.bin\\' : 'node_modules/.bin/' }
+                    #{ systemProperties['os.name'].startsWith('Windows') ? 'cmd /C ' : '' }
+                </prop>
+                <prop key="frontEndCommandPath">
+                    #{ systemProperties['os.name'].startsWith('Windows') ? 'node_modules\\.bin\\' : 'node_modules/.bin/' }
                 </prop>
             </props>
         </property>
@@ -27,8 +30,9 @@
         <property name="frontEndCommandsToBeExecuted">
             <list>
                 <value>${frontEndCommandPrefix}npm${frontEndCommandSuffix} --no-color install</value>
-                <value>${frontEndCommandPrefix}bower${frontEndCommandSuffix} --no-color install</value>
-                <value>${frontEndCommandPrefix}grunt${frontEndCommandSuffix} --no-color</value>
+                <value>${frontEndCommandPrefix}${frontEndCommandPath}bower${frontEndCommandSuffix} --no-color install
+                </value>
+                <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} --no-color</value>
             </list>
         </property>
         <property name="resourceFoldersToCopyFromArchive">
