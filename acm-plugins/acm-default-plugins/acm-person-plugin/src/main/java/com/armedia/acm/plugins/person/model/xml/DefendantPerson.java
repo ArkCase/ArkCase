@@ -31,7 +31,7 @@ public class DefendantPerson extends Person implements FrevvoPerson  {
 		setGivenName(person.getGivenName());
 		setFamilyName(person.getFamilyName());
 		setDateOfBirth(person.getDateOfBirth());
-		setPersonIdentification(person.getPersonIdentification());
+		setIdentifications(person.getIdentifications());
 	}
 
 	@XmlElement(name="defendantId")
@@ -101,7 +101,7 @@ public class DefendantPerson extends Person implements FrevvoPerson  {
 		person.setGivenName(getGivenName());
 		person.setFamilyName(getFamilyName());
 		person.setDateOfBirth(getDateOfBirth());
-		person.setPersonIdentification(getPersonIdentification());
+		person.setIdentifications(getIdentifications());
 		
 		return person;
 	}	
