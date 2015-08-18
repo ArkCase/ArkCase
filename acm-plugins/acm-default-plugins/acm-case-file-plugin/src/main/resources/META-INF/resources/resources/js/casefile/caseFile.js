@@ -28,6 +28,8 @@ var CaseFile = CaseFile || {
                 ,uploadForm    : CaseFile.View.Documents.uploadForm
                 ,arkcaseUrl    : CaseFile.View.MicroData.arkcaseUrl
                 ,arkcasePort    : CaseFile.View.MicroData.arkcasePort
+                ,allowMailFilesAsAttachments : CaseFile.View.MicroData.allowMailFilesAsAttachments
+                ,allowMailFilesToExternalAddresses : CaseFile.View.MicroData.allowMailFilesToExternalAddresses
             });
         }
 
