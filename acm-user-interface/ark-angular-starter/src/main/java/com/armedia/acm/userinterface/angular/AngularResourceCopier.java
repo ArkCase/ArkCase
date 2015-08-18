@@ -78,11 +78,6 @@ public class AngularResourceCopier implements ServletContextAware
             // custom_modules is copied specially since we have to squash it into modules folder
             copyResources(resolver, rootPath, tmpDir, "custom_modules", "modules");
 
-            // copy the tools into the root temp folder where they are easier to use than if we left them in
-            // deploy_tools
-            File toolsFolder = new File(tmpDir, "deploy_tools");
-            FileSystemUtils.copyRecursively(toolsFolder, tmpDir);
-
             for (String frontEndCommand : getFrontEndCommandsToBeExecuted())
             {
                 runFrontEndBuildCommand(tmpDir, frontEndCommand);
@@ -214,62 +209,48 @@ public class AngularResourceCopier implements ServletContextAware
             return;
         }
 
-        // iterate once to make the folders
-        copyFolderStructureFromWebapp(rootPath, tmpDir, resources, moduleRoot, targetRoot);
-
-        // again to copy the files
         copyFilesFromWebapp(rootPath, tmpDir, resources, moduleRoot, targetRoot);
     }
 
     public void copyFilesFromWebapp(String rootPath, File tmpDir, Resource[] resources, String moduleRoot, String targetRoot) throws IOException
     {
+        File targetFile;
+
         for (Resource r : resources)
         {
-            URL url = r.getURL();
-            if ("jar".equals(url.getProtocol()))
-            {
-                String webappPath = logicalPathFromJarPath(url);
-                webappPath = webappPath.replaceFirst(moduleRoot, targetRoot);
 
-                if (!webappPath.endsWith("/"))
-                {
-                    File targetFile = new File(tmpDir, webappPath);
-                    log.info("Copying file {}", targetFile.getCanonicalPath());
-                    FileCopyUtils.copy(r.getInputStream(), new FileOutputStream(targetFile));
-                }
-            } else if (r.getFile().isFile())
+            targetFile = fileFromResource(rootPath, tmpDir, moduleRoot, targetRoot, r);
+
+            if (targetFile != null)
             {
-                File targetFile = determineTargetFile(rootPath, tmpDir, r, moduleRoot, targetRoot);
                 log.info("Copying file {}", targetFile.getCanonicalPath());
+                createFolderStructure(targetFile.getParentFile());
                 FileCopyUtils.copy(r.getInputStream(), new FileOutputStream(targetFile));
             }
+
         }
     }
 
-    public void copyFolderStructureFromWebapp(String rootPath, File tmpDir, Resource[] resources, String moduleRoot, String targetRoot) throws IOException
+    public File fileFromResource(String rootPath, File tmpDir, String moduleRoot, String targetRoot, Resource r) throws IOException
     {
-        for (Resource r : resources)
+        File targetFile = null;
+
+        URL url = r.getURL();
+        if ("jar".equals(url.getProtocol()))
         {
-            // is it from an extension jar?
-            URL url = r.getURL();
-            if ("jar".equals(url.getProtocol()))
+            String webappPath = logicalPathFromJarPath(url);
+            webappPath = webappPath.replaceFirst(moduleRoot, targetRoot);
+
+            if (!webappPath.endsWith("/"))
             {
-                String webappPath = logicalPathFromJarPath(url);
-                webappPath = webappPath.replaceFirst(moduleRoot, targetRoot);
-                if (webappPath.endsWith("/"))
-                {
-                    File targetFolder = new File(tmpDir, webappPath);
-                    createFolderStructure(targetFolder);
-                }
-            } else
-            {
-                if (r.getFile().isDirectory())
-                {
-                    File targetFolder = determineTargetFile(rootPath, tmpDir, r, moduleRoot, targetRoot);
-                    createFolderStructure(targetFolder);
-                }
+                targetFile = new File(tmpDir, webappPath);
             }
+        } else if (r.getFile().isFile())
+        {
+            targetFile = determineTargetFile(rootPath, tmpDir, r, moduleRoot, targetRoot);
         }
+
+        return targetFile;
     }
 
     public String logicalPathFromJarPath(URL url)
