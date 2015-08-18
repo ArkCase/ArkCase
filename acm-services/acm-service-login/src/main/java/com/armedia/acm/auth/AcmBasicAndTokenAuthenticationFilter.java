@@ -59,7 +59,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     private AuthenticationTokenDao authenticationTokenDao;
     private MuleContextManager muleContextManager;
     private AcmGrantedAuthoritiesMapper acmGrantedAuthoritiesMapper;
-//    private GroupService groupService;
+    private GroupService groupService;
 
     public AcmBasicAndTokenAuthenticationFilter(AuthenticationManager authenticationManager)
     {
@@ -115,7 +115,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                                 {
                                     Authentication authentication;
                                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authenticationToken.getCreator(), authenticationToken.getCreator());
-                                    String ldapGroups = getLdapGroupsForUser(usernamePasswordAuthenticationToken);
+                                    String ldapGroups = getGroupService().getLdapGroupsForUser(usernamePasswordAuthenticationToken);
                                     SearchResults searchResults = new SearchResults();
                                     JSONArray docs = searchResults.getDocuments(ldapGroups);
                                     List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
@@ -350,11 +350,11 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         this.acmGrantedAuthoritiesMapper = acmGrantedAuthoritiesMapper;
     }
 
-    /*public GroupService getGroupService() {
+    public GroupService getGroupService() {
         return groupService;
     }
 
     public void setGroupService(GroupService groupService) {
         this.groupService = groupService;
-    }*/
+    }
 }

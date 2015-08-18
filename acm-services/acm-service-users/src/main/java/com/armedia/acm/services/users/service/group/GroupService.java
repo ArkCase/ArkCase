@@ -39,5 +39,5 @@ public interface GroupService {
 	 * @param usernamePasswordAuthenticationToken
 	 * @return LDAP groups
 	 */
-//	public String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException;
+	public String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException;
 }

@@ -38,11 +38,7 @@
             class="com.armedia.acm.auth.AcmGrantedAuthoritiesMapper"
             init-method="initBean">
         <property name="applicationRoleToUserGroupProperties" ref="applicationRoleToUserGroupProperties"/>
-        <!--<property name="activeMapping" ref="activeMapping" />-->
     </bean>
-
-    <!--<util:map id="activeMapping" value-type="java.util.Map&lt;java.lang.String, java.util.List&lt;java.lang.String&lt;&lt;">
-    </util:map>-->
 
     <bean id="acmAuthenticationManager" class="com.armedia.acm.auth.AcmAuthenticationManager">
         <property name="springContextHolder" ref="acmContextHolder"/>
@@ -64,7 +60,7 @@
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
         <property name="authenticationTokenDao" ref="authenticationTokenDao" />
         <property name="acmGrantedAuthoritiesMapper" ref="acmAuthoritiesMapper" />
-        <!--<property name="groupService" ref="groupService" />-->
+        <property name="groupService" ref="groupService" />
     </bean>
 
     <bean id="acmAuditPropertyInterceptor" class="com.armedia.acm.auth.AcmAuditPropertyInterceptor">
