@@ -2739,16 +2739,18 @@ CaseFile.View = CaseFile.View || {
         ,createJTableReferences: function($jt) {
             var sortMap = {};
             sortMap["title"]    = "targetName";
+            sortMap["targetTitle"]  = "targetTitle";
             sortMap["modified"] = "participantLdapId";
             sortMap["type"]     = "targetType";
             sortMap["status"]   = "status";
 
             AcmEx.Object.JTable.usePaging_new({$jt: $jt
                 ,sortMap: {
-                    title      : "targetName"
-                    ,modified  : "participantLdapId"
-                    ,type      : "targetType"
-                    ,status    : "status"
+                    title        : "targetName"
+                    ,targetTitle : "targetTitle"
+                    ,modified    : "participantLdapId"
+                    ,type        : "targetType"
+                    ,status      : "status"
                 }
 
                 ,title: $.t("casefile:references.table.title")
@@ -2766,6 +2768,7 @@ CaseFile.View = CaseFile.View || {
                                 var record = AcmEx.Object.JTable.getPagingRecord(pagingItems[i]);
                                 record.id = Acm.goodValue(reference.targetId, 0);
                                 record.title = Acm.goodValue(reference.targetName);
+                                record.targetTitle = Acm.goodValue(reference.targetTitle);
                                 record.modified    = Acm.getDateFromDatetime(reference.modified,$.t("common:date.short"));
                                 record.type = Acm.goodValue(reference.targetType);
                                 record.status = Acm.goodValue(reference.status);
@@ -2788,7 +2791,7 @@ CaseFile.View = CaseFile.View || {
                     }
                     ,title: {
                         title: $.t("casefile:references.table.field.title")
-                        ,width: '30%'
+                        ,width: '25%'
                         ,edit: true
                         ,create: false
                         ,display: function(data) {
@@ -2797,6 +2800,17 @@ CaseFile.View = CaseFile.View || {
                             return $lnk;
                         }
                     }
+                    ,targetTitle: {
+                        title: $.t("casefile:references.table.field.target-title")
+                        ,width: '30%'
+                        ,edit: true
+                        ,create: false
+                        ,display: function(data) {
+                            var url = App.buildObjectUrl(data.record.type, data.record.id);
+                            var $lnk = $("<a href='" + url + "'>" + data.record.targetTitle + "</a>");
+                            return $lnk;
+                        }
+                    }                    
                     ,modified: {
                         title: $.t("casefile:references.table.field.modified")
                         ,width: '14%'
