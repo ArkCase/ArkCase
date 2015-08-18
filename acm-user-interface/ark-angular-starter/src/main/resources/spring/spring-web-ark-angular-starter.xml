@@ -7,8 +7,11 @@
     <bean id="osProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="properties">
             <props>
-                <prop key="operatingSystemFrontEndCommandSuffix">
+                <prop key="frontEndCommandSuffix">
                     #{ systemProperties['os.name'].startsWith('Windows') ? '.cmd' : '' }
+                </prop>
+                <prop key="frontEndCommandPrefix">
+                    #{ systemProperties['os.name'].startsWith('Windows') ? 'cmd /C node_modules\\.bin\\' : 'node_modules/.bin/' }
                 </prop>
             </props>
         </property>
@@ -23,9 +26,9 @@
         <property name="deployFolderPath" value="#{ systemProperties ['user.home'] }/.acm-ui/custom"/>
         <property name="frontEndCommandsToBeExecuted">
             <list>
-                <value>npm${operatingSystemFrontEndCommandSuffix} --no-color install</value>
-                <value>node_modules/bower/bin/bower${operatingSystemFrontEndCommandSuffix} --no-color install</value>
-                <value>node_modules/grunt-cli/bin/grunt${operatingSystemFrontEndCommandSuffix} --no-color</value>
+                <value>${frontEndCommandPrefix}npm${frontEndCommandSuffix} --no-color install</value>
+                <value>${frontEndCommandPrefix}bower${frontEndCommandSuffix} --no-color install</value>
+                <value>${frontEndCommandPrefix}grunt${frontEndCommandSuffix} --no-color</value>
             </list>
         </property>
         <property name="resourceFoldersToCopyFromArchive">
