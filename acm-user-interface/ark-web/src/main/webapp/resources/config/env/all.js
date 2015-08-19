@@ -5,6 +5,8 @@ var path = require('path');
 
 module.exports = {
 
+    appPath: '/arkcase/',
+
     config: {
         modulesConfigFolder: 'modules_config/config/',
         modulesConfigFile: 'modules_config/config/modules.json',
