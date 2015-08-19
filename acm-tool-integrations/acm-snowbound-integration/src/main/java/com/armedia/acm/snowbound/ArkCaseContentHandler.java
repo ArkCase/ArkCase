@@ -97,19 +97,19 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
     public void init(ServletConfig servletConfig) throws FlexSnapSIAPIException
     {
         String paramBaseURL = servletConfig.getInitParameter("baseURL");
-        if(paramBaseURL != null)
+        if (paramBaseURL != null)
         {
             this.baseURL = paramBaseURL;
         }
 
         String retrieveFileService = servletConfig.getInitParameter("getFileService");
-        if(retrieveFileService != null)
+        if (retrieveFileService != null)
         {
             this.retrieveFileService = retrieveFileService;
         }
 
         String sendFileService = servletConfig.getInitParameter("sendFileService");
-        if(sendFileService != null)
+        if (sendFileService != null)
         {
             this.sendFileService = sendFileService;
         }
@@ -154,8 +154,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             if (stat < 0)
             {
                 continue;
-            }
-            else
+            } else
             {
                 return true;
             }
@@ -170,45 +169,54 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
         String urlAppend = contentHandlerInput.getDocumentId();
 
         String getDocUrl = baseURL + retrieveFileService;
-        if( getDocUrl.endsWith("/") && urlAppend.startsWith("/") )
+        if (getDocUrl.endsWith("/") && urlAppend.startsWith("/"))
         {
             urlAppend = urlAppend.substring(1);
         }
 
         String completeURL = getDocUrl + urlAppend;
 
-        try {
+        try
+        {
             URLReturnData t = ClientServerIO.getURLBytes(completeURL);
             ContentHandlerResult result = new ContentHandlerResult();
             result.put("KEY_DOCUMENT_CONTENT", t.getData());
             String displayName = null;
             String filenameFromResponse = null;
 
-            try {
+            try
+            {
                 Map urlEnd = t.getHeaderFields();
-                List contentDispositionValue = (List)urlEnd.get("Content-Disposition");
-                if(contentDispositionValue != null) {
-                    String contentDisposition = (String)contentDispositionValue.get(0);
+                List contentDispositionValue = (List) urlEnd.get("Content-Disposition");
+                if (contentDispositionValue != null)
+                {
+                    String contentDisposition = (String) contentDispositionValue.get(0);
                     String[] dispositionTokens = contentDisposition.split(";");
 
-                    for(int i = 0; i < dispositionTokens.length; ++i) {
+                    for (int i = 0; i < dispositionTokens.length; ++i)
+                    {
                         String dispositionToken = dispositionTokens[i];
-                        if(dispositionToken.startsWith("filename=")) {
+                        if (dispositionToken.startsWith("filename="))
+                        {
                             filenameFromResponse = dispositionToken.split("=")[1];
                         }
                     }
                 }
-            } catch (Exception var14) {
+            } catch (Exception var14)
+            {
                 var14.printStackTrace();
             }
 
-            if(filenameFromResponse != null) {
+            if (filenameFromResponse != null)
+            {
                 displayName = filenameFromResponse;
             }
 
-            if(displayName == null) {
+            if (displayName == null)
+            {
                 String var17 = completeURL.substring(completeURL.lastIndexOf(47) + 1);
-                if(var17.indexOf(63) != -1) {
+                if (var17.indexOf(63) != -1)
+                {
                     var17 = var17.substring(0, var17.indexOf(63));
                 }
 
@@ -217,9 +225,11 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
 
             result.put("KEY_DOCUMENT_DISPLAY_NAME", displayName);
             return result;
-        } catch (MalformedURLException var15) {
+        } catch (MalformedURLException var15)
+        {
             throw new FlexSnapSIAPIException(var15.getMessage());
-        } catch (Throwable var16) {
+        } catch (Throwable var16)
+        {
             throw new FlexSnapSIAPIException(var16.getMessage());
         }
     }
@@ -237,12 +247,12 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
 
         String clientInstanceId = contentHandlerInput.getClientInstanceId();
         String documentId = contentHandlerInput.getDocumentId();
-        String documentKey = documentId.split("\\?")[0];
+        String documentKey = docIdFromDocumentKey(documentId);
         int userIdIndex = documentId.indexOf("userid");
         String userid = userIdIndex > 0 ? documentId.substring(userIdIndex + 7) : null;
-        log.log(Logger.FINEST, "Inside getAnnotationNames  userid: "+userid);
-        log.log(Logger.FINEST, "Inside getAnnotationNames  clientInstanceId: "+clientInstanceId);
-        log.log(Logger.FINEST, "Inside getAnnotationNames  documentKey: "+documentKey);
+        log.log(Logger.FINEST, "Inside getAnnotationNames  userid: " + userid);
+        log.log(Logger.FINEST, "Inside getAnnotationNames  clientInstanceId: " + clientInstanceId);
+        log.log(Logger.FINEST, "Inside getAnnotationNames  documentKey: " + documentKey);
         Vector vAnnotationIds = new Vector();
         String documentPath = "";
         String documentFile = documentKey;
@@ -262,8 +272,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
                         vAnnotationIds.add(FlexSnapSISnowAnn.TIFF_TAG_LAYER);
                     }
                 }
-            }
-            catch (FlexSnapSIAPIException fsapie)
+            } catch (FlexSnapSIAPIException fsapie)
             {
             }
         }
@@ -275,8 +284,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             {
                 pathFound = true;
                 pathSeparator = FORWARD_SLASH;
-            }
-            else if (documentKey.indexOf(BACK_SLASH) != -1)
+            } else if (documentKey.indexOf(BACK_SLASH) != -1)
             {
                 pathFound = true;
                 pathSeparator = BACK_SLASH;
@@ -299,7 +307,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
 //            if (!fileName.equals(documentFile)
 //                    && fileName.indexOf(documentFile) == 0
 //                    && fileName.endsWith(".ann")
-            if ( fileName.startsWith(documentKey) && fileName.endsWith(".ann")
+            if (fileName.startsWith(documentKey) && fileName.endsWith(".ann")
             /*
              * && fileName.indexOf("-redactionBurn") == -1 ||
              * clientInstanceId.toUpperCase().indexOf("SUPER") != -1)
@@ -310,19 +318,18 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
                 if (fileName.indexOf("-redactionBurn") != -1)
                 {
                     nameEnd = fileName.lastIndexOf("-redactionBurn");
-                }
-                else if (fileName.indexOf("-redactionEdit") != -1)
+                } else if (fileName.indexOf("-redactionEdit") != -1)
                 {
                     nameEnd = fileName.lastIndexOf("-redactionEdit");
                 }
                 String annotationId = fileName.substring(nameBegin + 1, nameEnd);
 
 
-                if ( "Default".equals(annotationId) ||
+                if ("Default".equals(annotationId) ||
                         userid == null ||
-                        annotationId.contains(userid) )
+                        annotationId.contains(userid))
                 {
-                    vAnnotationIds.addElement(annotationId);;
+                    vAnnotationIds.addElement(annotationId);
                 }
             }
             if (fileName.equals(documentFile + ".redactions.xml"))
@@ -351,10 +358,11 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
     }
 
 
-    public ContentHandlerResult getAnnotationContentFromFile(ContentHandlerInput contentHandlerInput) throws FlexSnapSIAPIException {
+    public ContentHandlerResult getAnnotationContentFromFile(ContentHandlerInput contentHandlerInput) throws FlexSnapSIAPIException
+    {
         String clientInstanceId = contentHandlerInput.getClientInstanceId();
         String documentKey = contentHandlerInput.getDocumentId();
-        documentKey = documentKey.split("\\?")[0];
+        documentKey = docIdFromDocumentKey(documentKey);
         String annotationKey = contentHandlerInput.getAnnotationId();
         log.log(Logger.FINEST, "getAnnotationContentFromFile()");
         String annotationFilename = documentKey + "." + annotationKey + ".ann";
@@ -384,8 +392,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
         {
             annotationFilename = documentKey + ".redactions.xml";
             fullFilePath = gFilePath + annotationFilename;
-        }
-        else if ((redactionFlag == true)
+        } else if ((redactionFlag == true)
                 && (permissionLevel < PERM_VIEW.intValue()))
         {
             annotationFilename = documentKey + "." + annotationKey
@@ -414,8 +421,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
                         props);
             }
             return result;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             return null;
         }
@@ -496,7 +502,8 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
     }
 
     @Override
-    public ContentHandlerResult deleteAnnotation(ContentHandlerInput contentHandlerInput) throws FlexSnapSIAPIException {
+    public ContentHandlerResult deleteAnnotation(ContentHandlerInput contentHandlerInput) throws FlexSnapSIAPIException
+    {
         String clientInstanceId = contentHandlerInput.getClientInstanceId();
         String documentKey = contentHandlerInput.getDocumentId();
         String annotationKey = contentHandlerInput.getAnnotationId();
@@ -507,8 +514,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
         {
             File file = new File(fullFilePath);
             file.delete();
-        }
-        catch (Throwable e)
+        } catch (Throwable e)
         {
             Logger.getInstance().log(Logger.INFO,
                     "Attempt to delete layer " + annotationKey
@@ -539,14 +545,11 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
 
             log.log(Level.FINE, "document key: " + documentKey);
 
-            int ticketStart = documentKey.indexOf("?acm_ticket=");
-
-            // document key: 38857?acm_ticket=90b27f09-498e-49e4-9da6-f76cc5d5e6d6&userid=ebmillar
-            // qs start: 5; ticket start: -1
+            int ticketStart = documentKey.indexOf("&acm_ticket=");
 
             log.log(Level.FINE, "ticket start: " + ticketStart);
 
-            String docIdString = documentKey.substring(0, ticketStart);
+            String docIdString = docIdFromDocumentKey(documentKey);
 
             log.log(Level.FINE, "Doc ID: " + docIdString);
 
@@ -581,7 +584,6 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
 
             log.log(Level.FINE, "save file");
             ClientServerIO.saveFileBytes(data, saveFile);
-
 
 
             String targetUrl = baseURL + sendFileService + docIdString + "?acm_ticket=" + ticket;
@@ -630,14 +632,12 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             log.log("Response body: " + fullResponse);
 
 
-
             log.log(Level.FINE, "Done writing!!!");
 
             log.log(Level.FINE, "returning");
 
             return retVal;
-        }
-        catch (Throwable t)
+        } catch (Throwable t)
         {
             log.log(Level.SEVERE, "Error in sendDocumentContent: " + t.getMessage());
             t.printStackTrace();
@@ -669,16 +669,19 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
         String fullFilePath = "/tmp/" + preferencesFilename;
         logger.log(Logger.FINEST, "Retrieving preferences file: " + fullFilePath);
 
-        try {
+        try
+        {
             File ioe = new File(fullFilePath);
             String xmlString = new String(ClientServerIO.getFileBytes(ioe), "UTF-8");
             ContentHandlerResult result = new ContentHandlerResult();
             result.put("KEY_CLIENT_PREFERENCES_XML", xmlString);
             return result;
-        } catch (UnsupportedEncodingException var9) {
+        } catch (UnsupportedEncodingException var9)
+        {
             logger.printStackTrace(var9);
             return null;
-        } catch (IOException var10) {
+        } catch (IOException var10)
+        {
             logger.printStackTrace(var10);
             return null;
         }
@@ -693,12 +696,14 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
         String fullFilePath = "/tmp/" + preferencesFilename;
         Logger.getInstance().log(Logger.FINEST, "Saving preferences file: " + fullFilePath);
 
-        try {
+        try
+        {
             File e = new File(fullFilePath);
             String xmlString = contentHandlerInput.getClientPreferencesXML();
             ClientServerIO.saveFileBytes(xmlString.getBytes("UTF-8"), e);
             return ContentHandlerResult.VOID;
-        } catch (Exception var7) {
+        } catch (Exception var7)
+        {
             return null;
         }
     }
@@ -760,8 +765,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
         try
         {
             ClientServerIO.copyFile(inputfile, saveFile);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             result.put(ContentHandlerResult.ERROR_MESSAGE, e.getMessage());
             return result;
@@ -804,8 +808,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             if (file.exists())
             {
                 file.delete();
-            }
-            else
+            } else
             {
                 return ContentHandlerResult.VOID;
             }
@@ -813,8 +816,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
         try
         {
             ClientServerIO.saveFileBytes(data, file);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             Logger.getInstance().printStackTrace(e);
         }
@@ -836,11 +838,10 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
         /* The following line shows how to get the page count if needed. */
         // int pageCount = input.getDocumentPageCount();
         Logger.getInstance().log("saveDocumentContents");
-        if ( data != null )
+        if (data != null)
         {
             saveDocumentContent(request, clientInstanceId, documentId, data);
-        }
-        else if (file != null)
+        } else if (file != null)
         {
             saveDocumentContent(request, clientInstanceId, documentId, file);
         }
@@ -865,8 +866,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
                             annLayer.getPageSpecificIndex(),
                             annLayer.getData(),
                             annLayer.getProperties());
-                }
-                else
+                } else
                 {
                     Logger.getInstance().log(Logger.FINEST,
                             "Skipping unmodified Layer: "
@@ -886,7 +886,8 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
         return result;
     }
 
-    private void deleteAnnotationLayer(String documentId, String layerId) throws FlexSnapSIAPIException {
+    private void deleteAnnotationLayer(String documentId, String layerId) throws FlexSnapSIAPIException
+    {
         log.log(Level.FINE, "in deleteAnnotationLayer");
         /* Note - there is some code in here that implies that
          * we simply rename the file, but currentlty we just delete the file
@@ -906,7 +907,9 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             annFile.delete();
         }
     }
-    private void deleteUnsavedExistingLayers(String documentId, Hashtable existingAnnHash) throws FlexSnapSIAPIException {
+
+    private void deleteUnsavedExistingLayers(String documentId, Hashtable existingAnnHash) throws FlexSnapSIAPIException
+    {
         log.log(Level.FINE, "in deleteUnsavedExistingLayers");
         Enumeration hashEnum = existingAnnHash.keys();
         while (hashEnum.hasMoreElements())
@@ -925,7 +928,8 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
      * @param data
      * @return
      */
-    private ContentHandlerResult saveNotesContent(HttpServletRequest request, String clientInstanceId, String documentId, byte[] data) {
+    private ContentHandlerResult saveNotesContent(HttpServletRequest request, String clientInstanceId, String documentId, byte[] data)
+    {
         log.log(Level.FINE, "in saveNotesContent/req/cid/docid/data");
         if (data == null)
         {
@@ -939,8 +943,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
         try
         {
             ClientServerIO.saveFileBytes(data, file);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             Logger.getInstance().printStackTrace(e);
         }
@@ -1033,11 +1036,11 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             throws FlexSnapSIAPIException
     {
         Logger logger = Logger.getInstance();
-        logger.log(Logger.FINEST, "Inside SaveAnnotationContebt method! ");
-        logger.log(Logger.FINEST, "Inside SaveAnnotationContebt method, clientInstanceId: " +clientInstanceId);
-        logger.log(Logger.FINEST, "Inside SaveAnnotationContebt method, documentKey: " +documentKey);
-        logger.log(Logger.FINEST, "Inside SaveAnnotationContebt method, annotationKey: " +annotationKey);
-        logger.log(Logger.FINEST, "Inside SaveAnnotationContebt method, pageSpecificIndex: " +pageSpecificIndex);
+        logger.log(Logger.FINEST, "Inside SaveAnnotationContent method! ");
+        logger.log(Logger.FINEST, "Inside SaveAnnotationContent method, clientInstanceId: " + clientInstanceId);
+        logger.log(Logger.FINEST, "Inside SaveAnnotationContent method, documentKey: " + documentKey);
+        logger.log(Logger.FINEST, "Inside SaveAnnotationContent method, annotationKey: " + annotationKey);
+        logger.log(Logger.FINEST, "Inside SaveAnnotationContent method, pageSpecificIndex: " + pageSpecificIndex);
 
         if (data == null)
         {
@@ -1049,22 +1052,22 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
         {
             pageIndexPortion = "-page" + pageSpecificIndex;
         }
-        logger.log(Logger.FINEST, "Inside SaveAnnotationContebt method, pageIndexPortion: " +pageIndexPortion);
+        logger.log(Logger.FINEST, "Inside SaveAnnotationContent method, pageIndexPortion: " + pageIndexPortion);
 
-        String docId = documentKey.split("\\?")[0];
-        logger.log(Logger.FINEST, "Inside SaveAnnotationContebt method, docId: " +docId);
+        String docId = docIdFromDocumentKey(documentKey);
+        logger.log(Logger.FINEST, "Inside SaveAnnotationContent method, docId: " + docId);
         String baseFilePath = gFilePath + docId + "." + annotationKey
                 + pageIndexPortion;
 
-        logger.log(Logger.FINEST, "Inside SaveAnnotationContent baseFilePath: "+baseFilePath);
+        logger.log(Logger.FINEST, "Inside SaveAnnotationContent baseFilePath: " + baseFilePath);
 
         String annFilePath = baseFilePath + ".ann";
 
-        logger.log(Logger.FINEST, "Inside SaveAnnotationContent annFilePath: "+annFilePath);
+        logger.log(Logger.FINEST, "Inside SaveAnnotationContent annFilePath: " + annFilePath);
         if (annotationKey.equals(DocumentModel.REDACTION_LAYER_NAME))
         {
             annFilePath = gFilePath + documentKey + ".redactions.xml";
-            logger.log(Logger.FINEST, "Inside SaveAnnotationContent Redaction ... annFilePath: "+annFilePath);
+            logger.log(Logger.FINEST, "Inside SaveAnnotationContent Redaction ... annFilePath: " + annFilePath);
         }
         String editFilePath = baseFilePath + "-redactionEdit.ann";
         String burnFilePath = baseFilePath + "-redactionBurn.ann";
@@ -1090,8 +1093,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             if (permissionLevel <= PERM_REDACTION.intValue())
             {
                 fullFilePath = burnFilePath;
-            }
-            else if (redactionFlag == true)
+            } else if (redactionFlag == true)
             {
 //                fullFilePath = editFilePath;
                 fullFilePath = burnFilePath; // Changed as per PM/Sales request, FB#7002
@@ -1106,8 +1108,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
                     byte[] entitiesData = permissionsEntities.toXML()
                             .getBytes(ClientServerIO.UTF_8);
                     ClientServerIO.saveFileBytes(entitiesData, entitiesFile);
-                }
-                catch (Exception e)
+                } catch (Exception e)
                 {
                     Logger.getInstance().printStackTrace(e);
                 }
@@ -1138,15 +1139,22 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             {
                 ClientServerIO.saveFileBytes(data, file);
             }
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             Logger.getInstance().printStackTrace(e);
         }
         return new ContentHandlerResult();
     }
 
-    private Hashtable getExistingAnnotationsHash(String documentId, String clientInstanceId) throws FlexSnapSIAPIException {
+    public String docIdFromDocumentKey(String documentKey)
+    {
+        int ecmFileIdPosition = documentKey.indexOf("ecmFileId=") + "ecmFileId".length() + 1;
+        int endOfDocIdPosition = documentKey.indexOf("&");
+        return documentKey.substring(ecmFileIdPosition, endOfDocIdPosition);
+    }
+
+    private Hashtable getExistingAnnotationsHash(String documentId, String clientInstanceId) throws FlexSnapSIAPIException
+    {
         log.log(Level.FINE, "in getExistingAnnotationsHash");
 
         ContentHandlerInput contentHandlerInput = new ContentHandlerInput();

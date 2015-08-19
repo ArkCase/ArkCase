@@ -28,14 +28,8 @@ var Complaint = Complaint || {
                 ,uploadForm    : Complaint.View.Documents.uploadForm
                 ,arkcaseUrl    : Complaint.View.MicroData.arkcaseUrl
                 ,arkcasePort    : Complaint.View.MicroData.arkcasePort
-
-//                ,parentType        : Complaint.Model.DOC_TYPE_COMPLAINT
-//                ,parentId          : null
-//                ,$tree            : Complaint.View.Documents.$tree
-//                ,treeArgs         : Complaint.View.Documents.getTreeArgs()
-//                ,getActiveObjId     : ObjNav.View.Navigator.getActiveObjId
-//                ,getPreviousObjId   : ObjNav.View.Navigator.getPreviousObjId
-//                ,getContextMenu     : Complaint.View.Documents.getContextMenu()
+                ,allowMailFilesAsAttachments : Complaint.View.MicroData.allowMailFilesAsAttachments
+                ,allowMailFilesToExternalAddresses : Complaint.View.MicroData.allowMailFilesToExternalAddresses
             });
         }
 

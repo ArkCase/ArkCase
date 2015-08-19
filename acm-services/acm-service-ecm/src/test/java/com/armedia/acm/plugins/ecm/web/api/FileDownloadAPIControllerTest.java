@@ -113,9 +113,8 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         mockEventPublisher.publishEvent(capture(capturedEvent));
 
         replayAll();
-
         MvcResult result = mockMvc.perform(
-                get("/api/v1/plugin/ecm/download/byId/{ecmFileId}", ecmFileId)
+                get("/api/v1/plugin/ecm/download" + "?ecmFileId=" + ecmFileId)
                         .principal(mockAuthentication)
                         .session(mockHttpSession))
                 .andReturn();
@@ -150,7 +149,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                get("/api/v1/plugin/ecm/download/byId/{ecmFileId}", ecmFileId)
+                get("/api/v1/plugin/ecm/download" + "?ecmFileId=" + ecmFileId)
                         .principal(mockAuthentication)
                         .session(mockHttpSession))
                 .andReturn();
