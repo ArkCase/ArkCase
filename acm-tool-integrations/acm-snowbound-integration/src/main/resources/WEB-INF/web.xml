@@ -7,12 +7,12 @@
         <servlet-class>com.armedia.acm.snowbound.ArkCaseAjaxServlet</servlet-class>
         <init-param>
             <param-name>codebase</param-name>
-            <param-value>http://192.168.56.100:8084/VirtualViewerJavaHTML5</param-value>
+            <param-value>http://repovm:8083/VirtualViewerJavaHTML5</param-value>
         </init-param>
         <!--Separate content server not available in evaluations -->
         <init-param>
             <param-name>servletURL</param-name>
-            <param-value>http://192.168.56.100:8084/VirtualViewerJavaContentServer</param-value>
+            <param-value>http://repovm:8083/VirtualViewerJavaContentServer</param-value>
         </init-param>
         <init-param>
             <param-name>contentServerType</param-name>
@@ -29,7 +29,7 @@
         </init-param> -->
         <init-param>
             <param-name>baseURL</param-name>
-            <param-value>http://192.168.56.1:8080/acm</param-value>
+            <param-value>http://devvm:8080/acm</param-value>
         </init-param>
         <init-param>
             <param-name>getFileService</param-name>
@@ -38,6 +38,10 @@
         <init-param>
             <param-name>sendFileService</param-name>
             <param-value>/api/v1/service/ecm/replace/</param-value>
+        </init-param>
+        <init-param>
+            <param-name>auditEventService</param-name>
+            <param-value>/api/v1/plugin/audit/event</param-value>
         </init-param>
         <init-param>
             <param-name>contentHandlerClass</param-name>
@@ -191,59 +195,56 @@
         </init-param>
         <init-param>
             <param-name>Approved</param-name>
-            <param-value>
-                Approved,535,293,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/Approved.png
+            <param-value>Approved,535,293,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/Approved.png
             </param-value>
         </init-param>
         <init-param>
             <param-name>Confidential</param-name>
             <param-value>
-                Confidential,593,285,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/Confidential.png
+                Confidential,593,285,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/Confidential.png
             </param-value>
         </init-param>
         <init-param>
             <param-name>Denied</param-name>
-            <param-value>Denied,448,287,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/Denied.png
+            <param-value>Denied,448,287,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/Denied.png
             </param-value>
         </init-param>
         <init-param>
             <param-name>InitialHere</param-name>
             <param-value>Initial
-                Here,682,192,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/InitialHere.png
+                Here,682,192,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/InitialHere.png
             </param-value>
         </init-param>
         <init-param>
             <param-name>Pending</param-name>
-            <param-value>Pending,675,282,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/Pending.png
+            <param-value>Pending,675,282,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/Pending.png
             </param-value>
         </init-param>
         <init-param>
             <param-name>Received</param-name>
-            <param-value>
-                Received,681,269,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/Received.png
+            <param-value>Received,681,269,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/Received.png
             </param-value>
         </init-param>
         <init-param>
             <param-name>SignHere</param-name>
-            <param-value>Sign
-                Here,584,292,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/SignHere.png
+            <param-value>Sign Here,584,292,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/SignHere.png
             </param-value>
         </init-param>
         <init-param>
             <param-name>Urgent</param-name>
-            <param-value>Urgent,589,274,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/Urgent.png
+            <param-value>Urgent,589,274,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/Urgent.png
             </param-value>
         </init-param>
         <init-param>
             <param-name>DateTime</param-name>
             <param-value>Current
-                Date/Time,300,30,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/DateTime.png
+                Date/Time,300,30,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/DateTime.png
             </param-value>
         </init-param>
-        <!--init-param>
+        <init-param>
             <param-name>validNetworkPrinters</param-name>
             <param-value></param-value>
-        </init-param-->
+        </init-param>
         <!--
         <init-param>
             <param-name>smtpServer</param-name>

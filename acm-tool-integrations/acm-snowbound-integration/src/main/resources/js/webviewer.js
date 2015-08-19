@@ -7823,4 +7823,21 @@ function VirtualViewer() {
         }
         return C4
     }
+
+    // reload date/time png image on mouse over stamp button
+    VirtualViewer.prototype.reloadDateTimePngImage = function () {
+        var uri = new URI('/VirtualViewerJavaHTML5/resources/stamps/DateTime.png');
+        uri.addQuery("base64", "true");
+        var data = uri.query();
+        uri.query("");
+
+        $.ajax({
+            url: uri.toString(),
+            type: "GET",
+            data: data,
+            success: function (result) {
+                q[8].stampData = result;
+            }
+        })
+    };
 };
