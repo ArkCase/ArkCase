@@ -89,7 +89,7 @@
          you need to create them.
     -->
     <includeAll path="classpath*:/com/armedia/acm/dml" relativeToChangelogFile="false"/>
-    <includeAll path="classpath*:/custom/dml" relativeToChangelogFile="false"/>
+    <includeAll path="classpath*:/dml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
 
