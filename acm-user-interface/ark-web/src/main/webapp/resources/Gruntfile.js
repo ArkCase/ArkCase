@@ -96,6 +96,7 @@ module.exports = function (grunt) {
 
 
         var html = nunjucks.render(config.homePage.template, {
+            appPath: config.appPath,
             title: title,
             jsFiles: jsFiles,
             cssFiles: cssFiles
