@@ -56,6 +56,10 @@
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
 
+    <welcome-file-list>
+        <welcome-file>/home.html</welcome-file>
+    </welcome-file-list>
+
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
