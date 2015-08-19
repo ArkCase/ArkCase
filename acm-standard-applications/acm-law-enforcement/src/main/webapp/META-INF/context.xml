@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context path="/acm-law-enforcement">
-  <Resources className="org.apache.catalina.webresources.StandardRoot">
-    <!-- map $HOME/.acm/custom to the root of web application -->
-    <PostResources base="${user.home}/.acm/custom/" className="org.apache.catalina.webresources.DirResourceSet" internalPath="/" webAppMount="/"/>
-  </Resources>
+<Context>
+    <Resources className="org.apache.catalina.webresources.StandardRoot">
+        <!-- map $HOME/.acm/custom to the root of web application -->
+        <PostResources className="org.apache.catalina.webresources.DirResourceSet"
+                       base="${user.home}/.acm/custom/"
+                       internalPath="/"
+                       webAppMount="/"/>
+    </Resources>
 </Context>
