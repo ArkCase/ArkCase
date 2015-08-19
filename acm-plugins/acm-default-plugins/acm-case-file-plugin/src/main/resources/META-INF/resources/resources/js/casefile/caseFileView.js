@@ -68,6 +68,9 @@ CaseFile.View = CaseFile.View || {
             this.arkcaseUrl      = Acm.Object.MicroData.get("arkcaseUrl");
             this.arkcasePort      = Acm.Object.MicroData.get("arkcasePort");
 
+            this.allowMailFilesAsAttachments      = Acm.Object.MicroData.get("allowMailFilesAsAttachments");
+            this.allowMailFilesToExternalAddresses      = Acm.Object.MicroData.get("allowMailFilesToExternalAddresses");
+
             this.formUrls = {};
             this.formUrls.urlEditCaseFileForm            = Acm.Object.MicroData.get("urlEditCaseFileForm");
             this.formUrls.urlReinvestigateCaseFileForm   = Acm.Object.MicroData.get("urlReinvestigateCaseFileForm");
@@ -2939,7 +2942,7 @@ CaseFile.View = CaseFile.View || {
         , onInitialized: function () {
         }
 
-        ,API_DOWNLOAD_DOCUMENT_      : "/api/latest/plugin/ecm/download/byId/"
+        ,API_DOWNLOAD_DOCUMENT_      : "/api/latest/plugin/ecm/download?ecmFileId="
 
         , onModelRetrievedObject: function (objData) {
             AcmEx.Object.JTable.load(CaseFile.View.Correspondence.$divCorrespondence);
