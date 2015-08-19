@@ -249,7 +249,7 @@
         <property name="name" value="FILE"/>
         <property name="description" value="File"/>
         <property name="iconName" value=""/>
-        <property name="url" value="/api/latest/plugin/ecm/download/byId/"/>
+        <property name="url" value="/api/latest/plugin/ecm/download"/>
     </bean>
     <bean id="personType" class="com.armedia.acm.core.AcmObjectType">
         <property name="name" value="PERSON"/>

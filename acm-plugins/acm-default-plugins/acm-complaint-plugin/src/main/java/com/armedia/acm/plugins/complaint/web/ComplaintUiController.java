@@ -97,7 +97,8 @@ public class ComplaintUiController
         addJsonArrayProp(mv, props, "fileTypes", "fileTypes");
         mv.addObject("arkcaseUrl",getNotificationProperties().get("arkcase.url"));
         mv.addObject("arkcasePort",getNotificationProperties().get("arkcase.port"));
-
+        mv.addObject("allowMailFilesAsAttachments",getNotificationProperties().get("notification.allowMailFilesAsAttachments"));
+        mv.addObject("allowMailFilesToExternalAddresses",getNotificationProperties().get("notification.allowMailFilesToExternalAddresses"));
         String token = this.authenticationTokenService.getTokenForAuthentication(auth);
         mv.addObject("token", token);
         log.debug("Security token: " + token);

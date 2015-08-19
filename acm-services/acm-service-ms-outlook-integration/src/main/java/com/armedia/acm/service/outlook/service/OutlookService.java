@@ -6,12 +6,7 @@ import com.armedia.acm.core.exceptions.AcmOutlookException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.core.exceptions.AcmOutlookListItemsFailedException;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
-import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
-import com.armedia.acm.service.outlook.model.OutlookContactItem;
-import com.armedia.acm.service.outlook.model.OutlookMailItem;
-import com.armedia.acm.service.outlook.model.OutlookResults;
-import com.armedia.acm.service.outlook.model.OutlookTaskItem;
+import com.armedia.acm.service.outlook.model.*;
 import microsoft.exchange.webservices.data.enumeration.DeleteMode;
 import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
 import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
@@ -60,6 +55,9 @@ public interface OutlookService {
 
     @Retryable(maxAttempts = 3, value=AcmOutlookException.class, backoff = @Backoff(delay = 500))
     void deleteAppointmentItem(AcmOutlookUser user, String itemId, Boolean recurring, DeleteMode deleteMode);
+
+    @Retryable(maxAttempts = 3, value=AcmOutlookException.class, backoff = @Backoff(delay = 500))
+    void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user) throws Exception;
 
     void setDao(OutlookDao dao);
 }

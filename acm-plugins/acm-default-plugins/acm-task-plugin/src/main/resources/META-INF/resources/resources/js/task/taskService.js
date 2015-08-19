@@ -561,7 +561,7 @@ Task.Service = {
         }
 
         ,API_UPLOAD_FILE            : "/api/latest/service/ecm/upload"
-        ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
+        ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download?ecmFileId="
         ,API_RETRIEVE_DOCUMENTS_      : "/api/latest/service/ecm/folder/"
 
         ,retrieveDocumentsDeferred : function(taskId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
@@ -631,7 +631,7 @@ Task.Service = {
         ,onInitialized: function(){
         }
 
-        ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
+        ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download?ecmFileId="
     }
 
     ,RejectComments: {
