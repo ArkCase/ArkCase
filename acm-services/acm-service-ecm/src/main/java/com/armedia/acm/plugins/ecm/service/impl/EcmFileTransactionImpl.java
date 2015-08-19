@@ -158,12 +158,29 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 			throw e;
 		}
     }
+
+    @Override
+    public InputStream downloadFileTransactionAsInputStream(EcmFile ecmFile) throws MuleException {
+        try
+        {
+            MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", ecmFile.getVersionSeriesId());
+
+            InputStream result = ((ContentStream) message.getPayload()).getStream();
+
+            return result;
+        }
+        catch (MuleException e)
+        {
+            log.error("Cannot download file: " + e.getMessage(), e);
+            throw e;
+        }
+    }
     
     private String getContent(ContentStream contentStream)
 	{
 		String content = "";
 		InputStream inputStream = null;
-		
+
 		try
         {
 			inputStream = contentStream.getStream();

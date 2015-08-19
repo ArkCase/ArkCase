@@ -190,8 +190,12 @@
             ,"defaultValue": "Add New Recipients"
             ,"description": ""
         }
-        ,"prompt": {"value": "Enter an email address OR search for users within ArkCase."
-            ,"defaultValue": "Enter an email address OR search for users within ArkCase."
+        ,"prompt": {"value": "Search for users within ArkCase."
+            ,"defaultValue": "Search for users within ArkCase."
+            ,"description": ""
+        }
+        ,"success":{"value": "Email sent successfully"
+            ,"defaultValue": "Email sent successfully"
             ,"description": ""
         }
         ,"btnTextGo": {"value": "Go!"
@@ -216,6 +220,34 @@
         }
         ,"instruct-time": {"value": "Click to enter time"
             ,"defaultValue": "Click to enter time"
+            ,"description": ""
+        }
+        ,"header-for-email-with-links": {"value": "Please follow the links below to view the document(s). Links expire in 3 days."
+            ,"defaultValue": "Please follow the links below to view the document(s). Links expire in 3 days."
+            ,"description": ""
+        }
+        ,"footer-for-email-with-links": {"value": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+            ,"defaultValue": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+            ,"description": ""
+        }
+        ,"subject-for-email-with-attachment":{
+            "value": "Documents from ArkCase"
+            ,"defaultValue": "Documents from ArkCase"
+            ,"description": ""
+        },
+        "header-for-email-with-attachment":{
+            "value": "Hello,"
+            ,"defaultValue": "Hello,"
+            ,"description": ""
+        },
+        "body-for-email-with-attachment":{
+            "value": "Please find attached the documents sent to you from ArkCase."
+            ,"defaultValue": "Please find attached the documents sent to you from ArkCase"
+            ,"description": ""
+        }
+        ,"footer-for-email-with-attachment":{
+            "value": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+            ,"defaultValue": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
             ,"description": ""
         }
     }

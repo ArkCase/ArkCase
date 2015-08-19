@@ -13,6 +13,8 @@
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
         <span itemprop="treeSort">${treeSort}</span>
+        <span itemprop="allowMailFilesAsAttachments">${allowMailFilesAsAttachments}</span>
+        <span itemprop="allowMailFilesToExternalAddresses">${allowMailFilesToExternalAddresses}</span>
 
         <%--<span itemprop="closeComplaintFormUrl">${closeComplaintFormUrl}</span>--%>
         <span itemprop="editCloseComplaintFormUrl">${editCloseComplaintFormUrl}</span>
