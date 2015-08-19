@@ -73,8 +73,8 @@ Profile.Service = {
 
         ,API_RETRIEVE_PROFILE_INFO_          : "/api/latest/plugin/profile/get/"
         ,API_SAVE_PROFILE_INFO               : "/api/latest/plugin/profile/userOrgInfo/set"
-        ,API_DOWNLOAD_PICTURE_BEGIN_         : "/api/latest/plugin/ecm/download/byId/"
-        ,API_DOWNLOAD_PICTURE_END            : "?inline=true"
+        ,API_DOWNLOAD_PICTURE_BEGIN_         : "/api/latest/plugin/ecm/download?ecmFileId="
+        ,API_DOWNLOAD_PICTURE_END            : "&inline=true"
         ,API_RETRIEVE_GROUPS                 : "/api/v1/plugin/search/usersSearch"
 
         ,getPictureUrl: function(ecmFileId) {

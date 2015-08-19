@@ -33,7 +33,7 @@
         </init-param>
         <init-param>
             <param-name>getFileService</param-name>
-            <param-value>/api/v1/plugin/ecm/download/byId/</param-value>
+            <param-value>/api/v1/plugin/ecm/download</param-value>
         </init-param>
         <init-param>
             <param-name>sendFileService</param-name>
