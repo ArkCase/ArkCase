@@ -19,6 +19,8 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +34,10 @@ public class ArkCaseAjaxServlet extends AjaxServlet
 {
     private Logger LOG = Logger.getInstance();
 
+    private String baseURL;
+
+    private String auditEventService;
+
     public ArkCaseAjaxServlet()
     {
         super();
@@ -41,6 +47,18 @@ public class ArkCaseAjaxServlet extends AjaxServlet
     public void init(ServletConfig servletConfig) throws ServletException
     {
         super.init(servletConfig);
+
+        String paramBaseURL = servletConfig.getInitParameter("baseURL");
+        if (paramBaseURL != null)
+        {
+            this.baseURL = paramBaseURL;
+        }
+
+        String paramAuditEventService = servletConfig.getInitParameter("auditEventService");
+        if (paramAuditEventService != null)
+        {
+            this.auditEventService = paramAuditEventService;
+        }
 
         // TODO: Take custom created stamps and add to the list taken from web.xml
     }
@@ -78,18 +96,28 @@ public class ArkCaseAjaxServlet extends AjaxServlet
             }
             if (action.equals("arkCaseDeleteDocumentPages"))
             {
+                LOG.log(Level.FINE, "Requested document pages deletion");
                 String ecmFileId = getDecodedParameter(request, "ecmFileId");
                 String userId = getDecodedParameter(request, "userid");
                 String acmTicket = getDecodedParameter(request, "acm_ticket");
                 String pageNumbers = getDecodedParameter(request, "pageNumbers");
                 String deleteReason = getDecodedParameter(request, "deleteReason");
-                LOG.log(Level.FINE, "Requested document pages deletion");
-                LOG.log(Level.FINE, "ecmFileId=" + ecmFileId);
-                LOG.log(Level.FINE, "userId=" + userId);
-                LOG.log(Level.FINE, "acmTicket=" + acmTicket);
-                LOG.log(Level.FINE, "pageNumbers=" + pageNumbers);
-                LOG.log(Level.FINE, "deleteReason=" + deleteReason);
-                // TODO: invoke ArkCase service
+                String targetUrl = String.format("%s%s?acm_ticket=%s&file_id=%s&user_id=%s&page_numbers=%s&delete_reason=%s",
+                        baseURL, auditEventService, acmTicket, ecmFileId, userId, pageNumbers, deleteReason);
+                LOG.log(Level.FINE, "target URL: " + targetUrl);
+                URL url = new URL(targetUrl);
+
+                LOG.log(Level.FINE, "open connection");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                if (HttpServletResponse.SC_OK == connection.getResponseCode())
+                {
+                    LOG.log(Level.FINE, "successfully sent audit event data");
+                } else
+                {
+                    LOG.log(Level.SEVERE, "unable to send audit event data");
+                }
+                connection.disconnect();
             }
         }
     }

@@ -24,10 +24,17 @@
             <outputDirectory>/WEB-INF/classes/com/armedia/acm/snowbound</outputDirectory>
             <filtered>false</filtered>
         </file>
+        <file>
+            <source>target/classes/com/armedia/acm/snowbound/DateTimePngServlet.class</source>
+            <outputDirectory>/WEB-INF/classes/com/armedia/acm/snowbound</outputDirectory>
+            <filtered>false</filtered>
+        </file>
         <!--
              This is original "webviewer.js" file from snowbound. They was small bug that I've fixed. I cannot fix it
              in the patch because the variable that should be initialized is private. I've added only "q=[];" in A5 function.
              This will reset the queue with image stamps and add again including new created.
+
+             [PI] added another function to be able to set the image data to q Array
          -->
         <file>
             <source>src/main/resources/js/webviewer.js</source>
