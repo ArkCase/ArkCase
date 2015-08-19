@@ -69,6 +69,9 @@ public class ObjectAssociation implements AcmEntity, Serializable
 
     @Column(name = "cm_association_type")
     private String associationType = "OWNERSHIP";
+    
+    @Column(name ="cm_target_title")
+    private String targetTitle;
 
     @PrePersist
     protected void beforeInsert()
@@ -241,6 +244,14 @@ public class ObjectAssociation implements AcmEntity, Serializable
     public void setModifier(String modifier)
     {
         this.modifier = modifier;
+    }
+    
+    public String getTargetTitle() {
+        return targetTitle;
+    }
+
+    public void setTargetTitle(String targetTitle) {
+        this.targetTitle = targetTitle;
     }
 
     @Override

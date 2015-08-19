@@ -105,5 +105,11 @@
             <column name="cm_seq_name" value="acm_object_association"></column>
         </insert>
     </changeSet>
+    
+    <changeSet id="09-acm-object-association-add-target-title" author="tsedalu">
+        <addColumn tableName="acm_object_association">
+            <column name="cm_target_title" type="VARCHAR(1024)"/>
+     </addColumn>
+    </changeSet>
 </databaseChangeLog>
 
