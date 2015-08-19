@@ -13,6 +13,7 @@ if (myFlexSnap) {
             // store page numbers pending for deletion
             pageNumbers = myFlexSnap.getDocumentModel().getSelectedPageNumbers();
 
+            // open "select delete reason" dialog
             $("#vvDeletePagesReason").dialog({
                 title: "Delete Pages",
                 modal: true,
@@ -31,8 +32,9 @@ if (myFlexSnap) {
                         // invoke default event handler and check result...
                         if (myFlexSnap.cutSelection(true)) {
                             // success
-                            alert("Page numbers [" + pageNumbers + "] deleted, deleteReason is [" + deleteReason + "]");
-                            // invoke service method...
+                            documentId = myFlexSnap.getDocumentId();
+                            // invoke service method, which in turn will invoke ArkCase service...
+                            myFlexSnap.arkCaseDeleteDocumentPages(documentId, pageNumbers, deleteReason);
                         }
                     }
                 }
@@ -86,6 +88,18 @@ if (myFlexSnap) {
                 console.log("arkCaseCreateCustomImageStamp: error")
                 $("#vvCreatingStampDialog").dialog("close");
             }
+        })
+    };
+
+    myFlexSnap.arkCaseDeleteDocumentPages = function (documentId, pageNumbers, deleteReason) {
+        var uri = new URI(vvConfig.servletPath);
+        uri.addQuery("action", "arkCaseDeleteDocumentPages");
+        var data = uri.query();
+        uri.query("");
+        $.ajax({
+            url: uri.toString(),
+            data: data + '&' + documentId + '&pageNumbers=' + pageNumbers + '&deleteReason=' + deleteReason,
+            type: "POST"
         })
     };
 }
