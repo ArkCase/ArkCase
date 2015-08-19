@@ -6,7 +6,6 @@ import com.snowbound.common.utils.ClientServerIO;
 import com.snowbound.common.utils.Logger;
 import com.snowbound.common.utils.SnowURLEncoder;
 import com.snowbound.common.utils.URLReturnData;
-import com.snowbound.snapserv.servlet.FlexSnapSIAPIException;
 import com.snowbound.snapserv.transport.Base64Processor;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,13 +52,13 @@ public class ArkCaseAjaxServlet extends AjaxServlet
 
         String action = getDecodedParameter(request, "action");
 
-        if(action != null)
+        if (action != null)
         {
-            byte[] jsonBytes;
 
-            if(action.equals("arkCaseCreateCustomImageStamp"))
+            if (action.equals("arkCaseCreateCustomImageStamp"))
             {
                 LOG.log(Level.FINE, "Requested creation of new stamp");
+                byte[] jsonBytes;
                 try
                 {
                     jsonBytes = arkCaseCreateCustomImageStamp();
@@ -67,8 +66,7 @@ public class ArkCaseAjaxServlet extends AjaxServlet
                     response.setContentType("application/json");
                     response.setContentLength(jsonBytes.length);
                     response.getOutputStream().write(jsonBytes);
-                }
-                catch (Exception e)
+                } catch (Exception e)
                 {
                     jsonBytes = createExceptionJSON(e).getBytes();
                     response.setContentType("application/json");
@@ -77,6 +75,21 @@ public class ArkCaseAjaxServlet extends AjaxServlet
                 }
 
                 LOG.log(Level.FINE, "Response: " + jsonBytes.toString());
+            }
+            if (action.equals("arkCaseDeleteDocumentPages"))
+            {
+                String ecmFileId = getDecodedParameter(request, "ecmFileId");
+                String userId = getDecodedParameter(request, "userid");
+                String acmTicket = getDecodedParameter(request, "acm_ticket");
+                String pageNumbers = getDecodedParameter(request, "pageNumbers");
+                String deleteReason = getDecodedParameter(request, "deleteReason");
+                LOG.log(Level.FINE, "Requested document pages deletion");
+                LOG.log(Level.FINE, "ecmFileId=" + ecmFileId);
+                LOG.log(Level.FINE, "userId=" + userId);
+                LOG.log(Level.FINE, "acmTicket=" + acmTicket);
+                LOG.log(Level.FINE, "pageNumbers=" + pageNumbers);
+                LOG.log(Level.FINE, "deleteReason=" + deleteReason);
+                // TODO: invoke ArkCase service
             }
         }
     }
@@ -126,8 +139,7 @@ public class ArkCaseAjaxServlet extends AjaxServlet
             super.customImageRubberStamps.put(stampJSON);
 
             message = "New image is created.";
-        }
-        else
+        } else
         {
             message = "The image already exist.";
         }
@@ -138,22 +150,28 @@ public class ArkCaseAjaxServlet extends AjaxServlet
         return jsonBytes;
     }
 
-    private String getBase64EncodedStamp(String url, int width, int height) {
+    private String getBase64EncodedStamp(String url, int width, int height)
+    {
         String retVal = null;
 
-        try {
+        try
+        {
             URLReturnData urlData = ClientServerIO.getURLBytes(url, (String) null);
-            if (urlData != null) {
+            if (urlData != null)
+            {
                 byte[] e = urlData.getData();
                 Object returnBytes = null;
-                if (e == null) {
+                if (e == null)
+                {
                     return null;
                 }
 
                 byte[] returnBytes1;
-                if (e[1] == 80 && e[2] == 78 && e[3] == 71) {
+                if (e[1] == 80 && e[2] == 78 && e[3] == 71)
+                {
                     returnBytes1 = e;
-                } else {
+                } else
+                {
                     Snowbnd s = new Snowbnd();
                     DataInputStream inputStream = new DataInputStream(new ByteArrayInputStream(e));
                     s.IMG_decompress_bitmap(inputStream, 0);
@@ -167,52 +185,62 @@ public class ArkCaseAjaxServlet extends AjaxServlet
 
                 retVal = Base64Processor.encode(returnBytes1);
             }
-        } catch (IOException var12) {
+        } catch (IOException var12)
+        {
             var12.printStackTrace();
         }
 
         return retVal;
     }
 
-    private String getDecodedParameter(HttpServletRequest request, String id) {
+    private String getDecodedParameter(HttpServletRequest request, String id)
+    {
         String queryString = request.getQueryString();
-        if(queryString != null) {
+        if (queryString != null)
+        {
             Map value1;
-            try {
+            try
+            {
                 value1 = parseQueryString(queryString);
-            } catch (UnsupportedEncodingException var6) {
+            } catch (UnsupportedEncodingException var6)
+            {
                 var6.printStackTrace();
                 return null;
             }
 
-            return value1.get(id) != null?(String)((List)value1.get(id)).get(0):null;
-        } else {
+            return value1.get(id) != null ? (String) ((List) value1.get(id)).get(0) : null;
+        } else
+        {
             String value = request.getParameter(id);
             return SnowURLEncoder.decodeURIComponent(value);
         }
     }
 
-    private Map<String, List<String>> parseQueryString(String query) throws UnsupportedEncodingException {
+    private Map<String, List<String>> parseQueryString(String query) throws UnsupportedEncodingException
+    {
         HashMap params = new HashMap();
         String[] arr$ = query.split("&");
         int len$ = arr$.length;
 
-        for(int i$ = 0; i$ < len$; ++i$) {
+        for (int i$ = 0; i$ < len$; ++i$)
+        {
             String param = arr$[i$];
             String[] pair = param.split("=");
             String key = SnowURLEncoder.decodeURIComponent(pair[0]);
             String value = "";
-            if(pair.length > 1) {
+            if (pair.length > 1)
+            {
                 value = SnowURLEncoder.decodeURIComponent(pair[1]);
             }
 
-            Object values = (List)params.get(key);
-            if(values == null) {
+            Object values = (List) params.get(key);
+            if (values == null)
+            {
                 values = new ArrayList();
                 params.put(key, values);
             }
 
-            ((List)values).add(value);
+            ((List) values).add(value);
         }
 
         return params;
@@ -229,8 +257,7 @@ public class ArkCaseAjaxServlet extends AjaxServlet
             {
                 json.put("message", message);
             }
-        }
-        catch (JSONException e)
+        } catch (JSONException e)
         {
             LOG.log(Level.WARNING, "Error while creation success response: " + e.getMessage());
         }
@@ -246,8 +273,7 @@ public class ArkCaseAjaxServlet extends AjaxServlet
         {
             json.put("status", "ERROR");
             json.put("message", SnowURLEncoder.encodeURIComponent(e.getMessage()));
-        }
-        catch (JSONException e1)
+        } catch (JSONException e1)
         {
             LOG.log(Level.WARNING, "Error while creation exception response: " + e1.getMessage());
         }
@@ -260,7 +286,7 @@ public class ArkCaseAjaxServlet extends AjaxServlet
         String data = null;
 
         // Try 10 seconds to see if the image is created
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
         {
             data = getBase64EncodedStamp(path, width, height);
             if (data != null)
@@ -272,8 +298,7 @@ public class ArkCaseAjaxServlet extends AjaxServlet
             try
             {
                 Thread.sleep(1000);
-            }
-            catch(InterruptedException ie)
+            } catch (InterruptedException ie)
             {
                 LOG.log(Level.WARNING, "Image '" + path + "' is not found. Wait one second and try to take again.");
                 LOG.log(Level.WARNING, "Attempt: " + (i + 1) + ". Total attempts: " + 10);
