@@ -7822,7 +7822,7 @@ function VirtualViewer() {
             }
         }
         return C4
-    }
+    };
 
     // reload date/time png image on mouse over stamp button
     VirtualViewer.prototype.reloadDateTimePngImage = function () {
