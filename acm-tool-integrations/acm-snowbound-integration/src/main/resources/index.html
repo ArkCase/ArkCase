@@ -959,6 +959,18 @@
 </form>
 </div>
 
+<!-- Choose a reason for delete -->
+<div id="vvDeletePagesReason" style="display: none;">
+    <form>
+        <fieldset>
+            <legend>Why do you want to delete these pages?</legend>
+            <input type="radio" name="reason" value="1" onclick="javascript:myFlexSnap.setReason(event, 1)" checked>I hate pages!<br/>
+            <input type="radio" name="reason" value="2" onclick="javascript:myFlexSnap.setReason(event, 2)">I am the manager and I can delete whatever I want<br/>
+            <input type="radio" name="reason" value="3" onclick="javascript:myFlexSnap.setReason(event, 3)">For my own personal reasons<br/>
+        </fieldset>
+    </form>
+</div>
+
 <div id="vvSafariSVGWorkaround"></div>
 </body>
 </html>

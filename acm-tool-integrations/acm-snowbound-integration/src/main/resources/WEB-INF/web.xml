@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN" "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+        "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
 <web-app>
     <servlet>
         <servlet-name>AjaxServlet</servlet-name>
         <servlet-class>com.armedia.acm.snowbound.ArkCaseAjaxServlet</servlet-class>
         <init-param>
             <param-name>codebase</param-name>
-            <param-value>http://repovm:8083/VirtualViewerJavaHTML5</param-value>
+            <param-value>http://192.168.56.100:8084/VirtualViewerJavaHTML5</param-value>
         </init-param>
         <!--Separate content server not available in evaluations -->
         <init-param>
             <param-name>servletURL</param-name>
-            <param-value>http://repovm:8083/VirtualViewerJavaContentServer</param-value>
+            <param-value>http://192.168.56.100:8084/VirtualViewerJavaContentServer</param-value>
         </init-param>
         <init-param>
             <param-name>contentServerType</param-name>
@@ -28,7 +29,7 @@
         </init-param> -->
         <init-param>
             <param-name>baseURL</param-name>
-            <param-value>http://devvm:8080/acm</param-value>
+            <param-value>http://192.168.56.1:8080/acm</param-value>
         </init-param>
         <init-param>
             <param-name>getFileService</param-name>
@@ -44,11 +45,11 @@
         </init-param>
         <init-param>
             <param-name>officeLicensePath</param-name>
-             <!-- This is the evaluation license file, it expires after 30 days -->
+            <!-- This is the evaluation license file, it expires after 30 days -->
             <param-value>/WEB-INF/lib/Aspose.Total.Product.Family.lic</param-value>
 
-        <!--When you purchase VirtualViewer with the Office 2007-2013 option, place the Aspose.*.lic files you receive into the ./WEB-INF/lib folder, then use this value for officeLicensePath.-->
-        <!--param-value>/WEB-INF/lib/Aspose.Cells.lic,/WEB-INF/lib/Aspose.Words.lic,/WEB-INF/lib/Aspose.Slides.lic</param-value-->
+            <!--When you purchase VirtualViewer with the Office 2007-2013 option, place the Aspose.*.lic files you receive into the ./WEB-INF/lib folder, then use this value for officeLicensePath.-->
+            <!--param-value>/WEB-INF/lib/Aspose.Cells.lic,/WEB-INF/lib/Aspose.Words.lic,/WEB-INF/lib/Aspose.Slides.lic</param-value-->
         </init-param>
         <init-param>
             <param-name>logLevel</param-name>
@@ -180,48 +181,69 @@
         </init-param>
         <init-param>
             <param-name>svgExclusions</param-name>
-            <param-value>ODT,PCL_1,PPTX,ASCII,PCL_5</param-value> <!-- a comma-separated list of format names. i.e. MODCA_IOCA,PDF -->
+            <param-value>ODT,PCL_1,PPTX,ASCII,PCL_5</param-value>
+            <!-- a comma-separated list of format names. i.e. MODCA_IOCA,PDF -->
         </init-param>
         <init-param>
             <param-name>customImageRubberStamps</param-name>
-            <param-value>Approved,Confidential,Denied,InitialHere,Pending,Received,SignHere,Urgent</param-value>
+            <param-value>Approved,Confidential,Denied,InitialHere,Pending,Received,SignHere,Urgent,DateTime
+            </param-value>
         </init-param>
         <init-param>
             <param-name>Approved</param-name>
-            <param-value>Approved,535,293,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/Approved.png</param-value>
+            <param-value>
+                Approved,535,293,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/Approved.png
+            </param-value>
         </init-param>
         <init-param>
             <param-name>Confidential</param-name>
-            <param-value>Confidential,593,285,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/Confidential.png</param-value>
+            <param-value>
+                Confidential,593,285,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/Confidential.png
+            </param-value>
         </init-param>
         <init-param>
             <param-name>Denied</param-name>
-            <param-value>Denied,448,287,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/Denied.png</param-value>
+            <param-value>Denied,448,287,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/Denied.png
+            </param-value>
         </init-param>
         <init-param>
             <param-name>InitialHere</param-name>
-            <param-value>Initial Here,682,192,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/InitialHere.png</param-value>
+            <param-value>Initial
+                Here,682,192,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/InitialHere.png
+            </param-value>
         </init-param>
         <init-param>
             <param-name>Pending</param-name>
-            <param-value>Pending,675,282,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/Pending.png</param-value>
+            <param-value>Pending,675,282,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/Pending.png
+            </param-value>
         </init-param>
         <init-param>
             <param-name>Received</param-name>
-            <param-value>Received,681,269,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/Received.png</param-value>
+            <param-value>
+                Received,681,269,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/Received.png
+            </param-value>
         </init-param>
         <init-param>
             <param-name>SignHere</param-name>
-            <param-value>Sign Here,584,292,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/SignHere.png</param-value>
+            <param-value>Sign
+                Here,584,292,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/SignHere.png
+            </param-value>
         </init-param>
         <init-param>
             <param-name>Urgent</param-name>
-            <param-value>Urgent,589,274,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/Urgent.png</param-value>
+            <param-value>Urgent,589,274,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/Urgent.png
+            </param-value>
         </init-param>
         <init-param>
+            <param-name>DateTime</param-name>
+            <param-value>Current
+                Date/Time,300,30,http://192.168.56.100:8084/VirtualViewerJavaHTML5/resources/stamps/DateTime.png
+            </param-value>
+        </init-param>
+        <!--init-param>
             <param-name>validNetworkPrinters</param-name>
             <param-value></param-value>
-        </init-param>
+        </init-param-->
         <!--
         <init-param>
             <param-name>smtpServer</param-name>
@@ -254,15 +276,25 @@
         -->
     </servlet>
     <!--end of integrated server parameters-->
-
-    <env-entry>
-        <env-entry-name>snowboundLicensePath</env-entry-name>
-        <env-entry-value>/opt/apache-tomcat-snowbound/webapps/VirtualViewerJavaHTML5/WEB-INF/lib/SnowboundLicense.jar</env-entry-value>
-        <env-entry-type>java.lang.String</env-entry-type>
-    </env-entry>
+    <servlet>
+        <servlet-name>DateTimePngServlet</servlet-name>
+        <servlet-class>com.armedia.acm.snowbound.DateTimePngServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>AjaxServlet</servlet-name>
         <url-pattern>/AjaxServlet</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>DateTimePngServlet</servlet-name>
+        <url-pattern>/resources/stamps/DateTime.png</url-pattern>
+    </servlet-mapping>
+
+    <env-entry>
+        <env-entry-name>snowboundLicensePath</env-entry-name>
+        <env-entry-value>/opt/snowbound/webapps/VirtualViewerJavaHTML5/WEB-INF/lib/SnowboundLicense.jar
+        </env-entry-value>
+        <env-entry-type>java.lang.String</env-entry-type>
+    </env-entry>
 </web-app>
