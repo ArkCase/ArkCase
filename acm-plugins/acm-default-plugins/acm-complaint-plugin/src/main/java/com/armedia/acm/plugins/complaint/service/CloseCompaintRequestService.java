@@ -121,7 +121,7 @@ public class CloseCompaintRequestService
         // not update the case file's details.  User can read the complaint details via the link to the
         // complaint from the references table.
 
-        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(), updatedComplaint.getComplaintNumber(), "COMPLAINT");
+        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(), updatedComplaint.getComplaintNumber(), "COMPLAINT", updatedComplaint.getComplaintTitle());
         existingCaseFile.addChildObject(originalComplaint);
 
 
@@ -237,7 +237,8 @@ public class CloseCompaintRequestService
         caseFile.setPriority(updatedComplaint.getPriority());
         caseFile.setTitle(updatedComplaint.getComplaintTitle());
 
-        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(), updatedComplaint.getComplaintNumber(), "COMPLAINT");
+        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(), updatedComplaint.getComplaintNumber(), "COMPLAINT", updatedComplaint.getComplaintTitle());
+        log.debug("reference object title: " + originalComplaint.getTargetTitle());
         caseFile.addChildObject(originalComplaint);
 
         addPersonsToCaseFile(updatedComplaint.getPersonAssociations(), caseFile);
@@ -267,13 +268,14 @@ public class CloseCompaintRequestService
         return details;
     }
 
-    private ObjectAssociation makeObjectAssociation(Long id, String number, String type)
+    private ObjectAssociation makeObjectAssociation(Long id, String number, String type, String title)
     {
         ObjectAssociation oa = new ObjectAssociation();
 
         oa.setTargetId(id);
         oa.setTargetName(number);
         oa.setTargetType(type);
+        oa.setTargetTitle(title);
         oa.setAssociationType("REFERENCE");
 
         return oa;
@@ -313,7 +315,7 @@ public class CloseCompaintRequestService
     {
         if (complaint != null && caseFile != null)
         {
-            ObjectAssociation caseFileObjectAssociation = makeObjectAssociation(caseFile.getId(), caseFile.getCaseNumber(), caseFile.getObjectType());
+            ObjectAssociation caseFileObjectAssociation = makeObjectAssociation(caseFile.getId(), caseFile.getCaseNumber(), caseFile.getObjectType(), caseFile.getTitle());
             complaint.addChildObject(caseFileObjectAssociation);
             getComplaintDao().save(complaint);
         }
