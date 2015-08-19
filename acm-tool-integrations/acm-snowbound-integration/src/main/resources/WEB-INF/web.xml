@@ -40,6 +40,10 @@
             <param-value>/api/v1/service/ecm/replace/</param-value>
         </init-param>
         <init-param>
+            <param-name>auditEventService</param-name>
+            <param-value>/api/v1/plugin/audit/event</param-value>
+        </init-param>
+        <init-param>
             <param-name>contentHandlerClass</param-name>
             <param-value>com.armedia.acm.snowbound.ArkCaseContentHandler</param-value>
         </init-param>
@@ -186,7 +190,8 @@
         </init-param>
         <init-param>
             <param-name>customImageRubberStamps</param-name>
-            <param-value>Approved,Confidential,Denied,InitialHere,Pending,Received,SignHere,Urgent,DateTime</param-value>
+            <param-value>Approved,Confidential,Denied,InitialHere,Pending,Received,SignHere,Urgent,DateTime
+            </param-value>
         </init-param>
         <init-param>
             <param-name>Approved</param-name>
@@ -232,7 +237,9 @@
         </init-param>
         <init-param>
             <param-name>DateTime</param-name>
-            <param-value>Current Date/Time,300,30,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/DateTime.png</param-value>
+            <param-value>Current
+                Date/Time,300,30,http://repovm:8083/VirtualViewerJavaHTML5/resources/stamps/DateTime.png
+            </param-value>
         </init-param>
         <init-param>
             <param-name>validNetworkPrinters</param-name>
@@ -270,6 +277,20 @@
         -->
     </servlet>
     <!--end of integrated server parameters-->
+    <servlet>
+        <servlet-name>DateTimePngServlet</servlet-name>
+        <servlet-class>com.armedia.acm.snowbound.DateTimePngServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AjaxServlet</servlet-name>
+        <url-pattern>/AjaxServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>DateTimePngServlet</servlet-name>
+        <url-pattern>/resources/stamps/DateTime.png</url-pattern>
+    </servlet-mapping>
 
     <env-entry>
         <env-entry-name>snowboundLicensePath</env-entry-name>
@@ -277,18 +298,4 @@
         </env-entry-value>
         <env-entry-type>java.lang.String</env-entry-type>
     </env-entry>
-
-    <servlet-mapping>
-        <servlet-name>AjaxServlet</servlet-name>
-        <url-pattern>/AjaxServlet</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>DateTimePngServlet</servlet-name>
-        <servlet-class>com.armedia.acm.snowbound.DateTimePngServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>DateTimePngServlet</servlet-name>
-        <url-pattern>/resources/stamps/DateTime.png</url-pattern>
-    </servlet-mapping>
 </web-app>
