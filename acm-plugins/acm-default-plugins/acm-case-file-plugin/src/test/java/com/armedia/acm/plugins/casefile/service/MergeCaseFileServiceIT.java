@@ -17,6 +17,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,36 +41,37 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-    @ContextConfiguration(name="spring",
-            locations = {
-                    "/spring/spring-library-activiti-configuration.xml",
-                    "/spring/spring-library-activiti-actions.xml",
-                    "/spring/spring-mule-activemq.xml",
-                    "/spring/spring-library-case-file.xml",
-                    "/spring/spring-library-data-source.xml",
-                    "/spring/spring-library-ecm-file.xml",
-                    "/spring/spring-library-user-service.xml",
-                    "/spring/spring-library-context-holder.xml",
-                    "/spring/spring-library-search.xml",
-                    "/spring/spring-library-data-access-control.xml",
-                    "/spring/spring-library-folder-watcher.xml",
-                    "/spring/spring-library-drools-monitor.xml",
-                    "/spring/spring-library-merge-case-test-IT.xml",
-                    "/spring/spring-library-ms-outlook-integration.xml",
-                    "/spring/spring-library-ms-outlook-plugin.xml",
-                    "/spring/spring-library-object-history.xml",
-                    "/spring/spring-library-particpants.xml",
-                    "/spring/spring-library-person.xml",
-                    "/spring/spring-library-property-file-manager.xml",
-                    "/spring/spring-library-profile.xml",
-                    "/spring/spring-library-acm-encryption.xml",
-                    "/spring/spring-library-task.xml",
-                    "/spring/spring-library-note.xml",
-                    "/spring/spring-library-event.xml",
-                    "/spring/test-case-file-context.xml"
-})
+@ContextConfiguration(name = "spring",
+        locations = {
+                "/spring/spring-library-activiti-configuration.xml",
+                "/spring/spring-library-activiti-actions.xml",
+                "/spring/spring-mule-activemq.xml",
+                "/spring/spring-library-case-file.xml",
+                "/spring/spring-library-data-source.xml",
+                "/spring/spring-library-ecm-file.xml",
+                "/spring/spring-library-user-service.xml",
+                "/spring/spring-library-context-holder.xml",
+                "/spring/spring-library-search.xml",
+                "/spring/spring-library-data-access-control.xml",
+                "/spring/spring-library-folder-watcher.xml",
+                "/spring/spring-library-drools-monitor.xml",
+                "/spring/spring-library-merge-case-test-IT.xml",
+                "/spring/spring-library-ms-outlook-integration.xml",
+                "/spring/spring-library-ms-outlook-plugin.xml",
+                "/spring/spring-library-object-history.xml",
+                "/spring/spring-library-particpants.xml",
+                "/spring/spring-library-person.xml",
+                "/spring/spring-library-property-file-manager.xml",
+                "/spring/spring-library-profile.xml",
+                "/spring/spring-library-acm-encryption.xml",
+                "/spring/spring-library-task.xml",
+                "/spring/spring-library-note.xml",
+                "/spring/spring-library-event.xml",
+                "/spring/test-case-file-context.xml"
+        })
 @TransactionConfiguration(defaultRollback = true)
-public class MergeCaseFileServiceIT extends EasyMock {
+public class MergeCaseFileServiceIT extends EasyMock
+{
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -99,7 +101,8 @@ public class MergeCaseFileServiceIT extends EasyMock {
 
     @Test
     @Transactional
-    public void mergeCaseFilesTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException {
+    public void mergeCaseFilesTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException
+    {
         auditAdapter.setUserId("auditUser");
         auth = createMock(Authentication.class);
         ipAddress = "127.0.0.1";
@@ -190,7 +193,8 @@ public class MergeCaseFileServiceIT extends EasyMock {
         CaseFile targetCase = caseFileDao.find(targetId);
 
         ObjectAssociation sourceOa = null;
-        for (ObjectAssociation oa : sourceCase.getChildObjects()) {
+        for (ObjectAssociation oa : sourceCase.getChildObjects())
+        {
             if ("MERGED_TO".equals(oa.getCategory()))
                 sourceOa = oa;
         }
@@ -199,7 +203,8 @@ public class MergeCaseFileServiceIT extends EasyMock {
         assertEquals(sourceOa.getTargetId().longValue(), targetCase.getId().longValue());
 
         ObjectAssociation targetOa = null;
-        for (ObjectAssociation oa : targetCase.getChildObjects()) {
+        for (ObjectAssociation oa : targetCase.getChildObjects())
+        {
             if ("MERGED_FROM".equals(oa.getCategory()))
                 targetOa = oa;
         }
@@ -208,12 +213,13 @@ public class MergeCaseFileServiceIT extends EasyMock {
         assertEquals(targetOa.getTargetId().longValue(), sourceCase.getId().longValue());
 
         assertEquals(sourceCase.getContainer().getFolder().getParentFolderId(), targetCase.getContainer().getFolder().getId());
-        
+
     }
 
     @Test
     @Transactional
-    public void mergeCaseFilesParticipantSameAssigneeTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException {
+    public void mergeCaseFilesParticipantSameAssigneeTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException
+    {
         auditAdapter.setUserId("auditUser");
         auth = createMock(Authentication.class);
         ipAddress = "127.0.0.1";
@@ -270,8 +276,10 @@ public class MergeCaseFileServiceIT extends EasyMock {
         assertEquals(3, targetCase.getParticipants().size());
 
         AcmParticipant foundAssignee = null;
-        for (AcmParticipant ap : targetCase.getParticipants()) {
-            if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType())) {
+        for (AcmParticipant ap : targetCase.getParticipants())
+        {
+            if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType()))
+            {
                 foundAssignee = ap;
                 break;
             }
@@ -282,7 +290,8 @@ public class MergeCaseFileServiceIT extends EasyMock {
 
     @Test
     @Transactional
-    public void mergeCaseFilesParticipantDifferentAssigneeTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException {
+    public void mergeCaseFilesParticipantDifferentAssigneeTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException
+    {
         auditAdapter.setUserId("auditUser");
         auth = createMock(Authentication.class);
         ipAddress = "127.0.0.1";
@@ -330,8 +339,10 @@ public class MergeCaseFileServiceIT extends EasyMock {
         assertEquals(3, targetSaved.getParticipants().size());
 
         AcmParticipant foundAssignee = null;
-        for (AcmParticipant ap : targetSaved.getParticipants()) {
-            if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType())) {
+        for (AcmParticipant ap : targetSaved.getParticipants())
+        {
+            if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType()))
+            {
                 foundAssignee = ap;
                 break;
             }
@@ -352,8 +363,10 @@ public class MergeCaseFileServiceIT extends EasyMock {
         assertEquals(4, targetCase.getParticipants().size());
 
         foundAssignee = null;
-        for (AcmParticipant ap : targetCase.getParticipants()) {
-            if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType())) {
+        for (AcmParticipant ap : targetCase.getParticipants())
+        {
+            if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType()))
+            {
                 foundAssignee = ap;
                 break;
             }
@@ -362,8 +375,10 @@ public class MergeCaseFileServiceIT extends EasyMock {
         assertEquals(auth.getName(), foundAssignee.getParticipantLdapId());
 
         AcmParticipant foundPreviousAssignee = null;
-        for (AcmParticipant ap : targetCase.getParticipants()) {
-            if (ParticipantTypes.FOLLOWER.equals(ap.getParticipantType()) && "ian-acm".equals(ap.getParticipantLdapId())) {
+        for (AcmParticipant ap : targetCase.getParticipants())
+        {
+            if (ParticipantTypes.FOLLOWER.equals(ap.getParticipantType()) && "ian-acm".equals(ap.getParticipantLdapId()))
+            {
                 foundPreviousAssignee = ap;
                 break;
             }

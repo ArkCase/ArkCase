@@ -9,6 +9,8 @@ DocTree.View = DocTree.View || {
         this.parentId = args.parentId;
         this.arkcaseUrl = args.arkcaseUrl;
         this.arkcasePort = args.arkcasePort;
+        this.allowMailFilesAsAttachments      = args.allowMailFilesAsAttachments;
+        this.allowMailFilesToExternalAddresses      = args.allowMailFilesToExternalAddresses;
 
         this.doUploadForm = args.uploadForm;
         this.fileTypes  = args.fileTypes;
@@ -119,11 +121,17 @@ DocTree.View = DocTree.View || {
                         dlgSendEmail.show();
                     }
                     else{
-                        var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes);
-                        //DocTree.Controller.viewSentEmail(emailNotifications);
-                        DocTree.Model.sendEmail(emailNotifications).fail(function(failed){
-                            Acm.MessageBoard.show($.t("doctree:error.email-delivery") + failed + "\n" + $.t("doctree:error.email-retry"));
-                        });
+                        var emailData = DocTree.View.Email.makeEmailData(emailAddresses, nodes);
+                        if(Acm.isNotEmpty(DocTree.View.allowMailFilesAsAttachments) && Acm.compare("true", DocTree.View.allowMailFilesAsAttachments.toLowerCase())) {
+                            DocTree.Model.sendEmailWithAttachments(emailData).done(function(){
+                                Acm.MessageBoard.show($.t("doctree:email.success"));
+                            });
+                        }
+                        else{
+                            DocTree.Model.sendEmail(emailData).fail(function(failed){
+                                Acm.MessageBoard.show($.t("doctree:error.email-delivery") + failed + "\n" + $.t("doctree:error.email-retry"));
+                            });
+                        }
                     }
                 }
             }
@@ -146,6 +154,7 @@ DocTree.View = DocTree.View || {
                 var $edtEmailRecipients = $("<input/>")
                     .attr("type", "text")
                     .attr("id", "recipientsList")
+                    .prop("disabled",true)
                     .addClass("form-control")
                     .css("width", "100%")
                     .appendTo($emailFormGroup)
@@ -200,6 +209,9 @@ DocTree.View = DocTree.View || {
                 this.setDlgComponentsCreated(true);
             }
             //finally display the dialog box
+            if((Acm.isNotEmpty(DocTree.View.allowMailFilesToExternalAddresses) && Acm.compare("true", (DocTree.View.allowMailFilesToExternalAddresses).toLowerCase()))) {
+                $dlgSelector.find("#recipientsList").prop('disabled', false);
+            }
             dlgSendEmail.show();
 
             //event handlers for dialog actions
@@ -233,38 +245,65 @@ DocTree.View = DocTree.View || {
             });
         }
         ,makeEmailData: function(emailAddresses, nodes, title){
+            if(Acm.isNotEmpty(DocTree.View.allowMailFilesAsAttachments) && Acm.compare("true", DocTree.View.allowMailFilesAsAttachments.toLowerCase())){
+                return DocTree.View.Email._makeEmailDataForEmailWithAttachments(emailAddresses,nodes);
+            }
+            else{
+                return DocTree.View.Email._makeEmailDataForEmailWithLinks(emailAddresses,nodes,title);
+            }
+        }
+        ,_makeEmailDataForEmailWithLinks: function(emailAddresses, nodes, title){
             var emailNotifications = [];
             var emailData = {};
             emailData.emailAddresses = emailAddresses;
             emailData.title = Acm.goodValue(title, "ArkCase Documents");
-            emailData.note = DocTree.View.Email._makeEmailNote(nodes);
+            emailData.fileIds = DocTree.View.Email._extractFileIds(nodes);
+            emailData.baseUrl =DocTree.View.Email._makeBaseUrl();
+            emailData.header = $.t("doctree:email.header-for-email-with-links") + "\n\n";
+            emailData.footer = "\n\n" + $.t("doctree:email.footer-for-email-with-links");
             emailNotifications.push(emailData);
             return emailNotifications;
         }
-        ,_makeEmailNote: function(nodes){
-            var firstLine = "Please follow the links below to view the document(s): " + "\n\n";
-            var note="";
+        ,_makeEmailDataForEmailWithAttachments: function(emailAddresses, nodes){
+            var emailData = {};
+            emailData.emailAddresses = emailAddresses;
+            emailData.subject = $.t("doctree:email.subject-for-email-with-attachment");
+            emailData.body = $.t("doctree:email.body-for-email-with-attachment");
+            emailData.header = $.t("doctree:email.header-for-email-with-attachment");
+            emailData.footer = $.t("doctree:email.footer-for-email-with-attachment");
+            emailData.emailAddresses = emailAddresses;
+            var attachmentIds = [];
             if(Acm.isArray(nodes)){
-                for(var i = 0; i < nodes.length; i++){
-                    var title = Acm.goodValue(nodes[i].data.name) + "\n";
-                    var url = Acm.goodValue(DocTree.View.arkcaseUrl);
-                    if(Acm.isNotEmpty(DocTree.View.arkcasePort)){
-                        url += ":" + Acm.goodValue(DocTree.View.arkcasePort);
-                    }
-                    url+= App.getContextPath() + "/plugin/document/" + Acm.goodValue(nodes[i].data.objectId);
-                    note += title + url + "\n\n";
+                for(var i = 0; i < nodes.length; i++) {
+                    attachmentIds.push(Acm.goodValue(nodes[i].data.objectId));
                 }
             }
             else{
-                var title = Acm.goodValue(nodes.data.name) + "\n";
-                var url = Acm.goodValue(DocTree.View.arkcaseUrl);
-                if(Acm.isNotEmpty(DocTree.View.arkcasePort)){
-                    url += ":" + Acm.goodValue(DocTree.View.arkcasePort);
-                }
-                url+= App.getContextPath() + "/plugin/document/" + Acm.goodValue(nodes.data.objectId);
-                note += title + url + "\n\n";
+                attachmentIds.push(Acm.goodValue(nodes.data.objectId));
             }
-            return firstLine + note;
+
+            emailData.attachmentIds = attachmentIds;
+            return emailData;
+        }
+        ,_extractFileIds: function(nodes){
+            var fileIds=[];
+            if(Acm.isArray(nodes)){
+                for(var i = 0; i < nodes.length; i++){
+                    fileIds.push(Acm.goodValue(nodes[i].data.objectId));
+                }
+            }
+            else{
+                fileIds.push(Acm.goodValue(nodes.data.objectId));
+            }
+            return fileIds;
+        }
+        ,_makeBaseUrl: function(){
+            var url = Acm.goodValue(DocTree.View.arkcaseUrl);
+            if(Acm.isNotEmpty(DocTree.View.arkcasePort)){
+                url += ":" + Acm.goodValue(DocTree.View.arkcasePort);
+            }
+            url+= App.getContextPath() + DocTree.Model.API_DOWNLOAD_DOCUMENT_;
+            return url;
         }
     }
 
@@ -2382,7 +2421,13 @@ DocTree.View = DocTree.View || {
     }
 
     ,_doDownload: function(node) {
-        DocTree.View.$formDownloadDoc.attr("action", App.getContextPath() + DocTree.Model.API_DOWNLOAD_DOCUMENT_ + node.data.objectId);
+        var url = App.getContextPath() + DocTree.Model.API_DOWNLOAD_DOCUMENT_ + node.data.objectId;
+        DocTree.View.$formDownloadDoc.attr("action", url);
+        this.$input = $('<input>').attr({
+            id: 'fileId',
+            name: 'ecmFileId',
+        });
+        this.$input.val(node.data.objectId).appendTo(this.$formDownloadDoc);
         DocTree.View.$formDownloadDoc.submit();
     }
 

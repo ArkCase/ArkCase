@@ -180,7 +180,7 @@ public class FrevvoFormServiceFactory {
 	            service.setMuleContextManager(frevvoFormController.getMuleContextManager());
 	            service.setCaseFileDao(frevvoFormController.getCaseFileDao());
 	            service.setObjectAssociationDao(frevvoFormController.getObjectAssociationDao());
-	            service.setPersonIdentificationDao(frevvoFormController.getPersonIdentificationDao());
+	            service.setIdentificationDao(frevvoFormController.getIdentificationDao());
 	            service.setActivitiRuntimeService(frevvoFormController.getActivitiRuntimeService());
 	            service.setFileWorkflowBusinessRule(frevvoFormController.getFileWorkflowBusinessRule());
 	            service.setCaseFileFactory(frevvoFormController.getCaseFileFactory());
@@ -212,7 +212,7 @@ public class FrevvoFormServiceFactory {
 	            service.setMuleContextManager(frevvoFormController.getMuleContextManager());
 	            service.setCaseFileDao(frevvoFormController.getCaseFileDao());
 	            service.setObjectAssociationDao(frevvoFormController.getObjectAssociationDao());
-	            service.setPersonIdentificationDao(frevvoFormController.getPersonIdentificationDao());
+	            service.setIdentificationDao(frevvoFormController.getIdentificationDao());
 	            service.setActivitiRuntimeService(frevvoFormController.getActivitiRuntimeService());
 	            service.setFileWorkflowBusinessRule(frevvoFormController.getFileWorkflowBusinessRule());
 	            service.setCaseFilePSFactory(frevvoFormController.getCaseFilePSFactory());

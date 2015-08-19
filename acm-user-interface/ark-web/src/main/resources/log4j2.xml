@@ -5,16 +5,16 @@
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS} [%-5p] [%t] %c - %m%n"/>
         </Console>
         <RollingFile name="file-log" fileName="${sys:catalina.base}/logs/arkcase-ui.log"
-          filePattern="${sys:catalina.base}/logs/arkcase-ui-%d{yyyy-MM-dd}.log">
-          <PatternLayout>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} [%-5p] [%t] %c - %m%n</pattern>
-        </PatternLayout>
-        <Policies>
-            <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-        </Policies>
-    </RollingFile>
+                     filePattern="${sys:catalina.base}/logs/arkcase-ui-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} [%-5p] [%t] %c - %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
 
-</Appenders>
+    </Appenders>
     <Loggers>
         <!-- INFO and above to console and log file; com.armedia debug and above to log file -->
         <Logger name="com.armedia" level="debug" additivity="false">
@@ -22,6 +22,10 @@
             <AppenderRef ref="file-log" level="debug"/>
         </Logger>
         <Logger name="org.springframework" level="debug" additivity="false">
+            <AppenderRef ref="Console" level="debug"/>
+            <AppenderRef ref="file-log" level="debug"/>
+        </Logger>
+        <Logger name="com.armedia.acm.userinterface.angular.AngularResourceCopier" level="debug" additivity="false">
             <AppenderRef ref="Console" level="debug"/>
             <AppenderRef ref="file-log" level="debug"/>
         </Logger>

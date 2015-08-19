@@ -25,6 +25,8 @@
     <link rel="stylesheet" type="text/css" href="css/webviewer.css" />
     <link rel="stylesheet" type="text/css" href="css/toolbar.css" />
 
+    <link rel="stylesheet" type="text/css" href="arkcase/patch/toolbar.patch.css" />
+
     <!-- XXX: BE SURE TO UPDATE resources/print.html WHEN UPGRADING JQUERY -->
     <script type="text/javascript" src="js/3rdparty/jquery-1.11.1.min.js"></script>
     <!-- XXX: BE SURE TO UPDATE resources/print.html WHEN UPGRADING JQUERY -->
@@ -58,6 +60,8 @@
     <script type="text/javascript" src="js/annotations.js"></script>
     <script type="text/javascript" src="js/webviewer.js"></script>
 
+    <script type="text/javascript" src="arkcase/patch/webviewer.patch.js"></script>
+
 
     <!--[if lte IE 8]>
     <meta http-equiv="imagetoolbar" content="no" />
@@ -75,9 +79,17 @@
     <link rel="stylesheet" type="text/css" href="css/ie6hacks.css" />
     <link rel="stylesheet" type="text/css" href="css/ie7hacks.css" />
     <![endif]-->
+
+    <script language="javascript">
+        function start(){
+            virtualViewer.initViaURL();
+            myFlexSnap.initPatch();
+        }
+    </script>
 </head>
 
-<body onload="virtualViewer.initViaURL()">
+
+<body onload="start()">
 <div id="virtualViewerMain">
     <div id="vvToolbar">
         <div id="vvSaveDocumentButton"
@@ -231,6 +243,11 @@
              class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
              title="About">&nbsp;</div>
 
+        <div id="vvAddStampButton"
+             onclick="javascript:myFlexSnap.arkCaseCreateCustomImageStamp()"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Create Custom Stamp">&nbsp;</div>
+
         <div id="vvThumbToggleButton"
              onclick="javascript:myFlexSnap.toggleThumbnailPanel()"
              data-localize="utilityToolbar.toggleThumbnailPanel"
@@ -251,6 +268,7 @@
              title="Text Edit">&nbsp;</div>
 
         <div id="vvAnnImageRubberStampButton"
+             onmouseover="javascript:myFlexSnap.reloadDateTimePngImage()"
              data-localize="annToolbar.imageRubberStamp"
              class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
              title="Image Rubber Stamp">&nbsp;</div>
@@ -688,6 +706,9 @@
 </div>
 
 
+<div id="vvCreatingStampDialog" style="display: none;">
+    <img src="resources/loader.gif" alt="Creating Stamp" /><span id="vvCreatingStampDialogText">&nbsp;Please wait while your stamp is created ...</span>
+</div>
 
 <div id="vvAboutDialog">
     <div id="vvAboutDialogContents" class="vvSVGable">

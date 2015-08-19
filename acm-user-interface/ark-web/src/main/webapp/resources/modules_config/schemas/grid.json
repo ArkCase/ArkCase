@@ -1,0 +1,64 @@
+{
+  "type": "object",
+  "title": "Grid Component",
+
+  "properties": {
+    "id": {
+      "title" : "Id",
+      "type"  : "string"
+    },
+    "type": {
+      "title": "Type",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "enabled": {
+      "title": "Enabled",
+      "type": "boolean"
+    },
+    "enableFiltering": {
+      "title": "Enable Filtering",
+      "type": "boolean"
+    },
+
+    "columnDefs": {
+      "title": "Columns definition",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "displayName": {
+            "title": "Display Name",
+            "type": "string"
+          },
+          "cellTemplate": {
+            "title": "Cell Template",
+            "type": "string"
+          },
+          "headerCellFilter": {
+            "title": "Header Angular Filter",
+            "type": "string",
+            "enum": [
+              "", "translate"
+            ]
+          }
+
+        },
+        "required": [
+          "name",
+          "displayName"
+        ]
+      }
+    }
+  },
+  "required": [
+    "id", "title"
+  ]
+}
