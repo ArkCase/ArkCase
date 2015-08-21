@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,10 @@ import java.util.List;
 @XmlRootElement
 @Entity
 @Table(name = "acm_person")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.person.model.Person")
 public class Person implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
@@ -137,7 +142,11 @@ public class Person implements Serializable, AcmEntity
             inverseJoinColumns = { @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id") }
     )
     private List<Organization> organizations = new ArrayList<>();
-    
+
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
+
     @PrePersist
     protected void beforeInsert()
     {
@@ -431,5 +440,13 @@ public class Person implements Serializable, AcmEntity
     public Person returnBase()
     {
     	return this;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 }
