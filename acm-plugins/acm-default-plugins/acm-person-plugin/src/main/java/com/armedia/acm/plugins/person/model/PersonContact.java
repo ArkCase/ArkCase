@@ -1,0 +1,201 @@
+package com.armedia.acm.plugins.person.model;
+
+import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.plugins.addressable.model.ContactMethod;
+import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+/**
+ *
+ */
+@XmlRootElement
+@Entity
+@Table(name = "acm_person_contact")
+public class PersonContact implements Serializable, AcmEntity
+{
+    private static final long serialVersionUID = 7413755227864370548L;
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
+
+    @Id
+    @TableGenerator(name = "acm_person_contact_gen",
+            table = "acm_person_contact_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_person_contact",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_person_contact_gen")
+    @Column(name = "cm_person_contact_id")
+    private Long id;
+
+    @Column(name = "cm_person_contact_attention")
+    private String attention;
+
+    @Column(name = "cm_person_contact_company_name")
+    private String companyName;
+
+    @Column(name = "cm_person_contact_name")
+    private String personName;
+
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(
+            name = "acm_person_cntct_ident",
+            joinColumns = { @JoinColumn(name="cm_person_contact_id", referencedColumnName = "cm_person_contact_id") },
+            inverseJoinColumns = { @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)
+            }
+    )
+    private List<Identification> identifications = new ArrayList<>();
+
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "acm_person_cntct_postal_address",
+            joinColumns = { @JoinColumn(name="cm_person_contact_id", referencedColumnName = "cm_person_contact_id") },
+            inverseJoinColumns = { @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id") }
+    )
+    private List<PostalAddress> addresses = new ArrayList<>();
+
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "acm_person_cntct_cntct_method",
+            joinColumns = { @JoinColumn(name="cm_person_contact_id", referencedColumnName = "cm_person_contact_id") },
+            inverseJoinColumns = { @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id") }
+    )
+    private List<ContactMethod> contactMethods = new ArrayList<>();
+
+
+    @Column(name = "cm_person_contact_created", nullable = false, insertable = true, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
+
+    @Column(name = "cm_person_contact_creator", insertable = true, updatable = false)
+    private String creator;
+
+    @Column(name = "cm_person_contact_modified", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modified;
+
+    @Column(name = "cm_person_contact_modifier")
+    private String modifier;
+
+
+    @XmlTransient
+    @Override
+    public Date getCreated()
+    {
+        return created;
+    }
+
+    @Override
+    public void setCreated(Date created)
+    {
+        this.created = created;
+    }
+
+    @XmlTransient
+    @Override
+    public String getCreator()
+    {
+        return creator;
+    }
+
+    @Override
+    public void setCreator(String creator)
+    {
+        this.creator = creator;
+    }
+
+    @XmlTransient
+    @Override
+    public Date getModified()
+    {
+        return modified;
+    }
+
+    @Override
+    public void setModified(Date modified)
+    {
+        this.modified = modified;
+    }
+
+    @XmlTransient
+    @Override
+    public String getModifier()
+    {
+        return modifier;
+    }
+
+    @Override
+    public void setModifier(String modifier)
+    {
+        this.modifier = modifier;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getAttention() {
+        return attention;
+    }
+
+    public void setAttention(String attention) {
+        this.attention = attention;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getPersonName() {
+        return personName;
+    }
+
+    public void setPersonName(String personName) {
+        this.personName = personName;
+    }
+
+    public List<Identification> getIdentifications() {
+        return identifications;
+    }
+
+    public void setIdentifications(List<Identification> identifications) {
+        this.identifications = identifications;
+    }
+
+    public List<PostalAddress> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<PostalAddress> addresses) {
+        this.addresses = addresses;
+    }
+
+    public List<ContactMethod> getContactMethods() {
+        return contactMethods;
+    }
+
+    public void setContactMethods(List<ContactMethod> contactMethods) {
+        this.contactMethods = contactMethods;
+    }
+}
