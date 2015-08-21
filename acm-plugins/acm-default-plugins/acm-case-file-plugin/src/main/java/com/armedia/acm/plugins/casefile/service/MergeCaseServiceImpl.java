@@ -72,6 +72,7 @@ public class MergeCaseServiceImpl implements MergeCaseService
         childObjectSource.setCategory("MERGED_TO");
         childObjectSource.setTargetId(target.getId());
         childObjectSource.setTargetType(target.getObjectType());
+        childObjectSource.setTargetTitle(target.getTitle());
         childObjectSource.setTargetName(target.getCaseNumber());
         source.addChildObject(childObjectSource);
 
@@ -80,6 +81,7 @@ public class MergeCaseServiceImpl implements MergeCaseService
         childObjectTarget.setCategory("MERGED_FROM");
         childObjectTarget.setTargetId(source.getId());
         childObjectTarget.setTargetType(source.getObjectType());
+        childObjectTarget.setTargetTitle(source.getTitle());
         childObjectTarget.setTargetName(source.getCaseNumber());
         target.addChildObject(childObjectTarget);
 

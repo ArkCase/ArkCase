@@ -325,7 +325,7 @@ AcmDocument.Service = {
         ,onInitialized: function() {
         }
 
-        ,API_DOWNLOAD_DOCUMENT_      : "/api/latest/plugin/ecm/download/byId/"
+        ,API_DOWNLOAD_DOCUMENT_      : "/api/latest/plugin/ecm/download?ecmFileId="
         ,API_UPLOAD_DOCUMENT: "/api/latest/plugin/casefile/file"
 
         ,_validateUploadInfo: function(data) {
