@@ -497,4 +497,22 @@
                              columnNames="cm_organization_id, cm_identification_id"/>
     </changeSet>
 
+    <changeSet id="34-organization-add-class-name-column" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_organization">
+            <column name="cm_class_name" type="varchar(400)"
+                    defaultValue="com.armedia.acm.plugins.person.model.PersonContact">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="35-person-add-class-name-column" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_person">
+            <column name="cm_class_name" type="varchar(400)"
+                    defaultValue="com.armedia.acm.plugins.person.model.Person">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

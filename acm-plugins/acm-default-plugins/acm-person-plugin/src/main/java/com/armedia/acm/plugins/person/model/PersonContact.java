@@ -4,6 +4,7 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,10 @@ import java.util.List;
 @XmlRootElement
 @Entity
 @Table(name = "acm_person_contact")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.person.model.PersonContact")
 public class PersonContact implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
@@ -90,6 +95,8 @@ public class PersonContact implements Serializable, AcmEntity
     @Column(name = "cm_person_contact_modifier")
     private String modifier;
 
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     @XmlTransient
     @Override
@@ -197,5 +204,13 @@ public class PersonContact implements Serializable, AcmEntity
 
     public void setContactMethods(List<ContactMethod> contactMethods) {
         this.contactMethods = contactMethods;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 }
