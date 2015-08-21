@@ -16,7 +16,7 @@
                 <bean id="alfrescoDownloadUrlPrivilege"
                       class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/ecm/download/byId/{ecmFileId}"/>
+                    <property name="url" value="/api/{version}/plugin/ecm/download"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
                 <bean id="documentUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">

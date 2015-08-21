@@ -82,6 +82,7 @@ public class SplitCaseServiceImpl implements SplitCaseService
         childObjectCopy.setCategory("COPY_FROM");
         childObjectCopy.setTargetId(original.getId());
         childObjectCopy.setTargetType(original.getObjectType());
+        childObjectCopy.setTargetTitle(original.getTitle());
         childObjectCopy.setTargetName(original.getCaseNumber());
         copyCaseFile.addChildObject(childObjectCopy);
 
@@ -96,6 +97,7 @@ public class SplitCaseServiceImpl implements SplitCaseService
         childObjectOriginal.setCategory("COPY_TO");
         childObjectOriginal.setTargetId(copyCaseFile.getId());
         childObjectOriginal.setTargetType(copyCaseFile.getObjectType());
+        childObjectOriginal.setTargetTitle(copyCaseFile.getTitle());
         childObjectOriginal.setTargetName(copyCaseFile.getCaseNumber());
         original.addChildObject(childObjectOriginal);
         saveCaseService.saveCase(original, auth, ipAddress);
