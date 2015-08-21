@@ -103,6 +103,8 @@ public class OrganizationIT {
         assertEquals(2, saved.getContactMethods().size());
         assertEquals(2, saved.getAddresses().size());
 
+        assertEquals("com.armedia.acm.plugins.person.model.Organization",saved.getClassName());
+
         assertEquals("sample", org.getOrganizationType());
 
 

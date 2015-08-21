@@ -102,6 +102,7 @@ public class PersonContactIT {
         assertEquals(1,saved.getIdentifications().size());
         assertEquals(2,saved.getContactMethods().size());
         assertEquals(2,saved.getAddresses().size());
+        assertEquals("com.armedia.acm.plugins.person.model.PersonContact",saved.getClassName());
 
         assertNotNull(saved.getId());
 

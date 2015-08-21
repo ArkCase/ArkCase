@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.person.model;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,10 @@ import java.util.List;
  */
 @Entity
 @Table(name = "acm_organization")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.person.model.Organization")
 public class Organization implements Serializable, AcmEntity {
     private static final long serialVersionUID = 7413755227864370548L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -84,6 +89,9 @@ public class Organization implements Serializable, AcmEntity {
             inverseJoinColumns = {@JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")}
     )
     private List<ContactMethod> contactMethods = new ArrayList<>();
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     @XmlTransient
     public Long getOrganizationId() {
@@ -191,5 +199,13 @@ public class Organization implements Serializable, AcmEntity {
 
     public void setContactMethods(List<ContactMethod> contactMethods) {
         this.contactMethods = contactMethods;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 }
