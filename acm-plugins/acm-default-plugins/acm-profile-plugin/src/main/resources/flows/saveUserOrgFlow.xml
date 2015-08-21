@@ -15,9 +15,10 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
     <flow name="saveUserOrg" doc:name="Save UserOrg">
         <description>Saves a userOrg (creates new userOrg record if it has not been saved
-            previously).  The payload must be a UserOrg entity object.  The return message&quot;s
+            previously). The payload must be a UserOrg entity object. The return message&quot;s
             payload is the (possibly updated) userOrg; i.e. for a new userOrg, the return payload&quot;s
-            ID fields are populated.</description>
+            ID fields are populated.
+        </description>
         <vm:inbound-endpoint
                 address="vm://saveUserOrg.in"
                 exchange-pattern="request-response"
@@ -66,7 +67,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                         payload.container.folder = new AcmFolder();
 
                         String user = payload.user == null ? null : payload.user.userId;
-                        payload.ecmFolderPath = "/Sites/acm/documentLibrary/User Profile/"+user;
+                        payload.ecmFolderPath = muleContext.registry.get("arkContext").getBean("acmUserOrgService").getProfileLocation() + "/" + user;
                         payload.container.folder.name = user;
                     }
 
@@ -105,7 +106,8 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
 
         <catch-exception-strategy>
-            <logger level="ERROR" category="com.armedia.plugins.profile" message="Exception saving: #[exception.message]"/>
+            <logger level="ERROR" category="com.armedia.plugins.profile"
+                    message="Exception saving: #[exception.message]"/>
             <set-property propertyName="saveException" value="#[exception]"/>
         </catch-exception-strategy>
 
