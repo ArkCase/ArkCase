@@ -3188,7 +3188,7 @@ CaseFile.View = CaseFile.View || {
                     pagingListAction: function(postData, jtParams, comparator) {
                         var rc = AcmEx.Object.JTable.getEmptyRecords();
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
-                        var timesheets = CaseFile.Model.Time.cacheTimesheets.put(caseFileId);
+                        var timesheets = CaseFile.Model.Time.cacheTimesheets.get(caseFileId);
                         if (CaseFile.Model.Time.validateTimesheets(timesheets)) {
                             var pagingItems = AcmEx.Object.JTable.getPagingItems(jtParams, timesheets, comparator);
                             for (var i = 0; i < pagingItems.length; i++) {
@@ -3256,7 +3256,7 @@ CaseFile.View = CaseFile.View || {
         }
 
         ,onViewSelectedObject: function(nodeType, nodeId) {
-            CaseFile.Model.Time.getTimesheets(nodeId).done(function(costsheets){
+                CaseFile.Model.Cost.retrieveCostsheets(nodeId).done(function (costsheets) {
                 AcmEx.Object.JTable.load(CaseFile.View.Cost.$divCost);
             });
         }
@@ -3339,8 +3339,8 @@ CaseFile.View = CaseFile.View || {
                     pagingListAction: function(postData, jtParams, comparator) {
                         var rc = AcmEx.Object.JTable.getEmptyRecords();
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
-                        var costsheets = CaseFile.Model.Time.cacheTimesheets.put(caseFileId);
-                        if (CaseFile.Model.Time.validateTimesheets(costsheets)) {
+                        var costsheets = CaseFile.Model.Cost.cacheCostsheets.get(caseFileId);
+                        if (CaseFile.Model.Cost.validateCostsheets(costsheets)) {
                             var pagingItems = AcmEx.Object.JTable.getPagingItems(jtParams, costsheets, comparator);
                             for (var i = 0; i < pagingItems.length; i++) {
                                 var costsheet = AcmEx.Object.JTable.getPagingItemData(pagingItems[i]);

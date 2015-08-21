@@ -18,6 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Date;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -63,7 +64,7 @@ public class PersonIT
         em.flush();
 
         assertNotNull(saved.getId());
-
+        assertEquals("com.armedia.acm.plugins.person.model.Person",saved.getClassName());
         personDao.deletePersonById(saved.getId());
 
         em.flush();

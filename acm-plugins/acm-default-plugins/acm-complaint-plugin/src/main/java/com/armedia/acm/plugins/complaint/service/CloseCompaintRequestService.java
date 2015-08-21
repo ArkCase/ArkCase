@@ -16,7 +16,6 @@ import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
@@ -29,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -88,6 +86,8 @@ public class CloseCompaintRequestService
                 addReferenceToComplaint(updatedComplaint, updatedCaseFile);
             }
         }
+
+        updatedComplaint = getComplaintDao().save(updatedComplaint);
 
         // get the entity manager to flush any outstanding SQL, so if there are any SQL exceptions, they get
         // raised here; the resulting exception will ensure we don't raise the complaint closed event.
@@ -151,37 +151,15 @@ public class CloseCompaintRequestService
 
             AcmContainer containerCaseFile = getEcmFileService().getOrCreateContainer(existingCaseFile.getObjectType(), existingCaseFile.getId());
 
+            container.getFolder().setParentFolderId(containerCaseFile.getFolder().getId());
+            container.getFolder().setName(updatedComplaint.getComplaintTitle() + " (" + updatedComplaint.getComplaintNumber() + ")");
+
             if (files != null && files.getChildren() != null)
             {
                 for (AcmCmisObject file : files.getChildren())
                 {
-                    EcmFile ecmFile = new EcmFile();
-
-                    ecmFile.setFileName(file.getName());
-                    ecmFile.setFileType(file.getType());
+                    EcmFile ecmFile = getEcmFileService().findById(file.getObjectId());
                     ecmFile.setContainer(containerCaseFile);
-                    ecmFile.setFolder(containerCaseFile.getFolder());
-                    ecmFile.setCategory(file.getCategory());
-                    ecmFile.setStatus(file.getStatus());
-                    ecmFile.setActiveVersionTag(file.getVersion());
-                    ecmFile.setVersionSeriesId(file.getCmisObjectId());
-                    ecmFile.setFileMimeType(file.getMimeType());
-
-                    if (file.getVersionList() != null)
-                    {
-                        List<EcmFileVersion> newVersions = new ArrayList<>();
-
-                        for (EcmFileVersion v : file.getVersionList())
-                        {
-                            EcmFileVersion vnew = new EcmFileVersion();
-                            vnew.setCmisObjectId(v.getCmisObjectId());
-                            vnew.setVersionTag(v.getVersionTag());
-                            vnew.setFile(v.getFile());
-                            newVersions.add(vnew);
-                        }
-
-                        ecmFile.setVersions(newVersions);
-                    }
 
                     getEcmFileDao().save(ecmFile);
                 }
@@ -305,9 +283,6 @@ public class CloseCompaintRequestService
         Complaint c = getComplaintDao().find(complaintId);
         c.setStatus("CLOSED");
         c.setDisposition(disposition);
-
-        c = getComplaintDao().save(c);
-
         return c;
     }
 
