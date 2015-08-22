@@ -27,8 +27,22 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.profile"/>
 
-
         <timer-interceptor/>
+
+        <choice>
+            <when expression="message.inboundProperties['acmUser'] == null || payload == null || payload.user == null || payload.user.userId == null">
+                <scripting:component doc:name="Script">
+                    <scripting:script engine="Groovy"><![CDATA[
+                        throw new IllegalStateException('Payload and user id were not specified');
+                    ]]>
+                    </scripting:script>
+                </scripting:component>
+            </when>
+            <otherwise>
+                <logger category="com.armedia.acm.plugins.profile" level="DEBUG"
+                        message="Input is OK, proceeding with flow"/>
+            </otherwise>
+        </choice>
 
         <set-property doc:name="Created or Updated?"
                       propertyName="userOrgCreated" value="#[payload.userOrgId == null]"/>
@@ -38,8 +52,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <scripting:transformer name="saveUserOrgCreatorModifierTransformer">
             <scripting:script engine="groovy">
                 <scripting:text><![CDATA[
-                    String user = message.getInboundProperty("acmUser") == null ? null :
-                        message.getInboundProperty("acmUser").name;
+                    String user = message.getInboundProperty("acmUser").name;
                     if ( user != null )
                     {
                         muleContext.registry.get("arkContext").getBean("auditPropertyEntityAdapter").setUserId(user);
@@ -66,7 +79,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                     {
                         payload.container.folder = new AcmFolder();
 
-                        String user = payload.user == null ? null : payload.user.userId;
+                        String user = payload.user.userId;
                         payload.ecmFolderPath = muleContext.registry.get("arkContext").getBean("acmUserOrgService").getProfileLocation() + "/" + user;
                         payload.container.folder.name = user;
                     }
