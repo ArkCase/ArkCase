@@ -11,6 +11,7 @@ import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
@@ -153,7 +154,7 @@ public class CloseCompaintRequestService
             AcmContainer containerCaseFile = getEcmFileService().getOrCreateContainer(existingCaseFile.getObjectType(), existingCaseFile.getId());
 
             container.getFolder().setParentFolderId(containerCaseFile.getFolder().getId());
-            container.getFolder().setName(updatedComplaint.getComplaintTitle() + " (" + updatedComplaint.getComplaintNumber() + ")");
+            container.getFolder().setName(ComplaintConstants.OBJECT_TYPE + " (" + updatedComplaint.getComplaintNumber() + ")");
 
             if (files != null && files.getChildren() != null)
             {
