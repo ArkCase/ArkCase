@@ -154,13 +154,10 @@ public class CostService extends FrevvoFormChargeAbstractService {
 		String ipAddress = (String) getRequest().getSession().getAttribute("acm_ip_address");
 		
 		boolean startWorkflow = getCostsheetService().checkWorkflowStartup(CostsheetConstants.EVENT_TYPE + "." + submissionName.toLowerCase());
-		
+
 		FrevvoUploadedFiles uploadedFiles = null;
-		if (startWorkflow)
-		{
-			uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(), FrevvoFormName.COSTSHEET.toUpperCase(), saved.getId());
-		}
-		
+		uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(), FrevvoFormName.COSTSHEET.toUpperCase(), saved.getId());
+
 		getCostsheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(), uploadedFiles, startWorkflow);
 		
 		return true;
