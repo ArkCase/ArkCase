@@ -16,6 +16,7 @@ import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
@@ -160,6 +161,7 @@ public class CloseCompaintRequestService
                 {
                     EcmFile ecmFile = getEcmFileService().findById(file.getObjectId());
                     ecmFile.setContainer(containerCaseFile);
+                    ecmFile.setStatus(EcmFileConstants.RECORD);
 
                     getEcmFileDao().save(ecmFile);
                 }
