@@ -16,11 +16,13 @@ import java.util.Base64;
 /**
  * Created by nebojsha on 07.05.2015.
  */
-public class UserOrgServiceImpl implements UserOrgService {
+public class UserOrgServiceImpl implements UserOrgService
+{
 
     private UserOrgDao userOrgDao;
 
     private AcmCryptoUtils acmCryptoUtils;
+    private String profileLocation;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -40,7 +42,8 @@ public class UserOrgServiceImpl implements UserOrgService {
     }
 
     @Override
-    public void saveOutlookPassword(Authentication authentication, OutlookDTO in) throws AcmEncryptionException {
+    public void saveOutlookPassword(Authentication authentication, OutlookDTO in) throws AcmEncryptionException
+    {
 
         //encrypt password and encode it to BASE64
         String md5Hex = DigestUtils.md5Hex(authentication.getCredentials().toString());
@@ -52,24 +55,40 @@ public class UserOrgServiceImpl implements UserOrgService {
     }
 
     @Override
-    public UserOrg getUserOrgForUserId(String userId) throws AcmObjectNotFoundException {
+    public UserOrg getUserOrgForUserId(String userId) throws AcmObjectNotFoundException
+    {
         return userOrgDao.getUserOrgForUserId(userId);
     }
 
 
-    public UserOrgDao getUserOrgDao() {
+    public UserOrgDao getUserOrgDao()
+    {
         return userOrgDao;
     }
 
-    public void setUserOrgDao(UserOrgDao userOrgDao) {
+    public void setUserOrgDao(UserOrgDao userOrgDao)
+    {
         this.userOrgDao = userOrgDao;
     }
 
-    public AcmCryptoUtils getAcmCryptoUtils() {
+    public AcmCryptoUtils getAcmCryptoUtils()
+    {
         return acmCryptoUtils;
     }
 
-    public void setAcmCryptoUtils(AcmCryptoUtils acmCryptoUtils) {
+    public void setAcmCryptoUtils(AcmCryptoUtils acmCryptoUtils)
+    {
         this.acmCryptoUtils = acmCryptoUtils;
+    }
+
+    public void setProfileLocation(String profileLocation)
+    {
+        this.profileLocation = profileLocation;
+    }
+
+    @Override
+    public String getProfileLocation()
+    {
+        return profileLocation;
     }
 }
