@@ -24,12 +24,12 @@
         <dependency>
             <groupId>com.armedia.acm.acm-user-interface</groupId>
             <artifactId>ark-surf-connector</artifactId>
-            <version>3.0.35-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-user-interface</groupId>
             <artifactId>ark-angular-starter</artifactId>
-            <version>3.0.35-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- spring mvc -->
