@@ -21,12 +21,20 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-ms-outlook-integration.xml",
-        "/spring/spring-library-property-file-manager.xml"
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-test-ms-outlook-integration.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-acm-encryption.xml"
 })
 public class OutlookServiceRetryLogicIT extends EasyMockSupport
 {
@@ -121,7 +129,7 @@ public class OutlookServiceRetryLogicIT extends EasyMockSupport
                 eq(sortProperty),
                 eq(sortAscending),
                 eq(filter))).andThrow(new AcmOutlookFindItemsFailedException(new NullPointerException("test exception")))
-        .times(expectedRetries);
+                .times(expectedRetries);
 
         // since we threw an exception, now it should disconnect, and then retry
         mockDao.disconnect(user);
@@ -133,8 +141,7 @@ public class OutlookServiceRetryLogicIT extends EasyMockSupport
         {
             outlookService.findTaskItems(user, 0, 5, "subject", true, null);
             fail("should have caught an exception");
-        }
-        catch (AcmOutlookException e)
+        } catch (AcmOutlookException e)
         {
             log.info("Got expected exception, test passes.");
         }
