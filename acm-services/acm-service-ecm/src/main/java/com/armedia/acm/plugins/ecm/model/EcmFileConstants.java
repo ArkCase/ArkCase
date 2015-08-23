@@ -31,6 +31,9 @@ public interface EcmFileConstants
 
     String USER_ACTION_SET_FILE_ACTIVE_VERSION = "SET ACTIVE VERSION TO";
 
+    String USER_ACTION_DOWNLOAD_FILE_AS_INPUTSTREAM = " DOWNLOAD FILE AS INPUTSTREAM";
+
+
     String FOLDER_LIST_DEFAULT_SORT_PARAM = "name_lcs";
 
     String SUCCESS_DELETE_MSG = "File deleted successfully: ";
@@ -83,4 +86,6 @@ public interface EcmFileConstants
     String FILE = "file";
 
     String COPY_FILE_EXCEPTION_INBOUND_PROPERTY = "copyFileException";
+
+    String ACTIVE = "ACTIVE";
 }

@@ -1,13 +1,16 @@
 package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -25,6 +28,7 @@ import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +49,7 @@ public class AcmTaskServiceImpl implements AcmTaskService {
     private AcmContainerDao acmContainerDao;
     private SearchResults searchResults = new SearchResults();
     private AcmFolderService acmFolderService;
+    private EcmFileService ecmFileService;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -161,27 +166,30 @@ public class AcmTaskServiceImpl implements AcmTaskService {
 
 				
 				AcmContainer container = task.getContainer() != null ? task.getContainer() : getAcmContainerDao().findFolderByObjectTypeAndId(task.getObjectType(), task.getId());
-				
-				AcmFolder folderToBeCoppied = container.getFolder();
-				
-				AcmContainer targetContainer = getAcmContainerDao().findFolderByObjectTypeAndId(task.getParentObjectType(), task.getParentObjectId());
 
-				AcmFolder targetFolder = getAcmFolderService().addNewFolderByPath(task.getParentObjectType(), 
-						task.getParentObjectId(), 
-						"/" + String.format("Task %d%n %s", task.getId(), task.getTitle()));
-				
-				getAcmFolderService().copyFolderStructure(folderToBeCoppied.getId(), targetContainer, targetFolder);
-				
+                Authentication auth =
+                        new UsernamePasswordAuthenticationToken(container.getCreator(), container.getCreator());
 
-			
-			}
-			
-		} catch (AcmFolderException | AcmCreateObjectFailedException | AcmUserActionFailedException | AcmObjectNotFoundException e) {
-			
-			log.error("Could not coppy folder for task id = " + task.getId(), e);
-			
-		} 
-    	
+                AcmCmisObjectList files = getEcmFileService().allFilesForContainer(auth, container);
+
+                if (files != null && files.getChildren() != null && files.getTotalChildren() > 0)
+                {
+                    AcmFolder folderToBeCoppied = container.getFolder();
+
+                    AcmContainer targetContainer = getAcmContainerDao().findFolderByObjectTypeAndId(task.getParentObjectType(), task.getParentObjectId());
+
+                    AcmFolder targetFolder = getAcmFolderService().addNewFolderByPath(task.getParentObjectType(),
+                            task.getParentObjectId(),
+                            "/" + String.format("Task %d%n %s", task.getId(), task.getTitle()));
+
+                    getAcmFolderService().copyFolderStructure(folderToBeCoppied.getId(), targetContainer, targetFolder);
+                }
+            }
+
+        } catch (AcmFolderException | AcmListObjectsFailedException | AcmCreateObjectFailedException | AcmUserActionFailedException | AcmObjectNotFoundException e)
+        {
+            log.error("Could not coppy folder for task id = " + task.getId(), e);
+        }
     }
     
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher) {
@@ -217,5 +225,14 @@ public class AcmTaskServiceImpl implements AcmTaskService {
     }
 
 
+    public EcmFileService getEcmFileService()
+    {
+        return ecmFileService;
+    }
+
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
+        this.ecmFileService = ecmFileService;
+    }
     
 }

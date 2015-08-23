@@ -1,0 +1,26 @@
+@import "../../../scss/base/variables";
+
+// Left Navigation menu
+$leftnav-menu-bg: $white-dark !default;
+$leftnav-menu-color: $gray-darker !default;
+$leftnav-menu-width: 200px !default;
+
+// Active items
+$leftnav-menu-active-bg: $white-darker !default;
+$leftnav-menu-active-color: $gray-darker !default;
+
+// Hover items
+$leftnav-menu-hover-bg: $white-darker !default;
+$leftnav-menu-hover-color: $gray-darker !default;
+
+// Navbar settings
+$navbar-bg: $blue !default;
+$navbar-color: $blue-lighter !default;
+$navbar-header-bg: $blue-dark !default;
+$navbar-header-color: $white !default;
+$navbar-header-width: $leftnav-menu-width;
+$navbar-min-height: 50px !default;
+
+// Menu items
+$navbar-menu-item-hover-bg: $blue-dark !default;
+$navbar-menu-item-hover-color: $white !default;

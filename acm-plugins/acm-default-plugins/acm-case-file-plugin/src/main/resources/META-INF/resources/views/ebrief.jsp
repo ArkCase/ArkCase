@@ -15,6 +15,8 @@
         <span itemprop="token">${token}</span>
         <span itemprop="arkcaseUrl">${arkcaseUrl}</span>
         <span itemprop="arkcasePort">${arkcasePort}</span>
+        <span itemprop="allowMailFilesAsAttachments">${allowMailFilesAsAttachments}</span>
+        <span itemprop="allowMailFilesToExternalAddresses">${allowMailFilesToExternalAddresses}</span>
 
         <span itemprop="urlEditCaseFileForm">${editCaseFileFormUrl}</span>
         <span itemprop="urlReinvestigateCaseFileForm">${reinvestigateCaseFileFormUrl}</span>

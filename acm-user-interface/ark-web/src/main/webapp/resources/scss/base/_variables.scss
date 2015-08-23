@@ -1,0 +1,53 @@
+//
+// Variables
+// --------------------------------------------------
+
+//== Colors
+//
+//## Colors for use across application
+$white:           #ffffff;
+$white-dark:      #f7f8fb;
+$white-darker:    #e0e6ef;
+
+$gray-darker:     #3c4144;
+$gray-dark:       #555;
+$gray:            #788288;
+$gray-light:      #a1a8ac;
+$gray-lighter:    #e8eaef;
+
+$red:             #dd1144;
+
+$blue-dark:       #126da7;
+$blue:            #177bbb;
+$blue-light:      #0088cc;
+$blue-lighter:    #aad7f4;
+
+$green-light:     #1aae88;
+$green-lighter:   #1ccacc;
+
+$yellow-light:    #faffbd;
+
+
+//==Scaffolding
+//
+//## Settings for some of the most global styles
+$body-bg:       transparent !default;
+$text-color:    $gray !default;
+
+//==Typography
+//
+//## Font, line-height, and color for body text, headings, and more.
+
+$font-family-sans-serif:  "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+$font-size-default: 13px;
+$font-size-small:   12px;
+
+
+$font-size-h1: 36px !default;
+$font-size-h2: 32px !default;
+$font-size-h3: 24px !default;
+$font-size-h4: 18px !default;
+$font-size-h5: 16px !default;
+$font-size-h6: 14px !default;
+

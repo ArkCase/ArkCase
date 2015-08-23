@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-tool-integrations</artifactId>
-        <version>3.0.33</version>
+        <version>3.0.34</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -12,9 +12,20 @@
     <name>Tool Integrations: Copy from Classpath to Working Folder</name>
     <description>Copy files matching a classpath pattern (e.g. Activiti workflow definitions
         and Drools decision table spreadsheets) to the application working folder.
+
+        Also copy all built-in Spring configuration files from the WAR file to
+        $HOME/.acm/default-config/spring directory and all custom Spring configuration
+        files to $HOME/.acm/custom-config/spring directory. Then, compare custom
+        defined beans with built-in ones and create DIFF files when there is a
+        difference.
     </description>
 
     <dependencies>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>

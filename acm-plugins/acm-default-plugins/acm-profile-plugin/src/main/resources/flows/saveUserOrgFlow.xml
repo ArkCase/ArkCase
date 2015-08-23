@@ -15,9 +15,10 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
     <flow name="saveUserOrg" doc:name="Save UserOrg">
         <description>Saves a userOrg (creates new userOrg record if it has not been saved
-            previously).  The payload must be a UserOrg entity object.  The return message&quot;s
+            previously). The payload must be a UserOrg entity object. The return message&quot;s
             payload is the (possibly updated) userOrg; i.e. for a new userOrg, the return payload&quot;s
-            ID fields are populated.</description>
+            ID fields are populated.
+        </description>
         <vm:inbound-endpoint
                 address="vm://saveUserOrg.in"
                 exchange-pattern="request-response"
@@ -26,8 +27,22 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.profile"/>
 
-
         <timer-interceptor/>
+
+        <choice>
+            <when expression="message.inboundProperties['acmUser'] == null || payload == null || payload.user == null || payload.user.userId == null">
+                <scripting:component doc:name="Script">
+                    <scripting:script engine="Groovy"><![CDATA[
+                        throw new IllegalStateException('Payload and user id were not specified');
+                    ]]>
+                    </scripting:script>
+                </scripting:component>
+            </when>
+            <otherwise>
+                <logger category="com.armedia.acm.plugins.profile" level="DEBUG"
+                        message="Input is OK, proceeding with flow"/>
+            </otherwise>
+        </choice>
 
         <set-property doc:name="Created or Updated?"
                       propertyName="userOrgCreated" value="#[payload.userOrgId == null]"/>
@@ -37,8 +52,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <scripting:transformer name="saveUserOrgCreatorModifierTransformer">
             <scripting:script engine="groovy">
                 <scripting:text><![CDATA[
-                    String user = message.getInboundProperty("acmUser") == null ? null :
-                        message.getInboundProperty("acmUser").name;
+                    String user = message.getInboundProperty("acmUser").name;
                     if ( user != null )
                     {
                         muleContext.registry.get("arkContext").getBean("auditPropertyEntityAdapter").setUserId(user);
@@ -65,8 +79,8 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                     {
                         payload.container.folder = new AcmFolder();
 
-                        String user = payload.user == null ? null : payload.user.userId;
-                        payload.ecmFolderPath = "/Sites/acm/documentLibrary/User Profile/"+user;
+                        String user = payload.user.userId;
+                        payload.ecmFolderPath = muleContext.registry.get("arkContext").getBean("acmUserOrgService").getProfileLocation() + "/" + user;
                         payload.container.folder.name = user;
                     }
 
@@ -105,7 +119,8 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
 
         <catch-exception-strategy>
-            <logger level="ERROR" category="com.armedia.plugins.profile" message="Exception saving: #[exception.message]"/>
+            <logger level="ERROR" category="com.armedia.plugins.profile"
+                    message="Exception saving: #[exception.message]"/>
             <set-property propertyName="saveException" value="#[exception]"/>
         </catch-exception-strategy>
 
