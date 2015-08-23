@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.profile.dao;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.plugins.profile.model.UserOrgConstants;
@@ -12,9 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -26,7 +23,8 @@ import java.util.List;
 /**
  * Created by marjan.stefanoski on 20.10.2014.
  */
-public class UserOrgDao extends AcmAbstractDao<UserOrg> {
+public class UserOrgDao extends AcmAbstractDao<UserOrg>
+{
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -42,15 +40,15 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg> {
         {
             UserOrg retval = query.getSingleResult();
             return retval;
-        }
-        catch ( NoResultException e)
+        } catch (NoResultException e)
         {
             throw new AcmObjectNotFoundException(UserOrgConstants.OBJECT_TYPE, null, "No user profile for user " +
                     "'" + userId + "'", e);
         }
     }
 
-    public UserOrg getUserOrgForUser(AcmUser user) throws AcmObjectNotFoundException {
+    public UserOrg getUserOrgForUser(AcmUser user) throws AcmObjectNotFoundException
+    {
 
         CriteriaBuilder builder = getEm().getCriteriaBuilder();
         CriteriaQuery<UserOrg> query = builder.createQuery(UserOrg.class);
@@ -59,8 +57,9 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg> {
         TypedQuery<UserOrg> dbQuery = getEm().createQuery(query);
         List<UserOrg> results = null;
         results = dbQuery.getResultList();
-        if( results.isEmpty()){
-            throw new AcmObjectNotFoundException("profile",null, "Object not found",null);
+        if (results.isEmpty())
+        {
+            throw new AcmObjectNotFoundException("profile", null, "Object not found", null);
         }
         return results.get(0);
     }
@@ -81,7 +80,7 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg> {
 
         int updated = q.executeUpdate();
 
-        if ( updated == 0 )
+        if (updated == 0)
         {
             throw new IllegalStateException("No profile for user '" + authentication.getName() + "'");
         }
@@ -105,7 +104,7 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg> {
         {
             Object o = q.getSingleResult();
 
-            log.debug("Query result is of type: " + o.getClass().getName());
+            log.debug("Query result is of type: " + (o == null ? "null" : o.getClass().getName()));
 
             String password = (String) o;
 
@@ -113,15 +112,15 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg> {
             retval.setOutlookPassword(password);
 
             return retval;
-        }
-        catch (PersistenceException pe)
+        } catch (PersistenceException pe)
         {
             throw new IllegalStateException("No profile for user '" + authentication.getName() + "'");
         }
     }
 
     @Override
-    protected Class<UserOrg> getPersistenceClass() {
+    protected Class<UserOrg> getPersistenceClass()
+    {
         return UserOrg.class;
     }
 

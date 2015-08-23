@@ -15,20 +15,18 @@
     <!-- The login page itself, along with the JavaScript and images that
          appear on the login page, do not have to be protected.  -->
     <http security="none" pattern="/login" />
-    <http security="none" pattern="/login.html" />
-    <http security="none" pattern="/login.jsp" />
+    <http security="none" pattern="/assets/css/login.css" />
+    <http security="none" pattern="/lib/bootstrap/dist/css/bootstrap.css" />
+    <http security="none" pattern="/assets/img/logo.png" />
 
     <!-- arkCaseAuthenticationProvider is defined in spring-library-surf-connector.xml -->
 
-    <!-- We don't need to setup basic authentication access to the /proxy URL, since customers that want to call
-         ArkCase services programmatically can just call the Ark war directly, they wouldn't proxy through Ark-UI -->
-
-
-    <http auto-config="true">
+    <http
+            auto-config="true">
         <intercept-url pattern="/**" access="ROLE_USER_INTERFACE" />
         <form-login
                 login-page="/login"
-                default-target-url="/home"
+                default-target-url="/home.html"
                 always-use-default-target="true"
                 authentication-failure-url="/login?login_error=1"/>
         <logout

@@ -60,6 +60,8 @@ Task.View = Task.View || {
             this.formUrls.roiFormUrl                     = Acm.Object.MicroData.get("roiFormUrl");
             this.formUrls.changeCaseStatusFormUrl        = Acm.Object.MicroData.get("changeCaseStatusFormUrl");
 
+            this.allowMailFilesAsAttachments      = Acm.Object.MicroData.get("allowMailFilesAsAttachments");
+            this.allowMailFilesToExternalAddresses      = Acm.Object.MicroData.get("allowMailFilesToExternalAddresses");
 
             //var formDocuments = Acm.Object.MicroData.getJson("formDocuments");
             var formDocuments = [];

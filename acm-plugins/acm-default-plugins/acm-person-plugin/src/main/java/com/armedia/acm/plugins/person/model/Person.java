@@ -3,9 +3,9 @@ package com.armedia.acm.plugins.person.model;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import com.armedia.acm.service.history.model.AcmHistory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +24,10 @@ import java.util.List;
 @XmlRootElement
 @Entity
 @Table(name = "acm_person")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.person.model.Person")
 public class Person implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
@@ -121,8 +125,15 @@ public class Person implements Serializable, AcmEntity
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="person")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="person")
-    private List<PersonIdentification> personIdentification = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(
+            name = "acm_person_identification",
+            joinColumns = { @JoinColumn(name="cm_person_id", referencedColumnName = "cm_person_id") },
+            inverseJoinColumns = { @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)
+            }
+    )
+    private List<Identification> identifications = new ArrayList<>();
     
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -131,7 +142,11 @@ public class Person implements Serializable, AcmEntity
             inverseJoinColumns = { @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id") }
     )
     private List<Organization> organizations = new ArrayList<>();
-    
+
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
+
     @PrePersist
     protected void beforeInsert()
     {
@@ -144,11 +159,6 @@ public class Person implements Serializable, AcmEntity
         {
             pa.setPerson(this);
         }
-
-        for (PersonIdentification pi : getPersonIdentification() )
-        {
-            pi.setPerson(this);
-        }
     }
 
     @PreUpdate
@@ -157,11 +167,6 @@ public class Person implements Serializable, AcmEntity
         for ( PersonAlias pa : getPersonAliases() )
         {
             pa.setPerson(this);
-        }
-
-        for (PersonIdentification pi : getPersonIdentification() )
-        {
-            pi.setPerson(this);
         }
     }
 
@@ -424,16 +429,24 @@ public class Person implements Serializable, AcmEntity
     }
 
     @XmlTransient
-    public List<PersonIdentification> getPersonIdentification() {
-        return personIdentification;
+    public List<Identification> getIdentifications() {
+        return identifications;
     }
 
-    public void setPersonIdentification(List<PersonIdentification> personIdentification) {
-        this.personIdentification = personIdentification;
+    public void setIdentifications(List<Identification> identifications) {
+        this.identifications = identifications;
     }
     
     public Person returnBase()
     {
     	return this;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 }

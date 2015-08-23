@@ -1248,9 +1248,6 @@ Complaint.Model = Complaint.Model || {
             if (Acm.isEmpty(data.title)) {
                 return false;
             }
-            if (Acm.isEmpty(data.description)) {
-                return false;
-            }
             if (Acm.isEmpty(data.value)) {
                 return false;
             }

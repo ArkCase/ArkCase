@@ -25,6 +25,8 @@
     <link rel="stylesheet" type="text/css" href="css/webviewer.css" />
     <link rel="stylesheet" type="text/css" href="css/toolbar.css" />
 
+    <link rel="stylesheet" type="text/css" href="arkcase/patch/toolbar.patch.css" />
+
     <!-- XXX: BE SURE TO UPDATE resources/print.html WHEN UPGRADING JQUERY -->
     <script type="text/javascript" src="js/3rdparty/jquery-1.11.1.min.js"></script>
     <!-- XXX: BE SURE TO UPDATE resources/print.html WHEN UPGRADING JQUERY -->
@@ -58,6 +60,8 @@
     <script type="text/javascript" src="js/annotations.js"></script>
     <script type="text/javascript" src="js/webviewer.js"></script>
 
+    <script type="text/javascript" src="arkcase/patch/webviewer.patch.js"></script>
+
 
     <!--[if lte IE 8]>
     <meta http-equiv="imagetoolbar" content="no" />
@@ -75,9 +79,17 @@
     <link rel="stylesheet" type="text/css" href="css/ie6hacks.css" />
     <link rel="stylesheet" type="text/css" href="css/ie7hacks.css" />
     <![endif]-->
+
+    <script language="javascript">
+        function start(){
+            virtualViewer.initViaURL();
+            myFlexSnap.initPatch();
+        }
+    </script>
 </head>
 
-<body onload="virtualViewer.initViaURL()">
+
+<body onload="start()">
 <div id="virtualViewerMain">
     <div id="vvToolbar">
         <div id="vvSaveDocumentButton"
@@ -231,6 +243,11 @@
              class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
              title="About">&nbsp;</div>
 
+        <div id="vvAddStampButton"
+             onclick="javascript:myFlexSnap.arkCaseCreateCustomImageStamp()"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Create Custom Stamp">&nbsp;</div>
+
         <div id="vvThumbToggleButton"
              onclick="javascript:myFlexSnap.toggleThumbnailPanel()"
              data-localize="utilityToolbar.toggleThumbnailPanel"
@@ -251,6 +268,7 @@
              title="Text Edit">&nbsp;</div>
 
         <div id="vvAnnImageRubberStampButton"
+             onmouseover="javascript:myFlexSnap.reloadDateTimePngImage()"
              data-localize="annToolbar.imageRubberStamp"
              class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
              title="Image Rubber Stamp">&nbsp;</div>
@@ -688,6 +706,9 @@
 </div>
 
 
+<div id="vvCreatingStampDialog" style="display: none;">
+    <img src="resources/loader.gif" alt="Creating Stamp" /><span id="vvCreatingStampDialogText">&nbsp;Please wait while your stamp is created ...</span>
+</div>
 
 <div id="vvAboutDialog">
     <div id="vvAboutDialogContents" class="vvSVGable">
@@ -937,6 +958,18 @@
     <div data-localize="layerManager.layerVisibility"
          id="vvLayerManagerVisibilityControlTitle">Layer Visibility: </div><form id="vvLayerManagerVisibilityControl" action="%20">
 </form>
+</div>
+
+<!-- Choose a reason for delete -->
+<div id="vvDeletePagesReason" style="display: none;">
+    <form>
+        <fieldset>
+            <legend>Why do you want to delete these pages?</legend>
+            <input type="radio" name="reason" value="1" onclick="javascript:myFlexSnap.setReason(event, 1)" checked>I hate pages!<br/>
+            <input type="radio" name="reason" value="2" onclick="javascript:myFlexSnap.setReason(event, 2)">I am the manager and I can delete whatever I want<br/>
+            <input type="radio" name="reason" value="3" onclick="javascript:myFlexSnap.setReason(event, 3)">For my own personal reasons<br/>
+        </fieldset>
+    </form>
 </div>
 
 <div id="vvSafariSVGWorkaround"></div>

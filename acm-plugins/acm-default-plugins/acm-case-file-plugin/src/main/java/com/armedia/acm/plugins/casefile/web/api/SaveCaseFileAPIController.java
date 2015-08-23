@@ -3,7 +3,7 @@ package com.armedia.acm.plugins.casefile.web.api;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
-import org.mule.api.MuleException;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -18,7 +18,7 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping( { "/api/v1/plugin/casefile", "/api/latest/plugin/casefile"})
+@RequestMapping({"/api/v1/plugin/casefile", "/api/latest/plugin/casefile"})
 public class SaveCaseFileAPIController
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -26,7 +26,7 @@ public class SaveCaseFileAPIController
     private SaveCaseService saveCaseService;
 
 
-    @RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE })
+    @RequestMapping(method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE})
     @ResponseBody
     public CaseFile createCaseFile(
             @RequestBody CaseFile in,
@@ -50,8 +50,7 @@ public class SaveCaseFileAPIController
             saved.setApprovers(in.getApprovers());
 
             return saved;
-        }
-        catch (MuleException | PersistenceException e)
+        } catch (PipelineProcessException | PersistenceException e)
         {
             throw new AcmCreateObjectFailedException("Case File", e.getMessage(), e);
         }

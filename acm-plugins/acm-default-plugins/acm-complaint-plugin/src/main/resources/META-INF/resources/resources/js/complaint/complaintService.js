@@ -229,7 +229,10 @@ Complaint.Service = {
         ,saveIncidentDate: function(complaintId, incidentDate) {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
-                complaint.incidentDate = incidentDate;
+            	if (Acm.isNotEmpty(incidentDate)) { // correct incident date issue by negating timezone offset (afdp-1276)
+            	    incidentDate.setMinutes(incidentDate.getMinutes() + incidentDate.getTimezoneOffset());
+            	}
+            	complaint.incidentDate = incidentDate;
                 this._saveComplaint(complaintId, complaint
                     ,function(data) {
                         Complaint.Controller.modelSavedIncidentDate(complaintId, Acm.Service.responseWrapper(data, data.incidentDate));
@@ -1105,7 +1108,7 @@ Complaint.Service = {
         }
 
         ,API_UPLOAD_FILE            : "/api/latest/service/ecm/upload"
-        ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
+        ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download?ecmFileId="
         ,API_RETRIEVE_DOCUMENT_      : "/api/latest/service/ecm/folder/"
 
         ,retrieveDocumentsDeferred : function(complaintId, postData, jtParams, sortMap, callbackSuccess, callbackError) {

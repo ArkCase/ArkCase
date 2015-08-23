@@ -7,6 +7,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,6 +75,18 @@ public interface EcmFileService
      * @throws AcmObjectNotFoundException
      */
     String download(Long id) throws MuleException;
+
+
+    /**
+     *
+     * @param id - id of EcmFile
+     * @return InputStream from the CMIS payload
+     * @throws AcmObjectNotFoundException
+     * @usage Needed to create attachments for Exchange Web Services (EWS)
+     */
+
+    InputStream downloadAsInputStream(Long id) throws MuleException, AcmUserActionFailedException;
+
 
     /**
      * Create a folder in the CMIS repository

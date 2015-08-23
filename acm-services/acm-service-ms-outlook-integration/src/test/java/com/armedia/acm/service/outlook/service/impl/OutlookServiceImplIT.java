@@ -20,12 +20,21 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-ms-outlook-integration.xml",
-        "/spring/spring-library-property-file-manager.xml"
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-test-ms-outlook-integration.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-acm-encryption.xml"
 })
 public class OutlookServiceImplIT
 {
@@ -94,7 +103,7 @@ public class OutlookServiceImplIT
         taskItem.setStartDate(new Date(System.currentTimeMillis() + 1000 * 60));//start next minute
         assertNull(taskItem.getId());
 
-        taskItem =  outlookService.createOutlookTaskItem(user, WellKnownFolderName.Tasks,taskItem);
+        taskItem = outlookService.createOutlookTaskItem(user, WellKnownFolderName.Tasks, taskItem);
         verifyFilledItemDetails(taskItem);
 
 
@@ -138,7 +147,7 @@ public class OutlookServiceImplIT
         appointmentItem.setRecurringEndDate(new Date(tomorrow + 1000 * 60 * 60 * 48));//ends after 2 days
 
         assertNull(appointmentItem.getId());
-        appointmentItem = outlookService.createOutlookAppointment(user,  appointmentItem);
+        appointmentItem = outlookService.createOutlookAppointment(user, appointmentItem);
         verifyFilledItemDetails(appointmentItem);
 
         outlookService.deleteAppointmentItem(user, appointmentItem.getId(), appointmentItem.getRecurring(), DeleteMode.HardDelete);
@@ -165,7 +174,8 @@ public class OutlookServiceImplIT
         outlookService.deleteAppointmentItem(user, appointmentItem.getId(), false, DeleteMode.HardDelete);
     }
 
-    private void verifyFilledItemDetails(OutlookItem outlookItem) {
+    private void verifyFilledItemDetails(OutlookItem outlookItem)
+    {
         assertNotNull(outlookItem.getId());
     }
 

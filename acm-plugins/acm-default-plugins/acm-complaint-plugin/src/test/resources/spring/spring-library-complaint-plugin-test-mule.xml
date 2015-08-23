@@ -7,9 +7,9 @@
           destroy-method="shutdownBean">
         <property name="specificConfigFiles">
             <list>
-                <value>/flows/saveComplaintFlow.xml</value>
                 <value>/flows/MuleCmisConnectorFlow.xml</value>
                 <value>/flows/MuleActiveMqConnectorFlow.xml</value>
+                <value>/flows/createFolderFlow.xml</value>
             </list>
         </property>
     </bean>

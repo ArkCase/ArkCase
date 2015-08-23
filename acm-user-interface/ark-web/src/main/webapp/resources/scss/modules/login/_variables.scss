@@ -1,0 +1,20 @@
+// Logo
+$login-logo: url('../../../public/assets/img/logo.png') !default;
+
+$login-bg: #f2f4f8 !default;
+
+// Header settings
+$logo-header-margin: 15px !default;
+
+
+// Form settings
+$body-bg: $login-bg;
+$login-color: $gray-dark !default;
+$login-wrapper-top-padding: 50px !default;
+$login-wrapper-width: 330px !default;
+$login-input-bg: $yellow-light !default;
+$login-input-color: $gray-dark !default;
+
+// Submit button
+$login-submit-button-color: $white !default;
+$login-submit-button-bg: $blue-dark !default;

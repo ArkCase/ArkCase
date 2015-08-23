@@ -6,16 +6,10 @@ import com.armedia.acm.core.exceptions.AcmOutlookException;
 import com.armedia.acm.core.exceptions.AcmOutlookFindItemsFailedException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.core.exceptions.AcmOutlookListItemsFailedException;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
-import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
-import com.armedia.acm.service.outlook.model.OutlookContactItem;
-import com.armedia.acm.service.outlook.model.OutlookFolder;
-import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
-import com.armedia.acm.service.outlook.model.OutlookItem;
-import com.armedia.acm.service.outlook.model.OutlookMailItem;
-import com.armedia.acm.service.outlook.model.OutlookResults;
-import com.armedia.acm.service.outlook.model.OutlookTaskItem;
+import com.armedia.acm.service.outlook.model.*;
 import com.armedia.acm.service.outlook.service.OutlookFolderService;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import microsoft.exchange.webservices.data.core.ExchangeService;
@@ -31,19 +25,18 @@ import microsoft.exchange.webservices.data.core.service.schema.ContactSchema;
 import microsoft.exchange.webservices.data.core.service.schema.EmailMessageSchema;
 import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
 import microsoft.exchange.webservices.data.core.service.schema.TaskSchema;
-import microsoft.exchange.webservices.data.enumeration.DeleteMode;
-import microsoft.exchange.webservices.data.enumeration.EmailAddressKey;
-import microsoft.exchange.webservices.data.enumeration.PhoneNumberKey;
-import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
+import microsoft.exchange.webservices.data.enumeration.*;
 import microsoft.exchange.webservices.data.exception.ServiceLocalException;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.FolderPermission;
+import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,6 +50,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private OutlookDao dao;
+    private EcmFileService ecmFileService;
 
     @Override
     public OutlookResults<OutlookMailItem> findMailItems(AcmOutlookUser user, int start, int maxItems, String sortField,
@@ -296,6 +290,33 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     }
 
     @Override
+    public void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user) throws Exception{
+        ExchangeService service = connect(user);
+        EmailMessage emailMessage = new EmailMessage(service);
+        emailMessage.setSubject(emailWithAttachmentsDTO.getSubject());
+        emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getHeader() + "\r\r"
+                + emailWithAttachmentsDTO.getBody() + "\r\r\r"
+                + emailWithAttachmentsDTO.getFooter()));
+        emailMessage.getBody().setBodyType(BodyType.Text);
+        for (String emailAddress: emailWithAttachmentsDTO.getEmailAddresses()) {
+            emailMessage.getToRecipients().add(emailAddress);
+        }
+
+        for (Long attachmentId: emailWithAttachmentsDTO.getAttachmentIds()) {
+            InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
+            EcmFile ecmFile = getEcmFileService().findById(attachmentId);
+            emailMessage.getAttachments().addFileAttachment(ecmFile.getFileName(), contents);
+        }
+        emailMessage.sendAndSaveCopy();
+
+
+        //use the first method if you don't require a copy
+        // use the second if a copy of the sent email is needed
+        //emailMessage.send();
+        //emailMessage.sendAndSaveCopy();
+    }
+
+    @Override
     public OutlookResults<OutlookContactItem> findContactItems(AcmOutlookUser user, int start, int maxItems, String sortField,
                                                                boolean sortAscending, SearchFilter filter)
             throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
@@ -453,39 +474,39 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         }
 
     }
-    
+
     @Override
-	public void deleteAllItemsFoundByExtendedProperty(String folderId, AcmOutlookUser user,
+    public void deleteAllItemsFoundByExtendedProperty(String folderId, AcmOutlookUser user,
                                                       ExtendedPropertyDefinition extendedPropertyDefinition,
                                                       Object extendedPropertyValue)
     {
         // disconnectAndRetry is not needed here since this method calls other public methods in this service class,
         // and does not call any DAO methods.
-    	try
-    	{
-	    	SearchFilter filter = new SearchFilter.IsEqualTo(extendedPropertyDefinition, extendedPropertyValue);
-			
-			OutlookResults<OutlookCalendarItem> results;
-			// In case there are more than one, remove all (this cannot be the case, only one will exist, but do this to be 100% sure)
-			do 
-			{
-				// This code always will remove the items if found. For that reason "start" and "maxItems" are set to 0 and 50.
-				// There is no sense to change "start" index in the next iteration because the next iteration some of them will be removed
-				results = findCalendarItems(folderId, user, 0, 50, null, false, filter);	
-				
-				if (results != null && results.getItems() != null)
-				{
-					results.getItems().stream().forEach(element -> deleteItem(user, element.getId(), DeleteMode.HardDelete));
-				}
-			} 
-			while (results != null && results.getItems() != null && results.getItems().size() > 0);
-    	}
-    	catch (Exception e) 
-    	{
-    		log.error("Error while removing all items found by extended property.", e);
-		}
-		
-	}
+        try
+        {
+            SearchFilter filter = new SearchFilter.IsEqualTo(extendedPropertyDefinition, extendedPropertyValue);
+
+            OutlookResults<OutlookCalendarItem> results;
+            // In case there are more than one, remove all (this cannot be the case, only one will exist, but do this to be 100% sure)
+            do
+            {
+                // This code always will remove the items if found. For that reason "start" and "maxItems" are set to 0 and 50.
+                // There is no sense to change "start" index in the next iteration because the next iteration some of them will be removed
+                results = findCalendarItems(folderId, user, 0, 50, null, false, filter);
+
+                if (results != null && results.getItems() != null)
+                {
+                    results.getItems().stream().forEach(element -> deleteItem(user, element.getId(), DeleteMode.HardDelete));
+                }
+            }
+            while (results != null && results.getItems() != null && results.getItems().size() > 0);
+        }
+        catch (Exception e)
+        {
+            log.error("Error while removing all items found by extended property.", e);
+        }
+
+    }
 
     @Override
     public void deleteAppointmentItem(AcmOutlookUser user, String appointmentId, Boolean recurring, DeleteMode deleteMode)
@@ -685,5 +706,13 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     public void setDao(OutlookDao dao)
     {
         this.dao = dao;
+    }
+
+    public EcmFileService getEcmFileService() {
+        return ecmFileService;
+    }
+
+    public void setEcmFileService(EcmFileService ecmFileService) {
+        this.ecmFileService = ecmFileService;
     }
 }
