@@ -4,7 +4,7 @@
       xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
-      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis" xmlns:json="http://www.mulesoft.org/schema/mule/json"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
       version="CE-3.7.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="
@@ -32,7 +32,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
                 queue="solrContentFile.in"
                 exchange-pattern="request-response"
                 connector-ref="ActiveMQ-ACM"
-                doc:name="JMS" />
+                doc:name="JMS"/>
 
         <timer-interceptor/>
 
@@ -41,9 +41,9 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
         <!-- Starting with Mule 3.7 we need to specifically set the Content-Type in Mule to be able to
              index content files -->
         <message-properties-transformer name="arkContentTypeTransformer">
-            <add-message-property key="Content-Type" value="#[message.payload.content_type]" />
+            <add-message-property key="Content-Type" value="#[message.payload.content_type]"/>
         </message-properties-transformer>
-        
+
         <set-variable variableName="docId" value="#[message.payload.id]"/>
         <set-variable variableName="contentType" value="#[message.payload.content_type]"/>
         <set-variable variableName="objectType" value="#[message.payload.object_type_s]"/>
@@ -62,11 +62,12 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
         <set-variable variableName="parentRef" value="#[message.payload.parent_ref_s]"/>
         <set-variable variableName="hidden" value="#[message.payload.hidden_b]"/>
 
-        <logger category="com.armedia.acm.services.search.service" level="DEBUG" message="Doc ID: #[flowVars['docId']]" />
+        <logger category="com.armedia.acm.services.search.service" level="DEBUG"
+                message="Doc ID: #[flowVars['docId']]"/>
 
         <cmis:get-content-stream
-            objectId="#[message.payload.ecmFileId]"/>   
-        
+                objectId="#[message.payload.ecmFileId]"/>
+
         <set-payload value="#[message.payload.stream]"/>
 
         <http:outbound-endpoint ref="http.submitContentFiles">
