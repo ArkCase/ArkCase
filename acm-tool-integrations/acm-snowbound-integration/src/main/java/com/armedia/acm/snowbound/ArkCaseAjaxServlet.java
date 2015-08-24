@@ -15,12 +15,11 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +71,6 @@ public class ArkCaseAjaxServlet extends AjaxServlet
 
         if (action != null)
         {
-
             if (action.equals("arkCaseCreateCustomImageStamp"))
             {
                 LOG.log(Level.FINE, "Requested creation of new stamp");
@@ -118,6 +116,42 @@ public class ArkCaseAjaxServlet extends AjaxServlet
                     LOG.log(Level.SEVERE, "unable to send audit event data");
                 }
                 connection.disconnect();
+            }
+            if (action.equals("arkCaseReorderDocumentPages")) {
+                try {
+                    LOG.log(Level.FINE, "Requested document page reordering");
+
+                    // Obtains url parameters
+                    String acmTicket = getDecodedParameter(request, "acm_ticket");
+                    String ecmFileId = getDecodedParameter(request, "ecmFileId");
+                    String userId = getDecodedParameter(request, "userid");
+                    String pageReorderOperation = getDecodedParameter(request, "pageReorderOperation");
+                    LOG.log(Level.FINE, "Requested new order: " + pageReorderOperation);
+
+                    // Builds audit event notification target url to ArkCase
+                    String targetUrl = String.format("%s%s?acm_ticket=%s&file_id=%s&user_id=%s&reorder_operation=%s",
+                            baseURL, auditEventService, acmTicket, ecmFileId, userId, pageReorderOperation);
+                    LOG.log(Level.FINE, "target URL: " + targetUrl);
+
+                    // Sends audit event notification to ArkCase that a document has been re-ordered
+                    HttpURLConnection connection = null;
+                    try {
+                        URL url = new URL(targetUrl);
+                        connection = (HttpURLConnection) url.openConnection();
+                        connection.setRequestMethod("POST");
+                        if (HttpServletResponse.SC_OK == connection.getResponseCode()) {
+                            LOG.log(Level.FINE, "successfully sent audit event data");
+                        } else {
+                            LOG.log(Level.SEVERE, "unable to send audit event data");
+                        }
+                    } finally {
+                        if (connection != null)
+                            connection.disconnect();
+                    }
+
+                } catch (Exception e) {
+                    LOG.log(Level.SEVERE, e.getMessage());
+                }
             }
         }
     }
