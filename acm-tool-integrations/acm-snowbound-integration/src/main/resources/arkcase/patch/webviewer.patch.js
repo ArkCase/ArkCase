@@ -7,6 +7,50 @@ VirtualViewer.prototype.setReason = function (event, reason) {
 
 if (myFlexSnap) {
 
+    // We need to make the pages list sortable, but since the pages
+    // thumbnails are re-loaded by snowbound after certain events we
+    // need to continue to apply the sortable functionality asynchronously
+    var sortingTimer = setInterval(function() {
+        var pageOrderTable = $("#vvPageThumbsInternal > tbody");
+        if (pageOrderTable.length > 0) {
+            pageOrderTable.sortable({ update: function(event, ui) {
+
+                // Determines which page was moved (we need the original index)
+                var pageOriginalIndex = 0;
+                var pageThumbnailImg = $(ui.item).find("img");
+                if (pageThumbnailImg) {
+                    var thumbnailUrlSrc = pageThumbnailImg.attr("src");
+                    if (thumbnailUrlSrc) {
+                        var thumbnailUrlParts = thumbnailUrlSrc.split('&');
+                        for (var i = 0; i < thumbnailUrlParts.length; i++) {
+                            if (thumbnailUrlParts[i].indexOf("PageNumber") >= 0) {
+                                pageOriginalIndex = parseInt(thumbnailUrlParts[i].split('=')[1]);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // The moved page must be selected in order for snowbound to recognize the move operation
+                myFlexSnap.addPageToSelection(pageOriginalIndex);
+
+                // Determines the new target index of the page which was moved
+                var pageThumbnails = $("#vvPageThumbsInternal > tbody > tr");
+                var movedPageNewIndex = pageThumbnails.index(ui.item);
+
+                // Registers the page move with snowbound and initiates an audit event notification
+                if (myFlexSnap.cutSelection(false)) {
+                    var documentModel = myFlexSnap.getDocumentModel();
+                    myFlexSnap.pasteSelection(movedPageNewIndex, documentModel.model.documentId);
+                    myFlexSnap.arkCaseReorderDocumentPages(pageOriginalIndex, movedPageNewIndex);
+                } else { // Failed to cut selection, cannot reorder successfully
+                    ;
+                }
+            }});
+            pageOrderTable.disableSelection();
+        }
+    }, 1000); // Uses a timer because if Snowbound regenerates the page thumbnail html (after a reorder, for example) then the jquery sortable aspect needs to be applied again
+
     // handle delete pages context menu action
     $.event.special.vvDeletePages = {
         _default: function (event) {
@@ -58,6 +102,22 @@ if (myFlexSnap) {
             open: function () {
                 $(this).parent().children().children(".ui-dialog-titlebar-close").hide()
             }
+        });
+    };
+
+    myFlexSnap.arkCaseReorderDocumentPages = function(pageOriginalIndex, movedPageNewIndex) {
+
+        var pageOperation = "page " + pageOriginalIndex + " moved to position " + movedPageNewIndex;
+
+        // Sends the reorder request to the snowbound server
+        var uri = new URI(vvConfig.servletPath);
+        uri.addQuery("action", "arkCaseReorderDocumentPages");
+        var data = uri.query();
+        uri.query("");
+        $.ajax({
+            url: uri.toString(),
+            type: "POST",
+            data: data + '&pageReorderOperation=' + pageOperation
         });
     };
 
