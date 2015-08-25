@@ -4,11 +4,16 @@
             <div class="panel-title">{{'cases.comp.details.title' | translate}}</div>
         </div>
         <div class="panel-body">
-            <div ng-if="!details || details.length == 0">
-                <i>{{'cases.comp.details.msg.noDetails' | translate}}</i>
-            </div>
-            <div ng-if="details" ng-bind-html="details">
-            </div>
+            <!--<div ng-if="!details || details.length == 0">-->
+                <!--<i>{{'cases.comp.details.msg.noDetails' | translate}}</i>-->
+            <!--</div>-->
+            <!--<div ng-if="details" ng-bind-html="details">-->
+            <!--</div>-->
+
+
+            <!--<button class="btn btn-xs btn-default" ng-click="editDetails()">Edit</button>-->
+            <!--<button class="btn btn-xs btn-default" ng-click="saveDetails()">Save</button>-->
+            <summernote config="options" ng-model="details"></summernote>
         </div>
     </div>
 
