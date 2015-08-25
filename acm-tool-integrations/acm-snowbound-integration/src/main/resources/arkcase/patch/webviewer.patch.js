@@ -105,6 +105,30 @@ if (myFlexSnap) {
         });
     };
 
+    // Obtains the ticket, userid, and document id from the snowbound page url
+    myFlexSnap.arkCaseGetCommonUrlParams = function() {
+        var argUrlSection = "";
+        var snowUrl = unescape(window.location);
+        var snowUrlArgSections = snowUrl.split("?");
+        var argKeys = ["userid", "acm_ticket", "documentId"];
+        for (var y = 0; y < snowUrlArgSections.length; y++) {
+            var snowUrlArgs = snowUrlArgSections[y].split("&");
+            for (var i = 0; i < snowUrlArgs.length; i++) {
+                var urlKeyValuePair = snowUrlArgs[i].split("=");
+                var urlArgument = urlKeyValuePair[0];
+
+                // Adds valid url arguments from ArkCase to the url for the snowbound backend call
+                if ($.inArray(urlArgument, argKeys) >= 0) {
+                    if (urlArgument == "documentId") urlArgument = "ecmFileId"; // The backend expects "ecmFileId", not "documentId"
+                    argUrlSection += urlArgument + "=" + urlKeyValuePair[1] + "&";
+                }
+            }
+        }
+        if (argUrlSection.length > 0) // removes trailing & character
+            argUrlSection = argUrlSection.substring(0, argUrlSection.length - 1);
+        return argUrlSection;
+    };
+
     myFlexSnap.arkCaseReorderDocumentPages = function(pageOriginalIndex, movedPageNewIndex) {
 
         var pageOperation = "page " + pageOriginalIndex + " moved to position " + movedPageNewIndex;
@@ -114,10 +138,11 @@ if (myFlexSnap) {
         uri.addQuery("action", "arkCaseReorderDocumentPages");
         var data = uri.query();
         uri.query("");
+        var dataFinal = data + "&" + myFlexSnap.arkCaseGetCommonUrlParams() + '&pageReorderOperation=' + pageOperation;
         $.ajax({
             url: uri.toString(),
             type: "POST",
-            data: data + '&pageReorderOperation=' + pageOperation
+            data: dataFinal
         });
     };
 
@@ -156,10 +181,11 @@ if (myFlexSnap) {
         uri.addQuery("action", "arkCaseDeleteDocumentPages");
         var data = uri.query();
         uri.query("");
+        var dataFinal = data + "&" + myFlexSnap.arkCaseGetCommonUrlParams() +"&" + documentId + '&pageNumbers=' + pageNumbers + '&deleteReason=' + deleteReason;
         $.ajax({
             url: uri.toString(),
-            data: data + '&' + documentId + '&pageNumbers=' + pageNumbers + '&deleteReason=' + deleteReason,
+            data: dataFinal,
             type: "POST"
-        })
+        });
     };
 }
