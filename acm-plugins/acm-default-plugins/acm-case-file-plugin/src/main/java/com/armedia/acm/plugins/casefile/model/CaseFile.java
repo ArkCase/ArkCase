@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -14,32 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -200,6 +176,19 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     @Temporal(TemporalType.TIMESTAMP)
     private Date nextCourtDate;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumns({
+            @JoinColumn(name = "cm_case_id", referencedColumnName = "cm_object_id", updatable = false, insertable = false),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", updatable = false, insertable = false)
+    })
+    private AcmObjectLock lock;
+
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cm_queue_id")
+    private AcmQueue queue;
+
+
     @PrePersist
     protected void beforeInsert()
     {
@@ -239,6 +228,10 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
             getContainer().setContainerObjectId(getId());
             getContainer().setContainerObjectType(getObjectType());
             getContainer().setContainerObjectTitle(getCaseNumber());
+        }
+        if (getLock() != null) {
+            getLock().setObjectId(this.getId());
+            getLock().setObjectType(this.getObjectType());
         }
     }
 
@@ -585,6 +578,22 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     public void setClassName(String className)
     {
         this.className = className;
+    }
+
+    public AcmObjectLock getLock() {
+        return lock;
+    }
+
+    public void setLock(AcmObjectLock lock) {
+        this.lock = lock;
+    }
+
+    public AcmQueue getQueue() {
+        return queue;
+    }
+
+    public void setQueue(AcmQueue queue) {
+        this.queue = queue;
     }
 
     @Override

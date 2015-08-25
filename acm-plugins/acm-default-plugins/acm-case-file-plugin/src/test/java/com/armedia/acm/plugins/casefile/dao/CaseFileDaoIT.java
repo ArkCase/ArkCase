@@ -1,9 +1,12 @@
 package com.armedia.acm.plugins.casefile.dao;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.plugins.casefile.model.AcmQueue;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +45,7 @@ import static org.junit.Assert.*;
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-task.xml",
         "/spring/spring-library-event.xml",
+        "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-note.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
@@ -49,6 +53,9 @@ public class CaseFileDaoIT
 {
     @Autowired
     private CaseFileDao caseFileDao;
+
+    @Autowired
+    private AcmObjectLockService acmObjectLockService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -94,4 +101,78 @@ public class CaseFileDaoIT
         assertNotNull(saved.getId());
     }
 
+    @Test
+    @Transactional
+    public void saveCaseFileWithLock()
+    {
+        assertNotNull(caseFileDao);
+        assertNotNull(entityManager);
+
+        CaseFile caseFile = new CaseFile();
+        caseFile.setCaseNumber("caseNumber");
+        caseFile.setCaseType("caseType");
+        caseFile.setStatus("status");
+        caseFile.setTitle("title");
+        caseFile.setRestricted(true);
+
+        AcmContainer container = new AcmContainer();
+        AcmFolder folder = new AcmFolder();
+        folder.setCmisFolderId("cmisFolderId");
+        folder.setName("folderName");
+        container.setFolder(folder);
+        caseFile.setContainer(container);
+
+        CaseFile saved = caseFileDao.save(caseFile);
+
+        acmObjectLockService.createLock(saved.getId(),saved.getObjectType());
+
+        entityManager.flush();
+
+        saved = caseFileDao.find(saved.getId());
+
+        assertNotNull(saved.getLock().getId());
+        assertEquals(saved.getId(), saved.getLock().getObjectId());
+        assertEquals(saved.getObjectType(), saved.getLock().getObjectType());
+
+        assertNotNull(saved.getId());
+    }
+
+    @Test
+    @Transactional
+    public void saveCaseQueue()
+    {
+        assertNotNull(caseFileDao);
+        assertNotNull(entityManager);
+
+        CaseFile caseFile = new CaseFile();
+        caseFile.setCaseNumber("caseNumber");
+        caseFile.setCaseType("caseType");
+        caseFile.setStatus("status");
+        caseFile.setTitle("title");
+        caseFile.setRestricted(true);
+
+        AcmContainer container = new AcmContainer();
+        AcmFolder folder = new AcmFolder();
+        folder.setCmisFolderId("cmisFolderId");
+        folder.setName("folderName");
+        container.setFolder(folder);
+        caseFile.setContainer(container);
+
+        AcmQueue queue = new AcmQueue();
+        queue.setName("queueName");
+        caseFile.setQueue(queue);
+
+        CaseFile saved = caseFileDao.save(caseFile);
+
+        entityManager.flush();
+
+        saved = caseFileDao.find(saved.getId());
+
+        assertNotNull(saved.getId());
+        
+        assertNotNull(saved.getQueue().getId());
+
+        assertEquals("queueName", saved.getQueue().getName());
+
+    }
 }
