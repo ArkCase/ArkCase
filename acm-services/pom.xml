@@ -43,6 +43,7 @@
         <module>acm-service-pipeline</module>
         <module>acm-service-form-configuration</module>
         <module>acm-service-object-change-status</module>
+        <module>acm-service-object-lock</module>
     </modules>
 
 
