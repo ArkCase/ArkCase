@@ -253,5 +253,6 @@
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="noteDao" ref="noteDao"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 </beans>

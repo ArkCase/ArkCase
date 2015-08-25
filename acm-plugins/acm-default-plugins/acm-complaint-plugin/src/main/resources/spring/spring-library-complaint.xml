@@ -165,6 +165,7 @@
         <property name="fileService" ref="ecmFileService"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="complaintService" class="com.armedia.acm.plugins.complaint.service.ComplaintService">
