@@ -19,7 +19,8 @@
 				<div class="dropdown-menu">
 					<div class="col-xs-4" ng-repeat="item in menu.items | orderBy: 'position' " >
 						<div class="well-sm">
-							<a href="/#!/{{item.link}}" title="{{item.title}}">
+
+							<a data-ui-sref="{{item.link}}" title="{{item.title}}">
 								<i ng-if="item.iconClass" class="navigation-icon {{item.iconClass}}"> </i>
 								<span class="text-muted">{{item.title}}</span>
 							</a>
