@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('CaseInfoController', ['$scope', '$stateParams', 'ConfigService', 'CasesService',
-    function($scope, $stateParams, ConfigService, CasesService) {
+angular.module('cases').controller('CaseInfoController', ['$scope', '$stateParams', 'ConfigService', 'CasesService', 'LookupService',
+    function($scope, $stateParams, ConfigService, CasesService, LookupService) {
         $scope.$emit('req-component-config', 'info');
 
         $scope.config = null;
@@ -38,10 +38,18 @@ angular.module('cases').controller('CaseInfoController', ['$scope', '$stateParam
             //return $http.post('/updateTitle', $scope.caseInfo.title);
         };
 
-        $scope.priorities = [
-            { value: "High"     ,text: "High" }
-            ,{ value: "Medium"  ,text: "Medium" }
-            ,{ value: "Low"     ,text: "Low" }
-        ];
+        $scope.priorities = [];
+        LookupService.getPriorites({}, function(data) {
+            //$scope.priorities = data;
+
+            $scope.priorities = [];
+            _.forEach(data, function (item) {
+                $scope.priorities.push({value: item, text: item});
+            });
+        });
+
+        //$scope.myselect = "var1";
+        //$scope.myoptions = ['var1', 'var2', 'var3'];
+
     }
 ]);
