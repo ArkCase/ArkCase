@@ -1,5 +1,9 @@
 @import "variables";
 
+.module-header {
+  background-color: $blue-lighter2;
+}
+
 .module-content {
   width: 100%;
   display: table;
@@ -8,6 +12,7 @@
   .left-sidebar {
     display: table-cell;
     width: $left-sidebar-width;
+    background-color: $left-sidebar-bg;
   }
 
   .right-sidebar {

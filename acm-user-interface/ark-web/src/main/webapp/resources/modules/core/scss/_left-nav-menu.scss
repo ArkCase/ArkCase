@@ -6,8 +6,16 @@
   height: 100%;
   background-color: $leftnav-menu-bg;
   color: $leftnav-menu-color;
+  border-right: $leftnav-menu-border;
+  vertical-align: top;
+
+  .title {
+    font-size: $font-size-small;
+  }
+
   a {
     color: $leftnav-menu-color;
+    font-size: $leftnav-menu-font-size;
   }
 
   // active items color
@@ -25,5 +33,9 @@
     a {
       color: $leftnav-menu-hover-color;
     }
+  }
+
+  .navigation-icon {
+    padding-right: 15px;
   }
 }
