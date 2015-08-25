@@ -176,7 +176,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     @Temporal(TemporalType.TIMESTAMP)
     private Date nextCourtDate;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumns({
             @JoinColumn(name = "cm_case_id", referencedColumnName = "cm_object_id", updatable = false, insertable = false),
             @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", updatable = false, insertable = false)
@@ -228,10 +228,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
             getContainer().setContainerObjectId(getId());
             getContainer().setContainerObjectType(getObjectType());
             getContainer().setContainerObjectTitle(getCaseNumber());
-        }
-        if (getLock() != null) {
-            getLock().setObjectId(this.getId());
-            getLock().setObjectType(this.getObjectType());
         }
     }
 

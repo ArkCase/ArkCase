@@ -44,7 +44,7 @@ public class AcmObjectLock implements Serializable, AcmEntity {
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_object_lock_gen")
     @Column(name = "cm_object_lock_id")
     private Long id;
-    
+
     @Column(name = "cm_object_id")
     private Long objectId;
     @Column(name = "cm_object_type")
