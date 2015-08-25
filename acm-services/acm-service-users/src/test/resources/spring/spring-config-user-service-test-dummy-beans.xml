@@ -14,7 +14,14 @@
     <bean id="drlDeployer" class="java.lang.String">
         <constructor-arg value="This is a dummy bean.  Don't expect anything real in here."/>
     </bean>
-    
-    <bean id="exceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
+
+    <bean id="exceptionResolver"
+          class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
+
+    <bean id="muleContextManager" class="com.armedia.acm.muletools.mulecontextmanager.MuleContextManager">
+        <property name="specificConfigFiles">
+            <list/>
+        </property>
+    </bean>
 
 </beans>

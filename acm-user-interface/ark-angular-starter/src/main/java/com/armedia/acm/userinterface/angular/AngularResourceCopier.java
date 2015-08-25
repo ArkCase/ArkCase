@@ -46,6 +46,7 @@ public class AngularResourceCopier implements ServletContextAware
     private List<String> filesToCopyFromArchive;
     private List<String> assembledFilesToCopyToDeployment;
     private List<String> frontEndCommandsToBeExecuted;
+    private List<String> oldDeployFoldersToBeRemovedBeforeBuild;
 
 
     @Override
@@ -66,6 +67,16 @@ public class AngularResourceCopier implements ServletContextAware
             log.info("modulesRoot: {}", modulesRoot);
             String rootPath = modulesRoot.getFile().getCanonicalPath();
 
+            for (String oldDeployFolder : getOldDeployFoldersToBeRemovedBeforeBuild())
+            {
+                File oldFolder = new File(tmpDir.getCanonicalPath() + oldDeployFolder);
+                log.info("Old folder path: {}", oldFolder.getCanonicalPath());
+                if (oldFolder.exists())
+                {
+                    log.info("Removing old folder");
+                    FileSystemUtils.deleteRecursively(oldFolder);
+                }
+            }
             for (String resourceFolder : getResourceFoldersToCopyFromArchive())
             {
                 copyResources(resolver, rootPath, tmpDir, resourceFolder);
@@ -347,5 +358,15 @@ public class AngularResourceCopier implements ServletContextAware
     public void setFrontEndCommandsToBeExecuted(List<String> frontEndCommandsToBeExecuted)
     {
         this.frontEndCommandsToBeExecuted = frontEndCommandsToBeExecuted;
+    }
+
+    public List<String> getOldDeployFoldersToBeRemovedBeforeBuild()
+    {
+        return oldDeployFoldersToBeRemovedBeforeBuild;
+    }
+
+    public void setOldDeployFoldersToBeRemovedBeforeBuild(List<String> oldDeployFoldersToBeRemovedBeforeBuild)
+    {
+        this.oldDeployFoldersToBeRemovedBeforeBuild = oldDeployFoldersToBeRemovedBeforeBuild;
     }
 }

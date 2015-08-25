@@ -27,6 +27,11 @@
     <bean id="angularResourceCopier" class="com.armedia.acm.userinterface.angular.AngularResourceCopier">
         <property name="tempFolderPath" value="#{ systemProperties ['user.home'] }/.acm-ui/tmp"/>
         <property name="deployFolderPath" value="#{ systemProperties ['user.home'] }/.acm-ui/custom"/>
+        <property name="oldDeployFoldersToBeRemovedBeforeBuild">
+            <list>
+                <value>/modules_config/config</value>
+            </list>
+        </property>
         <property name="frontEndCommandsToBeExecuted">
             <list>
                 <value>${frontEndCommandPrefix}npm${frontEndCommandSuffix} --no-color install</value>

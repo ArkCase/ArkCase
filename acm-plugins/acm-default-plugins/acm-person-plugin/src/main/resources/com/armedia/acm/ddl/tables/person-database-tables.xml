@@ -6,5 +6,7 @@
 
     <include file="person/person-db-tables-1.0.xml"
             relativeToChangelogFile="true"/>
+    <include file="person/person-contact-db-tables-1.0.xml"
+             relativeToChangelogFile="true"/>
 </databaseChangeLog>
 
