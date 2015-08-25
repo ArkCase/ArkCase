@@ -20,7 +20,10 @@ var ApplicationConfiguration = (function() {
         'ui.grid.resizeColumns',
         'ui.grid.autoResize',
         'ui.grid.selection',
-        'ui.grid.expandable'
+        'ui.grid.expandable',
+        'ui.grid.edit',
+        'xeditable',
+        'summernote'
     ];
 
     // Add a new vertical module
