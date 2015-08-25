@@ -99,6 +99,11 @@
             <artifactId>acm-service-pipeline</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-object-lock</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         <!-- JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
