@@ -72,7 +72,6 @@ public class ArkCaseAjaxServlet extends AjaxServlet
 
         if (action != null)
         {
-
             if (action.equals("arkCaseCreateCustomImageStamp"))
             {
                 LOG.log(Level.FINE, "Requested creation of new stamp");
@@ -93,32 +92,78 @@ public class ArkCaseAjaxServlet extends AjaxServlet
                 }
 
                 LOG.log(Level.FINE, "Response: " + jsonBytes.toString());
-            }
-            if (action.equals("arkCaseDeleteDocumentPages"))
-            {
-                LOG.log(Level.FINE, "Requested document pages deletion");
-                String ecmFileId = getDecodedParameter(request, "ecmFileId");
-                String userId = getDecodedParameter(request, "userid");
-                String acmTicket = getDecodedParameter(request, "acm_ticket");
-                String pageNumbers = getDecodedParameter(request, "pageNumbers");
-                String deleteReason = getDecodedParameter(request, "deleteReason");
-                String targetUrl = String.format("%s%s?acm_ticket=%s&file_id=%s&user_id=%s&page_numbers=%s&delete_reason=%s",
-                        baseURL, auditEventService, acmTicket, ecmFileId, userId, pageNumbers, deleteReason);
-                LOG.log(Level.FINE, "target URL: " + targetUrl);
-                URL url = new URL(targetUrl);
+            } else if (action.equals("arkCaseDeleteDocumentPages")) {
+                try {
+                    LOG.log(Level.FINE, "Requested document pages deletion");
 
-                LOG.log(Level.FINE, "open connection");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
-                if (HttpServletResponse.SC_OK == connection.getResponseCode())
-                {
-                    LOG.log(Level.FINE, "successfully sent audit event data");
-                } else
-                {
-                    LOG.log(Level.SEVERE, "unable to send audit event data");
+                    // Builds audit event notification target url to ArkCase
+                    String targetUrl = buildAuditEventBaseUrl(request); // common url portion
+                    targetUrl += "&page_numbers=" + getDecodedParameter(request, "pageNumbers");
+                    targetUrl += "&delete_reason=" + getDecodedParameter(request, "deleteReason");
+                    LOG.log(Level.FINE, "target URL: " + targetUrl);
+
+                    // Notifies ArkCase that a delete has occurred
+                    sendAuditEventNotificationToArkCase(targetUrl);
+                } catch (Exception e) {
+                    LOG.log(Level.SEVERE, e.getMessage());
                 }
-                connection.disconnect();
+            } else if (action.equals("arkCaseReorderDocumentPages")) {
+                try {
+                    LOG.log(Level.FINE, "Requested document page reordering");
+
+                    // Obtains the page re-order event description
+                    String pageReorderOperation = getDecodedParameter(request, "pageReorderOperation");
+                    LOG.log(Level.FINE, "Requested new order: " + pageReorderOperation);
+
+                    // Builds audit event notification target url to ArkCase
+                    String targetUrl = buildAuditEventBaseUrl(request); // common url portion
+                    targetUrl += "&reorder_operation=" + pageReorderOperation; // reorder event specific url segment
+                    LOG.log(Level.FINE, "target URL: " + targetUrl);
+
+                    // Sends audit event notification to ArkCase that a document has been re-ordered
+                    sendAuditEventNotificationToArkCase(targetUrl);
+
+                } catch (Exception e) {
+                    LOG.log(Level.SEVERE, e.getMessage());
+                }
             }
+        }
+    }
+
+    /**
+     * Generates the common portion of the audit event ArkCase url
+     * which can be re-used for different event types
+     * @param request - standard servlet request object containing the url parameters
+     * @return base audit event url including standard url arguments for ArkCase
+     */
+    private String buildAuditEventBaseUrl(HttpServletRequest request) {
+        String acmTicket = getDecodedParameter(request, "acm_ticket");
+        String ecmFileId = getDecodedParameter(request, "ecmFileId");
+        String userId = getDecodedParameter(request, "userid");
+        return String.format("%s%s?acm_ticket=%s&file_id=%s&user_id=%s",
+                             baseURL, auditEventService, acmTicket, ecmFileId, userId);
+    }
+
+    /**
+     * Makes an HTTP POST request to ArkCase to register an audit trail event
+     * @param targetUrl - the full url including all url arguments of the ArkCase audit REST call
+     * @throws Exception if a connection cannot be opened or the data cannot be transmitted to ArkCase
+     */
+    private void sendAuditEventNotificationToArkCase(String targetUrl) throws Exception {
+        HttpURLConnection connection = null;
+        try {
+            URL url = new URL(targetUrl);
+            LOG.log(Level.FINE, "open connection");
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            if (HttpServletResponse.SC_OK == connection.getResponseCode()) {
+                LOG.log(Level.FINE, "successfully sent audit event data");
+            } else {
+                LOG.log(Level.SEVERE, "unable to send audit event data");
+            }
+        } finally {
+            if (connection != null)
+                connection.disconnect();
         }
     }
 
