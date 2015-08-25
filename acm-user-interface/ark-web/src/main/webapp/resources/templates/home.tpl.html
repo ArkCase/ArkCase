@@ -32,12 +32,14 @@
 
 <body class="ng-cloak">
 
-<header data-ng-include="'modules/core/views/header.client.view.html'" class="navbar navbar-fixed-top navbar-arkcase"></header>
+<header data-ng-include="'modules/core/views/header.client.view.html'" class="navbar navbar-arkcase"></header>
 
 <div class="page-wrapper">
-    <div class="leftnav-menu" ng-include="'modules/core/views/left-navigation.client.view.html'"></div>
-    <div class="page-content">
-        <section data-ui-view></section>
+    <div style="display:table-row">
+        <div class="leftnav-menu" ng-include="'modules/core/views/left-navigation.client.view.html'"></div>
+        <div class="page-content">
+            <section data-ui-view></section>
+        </div>
     </div>
 </div>
 
