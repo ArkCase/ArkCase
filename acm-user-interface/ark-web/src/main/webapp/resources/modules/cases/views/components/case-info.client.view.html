@@ -14,6 +14,10 @@
         </div>
         <div class="col-sm-6">
             <b>Priority: </b><a href="#" editable-select="caseInfo.priority" e-ng-options="p.value as p.text for p in priorities">{{ caseInfo.priority  || 'Unknown'}}</a>
+            <!--<b>Priority: </b><a href="#" editable-select="caseInfo.priority" e-ng-options="p as p for p in priorities">{{ caseInfo.priority  || 'Unknown'}}</a>-->
+            <!--<select ng-model="myselect" ng-options="o as o for o in myoptions"></select>-->
+
+
         </div>
         <div class="col-sm-6">
             <b>Due Date: </b><a href="#" editable-date="caseInfo.dueDate">{{ caseInfo.dueDate | date: "MM/dd/yyyy" || 'Unknown' }}</a>

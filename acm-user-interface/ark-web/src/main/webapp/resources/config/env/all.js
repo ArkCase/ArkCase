@@ -75,7 +75,7 @@ module.exports = {
         js: [
             'config.js',
             'application.js',
-            'scripts/*/*.js',
+            //'scripts/*/*.js',
             'scripts/*/**/*.js',
             'services/*.js',
             'services/*/*.js',
