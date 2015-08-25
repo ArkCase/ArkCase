@@ -23,7 +23,8 @@
     "angular-schema-form": "~0.8.4",
     "angular-translate": "~2.7.2",
     "angular-translate-loader-partial": "~2.7.2",
-    "angular-ui-grid": "~3.0.1"
+    "angular-ui-grid": "~3.0.1",
+    "components-font-awesome": "~4.4.0"
   },
   "resolutions": {
     "angular": "1.4.4",

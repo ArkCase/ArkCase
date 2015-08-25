@@ -10,6 +10,7 @@ var ApplicationConfiguration = (function() {
         'ngAnimate',
         'ngTouch',
         'ngSanitize',
+        'ngAnimate',
         'ui.router',
         'ui.bootstrap',
         'pascalprecht.translate',

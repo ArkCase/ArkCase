@@ -1,4 +1,5 @@
 <div  ng-controller="HeaderController">
+	<!-- Header -->
 	<div class="navbar-header">
 		<button class="navbar-toggle" type="button" ng-click="toggleCollapsibleMenu()">
 			<span class="sr-only">Toggle navigation</span>
@@ -8,7 +9,26 @@
 		</button>
 		<a href="/#!/" class="navbar-brand">ArkCase</a>
 	</div>
+
 	<nav class="collapse navbar-collapse" collapse="!isCollapsed" role="navigation">
+		<ul class="nav navbar-nav">
+			<li dropdown class="dropdown">
+				<a href="#" dropdown-toggle>
+					New
+				</a>
+				<div class="dropdown-menu">
+					<div class="col-xs-4" ng-repeat="item in menu.items | orderBy: 'position' " >
+						<div class="well-sm">
+							<a href="/#!/{{item.link}}" title="{{item.title}}">
+								<i ng-if="item.iconClass" class="navigation-icon {{item.iconClass}}"> </i>
+								<span class="text-muted">{{item.title}}</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</li>
+		</ul>
+
 		<ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
 			<li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.menuItemType" ui-route="{{item.uiRoute}}" class="{{item.menuItemClass}}" ng-class="{active: ($uiRoute)}" dropdown="item.menuItemType === 'dropdown'">
 				<a ng-switch-when="dropdown" class="dropdown-toggle">
@@ -23,29 +43,19 @@
 				<a ng-switch-default href="/#!/{{item.link}}" ng-bind="item.title"></a>
 			</li>
 		</ul>
-		<ul class="nav navbar-nav navbar-right" ng-hide="authentication.user">
-			<li ui-route="/signin" ng-class="{active: $uiRoute}">
-				<a href="/#!/signin">Sign In</a>
-			</li>
-		</ul>
-		<ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
-			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-					<span ng-bind="authentication.user.displayName"></span> <b class="caret"></b>
-				</a>
-				<ul class="dropdown-menu">
-					<li>
-						<a href="/#!/settings/profile">Edit Profile</a>
-					</li>
-					<li ng-show="authentication.user.provider === 'local'">
-						<a href="/#!/settings/password">Change Password</a>
-					</li>
-					<li class="divider"></li>
-					<li>
-						<a href="/auth/signout">Signout</a>
-					</li>
-				</ul>
-			</li>
-		</ul>
+
+		<form class="navbar-form navbar-right" role="search">
+			<div class="form-group">
+				<div class="input-group input-group-sm">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="submit">
+							<span class="fa fa-search"></span>
+						</button>
+					</span>
+					<input type="text" class="form-control input-sm" placeholder="Search complaints, cases...">
+				</div>
+			</div>
+		</form>
+
 	</nav>
 </div>

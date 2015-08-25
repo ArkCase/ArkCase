@@ -1,0 +1,10 @@
+.user-info {
+  background-color: $user-info-bg;
+
+  .user-pic {
+    height: 50px;
+    width: 50px;
+    background-color: $user-pic-bg;
+    border-radius: 500px;
+  }
+}
