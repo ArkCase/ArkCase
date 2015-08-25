@@ -1,4 +1,4 @@
-package com.armedia.acm.service.objectlock.service;
+package com.armedia.acm.service.objectlock.dao;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -25,10 +24,10 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-object-lock.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
-public class ObjectLockServiceImplIT {
+public class AcmObjectLockDaoIT {
 
     @Autowired
-    AcmObjectLockService acmObjectLockService;
+    AcmObjectLockDao acmObjectLockDao;
 
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
@@ -36,37 +35,31 @@ public class ObjectLockServiceImplIT {
     @Before
     public void beforeEachTest() {
         auditAdapter.setUserId("auditUser");
-        assertNotNull(acmObjectLockService);
+        assertNotNull(acmObjectLockDao);
     }
 
     @Test
     @Transactional
-    public void testCreateLock() throws Exception {
-        AcmObjectLock ol = acmObjectLockService.createLock(1l, "CASE_FILE");
-        assertNotNull(ol);
-        assertNotNull(ol.getId());
+    public void testFindLock() throws Exception {
+        long objectId = 1l;
+        String objectType = "COMPLAINT";
+        acmObjectLockDao.save(new AcmObjectLock(objectId, objectType));
+
+        assertNotNull(acmObjectLockDao.findLock(objectId, objectType));
     }
 
     @Test
     @Transactional
-    public void testRemoveLock() throws Exception {
-        AcmObjectLock ol = acmObjectLockService.createLock(1l, "CASE_FILE");
-        assertNotNull(ol);
-        assertNotNull(ol.getId());
-
-        acmObjectLockService.removeLock(1l, "CASE_FILE");
+    public void testRemove() throws Exception {
+        AcmObjectLock ol = acmObjectLockDao.save(new AcmObjectLock(1l, "CASE_FILE"));
     }
 
-    @Test
+    @Test(expected = Exception.class)
     @Transactional
-    public void testGetAllLocksByType() throws Exception {
-        acmObjectLockService.createLock(1l, "CASE_FILE");
-        acmObjectLockService.createLock(2l, "CASE_FILE");
-        acmObjectLockService.createLock(3l, "CASE_FILE");
-        acmObjectLockService.createLock(4l, "CASE_FILE");
-        acmObjectLockService.createLock(5l, "CASE_FILE");
-
-        assertEquals(5, acmObjectLockService.getAllLocksByType("CASE_FILE").size());
-
+    public void testInsertLockForSameObjet() throws Exception {
+        acmObjectLockDao.save(new AcmObjectLock(1l, "CASE_FILE"));
+        acmObjectLockDao.getEm().flush();
+        acmObjectLockDao.save(new AcmObjectLock(1l, "CASE_FILE"));
+        acmObjectLockDao.getEm().flush();
     }
 }
