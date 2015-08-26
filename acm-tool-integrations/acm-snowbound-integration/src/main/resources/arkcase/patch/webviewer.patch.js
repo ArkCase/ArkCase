@@ -41,8 +41,10 @@ if (myFlexSnap) {
                 // Registers the page move with snowbound and initiates an audit event notification
                 if (myFlexSnap.cutSelection(false)) {
                     var documentModel = myFlexSnap.getDocumentModel();
-                    myFlexSnap.pasteSelection(movedPageNewIndex, documentModel.model.documentId);
+                    myFlexSnap.pasteSelection(movedPageNewIndex, false);
+                    //myFlexSnap.pasteSelection(movedPageNewIndex, documentModel.model.documentId);
                     myFlexSnap.arkCaseReorderDocumentPages(pageOriginalIndex, movedPageNewIndex);
+                    //myFlexSnap.saveDocument(true);
                 } else { // Failed to cut selection, cannot reorder successfully
                     ;
                 }
@@ -116,11 +118,15 @@ if (myFlexSnap) {
             for (var i = 0; i < snowUrlArgs.length; i++) {
                 var urlKeyValuePair = snowUrlArgs[i].split("=");
                 var urlArgument = urlKeyValuePair[0];
+                var urlValue = urlKeyValuePair[1];
+                if (urlKeyValuePair.length > 2) { // this scenario of more than one equals sign happens in the url
+                    urlValue = urlKeyValuePair[urlKeyValuePair.length - 1];
+                }
 
                 // Adds valid url arguments from ArkCase to the url for the snowbound backend call
                 if ($.inArray(urlArgument, argKeys) >= 0) {
                     if (urlArgument == "documentId") urlArgument = "ecmFileId"; // The backend expects "ecmFileId", not "documentId"
-                    argUrlSection += urlArgument + "=" + urlKeyValuePair[1] + "&";
+                    argUrlSection += urlArgument + "=" + urlValue + "&";
                 }
             }
         }
@@ -131,7 +137,7 @@ if (myFlexSnap) {
 
     myFlexSnap.arkCaseReorderDocumentPages = function(pageOriginalIndex, movedPageNewIndex) {
 
-        var pageOperation = "page " + pageOriginalIndex + " moved to position " + movedPageNewIndex;
+        var pageOperation = "[" + pageOriginalIndex + "-" + movedPageNewIndex + "]";
 
         // Sends the reorder request to the snowbound server
         var uri = new URI(vvConfig.servletPath);
