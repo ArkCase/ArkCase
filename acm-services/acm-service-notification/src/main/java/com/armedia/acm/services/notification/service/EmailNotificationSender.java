@@ -6,14 +6,23 @@ package com.armedia.acm.services.notification.service;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
+import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.notification.model.EmailNotificationDto;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +37,11 @@ public class EmailNotificationSender implements NotificationSender {
     private PropertyFileManager propertyFileManager;
     private String notificationPropertyFileLocation;
     private MuleContextManager muleContextManager;
-	
+	private AuthenticationTokenService authenticationTokenService;
+	private AuthenticationTokenDao authenticationTokenDao;
+
+
+
 	@Override
 	public Notification send(Notification notification) 
 	{
@@ -72,6 +85,49 @@ public class EmailNotificationSender implements NotificationSender {
 		return notification;
 	}
 
+	@Override
+	public List<Notification> sendEmailNotificationWithLinks(List<EmailNotificationDto> emailNotificationDtoList, Authentication authentication){
+		List<Notification> notificationList = new ArrayList<>();
+		for(EmailNotificationDto emailNotificationDto : emailNotificationDtoList){
+			Notification notification = new Notification();
+			notification.setTitle(emailNotificationDto.getTitle());
+			for (String emailAddress: emailNotificationDto.getEmailAddresses()) {
+				notification.setNote(makeNote(emailAddress, emailNotificationDto, authentication));
+				notification.setUserEmail(emailAddress);
+				notification.setStatus(NotificationConstants.STATUS_NEW);
+				notificationList.add(send(notification));
+			}
+		}
+		return notificationList;
+	}
+
+	public String makeNote(String emailAddress, EmailNotificationDto emailNotificationDto, Authentication authentication){
+		String note="";
+		note += emailNotificationDto.getHeader();
+		for(Long fileId: emailNotificationDto.getFileIds()){
+			String token = generateAndSaveAuthenticationToken(fileId,emailAddress,emailNotificationDto,authentication);
+			note+= emailNotificationDto.getBaseUrl()+ fileId + "&acm_email_ticket=" + token + "\n";
+		}
+		note+= emailNotificationDto.getFooter();
+		return note;
+	}
+
+	public String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, EmailNotificationDto emailNotificationDto, Authentication authentication){
+		String token = getAuthenticationTokenService().getUncachedTokenForAuthentication(authentication);
+		saveAuthenticationToken(emailAddress,fileId,token);
+		return token;
+	}
+
+	public void saveAuthenticationToken(String email, Long fileId, String token){
+		AuthenticationToken authenticationToken = new AuthenticationToken();
+		authenticationToken.setKey(token);
+		authenticationToken.setStatus(AuthenticationTokenConstants.ACTIVE);
+		authenticationToken.setEmail(email);
+		authenticationToken.setFileId(fileId);
+		getAuthenticationTokenDao().save(authenticationToken);
+	}
+
+
 	public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter() {
 		return auditPropertyEntityAdapter;
 	}
@@ -106,5 +162,21 @@ public class EmailNotificationSender implements NotificationSender {
 	public void setMuleContextManager(MuleContextManager muleContextManager)
 	{
 		this.muleContextManager = muleContextManager;
+	}
+
+	public AuthenticationTokenService getAuthenticationTokenService() {
+		return authenticationTokenService;
+	}
+
+	public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService) {
+		this.authenticationTokenService = authenticationTokenService;
+	}
+
+	public AuthenticationTokenDao getAuthenticationTokenDao() {
+		return authenticationTokenDao;
+	}
+
+	public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao) {
+		this.authenticationTokenDao = authenticationTokenDao;
 	}
 }

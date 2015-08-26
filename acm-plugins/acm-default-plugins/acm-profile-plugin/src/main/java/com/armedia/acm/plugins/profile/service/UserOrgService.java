@@ -9,10 +9,13 @@ import org.springframework.security.core.Authentication;
 /**
  * Created by nebojsha on 07.05.2015.
  */
-public interface UserOrgService {
-    public OutlookDTO retrieveOutlookPassword(Authentication authentication) throws AcmEncryptionException;
+public interface UserOrgService
+{
+    OutlookDTO retrieveOutlookPassword(Authentication authentication) throws AcmEncryptionException;
 
-    public void saveOutlookPassword(Authentication authentication, OutlookDTO in) throws AcmEncryptionException;
+    void saveOutlookPassword(Authentication authentication, OutlookDTO in) throws AcmEncryptionException;
 
-    public UserOrg getUserOrgForUserId(String userId) throws AcmObjectNotFoundException;
+    UserOrg getUserOrgForUserId(String userId) throws AcmObjectNotFoundException;
+
+    String getProfileLocation();
 }

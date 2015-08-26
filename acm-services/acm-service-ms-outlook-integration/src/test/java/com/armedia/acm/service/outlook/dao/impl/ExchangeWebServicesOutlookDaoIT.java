@@ -53,7 +53,15 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-ms-outlook-integration.xml",
-        "/spring/spring-library-property-file-manager.xml"
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-test-ms-outlook-integration.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-acm-encryption.xml"
 })
 public class ExchangeWebServicesOutlookDaoIT
 {
@@ -85,20 +93,20 @@ public class ExchangeWebServicesOutlookDaoIT
 
         log.info("Total items: " + mailItems.getTotalCount() + "; more? " + mailItems.isMoreAvailable());
 
-        for ( Item item : mailItems.getItems() )
+        for (Item item : mailItems.getItems())
         {
             log.info("Date: " + item.getDateTimeReceived() + "; subject: " + item.getSubject() + "; from: " + ((EmailMessage) item).getFrom());
         }
 
         //service.loadPropertiesForItems(mailItems.getItems(), new PropertySet(ItemSchema.Body));
 
-        log.info("Body of first message: " + ( mailItems.getItems().get(0).getBody()));
+        log.info("Body of first message: " + (mailItems.getItems().get(0).getBody()));
 
         mailItems = dao.findItems(
                 service, WellKnownFolderName.Inbox, new PropertySet(ItemSchema.Body, EmailMessageSchema.From), 0, 5, "subject", false, null);
         log.info("--- descending: ");
 
-        for ( Item item : mailItems.getItems() )
+        for (Item item : mailItems.getItems())
         {
             log.info("Date: " + item.getDateTimeReceived() + "; subject: " + item.getSubject() + "; from: " + ((EmailMessage) item).getFrom());
         }
@@ -118,7 +126,7 @@ public class ExchangeWebServicesOutlookDaoIT
 
         log.info("Total items: " + items.getTotalCount() + "; more? " + items.isMoreAvailable());
 
-        for ( Item item : items.getItems() )
+        for (Item item : items.getItems())
         {
             Appointment appointment = (Appointment) item;
             log.info("Date: " + appointment.getStart() + "; subject: " + item.getSubject() + "; type: " + ((Appointment) item).getAppointmentType());
@@ -132,7 +140,7 @@ public class ExchangeWebServicesOutlookDaoIT
                 "subject", false, null);
         log.info("--- descending: ");
 
-        for ( Item item : items.getItems() )
+        for (Item item : items.getItems())
         {
             log.info("Date: " + item.getDateTimeReceived() + "; subject: " + item.getSubject() + "; type: " + ((Appointment) item).getAppointmentType());
         }
@@ -169,7 +177,7 @@ public class ExchangeWebServicesOutlookDaoIT
 
         log.info("Total items: " + items.getTotalCount() + "; more? " + items.isMoreAvailable());
 
-        for ( Item item : items.getItems() )
+        for (Item item : items.getItems())
         {
             Appointment appointment = (Appointment) item;
             log.info("Date: " + appointment.getStart() + "; subject: " + item.getSubject() + "; type: " + ((Appointment) item).getAppointmentType());
@@ -194,7 +202,7 @@ public class ExchangeWebServicesOutlookDaoIT
 
         log.info("Total items: " + taskItems.getTotalCount() + "; more? " + taskItems.isMoreAvailable());
 
-        for ( Item item : taskItems.getItems() )
+        for (Item item : taskItems.getItems())
         {
             Task outlookTask = (Task) item;
             log.info("Date: " + outlookTask.getDateTimeReceived() + "; subject: " + outlookTask.getSubject() +
@@ -229,8 +237,7 @@ public class ExchangeWebServicesOutlookDaoIT
         {
             dao.connect(invalidUser);
             log.info("hmmm... with Office 365 even an invalid user gets here");
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             // expected
             log.info("Exception: " + e.getMessage(), e);
@@ -330,12 +337,14 @@ public class ExchangeWebServicesOutlookDaoIT
         dao.deleteAppointmentItem(service, appointmentItem.getId(), false, DeleteMode.HardDelete);
     }
 
-    private void verifyFilledItemDetails(OutlookItem outlookItem) {
+    private void verifyFilledItemDetails(OutlookItem outlookItem)
+    {
         assertNotNull(outlookItem.getId());
     }
 
     @Test
-    public void testFindFolders() throws Exception {
+    public void testFindFolders() throws Exception
+    {
         ExchangeService service = dao.connect(user);
 
         FindFoldersResults items = dao.findFolders(
@@ -346,16 +355,19 @@ public class ExchangeWebServicesOutlookDaoIT
 
         log.info("Total items: " + items.getTotalCount() + "; more? " + items.isMoreAvailable());
 
-        for ( Folder folder : items.getFolders()) {
+        for (Folder folder : items.getFolders())
+        {
             log.info("Display Name: {}; ID: {};", folder.getDisplayName(), folder.getId().getUniqueId());
-            for(FolderPermission permission:folder.getPermissions().getItems()){
+            for (FolderPermission permission : folder.getPermissions().getItems())
+            {
                 log.info("User Display Name: {}; Level: {};", permission.getUserId().getDisplayName(), permission.getPermissionLevel());
             }
         }
     }
 
     @Test
-    public void testCreateAndDeleteFolder() throws Exception {
+    public void testCreateAndDeleteFolder() throws Exception
+    {
         ExchangeService service = dao.connect(user);
         OutlookFolder newFolderData = new OutlookFolder();
         newFolderData.setDisplayName("Folder Test");
@@ -366,7 +378,8 @@ public class ExchangeWebServicesOutlookDaoIT
     }
 
     @Test
-    public void testAddRemovePrivilegesToFolder() throws InterruptedException, ServiceLocalException {
+    public void testAddRemovePrivilegesToFolder() throws InterruptedException, ServiceLocalException
+    {
         //create folder
         ExchangeService service = dao.connect(user);
         OutlookFolder newFolderData = new OutlookFolder();
@@ -374,7 +387,7 @@ public class ExchangeWebServicesOutlookDaoIT
         OutlookFolder createdFolder = dao.createFolder(service, user.getEmailAddress(), WellKnownFolderName.Calendar, newFolderData);
         assertNotNull(createdFolder.getId());
 
-        Folder folder =  dao.getFolder(service, createdFolder.getId());
+        Folder folder = dao.getFolder(service, createdFolder.getId());
         assertEquals(3, folder.getPermissions().getItems().size());
 
         //add privileges to user1
@@ -388,13 +401,13 @@ public class ExchangeWebServicesOutlookDaoIT
         permissionList.add(permission);
         dao.addFolderPermissions(service, createdFolder.getId(), permissionList);
 
-        folder =  dao.getFolder(service, createdFolder.getId());
+        folder = dao.getFolder(service, createdFolder.getId());
         assertEquals(4, folder.getPermissions().getItems().size());
 
         //remove the privileges to the user1
         dao.removeFolderPermissions(service, createdFolder.getId(), permissionList);
 
-        folder =  dao.getFolder(service, createdFolder.getId());
+        folder = dao.getFolder(service, createdFolder.getId());
         assertEquals(3, folder.getPermissions().getItems().size());
 
         //delete the folder
@@ -402,7 +415,8 @@ public class ExchangeWebServicesOutlookDaoIT
     }
 
     @Test
-    public void testNotAllowedListFolder() throws InterruptedException, ServiceLocalException {
+    public void testNotAllowedListFolder() throws InterruptedException, ServiceLocalException
+    {
         //create folder
         ExchangeService service = dao.connect(user);
         ExchangeService service1 = dao.connect(user1);
@@ -411,20 +425,24 @@ public class ExchangeWebServicesOutlookDaoIT
         OutlookFolder createdFolder = dao.createFolder(service, user.getEmailAddress(), WellKnownFolderName.Calendar, newFolderData);
         assertNotNull(createdFolder.getId());
 
-        try {
+        try
+        {
             dao.findItems(service1, createdFolder.getId(),
                     new PropertySet(ItemSchema.Subject,
                             AppointmentSchema.Start,
                             AppointmentSchema.AppointmentType,
                             AppointmentSchema.Recurrence), 0, 15,
                     "subject", true, null);
-        } catch (AcmOutlookItemNotFoundException e) {
+        } catch (AcmOutlookItemNotFoundException e)
+        {
             e.printStackTrace();
             assertTrue(e.getMessage().contains("Folder not found"));
-        }catch (Exception e) {
+        } catch (Exception e)
+        {
             log.error("Error:", e);
             fail();
-        } finally {
+        } finally
+        {
             //delete the folder
             if (createdFolder.getId() != null)
                 dao.deleteFolder(service, createdFolder.getId(), DeleteMode.HardDelete);
@@ -432,7 +450,8 @@ public class ExchangeWebServicesOutlookDaoIT
     }
 
     @Test
-    public void testCachingUserSessions(){
+    public void testCachingUserSessions()
+    {
         ExchangeService service = dao.connect(user);
         ExchangeService service1 = dao.connect(user);
         assertEquals(service, service1);

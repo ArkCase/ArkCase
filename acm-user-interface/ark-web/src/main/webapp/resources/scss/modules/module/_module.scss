@@ -1,0 +1,28 @@
+@import "variables";
+
+.module-header {
+  background-color: $blue-lighter2;
+}
+
+.module-content {
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+
+  .left-sidebar {
+    display: table-cell;
+    width: $left-sidebar-width;
+    background-color: $left-sidebar-bg;
+  }
+
+  .right-sidebar {
+    display: table-cell;
+    width: $right-sidebar-width;
+  }
+
+
+  .content-body{
+    display: table-cell;
+    width: 100%;
+  }
+}

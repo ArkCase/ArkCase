@@ -32,6 +32,7 @@
   },
   "cases.comp.info": {
     "caseId": "Case id:",
+    "caseNumber": "Case Number:",
     "courtRoomName": "Court Room Name:"
   },
   "cases.comp.notes": {

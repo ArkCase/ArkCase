@@ -14,6 +14,7 @@
                 <value>/flows/getFolderFlow.xml</value>
                 <value>/flows/moveFolderFlow.xml</value>
                 <value>/flows/copyFileFlow.xml</value>
+                <value>/flows/createFolderFlow.xml</value>
             </list>
         </property>
     </bean>

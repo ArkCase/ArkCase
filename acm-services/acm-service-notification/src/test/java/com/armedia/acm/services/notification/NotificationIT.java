@@ -13,8 +13,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -24,7 +22,8 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-notification-plugin-test.xml",
-        "/spring/spring-library-acm-encryption.xml"
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-authentication-token.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class NotificationIT
@@ -58,10 +57,10 @@ public class NotificationIT
         assertNotNull(saved.getId());
 
         notificationDao.deleteNotificationById(saved.getId());
-        
 
-        log.info("Notification ID: " + saved.getId());        
+
+        log.info("Notification ID: " + saved.getId());
     }
- 
-    
+
+
 }

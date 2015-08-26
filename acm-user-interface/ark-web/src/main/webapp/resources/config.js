@@ -10,6 +10,7 @@ var ApplicationConfiguration = (function() {
         'ngAnimate',
         'ngTouch',
         'ngSanitize',
+        'ngAnimate',
         'ui.router',
         'ui.bootstrap',
         'pascalprecht.translate',
@@ -20,7 +21,10 @@ var ApplicationConfiguration = (function() {
         'ui.grid.resizeColumns',
         'ui.grid.autoResize',
         'ui.grid.selection',
-        'ui.grid.expandable'
+        'ui.grid.expandable',
+        'ui.grid.edit',
+        'xeditable',
+        'summernote'
     ];
 
     // Add a new vertical module
