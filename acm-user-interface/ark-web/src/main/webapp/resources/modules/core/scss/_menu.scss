@@ -3,6 +3,8 @@
 .navbar-arkcase {
   background-color: $navbar-bg;
   border-color: $navbar-bg;
+  border-radius: 0;
+  margin-bottom: 0;
   min-height: $navbar-min-height;
 
   // text and links color
@@ -22,9 +24,24 @@
   .navbar-header {
     width: $navbar-header-width;
     background-color: $navbar-header-bg;
+    min-height: $navbar-min-height;
     color: $navbar-header-color;
     a {
       color: $navbar-header-color;
     }
+  }
+
+  .navbar-form {
+    margin-top: 15px;
+  }
+  .navbar-nav >li > a {
+    padding: 20px;
+    font-size: $font-size-small;
+  }
+
+  .nav .open > a,
+  .nav .open > a:hover,
+  .nav .open > a:focus {
+    background-color: $blue-darker;
   }
 }

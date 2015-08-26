@@ -32,7 +32,7 @@ module.exports = {
                 'lib/bootstrap/dist/css/bootstrap.css',
                 'lib/bootstrap/dist/css/bootstrap-theme.css',
                 'lib/angular-ui-grid/ui-grid.css',
-                'lib/font-awesome/css/font-awesome.css',
+                'lib/components-font-awesome/css/font-awesome.css',
                 'lib/fancytree/dist/skin-win8/ui.fancytree.css',
                 'lib/angular-xeditable/dist/css/xeditable.css',
                 'lib/summernote/dist/summernote.css'
