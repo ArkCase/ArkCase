@@ -31,13 +31,16 @@ module.exports = {
             css: [
                 'lib/bootstrap/dist/css/bootstrap.css',
                 'lib/bootstrap/dist/css/bootstrap-theme.css',
+                'lib/angular-ui-grid/ui-grid.css',
+                'lib/components-font-awesome/css/font-awesome.css',
                 'lib/fancytree/dist/skin-win8/ui.fancytree.css',
-                'lib/angular-ui-grid/ui-grid.css'
+                'lib/angular-xeditable/dist/css/xeditable.css',
+                'lib/summernote/dist/summernote.css'
             ],
             js: [
                 'lib/jquery/dist/jquery.js',
                 'lib/jquery-ui/jquery-ui.js',
-                'lib/fancytree/dist/jquery.fancytree.js',
+                'lib/bootstrap/dist/js/bootstrap.js',
                 'lib/tv4/tv4.js',
                 'lib/objectpath/lib/ObjectPath.js',
                 'lib/lodash/lodash.js',
@@ -53,7 +56,11 @@ module.exports = {
                 'lib/angular-schema-form/dist/schema-form.js',
                 'lib/angular-schema-form/dist/bootstrap-decorator.js',
                 'lib/angular-translate/angular-translate.js',
-                'lib/angular-translate-loader-partial/angular-translate-loader-partial.js'
+                'lib/angular-translate-loader-partial/angular-translate-loader-partial.js',
+                'lib/fancytree/dist/jquery.fancytree.js',
+                'lib/angular-xeditable/dist/js/xeditable.js',
+                'lib/summernote/dist/summernote.js',
+                'lib/angular-summernote/dist/angular-summernote.js'
             ]
         },
         css: [
@@ -68,6 +75,8 @@ module.exports = {
         js: [
             'config.js',
             'application.js',
+            //'scripts/*/*.js',
+            'scripts/*/**/*.js',
             'services/*.js',
             'services/*/*.js',
             'directives/*.js',
