@@ -101,8 +101,8 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
             //        });
             //    }
             //});
-
-            this.menus[menuId].items.push({
+            // Push new menu item
+            context.menus[menuId].items.push({
                 title: menuItemTitle,
                 link: menuItemURL,
                 menuItemType: menuItemType || 'item',
@@ -119,6 +119,29 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
             // Return the menu object
 //            return this.menus[menuId];
         };
+
+        // Add menu item object
+        this.addMenuItems = function (menuObjects) {
+
+            for (var i = 0; i < menuObjects.length; i++) {
+                var menuObj = menuObjects[i];
+                // Validate that the menu exists
+                this.validateMenuExistance(menuObj.menuId);
+                var context = this;
+
+                // Push new menu item
+                context.menus[menuObj.menuId].items.push({
+                    title: menuObj.menuItemTitle,
+                    link: menuObj.menuItemURL,
+                    menuItemType: 'item',
+                    uiRoute: '/' + menuObj.menuItemURL,
+                    isPublic: true,
+                    position: menuObj.position || 0,
+                    iconClass: menuObj.iconClass
+                });
+            }
+        };
+
 
         // Add submenu item object
         this.addSubMenuItem = function (menuId, rootMenuItemURL, menuItemTitle, menuItemURL, menuItemUIRoute, isPublic, roles, position) {
@@ -184,6 +207,5 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
 
         //Adding the leftnav menu
         this.addMenu('leftnav');
-
     }
 ]);
