@@ -1,0 +1,67 @@
+//
+// Variables
+// --------------------------------------------------
+
+//== Colors
+//
+//## Colors for use across application
+$black:           #000000;
+
+$white:           #ffffff;
+$white-dark:      #f7f8fb;
+$white-dark2:     #f2f4f8;
+$white-darker:    #e0e6ef;
+
+
+
+$gray-darker:     #3c4144;
+$gray-dark:       #555;
+$gray:            #788288;
+$gray-light:      #a1a8ac;
+$gray-lighter:    #e8eaef;
+
+$red:             #dd1144;
+
+$blue-darker:      #11659b;
+$blue-dark:       #126da7;
+$blue:            #177bbb;
+$blue-light:      #0088cc;
+$blue-lighter:    #aad7f4;
+$blue-lighter2:   #e9edf4;
+
+$green-light:     #1aae88;
+$green-lighter:   #1ccacc;
+
+$yellow-light:    #faffbd;
+
+
+
+//==Scaffolding
+//
+//## Settings for some of the most global styles
+$body-bg:       transparent !default;
+$text-color:    $gray !default;
+$header-color: $black;
+
+//==Typography
+//
+//## Font, line-height, and color for body text, headings, and more.
+
+$font-family-sans-serif:  "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+$font-size-default: 13px;
+$font-size-small:   12px;
+
+$font-size-h1: 36px !default;
+$font-size-h2: 32px !default;
+$font-size-h3: 24px !default;
+$font-size-h4: 18px !default;
+$font-size-h5: 16px !default;
+$font-size-h6: 14px !default;
+
+$font-color-h1: $header-color;
+$font-color-h2: $header-color;
+$font-color-h3: $header-color;
+$font-color-h4: $header-color;
+$font-color-h5: $header-color;
+$font-color-h6: $header-color;

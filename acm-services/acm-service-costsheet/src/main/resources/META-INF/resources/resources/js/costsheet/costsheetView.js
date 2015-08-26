@@ -466,7 +466,7 @@ Costsheet.View = {
                         Record.parentType = Acm.goodValue(Costsheet.View.getActiveCostsheet().parentType);
                         Record.cost = Acm.goodValue(costRecords[i].value);
                         Record.title = Acm.goodValue(costRecords[i].title);
-                        Record.description = Acm.goodValue(costRecords[i].description);
+                        Record.description = Acm.isEmpty(Acm.goodValue(costRecords[i].description)) ? "N/A" : Acm.goodValue(costRecords[i].description);
                         jtData.Records.push(Record);
                     }
                 }

@@ -10,7 +10,9 @@
     </listener>
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:/spring/surf/surf-config.xml, classpath*:/spring/spring-library-*.xml, classpath:/spring/spring-security-config.xml</param-value>
+        <param-value>classpath:/spring/surf/surf-config.xml, classpath*:/spring/spring-library-*.xml,
+            classpath:/spring/spring-security-config.xml
+        </param-value>
     </context-param>
 
     <servlet>
@@ -19,7 +21,7 @@
         <init-param>
             <param-name>contextConfigLocation</param-name>
             <param-value>
-                classpath:/spring/appServlet/servlet-context.xml
+                classpath:/spring/appServlet/servlet-context.xml, classpath*:/spring/spring-web-*.xml
             </param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
@@ -44,7 +46,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-     <!--this may be necessary for Tomcat 7 deployments-->
+    <!--this may be necessary for Tomcat 7 deployments-->
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>/j_spring_security_check</url-pattern>
@@ -53,6 +55,10 @@
         <servlet-name>default</servlet-name>
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>/home.html</welcome-file>
+    </welcome-file-list>
 
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>

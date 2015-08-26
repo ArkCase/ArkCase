@@ -1,0 +1,28 @@
+@import "variables";
+// Set login page variables
+
+.login-wrapper {
+  padding-top: $login-wrapper-top-padding;
+  width: $login-wrapper-width;
+  margin: 0 auto;
+
+  .logo {
+    background-image: $login-logo;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  header {
+    margin: $logo-header-margin;
+  }
+
+  input [type="text"], input[type=password] {
+    background-color: $login-input-bg;
+    color: $login-input-color;
+  }
+
+  button[type="submit"] {
+    background-color: $login-submit-button-bg;
+    color: $login-submit-button-color;
+  }
+}

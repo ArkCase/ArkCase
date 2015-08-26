@@ -279,4 +279,44 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="24-create-table-acm_queue" author="nebojsha.davidovikj">
+        <createTable tableName="acm_queue">
+            <column name="cm_queue_id" type="${idType}">
+                <constraints primaryKeyName="pk_queue" primaryKey="true"/>
+            </column>
+            <column name="cm_name" type="varchar(1000)"/>
+
+            <!--  Audit fields-->
+            <column name="cm_queue_created" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_queue_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_queue_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_queue_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="acm_queue_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_queue_id">
+            <column name="cm_seq_num" value="100"/>
+            <column name="cm_seq_name" value="acm_queue"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="25-add-column-queue_id-to-acm_case_file" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_queue_id" type="${fkIdType}">
+                <constraints foreignKeyName="fk_queue_id" referencedColumnNames="cm_queue_id"
+                             referencedTableName="acm_queue"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
