@@ -97,7 +97,7 @@ public class ArkCaseAjaxServlet extends AjaxServlet
                     LOG.log(Level.FINE, "Requested document pages deletion");
 
                     // Builds audit event notification target url to ArkCase
-                    String targetUrl = buildAuditEventBaseUrl(request); // common url portion
+                    String targetUrl = buildAuditEventBaseUrl(request, "delete"); // common url portion
                     targetUrl += "&page_numbers=" + getDecodedParameter(request, "pageNumbers");
                     targetUrl += "&delete_reason=" + getDecodedParameter(request, "deleteReason");
                     LOG.log(Level.FINE, "target URL: " + targetUrl);
@@ -116,8 +116,8 @@ public class ArkCaseAjaxServlet extends AjaxServlet
                     LOG.log(Level.FINE, "Requested new order: " + pageReorderOperation);
 
                     // Builds audit event notification target url to ArkCase
-                    String targetUrl = buildAuditEventBaseUrl(request); // common url portion
-                    targetUrl += "&reorder_operation=" + pageReorderOperation; // reorder event specific url segment
+                    String targetUrl = buildAuditEventBaseUrl(request, "reorder"); // common url portion
+                    targetUrl += "&reorder_operation=" + pageReorderOperation.replaceAll(" ", ""); // reorder event specific url segment
                     LOG.log(Level.FINE, "target URL: " + targetUrl);
 
                     // Sends audit event notification to ArkCase that a document has been re-ordered
@@ -134,14 +134,15 @@ public class ArkCaseAjaxServlet extends AjaxServlet
      * Generates the common portion of the audit event ArkCase url
      * which can be re-used for different event types
      * @param request - standard servlet request object containing the url parameters
+     * @param auditEventType - identifies the type of event being raised (delete, reorder, viewed)
      * @return base audit event url including standard url arguments for ArkCase
      */
-    private String buildAuditEventBaseUrl(HttpServletRequest request) {
+    private String buildAuditEventBaseUrl(HttpServletRequest request, String auditEventType) {
         String acmTicket = getDecodedParameter(request, "acm_ticket");
         String ecmFileId = getDecodedParameter(request, "ecmFileId");
         String userId = getDecodedParameter(request, "userid");
-        return String.format("%s%s?acm_ticket=%s&file_id=%s&user_id=%s",
-                             baseURL, auditEventService, acmTicket, ecmFileId, userId);
+        return String.format("%s%s?acm_ticket=%s&file_id=%s&user_id=%s&audit_event_type=%s",
+                             baseURL, auditEventService, acmTicket, ecmFileId, userId, auditEventType);
     }
 
     /**
@@ -156,10 +157,12 @@ public class ArkCaseAjaxServlet extends AjaxServlet
             LOG.log(Level.FINE, "open connection");
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
-            if (HttpServletResponse.SC_OK == connection.getResponseCode()) {
+            int responseCode = connection.getResponseCode();
+            if (HttpServletResponse.SC_OK == responseCode) {
                 LOG.log(Level.FINE, "successfully sent audit event data");
             } else {
-                LOG.log(Level.SEVERE, "unable to send audit event data");
+                LOG.log(Level.SEVERE, "unable to send audit event data (" + responseCode + ")");
+                LOG.log(Level.SEVERE, connection.getResponseMessage());
             }
         } finally {
             if (connection != null)
