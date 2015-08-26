@@ -6,11 +6,9 @@ angular.module('cases').controller('CaseHistoryController', ['$scope', '$statePa
 
         $scope.currentId = $stateParams.id;
         $scope.start = 0;
-        //$scope.pageSizes = [4, 6, 8, 10];
-        $scope.pageSize = 4;
-        //$scope.total = 0;
+        $scope.pageSize = 10;
         $scope.sort = {by: "", dir: "asc"};
-        $scope.filters = [];   //[{by: "eventDate", with: "asc"}];
+        $scope.filters = [];   //[{by: "eventDate", with: "term"}];
 
         $scope.config = null;
         $scope.gridOptions = {};
@@ -83,7 +81,7 @@ angular.module('cases').controller('CaseHistoryController', ['$scope', '$statePa
                     sort = $scope.sort.by + "%20" + $scope.sort.dir;
                 }
             }
-            //implement filtering when service side supports it
+            //implement filtering here when service side supports it
             //var filter = "";
             ////$scope.filters = [{by: "eventDate", with: "term"}];
 
