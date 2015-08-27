@@ -111,7 +111,9 @@
           "displayName": "cases.comp.history.table.columns.userId",
           "headerCellFilter": "translate"
         }
-      ]
+      ],
+      "paginationPageSizes": [5, 10, 20, 50],
+      "paginationPageSize": 10
     },
 
     {
