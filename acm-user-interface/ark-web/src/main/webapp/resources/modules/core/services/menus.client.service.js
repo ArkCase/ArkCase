@@ -207,5 +207,9 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
 
         //Adding the leftnav menu
         this.addMenu('leftnav');
+
+        //Adding the user menu
+        this.addMenu('usermenu');
+
     }
 ]);
