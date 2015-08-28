@@ -1,0 +1,29 @@
+@import "variables";
+
+.panel {
+  border-radius: $theme-radius;
+}
+
+// Success panel style
+.panel-success {
+  border: $theme-panel-success-border;
+}
+
+.panel-success > .panel-heading {
+  color:                $theme-panel-success-heading-color;
+  background-color:     $theme-panel-success-heading-bg;
+  background-image:     $theme-panel-success-heading-bg-img;
+  border:               $theme-panel-success-heading-border;
+  font-weight:          700;
+}
+
+.panel .panel-heading .collapse-icon {
+  color:                $theme-panel-collapse-icon-color;
+  font-size:            $theme-panel-collapse-font-size;
+  padding:              $theme-panel-collapse-padding;
+}
+
+// Remove border for grid panels
+.panel-grid > .panel-body {
+  padding: 0;
+}

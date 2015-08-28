@@ -24,10 +24,17 @@
                     <property name="url" value="/api/{version}/plugin/audit/page"/>
                     <property name="requiredPrivilege" ref="auditPrivilege"/>
                 </bean>
-                <bean id="auditByObjectTypeAndObjectIdUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                <bean id="auditByObjectTypeAndObjectIdUrl"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/audit/{objectType}/{objectId}"/>
                     <property name="requiredPrivilege" ref="auditReadEventsForObjectPrivilege"/>
+                </bean>
+                <bean id="postAuditEventAPIController"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/audit/event"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
             </list>
         </property>

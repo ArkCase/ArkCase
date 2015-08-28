@@ -78,6 +78,9 @@ public class CaseFileUiController
         mv.addObject("arkcaseUrl",getNotificationProperties().get("arkcase.url"));
         mv.addObject("arkcasePort",getNotificationProperties().get("arkcase.port"));
 
+        mv.addObject("allowMailFilesAsAttachments", getNotificationProperties().get("notification.allowMailFilesAsAttachments"));
+        mv.addObject("allowMailFilesToExternalAddresses", getNotificationProperties().get("notification.allowMailFilesToExternalAddresses"));
+
         mv.addObject("changeCaseStatusFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CHANGE_CASE_STATUS, false));
         mv.addObject("enableFrevvoFormEngine", formUrl.enableFrevvoFormEngine(FrevvoFormName.ROI));
         mv.addObject("editCaseFileFormUrl", getCaseFileUrl());
@@ -110,6 +113,8 @@ public class CaseFileUiController
         addJsonArrayProp(mv, props, "fileTypes", "fileTypes");
         mv.addObject("arkcaseUrl",getNotificationProperties().get("arkcase.url"));
         mv.addObject("arkcasePort",getNotificationProperties().get("arkcase.port"));
+        mv.addObject("allowMailFilesAsAttachments",getNotificationProperties().get("notification.allowMailFilesAsAttachments"));
+        mv.addObject("allowMailFilesToExternalAddresses",getNotificationProperties().get("notification.allowMailFilesToExternalAddresses"));
         return mv;
     }
     

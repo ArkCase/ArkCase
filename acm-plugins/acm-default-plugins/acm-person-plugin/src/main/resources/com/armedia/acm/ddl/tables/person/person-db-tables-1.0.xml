@@ -1,7 +1,7 @@
 <databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="upperFunctionName" value="UPPER" dbms="oracle"/>
@@ -21,8 +21,8 @@
         <createTable tableName="acm_person">
             <column name="cm_person_id" type="${idType}">
                 <constraints
-                    primaryKey="true"
-                    primaryKeyName="pk_person"/>
+                        primaryKey="true"
+                        primaryKeyName="pk_person"/>
             </column>
             <column name="cm_person_status" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
@@ -126,9 +126,9 @@
         <createTable tableName="acm_person_alias_type_lu">
             <column name="cm_id" type="${idType}">
                 <constraints
-                    nullable="false"
-                    primaryKey="true"
-                    primaryKeyName="pk_person_alias_type"/>
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_person_alias_type"/>
             </column>
             <column name="cm_value" type="VARCHAR(${cmValueLength})">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_person_alias_type"/>
@@ -158,11 +158,11 @@
         <createTable tableName="acm_person_alias">
             <column name="cm_person_alias_id" type="${idType}">
                 <constraints
-                    nullable="false"
-                    primaryKey="true"
-                    primaryKeyName="pk_person_alias"/>
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_person_alias"/>
             </column>
-            <column name="cm_person_id" type="${fkIdType}" >
+            <column name="cm_person_id" type="${fkIdType}">
                 <constraints nullable="false" unique="false"/>
             </column>
             <column name="cm_person_alias_type" type="VARCHAR(${cmValueLength})">
@@ -195,9 +195,9 @@
         <createTable tableName="acm_person_assoc">
             <column name="cm_person_associ_id" type="${idType}">
                 <constraints
-                    nullable="false"
-                    primaryKey="true"
-                    primaryKeyName="pk_person_assoc"/>
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_person_assoc"/>
             </column>
             <column name="cm_person_assoc_person_id" type="${fkIdType}">
                 <constraints nullable="false"/>
@@ -211,8 +211,8 @@
             <column name="cm_person_assoc_parent_type" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_person_assoc_person_desc" type ="VARCHAR(4000)">
-                <constraints nullable= "false"/>
+            <column name="cm_person_assoc_person_desc" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
             </column>
             <column name="cm_person_assoc_created" type="${timestampType}">
                 <constraints nullable="false"/>
@@ -246,17 +246,19 @@
     </changeSet>
 
     <changeSet id="17-rename-and-change-constraints-personAssoc-table" author="tsedalu">
-        <renameColumn tableName="acm_person_assoc" oldColumnName="cm_person_associ_id" newColumnName="cm_person_assoc_id" columnDataType="${fkIdType}"/>
-        <dropNotNullConstraint tableName="acm_person_assoc" columnName="cm_person_assoc_person_desc" columnDataType="VARCHAR(4000)"/>
+        <renameColumn tableName="acm_person_assoc" oldColumnName="cm_person_associ_id"
+                      newColumnName="cm_person_assoc_id" columnDataType="${fkIdType}"/>
+        <dropNotNullConstraint tableName="acm_person_assoc" columnName="cm_person_assoc_person_desc"
+                               columnDataType="VARCHAR(4000)"/>
     </changeSet>
 
     <changeSet id="19-create-organization-table" author="tsedalu">
         <createTable tableName="acm_organization">
             <column name="cm_organization_id" type="${idType}">
                 <constraints
-                    nullable="false"
-                    primaryKey="true"
-                    primaryKeyName="pk_organization"/>
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_organization"/>
             </column>
             <column name="cm_organization_type" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
@@ -300,7 +302,7 @@
 
     <changeSet id="23-add-column-into-personAssoc-table" author="tsedalu">
         <addColumn tableName="acm_person_assoc">
-           <column name="cm_notes" type="VARCHAR(4000)"/>
+            <column name="cm_notes" type="VARCHAR(4000)"/>
         </addColumn>
     </changeSet>
 
@@ -318,16 +320,16 @@
                                  constraintName="fk_person_assoc_tag_assoc_id"
                                  referencedTableName="acm_person_assoc"
                                  referencedColumnNames="cm_person_assoc_id"
-                                 deferrable="${deferrable}" initiallyDeferred="${initially.deferred}" />
+                                 deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="25-add-new-table-acm_person_identification" author="marst">
-        <createTable tableName="acm_person_identification" >
-            <column name="cm_person_identification_id"  type="${idType}">
+        <createTable tableName="acm_person_identification">
+            <column name="cm_person_identification_id" type="${idType}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_person_identification"
-                 />
+                        />
             </column>
             <column name="cm_person" type="${fkIdType}">
                 <constraints nullable="false"/>
@@ -360,7 +362,7 @@
                                  referencedTableName="acm_person"
                                  referencedColumnNames="cm_person_id"
                                  deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}" />
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
 
@@ -426,7 +428,8 @@
     </changeSet>
     <changeSet id="30-rename-person-identification" author="nebojsha.davidovikj">
         <renameTable oldTableName="acm_person_identification" newTableName="acm_identification"/>
-        <renameColumn tableName="acm_identification" oldColumnName="cm_person_identification_id" newColumnName="cm_identification_id"/>
+        <renameColumn tableName="acm_identification" oldColumnName="cm_person_identification_id"
+                      newColumnName="cm_identification_id"/>
         <renameColumn tableName="acm_identification" oldColumnName="cm_person_id_created" newColumnName="cm_created"/>
         <renameColumn tableName="acm_identification" oldColumnName="cm_person_id_creator" newColumnName="cm_creator"/>
         <renameColumn tableName="acm_identification" oldColumnName="cm_person_id_modified" newColumnName="cm_modified"/>
@@ -434,7 +437,7 @@
         <!--rename ID generator -->
         <renameTable oldTableName="acm_person_identification_id" newTableName="acm_identification_id"/>
         <!--change value of the id generator-->
-        <update tableName="acm_identification_id" >
+        <update tableName="acm_identification_id">
             <column name="cm_seq_name" value="acm_identification"/>
             <where>
                 cm_seq_name = 'acm_person_identification'
@@ -447,8 +450,69 @@
         </createTable>
         <addPrimaryKey tableName="acm_person_identification" columnNames="cm_person_id, cm_identification_id"/>
         <!-- copy all relations from acm_identification into relational table-->
-        <sql>INSERT INTO acm_person_identification (cm_person_id, cm_identification_id) SELECT cm_person, cm_identification_id FROM acm_identification</sql>
+        <sql>INSERT INTO acm_person_identification (cm_person_id, cm_identification_id) SELECT cm_person,
+            cm_identification_id FROM acm_identification
+        </sql>
         <!-- drop person column from acm_identification-->
         <dropColumn tableName="acm_identification" columnName="cm_person"/>
     </changeSet>
+
+
+    <changeSet id="31-add-organization-address-table" author="nebojsha.davidovikj">
+        <createTable tableName="acm_organization_postal_address">
+            <column name="cm_organization_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_address_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="acm_organization_postal_address"
+                             columnNames="cm_organization_id, cm_address_id"/>
+    </changeSet>
+
+    <changeSet id="32-add-organization-contact-method-table" author="nebojsha.davidovikj">
+        <createTable tableName="acm_organization_contact_method">
+            <column name="cm_organization_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_contact_method_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="acm_organization_contact_method"
+                             columnNames="cm_organization_id, cm_contact_method_id"/>
+    </changeSet>
+
+    <changeSet id="33-add-organization-identification-table" author="nebojsha.davidovikj">
+        <createTable tableName="acm_organization_identification">
+            <column name="cm_organization_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_identification_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="acm_organization_identification"
+                             columnNames="cm_organization_id, cm_identification_id"/>
+    </changeSet>
+
+    <changeSet id="34-organization-add-class-name-column" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_organization">
+            <column name="cm_class_name" type="varchar(400)"
+                    defaultValue="com.armedia.acm.plugins.person.model.PersonContact">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="35-person-add-class-name-column" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_person">
+            <column name="cm_class_name" type="varchar(400)"
+                    defaultValue="com.armedia.acm.plugins.person.model.Person">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

@@ -161,7 +161,7 @@ public class SavePersonAPIControllerTest extends EasyMockSupport
         Capture<Person> found = new Capture<>();
 
         // With upgrading spring version, bad JSON is not the problem for entering the execution in the controller
-        expect(mockSaveTransaction.savePerson(capture(found), eq(mockAuthentication))).andThrow(new RuntimeException());
+        expect(mockSaveTransaction.savePerson(capture(found), eq(mockAuthentication))).andThrow(new RuntimeException()).anyTimes();
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");

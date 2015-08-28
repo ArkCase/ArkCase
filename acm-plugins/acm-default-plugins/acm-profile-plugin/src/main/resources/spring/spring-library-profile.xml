@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 
     <!-- keeping this bean for now even though we are not using any properties yet.  -->
     <bean id="profilePluginProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -17,6 +15,7 @@
         <property name="localOverride" value="false"/>
         <property name="properties">
             <props>
+                <prop key="user.profile.root.folder">/Sites/acm/documentLibrary/User Profile</prop>
             </props>
         </property>
     </bean>
@@ -28,6 +27,7 @@
     <bean id="acmUserOrgService" class="com.armedia.acm.plugins.profile.service.UserOrgServiceImpl">
         <property name="userOrgDao" ref="acmUserOrgDao"/>
         <property name="acmCryptoUtils" ref="acmCryptoUtils"/>
+        <property name="profileLocation" value="${user.profile.root.folder}"/>
     </bean>
 
     <bean id="saveUserOrgTransaction" class="com.armedia.acm.plugins.profile.service.SaveUserOrgTransaction">

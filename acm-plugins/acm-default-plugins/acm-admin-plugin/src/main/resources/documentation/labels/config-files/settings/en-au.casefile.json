@@ -110,6 +110,11 @@
                     "value": "ID"
                 },
                 "title": {
+                    "defaultValue": "Number",
+                    "description": "",
+                    "value": "Number"
+                },
+                  "target-title": {
                     "defaultValue": "Title",
                     "description": "",
                     "value": "Title"

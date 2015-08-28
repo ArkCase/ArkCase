@@ -84,27 +84,64 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
             // Validate that the menu exists
             this.validateMenuExistance(menuId);
             var context = this;
-            $q.resolve(permissions.$promise).then(function(){
-                if (permissions[menuItemURL] && permissions[menuItemURL].enabled) {
-                    // Push new menu item
-                    context.menus[menuId].items.push({
-                        title: menuItemTitle,
-                        link: menuItemURL,
-                        menuItemType: menuItemType || 'item',
-                        menuItemClass: menuItemType,
-                        uiRoute: menuItemUIRoute || ('/' + menuItemURL),
-                        isPublic: ((isPublic === null || typeof isPublic === 'undefined') ? context.menus[menuId].isPublic : isPublic),
-                        roles: ((roles === null || typeof roles === 'undefined') ? context.menus[menuId].roles : roles),
-                        position: position || 0,
-                        items: [],
-                        shouldRender: shouldRender
-                    });
-                }
+            //$q.resolve(permissions.$promise).then(function(){
+            //    if (permissions[menuItemURL] && permissions[menuItemURL].enabled) {
+            //        // Push new menu item
+            //        context.menus[menuId].items.push({
+            //            title: menuItemTitle,
+            //            link: menuItemURL,
+            //            menuItemType: menuItemType || 'item',
+            //            menuItemClass: menuItemType,
+            //            uiRoute: menuItemUIRoute || ('/' + menuItemURL),
+            //            isPublic: ((isPublic === null || typeof isPublic === 'undefined') ? context.menus[menuId].isPublic : isPublic),
+            //            roles: ((roles === null || typeof roles === 'undefined') ? context.menus[menuId].roles : roles),
+            //            position: position || 0,
+            //            items: [],
+            //            shouldRender: shouldRender
+            //        });
+            //    }
+            //});
+            // Push new menu item
+            context.menus[menuId].items.push({
+                title: menuItemTitle,
+                link: menuItemURL,
+                menuItemType: menuItemType || 'item',
+                menuItemClass: menuItemType,
+                uiRoute: menuItemUIRoute || ('/' + menuItemURL),
+                isPublic: ((isPublic === null || typeof isPublic === 'undefined') ? context.menus[menuId].isPublic : isPublic),
+                roles: ((roles === null || typeof roles === 'undefined') ? context.menus[menuId].roles : roles),
+                position: position || 0,
+                items: [],
+                shouldRender: shouldRender
             });
+
 
             // Return the menu object
 //            return this.menus[menuId];
         };
+
+        // Add menu item object
+        this.addMenuItems = function (menuObjects) {
+
+            for (var i = 0; i < menuObjects.length; i++) {
+                var menuObj = menuObjects[i];
+                // Validate that the menu exists
+                this.validateMenuExistance(menuObj.menuId);
+                var context = this;
+
+                // Push new menu item
+                context.menus[menuObj.menuId].items.push({
+                    title: menuObj.menuItemTitle,
+                    link: menuObj.menuItemURL,
+                    menuItemType: 'item',
+                    uiRoute: '/' + menuObj.menuItemURL,
+                    isPublic: true,
+                    position: menuObj.position || 0,
+                    iconClass: menuObj.iconClass
+                });
+            }
+        };
+
 
         // Add submenu item object
         this.addSubMenuItem = function (menuId, rootMenuItemURL, menuItemTitle, menuItemURL, menuItemUIRoute, isPublic, roles, position) {
@@ -170,6 +207,9 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
 
         //Adding the leftnav menu
         this.addMenu('leftnav');
+
+        //Adding the user menu
+        this.addMenu('usermenu');
 
     }
 ]);
