@@ -15,13 +15,17 @@
         <spring:import resource="classpath:/spring/spring-library-property-file-manager.xml"/>
     </spring:beans>
 
+
     <cmis:config
             name="acmCmisConnector"
             baseUrl="${cmis.baseUrl}"
             username="${cmis.username}"
             password="${cmis.password}"
             useAlfrescoExtension="${cmis.useAlfrescoExtension}"
-            endpoint="${cmis.endpoint}">
+            endpoint="${cmis.endpoint}"
+            repositoryId="#{ '${cmis.repositoryId}' == '' ? null : '${cmis.repositoryId}' }">
+        <!-- for Alfresco we don't need a repository ID, so if the property is empty, use null instead... that is what
+        the above expression does. Documentum does need a repository ID. -->
 
         <!-- somehow we can't use a property for exhausted action. -->
         <cmis:connection-pooling-profile
@@ -34,5 +38,6 @@
         <reconnect count="${cmis.reconnectCount}" frequency="${cmis.reconnectFrequency}"/>
 
     </cmis:config>
+
 
 </mule>

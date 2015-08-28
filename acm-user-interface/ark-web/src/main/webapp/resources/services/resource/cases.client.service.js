@@ -13,7 +13,7 @@ angular.module('services').factory('CasesService', ['$resource',
             queryAudit: {
                 method: 'GET',
                 cache: false,
-                url: 'proxy/arkcase/api/latest/plugin/audit/CASE_FILE/:id?start=:startWith&n=:count'
+                url: 'proxy/arkcase/api/latest/plugin/audit/CASE_FILE/:id?start=:startWith&n=:count&s=:sort'
             },
 
             queryTasks: {

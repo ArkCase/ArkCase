@@ -37,7 +37,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -118,10 +120,8 @@ public class SplitCaseFileServiceTest extends EasyMockSupport
 
         EasyMock.expect(caseFileDao.find(sourceId)).andReturn(sourceCaseFile).anyTimes();
         EasyMock.expect(mockSplitCaseFileBusinessRule.applyRules(capture(toSplitCaseRulesCapture))).andReturn(null);
-        EasyMock.expect(saveCaseService.saveCase(capture(caseFileCapture), eq(auth), eq(ipAddress))).andAnswer(new IAnswer<CaseFile>()
-        {
-            public CaseFile answer() throws Throwable
-            {
+        EasyMock.expect(saveCaseService.saveCase(capture(caseFileCapture), eq(auth), eq(ipAddress))).andAnswer(new IAnswer<CaseFile>() {
+            public CaseFile answer() throws Throwable {
                 CaseFile copiedCaseFile = caseFileCapture.getValue();
                 copiedCaseFile.setId(2l);
 

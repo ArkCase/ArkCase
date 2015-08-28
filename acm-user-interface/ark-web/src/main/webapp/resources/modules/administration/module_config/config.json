@@ -1,0 +1,15 @@
+{
+    "id": "administration",
+    "title": "Administration",
+    "menus": [
+        {
+            "menuId": "leftnav",
+            "menuItemURL": "administration",
+            "menuItemTitle": "Administration",
+            "iconClass": "glyphicon glyphicon-cog",
+            "position": 0
+        }
+    ],
+    "components": [
+    ]
+}

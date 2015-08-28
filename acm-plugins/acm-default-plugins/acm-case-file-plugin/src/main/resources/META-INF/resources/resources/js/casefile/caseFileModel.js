@@ -1529,9 +1529,9 @@ CaseFile.Model = CaseFile.Model || {
         , API_RETRIEVE_COSTSHEETS: "/api/v1/service/costsheet/"
 
         ,retrieveCostsheets : function(caseFileId) {
-            var costsheets = CaseFile.Model.Time.cacheTimesheets.get(caseFileId);
+            var costsheets = CaseFile.Model.Cost.cacheCostsheets.get(caseFileId);
             if (costsheets) {
-                return Acm.Promise.donePromise(costsheets).donePromise();
+                return Acm.Promise.donePromise(costsheets).promise();
             }
 
             var url = this.API_RETRIEVE_COSTSHEETS;
@@ -1607,9 +1607,6 @@ CaseFile.Model = CaseFile.Model || {
                 return false;
             }
             if (Acm.isEmpty(data.title)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.description)) {
                 return false;
             }
             if (Acm.isEmpty(data.value)) {

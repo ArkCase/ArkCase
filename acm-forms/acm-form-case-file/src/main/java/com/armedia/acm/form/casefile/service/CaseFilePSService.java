@@ -322,6 +322,7 @@ public class CaseFilePSService extends FrevvoFormAbstractService
 
             String oldCaseIdAsString = getRequest().getParameter("caseId");
             String oldCaseNumber = getRequest().getParameter("caseNumber");
+            String oldCaseTitle  = getRequest().getParameter("caseTitle");
             Long oldCaseId = null;
             try
             {
@@ -349,6 +350,7 @@ public class CaseFilePSService extends FrevvoFormAbstractService
                 objectAssociation.setTargetType("CASE_FILE");
                 objectAssociation.setTargetId(oldCaseId);
                 objectAssociation.setTargetName(oldCaseNumber);
+                objectAssociation.setTargetTitle(oldCaseTitle);
                 objectAssociation.setAssociationType("REFERENCE");
 
                 getObjectAssociationDao().save(objectAssociation);
