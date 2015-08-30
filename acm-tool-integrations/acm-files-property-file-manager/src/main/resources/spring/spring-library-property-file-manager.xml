@@ -16,6 +16,7 @@
                 <value>file:${user.home}/.acm/adminPlugin.properties</value>
                 <value>file:${user.home}/.acm/applicationRoleToUserGroup.properties</value>
                 <value>file:${user.home}/.acm/auditPlugin.properties</value>
+                <value>file:${user.home}/.acm/capture.properties</value>
                 <value>file:${user.home}/.acm/caseFilePlugin.properties</value>
                 <value>file:${user.home}/.acm/cmis.properties</value>
                 <value>file:${user.home}/.acm/complaintPlugin.properties</value>
