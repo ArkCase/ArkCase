@@ -37,7 +37,7 @@ angular.module('cases').controller('CaseHistoryController', ['$scope', '$statePa
                     onRegisterApi: function (gridApi) {
                         $scope.gridApi = gridApi;
                         $scope.gridApi.core.on.sortChanged($scope, function(grid, sortColumns) {
-                            if (sortColumns.length == 0) {
+                            if (0 >= sortColumns.length) {
                                 $scope.sort.by = null;
                                 $scope.sort.dir = null;
                             } else {
@@ -50,7 +50,7 @@ angular.module('cases').controller('CaseHistoryController', ['$scope', '$statePa
                             var grid = this.grid;
                             $scope.filters = [];
                             for (var i = 0; i < grid.columns.length; i++) {
-                                if (grid.columns[i].filters[0].term) {
+                                if (Acm.isNotEmpty(grid.columns[i].filters[0].term)) {
                                     var filter = {};
                                     filter.by = grid.columns[i].field;
                                     filter.with = grid.columns[i].filters[0].term;
@@ -77,7 +77,7 @@ angular.module('cases').controller('CaseHistoryController', ['$scope', '$statePa
         $scope.updatePageData = function() {
             var sort = "";
             if ($scope.sort) {
-                if ($scope.sort.by && $scope.sort.dir) {
+                if (Acm.isNotEmpty($scope.sort.by) && Acm.isNotEmpty($scope.sort.dir)) {
                     sort = $scope.sort.by + "%20" + $scope.sort.dir;
                 }
             }
