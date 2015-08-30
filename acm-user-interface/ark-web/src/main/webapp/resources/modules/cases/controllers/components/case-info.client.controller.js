@@ -39,7 +39,7 @@ angular.module('cases').controller('CaseInfoController', ['$scope', '$stateParam
         };
 
         $scope.priorities = [];
-        LookupService.getPriorites({}, function(data) {
+        LookupService.getPriorities({}, function(data) {
             //$scope.priorities = data;
 
             $scope.priorities = [];

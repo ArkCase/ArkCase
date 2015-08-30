@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('CasesController', ['$scope', '$q', '$stateParams', 'ConfigService', 'CasesService',
-	function($scope, $q, $stateParams, ConfigService, CasesService) {
+angular.module('cases').controller('CasesController', ['$scope', '$stateParams', 'ConfigService', 'CasesService',
+	function($scope, $stateParams, ConfigService, CasesService) {
 		$scope.config = ConfigService.getModule({moduleId: 'cases'});
 		$scope.$on('req-component-config', onConfigRequest);
 		function onConfigRequest(e, componentId) {

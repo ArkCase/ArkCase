@@ -39,7 +39,11 @@
     "title": "Notes"
   },
   "cases.comp.participants": {
-    "title": "Participants"
+    "title": "Participants",
+    "table.columns": {
+      "type": "Type",
+      "name": "Name"
+    }
   },
   "cases.comp.people": {
     "title": "People"
