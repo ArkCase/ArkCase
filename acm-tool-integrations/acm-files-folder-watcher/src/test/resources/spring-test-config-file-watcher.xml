@@ -22,5 +22,7 @@
     <bean id="springEntityListenerConfigurer" class="java.lang.String">
         <constructor-arg value="Not really a Spring listener bean"/>
     </bean>
+    
+    <bean id="captureFileEventListener" class="com.armedia.acm.files.capture.CaptureFileEventListener"/>
 
 </beans>
