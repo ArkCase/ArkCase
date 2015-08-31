@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('CaseParticipantsController', ["$scope", "$stateParams", "$q", "CasesService", "LookupService",
+angular.module('cases').controller('CaseParticipantsController', ['$scope', '$stateParams', '$q', 'CasesService', 'LookupService',
     function($scope, $stateParams, $q, CasesService, LookupService) {
         $scope.$emit('req-component-config', 'participants');
 
