@@ -1,0 +1,29 @@
+<div ng-app="company" class="panel panel-default">
+    <h4 class="padder"> &nbsp; Company Details</h4>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <div ng-controller="CompanyController" class="row">
+                <div  class="col-xs-6">
+                    <h4>  <a href="#" editable-text="company.name">{{ company.name|| 'unknown' }}</a></h4>
+                    <small> Company Name </small>
+                    <h4>  <a href="#" editable-text="company.address1">{{ company.address1|| 'unknown' }}</a></h4>
+                    <small> Address 1 </small>
+                    <h4>  <a href="#" editable-text="company.address2">{{ company.address2|| 'unknown' }}</a></h4>
+                    <small> Address 2 </small>
+                    <h4>  <a href="#" editable-text="company.city">{{ company.city|| 'unknown' }}</a></h4>
+                    <small> City </small>
+                    <h4>  <a href="#" editable-text="company.state">{{ company.state|| 'unknown' }}</a></h4>
+                    <small> State </small>
+                    <h4>  <a href="#" editable-text="company.zip">{{ company.zip|| 'unknown' }}</a></h4>
+                    <small> ZIP </small> </div>
+                <div class="col-xs-6">
+                    <h4>  <a href="#" editable-text="company.phone">{{ company.phone|| 'unknown' }}</a></h4>
+                    <small> Main Office Phone </small>
+                    <h4>  <a href="#" editable-text="company.fax">{{ company.fax|| 'unknown' }}</a></h4>
+                    <small> Fax </small>
+                    <h4>  <a href="#" editable-text="company.website">{{ company.website|| 'unknown' }}</a></h4>
+                    <small> Website </small> </div>
+            </div>
+        </li>
+    </ul>
+</div>

@@ -6,5 +6,7 @@ angular.module('core').controller('LeftNavigationController', ['$scope', '$state
         $scope.authentication = Authentication;
         $scope.isCollapsed = false;
         $scope.menu = Menus.getMenu('leftnav');
+        $scope.dropDown=[{title:'User Profile',url:'profile'},
+                         {title:'Help',url:'help'}];
     }
 ]);
