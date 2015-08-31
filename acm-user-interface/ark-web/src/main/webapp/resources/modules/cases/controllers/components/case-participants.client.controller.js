@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('CaseParticipantsController', ['$scope', '$stateParams', "$q", 'CasesService', 'LookupService',
+angular.module('cases').controller('CaseParticipantsController', ["$scope", "$stateParams", "$q", "CasesService", "LookupService",
     function($scope, $stateParams, $q, CasesService, LookupService) {
         $scope.$emit('req-component-config', 'participants');
 
@@ -24,7 +24,11 @@ angular.module('cases').controller('CaseParticipantsController', ['$scope', '$st
                     onRegisterApi: function(gridApi) {
                         $scope.gridApi = gridApi;
                         gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
-                            Acm.log("do save, newValue=" + newValue);
+
+                            //
+                            //Insert code here to save data to service   //Acm.log("do save, newValue=" + newValue);
+                            //
+
                             if ("participantTypes" === colDef.lookup) {
                                 if ("*" === newValue) {
                                     rowEntity.participantNames = [
@@ -81,6 +85,7 @@ angular.module('cases').controller('CaseParticipantsController', ['$scope', '$st
                         return $scope.participantGroups;
                     }
                 });
+
 
                 $q.all([promiseTypes, promiseUsers, promiseGroups]).then(function(data) {
                     $scope.gridOptions.enableRowSelection = false;    //need to turn off for inline edit

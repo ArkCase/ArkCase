@@ -50,7 +50,7 @@ angular.module('cases').controller('CaseHistoryController', ['$scope', '$statePa
                             var grid = this.grid;
                             $scope.filters = [];
                             for (var i = 0; i < grid.columns.length; i++) {
-                                if (Acm.isNotEmpty(grid.columns[i].filters[0].term)) {
+                                if (!_.isEmpty(grid.columns[i].filters[0].term)) {
                                     var filter = {};
                                     filter.by = grid.columns[i].field;
                                     filter.with = grid.columns[i].filters[0].term;
@@ -77,7 +77,7 @@ angular.module('cases').controller('CaseHistoryController', ['$scope', '$statePa
         $scope.updatePageData = function() {
             var sort = "";
             if ($scope.sort) {
-                if (Acm.isNotEmpty($scope.sort.by) && Acm.isNotEmpty($scope.sort.dir)) {
+                if (!_.isEmpty($scope.sort.by) && !_.isEmpty($scope.sort.dir)) {
                     sort = $scope.sort.by + "%20" + $scope.sort.dir;
                 }
             }
