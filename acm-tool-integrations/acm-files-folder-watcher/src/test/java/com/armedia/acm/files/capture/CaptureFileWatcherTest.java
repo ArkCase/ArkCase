@@ -4,6 +4,7 @@ import org.apache.commons.vfs2.FileChangeEvent;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileTypeSelector;
 import org.easymock.Capture;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
@@ -21,8 +22,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -62,6 +62,20 @@ public class CaptureFileWatcherTest extends EasyMockSupport
         unit = new CaptureFileWatcher();
         unit.setBaseFolderPath(baseFolderPath);
         unit.setFileExtensions(allowedFileExtensions);
+    }
+
+    @Test
+    public void setApplicationContext_noFilesOrFoldersFound() throws Exception
+    {
+        expect(mockFileObject.getURL()).andReturn(new URL(baseFolderPath));
+        expect(mockFileObject.findFiles(anyObject(FileTypeSelector.class))).andReturn(null).times(2);
+
+        replayAll();
+
+        unit.setBaseFolder(mockFileObject);
+        unit.setApplicationContext(null);
+
+        verifyAll();
     }
 
     @Test
