@@ -46,8 +46,12 @@ public class CaptureFileWatcherTest extends EasyMockSupport
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    private boolean runningOnWindows = System.getProperty("os.name").startsWith("Windows");
+
     // for this test to pass, Windows and Linux require different file URL prefixes
-    private final String fileUrlPrefix = "file:" + (File.separator.equals("/") ? "" : "/");
+    private final String fileUrlPrefix = runningOnWindows ? "file:///C:" : "file:///";
+
+    private final String baseFolderPath = fileUrlPrefix + fileSeparator + "temp";
 
     // do not put a period before the extension
     private final String allowedFileExtensions = "pdf,xml";
@@ -56,14 +60,14 @@ public class CaptureFileWatcherTest extends EasyMockSupport
     public void setUp() throws Exception
     {
         unit = new CaptureFileWatcher();
-        unit.setBaseFolderPath("/C:" + fileSeparator + "temp");
+        unit.setBaseFolderPath(baseFolderPath);
         unit.setFileExtensions(allowedFileExtensions);
     }
 
     @Test
     public void baseFolderPath_shouldBeSet_afterSourceFolderIsSet() throws Exception
     {
-        expect(mockFileObject.getURL()).andReturn(new URL("file:///C:" + fileSeparator + "temp"));
+        expect(mockFileObject.getURL()).andReturn(new URL(baseFolderPath));
 
         replayAll();
 
@@ -72,12 +76,7 @@ public class CaptureFileWatcherTest extends EasyMockSupport
         verifyAll();
 
 
-        String expected = "C:" + fileSeparator + "temp";
-        // cross platform canonical path names...
-        if ("/".equals(fileSeparator))
-        {
-            expected = "/" + expected;
-        }
+        String expected = (runningOnWindows ? "C:" : "") + fileSeparator + "temp";
 
         assertEquals(expected, unit.getBaseFolderPath());
     }
@@ -87,7 +86,11 @@ public class CaptureFileWatcherTest extends EasyMockSupport
     {
         String fileExtensions = "pdf,txt,html";
 
+        replayAll();
+
         unit.setFileExtensions(fileExtensions);
+
+        verifyAll();
 
         List<String> expected = new ArrayList<String>();
         expected.add("pdf");
@@ -113,12 +116,28 @@ public class CaptureFileWatcherTest extends EasyMockSupport
     @Test
     public void raiseEvent_whenFileIsAdded_notallowed() throws Exception
     {
-        Capture<AbstractCaptureFileEvent> capturedEvent =
-                setupEventTest(fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator + "file.png", "png");
+        // we don't watch for png files so we shouldn't get an event
+
+        String extension = "png";
+        String fileUrl = fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator + "file.png";
+
+        unit.setApplicationEventPublisher(mockPublisher);
+
+        expect(mockFileChangeEvent.getFile()).andReturn(mockFileObject).atLeastOnce();
+        expect(mockFileObject.getName()).andReturn(mockFileName).anyTimes();
+        expect(mockFileName.getExtension()).andReturn(extension);
+
+        URL fileUrlObj = new URL(fileUrl);
+        expect(mockFileObject.getURL()).andReturn(fileUrlObj);
+
+        log.debug("File URL: " + fileUrl);
+
+        replayAll();
 
         unit.fileCreated(mockFileChangeEvent);
 
         // no event should be captured
+        verifyAll();
     }
 
     private void verifyEventTestResults(Capture<AbstractCaptureFileEvent> capturedEvent)
