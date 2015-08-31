@@ -1,0 +1,39 @@
+<div ng-controller="ReportsSelectionController" ng-cloak>
+    <section class="scrollable">
+
+        <div class="wrapper">
+            <label for="selectReport"> {{'reports.navigation.label.select-report' | translate}} </label>
+            <select name="priority" class="form-control" id="selectReport">
+                <option> {{'reports.navigation.placeholder.select-report' | translate}}</option>
+                <option> Case Summary</option>
+            </select>
+
+            <br>
+
+            <section id="caseStatusSection">
+                <label for="selectCaseState">{{'reports.navigation.label.select-state' | translate}}
+                </label>
+                <select name="cStatus" class="form-control" id="selectCaseState">
+                    <option value="Select State"> {{'reports.navigation.placeholder.select-state' | translate}}</option>
+                    <option value="DRAFT">DRAFT</option>
+                    <option value="IN APPROVAL">IN APPROVAL</option>
+                    <option value="CLOSED">CLOSED</option>
+                    <option value="INACTIVE">INACTIVE</option>
+                    <option value="ACTIVE">ACTIVE</option>
+                </select>
+            </section>
+
+            <br>
+
+            <div ng-include="'modules/reports/views/components/reports-datepickers.client.view.html'"/>
+
+            <br>
+
+            <section id="reportSubmitSection">
+                <button class="btn btn-sm btn-default left-block" type="button" id="generateReport">
+                    {{'reports.navigation.button.generate-report' | translate}}
+                </button>
+            </section>
+        </div>
+    </section>
+</div>
