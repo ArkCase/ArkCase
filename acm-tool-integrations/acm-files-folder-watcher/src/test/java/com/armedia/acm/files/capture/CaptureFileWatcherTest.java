@@ -1,16 +1,5 @@
 package com.armedia.acm.files.capture;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.vfs2.FileChangeEvent;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
@@ -25,6 +14,17 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(EasyMockRunner.class)
 public class CaptureFileWatcherTest extends EasyMockSupport
@@ -45,10 +45,10 @@ public class CaptureFileWatcherTest extends EasyMockSupport
     private String fileSeparator = File.separator;
 
     private Logger log = LoggerFactory.getLogger(getClass());
-    
+
     // for this test to pass, Windows and Linux require different file URL prefixes
-    private final String fileUrlPrefix = "file:" + ( File.separator.equals("/") ? "" : "/" );
-    
+    private final String fileUrlPrefix = "file:" + (File.separator.equals("/") ? "" : "/");
+
     // do not put a period before the extension
     private final String allowedFileExtensions = "pdf,xml";
 
@@ -56,10 +56,10 @@ public class CaptureFileWatcherTest extends EasyMockSupport
     public void setUp() throws Exception
     {
         unit = new CaptureFileWatcher();
-        unit.setBaseFolderPath("C:" + fileSeparator + "temp");
+        unit.setBaseFolderPath("/C:" + fileSeparator + "temp");
         unit.setFileExtensions(allowedFileExtensions);
     }
-    
+
     @Test
     public void baseFolderPath_shouldBeSet_afterSourceFolderIsSet() throws Exception
     {
@@ -74,33 +74,33 @@ public class CaptureFileWatcherTest extends EasyMockSupport
 
         String expected = "C:" + fileSeparator + "temp";
         // cross platform canonical path names...
-        if ( "/".equals(fileSeparator) )
+        if ("/".equals(fileSeparator))
         {
             expected = "/" + expected;
         }
 
         assertEquals(expected, unit.getBaseFolderPath());
     }
-    
+
     @Test
     public void fileExtensionsList_shouldBeSet_afterFileExtensionsIsSet() throws Exception
     {
         String fileExtensions = "pdf,txt,html";
 
         unit.setFileExtensions(fileExtensions);
-       
+
         List<String> expected = new ArrayList<String>();
         expected.add("pdf");
         expected.add("txt");
         expected.add("html");
-        
+
         assertEquals(expected, unit.getFileExtensionsList());
     }
 
     @Test
     public void raiseEvent_whenFileIsAdded_allowed() throws Exception
     {
-        
+
         Capture<AbstractCaptureFileEvent> capturedEvent =
                 setupEventTest(fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator + "file.xml", "xml");
 
@@ -120,7 +120,7 @@ public class CaptureFileWatcherTest extends EasyMockSupport
 
         // no event should be captured
     }
-    
+
     private void verifyEventTestResults(Capture<AbstractCaptureFileEvent> capturedEvent)
     {
         verifyAll();
@@ -139,7 +139,7 @@ public class CaptureFileWatcherTest extends EasyMockSupport
         expect(mockFileChangeEvent.getFile()).andReturn(mockFileObject).atLeastOnce();
         expect(mockFileObject.getName()).andReturn(mockFileName).anyTimes();
         expect(mockFileName.getExtension()).andReturn(extension);
-        
+
         URL fileUrlObj = new URL(fileUrl);
         expect(mockFileObject.getURL()).andReturn(fileUrlObj).times(1, 2);
 
