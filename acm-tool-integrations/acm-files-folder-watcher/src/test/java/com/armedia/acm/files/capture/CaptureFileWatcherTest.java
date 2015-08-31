@@ -105,7 +105,7 @@ public class CaptureFileWatcherTest extends EasyMockSupport
     {
 
         Capture<AbstractCaptureFileEvent> capturedEvent =
-                setupEventTest(fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator + "file.xml", "xml");
+                setupEventTest(unit.getBaseFolderPath() + fileSeparator + "file.xml", "xml");
 
         unit.fileCreated(mockFileChangeEvent);
 
@@ -119,7 +119,7 @@ public class CaptureFileWatcherTest extends EasyMockSupport
         // we don't watch for png files so we shouldn't get an event
 
         String extension = "png";
-        String fileUrl = fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator + "file.png";
+        String fileUrl = unit.getBaseFolderPath() + fileSeparator + "file.png";
 
         unit.setApplicationEventPublisher(mockPublisher);
 
