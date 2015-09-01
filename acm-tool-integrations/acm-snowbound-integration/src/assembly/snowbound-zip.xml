@@ -98,6 +98,11 @@
             <filtered>false</filtered>
         </file>
         <file>
+            <source>src/main/resources/resources/split.png</source>
+            <outputDirectory>/resources</outputDirectory>
+            <filtered>false</filtered>
+        </file>
+        <file>
             <source>src/main/resources/WEB-INF/web.xml</source>
             <outputDirectory>/WEB-INF</outputDirectory>
             <filtered>false</filtered>
