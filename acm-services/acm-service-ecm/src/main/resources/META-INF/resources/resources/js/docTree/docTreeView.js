@@ -1552,7 +1552,10 @@ DocTree.View = DocTree.View || {
                     DocTree.View.replaceFile(node);
                     break;
                 case "open":
-                    var url = App.getContextPath() + "/plugin/document/" + node.data.objectId;
+                    var url = App.getContextPath() + "/plugin/document/" + node.data.objectId +
+                                                     "?documentName=" + node.data.name +
+                                                     "&parentObjectId=" + node.parent.data.containerObjectId +
+                                                     "&parentObjectType=" + node.parent.data.containerObjectType;
                     window.open(url);
                     break;
                 case "edit":
