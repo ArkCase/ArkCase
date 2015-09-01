@@ -12,6 +12,7 @@
 
     <bean id="vfsManager" class="org.apache.commons.vfs2.VFS" factory-method="getManager"/>
 
+    <!-- Configuration File -->
     <bean id="configFolder" factory-bean="vfsManager"  factory-method="resolveFile">
         <constructor-arg index="0" ref="userHomeFolder"/>
         <constructor-arg index="1" value=".acm"/>
@@ -39,6 +40,30 @@
             depends-on="activitiProcessEngineConfiguration,drlDeployer">
         <property name="configFolder" ref="configFolder"/>
         <property name="configFolderMonitor" ref="configFileMonitor"/>
+    </bean>
+    
+    <!-- Capture File -->
+    <bean id="captureFolder" factory-bean="vfsManager" factory-method="resolveFile">
+        <constructor-arg index="0" value="${capture.rootFolderToWatch}"/>
+    </bean>
+
+    <bean id="captureFileListener" class="com.armedia.acm.files.capture.CaptureFileWatcher" depends-on="springEntityListenerConfigurer">
+        <property name="baseFolder" ref="captureFolder"/>
+        <!-- Do not put a period before the extension -->
+        <property name="fileExtensions" value="${capture.fileExtensions}"/> 
+    </bean>
+
+    <bean id="captureFileMonitor" class="org.apache.commons.vfs2.impl.DefaultFileMonitor">
+        <constructor-arg ref="captureFileListener"/>
+        <property name="recursive" value="true"/>
+        <!--<property name="delay" value="3000"/>-->
+    </bean>
+
+    <bean id="captureMonitorController" class="com.armedia.acm.files.capture.CaptureFileController"
+            init-method="initBean"
+            destroy-method="stopBean">
+        <property name="captureFolder" ref="captureFolder"/>
+        <property name="captureFolderMonitor" ref="captureFileMonitor"/>
     </bean>
 
 </beans>
