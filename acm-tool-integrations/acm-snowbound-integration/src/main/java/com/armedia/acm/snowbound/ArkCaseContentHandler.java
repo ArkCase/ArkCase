@@ -3,7 +3,6 @@ package com.armedia.acm.snowbound;
 import com.armedia.acm.snowbound.model.ArkCaseConstants;
 import com.armedia.acm.snowbound.service.web.ArkCaseRestClient;
 import com.armedia.acm.snowbound.service.SnowBoundService;
-import com.armedia.acm.snowbound.utils.ArkCaseUtils;
 import com.armedia.acm.snowbound.utils.GenericUtils;
 import com.armedia.acm.snowbound.utils.WebUtils;
 
@@ -30,14 +29,18 @@ import com.snowbound.snapserv.transport.pagedata.FlexSnapSISnowAnn;
 import com.snowbound.snapserv.transport.pagedata.PermissionsEntities;
 
 import javax.servlet.ServletConfig;
-import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.util.*;
+import java.io.File;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.io.ByteArrayInputStream;
+import java.util.Vector;
+import java.util.Map;
+import java.util.List;
+import java.util.Hashtable;
+import java.util.Enumeration;
 import java.util.logging.Level;
 
 /**
