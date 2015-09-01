@@ -1408,8 +1408,7 @@ function VirtualViewer() {
                 A1.copySelectionToNewDocument(Cz)
             }
         } else {
-            //Cz = $("#vvNewDocumentDialogNameInput").val();
-            Cz = myFlexSnap.arkCaseGetCommonUrlParams();
+            Cz = $("#vvNewDocumentDialogNameInput").val();
             if (Cz === "") {
                 $("#vvNewDocumentDialogError").show()
             } else {
@@ -1923,8 +1922,7 @@ function VirtualViewer() {
             A1.loadVisibleThumbs(null, C2, true)
         }
         if (C0) {
-            A1.saveDocument(true);
-            //A1.sendDocument()
+            A1.saveDocument(true)
         }
     };
     var A5 = function (C3) {
