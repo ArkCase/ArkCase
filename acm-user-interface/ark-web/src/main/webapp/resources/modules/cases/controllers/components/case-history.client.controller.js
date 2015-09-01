@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('CaseHistoryController', ['$scope', '$stateParams', 'CasesService',
+angular.module('cases').controller('Cases.HistoryController', ['$scope', '$stateParams', 'CasesService',
     function ($scope, $stateParams, CasesService) {
         $scope.$emit('req-component-config', 'history');
 
