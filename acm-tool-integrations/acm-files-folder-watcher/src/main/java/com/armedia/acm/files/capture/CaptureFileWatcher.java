@@ -1,13 +1,5 @@
 package com.armedia.acm.files.capture;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.commons.vfs2.FileChangeEvent;
 import org.apache.commons.vfs2.FileListener;
 import org.apache.commons.vfs2.FileObject;
@@ -23,13 +15,21 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 public class CaptureFileWatcher implements FileListener, ApplicationEventPublisherAware, ApplicationContextAware
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private FileObject baseFolder;
     private String fileExtensions;
-    
+
     private String baseFolderPath;
     private List<String> fileExtensionsList;
     private ApplicationEventPublisher applicationEventPublisher;
@@ -37,7 +37,7 @@ public class CaptureFileWatcher implements FileListener, ApplicationEventPublish
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
     {
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
             log.debug("The application context has been set!");
             log.debug("Looking for files in: " + getBaseFolder().getName());
@@ -49,18 +49,28 @@ public class CaptureFileWatcher implements FileListener, ApplicationEventPublish
             //all this because of FileTypeSelector(FileType.FILE_OR_FOLDER) returns 0 elements
             FileObject[] existingFiles = getBaseFolder().findFiles(new FileTypeSelector(FileType.FILE));
             FileObject[] existingFolders = getBaseFolder().findFiles(new FileTypeSelector(FileType.FOLDER));
-            FileObject[] existingFilesAndFolders = new FileObject[existingFiles.length + existingFolders.length];
-            existingFilesAndFolders = Arrays.copyOf(existingFiles, existingFiles.length + existingFolders.length);
-            System.arraycopy(existingFolders, 0, existingFilesAndFolders, existingFiles.length, existingFolders.length);
 
-            for ( FileObject current : existingFilesAndFolders )
+            int fileCount = existingFiles == null ? 0 : existingFiles.length;
+            int folderCount = existingFolders == null ? 0 : existingFolders.length;
+
+            int totalCount = fileCount + folderCount;
+
+            if (totalCount > 0)
             {
-                if ( log.isDebugEnabled() )
+                FileObject[] existingFilesAndFolders = new FileObject[totalCount];
+                existingFilesAndFolders = Arrays.copyOf(existingFiles, totalCount);
+                System.arraycopy(existingFolders, 0, existingFilesAndFolders, fileCount, folderCount);
+
+                for (FileObject current : existingFilesAndFolders)
                 {
-                    log.debug("Raising event for file " + current.getName());
+                    if (log.isDebugEnabled())
+                    {
+                        log.debug("Raising event for file " + current.getName());
+                    }
+                    fileCreated(new FileChangeEvent(current));
                 }
-                fileCreated(new FileChangeEvent(current));
             }
+
         } catch (Exception e)
         {
             log.error("Could not find existing files: " + e.getMessage(), e);
@@ -71,7 +81,7 @@ public class CaptureFileWatcher implements FileListener, ApplicationEventPublish
     @Override
     public void fileCreated(FileChangeEvent fileChangeEvent) throws Exception
     {
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
             log.debug("file added: " + fileChangeEvent.getFile().getName());
         }
@@ -79,28 +89,30 @@ public class CaptureFileWatcher implements FileListener, ApplicationEventPublish
         File eventFile = getEventFile(fileChangeEvent);
         String baseFilePath = getEventFileBasePath(eventFile);
         String fileExtension = getFileExtension(fileChangeEvent);
-        
+
         // only publish event if in list of allowed file extensions
         if (getFileExtensionsList().contains(fileExtension))
         {
             CaptureFileAddedEvent event = new CaptureFileAddedEvent(fileChangeEvent);
             event.setBaseFileName(baseFilePath);
             event.setCaptureFile(eventFile);
-    
+
             getApplicationEventPublisher().publishEvent(event);
         }
     }
-    
+
     @Override
-    public void fileChanged(FileChangeEvent arg0) throws Exception {
+    public void fileChanged(FileChangeEvent arg0) throws Exception
+    {
         // do nothing
-        
+
     }
 
     @Override
-    public void fileDeleted(FileChangeEvent arg0) throws Exception {
+    public void fileDeleted(FileChangeEvent arg0) throws Exception
+    {
         // do nothing
-        
+
     }
 
     private String getEventFileBasePath(File eventFile) throws IOException
@@ -115,7 +127,7 @@ public class CaptureFileWatcher implements FileListener, ApplicationEventPublish
         URL fileUrl = fileChangeEvent.getFile().getURL();
         return new File(fileUrl.toURI());
     }
-    
+
     private String getFileExtension(FileChangeEvent fileChangeEvent) throws Exception
     {
         FileObject fileObject = fileChangeEvent.getFile();
@@ -143,7 +155,7 @@ public class CaptureFileWatcher implements FileListener, ApplicationEventPublish
     {
         this.baseFolder = baseFolder;
 
-        if ( baseFolder != null )
+        if (baseFolder != null)
         {
             try
             {
@@ -168,26 +180,29 @@ public class CaptureFileWatcher implements FileListener, ApplicationEventPublish
         this.baseFolderPath = baseFolderPath;
     }
 
-    public String getFileExtensions() {
+    public String getFileExtensions()
+    {
         return fileExtensions;
     }
 
-    public void setFileExtensions(String fileExtensions) {
+    public void setFileExtensions(String fileExtensions)
+    {
         this.fileExtensions = fileExtensions;
-        
+
         // set file extensions list
         this.fileExtensionsList = new ArrayList<String>();
         setFileExtensionsList(Arrays.asList(fileExtensions.trim().split("\\s*,\\s*")));
     }
 
-    public List<String> getFileExtensionsList() {
+    public List<String> getFileExtensionsList()
+    {
         return fileExtensionsList;
     }
 
-    public void setFileExtensionsList(List<String> fileExtensionsList) {
+    public void setFileExtensionsList(List<String> fileExtensionsList)
+    {
         this.fileExtensionsList = fileExtensionsList;
     }
-    
-    
+
 
 }

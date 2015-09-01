@@ -44,6 +44,10 @@
             <param-value>/api/v1/plugin/audit/event</param-value>
         </init-param>
         <init-param>
+            <param-name>uploadNewFileService</param-name>
+            <param-value>/api/v1/service/ecm/upload</param-value>
+        </init-param>
+        <init-param>
             <param-name>contentHandlerClass</param-name>
             <param-value>com.armedia.acm.snowbound.ArkCaseContentHandler</param-value>
         </init-param>

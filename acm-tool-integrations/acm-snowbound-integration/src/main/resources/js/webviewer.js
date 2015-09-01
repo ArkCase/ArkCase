@@ -5748,10 +5748,19 @@ function VirtualViewer() {
         }
         Cz.toggle()
     };
-    VirtualViewer.prototype.sendDocument = function () {
+    VirtualViewer.prototype.sendDocument = function (splitParam) {
         var Cz = new URI(vvConfig.servletPath);
         Cz.addQuery("action", "sendDocument");
-        Cz.addQuery("documentId", A1.getDocumentId());
+
+        // The document name, and the id and type of the parent node are needed by the backend Java split functionality
+        var parentWindowUri = new URI(document.referrer);
+        var parentNodeArgs = parentWindowUri.query();
+
+        // The url arguments are passed along with the document id/user/ticket to the backend
+        var argsForSnowBackend = A1.getDocumentId() + ((parentNodeArgs) ? ("&" + parentNodeArgs) : "");
+        argsForSnowBackend += "&splitDocument=" + ((splitParam) ? splitParam : "");
+        Cz.addQuery("documentId", argsForSnowBackend);
+
         Cz.addQuery("clientInstanceId", virtualViewer.getClientInstanceId());
         Cz.addQuery("pageCount", virtualViewer.getPageCount());
         Cz.addQuery("withAnnotations", vvConfig.sendDocumentWithAnnotations);
