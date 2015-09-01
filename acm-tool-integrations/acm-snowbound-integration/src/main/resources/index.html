@@ -354,6 +354,11 @@
              data-localize="annToolbar.layerManager"
              class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
              title="Layer Manager">&nbsp;</div>
+
+        <div id="vvSplitDocumentButton"
+             onclick="javascript:myFlexSnap.arkCaseSplitDocument()"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Split Document">&nbsp;</div>
     </div>
 
     <div id="vvImageAndThumbs">
@@ -742,6 +747,13 @@
         <span data-localize="newDocumentDialog.documentId">Document ID</span>: <input id="vvNewDocumentDialogNameInput" type="text" name="vvNewDocumentDialogNameInput" />
     </div>
     <div data-localize="newDocumentDialog.error" id="vvNewDocumentDialogError">Please enter a valid Document ID!</div>
+</div>
+
+<div id="vvSplitDocumentDialog">
+    <div id="vvSplitDocumentDialogName">
+        <span data-localize="newDocumentDialog.documentId">Split Index</span>: <input id="vvSplitDocumentDialogNameInput" type="text" name="vvSplitDocumentDialogNameInput" />
+    </div>
+    <div data-localize="newDocumentDialog.error" id="vvSplitIndexDialogError">Please enter a valid Split Index!</div>
 </div>
 
 <div id="vvPictureControlsDialog">
