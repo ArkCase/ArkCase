@@ -90,6 +90,30 @@ if (myFlexSnap) {
 
     myFlexSnap.initPatch = function () {
         myFlexSnap.initCreateStampDialog();
+        myFlexSnap.initSplitDocumentDialog();
+    };
+
+    myFlexSnap.initSplitDocumentDialog = function() {
+        $("#vvSplitDocumentDialog").dialog({
+            modal: true,
+            closeOnEscape: false,
+            draggable: false,
+            resizable: false,
+            width: 600,
+            height: 300,
+            autoOpen: false,
+            buttons: {
+                "OK": function() {
+                    var splitIndex = $("input#vvSplitDocumentDialogNameInput").val();
+                    $(this).dialog("close");
+
+                    // Splits the document in the backend and sends the sub documents to ArkCase
+                    if (splitIndex && splitIndex.trim().length > 0) {
+                        myFlexSnap.sendDocument(splitIndex);
+                    }
+                }
+            }
+        });
     };
 
     myFlexSnap.initCreateStampDialog = function () {
@@ -134,6 +158,10 @@ if (myFlexSnap) {
             argUrlSection = argUrlSection.substring(0, argUrlSection.length - 1);
         return argUrlSection;
     };
+
+    myFlexSnap.arkCaseSplitDocument = function() {
+        var splitDialog = $("#vvSplitDocumentDialog").dialog("open");
+    }
 
     myFlexSnap.arkCaseReorderDocumentPages = function(pageOriginalIndex, movedPageNewIndex) {
 
