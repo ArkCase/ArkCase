@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('CaseParticipantsController', ['$scope', '$stateParams', '$q', 'CasesService', 'LookupService',
-    function($scope, $stateParams, $q, CasesService, LookupService) {
+angular.module('cases').controller('CaseParticipantsController', ['$scope', '$stateParams', '$q', 'Acm', 'CasesService', 'LookupService',
+    function($scope, $stateParams, $q, Acm, CasesService, LookupService) {
         $scope.$emit('req-component-config', 'participants');
 
         $scope.config = null;
@@ -47,7 +47,7 @@ angular.module('cases').controller('CaseParticipantsController', ['$scope', '$st
                 };
 
 
-                var promiseTypes = Acm.servicePromise($q, {
+                var promiseTypes = Acm.servicePromise({
                     service: LookupService.getParticipantTypes
                     ,callback: function(data){
                         $scope.participantTypes = [{type: "*", name: "*"}];
@@ -57,7 +57,7 @@ angular.module('cases').controller('CaseParticipantsController', ['$scope', '$st
                         return $scope.participantTypes;
                     }
                 });
-                var promiseUsers = Acm.servicePromise($q, {
+                var promiseUsers = Acm.servicePromise({
                     service: LookupService.getUsers
                     ,callback: function(data){
                         $scope.participantUsers = [];
@@ -71,7 +71,7 @@ angular.module('cases').controller('CaseParticipantsController', ['$scope', '$st
                         return $scope.participantUsers;
                     }
                 });
-                var promiseGroups = Acm.servicePromise($q, {
+                var promiseGroups = Acm.servicePromise({
                     service: LookupService.getGroups
                     ,callback: function(data){
                         $scope.participantGroups = [];
