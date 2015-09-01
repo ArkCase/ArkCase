@@ -1,8 +1,15 @@
 package com.armedia.acm.snowbound;
 
+import com.armedia.acm.snowbound.model.ArkCaseConstants;
+import com.armedia.acm.snowbound.service.web.ArkCaseRestClient;
+import com.armedia.acm.snowbound.service.SnowBoundService;
+import com.armedia.acm.snowbound.utils.GenericUtils;
+import com.armedia.acm.snowbound.utils.WebUtils;
+
 import Snow.Format;
 import Snow.FormatHash;
 import Snow.Snowbnd;
+
 import com.snowbound.common.utils.ClientServerIO;
 import com.snowbound.common.utils.Logger;
 import com.snowbound.common.utils.URLReturnData;
@@ -23,24 +30,17 @@ import com.snowbound.snapserv.transport.pagedata.PermissionsEntities;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.io.ByteArrayInputStream;
 import java.util.Vector;
+import java.util.Map;
+import java.util.List;
+import java.util.Hashtable;
+import java.util.Enumeration;
 import java.util.logging.Level;
 
 /**
@@ -61,6 +61,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
     private Logger log = Logger.getInstance();
     private String retrieveFileService;
     private String sendFileService;
+    private String uploadNewFileService;
 
 
     @Override
@@ -126,6 +127,12 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             gSupportTiffTagAnnotations = true;
         }
 
+        String paramUploadNewFileService = servletConfig.getInitParameter("uploadNewFileService");
+        if (paramUploadNewFileService != null)
+        {
+            this.uploadNewFileService = paramUploadNewFileService;
+        }
+        log.log(Level.FINE, "uploadNewFileService: " + uploadNewFileService);
     }
 
     private boolean hasTiffTagAnnotations(byte[] documentContent)
@@ -244,12 +251,13 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
     @Override
     public ContentHandlerResult getAnnotationNames(ContentHandlerInput contentHandlerInput) throws FlexSnapSIAPIException
     {
-
         String clientInstanceId = contentHandlerInput.getClientInstanceId();
+
+        // Obtains the acm user id and the file id of the document in acm
         String documentId = contentHandlerInput.getDocumentId();
-        String documentKey = docIdFromDocumentKey(documentId);
-        int userIdIndex = documentId.indexOf("userid");
-        String userid = userIdIndex > 0 ? documentId.substring(userIdIndex + 7) : null;
+        String documentKey = WebUtils.getUrlArgument(ArkCaseConstants.ACM_FILE_PARAM, documentId);
+        String userid = WebUtils.getUrlArgument(ArkCaseConstants.ACM_USER_PARAM, documentId);
+
         log.log(Logger.FINEST, "Inside getAnnotationNames  userid: " + userid);
         log.log(Logger.FINEST, "Inside getAnnotationNames  clientInstanceId: " + clientInstanceId);
         log.log(Logger.FINEST, "Inside getAnnotationNames  documentKey: " + documentKey);
@@ -540,37 +548,37 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             log.log(Level.FINE, "new CHR");
             ContentHandlerResult retVal = new ContentHandlerResult();
 
+            // This url string passed from acm contains the acm ticket, user, doc id, doc name, parent node id, parent node type
             log.log(Level.FINE, "get doc id");
             String documentKey = contentHandlerInput.getDocumentId();
-
             log.log(Level.FINE, "document key: " + documentKey);
 
-            int ticketStart = documentKey.indexOf("&acm_ticket=");
-
-            log.log(Level.FINE, "ticket start: " + ticketStart);
-
-            String docIdString = docIdFromDocumentKey(documentKey);
-
-            log.log(Level.FINE, "Doc ID: " + docIdString);
-
-            int userIdStart = documentKey.indexOf("&userid=");
-            String user = documentKey.substring(userIdStart + 8);
-
-            log.log(Level.FINE, "User: " + user);
-
-            String ticket = documentKey.substring(ticketStart + 12, userIdStart);
+            // Extracts the ticket, user, doc id, parent node id, parent node type from the url
+            String ticket = WebUtils.getUrlArgument(ArkCaseConstants.ACM_TICKET_PARAM, documentKey);
             log.log(Level.FINE, "ticket: " + ticket);
-
+            String docIdString = WebUtils.getUrlArgument(ArkCaseConstants.ACM_FILE_PARAM, documentKey);
+            log.log(Level.FINE, "Doc ID: " + docIdString);
+            String user = WebUtils.getUrlArgument(ArkCaseConstants.ACM_USER_PARAM, documentKey);
+            log.log(Level.FINE, "User: " + user);
+            String documentName = WebUtils.getUrlArgument("documentName", documentKey);
+            log.log(Level.FINE, "documentName: " + documentName);
+            String parentObjectId = WebUtils.getUrlArgument(ArkCaseConstants.ACM_PARENT_ID_PARAM, documentKey);
+            log.log(Level.FINE, "parentObjectId: " + parentObjectId);
+            String parentObjectType = WebUtils.getUrlArgument(ArkCaseConstants.ACM_PARENT_TYPE_PARAM, documentKey);
+            log.log(Level.FINE, "parentObjectType: " + parentObjectType);
+            String splitDocument = WebUtils.getUrlArgument("splitDocument", documentKey);
+            log.log(Level.FINE, "splitDocument: " + splitDocument);
 
             log.log(Level.FINE, "get merge annotations");
             boolean mergeAnnotations = contentHandlerInput.mergeAnnotations();
 
+            // The binary data comprising the document is included in the content handler hash table
             log.log(Level.FINE, "get doc content");
             byte[] data = contentHandlerInput.getDocumentContent();
 
-            DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));
-            Snowbnd snow = new Snowbnd();
-            int filetype = snow.IMGLOW_get_filetype(dis);
+            // Obtains a snowbound specific format code for the document type
+            SnowBoundService snowBoundService = new SnowBoundService();
+            int filetype = snowBoundService.getDocumentFormat(data);
             Format format = FormatHash.getInstance().getFormat(filetype);
 
             String extension = format.getExtension();
@@ -585,56 +593,43 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             log.log(Level.FINE, "save file");
             ClientServerIO.saveFileBytes(data, saveFile);
 
+            // Used to communicate with ArkCase via HTTP REST calls
+            ArkCaseRestClient arkCaseClient = new ArkCaseRestClient(baseURL, uploadNewFileService, sendFileService, ticket);
 
-            String targetUrl = baseURL + sendFileService + docIdString + "?acm_ticket=" + ticket;
-            log.log(Level.FINE, "target URL: " + targetUrl);
-            URL url = new URL(targetUrl);
+            // Has a split operation been requested?
+            boolean isSplitOperation = (splitDocument != null && splitDocument.trim().length() > 0);
 
-            log.log(Level.FINE, "open connection");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true); // Triggers POST.
-            connection.setDoInput(true);
-            connection.setRequestProperty("Accept", "application/json");
-            connection.setRequestMethod("POST");
+            if (isSplitOperation) { // Split document and push the sub documents to ArkCase
+                try {
+                    List<byte[]> splitDocuments = snowBoundService.splitDocument(data, GenericUtils.parseIntegerList(splitDocument));
+                    for (int i = 0; i < splitDocuments.size(); i++) {
 
-            String boundary = Long.toHexString(System.currentTimeMillis()); // Just generate some unique random value.
-            String CRLF = "\r\n"; // Line separator required by multipart/form-data.
+                        String splitDocumentName = GenericUtils.createSubDocumentName(documentName, extension, i);
 
-            connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-            OutputStream output = connection.getOutputStream();
-            PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, "UTF-8"), true);
+                        // Write the split document to the file system (this is for testing purposes only)
+                        /*FileOutputStream fos = new FileOutputStream(new File("C:\\temp\\" + splitDocumentName));
+                        fos.write(splitDocuments.get(i));
+                        fos.close();*/
 
-            log.log(Level.FINE, "Writing file!!!");
-            // Send normal param.
-            writer.append("--" + boundary).append(CRLF);
+                        // Writes the split document to ArkCase
+                        String fullResponse = arkCaseClient.uploadDocumentToArkCase(splitDocuments.get(i), format.getMimeType(),
+                                              splitDocumentName, parentObjectType, parentObjectId);
 
-            //Content-Disposition: form-data; name="files[]"; filename="Report_of_Investigation_26032015174543228.pdf"
+                        log.log("Response body: " + fullResponse);
+                        log.log(Level.FINE, "Done writing!!!");
+                    }
+                } catch (Exception e) {
+                    log.log(Level.SEVERE, e.getMessage());
+                    log.log(Level.SEVERE, "Unable to perform document splitting.");
+                }
+            } else { // replaces an existing document in ArkCase with a new modified version
 
-            writer.append("Content-Disposition: form-data; name=\"files[]\"; filename=\"" + saveFile.getName() + "\"").append(CRLF);
-            writer.append("Content-Type: " + format.getMimeType()); //URLConnection.guessContentTypeFromName(saveFile.getName())).append(CRLF);
-            writer.append("Content-Transfer-Encoding: binary").append(CRLF);
-            writer.append(CRLF).flush();
-            Files.copy(saveFile.toPath(), output);
-            output.flush(); // Important before continuing with writer!
-            writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.
+                // Replaces the document in ArkCase with the new modified version
+                String fullResponse = arkCaseClient.replaceDocumentInArkCase(data, docIdString, format.getMimeType(), saveFile.getName());
 
-            // End of multipart/form-data.
-            writer.append("--" + boundary + "--").append(CRLF).flush();
-
-            int responseCode = connection.getResponseCode();
-            String responseMessage = connection.getResponseMessage();
-
-            log.log(Level.FINE, "Response: " + responseCode + " " + responseMessage);
-
-            InputStream is = connection.getInputStream();
-
-            String fullResponse = ClientServerIO.readStringFromInputStream(is);
-            log.log("Response body: " + fullResponse);
-
-
-            log.log(Level.FINE, "Done writing!!!");
-
-            log.log(Level.FINE, "returning");
+                log.log("Response body: " + fullResponse);
+                log.log(Level.FINE, "Done writing!!!");
+            }
 
             return retVal;
         } catch (Throwable t)
@@ -643,12 +638,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             t.printStackTrace();
 
             throw new FlexSnapSIAPIException(t.getMessage());
-
         }
-
-//
-//        ContentHandlerResult retVal = new ContentHandlerResult();
-//        return retVal;
     }
 
     @Override
@@ -835,7 +825,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
         AnnotationLayer[] annotations = contentHandlerInput.getAnnotationLayers();
         byte[] bookmarkBytes = contentHandlerInput.getBookmarkContent();
         byte[] noteBytes = contentHandlerInput.getNotesContent();
-        /* The following line shows how to get the page count if needed. */
+        // The following line shows how to get the page count if needed.
         // int pageCount = input.getDocumentPageCount();
         Logger.getInstance().log("saveDocumentContents");
         if (data != null)
@@ -852,10 +842,10 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             for (int annIndex = 0; annIndex < annotations.length; annIndex++)
             {
                 AnnotationLayer annLayer = annotations[annIndex];
-                /*
-                 * Remove the annLayer from the existingHashToindicate that it
-                 * should still exist and not be deleted.
-                 */
+                //
+                 // Remove the annLayer from the existingHashToindicate that it
+                 // should still exist and not be deleted.
+                 //
                 existingAnnHash.remove(annLayer.getLayerName());
                 if (annLayer.isNew() || annLayer.isModified())
                 {
@@ -873,7 +863,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
                                     + annLayer.getLayerName());
                 }
             }
-            /* Any annotation that is still in the existing hash should be deleted */
+            //' Any annotation that is still in the existing hash should be deleted
             deleteUnsavedExistingLayers(documentId, existingAnnHash);
         }
         saveNotesContent(request, clientInstanceId, documentId, noteBytes);
