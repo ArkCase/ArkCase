@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('CaseTimeController', ['$scope',
+angular.module('cases').controller('Cases.TimeController', ['$scope',
     function($scope) {
         $scope.$on('component-config', applyConfig);
         $scope.$emit('req-component-config', 'time');
