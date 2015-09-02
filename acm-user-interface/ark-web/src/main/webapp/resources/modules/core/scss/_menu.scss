@@ -28,6 +28,14 @@
     color: $navbar-header-color;
     a {
       color: $navbar-header-color;
+      background-image: $navbar-logo-bg-img;
+      background-size: $navbar-logo-bg-size;
+      background-repeat: $navbar-logo-bg-repeat;
+      background-position: $navbar-logo-bg-position;
+      position: $navbar-logo-position;
+      width: $navbar-logo-width;
+      padding-left: $navbar-logo-padding-left;
+      overflow: $navbar-logo-overflow;
     }
   }
 
