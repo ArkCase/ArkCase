@@ -24,11 +24,6 @@ public class PipelineManager<T, S extends PipelineContext>
     private List<PipelineHandler<T, S>> postSaveHandlers;
 
     /**
-     * Pipeline context.
-     */
-    private S pipelineContext;
-
-    /**
      * Logger instance.
      */
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -37,10 +32,11 @@ public class PipelineManager<T, S extends PipelineContext>
      * Execute all registered pre-save handlers.
      * Stop processing if any of the handlers throws exception
      *
-     * @param entity entity to execute
+     * @param entity          entity to process
+     * @param pipelineContext context associated with this pipeline
      * @throws PipelineProcessException on error
      */
-    public void onPreSave(T entity) throws PipelineProcessException
+    public void onPreSave(T entity, S pipelineContext) throws PipelineProcessException
     {
         log.debug("Pre-save handler of [{}] started", entity);
         ListIterator<PipelineHandler<T, S>> it = preSaveHandlers.listIterator();
@@ -72,10 +68,11 @@ public class PipelineManager<T, S extends PipelineContext>
      * Execute all post-save handlers.
      * Stop processing if any of the handlers throws exception
      *
-     * @param entity case file to execute
+     * @param entity          entity to process
+     * @param pipelineContext context associated with this pipeline
      * @throws PipelineProcessException on error
      */
-    public void onPostSave(T entity) throws PipelineProcessException
+    public void onPostSave(T entity, S pipelineContext) throws PipelineProcessException
     {
         log.debug("Post-save handler of [{}] started", entity);
         ListIterator<PipelineHandler<T, S>> it = postSaveHandlers.listIterator();
@@ -121,23 +118,5 @@ public class PipelineManager<T, S extends PipelineContext>
     public void setPostSaveHandlers(List<PipelineHandler<T, S>> postSaveHandlers)
     {
         this.postSaveHandlers = postSaveHandlers;
-    }
-
-    /**
-     * Case file saving context getter.
-     */
-    public S getPipelineContext()
-    {
-        return pipelineContext;
-    }
-
-    /**
-     * Case file saving context setter.
-     *
-     * @param pipelineContext
-     */
-    public void setPipelineContext(S pipelineContext)
-    {
-        this.pipelineContext = pipelineContext;
     }
 }
