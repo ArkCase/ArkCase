@@ -6,14 +6,22 @@
     <bean id="caseFileQueuePipelineContext"
           class="com.armedia.acm.plugins.casefile.pipeline.CaseFileQueuePipelineContext"/>
 
+    <bean id="caseFileQueueHandler" class="com.armedia.acm.plugins.casefile.pipeline.presave.CaseFileQueueHandler">
+        <property name="acmQueueDao" ref="acmQueueDao"/>
+    </bean>
+
     <bean id="queueCaseFilePipelineManager"
           class="com.armedia.acm.plugins.casefile.pipeline.QueueCaseFilePipelineManager">
         <property name="pipelineContext" ref="caseFileQueuePipelineContext"/>
         <property name="preSaveHandlers">
-            <list/>
+            <list>
+                <ref bean="caseFileQueueHandler"/>
+            </list>
         </property>
         <property name="postSaveHandlers">
-            <list/>
+            <list>
+                <ref bean="caseFileRulesHandler"/>
+            </list>
         </property>
     </bean>
 
