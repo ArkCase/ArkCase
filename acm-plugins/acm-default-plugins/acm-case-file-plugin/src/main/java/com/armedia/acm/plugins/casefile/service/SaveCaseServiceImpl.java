@@ -17,7 +17,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
 {
     private CaseFileDao caseFileDao;
 
-    private PipelineManager pipelineManager;
+    private PipelineManager<CaseFile, CaseFilePipelineContext> pipelineManager;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -30,14 +30,13 @@ public class SaveCaseServiceImpl implements SaveCaseService
         pipelineContext.setNewCase(in.getId() == null);
         pipelineContext.setAuthentication(auth);
         pipelineContext.setIpAddress(ipAddress);
-        pipelineManager.setPipelineContext(pipelineContext);
 
-        pipelineManager.onPreSave(in);
+        pipelineManager.onPreSave(in, pipelineContext);
 
         CaseFile saved = caseFileDao.save(in);
         log.info("Case saved '{}'", saved);
 
-        pipelineManager.onPostSave(saved);
+        pipelineManager.onPostSave(saved, pipelineContext);
 
         return saved;
     }
