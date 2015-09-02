@@ -1,20 +1,19 @@
 
-<section class="panel panel-default">
-    <h4 class="padder"> &nbsp; Contact Information</h4>
-    <ul class="list-group">
-        <li class="list-group-item">
+<section class="well">
+    <h4 class="well-small"> {{'profile.contact.title' | translate}} </h4>
+    <ul class="list-unstyled">
+        <li>
             <div class="row">
-                <div ng-controller="ContactController" class="col-xs-6">
-                    <!--<a href="#" class="acm-word-wrap editable editable-click editable-empty" id="location" data-type="text" data-pk="1" data-title="Enter Location" title="Enter Location">Unknown</a>-->
-                    <h4>  <a href="#"  editable-text="contact.location">{{ contact.location|| 'unknown' }}</a></h4>
-                    <small>Location </small>
-                    <h4>  <a href="#" editable-text="contact.im">{{ contact.im|| 'unknown' }}</a></h4>
-                    <small> IM Account </small> </div>
+                <div ng-controller="Profile.ContactController" class="col-xs-6">
+                    <h4>  <a href="#"  editable-text="profile.contact.location">{{ profile.contact.location|| 'unknown' }}</a></h4>
+                    <small>{{'profile.contact.location' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profile.contact.im">{{ profile.contact.im|| 'unknown' }}</a></h4>
+                    <small> {{'profile.contact.im' | translate}} </small> </div>
                 <div class="col-xs-6">
-                    <h4>  <a href="#" editable-text="contact.officephone">{{ contact.officephone|| 'unknown' }}</a></h4>
-                    <small> Office Phone </small>
-                    <h4>  <a href="#" editable-text="contact.mobilephone">{{ contact.mobilephone|| 'unknown' }}</a></h4>
-                    <small> Mobile Phone </small> </div>
+                    <h4>  <a href="#" editable-text="profile.contact.officephone">{{ profile.contact.officephone|| 'unknown' }}</a></h4>
+                    <small> {{'profile.contact.officePhone' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profile.contact.mobilephone">{{ profile.contact.mobilephone|| 'unknown' }}</a></h4>
+                    <small> {{'profile.contact.mobilePhone' | translate}} </small> </div>
             </div>
         </li>
     </ul>
