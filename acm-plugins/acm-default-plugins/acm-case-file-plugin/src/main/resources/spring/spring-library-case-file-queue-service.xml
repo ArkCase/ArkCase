@@ -3,13 +3,21 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
+    <bean id="caseFileQueueHandler" class="com.armedia.acm.plugins.casefile.pipeline.presave.CaseFileQueueHandler">
+        <property name="acmQueueDao" ref="acmQueueDao"/>
+    </bean>
+
     <bean id="queueCaseFilePipelineManager"
           class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
-            <list/>
+            <list>
+                <ref bean="caseFileQueueHandler"/>
+            </list>
         </property>
         <property name="postSaveHandlers">
-            <list/>
+            <list>
+                <ref bean="caseFileRulesHandler"/>
+            </list>
         </property>
     </bean>
 
