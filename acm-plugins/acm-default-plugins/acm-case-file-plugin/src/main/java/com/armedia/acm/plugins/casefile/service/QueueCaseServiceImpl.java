@@ -19,11 +19,12 @@ public class QueueCaseServiceImpl implements QueueCaseService
     {
         CaseFile caseFile = getCaseFileDao().find(caseFileId);
 
-        getQueuePipelineManager().onPreSave(caseFile);
+        CaseFileQueuePipelineContext pipelineContext = new CaseFileQueuePipelineContext();
+        getQueuePipelineManager().onPreSave(caseFile, pipelineContext);
 
         caseFile = getCaseFileDao().save(caseFile);
 
-        getQueuePipelineManager().onPostSave(caseFile);
+        getQueuePipelineManager().onPostSave(caseFile, pipelineContext);
 
         return caseFile;
     }
