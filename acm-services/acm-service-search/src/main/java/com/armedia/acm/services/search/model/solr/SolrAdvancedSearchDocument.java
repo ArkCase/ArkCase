@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Property names must be identical to the desired SOLR field names.
  */
-public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializable
+public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
@@ -22,10 +22,10 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
     private String object_type_s;
     private String object_sub_type_s;
     private String name;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SearchConstants.SOLR_DATE_FORMAT, timezone = SearchConstants.TIME_ZONE_UTC)
     private Date create_date_tdt;
     private String creator_lcs;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SearchConstants.SOLR_DATE_FORMAT, timezone = SearchConstants.TIME_ZONE_UTC)
     private Date modified_date_tdt;
     private String modifier_lcs;
 
@@ -46,11 +46,11 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
 
 
     /////////////////// for docs with an incident date ////////////
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SearchConstants.SOLR_DATE_FORMAT, timezone = SearchConstants.TIME_ZONE_UTC)
     private Date incident_date_tdt;
 
     /////////////////// for docs with a due date////////////////////
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SearchConstants.SOLR_DATE_FORMAT, timezone = SearchConstants.TIME_ZONE_UTC)
     private Date dueDate_tdt;
 
     /////////////////// for docs with a priority ////////////
@@ -106,7 +106,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
 
     ////////////////// for objects that own contact methods, e.g. persons /////////////////////
     private List<String> contact_method_ss;
-    
+
     ///////////////// for objects that have multiple children, supervisor, members ... e.g. group ///////////////////
     private String supervisor_id_s;
     private List<String> child_id_ss;
@@ -122,10 +122,10 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
     private String ecmFileId;
     private List<String> tags_ss;
 
-/////////////////////// for notification /////////////////////////////////////////
-	private String state_lcs;
-	private String data_lcs;
-	private String action_lcs;
+    /////////////////////// for notification /////////////////////////////////////////
+    private String state_lcs;
+    private String data_lcs;
+    private String action_lcs;
     private String notification_type_lcs;
 
 
@@ -133,19 +133,23 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
     private boolean hidden_b;
 
     @JsonIgnore
-    public String getEcmFileId() {
+    public String getEcmFileId()
+    {
         return ecmFileId;
     }
 
-    public void setEcmFileId(String ecmFileId) {
+    public void setEcmFileId(String ecmFileId)
+    {
         this.ecmFileId = ecmFileId;
     }
 
-    public String getContent_type() {
+    public String getContent_type()
+    {
         return content_type;
     }
 
-    public void setContent_type(String content_type) {
+    public void setContent_type(String content_type)
+    {
         this.content_type = content_type;
     }
 
@@ -181,17 +185,17 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
         this.object_type_s = object_type_s;
     }
 
-    public String getObject_sub_type_s() 
+    public String getObject_sub_type_s()
     {
-		return object_sub_type_s;
-	}
+        return object_sub_type_s;
+    }
 
-	public void setObject_sub_type_s(String object_sub_type_s) 
-	{
-		this.object_sub_type_s = object_sub_type_s;
-	}
+    public void setObject_sub_type_s(String object_sub_type_s)
+    {
+        this.object_sub_type_s = object_sub_type_s;
+    }
 
-	public String getTitle_parseable()
+    public String getTitle_parseable()
     {
         return title_parseable;
     }
@@ -412,35 +416,43 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
         return parent_type_s;
     }
 
-    public String getParent_name_t() {
+    public String getParent_name_t()
+    {
         return parent_name_t;
     }
 
-    public void setParent_name_t(String parent_name_t) {
+    public void setParent_name_t(String parent_name_t)
+    {
         this.parent_name_t = parent_name_t;
     }
 
-    public String getParent_number_lcs() {
+    public String getParent_number_lcs()
+    {
         return parent_number_lcs;
     }
 
-    public void setParent_number_lcs(String parent_number_lcs) {
+    public void setParent_number_lcs(String parent_number_lcs)
+    {
         this.parent_number_lcs = parent_number_lcs;
     }
 
-    public String getDescription_no_html_tags_parseable() {
+    public String getDescription_no_html_tags_parseable()
+    {
         return description_no_html_tags_parseable;
     }
 
-    public void setDescription_no_html_tags_parseable(String description_no_html_tags_parseable) {
+    public void setDescription_no_html_tags_parseable(String description_no_html_tags_parseable)
+    {
         this.description_no_html_tags_parseable = description_no_html_tags_parseable;
     }
 
-    public String getNotes_no_html_tags_parseable() {
+    public String getNotes_no_html_tags_parseable()
+    {
         return notes_no_html_tags_parseable;
     }
 
-    public void setNotes_no_html_tags_parseable(String notes_no_html_tags_parseable) {
+    public void setNotes_no_html_tags_parseable(String notes_no_html_tags_parseable)
+    {
         this.notes_no_html_tags_parseable = notes_no_html_tags_parseable;
     }
 
@@ -514,79 +526,97 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
         this.modifier_lcs = modifier_lcs;
     }
 
-    public String getEmail_lcs() {
+    public String getEmail_lcs()
+    {
         return email_lcs;
     }
 
-    public void setEmail_lcs(String email_lcs) {
+    public void setEmail_lcs(String email_lcs)
+    {
         this.email_lcs = email_lcs;
     }
 
-    public Date getDueDate_tdt() {
+    public Date getDueDate_tdt()
+    {
         return dueDate_tdt;
     }
 
-    public String getDescription_parseable() {
+    public String getDescription_parseable()
+    {
         return description_parseable;
     }
 
-    public void setDescription_parseable(String description_parseable) {
+    public void setDescription_parseable(String description_parseable)
+    {
         this.description_parseable = description_parseable;
     }
 
-    public void setDueDate_tdt(Date dueDate_tdt) {
+    public void setDueDate_tdt(Date dueDate_tdt)
+    {
         this.dueDate_tdt = dueDate_tdt;
     }
 
-    public String getAssignee_full_name_lcs() {
+    public String getAssignee_full_name_lcs()
+    {
         return assignee_full_name_lcs;
     }
-    
-    public void setAssignee_full_name_lcs(String assignee_full_name_lcs) {
+
+    public void setAssignee_full_name_lcs(String assignee_full_name_lcs)
+    {
         this.assignee_full_name_lcs = assignee_full_name_lcs;
     }
-    
-    public String getFull_name_lcs() {
+
+    public String getFull_name_lcs()
+    {
         return full_name_lcs;
     }
-    
-    public void setFull_name_lcs(String full_name_lcs) {
+
+    public void setFull_name_lcs(String full_name_lcs)
+    {
         this.full_name_lcs = full_name_lcs;
     }
 
-    public List<String> getChild_id_ss() {
-		return child_id_ss;
-	}
+    public List<String> getChild_id_ss()
+    {
+        return child_id_ss;
+    }
 
-	public void setChild_id_ss(List<String> child_id_ss) {
-		this.child_id_ss = child_id_ss;
-	}
+    public void setChild_id_ss(List<String> child_id_ss)
+    {
+        this.child_id_ss = child_id_ss;
+    }
 
-	public String getSupervisor_id_s() {
-		return supervisor_id_s;
-	}
+    public String getSupervisor_id_s()
+    {
+        return supervisor_id_s;
+    }
 
-	public void setSupervisor_id_s(String supervisor_id_s) {
-		this.supervisor_id_s = supervisor_id_s;
-	}
+    public void setSupervisor_id_s(String supervisor_id_s)
+    {
+        this.supervisor_id_s = supervisor_id_s;
+    }
 
-	public List<String> getMember_id_ss() {
-		return member_id_ss;
-	}
+    public List<String> getMember_id_ss()
+    {
+        return member_id_ss;
+    }
 
-	public void setMember_id_ss(List<String> member_id_ss) {
-		this.member_id_ss = member_id_ss;
-	}
+    public void setMember_id_ss(List<String> member_id_ss)
+    {
+        this.member_id_ss = member_id_ss;
+    }
 
-    public List<String> getGroups_id_ss() {
-		return groups_id_ss;
-	}
+    public List<String> getGroups_id_ss()
+    {
+        return groups_id_ss;
+    }
 
-	public void setGroups_id_ss(List<String> groups_id_ss) {
-		this.groups_id_ss = groups_id_ss;
-	}
+    public void setGroups_id_ss(List<String> groups_id_ss)
+    {
+        this.groups_id_ss = groups_id_ss;
+    }
 
-	public void setAdhocTask_b(boolean adhocTask_b)
+    public void setAdhocTask_b(boolean adhocTask_b)
     {
         this.adhocTask_b = adhocTask_b;
     }
@@ -621,29 +651,35 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
         return public_doc_b;
     }
 
-	public String getState_lcs() {
-		return state_lcs;
-	}
+    public String getState_lcs()
+    {
+        return state_lcs;
+    }
 
-	public void setState_lcs(String state_lcs) {
-		this.state_lcs = state_lcs;
-	}
+    public void setState_lcs(String state_lcs)
+    {
+        this.state_lcs = state_lcs;
+    }
 
-	public String getData_lcs() {
-		return data_lcs;
-	}
+    public String getData_lcs()
+    {
+        return data_lcs;
+    }
 
-	public void setData_lcs(String data_lcs) {
-		this.data_lcs = data_lcs;
-	}
+    public void setData_lcs(String data_lcs)
+    {
+        this.data_lcs = data_lcs;
+    }
 
-	public String getAction_lcs() {
-		return action_lcs;
-	}
+    public String getAction_lcs()
+    {
+        return action_lcs;
+    }
 
-	public void setAction_lcs(String action_lcs) {
-		this.action_lcs = action_lcs;
-	}
+    public void setAction_lcs(String action_lcs)
+    {
+        this.action_lcs = action_lcs;
+    }
 
     public String getNotification_type_lcs()
     {
@@ -655,7 +691,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
         this.notification_type_lcs = notification_type_lcs;
     }
 
-	@Override
+    @Override
     public void setPublic_doc_b(boolean public_doc_b)
     {
         this.public_doc_b = public_doc_b;
@@ -694,19 +730,23 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
         this.allow_acl_ss = allow_acl_ss;
     }
 
-    public List<String> getTags_ss() {
+    public List<String> getTags_ss()
+    {
         return tags_ss;
     }
 
-    public void setTags_ss(List<String> tags_ss) {
+    public void setTags_ss(List<String> tags_ss)
+    {
         this.tags_ss = tags_ss;
     }
 
-    public String getTag_token_lcs() {
+    public String getTag_token_lcs()
+    {
         return tag_token_lcs;
     }
 
-    public void setTag_token_lcs(String tag_token_lcs) {
+    public void setTag_token_lcs(String tag_token_lcs)
+    {
         this.tag_token_lcs = tag_token_lcs;
     }
 
