@@ -20,10 +20,9 @@ public abstract class SolrAbstractDocument implements SolrBaseDocument
         return additionalProperties;
     }
 
+    @Override
     public void setAdditionalProperty(String key, Object value)
     {
         getAdditionalProperties().put(key, value);
     }
-
-    ;
 }
