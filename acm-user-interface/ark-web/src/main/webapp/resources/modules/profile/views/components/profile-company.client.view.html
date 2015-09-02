@@ -1,0 +1,29 @@
+<div class="well">
+    <h4 class="well-small"> {{'profile.company.title' | translate}}</h4>
+    <ul class="list-unstyled">
+        <li>
+            <div ng-controller="Profile.CompanyController" class="row">
+                <div  class="col-xs-6">
+                    <h4>  <a href="#" editable-text="profile.company.name">{{profile.company.name || 'unknown'}}</a></h4>
+                    <small> {{'profile.company.name' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profile.company.address1">{{profile.company.address1 || 'unknown'}}</a></h4>
+                    <small> {{'profile.company.address1' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profile.company.address2">{{profile.company.address2 || 'unknown'}}</a></h4>
+                    <small> {{'profile.company.address2' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profile.company.city">{{profile.company.city || 'unknown'}}</a></h4>
+                    <small> {{'profile.company.city' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profile.company.state">{{profile.company.state || 'unknown'}}</a></h4>
+                    <small> {{'profile.company.state' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profile.company.zip">{{profile.company.zip || 'unknown'}}</a></h4>
+                    <small> {{'profile.company.zip' | translate}} </small> </div>
+                <div class="col-xs-6">
+                    <h4>  <a href="#" editable-text="profile.company.mainPhone">{{profile.company.mainPhone || 'unknown'}}</a></h4>
+                    <small> {{'profile.company.mainPhone' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profile.company.fax">{{profile.company || 'unknown'}}</a></h4>
+                    <small> {{'profile.company.fax' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profile.company.website">{{profile.company.website || 'unknown'}}</a></h4>
+                    <small> {{'profile.company.website' | translate}} </small> </div>
+            </div>
+        </li>
+    </ul>
+</div>

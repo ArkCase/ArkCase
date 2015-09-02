@@ -1,0 +1,21 @@
+<section class="well">
+    <div class="well-small">
+        <div ng-controller="Profile.PicController" class="row">
+            <div class="col-xs-6 text-center">
+                <div>
+                    <img id="picLoading" class="img-circle" ng-src='modules/profile/img/nopic.png'>
+                    <a id="lnkChangePicture" href="#" ng-click="changePic()"><u>{{'profile.pciture.title' | translate}}</u></a>
+                    <form id="formPicture" class="hidden">
+                        <input type="file" id="file" name="file">
+                    </form>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <h4 id="fullName"></h4>
+                <h4><a href="#" id="title" data-type="text" data-pk="1" data-title="Enter Title"></a></h4>
+                <h4 id="email"></h4>
+                <small> {{'profile.pciture.email' | translate}} </small>
+            </div>
+        </div>
+    </div>
+</section>
