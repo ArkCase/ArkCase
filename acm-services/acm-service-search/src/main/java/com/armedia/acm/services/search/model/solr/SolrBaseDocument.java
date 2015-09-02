@@ -2,9 +2,7 @@ package com.armedia.acm.services.search.model.solr;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,19 +24,9 @@ public interface SolrBaseDocument
 
     void setProtected_object_b(boolean protected_object_b);
 
-    // extensibility section below
-    @JsonUnwrapped
-    Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
     @JsonAnyGetter
-    default public Map<String, Object> getAdditionalProperties()
-    {
-        return additionalProperties;
-    }
+    Map<String, Object> getAdditionalProperties();
 
     @JsonAnySetter
-    default public void setAdditionalProperty(String key, Object value)
-    {
-        additionalProperties.put(key, value);
-    }
+    void setAdditionalProperty(String key, Object value);
 }
