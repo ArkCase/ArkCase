@@ -8,6 +8,8 @@ import java.util.List;
 
 import Snow.SNBD_SEARCH_RESULT;
 import Snow.Snowbnd;
+import Snow.FormatHash;
+import Snow.Format;
 
 /**
  * Created by joseph.mcgrady on 8/30/2015.
@@ -40,8 +42,19 @@ public class SnowBoundService {
      * @param documentBytes - contains the binary data comprising the document
      * @return integer code for the file type of the document
      */
-    public int getDocumentFormat(byte[] documentBytes) {
+    public int getDocumentType(byte[] documentBytes) {
         return snow.IMGLOW_get_filetype(convertByteArrayToDataStream(documentBytes));
+    }
+
+    /**
+     * Returns a snowbound Format object from which the mimetype
+     * and file extension can be obtained
+     * @param documentBytes - contains the binary data comprising the document
+     * @return snowbound Format object which includes the extension/mimetype
+     */
+    public Format getDocumentFormat(byte[] documentBytes) {
+        int formatCode = getDocumentType(documentBytes);
+        return FormatHash.getInstance().getFormat(formatCode);
     }
 
     /**
@@ -126,6 +139,30 @@ public class SnowBoundService {
     }
 
     /**
+     * Merges the given documents into one combined document with all of the pages
+     * @param documentList - contains the binary data for each document, which can be multi-page documents
+     * @return binary data of the merged document
+     */
+    public byte[] mergeDocuments(List<byte[]> documentList) {
+        byte[] mergedDocument = null;
+        if (documentList != null && documentList.size() > 0) {
+
+            // Builds one combined list with the pages of all the documents
+            List<byte[]> totalPageList = new ArrayList<byte[]>();
+            for (byte[] document : documentList) {
+                List<byte[]> pages = getPages(document);
+                for (byte[] page : pages) {
+                    totalPageList.add(page);
+                }
+            }
+
+            // Merges the pages of the separate documents into one document
+            mergedDocument = mergePages(totalPageList);
+        }
+        return mergedDocument;
+    }
+
+    /**
      * Merges the given pages into a combined document
      * @param pageList - contains the binary data for each individual page
      * @return binary data of the merged document
@@ -136,7 +173,7 @@ public class SnowBoundService {
             if (pageList.size() == 1) { // no merge action is required, there is only one page
                 mergedDocument = pageList.get(0);
             } else {
-                int fileType = getDocumentFormat(pageList.get(0));
+                int fileType = getDocumentType(pageList.get(0));
                 DataInputStream mergeDataStream = convertByteArrayToDataStream(pageList.get(0));
                 for (int i = 0; i + 1 < pageList.size(); i++) { // Appends each page to the total document
                     mergedDocument = snow.IMGLOW_append_page(mergeDataStream, pageList.get(i + 1), fileType, snowError);
@@ -168,7 +205,7 @@ public class SnowBoundService {
             throw new Exception("The reorder index was out of bounds. The pages list length is " + pageList.size() + " and the reorder index is " + reorderIndex);
 
         DataInputStream mergeDataStream = new DataInputStream(new ByteArrayInputStream(pageList.get(reorderIndex)));
-        int fileType = getDocumentFormat(pageList.get(reorderIndex));
+        int fileType = getDocumentType(pageList.get(reorderIndex));
         for (int i = 0; i < pageList.size() - 1; i++) {
 
             // Obtains the index of the next page to append to the reordered document

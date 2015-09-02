@@ -5748,7 +5748,7 @@ function VirtualViewer() {
         }
         Cz.toggle()
     };
-    VirtualViewer.prototype.sendDocument = function (splitParam) {
+    VirtualViewer.prototype.sendDocument = function (operationType, operationParam) {
         var Cz = new URI(vvConfig.servletPath);
         Cz.addQuery("action", "sendDocument");
 
@@ -5756,9 +5756,10 @@ function VirtualViewer() {
         var parentWindowUri = new URI(document.referrer);
         var parentNodeArgs = parentWindowUri.query();
 
-        // The url arguments are passed along with the document id/user/ticket to the backend
+        // The url arguments are passed along with the document id/user/ticket and the operation type and operation parameters to the backend
         var argsForSnowBackend = A1.getDocumentId() + ((parentNodeArgs) ? ("&" + parentNodeArgs) : "");
-        argsForSnowBackend += "&splitDocument=" + ((splitParam) ? splitParam : "");
+        argsForSnowBackend += "&operationType=" + ((operationType) ? operationType : "");
+        argsForSnowBackend += "&operationParam=" + ((operationParam) ? operationParam : "");
         Cz.addQuery("documentId", argsForSnowBackend);
 
         Cz.addQuery("clientInstanceId", virtualViewer.getClientInstanceId());

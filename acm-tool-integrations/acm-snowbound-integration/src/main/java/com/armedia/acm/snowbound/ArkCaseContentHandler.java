@@ -1,5 +1,6 @@
 package com.armedia.acm.snowbound;
 
+import com.armedia.acm.snowbound.model.AcmDocument;
 import com.armedia.acm.snowbound.model.ArkCaseConstants;
 import com.armedia.acm.snowbound.service.web.ArkCaseRestClient;
 import com.armedia.acm.snowbound.service.SnowBoundService;
@@ -12,7 +13,6 @@ import Snow.Snowbnd;
 
 import com.snowbound.common.utils.ClientServerIO;
 import com.snowbound.common.utils.Logger;
-import com.snowbound.common.utils.URLReturnData;
 import com.snowbound.snapserv.servlet.AnnotationLayer;
 import com.snowbound.snapserv.servlet.ContentHandlerInput;
 import com.snowbound.snapserv.servlet.ContentHandlerResult;
@@ -37,9 +37,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.ByteArrayInputStream;
 import java.util.Vector;
-import java.util.Map;
-import java.util.List;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
 
@@ -173,70 +173,28 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
     public ContentHandlerResult getDocumentContent(ContentHandlerInput contentHandlerInput) throws FlexSnapSIAPIException
     {
         log.log(Level.FINE, "in getDocumentContent");
-        String urlAppend = contentHandlerInput.getDocumentId();
+        String documentId = contentHandlerInput.getDocumentId();
 
-        String getDocUrl = baseURL + retrieveFileService;
-        if (getDocUrl.endsWith("/") && urlAppend.startsWith("/"))
-        {
-            urlAppend = urlAppend.substring(1);
-        }
-
-        String completeURL = getDocUrl + urlAppend;
+        // Extracts the ticket and document id from the document id string
+        String ticket = WebUtils.getUrlArgument(ArkCaseConstants.ACM_TICKET_PARAM, documentId);
+        log.log(Level.FINE, "ticket: " + ticket);
+        String docIdString = WebUtils.getUrlArgument(ArkCaseConstants.ACM_FILE_PARAM, documentId);
+        log.log(Level.FINE, "Doc ID: " + docIdString);
 
         try
         {
-            URLReturnData t = ClientServerIO.getURLBytes(completeURL);
+            // Pulls the document from the ArkCase download webscript
+            ArkCaseRestClient arkCaseClient = new ArkCaseRestClient(baseURL, uploadNewFileService, sendFileService, retrieveFileService, ticket);
+            AcmDocument acmDocument = arkCaseClient.getDocument(docIdString);
+
+            // Sends the document data and name to Snowbound in a hash table
             ContentHandlerResult result = new ContentHandlerResult();
-            result.put("KEY_DOCUMENT_CONTENT", t.getData());
-            String displayName = null;
-            String filenameFromResponse = null;
-
-            try
-            {
-                Map urlEnd = t.getHeaderFields();
-                List contentDispositionValue = (List) urlEnd.get("Content-Disposition");
-                if (contentDispositionValue != null)
-                {
-                    String contentDisposition = (String) contentDispositionValue.get(0);
-                    String[] dispositionTokens = contentDisposition.split(";");
-
-                    for (int i = 0; i < dispositionTokens.length; ++i)
-                    {
-                        String dispositionToken = dispositionTokens[i];
-                        if (dispositionToken.startsWith("filename="))
-                        {
-                            filenameFromResponse = dispositionToken.split("=")[1];
-                        }
-                    }
-                }
-            } catch (Exception var14)
-            {
-                var14.printStackTrace();
-            }
-
-            if (filenameFromResponse != null)
-            {
-                displayName = filenameFromResponse;
-            }
-
-            if (displayName == null)
-            {
-                String var17 = completeURL.substring(completeURL.lastIndexOf(47) + 1);
-                if (var17.indexOf(63) != -1)
-                {
-                    var17 = var17.substring(0, var17.indexOf(63));
-                }
-
-                displayName = var17;
-            }
-
-            result.put("KEY_DOCUMENT_DISPLAY_NAME", displayName);
+            result.put("KEY_DOCUMENT_CONTENT", acmDocument.getData());
+            result.put("KEY_DOCUMENT_DISPLAY_NAME", acmDocument.getName());
             return result;
-        } catch (MalformedURLException var15)
-        {
+        } catch (MalformedURLException var15) {
             throw new FlexSnapSIAPIException(var15.getMessage());
-        } catch (Throwable var16)
-        {
+        } catch (Throwable var16) {
             throw new FlexSnapSIAPIException(var16.getMessage());
         }
     }
@@ -566,8 +524,14 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             log.log(Level.FINE, "parentObjectId: " + parentObjectId);
             String parentObjectType = WebUtils.getUrlArgument(ArkCaseConstants.ACM_PARENT_TYPE_PARAM, documentKey);
             log.log(Level.FINE, "parentObjectType: " + parentObjectType);
-            String splitDocument = WebUtils.getUrlArgument("splitDocument", documentKey);
-            log.log(Level.FINE, "splitDocument: " + splitDocument);
+            String operationType = WebUtils.getUrlArgument("operationType", documentKey);
+            log.log(Level.FINE, "operationType: " + operationType);
+            String operationParam = WebUtils.getUrlArgument("operationParam", documentKey);
+            log.log(Level.FINE, "operationParam: " + operationParam);
+
+            // The default operation is to upload the document to ArkCase to replace the old version
+            if (operationType == null || operationType.length() == 0)
+                operationType = "replace";
 
             log.log(Level.FINE, "get merge annotations");
             boolean mergeAnnotations = contentHandlerInput.mergeAnnotations();
@@ -578,8 +542,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
 
             // Obtains a snowbound specific format code for the document type
             SnowBoundService snowBoundService = new SnowBoundService();
-            int filetype = snowBoundService.getDocumentFormat(data);
-            Format format = FormatHash.getInstance().getFormat(filetype);
+            Format format = snowBoundService.getDocumentFormat(data);
 
             String extension = format.getExtension();
             log.log(Level.FINE, "extension: " + extension);
@@ -594,14 +557,56 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             ClientServerIO.saveFileBytes(data, saveFile);
 
             // Used to communicate with ArkCase via HTTP REST calls
-            ArkCaseRestClient arkCaseClient = new ArkCaseRestClient(baseURL, uploadNewFileService, sendFileService, ticket);
+            ArkCaseRestClient arkCaseClient = new ArkCaseRestClient(baseURL, uploadNewFileService, sendFileService, retrieveFileService, ticket);
 
-            // Has a split operation been requested?
-            boolean isSplitOperation = (splitDocument != null && splitDocument.trim().length() > 0);
-
-            if (isSplitOperation) { // Split document and push the sub documents to ArkCase
+            if (operationType.equals("merge")) { // merge the specified documents and push the combined document to ArkCases
+                List<byte[]> documentsToMerge = new ArrayList<byte[]>();
+                String mergedDocumentName = "";
                 try {
-                    List<byte[]> splitDocuments = snowBoundService.splitDocument(data, GenericUtils.parseIntegerList(splitDocument));
+                    // Obtains the ids of the ArkCase documents to merge
+                    List<String> documentIdList = GenericUtils.parseStringList(operationParam);
+                    if (documentIdList.size() < 2)
+                        throw new Exception("At least two documents are required to perform a merge operation");
+
+                    // Downloads each of the documents to merge from ArkCase
+                    for (String docId : documentIdList) {
+                        AcmDocument acmDocument = arkCaseClient.getDocument(docId);
+                        documentsToMerge.add(acmDocument.getData());
+                        mergedDocumentName += acmDocument.getName() + "_";
+                    }
+
+                    // Removes trailing "_" character from the merged name
+                    if (mergedDocumentName.length() > 0)
+                        mergedDocumentName = mergedDocumentName.substring(0, mergedDocumentName.length() - 1);
+
+                    log.log(Level.FINE, "Pulled " + documentsToMerge.size() + " documents from ArkCase to merge");
+
+                    if (documentsToMerge.size() >= 2) { // 2 or more documents are required in order to merge
+                        byte[] mergedDocument = snowBoundService.mergeDocuments(documentsToMerge);
+
+                        // Determines the appropriate file type extension of the merged document
+                        Format mergedFormat = snowBoundService.getDocumentFormat(documentsToMerge.get(0));
+                        mergedDocumentName += "." + mergedFormat.getExtension();
+                        log.log(Level.FINE, "uploading merged document \"" + mergedDocumentName + "\" to ArkCase");
+
+                        // Uploads the merged document to ArkCase in the currently open parent container
+                        String fullResponse = arkCaseClient.uploadDocumentToArkCase(mergedDocument, mergedFormat.getMimeType(),
+                                              mergedDocumentName, parentObjectType, parentObjectId);
+
+                        log.log("Response body: " + fullResponse);
+                        log.log(Level.FINE, "Done writing!!!");
+                    } else {
+                        throw new Exception("Two or more documents could not be downloaded from ArkCase to merge");
+                    }
+
+                } catch (Exception e) {
+                    log.log(Level.SEVERE, e.getMessage());
+                    log.log(Level.SEVERE, "Unable to perform document merge operation.");
+                }
+
+            } else if (operationType.equals("split")) { // Split document and push the sub documents to ArkCase
+                try {
+                    List<byte[]> splitDocuments = snowBoundService.splitDocument(data, GenericUtils.parseIntegerList(operationParam));
                     for (int i = 0; i < splitDocuments.size(); i++) {
 
                         String splitDocumentName = GenericUtils.createSubDocumentName(documentName, extension, i);
@@ -632,8 +637,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             }
 
             return retVal;
-        } catch (Throwable t)
-        {
+        } catch (Throwable t) {
             log.log(Level.SEVERE, "Error in sendDocumentContent: " + t.getMessage());
             t.printStackTrace();
 
@@ -704,6 +708,11 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
         log.log(Level.FINE, "in getAvailableDocumenIds");
         String[] ids = new String[0];
 
+        /*String acmTicket = "86ea6dd9-806c-49ba-8fb6-fc0805734aab";
+        String acmUserId = "ann-acm";
+        String[] ids = new String[] { "ecmFileId=129&acm_ticket=" + acmTicket + "&userid=" + acmUserId + "&documentName=Complaint.pdf&parentObjectId=109&parentObjectType=COMPLAINT&splitDocument=",
+                                      "ecmFileId=140&acm_ticket=" + acmTicket + "&userid=" + acmUserId + "&documentName=Complaint.pdf&parentObjectId=110&parentObjectType=COMPLAINT&splitDocument="};
+*/
         ContentHandlerResult result = new ContentHandlerResult();
         result.put("KEY_AVAILABLE_DOCUMENT_IDS", ids);
         return result;
