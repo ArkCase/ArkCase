@@ -1,32 +1,29 @@
 <section ng-controller="ProfileController" class="well-sm">
-    <header class="header m-b-xs b-light hidden-print">
-
+    <header>
         <div class="pull-right inline">
-            <div class="btn-group">
-                <button class="btn btn-default btn-sm" data-title="Change Password" data-toggle="modal" data-target="#changePassword"><i class="fa fa-key"></i> Change Password</button>
-
-
-                <div class="modal fade in" id="changePassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" style="display: none;">
+            <div>
+                <button class="btn btn-default btn-sm" data-title="Change Password" data-toggle="modal" data-target="#changePassword"><i class="fa fa-key"></i> {{'profile.buttons.password' | translate}}</button>
+                <div class="modal fade in" id="changePassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">×<span class="sr-only">Change Password</span></button>
-                                <h4 class="modal-title" id="myModalLabel">Change Password</h4>
+                                <button type="button" class="close" data-dismiss="modal"><span class="sr-only">{{'profile.buttons.password' | translate}}</span></button>
+                                <h4 class="modal-title">{{'profile.buttons.password' | translate}}</h4>
                             </div>
                             <div class="modal-body">
                                 <section class="row">
                                     <div class="col-sm-12">
-                                        <label for="newpass" class="label">Enter your new password.</label>
-                                        <input id="newpass" type="password" class="form-control" placeholder="Enter your new password.">
+                                        <label for="newpass" class="label">{{'profile.buttons.message' | translate}}</label>
+                                        <input id="newpass" type="password" class="form-control" placeholder="{{'profile.buttons.password' | translate}}">
                                         <br>
-                                        <label for="newpassagain" class="label">Enter your new password again.</label>
-                                        <input id="newpassagain" type="password" class="form-control" placeholder="Enter your new password again.">
+                                        <label for="newpassagain" class="label">{{'profile.buttons.confirmation' | translate}}</label>
+                                        <input id="newpassagain" type="password" class="form-control" placeholder="{{'profile.buttons.confirmation' | translate}}">
                                     </div>
                                 </section>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-primary">Change Password</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">{{'profile.buttons.cancel' | translate}}</button>
+                                <button type="button" class="btn btn-primary">{{'profile.buttons.password' | translate}}</button>
                             </div>
                         </div>
                     </div>
@@ -34,7 +31,7 @@
             </div>
         </div>
 
-        <h3 class="m-b-xs text-black"> &nbsp; &nbsp; User Profile</h3>
+        <h3> {{'profile.title' | translate}}</h3>
     </header>
     <div class="clearfix">
         <div class="col-xs-6" >

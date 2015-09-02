@@ -1,25 +1,20 @@
-<section class="panel no-border bg-gradient lt">
-    <div class="panel-body">
-        <div ng-controller="PicController" class="row">
+<section class="well">
+    <div class="well-small">
+        <div ng-controller="Profile.PicController" class="row">
             <div class="col-xs-6 text-center">
-                <div class="thumb-lg avatar"> 
-<!--                    <img id="picture" ng-src="" default='modules/profile/img/nopic.png' class="dker">-->
-                </div>
-
                 <div>
-<!--                    <img id="picLoading" ng-src='modules/profile/img/nopic.png' class="dker">-->
-                     <a id="lnkChangePicture" href="#" ng-click="changePic()"><u>Change Picture</u></a>
-                    <form id="formPicture" style="display:none;">
+                    <img id="picLoading" class="img-circle" ng-src='modules/profile/img/nopic.png'>
+                    <a id="lnkChangePicture" href="#" ng-click="changePic()"><u>{{'profile.pciture.title' | translate}}</u></a>
+                    <form id="formPicture" class="hidden">
                         <input type="file" id="file" name="file">
                     </form>
                 </div>
             </div>
             <div class="col-xs-6">
-
                 <h4 id="fullName"></h4>
-                <h4><a href="#" class='acm-word-wrap' id="title" data-type="text" data-pk="1" data-title="Enter Title"></a></h4>
-                <h4 id="email" class='acm-word-wrap'></h4>
-                <small> E-mail Address </small>
+                <h4><a href="#" id="title" data-type="text" data-pk="1" data-title="Enter Title"></a></h4>
+                <h4 id="email"></h4>
+                <small> {{'profile.pciture.email' | translate}} </small>
             </div>
         </div>
     </div>

@@ -1,5 +1,40 @@
 {
   "profile": {
-    "title": "Profile"
-  }
+    "title": "User Profile"
+  },
+   "profile.subscribtions" : {
+    "title":"Subscriptions"
+    },
+   "profile.company": {
+     "title":"Company Detail",
+     "name":"Company Name",
+     "address1":"Address 1",
+     "address2":"Address 2",
+     "city":"City",
+     "state":"State",
+     "zip":"Zip",
+     "mainPhone":"Main Office Phone",
+     "fax":"Fax",
+     "website":"Website"
+   },
+   "profile.contact":{
+       "title":"Contact Information",
+       "location":"Location",
+       "im":"IM Account",
+       "officePhone":"Office Phone",
+       "mobilePhone":"Mobile Phone"
+   },
+   "profile.groups":{
+       "title":"Groups"
+   },
+   "profile.buttons":{
+       "password":"Change Password",
+       "message":"Enter your new password.",
+       "confirmation":"Enter your new password again.",
+       "cancel":"Cancel"
+   },
+   "profile.pciture":{
+       "title":"Change Picture",
+       "email":"Email Address"
+   }
 }
