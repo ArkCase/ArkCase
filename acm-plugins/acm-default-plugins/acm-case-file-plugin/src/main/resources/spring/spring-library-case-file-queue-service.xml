@@ -11,8 +11,7 @@
     </bean>
 
     <bean id="queueCaseFilePipelineManager"
-          class="com.armedia.acm.plugins.casefile.pipeline.QueueCaseFilePipelineManager">
-        <property name="pipelineContext" ref="caseFileQueuePipelineContext"/>
+          class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
             <list>
                 <ref bean="caseFileQueueHandler"/>
