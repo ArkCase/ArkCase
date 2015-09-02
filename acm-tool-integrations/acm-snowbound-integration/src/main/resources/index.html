@@ -359,6 +359,11 @@
              onclick="javascript:myFlexSnap.arkCaseSplitDocument()"
              class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
              title="Split Document">&nbsp;</div>
+
+        <div id="vvMergeDocumentButton"
+             onclick="javascript:myFlexSnap.arkCaseMergeDocument()"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Merge Documents">&nbsp;</div>
     </div>
 
     <div id="vvImageAndThumbs">
@@ -754,6 +759,13 @@
         <span data-localize="newDocumentDialog.documentId">Split Index</span>: <input id="vvSplitDocumentDialogNameInput" type="text" name="vvSplitDocumentDialogNameInput" />
     </div>
     <div data-localize="newDocumentDialog.error" id="vvSplitIndexDialogError">Please enter a valid Split Index!</div>
+</div>
+
+<div id="vvMergeDocumentDialog">
+    <div id="vvMergeDocumentDialogName">
+        <span data-localize="newDocumentDialog.documentId">Merge Document Ids</span>: <input id="vvMergeDocumentDialogNameInput" type="text" name="vvMergeDocumentDialogNameInput" />
+    </div>
+    <div data-localize="newDocumentDialog.error" id="vvMergeIndexDialogError">Please enter valid document ids to merge!</div>
 </div>
 
 <div id="vvPictureControlsDialog">
