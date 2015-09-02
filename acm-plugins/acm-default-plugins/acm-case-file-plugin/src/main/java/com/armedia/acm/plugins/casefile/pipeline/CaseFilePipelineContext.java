@@ -20,6 +20,11 @@ public class CaseFilePipelineContext implements PipelineContext
     private Authentication authentication;
 
     /**
+     * The queue the case will be moved to; used in the queue pipeline.
+     */
+    private String enqueueName;
+
+    /**
      * IP Address.
      */
     private String ipAddress;
@@ -52,5 +57,15 @@ public class CaseFilePipelineContext implements PipelineContext
     public void setIpAddress(String ipAddress)
     {
         this.ipAddress = ipAddress;
+    }
+
+    public String getEnqueueName()
+    {
+        return enqueueName;
+    }
+
+    public void setEnqueueName(String enqueueName)
+    {
+        this.enqueueName = enqueueName;
     }
 }
