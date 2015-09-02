@@ -1,5 +1,8 @@
 package com.armedia.acm.snowbound.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by joseph.mcgrady on 8/30/2015.
  */
@@ -18,10 +21,27 @@ public class GenericUtils {
             String[] listItems = integerListString.split(",");
             intArray = new int[listItems.length];
             for (int i = 0; i < listItems.length; i++) {
-                intArray[i] = Integer.parseInt(listItems[i]);
+                intArray[i] = Integer.parseInt(listItems[i].trim());
             }
         }
         return intArray;
+    }
+
+    /**
+     * Takes a string containing a comma separated list of string values and
+     * generates a list of trimmed String objects for each individual entry
+     * @param commaSeparatedList - comma separated list of string values (e.x. "1,abc,6c")
+     * @return array of Strings parsed from the list with trailing/leading whitespace removed from each entry
+     */
+    public static List<String> parseStringList(String commaSeparatedList) {
+        List<String> stringList = new ArrayList<String>();
+        if (commaSeparatedList != null && commaSeparatedList.length() > 0) {
+            String[] listItems = commaSeparatedList.split(",");
+            for (String listItem : listItems) {
+                stringList.add(listItem.trim());
+            }
+        }
+        return stringList;
     }
 
     /**
