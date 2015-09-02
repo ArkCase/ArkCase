@@ -3,12 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="caseFileQueuePipelineContext"
-          class="com.armedia.acm.plugins.casefile.pipeline.CaseFileQueuePipelineContext"/>
-
     <bean id="queueCaseFilePipelineManager"
-          class="com.armedia.acm.plugins.casefile.pipeline.QueueCaseFilePipelineManager">
-        <property name="pipelineContext" ref="caseFileQueuePipelineContext"/>
+          class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
             <list/>
         </property>
