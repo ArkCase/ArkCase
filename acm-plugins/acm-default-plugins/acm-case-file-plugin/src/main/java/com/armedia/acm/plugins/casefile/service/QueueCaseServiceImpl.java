@@ -35,14 +35,15 @@ public class QueueCaseServiceImpl implements QueueCaseService
 
         getQueuePipelineManager().setPipelineContext(ctx);
 
-        getQueuePipelineManager().onPreSave(caseFile);
+        CaseFileQueuePipelineContext pipelineContext = new CaseFileQueuePipelineContext();
+        getQueuePipelineManager().onPreSave(caseFile, pipelineContext);
 
         caseFile = getCaseFileDao().getEm().merge(caseFile);
         getCaseFileDao().getEm().persist(caseFile);
 
         getCaseFileDao().getEm().flush();
 
-        getQueuePipelineManager().onPostSave(caseFile);
+        getQueuePipelineManager().onPostSave(caseFile, pipelineContext);
 
         log.debug("Case file state: {}, queue: {}", caseFile.getStatus(), caseFile.getQueue() == null ? "null" : caseFile.getQueue().getName());
 
