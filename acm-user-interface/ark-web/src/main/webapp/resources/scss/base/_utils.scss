@@ -2,6 +2,8 @@
 .no-border {
   border-color: transparent;
   border-width: 0;
+  -webkit-box-shadow: none; //change
+  box-shadow: none;
 }
 
 .box-shadow {
