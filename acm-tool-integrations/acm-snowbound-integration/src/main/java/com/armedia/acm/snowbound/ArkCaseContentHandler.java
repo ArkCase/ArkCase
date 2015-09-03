@@ -540,21 +540,8 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             log.log(Level.FINE, "get doc content");
             byte[] data = contentHandlerInput.getDocumentContent();
 
-            // Obtains a snowbound specific format code for the document type
+            // Used to interact with the snowbound Java API to perform image manipulation
             SnowBoundService snowBoundService = new SnowBoundService();
-            Format format = snowBoundService.getDocumentFormat(data);
-
-            String extension = format.getExtension();
-            log.log(Level.FINE, "extension: " + extension);
-            log.log(Level.FINE, "MIME type: " + format.getMimeType());
-
-
-            String fileName = "sendDocument-" + docIdString + "." + extension;
-
-            File saveFile = new File(gFilePath + fileName);
-
-            log.log(Level.FINE, "save file");
-            ClientServerIO.saveFileBytes(data, saveFile);
 
             // Used to communicate with ArkCase via HTTP REST calls
             ArkCaseRestClient arkCaseClient = new ArkCaseRestClient(baseURL, uploadNewFileService, sendFileService, retrieveFileService, ticket);
@@ -607,17 +594,18 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
             } else if (operationType.equals("split")) { // Split document and push the sub documents to ArkCase
                 try {
                     List<byte[]> splitDocuments = snowBoundService.splitDocument(data, GenericUtils.parseIntegerList(operationParam));
+
+                    // The parent document mimetype and filename extension are needed to upload correctly named/typed split documents to ArkCase
+                    Format format = snowBoundService.getDocumentFormat(data);
+                    String mimeType = format.getMimeType();
+                    String extension = format.getExtension();
+
                     for (int i = 0; i < splitDocuments.size(); i++) {
 
                         String splitDocumentName = GenericUtils.createSubDocumentName(documentName, extension, i);
 
-                        // Write the split document to the file system (this is for testing purposes only)
-                        /*FileOutputStream fos = new FileOutputStream(new File("C:\\temp\\" + splitDocumentName));
-                        fos.write(splitDocuments.get(i));
-                        fos.close();*/
-
                         // Writes the split document to ArkCase
-                        String fullResponse = arkCaseClient.uploadDocumentToArkCase(splitDocuments.get(i), format.getMimeType(),
+                        String fullResponse = arkCaseClient.uploadDocumentToArkCase(splitDocuments.get(i), mimeType,
                                               splitDocumentName, parentObjectType, parentObjectId);
 
                         log.log("Response body: " + fullResponse);
@@ -628,12 +616,7 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
                     log.log(Level.SEVERE, "Unable to perform document splitting.");
                 }
             } else { // replaces an existing document in ArkCase with a new modified version
-
-                // Replaces the document in ArkCase with the new modified version
-                String fullResponse = arkCaseClient.replaceDocumentInArkCase(data, docIdString, format.getMimeType(), saveFile.getName());
-
-                log.log("Response body: " + fullResponse);
-                log.log(Level.FINE, "Done writing!!!");
+                saveDocumentToArkCase(data, docIdString, ticket);
             }
 
             return retVal;
@@ -643,6 +626,34 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
 
             throw new FlexSnapSIAPIException(t.getMessage());
         }
+    }
+
+    /**
+     * Updates an ArkCase document by calling the ArkCase replace document webscript
+     * to upload new content for an existing document
+     * @param data - binary data for the new document version
+     * @param docIdString - identifies an already existing document in ArkCase to be updated
+     * @param ticket - ArkCase authentication token (without this the call would fail with an HTTP 401 error)
+     */
+    private void saveDocumentToArkCase(byte[] data, String docIdString, String ticket) throws Exception
+    {
+        // Obtains a snowbound specific format code for the document type
+        SnowBoundService snowBoundService = new SnowBoundService();
+        Format format = snowBoundService.getDocumentFormat(data);
+
+        // The mimetype and extension are obtained from the snowbound format
+        String extension = format.getExtension();
+        log.log(Level.FINE, "extension: " + extension);
+        log.log(Level.FINE, "MIME type: " + format.getMimeType());
+
+        String fileName = "sendDocument-" + docIdString + "." + extension;
+
+        // Replaces the document in ArkCase with the new modified version
+        ArkCaseRestClient arkCaseClient = new ArkCaseRestClient(baseURL, uploadNewFileService, sendFileService, retrieveFileService, ticket);
+        String fullResponse = arkCaseClient.replaceDocumentInArkCase(data, docIdString, format.getMimeType(), fileName);
+
+        log.log("Response body: " + fullResponse);
+        log.log(Level.FINE, "Done writing!!!");
     }
 
     @Override
@@ -880,6 +891,26 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
                 clientInstanceId,
                 documentId,
                 bookmarkBytes);
+
+        // Extracts the ticket, doc id from the document id string
+        String documentKey = contentHandlerInput.getDocumentId();
+        log.log(Level.FINE, "document key: " + documentKey);
+        String ticket = WebUtils.getUrlArgument(ArkCaseConstants.ACM_TICKET_PARAM, documentKey);
+        log.log(Level.FINE, "ticket: " + ticket);
+        String docIdString = WebUtils.getUrlArgument(ArkCaseConstants.ACM_FILE_PARAM, documentKey);
+        log.log(Level.FINE, "Doc ID: " + docIdString);
+
+        // The modified binary content needs to be saved into ArkCase, because when the page
+        // is refreshed the document will be pulled from ArkCase, so if the new content is not pushed
+        // into ArkCase then the user will get the original unmodified document again after refreshing
+        log.log(Level.FINE, "saving updated document to ArkCase");
+        try {
+            saveDocumentToArkCase(data, docIdString, ticket);
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "failed to save document to ArkCase");
+            log.log(Level.SEVERE, e.getMessage());
+        }
+
         ContentHandlerResult result = new ContentHandlerResult();
 //        result.put(ContentHandlerResult.DOCUMENT_ID_TO_RELOAD, documentId);
         return result;
