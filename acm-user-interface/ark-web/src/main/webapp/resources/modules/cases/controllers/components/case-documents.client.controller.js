@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('CaseDocumentsController', ['$scope',
+angular.module('cases').controller('Cases.DocumentsController', ['$scope',
 	function($scope) {
 		$scope.$on('component-config', applyConfig);
 		$scope.$emit('req-component-config', 'documents');
