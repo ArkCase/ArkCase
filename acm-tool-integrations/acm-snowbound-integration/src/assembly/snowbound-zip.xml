@@ -60,6 +60,11 @@
             <filtered>false</filtered>
         </file>
         <file>
+            <source>target/classes/com/armedia/acm/snowbound/model/AcmDocument.class</source>
+            <outputDirectory>/WEB-INF/classes/com/armedia/acm/snowbound/model</outputDirectory>
+            <filtered>false</filtered>
+        </file>
+        <file>
             <source>target/classes/com/armedia/acm/snowbound/service/web/ArkCaseRestClient.class</source>
             <outputDirectory>/WEB-INF/classes/com/armedia/acm/snowbound/service/web</outputDirectory>
             <filtered>false</filtered>
@@ -99,6 +104,11 @@
         </file>
         <file>
             <source>src/main/resources/resources/split.png</source>
+            <outputDirectory>/resources</outputDirectory>
+            <filtered>false</filtered>
+        </file>
+        <file>
+            <source>src/main/resources/resources/merge.png</source>
             <outputDirectory>/resources</outputDirectory>
             <filtered>false</filtered>
         </file>

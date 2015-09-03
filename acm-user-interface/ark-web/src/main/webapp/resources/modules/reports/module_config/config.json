@@ -1,0 +1,21 @@
+{
+  "id": "reports",
+  "title": "Reports",
+  "menus": [
+    {
+      "menuId": "leftnav",
+      "menuItemURL": "reports",
+      "menuItemTitle": "Reports",
+      "iconClass": "glyphicon glyphicon-asterisk",
+      "position": 100
+    }
+  ],
+  "components": [
+    {
+      "id": "datepickers",
+      "title": "Datepickers",
+      "enabled": true,
+      "type": "empty"
+    }
+  ]
+}

@@ -8,17 +8,32 @@ import com.armedia.acm.snowbound.model.ArkCaseConstants;
 public class ArkCaseUtils {
 
     /**
+     * Returns the full url to the ArkCase download document web call including the
+     * url arguments for the authentication ticket and the id of the document to download
+     * @param baseURL  - host, port, and application context parts of the url to ArkCase
+     * @param retrieveFileService - url path to the document download api
+     * @param documentId - id of the document which will be downloaded
+     * @param acmTicket - acm authentication token (without this the call will result in an HTTP 401 unauthorized error)
+     * @return url which can be used to call the ArkCase file download api
+     */
+    public static String buildDownloadFileUrl(String baseURL, String retrieveFileService, String documentId, String acmTicket)
+    {
+        return baseURL + retrieveFileService + ArkCaseConstants.ACM_FILE_PARAM + "=" + documentId +
+               "&" + ArkCaseConstants.ACM_TICKET_PARAM + "=" + acmTicket;
+    }
+
+    /**
      * Returns the full url to the ArkCase replace file web call including the
      * url arguments for the authentication ticket and the acm id of the document to replace
      * @param baseURL - host, port, and application context parts of the url to ArkCase
      * @param sendFileService - url path to the ArkCase file replacement api
-     * @param docIdString - id of the document in ArkCase whose contents will be replaced
+     * @param documentId - id of the document in ArkCase whose contents will be replaced
      * @param acmTicket - acm authentication token (without this the call will result in an HTTP 401 unauthorized error)
      * @return url which can be used to call the ArkCase file replacement api
      */
-    public static String buildReplaceFileUrl(String baseURL, String sendFileService, String docIdString, String acmTicket)
+    public static String buildReplaceFileUrl(String baseURL, String sendFileService, String documentId, String acmTicket)
     {
-        return baseURL + sendFileService + docIdString + "?" + ArkCaseConstants.ACM_TICKET_PARAM + "=" + acmTicket;
+        return baseURL + sendFileService + documentId + "?" + ArkCaseConstants.ACM_TICKET_PARAM + "=" + acmTicket;
     }
 
     /**

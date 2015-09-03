@@ -22,7 +22,7 @@ public class SaveComplaintTransaction
 {
     private ComplaintDao complaintDao;
 
-    private PipelineManager pipelineManager;
+    private PipelineManager<Complaint, ComplaintPipelineContext> pipelineManager;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -35,15 +35,13 @@ public class SaveComplaintTransaction
         ComplaintPipelineContext pipelineContext = new ComplaintPipelineContext();
         // populate the context
         pipelineContext.setAuthentication(authentication);
-        pipelineManager.setPipelineContext(pipelineContext);
 
-
-        pipelineManager.onPreSave(complaint);
+        pipelineManager.onPreSave(complaint, pipelineContext);
 
         Complaint saved = complaintDao.save(complaint);
         log.info("Complaint saved '{}'", saved);
 
-        pipelineManager.onPostSave(saved);
+        pipelineManager.onPostSave(saved, pipelineContext);
 
         return saved;
     }

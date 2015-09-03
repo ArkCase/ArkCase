@@ -1,15 +1,19 @@
 package com.armedia.acm.snowbound.service.web;
 
+import com.armedia.acm.snowbound.model.AcmDocument;
 import com.armedia.acm.snowbound.utils.ArkCaseUtils;
 import com.armedia.acm.snowbound.utils.HttpHeaderFactory;
 import com.armedia.acm.snowbound.utils.WebUtils;
 
 import com.snowbound.common.utils.ClientServerIO;
 import com.snowbound.common.utils.Logger;
+import com.snowbound.common.utils.URLReturnData;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -21,14 +25,41 @@ public class ArkCaseRestClient {
     private String baseURL;
     private String uploadNewFileService;
     private String sendFileService;
+    private String retrieveFileService;
 
     private Logger log = Logger.getInstance();
 
-    public ArkCaseRestClient(String baseURL, String uploadNewFileService, String sendFileService, String acmTicket) {
+    public ArkCaseRestClient(String baseURL, String uploadNewFileService, String sendFileService, String retrieveFileService, String acmTicket) {
         this.baseURL = baseURL;
         this.uploadNewFileService = uploadNewFileService;
         this.sendFileService = sendFileService;
+        this.retrieveFileService = retrieveFileService;
         this.acmTicket = acmTicket;
+    }
+
+    /**
+     * Downloads the specified document from the ArkCase download webscript
+     * @param documentId - id number of the document which will be downloaded
+     * @return document object containing the binary content and the name
+     * @throws Exception if the download REST call fails
+     */
+    public AcmDocument getDocument(String documentId) throws Exception
+    {
+        log.log(Level.FINE, "Attempting to download document " + documentId + " from ArkCase");
+        String completeURL = ArkCaseUtils.buildDownloadFileUrl(baseURL, retrieveFileService, documentId, acmTicket);
+        log.log(Level.FINE, "complete url: " + completeURL);
+
+        // Pulls the content of the document from the ArkCase server
+        URLReturnData documentDownloadResponse = ClientServerIO.getURLBytes(completeURL);
+        byte[] documentData = documentDownloadResponse.getData();
+        log.log(Level.FINE, "pulled " + documentData.length + " document bytes from ArkCase");
+
+        // Determines the document name from the ACM response if it exists, otherwise uses the id number as the name
+        String documentName = extractFilenameFromResponseHeaders(documentDownloadResponse.getHeaderFields());
+        if (documentName == null)
+            documentName = documentId;
+
+        return new AcmDocument(documentData, documentName);
     }
 
     /**
@@ -132,5 +163,37 @@ public class ArkCaseRestClient {
         }
 
         return acmResponse;
+    }
+
+    /**
+     * Attempts to read the document name from the download response from ArkCase.
+     * @param responseHeaders - response headers from an ArkCase download document call
+     * @return downloaded document filename, or null if it was not found
+     */
+    private static String extractFilenameFromResponseHeaders(Map responseHeaders)
+    {
+        String fileName = null;
+        try
+        {
+            List contentDispositionValue = (List) responseHeaders.get("Content-Disposition");
+            if (contentDispositionValue != null)
+            {
+                String contentDisposition = (String) contentDispositionValue.get(0);
+                String[] dispositionTokens = contentDisposition.split(";");
+
+                for (int i = 0; i < dispositionTokens.length; ++i)
+                {
+                    String dispositionToken = dispositionTokens[i];
+                    if (dispositionToken.startsWith("filename="))
+                    {
+                        fileName = dispositionToken.split("=")[1];
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return fileName;
     }
 }

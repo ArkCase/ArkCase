@@ -1,0 +1,21 @@
+{
+  "reports": {
+    "title": "Reports",
+    "message": "This is the Reports module. iFrame goes here.",
+    "navigation": {
+      "label": {
+        "select-report": "Report",
+        "select-state": "State",
+        "date-from": "From",
+        "date-to": "To"
+      },
+      "placeholder": {
+        "select-state": "Select State",
+        "select-report": "Select Report"
+      },
+      "button": {
+        "generate-report": "Generate report"
+      }
+    }
+  }
+}

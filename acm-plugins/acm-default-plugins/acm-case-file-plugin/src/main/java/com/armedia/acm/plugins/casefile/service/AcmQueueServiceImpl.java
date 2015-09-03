@@ -16,7 +16,8 @@ public class AcmQueueServiceImpl implements AcmQueueService
     @Override
     public List<AcmQueue> listAllQueues()
     {
-        return acmQueueDao.findAll();
+        // list of queues sorted by "displayOrder"
+        return acmQueueDao.findAllOrderBy("displayOrder");
     }
 
     public AcmQueueDao getAcmQueueDao()
