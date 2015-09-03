@@ -5,7 +5,7 @@ angular.module('services').factory('Acm', ['$q',
         return {
             goodValue: function (val, replacement) {
                 var replacedWith = (undefined === replacement) ? "" : replacement;
-                return _.isEmpty(val) ? replacedWith : val;
+                return this.isEmpty(val) ? replacedWith : val;
             }
             ,goodObjValue: function (arr, replacement) {
                 var replacedWith = (undefined === replacement) ? "" : replacement;
@@ -23,7 +23,7 @@ angular.module('services').factory('Acm', ['$q',
                             v = v[k];
                         }
 
-                        if (_.isEmpty(v)) {
+                        if (this.isEmpty(v)) {
                             return replacedWith;
                         }
                     }
@@ -32,6 +32,18 @@ angular.module('services').factory('Acm', ['$q',
                 } else {
                     return replacedWith;
                 }
+            }
+            ,isEmpty: function (val) {
+                if (undefined == val) {
+                    return true;
+                } else if ("" === val) {
+                    return true;
+                } else if (null == val) {
+                    return true;
+                } else if ("null" == val) {
+                    return true;
+                }
+                return false;
             }
 
             ,servicePromise: function(arg) {
