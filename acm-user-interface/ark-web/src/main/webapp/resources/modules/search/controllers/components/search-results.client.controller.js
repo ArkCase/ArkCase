@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('SearchResultsController', ['$scope', '$stateParams',
+angular.module('search').controller('Search.ResultsController', ['$scope', '$stateParams',
     function ($scope, $stateParams) {
         $scope.$emit('req-component-config', 'results');
 

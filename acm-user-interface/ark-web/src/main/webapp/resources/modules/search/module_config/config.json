@@ -7,7 +7,7 @@
       "menuItemURL": "search",
       "menuItemTitle": "Search",
       "iconClass": "glyphicon glyphicon-asterisk",
-      "position": 100
+      "position": 120
     }
   ],
   "components": [
