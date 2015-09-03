@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('ReportsDatepickersController', ['$scope',
+angular.module('cases').controller('Reports.DatepickersController', ['$scope',
     function ($scope) {
         $scope.$on('component-config', applyConfig);
         $scope.$emit('req-component-config', 'datepickers');
