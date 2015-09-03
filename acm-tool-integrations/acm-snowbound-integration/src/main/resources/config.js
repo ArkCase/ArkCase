@@ -114,7 +114,8 @@ vvConfig = {
 
     // Multiple Document mode
     // Accepted values for multipleDocMode are: availableDocuments, viewedDocuments, specifiedDocuments
-    multipleDocMode: vvDefines.multipleDocModes.availableDocuments,
+    //multipleDocMode: vvDefines.multipleDocModes.availableDocuments,
+    multipleDocMode: vvDefines.multipleDocModes.specifiedDocuments,
 
     // Enable/Disable Page Manipulation Functionality
     pageManipulations: true,

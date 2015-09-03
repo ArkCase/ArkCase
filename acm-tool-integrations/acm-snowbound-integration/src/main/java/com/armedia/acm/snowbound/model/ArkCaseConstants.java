@@ -12,4 +12,5 @@ public class ArkCaseConstants {
     public static String ACM_AUDIT_DELETE_PAGES_PARAM = "page_numbers";
     public static String ACM_AUDIT_DELETE_REASON_PARAM = "delete_reason";
     public static String ACM_AUDIT_REORDER_OPERATION_PARAM = "reorder_operation";
+    public static String ACM_AUDIT_VIEWED_OPERATION_PARAM = "document_viewed";
 }
