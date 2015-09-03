@@ -9,20 +9,25 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             $scope.gridApi.pagination.seek(lastPage);
             $scope.gridOptions.data.push({});
         };
-        $scope.saveRow = function(row) {
-            //$scope.gridApi.rowEdit.flushDirtyRows( $scope.gridApi.grid );
-            alert("saveRow=" + row);
-        };
+        //$scope.saveRow = function(row) {
+        //    //$scope.gridApi.rowEdit.flushDirtyRows( $scope.gridApi.grid );
+        //    alert("saveRow=" + row);
+        //};
         $scope.deleteRow = function(row) {
-            var id = Acm.goodObjValue([row, "entity", "id"], 0);
-            var idx = _.findIndex($scope.gridOptions.data, 'id', id);
+            var idx = _.findIndex($scope.gridOptions.data, function(obj) {
+                return (obj == row.entity);
+            });
             if (0 <= idx) {
                 $scope.gridOptions.data.splice(idx, 1);
+            }
 
+            var id = Acm.goodObjValue([row, "entity", "id"], 0);
+            if (0 < id) {    //not a new row
                 //
                 // save data to server
                 //
             }
+
         };
 
         $scope.config = null;
