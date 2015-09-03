@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +18,7 @@ public abstract class AcmAbstractDao<T>
     @Transactional(propagation = Propagation.REQUIRED)
     public T save(T toSave)
     {
-       T saved = em.merge(toSave);
+        T saved = em.merge(toSave);
 //        em.persist(saved);
         return saved;
     }
@@ -28,7 +27,7 @@ public abstract class AcmAbstractDao<T>
     public T find(Long id)
     {
         T found = em.find(getPersistenceClass(), id);
-        if ( found != null )
+        if (found != null)
         {
             em.refresh(found);
             em.detach(found);
@@ -37,11 +36,36 @@ public abstract class AcmAbstractDao<T>
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public List<T> findAll() {
-        Query allRecords = em.createQuery("SELECT e FROM " + getPersistenceClass().getSimpleName()+" e");
+    public List<T> findAll()
+    {
+        Query allRecords = em.createQuery("SELECT e FROM " + getPersistenceClass().getSimpleName() + " e");
         List<T> retval = allRecords.getResultList();
-        if(retval!=null){
-            for(T value: retval) {
+        if (retval != null)
+        {
+            for (T value : retval)
+            {
+                em.refresh(value);
+                em.detach(value);
+            }
+        }
+        return retval;
+    }
+
+    /**
+     * Retrieve all entities of a given type, sorted by particular column
+     *
+     * @param column column name (entity field name) to sort by
+     * @return list of entities, sorted
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<T> findAllOrderBy(String column)
+    {
+        Query allRecords = em.createQuery("SELECT e FROM " + getPersistenceClass().getSimpleName() + " e order by e." + column);
+        List<T> retval = allRecords.getResultList();
+        if (retval != null)
+        {
+            for (T value : retval)
+            {
                 em.refresh(value);
                 em.detach(value);
             }
@@ -54,9 +78,9 @@ public abstract class AcmAbstractDao<T>
     {
         Query sinceWhen = getEm().createQuery(
                 "SELECT e " +
-                "FROM " + getPersistenceClass().getSimpleName() + " e " +
-                "WHERE e.modified >= :lastModified " +
-                "ORDER BY e.created");
+                        "FROM " + getPersistenceClass().getSimpleName() + " e " +
+                        "WHERE e.modified >= :lastModified " +
+                        "ORDER BY e.created");
         sinceWhen.setParameter("lastModified", lastModified);
         sinceWhen.setFirstResult(startRow);
         sinceWhen.setMaxResults(pageSize);
@@ -67,15 +91,15 @@ public abstract class AcmAbstractDao<T>
 
 
     protected abstract Class<T> getPersistenceClass();
-    
+
     /**
      * This method should be implemented under appropriate DAO. It should return OBJECT_TYPE
-     * 
+     *
      * @return
      */
     public String getSupportedObjectType()
     {
-    	return null;
+        return null;
     }
 
     public EntityManager getEm()
