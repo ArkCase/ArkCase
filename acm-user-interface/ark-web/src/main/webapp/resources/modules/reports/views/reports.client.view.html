@@ -1,0 +1,28 @@
+<div ng-controller="ReportsController">
+    <h3>{{'reports.title' | translate}}</h3>
+
+    <div class="clearfix">
+        <div class="col-xs-3">
+            <div class="scroll-body" slimscroll="{height: '800px'}"
+                 ng-include="'modules/reports/views/reports-selection.client.view.html'">
+            </div>
+        </div>
+
+        <section class="col-xs-9">
+
+            <div>
+                <div class="col-xs-4">
+                    <p></p>
+                </div>
+
+            </div>
+
+            <div class="col-xs-12">
+                <div class="scroll-body" slimscroll="{height: '800px'}" data-ui-view></div>
+            </div>
+        </section>
+        <div class="well col-xs-3">
+            {{'reports.message' | translate}}
+        </div>
+    </div>
+</div>

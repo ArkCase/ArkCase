@@ -3,6 +3,6 @@
 // Pages module config
 angular.module('cases').run(['Menus',
 	function(Menus) {
-		Menus.addMenuItem('leftnav', 'Cases', 'cases');
+		//Menus.addMenuItem('leftnav', 'Cases', 'cases');
 	}
 ]);

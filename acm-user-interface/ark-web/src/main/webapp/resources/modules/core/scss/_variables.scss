@@ -6,6 +6,8 @@ $leftnav-menu-color:            $gray-darker !default;
 $leftnav-menu-width:            200px !default;
 $leftnav-menu-font-size:        $font-size-default !default;
 $leftnav-menu-border:           1px solid #eaeef1 !default;
+$leftnav-menu-title-margin-top: 5px !default;
+$leftnav-menu-title-margin-left: 5px !default;
 
 
 // User Info
@@ -30,6 +32,14 @@ $navbar-header-color:           $white !default;
 $navbar-header-width:           $leftnav-menu-width;
 $navbar-min-height:             60px !default;
 
+$navbar-logo-bg-img: url('../../../assets/img/logo.png') !default;
+$navbar-logo-bg-size: 145px !default;
+$navbar-logo-bg-repeat: no-repeat !default;
+$navbar-logo-bg-position: 25px 10px !default;
+$navbar-logo-position: relative !default;
+$navbar-logo-width: 100% !default;
+$navbar-logo-padding-left: 2000px !default;
+$navbar-logo-overflow: hidden !default;
 
 // Menu items
 $navbar-menu-item-hover-bg:     $blue-dark !default;

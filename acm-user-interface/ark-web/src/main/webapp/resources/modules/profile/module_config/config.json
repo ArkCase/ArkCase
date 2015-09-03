@@ -1,0 +1,17 @@
+{
+    "id": "profile",
+    "title": "Profile",
+    "menus": [
+        
+        {
+            "menuId": "usermenu",
+            "menuItemURL": "profile",
+            "menuItemTitle": "Profile",
+            "iconClass": "glyphicon glyphicon-asterisk",
+            "position": 100
+        }
+        
+    ],
+    "components": [
+   ]
+}

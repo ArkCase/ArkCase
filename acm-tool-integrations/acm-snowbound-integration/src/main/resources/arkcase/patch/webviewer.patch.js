@@ -91,6 +91,7 @@ if (myFlexSnap) {
     myFlexSnap.initPatch = function () {
         myFlexSnap.initCreateStampDialog();
         myFlexSnap.initSplitDocumentDialog();
+        myFlexSnap.initMergeDocumentDialog();
     };
 
     myFlexSnap.initSplitDocumentDialog = function() {
@@ -109,12 +110,35 @@ if (myFlexSnap) {
 
                     // Splits the document in the backend and sends the sub documents to ArkCase
                     if (splitIndex && splitIndex.trim().length > 0) {
-                        myFlexSnap.sendDocument(splitIndex);
+                        myFlexSnap.sendDocument("split", splitIndex);
                     }
                 }
             }
         });
     };
+
+    myFlexSnap.initMergeDocumentDialog = function() {
+            $("#vvMergeDocumentDialog").dialog({
+                modal: true,
+                closeOnEscape: false,
+                draggable: false,
+                resizable: false,
+                width: 600,
+                height: 300,
+                autoOpen: false,
+                buttons: {
+                    "OK": function() {
+                        var mergeDocIds = $("input#vvMergeDocumentDialogNameInput").val();
+                        $(this).dialog("close");
+
+                        // Merged the specified documents in the backend and sends the merged document to ArkCase
+                        if (mergeDocIds && mergeDocIds.trim().length > 0) {
+                            myFlexSnap.sendDocument("merge", mergeDocIds);
+                        }
+                    }
+                }
+            });
+        };
 
     myFlexSnap.initCreateStampDialog = function () {
         $("#vvCreatingStampDialog").dialog({
@@ -161,6 +185,10 @@ if (myFlexSnap) {
 
     myFlexSnap.arkCaseSplitDocument = function() {
         var splitDialog = $("#vvSplitDocumentDialog").dialog("open");
+    }
+
+    myFlexSnap.arkCaseMergeDocument = function() {
+        var mergeDialog = $("#vvMergeDocumentDialog").dialog("open");
     }
 
     myFlexSnap.arkCaseReorderDocumentPages = function(pageOriginalIndex, movedPageNewIndex) {
