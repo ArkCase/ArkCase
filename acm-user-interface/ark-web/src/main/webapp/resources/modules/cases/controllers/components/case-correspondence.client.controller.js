@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('CaseCorrespondenceController', ['$scope',
+angular.module('cases').controller('Cases.CorrespondenceController', ['$scope',
     function($scope) {
         $scope.$on('component-config', applyConfig);
         $scope.$emit('req-component-config', 'correspondence');
