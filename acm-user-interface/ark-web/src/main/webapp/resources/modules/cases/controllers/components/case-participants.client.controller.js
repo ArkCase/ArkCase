@@ -4,10 +4,45 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
     function($scope, $stateParams, $q, Acm, CasesService, LookupService) {
         $scope.$emit('req-component-config', 'participants');
 
+        $scope.addNew = function() {
+            var lastPage = $scope.gridApi.pagination.getTotalPages();
+            $scope.gridApi.pagination.seek(lastPage);
+            $scope.gridOptions.data.push({});
+        };
+        $scope.saveRow = function(row) {
+            //$scope.gridApi.rowEdit.flushDirtyRows( $scope.gridApi.grid );
+            alert("saveRow=" + row);
+        };
+        $scope.deleteRow = function(row) {
+            var id = Acm.goodObjValue([row, "entity", "id"], 0);
+            var idx = _.findIndex($scope.gridOptions.data, 'id', id);
+            if (0 <= idx) {
+                $scope.gridOptions.data.splice(idx, 1);
+
+                //
+                // save data to server
+                //
+            }
+        };
+
         $scope.config = null;
         $scope.$on('component-config', applyConfig);
         function applyConfig(e, componentId, config) {
             if (componentId == 'participants' && !$scope.config) {
+
+                var cdef = {name: "act"
+                    ,cellEditableCondition: false
+                    //,enableFiltering: false
+                    //,enableHiding: false
+                    //,enableSorting: false
+                    //,enableColumnResizing: false
+                    ,width: 40
+                    ,headerCellTemplate: "<span></span>"
+                    //,cellTemplate: "<span><i class='fa fa-trash-o fa-lg' ng-click='grid.appScope.deleteRow($event, row)'></i></span>"
+                    ,cellTemplate: "<span><i class='fa fa-trash-o fa-lg' ng-click='grid.appScope.deleteRow(row)'></i></span>"
+                };
+                config.columnDefs.push(cdef);
+
                 $scope.config = config;
                 $scope.gridOptions = {
                     enableColumnResizing: true,
@@ -19,7 +54,6 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                     paginationPageSizes: config.paginationPageSizes,
                     paginationPageSize: config.paginationPageSize,
                     enableFiltering: config.enableFiltering,
-
                     columnDefs: config.columnDefs,
                     onRegisterApi: function(gridApi) {
                         $scope.gridApi = gridApi;
@@ -43,6 +77,14 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                                 $scope.$apply();
                             }
                         });
+
+
+                        //gridApi.rowEdit.on.saveRow($scope, function(rowEntity) {
+                        //    var z = 1;
+                        //});
+                        //gridApi.core.on.rowsRendered($scope, function(rowEntity) {
+                        //    var z = 1;
+                        //});
                     }
                 };
 
