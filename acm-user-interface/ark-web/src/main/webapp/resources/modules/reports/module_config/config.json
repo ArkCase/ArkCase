@@ -16,6 +16,11 @@
       "title": "Datepickers",
       "enabled": true,
       "type": "empty"
+    },
+    {
+      "id": "reportselection",
+      "title": "Reports",
+      "enabled": true
     }
   ]
 }

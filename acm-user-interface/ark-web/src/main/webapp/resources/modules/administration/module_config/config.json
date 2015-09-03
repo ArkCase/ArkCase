@@ -7,7 +7,7 @@
             "menuItemURL": "administration",
             "menuItemTitle": "Administration",
             "iconClass": "glyphicon glyphicon-cog",
-            "position": 0
+            "position": 40
         }
     ],
     "components": [
