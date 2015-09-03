@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('CaseTasksController', ['$scope', '$stateParams', 'CasesService',
+angular.module('cases').controller('Cases.TasksController', ['$scope', '$stateParams', 'CasesService',
 	function($scope, $stateParams, CasesService) {
 		$scope.$on('component-config', applyConfig);
 		$scope.$emit('req-component-config', 'tasks');
