@@ -1552,10 +1552,22 @@ DocTree.View = DocTree.View || {
                     DocTree.View.replaceFile(node);
                     break;
                 case "open":
+                    // Any documents which are checked in doctree will be opened in the viewer simultaneously
+                    // in addition to the document which is directly opened (double-clicked)
+                    var selectedIdsList = "";
+                    $(".fancytree-selected:not('.fancytree-folder')").find(".btn-group a").each(function() {
+                        selectedIdsList += this.innerText.trim() + ",";
+                    });
+
+                    // removes trailing comma from the id list
+                    if (selectedIdsList.length > 0)
+                        selectedIdsList = selectedIdsList.substring(0, selectedIdsList.length - 1);
+
                     var url = App.getContextPath() + "/plugin/document/" + node.data.objectId +
                                                      "?documentName=" + node.data.name +
                                                      "&parentObjectId=" + node.parent.data.containerObjectId +
-                                                     "&parentObjectType=" + node.parent.data.containerObjectType;
+                                                     "&parentObjectType=" + node.parent.data.containerObjectType +
+                                                     "&selectedIds=" + selectedIdsList;
                     window.open(url);
                     break;
                 case "edit":
