@@ -1,3 +1,9 @@
 div#vvAddStampButton {
     background-image: url("../../resources/add.png");
 }
+div#vvSplitDocumentButton {
+    background-image: url("../../resources/split.png");
+}
+div#vvMergeDocumentButton {
+    background-image: url("../../resources/merge.png");
+}

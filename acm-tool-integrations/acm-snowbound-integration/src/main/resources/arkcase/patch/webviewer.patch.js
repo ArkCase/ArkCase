@@ -7,6 +7,11 @@ VirtualViewer.prototype.setReason = function (event, reason) {
 
 if (myFlexSnap) {
 
+    // components of the document id string passed to snowbound to initialize a document in the viewer
+    var ACM_TICKET_PARAM = "acm_ticket";
+    var ACM_USER_PARAM = "userid";
+    var ACM_FILE_PARAM = "ecmFileId";
+
     // We need to make the pages list sortable, but since the pages
     // thumbnails are re-loaded by snowbound after certain events we
     // need to continue to apply the sortable functionality asynchronously
@@ -90,7 +95,55 @@ if (myFlexSnap) {
 
     myFlexSnap.initPatch = function () {
         myFlexSnap.initCreateStampDialog();
+        myFlexSnap.initSplitDocumentDialog();
+        myFlexSnap.initMergeDocumentDialog();
     };
+
+    myFlexSnap.initSplitDocumentDialog = function() {
+        $("#vvSplitDocumentDialog").dialog({
+            modal: true,
+            closeOnEscape: false,
+            draggable: false,
+            resizable: false,
+            width: 600,
+            height: 300,
+            autoOpen: false,
+            buttons: {
+                "OK": function() {
+                    var splitIndex = $("input#vvSplitDocumentDialogNameInput").val();
+                    $(this).dialog("close");
+
+                    // Splits the document in the backend and sends the sub documents to ArkCase
+                    if (splitIndex && splitIndex.trim().length > 0) {
+                        myFlexSnap.sendDocument("split", splitIndex);
+                    }
+                }
+            }
+        });
+    };
+
+    myFlexSnap.initMergeDocumentDialog = function() {
+            $("#vvMergeDocumentDialog").dialog({
+                modal: true,
+                closeOnEscape: false,
+                draggable: false,
+                resizable: false,
+                width: 600,
+                height: 300,
+                autoOpen: false,
+                buttons: {
+                    "OK": function() {
+                        var mergeDocIds = $("input#vvMergeDocumentDialogNameInput").val();
+                        $(this).dialog("close");
+
+                        // Merges the specified documents in the backend and sends the merged document to ArkCase
+                        if (mergeDocIds && mergeDocIds.trim().length > 0) {
+                            myFlexSnap.sendDocument("merge", mergeDocIds);
+                        }
+                    }
+                }
+            });
+        };
 
     myFlexSnap.initCreateStampDialog = function () {
         $("#vvCreatingStampDialog").dialog({
@@ -107,33 +160,13 @@ if (myFlexSnap) {
         });
     };
 
-    // Obtains the ticket, userid, and document id from the snowbound page url
-    myFlexSnap.arkCaseGetCommonUrlParams = function() {
-        var argUrlSection = "";
-        var snowUrl = unescape(window.location);
-        var snowUrlArgSections = snowUrl.split("?");
-        var argKeys = ["userid", "acm_ticket", "documentId"];
-        for (var y = 0; y < snowUrlArgSections.length; y++) {
-            var snowUrlArgs = snowUrlArgSections[y].split("&");
-            for (var i = 0; i < snowUrlArgs.length; i++) {
-                var urlKeyValuePair = snowUrlArgs[i].split("=");
-                var urlArgument = urlKeyValuePair[0];
-                var urlValue = urlKeyValuePair[1];
-                if (urlKeyValuePair.length > 2) { // this scenario of more than one equals sign happens in the url
-                    urlValue = urlKeyValuePair[urlKeyValuePair.length - 1];
-                }
+    myFlexSnap.arkCaseSplitDocument = function() {
+        var splitDialog = $("#vvSplitDocumentDialog").dialog("open");
+    }
 
-                // Adds valid url arguments from ArkCase to the url for the snowbound backend call
-                if ($.inArray(urlArgument, argKeys) >= 0) {
-                    if (urlArgument == "documentId") urlArgument = "ecmFileId"; // The backend expects "ecmFileId", not "documentId"
-                    argUrlSection += urlArgument + "=" + urlValue + "&";
-                }
-            }
-        }
-        if (argUrlSection.length > 0) // removes trailing & character
-            argUrlSection = argUrlSection.substring(0, argUrlSection.length - 1);
-        return argUrlSection;
-    };
+    myFlexSnap.arkCaseMergeDocument = function() {
+        var mergeDialog = $("#vvMergeDocumentDialog").dialog("open");
+    }
 
     myFlexSnap.arkCaseReorderDocumentPages = function(pageOriginalIndex, movedPageNewIndex) {
 
@@ -144,7 +177,22 @@ if (myFlexSnap) {
         uri.addQuery("action", "arkCaseReorderDocumentPages");
         var data = uri.query();
         uri.query("");
-        var dataFinal = data + "&" + myFlexSnap.arkCaseGetCommonUrlParams() + '&pageReorderOperation=' + pageOperation;
+        var dataFinal = data + "&" + myFlexSnap.getDocumentId() + '&pageReorderOperation=' + pageOperation;
+        $.ajax({
+            url: uri.toString(),
+            type: "POST",
+            data: dataFinal
+        });
+    };
+
+    myFlexSnap.arkCaseViewDocument = function(documentId) {
+
+        // Triggers audit event process for viewing this document
+        var uri = new URI(vvConfig.servletPath);
+        uri.addQuery("action", "arkCaseViewDocument");
+        var data = uri.query();
+        uri.query("");
+        var dataFinal = data + "&" + documentId;
         $.ajax({
             url: uri.toString(),
             type: "POST",
@@ -187,11 +235,63 @@ if (myFlexSnap) {
         uri.addQuery("action", "arkCaseDeleteDocumentPages");
         var data = uri.query();
         uri.query("");
-        var dataFinal = data + "&" + myFlexSnap.arkCaseGetCommonUrlParams() +"&" + documentId + '&pageNumbers=' + pageNumbers + '&deleteReason=' + deleteReason;
+        var dataFinal = data + "&" + documentId + '&pageNumbers=' + pageNumbers + '&deleteReason=' + deleteReason;
         $.ajax({
             url: uri.toString(),
             data: dataFinal,
             type: "POST"
         });
+    };
+
+    myFlexSnap.arkCaseGetUrlParamMap = function(urlString) {
+        var paramMap = {};
+        var queryString = new URI(urlString).query();
+        if (queryString && queryString.trim().length > 0) {
+            queryString = queryString.replace("documentId=", "");
+            var querySections = queryString.split("&");
+            if (querySections) {
+                $.each(querySections, function() { // Enters each argument/value set into the map
+                    var argKeyValuePair = this.split("=");
+                    if (argKeyValuePair && argKeyValuePair.length == 2) {
+                        paramMap[argKeyValuePair[0]] = argKeyValuePair[1];
+                    }
+                });
+            }
+        }
+        return paramMap;
+    };
+
+    myFlexSnap.arkCaseCreateDocumentId = function(documentIdComponents, newDocumentId) {
+        // Creates a snowbound document id (includes acm user, ticket, and file id) which can have an original file id if supplied
+        return ACM_FILE_PARAM + "=" + ((newDocumentId) ? newDocumentId.trim() : documentIdComponents[ACM_FILE_PARAM]) +
+         "&" + ACM_TICKET_PARAM + "=" + documentIdComponents[ACM_TICKET_PARAM] +
+         "&" + ACM_USER_PARAM + "=" + documentIdComponents[ACM_USER_PARAM];
+    };
+
+    myFlexSnap.arkCaseCreateInitDocumentList = function() {
+        var documentsToOpen = [];
+
+        // Obtains the parameters from the snowbound iframe and the parent window urls
+        var documentIdComponents = myFlexSnap.arkCaseGetUrlParamMap(unescape(window.location));
+        var parentUrlArguments = myFlexSnap.arkCaseGetUrlParamMap(unescape(document.referrer));
+
+        // Adds the document which was clicked on directly by the user to the list of documents which snowbound will open
+        var mainDocumentId = documentIdComponents[ACM_FILE_PARAM];
+        documentsToOpen.push(myFlexSnap.arkCaseCreateDocumentId(documentIdComponents, mainDocumentId));
+
+        // If doctree sends a list of additional selected ids (attached to the parent ArkCase window url)
+        // then it means that snowbound needs to open multiple documents at the same time
+        var docIdList = parentUrlArguments["selectedIds"];
+        if (docIdList && docIdList.trim().length > 0) {
+            var docIds = docIdList.split(",");
+
+            // Builds a list of snowbound document id strings (fileid, user, ticket) for each document to be opened
+            for (var i = 0; i < docIds.length; i++) {
+                var docId = docIds[i].trim();
+                if (docId.length > 0 && docId != mainDocumentId) // The directly opened document was already added to the list
+                    documentsToOpen.push(myFlexSnap.arkCaseCreateDocumentId(documentIdComponents, docIds[i]));
+            }
+        }
+        return documentsToOpen;
     };
 }

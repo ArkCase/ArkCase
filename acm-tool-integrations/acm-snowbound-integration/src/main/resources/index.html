@@ -82,7 +82,19 @@
 
     <script language="javascript">
         function start(){
-            virtualViewer.initViaURL();
+
+            // Initializes snowbound with a set of one or more documents as requested by doctree
+            var documentsToLoad = myFlexSnap.arkCaseCreateInitDocumentList();
+            virtualViewer.initSpecifiedDocuments(documentsToLoad);
+
+            // Triggers audit event notification that each document was viewed
+            for (var i = 0; i < documentsToLoad.length; i++) {
+                myFlexSnap.arkCaseViewDocument(documentsToLoad[i]);
+            }
+
+            //virtualViewer.initViaURL();
+
+            // Initializes the custom ArkCase dialog boxes
             myFlexSnap.initPatch();
         }
     </script>
@@ -354,6 +366,16 @@
              data-localize="annToolbar.layerManager"
              class="vvToolbarButton vvSVGable vvToolbarButtonVertical mouseDown"
              title="Layer Manager">&nbsp;</div>
+
+        <div id="vvSplitDocumentButton"
+             onclick="javascript:myFlexSnap.arkCaseSplitDocument()"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Split Document">&nbsp;</div>
+
+        <div id="vvMergeDocumentButton"
+             onclick="javascript:myFlexSnap.arkCaseMergeDocument()"
+             class="vvToolbarButton vvSVGable vvToolbarButtonHorizontal mouseDown"
+             title="Merge Documents">&nbsp;</div>
     </div>
 
     <div id="vvImageAndThumbs">
@@ -742,6 +764,20 @@
         <span data-localize="newDocumentDialog.documentId">Document ID</span>: <input id="vvNewDocumentDialogNameInput" type="text" name="vvNewDocumentDialogNameInput" />
     </div>
     <div data-localize="newDocumentDialog.error" id="vvNewDocumentDialogError">Please enter a valid Document ID!</div>
+</div>
+
+<div id="vvSplitDocumentDialog">
+    <div id="vvSplitDocumentDialogName">
+        <span data-localize="newDocumentDialog.documentId">Split Index</span>: <input id="vvSplitDocumentDialogNameInput" type="text" name="vvSplitDocumentDialogNameInput" />
+    </div>
+    <div data-localize="newDocumentDialog.error" id="vvSplitIndexDialogError">Please enter a valid Split Index!</div>
+</div>
+
+<div id="vvMergeDocumentDialog">
+    <div id="vvMergeDocumentDialogName">
+        <span data-localize="newDocumentDialog.documentId">Merge Document Ids</span>: <input id="vvMergeDocumentDialogNameInput" type="text" name="vvMergeDocumentDialogNameInput" />
+    </div>
+    <div data-localize="newDocumentDialog.error" id="vvMergeIndexDialogError">Please enter valid document ids to merge!</div>
 </div>
 
 <div id="vvPictureControlsDialog">

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('CaseCalendarController', ['$scope',
+angular.module('cases').controller('Cases.CalendarController', ['$scope',
 	function($scope) {
 		$scope.$on('component-config', applyConfig);
 		$scope.$emit('req-component-config', 'calendar');
