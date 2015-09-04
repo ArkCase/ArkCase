@@ -11,6 +11,9 @@
 
   .title {
     font-size: $font-size-small;
+    color: $gray-light;
+    margin-top: $leftnav-menu-title-margin-top;
+    margin-left: $leftnav-menu-title-margin-left;
   }
 
   a {

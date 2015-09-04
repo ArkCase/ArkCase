@@ -1,0 +1,19 @@
+<div ng-controller="Reports.DatepickersController" ng-cloak>
+
+    <section id="datepickerSection">
+
+        <label> {{'reports.navigation.label.date-from' | translate}} </label>
+
+        <div>
+            <input type="date" class="form-control" datepicker-popup ng-model="startDate" is-open="opened.openedStart"/>
+        </div>
+
+        <label>{{'reports.navigation.label.date-to' | translate}}</label>
+
+        <div>
+            <input type="date" class="form-control" datepicker-popup ng-model="endDate" is-open="opened.openedEnd"/>
+        </div>
+
+    </section>
+
+</div>
