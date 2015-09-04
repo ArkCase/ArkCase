@@ -82,7 +82,19 @@
 
     <script language="javascript">
         function start(){
-            virtualViewer.initViaURL();
+
+            // Initializes snowbound with a set of one or more documents as requested by doctree
+            var documentsToLoad = myFlexSnap.arkCaseCreateInitDocumentList();
+            virtualViewer.initSpecifiedDocuments(documentsToLoad);
+
+            // Triggers audit event notification that each document was viewed
+            for (var i = 0; i < documentsToLoad.length; i++) {
+                myFlexSnap.arkCaseViewDocument(documentsToLoad[i]);
+            }
+
+            //virtualViewer.initViaURL();
+
+            // Initializes the custom ArkCase dialog boxes
             myFlexSnap.initPatch();
         }
     </script>
