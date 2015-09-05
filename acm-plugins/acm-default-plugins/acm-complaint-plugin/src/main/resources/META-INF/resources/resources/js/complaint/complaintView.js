@@ -65,6 +65,7 @@ Complaint.View = Complaint.View || {
             this.allowMailFilesAsAttachments      = Acm.Object.MicroData.get("allowMailFilesAsAttachments");
             this.allowMailFilesToExternalAddresses      = Acm.Object.MicroData.get("allowMailFilesToExternalAddresses");
             this.formUrls = {};
+            this.formUrls.newComplaintFormUrl            = Acm.Object.MicroData.get("newComplaintFormUrl");
             this.formUrls.closeComplaintFormUrl          = Acm.Object.MicroData.get("closeComplaintFormUrl");
             this.formUrls.editCloseComplaintFormUrl      = Acm.Object.MicroData.get("editCloseComplaintFormUrl");
 
@@ -248,7 +249,6 @@ Complaint.View = Complaint.View || {
         }
     }
 
-
     ,Action: {
         create: function() {
             this.$chkRestrict     = $("#restrict");
@@ -257,10 +257,27 @@ Complaint.View = Complaint.View || {
             this.$btnComplaintClose = $("#closeComplaint");
             this.$btnComplaintClose.click(function(e){Complaint.View.Action.onClickBtnComplaintClose(e, this)});
 
+            this.$btnNewComplaintForm     = $("#newComplaint");
+            this.$btnNewComplaintForm.on("click", function(e) {Complaint.View.Action.onClickBtnNewComplaintForm(e, this);});
+
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
         }
         ,onInitialized: function() {
+        }
+
+        ,onClickBtnNewComplaintForm: function(event,ctrl){
+            var formUrls = Complaint.View.MicroData.formUrls;
+            if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.newComplaintFormUrl)){
+                var newComplaintFormUrl = Complaint.View.MicroData.formUrls.newComplaintFormUrl;
+                newComplaintFormUrl = newComplaintFormUrl.replace("embed", "popupform");
+                Acm.Dialog.openWindow(newComplaintFormUrl, "", 1060, 700, function() {
+                    Complaint.Controller.viewClosedAddComplaintWindow();
+                    if(Complaint.Model.Detail.validateComplaint(Complaint.View.getActiveComplaint())) {
+                        Complaint.Controller.viewClosedEditComplaintWindow(Complaint.View.getActiveComplaint());
+                    }
+                });
+            }
         }
 
         //---- demo how to use document tree picker ----

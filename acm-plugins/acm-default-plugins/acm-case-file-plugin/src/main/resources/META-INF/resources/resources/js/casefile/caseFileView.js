@@ -72,6 +72,7 @@ CaseFile.View = CaseFile.View || {
             this.allowMailFilesToExternalAddresses      = Acm.Object.MicroData.get("allowMailFilesToExternalAddresses");
 
             this.formUrls = {};
+            this.formUrls.newCaseFormUrl                 = Acm.Object.MicroData.get("newCaseFormUrl");
             this.formUrls.urlEditCaseFileForm            = Acm.Object.MicroData.get("urlEditCaseFileForm");
             this.formUrls.urlReinvestigateCaseFileForm   = Acm.Object.MicroData.get("urlReinvestigateCaseFileForm");
             this.formUrls.enableFrevvoFormEngine         = Acm.Object.MicroData.get("enableFrevvoFormEngine");
@@ -568,6 +569,7 @@ CaseFile.View = CaseFile.View || {
             //this.$dlgConsolidateCase       = $("#consolidateCase");
             //this.$edtConsolidateCase       = $("#edtConsolidateCase");
             //this.$btnConsolidateCase       = $("#btnConsolidateCase")   .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
+            this.$btnNewCaseFile    	   = $("#btnNewCaseFile")       .on("click", function(e) {CaseFile.View.Action.onClickBtnNewCaseFile(e, this);});
             this.$btnEditCaseFile    	   = $("#btnEditCaseFile")      .on("click", function(e) {CaseFile.View.Action.onClickBtnEditCaseFile(e, this);});
             this.$btnChangeCaseStatus      = $("#btnChangeCaseStatus")  .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
             this.$btnSplitCase             = $("#btnSplitCase")         .on("click", function(e) {CaseFile.View.Action.onClickBtnSplitCase(e, this);});
@@ -581,6 +583,20 @@ CaseFile.View = CaseFile.View || {
 
         }
         ,onInitialized: function() {
+        }
+
+        ,onClickBtnNewCaseFile: function(event,ctrl){
+            var formUrls = CaseFile.View.MicroData.formUrls;
+            if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.newCaseFormUrl)){
+                var newCaseFormUrl = CaseFile.View.MicroData.formUrls.newCaseFormUrl;
+                newCaseFormUrl = newCaseFormUrl.replace("embed", "popupform");
+                Acm.Dialog.openWindow(newCaseFormUrl, "", 1060, 700, function() {
+                    CaseFile.Controller.viewClosedAddCaseWindow();
+                    if(CaseFile.Model.Detail.validateCaseFile(CaseFile.View.getActiveCaseFile())) {
+                        CaseFile.Controller.viewClosedEditCaseWindow(CaseFile.View.getActiveCaseFile());
+                    }
+                });
+            }
         }
 
         ,onClickBtnEditCaseFile: function(event, ctrl) {
