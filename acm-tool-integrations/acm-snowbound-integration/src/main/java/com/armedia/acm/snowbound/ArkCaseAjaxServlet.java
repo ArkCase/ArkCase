@@ -139,6 +139,21 @@ public class ArkCaseAjaxServlet extends AjaxServlet
                 } catch (Exception e) {
                     LOG.log(Level.SEVERE, e.getMessage());
                 }
+            } else if (action.equals("arkCaseViewDocument")) {
+                try {
+                    LOG.log(Level.FINE, "Document was viewed by the user");
+
+                    // Builds audit event notification target url to ArkCase
+                    String targetUrl = buildAuditEventBaseUrl(request, "viewed"); // common url portion
+                    targetUrl += "&" + ArkCaseConstants.ACM_AUDIT_VIEWED_OPERATION_PARAM + "=" + "document_viewed_message";
+                    LOG.log(Level.FINE, "target URL: " + targetUrl);
+
+                    // Sends audit event notification to ArkCase that a document has been re-ordered
+                    sendAuditEventNotificationToArkCase(targetUrl);
+
+                } catch (Exception e) {
+                    LOG.log(Level.SEVERE, e.getMessage());
+                }
             }
         }
     }
