@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('CaseInfoController', ['$scope', '$stateParams', 'ConfigService', 'CasesService', 'LookupService',
+angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'ConfigService', 'CasesService', 'LookupService',
     function($scope, $stateParams, ConfigService, CasesService, LookupService) {
         $scope.$emit('req-component-config', 'info');
 
@@ -39,7 +39,7 @@ angular.module('cases').controller('CaseInfoController', ['$scope', '$stateParam
         };
 
         $scope.priorities = [];
-        LookupService.getPriorites({}, function(data) {
+        LookupService.getPriorities({}, function(data) {
             //$scope.priorities = data;
 
             $scope.priorities = [];

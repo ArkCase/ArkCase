@@ -27,6 +27,29 @@
       "enabled": true,
       "type": "empty"
     },
+    {
+      "id": "participants",
+      "title": "Participants",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "columnDefs": [
+        {
+          "name": "participantType",
+          "displayName": "cases.comp.participants.table.columns.type",
+          "headerCellFilter": "translate",
+          "lookup": "participantTypes"
+        },
+        {
+          "name": "participantLdapId",
+          "displayName": "cases.comp.participants.table.columns.name",
+          "headerCellFilter": "translate",
+          "lookup": "participantNames"
+        }
+      ],
+      "paginationPageSizes": [2, 5, 10, 20, 50],
+      "paginationPageSize": 2
+    },
 
     {
       "id" : "notes",
