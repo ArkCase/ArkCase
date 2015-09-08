@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('CaseCostController', ['$scope',
+angular.module('cases').controller('Cases.CostController', ['$scope',
     function($scope) {
         $scope.$on('component-config', applyConfig);
         $scope.$emit('req-component-config', 'cost');

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('CaseReferencesController', ['$scope',
+angular.module('cases').controller('Cases.ReferencesController', ['$scope',
 	function($scope) {
 		$scope.$on('component-config', applyConfig);
 		$scope.$emit('req-component-config', 'references');

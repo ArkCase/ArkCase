@@ -1,0 +1,66 @@
+{
+  "id": "search",
+  "title": "Search",
+  "menus": [
+    {
+      "menuId": "leftnav",
+      "menuItemURL": "search",
+      "menuItemTitle": "Search",
+      "iconClass": "glyphicon glyphicon-asterisk",
+      "position": 120
+    }
+  ],
+  "components": [
+    {
+      "id": "facets",
+      "title": "Facets",
+      "enabled": true
+    },
+    {
+      "id": "results",
+      "title": "Results",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "search.comp.results.table.columns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "type",
+          "displayName": "search.comp.results.table.columns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title",
+          "displayName": "search.comp.results.table.columns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "parent",
+          "displayName": "search.comp.results.table.columns.parent",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "assignee",
+          "displayName": "search.comp.results.table.columns.assignee",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified",
+          "displayName": "search.comp.results.table.columns.modified",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10
+    }
+  ]
+}
