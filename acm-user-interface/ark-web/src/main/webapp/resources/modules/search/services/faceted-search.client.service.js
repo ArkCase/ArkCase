@@ -1,17 +1,16 @@
-//this file is in the "service" folder outside of the actual module
-//the contents of this file has been moved to the "search" module
-
-
-/*
 'use strict';
 
 angular.module('services').factory('SearchService', ['$resource',
     function ($resource) {
+        var url = "proxy/arkcase/api/v1/plugin/search/facetedSearch?q=:searchString&start=:startWith&n=:count";
+        //needed for future work
+        //url: 'proxy/arkcase/api/v1/plugin/search/facetedSearch?q=:searchString&filters=fq="Object Type"::objectType&fq="Owner"::owner&start=:startWith&n=:count',
+
         return $resource('proxy/arkcase/api/latest/plugin/search', {}, {
             queryFacetedSearch: {
                 method: 'GET',
+                url: url,
                 cache: true,
-                url: 'proxy/arkcase/api/v1/plugin/search/facetedSearch?q=:searchString&filters=fq="Object Type"::objectType&fq="Owner"::owner&start=:startWith&n=:count',
                 isArray: false,
                 transformResponse: function (data, headerGetter) {
                     var result = {};
@@ -43,4 +42,3 @@ angular.module('services').factory('SearchService', ['$resource',
         });
     }
 ]);
- */
