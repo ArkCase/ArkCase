@@ -9,8 +9,29 @@ package com.armedia.acm.plugins.complaint.model;
  */
 public interface ComplaintConstants {
 
-	public static final String OBJECT_TYPE = "COMPLAINT";
+	String OBJECT_TYPE = "COMPLAINT";
 
-	public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+	String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
+	String XML_BATCH_CLASS_NAME_VALUE = "ComplaintTracking";
+	String XML_BATCH_INCIDENT_CATEGORY_KEY = "IncidentCategory";
+	String XML_BATCH_COMPLAINT_DESCRIPTION_KEY = "ComplaintDescription";
+	String XML_BATCH_COMPLAINANT_FIRST_NAME_KEY = "ComplainantFirstName";
+	String XML_BATCH_COMPLAINANT_LAST_NAME_KEY = "ComplainantLastName";
+	String XML_BATCH_COMPLAINANT_STREET_ADDRESS_KEY = "ComplainantStreetAddress";
+	String XML_BATCH_COMPLAINANT_CITY_KEY = "ComplainantCity";
+	String XML_BATCH_COMPLAINANT_STATE_KEY = "ComplainantState";
+	String XML_BATCH_COMPLAINANT_ZIP_CODE_KEY = "ComplainantZipCode";
+	String XML_BATCH_COMPLAINANT_PHONE_KEY = "ComplainantPhone";
+	String XML_BATCH_EMPLOYER_NAME_KEY = "EmployerName";
+	String XML_BATCH_EMPLOYER_STREET_ADDRESS_KEY = "EmployerStreetAddress";
+	String XML_BATCH_EMPLOYER_CITY_KEY = "EmployerCity";
+	String XML_BATCH_EMPLOYER_STATE_KEY = "EmployerState";
+	String XML_BATCH_EMPLOYER_ZIP_CODE_KEY = "EmployerZipCode";
+	String XML_BATCH_EMPLOYER_PHONE_KEY = "EmployerPhone";
+	String XML_BATCH_COMPLAINT_DOC_ID = "ComplaintDocID";
+
+
+	String OXM_FILE_PATH = "\\.acm\\ephesoft\\oxm\\ephesoft_complaint_oxm.xml";
 	
 }
