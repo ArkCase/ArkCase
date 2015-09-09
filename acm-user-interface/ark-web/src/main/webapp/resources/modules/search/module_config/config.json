@@ -29,12 +29,12 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "type",
+          "name": "object_type_s",
           "displayName": "search.comp.results.table.columns.type",
           "headerCellFilter": "translate"
         },
         {
-          "name": "title",
+          "name": "title_parseable",
           "displayName": "search.comp.results.table.columns.title",
           "headerCellFilter": "translate"
         },
@@ -44,12 +44,12 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "assignee",
+          "name": "assignee_full_name_lcs",
           "displayName": "search.comp.results.table.columns.assignee",
           "headerCellFilter": "translate"
         },
         {
-          "name": "modified",
+          "name": "modified_date_tdt",
           "displayName": "search.comp.results.table.columns.modified",
           "headerCellFilter": "translate"
         }
