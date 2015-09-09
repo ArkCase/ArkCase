@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('search').controller('Search.FacetsController', ['$scope',
-    function ($scope) {
+angular.module('search').controller('Search.FacetsController', ['$scope', 'SearchService',
+    function ($scope, SearchService) {
         $scope.$emit('req-component-config', 'facets');
 
         $scope.config = null;
