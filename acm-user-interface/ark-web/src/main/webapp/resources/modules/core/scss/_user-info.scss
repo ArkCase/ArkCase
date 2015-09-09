@@ -4,9 +4,12 @@
   background-color:     $user-info-bg;
 
   .user-pic {
-    height:             $user-pic-height;
-    width:              $user-pic-width;
-    background-color:   $user-pic-bg;
-    border-radius:      500px;
+    img {
+      height:             $user-pic-height;
+      width:              $user-pic-width;
+      background-color:   $user-pic-bg;
+      border-radius:      500px;
+
+    }
   }
 }
