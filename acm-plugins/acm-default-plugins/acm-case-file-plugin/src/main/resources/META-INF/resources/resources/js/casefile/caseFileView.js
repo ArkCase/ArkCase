@@ -589,7 +589,7 @@ CaseFile.View = CaseFile.View || {
             var formUrls = CaseFile.View.MicroData.formUrls;
             if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.newCaseFormUrl)){
                 var newCaseFormUrl = CaseFile.View.MicroData.formUrls.newCaseFormUrl;
-                newCaseFormUrl = newCaseFormUrl.replace("embed", "popupform");
+                //newCaseFormUrl = newCaseFormUrl.replace("embed", "popupform");
                 Acm.Dialog.openWindow(newCaseFormUrl, "", 1060, 700, function() {
                     CaseFile.Controller.viewClosedAddCaseWindow();
                     if(CaseFile.Model.Detail.validateCaseFile(CaseFile.View.getActiveCaseFile())) {

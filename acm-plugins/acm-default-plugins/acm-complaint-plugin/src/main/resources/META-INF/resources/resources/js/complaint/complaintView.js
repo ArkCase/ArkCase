@@ -270,7 +270,7 @@ Complaint.View = Complaint.View || {
             var formUrls = Complaint.View.MicroData.formUrls;
             if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.newComplaintFormUrl)){
                 var newComplaintFormUrl = Complaint.View.MicroData.formUrls.newComplaintFormUrl;
-                newComplaintFormUrl = newComplaintFormUrl.replace("embed", "popupform");
+                //newComplaintFormUrl = newComplaintFormUrl.replace("embed", "popupform");
                 Acm.Dialog.openWindow(newComplaintFormUrl, "", 1060, 700, function() {
                     Complaint.Controller.viewClosedAddComplaintWindow();
                     if(Complaint.Model.Detail.validateComplaint(Complaint.View.getActiveComplaint())) {
