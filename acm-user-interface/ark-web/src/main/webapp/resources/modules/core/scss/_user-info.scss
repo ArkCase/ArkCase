@@ -1,11 +1,12 @@
 .user-info {
-  height: 74px; //TODO Remove this dirty hack after demo
-  background-color: $user-info-bg;
+  height:               $user-info-height;
+  padding:              ($user-info-height - $user-pic-height)/2;
+  background-color:     $user-info-bg;
 
   .user-pic {
-    height: 50px;
-    width: 50px;
-    background-color: $user-pic-bg;
-    border-radius: 500px;
+    height:             $user-pic-height;
+    width:              $user-pic-width;
+    background-color:   $user-pic-bg;
+    border-radius:      500px;
   }
 }

@@ -1,21 +1,22 @@
-<div class="user-info well-sm" ng-controller="UserInfoController">
-    <div class="user-pic pull-left">
-        <img src="assets/img/ann.png" width="50" height="57"/>
-    </div>
+<div class="user-info" ng-controller="UserInfoController">
+    <div>
+        <div class="user-pic pull-left">
+            <img src="assets/img/ann.png" width="50" height="50"/>
+        </div>
 
-    <div dropdown class="user-menu pull-right">
-        <a href="#" dropdown-toggle><strong>Ann Administrator<span
-                class="glyphicon glyphicon-triangle-bottom"></span></strong></a>
-        <ul class="dropdown-menu animated fadeInRight">
-            <li ng-repeat="item in menu.items  | orderBy: 'position' ">
-                <a data-ui-sref="{{item.link}}" title="{{item.title}}" class="auto">
-                    <i ng-if="item.iconClass" class="navigation-icon {{item.iconClass}}"> </i>
-                    {{item.title}}
-                </a>
-            </li>
-            <li><a href="logout">Logout</a></li>
-        </ul>
+        <div dropdown class="user-menu">
+            <a href="#" dropdown-toggle><strong>Ann Administrator<span
+                    class="glyphicon glyphicon-triangle-bottom"></span></strong></a>
+            <ul class="dropdown-menu animated fadeInRight">
+                <li ng-repeat="item in menu.items  | orderBy: 'position' ">
+                    <a data-ui-sref="{{item.link}}" title="{{item.title}}" class="auto">
+                        <i ng-if="item.iconClass" class="navigation-icon {{item.iconClass}}"> </i>
+                        {{item.title}}
+                    </a>
+                </li>
+                <li><a href="logout">Logout</a></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
     </div>
-
-    <div class="clearfix"></div>
 </div>
