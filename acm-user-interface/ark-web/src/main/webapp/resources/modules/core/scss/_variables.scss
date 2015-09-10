@@ -1,4 +1,5 @@
 @import "../../../scss/base/variables";
+@import "../../../scss/modules/module/variables.scss";
 
 // Left Navigation menu
 $leftnav-menu-bg:               $white-dark !default;
@@ -11,7 +12,10 @@ $leftnav-menu-title-margin-left: 5px !default;
 
 
 // User Info
+$user-info-height:              $left-sidebar-height;
 $user-info-bg:                  $blue-lighter2;
+$user-pic-width:                50px;
+$user-pic-height:               50px;
 $user-pic-bg:                   #e0e6f0 !default;
 
 // Active items

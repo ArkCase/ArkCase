@@ -104,6 +104,7 @@ public class ComplaintUiController
         log.debug("Security token: " + token);
 
         // Frevvo form URLs
+        mv.addObject("newComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.COMPLAINT, false));
         mv.addObject("closeComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT, false));
         mv.addObject("formDocuments", getFormProperties().get("form.documents"));
         return mv;
