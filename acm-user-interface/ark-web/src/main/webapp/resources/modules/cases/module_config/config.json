@@ -25,7 +25,212 @@
       "id": "people",
       "title": "People",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [2, 5, 10, 20, 50],
+      "paginationPageSize": 2,
+      "columnDefs": [
+        {
+          "name": "entity",
+          "displayName": "cases.comp.people.table.columns.entity",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "personType",
+          "displayName": "cases.comp.people.table.columns.type",
+          "headerCellFilter": "translate",
+          "lookup": "personTypes"
+        },
+        {
+          "name": "firstName",
+          "field": "person.givenName",
+          "displayName": "cases.comp.people.table.columns.firstName",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "lastName",
+          "field": "person.familyName",
+          "displayName": "cases.comp.people.table.columns.lastName",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "contactMethods": {
+        "id": "contactMethods",
+        "title": "Contact Methods",
+        "enableFiltering": true,
+        "paginationPageSizes": [2, 5, 10, 20, 50],
+        "paginationPageSize": 2,
+        "columnDefs": [
+          {
+            "name": "type",
+            "displayName": "cases.comp.people.contactMethods.table.columns.type",
+            "headerCellFilter": "translate",
+            "lookup": "contactMethodTypes"
+          },
+          {
+            "name": "value",
+            "displayName": "cases.comp.people.contactMethods.table.columns.value",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "created",
+            "displayName": "cases.comp.people.contactMethods.table.columns.created",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "creator",
+            "displayName": "cases.comp.people.contactMethods.table.columns.creator",
+            "headerCellFilter": "translate" ,
+            "lookup": "userFullNames"
+          }
+        ]
+      },
+      "organizations": {
+        "id": "organizations",
+        "title": "Organizations",
+        "enableFiltering": true,
+        "paginationPageSizes": [5, 10, 20, 50],
+        "paginationPageSize": 5,
+        "columnDefs": [
+          {
+            "name": "type",
+            "field": "organizationType",
+            "displayName": "cases.comp.people.organizations.table.columns.type",
+            "headerCellFilter": "translate",
+            "lookup": "organizationTypes"
+          },
+          {
+            "name": "value",
+            "field": "organizationValue",
+            "displayName": "cases.comp.people.organizations.table.columns.value",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "created",
+            "displayName": "cases.comp.people.organizations.table.columns.created",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "creator",
+            "displayName": "cases.comp.people.organizations.table.columns.creator",
+            "headerCellFilter": "translate" ,
+            "lookup": "userFullNames"
+          }
+        ]
+      },
+      "addresses": {
+        "id": "addresses",
+        "title": "Addresses",
+        "enableFiltering": true,
+        "paginationPageSizes": [5, 10, 20, 50],
+        "paginationPageSize": 5,
+        "columnDefs": [
+          {
+            "name": "type",
+            "displayName": "cases.comp.people.addresses.table.columns.type",
+            "headerCellFilter": "translate",
+            "lookup": "addressTypes"
+          },
+          {
+            "name": "streetAddress",
+            "displayName": "cases.comp.people.addresses.table.columns.streetAddress",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "city",
+            "displayName": "cases.comp.people.addresses.table.columns.city",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "state",
+            "displayName": "cases.comp.people.addresses.table.columns.state",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "zip",
+            "displayName": "cases.comp.people.addresses.table.columns.zip",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "country",
+            "displayName": "cases.comp.people.addresses.table.columns.country",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "created",
+            "displayName": "cases.comp.people.addresses.table.columns.created",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "creator",
+            "displayName": "cases.comp.people.addresses.table.columns.creator",
+            "headerCellFilter": "translate" ,
+            "lookup": "userFullNames"
+          }
+        ]
+      },
+      "aliases": {
+        "id": "Aliases",
+        "title": "aliases",
+        "enableFiltering": true,
+        "paginationPageSizes": [5, 10, 20, 50],
+        "paginationPageSize": 5,
+        "columnDefs": [
+          {
+            "name": "type",
+            "displayName": "cases.comp.people.aliases.table.columns.type",
+            "headerCellFilter": "translate",
+            "lookup": "aliasTypes"
+          },
+          {
+            "name": "value",
+            "displayName": "cases.comp.people.aliases.table.columns.value",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "created",
+            "displayName": "cases.comp.people.aliases.table.columns.created",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "creator",
+            "displayName": "cases.comp.people.aliases.table.columns.creator",
+            "headerCellFilter": "translate" ,
+            "lookup": "userFullNames"
+          }
+        ]
+      },
+      "securityTags": {
+        "id": "securityTags",
+        "title": "Security Tags",
+        "enableFiltering": true,
+        "paginationPageSizes": [5, 10, 20, 50],
+        "paginationPageSize": 5,
+        "columnDefs": [
+          {
+            "name": "type",
+            "displayName": "cases.comp.people.securityTags.table.columns.type",
+            "headerCellFilter": "translate",
+            "lookup": "securityTagTypes"
+          },
+          {
+            "name": "value",
+            "displayName": "cases.comp.people.securityTags.table.columns.value",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "created",
+            "displayName": "cases.comp.people.securityTags.table.columns.created",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "creator",
+            "displayName": "cases.comp.people.securityTags.table.columns.creator",
+            "headerCellFilter": "translate" ,
+            "lookup": "userFullNames"
+          }
+        ]
+      }
     },
     {
       "id": "participants",
@@ -33,6 +238,8 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
+      "paginationPageSizes": [2, 5, 10, 20, 50],
+      "paginationPageSize": 2,
       "columnDefs": [
         {
           "name": "participantType",
@@ -46,9 +253,7 @@
           "headerCellFilter": "translate",
           "lookup": "participantNames"
         }
-      ],
-      "paginationPageSizes": [2, 5, 10, 20, 50],
-      "paginationPageSize": 2
+      ]
     },
 
     {
@@ -122,6 +327,8 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
+      "paginationPageSizes": [5, 10, 20, 50],
+      "paginationPageSize": 10,
       "columnDefs": [
         {
           "name": "eventDate",
@@ -134,9 +341,7 @@
           "displayName": "cases.comp.history.table.columns.userId",
           "headerCellFilter": "translate"
         }
-      ],
-      "paginationPageSizes": [5, 10, 20, 50],
-      "paginationPageSize": 10
+      ]
     },
 
     {

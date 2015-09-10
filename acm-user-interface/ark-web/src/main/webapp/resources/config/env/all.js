@@ -77,12 +77,13 @@ module.exports = {
         js: [
             'config.js',
             'application.js',
-            //'scripts/*/*.js',
             'scripts/*/**/*.js',
             'services/*.js',
             'services/*/*.js',
             'directives/*.js',
-            'directives/*/*.js'
+            'directives/*/*.js',
+            'filters/*.js',
+            'filters/*/*.js'
         ],
         jsModules: [
             'modules/*/*.js',
