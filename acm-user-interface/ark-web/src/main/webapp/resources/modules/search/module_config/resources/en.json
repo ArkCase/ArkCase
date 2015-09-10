@@ -14,6 +14,10 @@
     }
   },
   "search.comp.facets": {
-    "title": "Facets"
+    "title": "Facets",
+    "people": "People",
+    "contacts": "Contacts",
+    "city": "City",
+    "phone": "Phone"
   }
 }
