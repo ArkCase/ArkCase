@@ -46,7 +46,63 @@
     }
   },
   "cases.comp.people": {
-    "title": "People"
+    "title": "People",
+    "table.columns": {
+      "entity": "Entity",
+      "type": "Type",
+      "firstName": "FirstName",
+      "lastName": "LastName"
+    },
+    "contactMethods": {
+      "title": "ContactMethods",
+      "table.columns": {
+        "type": "Type",
+        "value": "Value",
+        "created": "Date Added",
+        "creator": "Added By"
+      }
+    },
+    "organizations": {
+      "title": "Organizations",
+      "table.columns": {
+        "type": "Type",
+        "value": "Value",
+        "created": "Date Added",
+        "creator": "Added By"
+      }
+    },
+    "addresses": {
+      "title": "Addresses",
+      "table.columns": {
+        "type": "Type",
+        "streetAddress": "Address",
+        "city": "City",
+        "state": "State",
+        "zip": "Zip",
+        "country": "Country",
+        "created": "Date Added",
+        "creator": "Added By"
+      }
+    },
+    "aliases": {
+      "title": "Aliases",
+      "table.columns": {
+        "type": "Type",
+        "value": "Value",
+        "created": "Date Added",
+        "creator": "Added By"
+      }
+    },
+    "securityTags": {
+      "title": "Security Tags",
+      "table.columns": {
+        "type": "Type",
+        "value": "Value",
+        "created": "Date Added",
+        "creator": "Added By"
+      }
+    }
+
   },
   "cases.comp.references": {
     "title": "References"
