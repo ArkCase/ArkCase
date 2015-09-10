@@ -2,10 +2,12 @@
 .no-border {
   border-color: transparent;
   border-width: 0;
-  -webkit-box-shadow: none; //change
+  -webkit-box-shadow: none; //TODO: change to mixin
   box-shadow: none;
 }
 
-.box-shadow {
-
+.table-row {
+  display: table-row;
+  width: 100%;
+  height: 100%;
 }
