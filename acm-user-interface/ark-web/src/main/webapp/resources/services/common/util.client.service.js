@@ -7,7 +7,15 @@ angular.module('services').factory('UtilService', ['$q',
                 var replacedWith = (undefined === replacement) ? "" : replacement;
                 return this.isEmpty(val) ? replacedWith : val;
             }
-            ,goodObjValue: function (arr, replacement) {
+            ,goodArray: function (val, replacement) {
+                var replacedWith = (undefined === replacement) ? [] : replacement;
+                return this.isArray(val) ? val : replacedWith;
+            }
+
+            //
+            //todo: use lodash impl _.map(obj, 'some.arr[0].name');
+            //
+            ,goodMapValue: function (arr, replacement) {
                 var replacedWith = (undefined === replacement) ? "" : replacement;
                 if (this.isArray(arr)) {
                     if (0 >= arr.length) {
@@ -44,6 +52,21 @@ angular.module('services').factory('UtilService', ['$q',
                 } else {
                     return replacedWith;
                 }
+            }
+
+            //todo: use lodash imppl
+            //function parseLodash(str){
+            //    return _.attempt(JSON.parse.bind(null, str));
+            //}
+            ,goodJsonObj: function (str, replacement)  {
+                var replacedWith = (undefined === replacement) ? {} : replacement;
+                var json = replacedWith;
+                try {
+                    json = JSON.parse(str);
+                } catch (e) {
+                    json = replacedWith;
+                }
+                return json;
             }
             ,isEmpty: function (val) {
                 if (undefined == val) {
@@ -89,6 +112,13 @@ angular.module('services').factory('UtilService', ['$q',
                     });
                 }
                 return d.promise;
+            }
+            ,forEachTypical: function(data, callback) {
+                _.forEach(data, function(v, k) {
+                    if (("string" == (typeof k)) && !k.startsWith("$")) {
+                        callback(v, k);
+                    }
+                });
             }
         }
     }
