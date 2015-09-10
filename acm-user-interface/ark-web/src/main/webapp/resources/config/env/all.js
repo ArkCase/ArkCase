@@ -1,5 +1,4 @@
 'use strict';
-var appRoot = require('app-root-path');
 var path = require('path');
 
 
