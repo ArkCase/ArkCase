@@ -32,6 +32,6 @@ public interface ComplaintConstants {
 	String XML_BATCH_COMPLAINT_DOC_ID = "ComplaintDocID";
 
 
-	String OXM_FILE_PATH = "\\.acm\\ephesoft\\oxm\\ephesoft_complaint_oxm.xml";
+	String OXM_FILE_PATH = "/.acm/ephesoft/oxm/ephesoft_complaint_oxm.xml";
 	
 }

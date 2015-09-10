@@ -115,6 +115,11 @@ public class ComplaintCaptureFileListener extends AbstractCaptureFileListener
                     LOG.debug("All requested documents are loaded!");
                     break;
                 }
+                else
+                {
+                    LOG.warn("Found " + loadedDocumentsCount + " documents from total documents " + expectedDocumentsCount);
+                    LOG.debug("Attempt: " + (i + 1) + " from total attempts " + getLoadingDocumentsSeconds());
+                }
 
                 try
                 {
@@ -122,8 +127,7 @@ public class ComplaintCaptureFileListener extends AbstractCaptureFileListener
                 }
                 catch (InterruptedException ie)
                 {
-                    LOG.warn("Found " + loadedDocumentsCount + " documents from total documents " + expectedDocumentsCount);
-                    LOG.debug("Attempt: " + (i + 1) + " from total attempts " + getLoadingDocumentsSeconds());
+                    LOG.error("Error while thread sleep: " + ie.getMessage(), ie);
                 }
             }
         }
