@@ -51,6 +51,7 @@
                 <value>services</value>
                 <value>templates</value>
                 <value>scripts</value>
+                <value>filters</value>
             </list>
         </property>
         <property name="assembledFoldersToCopyToDeployment">
@@ -62,6 +63,7 @@
                 <value>modules_config</value>
                 <value>services</value>
                 <value>scripts</value>
+                <value>filters</value>
             </list>
         </property>
         <property name="filesToCopyFromArchive">

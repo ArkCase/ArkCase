@@ -1,41 +1,15 @@
 'use strict';
 
-angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$stateParams', '$q', 'Acm', 'CasesService', 'LookupService',
-    function($scope, $stateParams, $q, Acm, CasesService, LookupService) {
+angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$stateParams', '$q', 'UtilService', 'CasesService', 'LookupService',
+    function($scope, $stateParams, $q, Util, CasesService, LookupService) {
         $scope.$emit('req-component-config', 'participants');
-
-        $scope.addNew = function() {
-            var lastPage = $scope.gridApi.pagination.getTotalPages();
-            $scope.gridApi.pagination.seek(lastPage);
-            $scope.gridOptions.data.push({});
-        };
-        //$scope.saveRow = function(row) {
-        //    //$scope.gridApi.rowEdit.flushDirtyRows( $scope.gridApi.grid );
-        //    alert("saveRow=" + row);
-        //};
-        $scope.deleteRow = function(row) {
-            var idx = _.findIndex($scope.gridOptions.data, function(obj) {
-                return (obj == row.entity);
-            });
-            if (0 <= idx) {
-                $scope.gridOptions.data.splice(idx, 1);
-            }
-
-            var id = Acm.goodObjValue([row, "entity", "id"], 0);
-            if (0 < id) {    //not a new row
-                //
-                // save data to server
-                //
-            }
-
-        };
 
         $scope.config = null;
         $scope.$on('component-config', applyConfig);
         function applyConfig(e, componentId, config) {
             if (componentId == 'participants' && !$scope.config) {
 
-                var cdef = {name: "act"
+                var columnDef = {name: "act"
                     ,cellEditableCondition: false
                     //,enableFiltering: false
                     //,enableHiding: false
@@ -43,10 +17,9 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                     //,enableColumnResizing: false
                     ,width: 40
                     ,headerCellTemplate: "<span></span>"
-                    //,cellTemplate: "<span><i class='fa fa-trash-o fa-lg' ng-click='grid.appScope.deleteRow($event, row)'></i></span>"
                     ,cellTemplate: "<span><i class='fa fa-trash-o fa-lg' ng-click='grid.appScope.deleteRow(row)'></i></span>"
                 };
-                config.columnDefs.push(cdef);
+                config.columnDefs.push(columnDef);
 
                 $scope.config = config;
                 $scope.gridOptions = {
@@ -94,21 +67,21 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                 };
 
 
-                var promiseTypes = Acm.servicePromise({
+                var promiseTypes = Util.servicePromise({
                     service: LookupService.getParticipantTypes
                     ,callback: function(data){
                         $scope.participantTypes = [{type: "*", name: "*"}];
-                        _.forEach(data, function(v, k) {
+                        Util.forEachTypical(data, function(v, k) {
                             $scope.participantTypes.push({type: k, name: v});
                         });
                         return $scope.participantTypes;
                     }
                 });
-                var promiseUsers = Acm.servicePromise({
-                    service: LookupService.getUsers
+                var promiseUsers = Util.servicePromise({
+                    service: LookupService.getUsersBasic
                     ,callback: function(data){
                         $scope.participantUsers = [];
-                        var arr = Acm.goodObjValue([data, "response", "docs"], []);
+                        var arr = Util.goodMapValue([data, "response", "docs"], []);
                         for (var i = 0; i < arr.length; i++) {
                             var user = {};
                             user.id = arr[i].object_id_s;
@@ -118,11 +91,11 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                         return $scope.participantUsers;
                     }
                 });
-                var promiseGroups = Acm.servicePromise({
+                var promiseGroups = Util.servicePromise({
                     service: LookupService.getGroups
                     ,callback: function(data){
                         $scope.participantGroups = [];
-                        var arr = Acm.goodObjValue([data, "response", "docs"], []);
+                        var arr = Util.goodMapValue([data, "response", "docs"], []);
                         for (var i = 0; i < arr.length; i++) {
                             var group = {};
                             group.id = arr[i].object_id_s;
@@ -145,7 +118,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                             $scope.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
                             $scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
                             $scope.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.participantTypes;
-                            $scope.gridOptions.columnDefs[i].cellFilter = "mapParticipantTypeName: col.colDef.editDropdownOptionsArray";
+                            $scope.gridOptions.columnDefs[i].cellFilter = "mapIdValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
                         } else if ("participantNames" == $scope.config.columnDefs[i].lookup) {
@@ -153,7 +126,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                             $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
                             $scope.gridOptions.columnDefs[i].editDropdownRowEntityOptionsArrayPath = "participantNames";
-                            $scope.gridOptions.columnDefs[i].cellFilter = "mapParticipantName: row.entity.participantNames";
+                            $scope.gridOptions.columnDefs[i].cellFilter = "mapIdValue: row.entity.participantNames:'id':'name'";
                         }
                     }
 
@@ -180,40 +153,65 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                 });
             }
         });
+
+        $scope.addNew = function() {
+            var lastPage = $scope.gridApi.pagination.getTotalPages();
+            $scope.gridApi.pagination.seek(lastPage);
+            $scope.gridOptions.data.push({});
+        };
+        //$scope.saveRow = function(row) {
+        //    //$scope.gridApi.rowEdit.flushDirtyRows( $scope.gridApi.grid );
+        //    alert("saveRow=" + row);
+        //};
+        $scope.deleteRow = function(row) {
+            var idx = _.findIndex($scope.gridOptions.data, function(obj) {
+                return (obj == row.entity);
+            });
+            if (0 <= idx) {
+                $scope.gridOptions.data.splice(idx, 1);
+            }
+
+            var id = Util.goodMapValue([row, "entity", "id"], 0);
+            if (0 < id) {    //not deleting a new row
+                //
+                // save data to server
+                //
+            }
+
+        };
     }
 ])
 
-.filter('mapParticipantTypeName', function() {
-    return function(input, typeNames) {
-        var find = _(typeNames).filter(function(typeName) {
-            return typeName.type == input;
-        })
-        .pluck("name")
-        .value()
-        ;
-
-        return (0 < find.length)? find[0] : input;
-    };
-
-})
-.filter('mapParticipantName', function() {
-    return function(input, participantNames) {
-        var find = _(participantNames).filter(function(participantName) {
-            return participantName.id == input;
-        })
-        .pluck("name")
-        .value()
-        ;
-
-        return (0 < find.length)? find[0] : input;
-    };
-
-})
 ;
 
 //
 //jwu: Commented out code are alternative solutions; will remove when most suitable solution chosen
 //
+//.filter('mapParticipantTypeName', function() {
+//    return function(input, typeNames) {
+//        var find = _(typeNames).filter(function(typeName) {
+//            return typeName.type == input;
+//        })
+//        .pluck("name")
+//        .value()
+//        ;
+//
+//        return (0 < find.length)? find[0] : input;
+//    };
+//})
+//
+//.filter('mapParticipantName', function() {
+//    return function(input, idNames) {
+//        var find = _(idNames).filter(function(idName) {
+//            return idName.id == input;
+//        })
+//        .pluck("name")
+//        .value()
+//        ;
+//
+//        return (0 < find.length)? find[0] : input;
+//    };
+//})
 //.filter('mapParticipantTypeName', ["LookupService", function(LookupService) {
 //	var participantTypeHash = null;
 //	var serviceInvoked = false;
