@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('services').factory('Acm', ['$q',
+angular.module('services').factory('UtilService', ['$q',
     function ($q) {
         return {
             goodValue: function (val, replacement) {
@@ -9,7 +9,7 @@ angular.module('services').factory('Acm', ['$q',
             }
             ,goodObjValue: function (arr, replacement) {
                 var replacedWith = (undefined === replacement) ? "" : replacement;
-                if (angular.isArray(arr)) {
+                if (this.isArray(arr)) {
                     if (0 >= arr.length) {
                         return replacedWith;
                     }
@@ -20,7 +20,19 @@ angular.module('services').factory('Acm', ['$q',
                             v = arr[0];
                         } else {
                             var k = arr[i];
-                            v = v[k];
+                            if (k.match(/^\[[0-9]+\]$/)) {  // match to "[ numbers ]"
+                                if (!this.isArray(v)) {
+                                    return replacedWith;
+                                }
+                                var idx = k.substring(1, k.length - 1);
+                                if (v.length <= idx) {
+                                    return replacedWith;
+                                }
+                                v = v[idx];
+
+                            } else {
+                                v = v[k];
+                            }
                         }
 
                         if (this.isEmpty(v)) {
@@ -44,6 +56,20 @@ angular.module('services').factory('Acm', ['$q',
                     return true;
                 }
                 return false;
+            }
+            ,isArray: function(arr) {
+                if (arr) {
+                    if (arr instanceof Array) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            ,isArrayEmpty: function (arr) {
+                if(!this.isArray(arr)) {
+                    return true;
+                }
+                return arr.length === 0;
             }
 
             ,servicePromise: function(arg) {
