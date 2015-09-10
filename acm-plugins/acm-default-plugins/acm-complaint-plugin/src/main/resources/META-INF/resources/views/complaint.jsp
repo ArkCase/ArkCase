@@ -20,6 +20,7 @@
         <span itemprop="allowMailFilesToExternalAddresses">${allowMailFilesToExternalAddresses}</span>
 
         <span itemprop="closeComplaintFormUrl">${closeComplaintFormUrl}</span>
+        <span itemprop="newComplaintFormUrl">${newComplaintFormUrl}</span>
         <%--<span itemprop="editCloseComplaintFormUrl">${editCloseComplaintFormUrl}</span>--%>
         <span itemprop="formDocuments">${formDocuments}</span>
         <span itemprop="fileTypes">${fileTypes}</span>
@@ -200,6 +201,7 @@
                                         <div class="col-md-12">
                                             <div class="pull-right inline">
                                                 <div class="btn-group">
+                                                    <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint:header.buttons.new-complaint" data-toggle="tooltip" id="newComplaint" data-title="New Complaint"><i class="fa fa-archive"></i> <span data-i18n="complaint:header.buttons.new-complaint">New Complaint</span></button>
                                                     <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint:header.buttons.close-complaint" data-toggle="tooltip" id="closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> <span data-i18n="complaint:header.buttons.close-complaint">Close Complaint</span></button>
                                                     <%--<input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />--%>
 
