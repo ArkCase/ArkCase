@@ -85,6 +85,11 @@
             <artifactId>acm-service-object-change-status</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-pipeline</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>
