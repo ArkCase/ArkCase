@@ -75,12 +75,13 @@ public class CaseFileUiController
         addJsonArrayProp(mv, props, "search.tree.filter", "treeFilter");
         addJsonArrayProp(mv, props, "search.tree.sort", "treeSort");
         addJsonArrayProp(mv, props, "fileTypes", "fileTypes");
-        mv.addObject("arkcaseUrl",getNotificationProperties().get("arkcase.url"));
+        mv.addObject("arkcaseUrl", getNotificationProperties().get("arkcase.url"));
         mv.addObject("arkcasePort",getNotificationProperties().get("arkcase.port"));
 
         mv.addObject("allowMailFilesAsAttachments", getNotificationProperties().get("notification.allowMailFilesAsAttachments"));
         mv.addObject("allowMailFilesToExternalAddresses", getNotificationProperties().get("notification.allowMailFilesToExternalAddresses"));
 
+        mv.addObject("newCaseFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CASE_FILE, false));
         mv.addObject("changeCaseStatusFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CHANGE_CASE_STATUS, false));
         mv.addObject("enableFrevvoFormEngine", formUrl.enableFrevvoFormEngine(FrevvoFormName.ROI));
         mv.addObject("editCaseFileFormUrl", getCaseFileUrl());
