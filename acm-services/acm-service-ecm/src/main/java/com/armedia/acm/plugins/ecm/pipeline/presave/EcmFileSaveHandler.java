@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.mule.api.ExceptionPayload;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -52,7 +53,30 @@ public class EcmFileSaveHandler implements PipelineHandler<EcmFile, EcmFileTrans
     @Override
     public void rollback(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
     {
-        // rollback not needed, JPA will rollback the database changes.
+        log.debug("mule pre save handler rollback called");
+        // Since the mule flow creates a file in the repository, JPA cannot roll it back and it needs to be deleted manually
+        try {
+            // We need the cmis id of the file in order to delete it
+            Document cmisDocument = pipelineContext.getCmisDocument();
+            if (cmisDocument == null)
+                throw new Exception("cmisDocument is null");
+
+            // This is the request payload for mule including the unique cmis id for the document to delete
+            Map<String, Object> messageProps = new HashMap<>();
+            messageProps.put("ecmFileId", cmisDocument.getId());
+
+            // Invokes the mule flow to delete the file contents from the repository
+            log.debug("rolling back file upload for cmis id: " + cmisDocument.getId() + " using vm://deleteFile.in mule flow");
+            MuleMessage fileDeleteResponse = getMuleContextManager().send("vm://deleteFile.in", entity, messageProps);
+            ExceptionPayload exceptionPayload = fileDeleteResponse.getExceptionPayload();
+            if (exceptionPayload != null)
+                throw new Exception(exceptionPayload.getRootException());
+
+        } catch (Exception e) { // since the rollback failed an orphan document will exist in Alfresco
+            log.error("rollback of file upload failed: " + e.getMessage());
+            throw new PipelineProcessException("rollback of file upload failed: " + e.getMessage());
+        }
+        log.debug("mule pre save handler rollback ended");
     }
 
     public MuleContextManager getMuleContextManager() {
