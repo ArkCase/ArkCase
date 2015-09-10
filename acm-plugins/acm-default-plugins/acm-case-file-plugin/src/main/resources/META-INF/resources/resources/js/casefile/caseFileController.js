@@ -57,6 +57,16 @@ CaseFile.Controller = CaseFile.Controller || {
     ,viewChangedCaseTitle: function(caseFileId, title) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_CASE_TITLE, caseFileId, title);
     }
+
+    ,VIEW_CLOSED_EDIT_CASE_WINDOW     : "case-view-closed-edit-case-window"
+    ,viewClosedEditCaseWindow: function(casefile) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CLOSED_EDIT_CASE_WINDOW, casefile);
+    }
+    ,VIEW_CLOSED_ADD_CASE_WINDOW      : "case-view-closed-add-case-window"
+    ,viewClosedAddCaseWindow: function(casefile) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CLOSED_ADD_CASE_WINDOW, casefile);
+    }
+
 //    ,MODEL_SAVED_CASE_TITLE                : "case-model-saved-case-title"
 //    ,modelSavedCaseTitle : function(caseFileId, title) {
 //        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_CASE_TITLE, caseFileId, title);

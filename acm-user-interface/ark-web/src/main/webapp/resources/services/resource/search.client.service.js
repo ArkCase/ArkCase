@@ -1,3 +1,8 @@
+//this file is in the "service" folder outside of the actual module
+//the contents of this file has been moved to the "search" module
+
+
+/*
 'use strict';
 
 angular.module('services').factory('SearchService', ['$resource',
@@ -38,3 +43,4 @@ angular.module('services').factory('SearchService', ['$resource',
         });
     }
 ]);
+ */

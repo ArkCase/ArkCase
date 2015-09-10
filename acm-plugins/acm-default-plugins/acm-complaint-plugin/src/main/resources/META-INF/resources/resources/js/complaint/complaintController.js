@@ -93,6 +93,16 @@ Complaint.Controller = Complaint.Controller || {
     ,viewChangedRestriction: function(complaintId, restriction) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_RESTRICTION, complaintId, restriction);
     }
+
+    ,VIEW_CLOSED_EDIT_COMPLAINT_WINDOW     : "complaint-view-closed-edit-complaint-window"
+    ,viewClosedEditComplaintWindow: function(complaint) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CLOSED_EDIT_COMPLAINT_WINDOW, complaint);
+    }
+    ,VIEW_CLOSED_ADD_COMPLAINT_WINDOW      : "complaint-view-closed-add-complaint-window"
+    ,viewClosedAddComplaintWindow: function(complaint) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CLOSED_ADD_COMPLAINT_WINDOW, complaint);
+    }
+
     ,MODEL_SAVED_RESTRICTION               : "complaint-model-saved-restriction"
     ,modelSavedRestriction : function(complaintId, restriction) {
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_RESTRICTION, complaintId, restriction);

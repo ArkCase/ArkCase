@@ -18,6 +18,7 @@
         <span itemprop="allowMailFilesAsAttachments">${allowMailFilesAsAttachments}</span>
         <span itemprop="allowMailFilesToExternalAddresses">${allowMailFilesToExternalAddresses}</span>
 
+        <span itemprop="newCaseFormUrl">${newCaseFormUrl}</span>
         <span itemprop="urlEditCaseFileForm">${editCaseFileFormUrl}</span>
         <span itemprop="urlReinvestigateCaseFileForm">${reinvestigateCaseFileFormUrl}</span>
         <span itemprop="urlChangeCaseStatusForm">${changeCaseStatusFormUrl}</span>
@@ -227,6 +228,9 @@
 
                                         <div class="pull-right inline">
                                             <div class="btn-group">
+                                                <button class="btn btn-default btn-sm" id="btnNewCaseFile" data-i18n="[data-title]casefile:header.buttons.new-case-file" data-title="New Case File" title="New Case File"><i class="fa fa-edit"></i>
+                                                    <span data-i18n="casefile:header.buttons.new">New</span>
+                                                </button>
                                                 <button class="btn btn-default btn-sm" id="btnEditCaseFile" data-i18n="[data-title]casefile:header.buttons.edit-case-file" data-title="Edit Case File" title="Edit Case File"><i class="fa fa-edit"></i>
                                                     <span data-i18n="casefile:header.buttons.edit">Edit</span>
                                                 </button>
