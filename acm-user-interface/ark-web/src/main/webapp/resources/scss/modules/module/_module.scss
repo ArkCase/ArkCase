@@ -2,7 +2,17 @@
 
 .module-header {
   background-color: $blue-lighter2;
-  padding-left: $module-header-padding-left;
+  padding-left: 0;
+  min-height: $left-sidebar-height;
+  h3, h4 {
+    margin: 0;
+  }
+
+  // H3 is used for Module name
+  h3 {
+    padding-top: ($left-sidebar-height - $font-size-h3) / 2;
+    padding-left: 15px;
+  }
 }
 
 .module-content {
@@ -10,16 +20,33 @@
   display: table;
   table-layout: fixed;
 
-  .left-sidebar {
+  .left-sidebar, .left-sidebar-sm {
     display: table-cell;
+    vertical-align: top;
     width: $left-sidebar-width;
-    background-color: $left-sidebar-bg;
-    padding-left: $left-sidebar-padding-left;
-    padding-right: $left-sidebar-padding-right;
+    padding-left: 0;
+    padding-right: 0;
+    .header {
+      padding-left: 15px;
+      padding-right: 15px;
+      padding-top: ($left-sidebar-height - $font-size-h3) / 2;
+      padding-bottom: ($left-sidebar-height - $font-size-h3) / 2;
+      h3 {
+        margin: 0;
+        padding: 0;
+      }
+      height: $left-sidebar-height;
+      background-color: $left-sidebar-header-bg;
+    }
+  }
+
+  .left-sidebar-sm {
+    width: $left-sidebar-sm-width;
   }
 
   .right-sidebar {
     display: table-cell;
+    vertical-align: top;
     width: $right-sidebar-width;
   }
 
@@ -27,8 +54,8 @@
   .content-body{
     display: table-cell;
     width: 100%;
-    padding-left: $content-body-padding-left;
-    padding-right: $content-body-padding-right;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
