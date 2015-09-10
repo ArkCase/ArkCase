@@ -4,16 +4,18 @@
             <div class="col-xs-6 text-center">
                 <div>
                     <img id="picLoading" class="img-circle" ng-src='modules/profile/img/nopic.png'>
+                    <div>
                     <a id="lnkChangePicture" href="#" ng-click="changePic()"><u>{{'profile.pciture.title' | translate}}</u></a>
+                    </div>
                     <form id="formPicture" class="hidden">
                         <input type="file" id="file" name="file">
                     </form>
                 </div>
             </div>
             <div class="col-xs-6">
-                <h4 id="fullName"></h4>
-                <h4><a href="#" id="title" data-type="text" data-pk="1" data-title="Enter Title"></a></h4>
-                <h4 id="email"></h4>
+                <h4 id="fullName">{{profilePicFullName || 'Unknown'}}</h4>
+                <h4>  <a href="#"  editable-text="profile.pic.title" onaftersave="update()">{{ profilePicTitle|| 'unknown' }}</a></h4>
+                <h4 id="email">{{ profilePicEmail  || 'Unknown'}}</h4>
                 <small> {{'profile.pciture.email' | translate}} </small>
             </div>
         </div>
