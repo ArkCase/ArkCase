@@ -1,12 +1,8 @@
 @import "../../base/variables";
 
-$module-header-padding-left: 20px !default;
-
 $left-sidebar-width:            300px !default;
-$left-sidebar-bg:               $blue-lighter2 !default;
-$left-sidebar-padding-left: 10px !default;
-$left-sidebar-padding-right: 10px !default;
+$left-sidebar-sm-width:         200px !default;
+$left-sidebar-bg:               $white-dark !default;
+$left-sidebar-header-bg:        $blue-lighter2 !default;
+$left-sidebar-height:           80px !default;
 $right-sidebar-width:           500px !default;
-
-$content-body-padding-left: 15px !default;
-$content-body-padding-right: 15px !default;

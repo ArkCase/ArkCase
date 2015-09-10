@@ -1,0 +1,23 @@
+{
+  "search": {
+    "title": "Search"
+  },
+  "search.comp.results": {
+    "title": "Results",
+    "table.columns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "parent": "Parent",
+      "assignee": "Assignee",
+      "modified": "Modified"
+    }
+  },
+  "search.comp.facets": {
+    "title": "Facets",
+    "people": "People",
+    "contacts": "Contacts",
+    "city": "City",
+    "phone": "Phone"
+  }
+}
