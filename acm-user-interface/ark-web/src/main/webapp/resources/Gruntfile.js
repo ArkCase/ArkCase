@@ -44,28 +44,6 @@ module.exports = function (grunt) {
                     'dist/application.js': '<%= applicationJavaScriptFiles %>'
                 }
             }
-        },
-
-        sass: {
-            dist: {
-                options: {},
-                files: [
-                    {
-                        'assets/css/login.css': 'scss/login.scss'
-                    },
-                    {
-                        'assets/css/application.css': 'scss/application.scss'
-                    },
-                    {
-                        expand: true,
-                        src: config.assets.scss,
-                        ext: '.css',
-                        rename: function (base, src) {
-                            return src.replace('/scss/', '/css/');
-                        }
-                    }
-                ]
-            }
         }
     });
 
@@ -193,5 +171,5 @@ module.exports = function (grunt) {
 
     // Build task.
     //grunt.registerTask('build', ['renderHome', 'sass', 'lint', 'loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
-    grunt.registerTask('default', ['loadConfig', 'sass', 'renderHome', 'updateModulesConfig']);
+    grunt.registerTask('default', ['loadConfig', 'renderHome', 'updateModulesConfig']);
 };
