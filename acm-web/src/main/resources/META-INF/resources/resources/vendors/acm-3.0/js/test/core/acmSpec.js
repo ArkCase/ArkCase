@@ -113,7 +113,7 @@ describe("Acm", function()
     });
 
     it("Test Acm.goodValue2() with array", function() {
-        var good = {name:"John", child:{name:"Charlie"}};
+        var good = {name:"John", child:{name:"Charlie", arr:[{item: "i0"}, {item: "i1"}, "i2"]}};
         var bad1 = {name:"John", child:{}};
         var bad2 = {name:"John"};
         var bad3 = {};
@@ -126,8 +126,16 @@ describe("Acm", function()
         expect(Acm.goodValue2([bad3, "child", "name"], "BadValue")).toBe("BadValue");
         expect(Acm.goodValue2([bad4, "child", "name"], "BadValue")).toBe("BadValue");
 
+        expect(Acm.goodValue2([good, "child", "arr", "[2]"])).toBe(good.child.arr[2]);
+        expect(Acm.goodValue2([good, "child", "arr", "[1]", "item"])).toBe(good.child.arr[1].item);
+
+        expect(Acm.goodValue2([good, "child", "arr", "[3]"]               ,"BadIndex")).toBe("BadIndex");
+        expect(Acm.goodValue2([good, "child", "arr", "[1]", "noSuchProp"] ,"BadProp" )).toBe("BadProp");
+        expect(Acm.goodValue2([bad1, "child", "[0]"]                      ,"NotArray")).toBe("NotArray");
+        expect(Acm.goodValue2([bad1, "child", "arr", "[0]"]               ,"BadArray")).toBe("BadArray");
+
         expect(Acm.goodValue2([good.child, "name"])  ,"if no need to check null good").toBe(good.child.name);
-        expect(Acm.goodValue2([good.child.name])     ,"if no need to check null good and null child").toBe(good.child.name);
+        expect(Acm.goodValue2([good.child.name])     ,"ifno need to check null good and null child").toBe(good.child.name);
         expect(Acm.goodValue2(["hello"])             ,"why used this way? but still work").toBe("hello");
     });
 
