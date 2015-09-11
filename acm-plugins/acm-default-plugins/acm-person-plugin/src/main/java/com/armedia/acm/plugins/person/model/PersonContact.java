@@ -3,12 +3,29 @@ package com.armedia.acm.plugins.person.model;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
@@ -56,8 +73,8 @@ public class PersonContact implements Serializable, AcmEntity
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(
             name = "acm_person_cntct_ident",
-            joinColumns = { @JoinColumn(name="cm_person_contact_id", referencedColumnName = "cm_person_contact_id") },
-            inverseJoinColumns = { @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)
+            joinColumns = {@JoinColumn(name = "cm_person_contact_id", referencedColumnName = "cm_person_contact_id")},
+            inverseJoinColumns = {@JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)
             }
     )
     private List<Identification> identifications = new ArrayList<>();
@@ -66,8 +83,8 @@ public class PersonContact implements Serializable, AcmEntity
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "acm_person_cntct_postal_address",
-            joinColumns = { @JoinColumn(name="cm_person_contact_id", referencedColumnName = "cm_person_contact_id") },
-            inverseJoinColumns = { @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id") }
+            joinColumns = {@JoinColumn(name = "cm_person_contact_id", referencedColumnName = "cm_person_contact_id")},
+            inverseJoinColumns = {@JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id")}
     )
     private List<PostalAddress> addresses = new ArrayList<>();
 
@@ -75,8 +92,8 @@ public class PersonContact implements Serializable, AcmEntity
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "acm_person_cntct_cntct_method",
-            joinColumns = { @JoinColumn(name="cm_person_contact_id", referencedColumnName = "cm_person_contact_id") },
-            inverseJoinColumns = { @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id") }
+            joinColumns = {@JoinColumn(name = "cm_person_contact_id", referencedColumnName = "cm_person_contact_id")},
+            inverseJoinColumns = {@JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")}
     )
     private List<ContactMethod> contactMethods = new ArrayList<>();
 
@@ -150,67 +167,104 @@ public class PersonContact implements Serializable, AcmEntity
         this.modifier = modifier;
     }
 
-    public Long getId() {
+    public Long getId()
+    {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id)
+    {
         this.id = id;
     }
 
-    public String getAttention() {
+    public String getAttention()
+    {
         return attention;
     }
 
-    public void setAttention(String attention) {
+    public void setAttention(String attention)
+    {
         this.attention = attention;
     }
 
-    public String getCompanyName() {
+    public String getCompanyName()
+    {
         return companyName;
     }
 
-    public void setCompanyName(String companyName) {
+    public void setCompanyName(String companyName)
+    {
         this.companyName = companyName;
     }
 
-    public String getPersonName() {
+    public String getPersonName()
+    {
         return personName;
     }
 
-    public void setPersonName(String personName) {
+    public void setPersonName(String personName)
+    {
         this.personName = personName;
     }
 
-    public List<Identification> getIdentifications() {
+    public List<Identification> getIdentifications()
+    {
         return identifications;
     }
 
-    public void setIdentifications(List<Identification> identifications) {
+    public void setIdentifications(List<Identification> identifications)
+    {
         this.identifications = identifications;
     }
 
-    public List<PostalAddress> getAddresses() {
+    public List<PostalAddress> getAddresses()
+    {
         return addresses;
     }
 
-    public void setAddresses(List<PostalAddress> addresses) {
+    public void setAddresses(List<PostalAddress> addresses)
+    {
         this.addresses = addresses;
     }
 
-    public List<ContactMethod> getContactMethods() {
+    public List<ContactMethod> getContactMethods()
+    {
         return contactMethods;
     }
 
-    public void setContactMethods(List<ContactMethod> contactMethods) {
+    public void setContactMethods(List<ContactMethod> contactMethods)
+    {
         this.contactMethods = contactMethods;
     }
 
-    public String getClassName() {
+    public String getClassName()
+    {
         return className;
     }
 
-    public void setClassName(String className) {
+    public void setClassName(String className)
+    {
         this.className = className;
+    }
+
+    /**
+     * Finds the index of a contact method by given type.
+     * Used in Bactes Order Validator SpEL expressions
+     *
+     * @param type type of contact record: email, phone, fax...
+     * @return position in contact methods list
+     */
+    public int getContactMethodIndexByType(String type)
+    {
+        int index = 0;
+        for (ContactMethod contactMethod : contactMethods)
+        {
+            if (type.equals(contactMethod.getType()))
+            {
+                break;
+            }
+            index++;
+        }
+        return index;
     }
 }
