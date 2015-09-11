@@ -1,21 +1,15 @@
 'use strict';
-angular.module('profile').service('userPicService', function ($http, $q) {
+angular.module('profile').service('passwordService', function ($http, $q, $modal) {
     return({
-        changePic: changePic,
-        getPic: getPic
+        changePassword: changePassword
     });
-    function changePic(formData) {
+    function changePassword(newPassword) {
         var request = $http({
             method: "POST",
-            processData: false,
-            url: "proxy/arkcase/api/latest/service/ecm/upload",
-            data: formData,
-            headers: {'Content-Type': undefined}
+            url: "proxy/arkcase/api/v1/plugin/profile/outlook",
+            data: newPassword
         });
         return(request.then(handleSuccess, handleError));
-    };
-    function getPic() {
-        
     };
     function handleError(response) {
         if (
@@ -27,6 +21,10 @@ angular.module('profile').service('userPicService', function ($http, $q) {
         return($q.reject(response.data.message));
     }
     function handleSuccess(response) {
+        $modal.open({
+      template: 'Successfully Changed Password',
+      size:'sm'
+    });
         return(response.data);
     }
 });

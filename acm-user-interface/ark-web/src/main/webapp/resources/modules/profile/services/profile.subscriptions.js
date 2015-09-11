@@ -1,21 +1,14 @@
 'use strict';
-angular.module('profile').service('userPicService', function ($http, $q) {
+angular.module('profile').service('subscriptionService', function ($http, $q) {
     return({
-        changePic: changePic,
-        getPic: getPic
+        getSubscriptions: getSubscriptions
     });
-    function changePic(formData) {
+    function getSubscriptions() {
         var request = $http({
-            method: "POST",
-            processData: false,
-            url: "proxy/arkcase/api/latest/service/ecm/upload",
-            data: formData,
-            headers: {'Content-Type': undefined}
+            method: "GET",
+            url: "proxy/arkcase/api/v1/service/subscription/ann-acm"
         });
         return(request.then(handleSuccess, handleError));
-    };
-    function getPic() {
-        
     };
     function handleError(response) {
         if (
