@@ -1,0 +1,122 @@
+/* @override http://sharecaredev.armedianet.com/arkcase/modules/core/css/core.css */
+
+.navbar-arkcase {
+  background-color: #177bbb;
+  border-color: #126ca6;
+  border-radius: 0;
+  color: #aad7f4;
+  margin-bottom: 0;
+  min-height: 60px;
+}
+.navbar-arkcase .nav > li > a:hover, .navbar-arkcase .nav > li > a {
+  color: #fff;
+  text-decoration: none;
+}
+.navbar-arkcase .nav > li > a:hover, .navbar-arkcase .nav > li > a:focus {
+  color: #fff;
+  background-color: #11649a;
+  text-decoration: none;
+}
+.navbar-arkcase .navbar-header {
+  background-color: #126ca6;
+  color: #ffffff;
+  min-height: 60px;
+  width: 200px;
+}
+.navbar-arkcase .navbar-header a {
+  background-image: url("../../../assets/img/logo.png");
+  background-size: 145px;
+  background-repeat: no-repeat;
+  background-position: 25px 10px;
+  position: relative;
+  width: 100%;
+  color: #ffffff;
+  overflow: hidden;
+}
+.navbar-arkcase .navbar-form {
+  margin-top: 15px;
+}
+.navbar-arkcase .navbar-nav > li > a {
+  font-size: 12px;
+  padding: 20px;
+}
+.navbar-arkcase .nav .open > a,
+.navbar-arkcase .nav .open > a:hover,
+.navbar-arkcase .nav .open > a:focus  {
+  background-color: #11659b;
+}
+.user-info {
+  background-color: #e9edf4;
+  border-radius: 0;
+  padding: 10px 0 10px 5px;
+}
+
+.user-info .user-pic img{
+  border: 1px solid #adb2bb;
+  border-radius: 300px;
+  height: 50px;
+  width: 50px;
+  position: relative;
+
+}
+.page-wrapper {
+  display: table;
+  height: 100%;
+  table-layout: fixed;
+  width: 100%;
+}
+.leftnav-menu {
+  background-color: #f7f8fb;
+  border-right: 1px solid #eaeef1;
+  color: #3c4144;
+  display: table-cell;
+  height: 100%;
+  vertical-align: top;
+  width: 200px;
+}
+.leftnav-menu .title {
+  color: #a1a8ac;
+  margin-top: 5px;
+  margin-left: 5px;
+  font-size: 12px;
+}
+.leftnav-menu a {
+  color: #3c4144;
+  font-size: 13px;
+}
+a.dropdown-toggle {
+  position: relative;
+  float: left;
+}
+.user-menu a.dropdown-toggle {
+  padding: 5px 10px 0 10px;
+  position: relative;
+  float: left;
+  width: 130px;
+}
+a.dropdown-toggle  .glyphicon {
+  margin-left: 4px;
+}
+.leftnav-menu li.active {
+  background-color: #e8ecf4;
+  color: #3c4144;
+}
+.leftnav-menu li.active a {
+  color: #3c4144;
+}
+.leftnav-menu > li > a:hover, .leftnav-menu > li > a:focus {
+  background-color: #e0e6ef;
+  color: #3c4144;
+}
+.leftnav-menu > li > a:hover a, .leftnav-menu > li > a:focus a {
+  color: #3c4144;
+}
+.leftnav-menu .navigation-icon {
+  padding-right: 15px;
+}
+.page-content {
+  background-color: #f2f4f8;
+  display: table-cell;
+  height: 100%;
+  width: 100%;
+}
