@@ -50,6 +50,7 @@
                 <value>scss</value>
                 <value>services</value>
                 <value>templates</value>
+                <value>filters</value>
                 <value>custom_assets</value>
             </list>
         </property>
@@ -61,6 +62,7 @@
                 <value>modules</value>
                 <value>modules_config</value>
                 <value>services</value>
+                <value>filters</value>
                 <value>custom_assets</value>
             </list>
         </property>

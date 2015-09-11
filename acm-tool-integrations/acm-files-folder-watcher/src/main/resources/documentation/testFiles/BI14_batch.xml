@@ -1,0 +1,1057 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Batch>
+   <BatchInstanceIdentifier>BI14</BatchInstanceIdentifier>
+   <BatchClassIdentifier>BC4</BatchClassIdentifier>
+   <BatchClassName>ComplaintTracking</BatchClassName>
+   <BatchClassDescription>Complaint Tracking</BatchClassDescription>
+   <BatchClassVersion>1.0.0.100</BatchClassVersion>
+   <BatchName>BC4_ephesoft_2015-08-24_12-24-53</BatchName>
+   <BatchDescription>BC4_ephesoft_2015-08-24_12-24-53</BatchDescription>
+   <BatchPriority>1</BatchPriority>
+   <BatchStatus>READY</BatchStatus>
+   <BatchCreationDate>2015-08-24 12:50:07.0</BatchCreationDate>
+   <BatchLocalPath>C:\Ephesoft\SharedFolders\ephesoft-system-folder</BatchLocalPath>
+   <UNCFolderPath>C:\Ephesoft\SharedFolders\ComplaintTracking-import\BC4_ephesoft_2015-08-24_12-24-53</UNCFolderPath>
+   <DocumentClassificationTypes>
+      <DocumentClassificationType>SearchClassification</DocumentClassificationType>
+   </DocumentClassificationTypes>
+   <Documents>
+      <Document>
+         <Identifier>DOC1</Identifier>
+         <Type>EmploymentDiscriminationComplaint</Type>
+         <Description>Complaint 1</Description>
+         <Confidence>25.35</Confidence>
+         <ConfidenceThreshold>20.0</ConfidenceThreshold>
+         <Valid>true</Valid>
+         <Reviewed>true</Reviewed>
+         <ErrorMessage />
+         <DocumentDisplayInfo />
+         <DocumentLevelFields>
+            <DocumentLevelField>
+               <Name>ComplainantFirstName</Name>
+               <Value>Sally</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>98.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>486</x0>
+                     <y0>853</y0>
+                     <x1>591</x1>
+                     <y1>900</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG0</Page>
+               <FieldOrderNumber>1</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 1</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>ComplainantLastName</Name>
+               <Value>McCormick</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>98.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>624</x0>
+                     <y0>853</y0>
+                     <x1>868</x1>
+                     <y1>890</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG0</Page>
+               <FieldOrderNumber>2</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 1</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>ComplainantStreetAddress</Name>
+               <Value>123 Maple Ave</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>66.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>337</x0>
+                     <y0>1003</y0>
+                     <x1>562</x1>
+                     <y1>1033</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG0</Page>
+               <FieldOrderNumber>3</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 1</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>ComplainantCity</Name>
+               <Value>Cincinnati</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>98.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>322</x0>
+                     <y0>1093</y0>
+                     <x1>463</x1>
+                     <y1>1118</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG0</Page>
+               <FieldOrderNumber>4</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 1</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>ComplainantState</Name>
+               <Value>OH</Value>
+               <Type>STRING</Type>
+               <Confidence>0.0</Confidence>
+               <OcrConfidenceThreshold>0.0</OcrConfidenceThreshold>
+               <OcrConfidence>0.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>642</x0>
+                     <y0>1094</y0>
+                     <x1>687</x1>
+                     <y1>1118</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG0</Page>
+               <FieldOrderNumber>5</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Recostar Extraction</ExtractionName>
+               <Category>Group 1</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>ComplainantZipCode</Name>
+               <Value>45422</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>100.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>868</x0>
+                     <y0>1095</y0>
+                     <x1>957</x1>
+                     <y1>1118</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG0</Page>
+               <FieldOrderNumber>6</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 1</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>ComplainantPhone</Name>
+               <Value>937-123-1234</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>79.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>335</x0>
+                     <y0>1137</y0>
+                     <x1>591</x1>
+                     <y1>1166</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG0</Page>
+               <FieldOrderNumber>7</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 1</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>EmployerName</Name>
+               <Value>Acme, Inc.</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>98.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>37</x0>
+                     <y0>1695</y0>
+                     <x1>272</x1>
+                     <y1>1738</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG0</Page>
+               <FieldOrderNumber>8</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 2</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>EmployerStreetAddress</Name>
+               <Value>123 Maple Ave.</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>66.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>337</x0>
+                     <y0>1763</y0>
+                     <x1>562</x1>
+                     <y1>1794</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG0</Page>
+               <FieldOrderNumber>9</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 2</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>EmployerCity</Name>
+               <Value>Cincinnati</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>100.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>323</x0>
+                     <y0>1866</y0>
+                     <x1>464</x1>
+                     <y1>1891</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG0</Page>
+               <FieldOrderNumber>10</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 2</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>EmployerState</Name>
+               <Value>0H</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>100.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>550</x0>
+                     <y0>1867</y0>
+                     <x1>596</x1>
+                     <y1>1891</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG0</Page>
+               <FieldOrderNumber>11</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 2</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>EmployerZipCode</Name>
+               <Value />
+               <Type>STRING</Type>
+               <Confidence>0.0</Confidence>
+               <OcrConfidenceThreshold>0.0</OcrConfidenceThreshold>
+               <OcrConfidence>0.0</OcrConfidence>
+               <FieldOrderNumber>12</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Recostar Extraction</ExtractionName>
+               <Category>Group 2</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>EmployerPhone</Name>
+               <Value />
+               <Type>STRING</Type>
+               <Confidence>0.0</Confidence>
+               <OcrConfidenceThreshold>0.0</OcrConfidenceThreshold>
+               <OcrConfidence>0.0</OcrConfidence>
+               <FieldOrderNumber>13</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Recostar Extraction</ExtractionName>
+               <Category>Group 2</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+			<DocumentLevelField>
+				<Name>IncidentCategory</Name>
+				<Value>Harassment</Value>
+				<Type>STRING</Type>
+				<Confidence>100.0</Confidence>
+				<OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+				<OcrConfidence>100.0</OcrConfidence>
+				<CoordinatesList>
+					<Coordinates>
+						<x0>62</x0>
+						<y0>2614</y0>
+						<x1>325</x1>
+						<y1>2649</y1>
+					</Coordinates>
+				</CoordinatesList>
+				<Page>PG0</Page>
+				<FieldOrderNumber>14</FieldOrderNumber>
+				<ForceReview>false</ForceReview>
+				<FieldValueChangeScript>false</FieldValueChangeScript>
+				<ExtractionName>Key Value Extraction</ExtractionName>
+				<Category>Group 3</Category>
+				<readOnly>false</readOnly>
+				<hidden>false</hidden>
+			</DocumentLevelField>
+			<DocumentLevelField>
+				<Name>ComplaintDescription</Name>
+				<Value>Inappropriate joke floating around the office regarding women in the workplace.</Value>
+				<Type>STRING</Type>
+				<Confidence>100.0</Confidence>
+				<OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+				<OcrConfidence>94.0</OcrConfidence>
+				<CoordinatesList>
+					<Coordinates>
+						<x0>1150</x0>
+						<y0>1358</y0>
+						<x1>2331</x1>
+						<y1>1461</y1>
+					</Coordinates>
+				</CoordinatesList>
+				<Page>PG0</Page>
+				<FieldOrderNumber>15</FieldOrderNumber>
+				<ForceReview>false</ForceReview>
+				<FieldValueChangeScript>false</FieldValueChangeScript>
+				<ExtractionName>Key Value Extraction</ExtractionName>
+				<Category>Group 3</Category>
+				<readOnly>false</readOnly>
+				<hidden>false</hidden>
+			</DocumentLevelField>
+         </DocumentLevelFields>
+         <Pages>
+            <Page>
+               <Identifier>PG0</Identifier>
+               <OldFileName>employment-discrimination-complaint_sample1-0001-0000.tif</OldFileName>
+               <NewFileName>BI14_0.tif</NewFileName>
+               <PageLevelFields>
+                  <PageLevelField>
+                     <Name>Search_Engine_Classification</Name>
+                     <Value>EmploymentDiscriminationComplaint_First_Page</Value>
+                     <Type />
+                     <Confidence>50.7</Confidence>
+                     <LearnedFileName>employment-discrimination-complaint.pdf.tif</LearnedFileName>
+                     <OcrConfidenceThreshold>0.0</OcrConfidenceThreshold>
+                     <OcrConfidence>0.0</OcrConfidence>
+                     <FieldOrderNumber>0</FieldOrderNumber>
+                     <ForceReview>false</ForceReview>
+                     <AlternateValues>
+                        <AlternateValue>
+                           <Name>Search_Engine_Classification</Name>
+                           <Value>EmploymentDiscriminationComplaint_First_Page</Value>
+                           <Type />
+                           <Confidence>50.7</Confidence>
+                           <ForceReview>false</ForceReview>
+                        </AlternateValue>
+                        <AlternateValue>
+                           <Name>Search_Engine_Classification</Name>
+                           <Value>Attachment_Middle_Page</Value>
+                           <Type />
+                           <Confidence>0.594</Confidence>
+                           <ForceReview>false</ForceReview>
+                        </AlternateValue>
+                     </AlternateValues>
+                     <Category>Group 1</Category>
+                     <widgetType>TEXT</widgetType>
+                  </PageLevelField>
+               </PageLevelFields>
+               <HocrFileName>BI14_PG0_HOCR.xml</HocrFileName>
+               <ThumbnailFileName>BI14_PG0_displayThumb.png</ThumbnailFileName>
+               <DisplayFileName>BI14_PG0_displayImage.png</DisplayFileName>
+               <OCRInputFileName>BI14_0.tif</OCRInputFileName>
+               <Direction>NORTH</Direction>
+               <IsRotated>false</IsRotated>
+            </Page>
+         </Pages>
+         <MultiPagePdfFile>C:\Ephesoft\SharedFolders\final-drop-folder\BC4\BI14\2015-08-24\BC4BI142015-08-2412-57-15_DOC1.pdf</MultiPagePdfFile>
+      </Document>
+      <Document>
+         <Identifier>DOC2</Identifier>
+         <Type>EmploymentDiscriminationComplaint</Type>
+         <Description>Complaint 2</Description>
+         <Confidence>25.28</Confidence>
+         <ConfidenceThreshold>20.0</ConfidenceThreshold>
+         <Valid>true</Valid>
+         <Reviewed>true</Reviewed>
+         <ErrorMessage />
+         <DocumentDisplayInfo />
+         <DocumentLevelFields>
+            <DocumentLevelField>
+               <Name>ComplainantFirstName</Name>
+               <Value>Ethan</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>98.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>488</x0>
+                     <y0>854</y0>
+                     <x1>610</x1>
+                     <y1>890</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG1</Page>
+               <FieldOrderNumber>1</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 1</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>ComplainantLastName</Name>
+               <Value>Allen</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>98.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>628</x0>
+                     <y0>854</y0>
+                     <x1>734</x1>
+                     <y1>890</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG1</Page>
+               <FieldOrderNumber>2</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 1</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>ComplainantStreetAddress</Name>
+               <Value>4599 Dove Pt</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>97.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>336</x0>
+                     <y0>1003</y0>
+                     <x1>542</x1>
+                     <y1>1027</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG1</Page>
+               <FieldOrderNumber>3</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 1</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>ComplainantCity</Name>
+               <Value>Hoschton</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>98.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>323</x0>
+                     <y0>1094</y0>
+                     <x1>457</x1>
+                     <y1>1118</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG1</Page>
+               <FieldOrderNumber>4</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 1</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>ComplainantState</Name>
+               <Value>GA</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>100.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>636</x0>
+                     <y0>1093</y0>
+                     <x1>682</x1>
+                     <y1>1118</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG1</Page>
+               <FieldOrderNumber>5</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 1</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>ComplainantZipCode</Name>
+               <Value>30548</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>100.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>851</x0>
+                     <y0>1095</y0>
+                     <x1>940</x1>
+                     <y1>1118</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG1</Page>
+               <FieldOrderNumber>6</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 1</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>ComplainantPhone</Name>
+               <Value>678-111-1234</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>79.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>335</x0>
+                     <y0>1137</y0>
+                     <x1>591</x1>
+                     <y1>1166</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG1</Page>
+               <FieldOrderNumber>7</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 1</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>EmployerName</Name>
+               <Value>Plastics Unlimited</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>98.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>42</x0>
+                     <y0>1695</y0>
+                     <x1>434</x1>
+                     <y1>1732</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG1</Page>
+               <FieldOrderNumber>8</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 2</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>EmployerStreetAddress</Name>
+               <Value>4599 Dove Pt.</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>97.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>336</x0>
+                     <y0>1764</y0>
+                     <x1>542</x1>
+                     <y1>1788</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG1</Page>
+               <FieldOrderNumber>9</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 2</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>EmployerCity</Name>
+               <Value>Hoschton</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>100.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>324</x0>
+                     <y0>1867</y0>
+                     <x1>458</x1>
+                     <y1>1891</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG1</Page>
+               <FieldOrderNumber>10</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 2</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>EmployerState</Name>
+               <Value>GA</Value>
+               <Type>STRING</Type>
+               <Confidence>100.0</Confidence>
+               <OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+               <OcrConfidence>100.0</OcrConfidence>
+               <CoordinatesList>
+                  <Coordinates>
+                     <x0>637</x0>
+                     <y0>1866</y0>
+                     <x1>683</x1>
+                     <y1>1891</y1>
+                  </Coordinates>
+               </CoordinatesList>
+               <Page>PG1</Page>
+               <FieldOrderNumber>11</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Key Value Extraction</ExtractionName>
+               <Category>Group 2</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>EmployerZipCode</Name>
+               <Value />
+               <Type>STRING</Type>
+               <Confidence>0.0</Confidence>
+               <OcrConfidenceThreshold>0.0</OcrConfidenceThreshold>
+               <OcrConfidence>0.0</OcrConfidence>
+               <FieldOrderNumber>12</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Recostar Extraction</ExtractionName>
+               <Category>Group 2</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+            <DocumentLevelField>
+               <Name>EmployerPhone</Name>
+               <Value />
+               <Type>STRING</Type>
+               <Confidence>0.0</Confidence>
+               <OcrConfidenceThreshold>0.0</OcrConfidenceThreshold>
+               <OcrConfidence>0.0</OcrConfidence>
+               <FieldOrderNumber>13</FieldOrderNumber>
+               <ForceReview>false</ForceReview>
+               <FieldValueChangeScript>false</FieldValueChangeScript>
+               <ExtractionName>Recostar Extraction</ExtractionName>
+               <Category>Group 2</Category>
+               <readOnly>false</readOnly>
+               <hidden>false</hidden>
+            </DocumentLevelField>
+			<DocumentLevelField>
+				<Name>IncidentCategory</Name>
+				<Value>Harassment</Value>
+				<Type>STRING</Type>
+				<Confidence>100.0</Confidence>
+				<OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+				<OcrConfidence>100.0</OcrConfidence>
+				<CoordinatesList>
+					<Coordinates>
+						<x0>62</x0>
+						<y0>2614</y0>
+						<x1>325</x1>
+						<y1>2649</y1>
+					</Coordinates>
+				</CoordinatesList>
+				<Page>PG0</Page>
+				<FieldOrderNumber>14</FieldOrderNumber>
+				<ForceReview>false</ForceReview>
+				<FieldValueChangeScript>false</FieldValueChangeScript>
+				<ExtractionName>Key Value Extraction</ExtractionName>
+				<Category>Group 3</Category>
+				<readOnly>false</readOnly>
+				<hidden>false</hidden>
+			</DocumentLevelField>
+			<DocumentLevelField>
+				<Name>ComplaintDescription</Name>
+				<Value>Inappropriate joke floating around the office regarding women in the workplace.</Value>
+				<Type>STRING</Type>
+				<Confidence>100.0</Confidence>
+				<OcrConfidenceThreshold>50.0</OcrConfidenceThreshold>
+				<OcrConfidence>94.0</OcrConfidence>
+				<CoordinatesList>
+					<Coordinates>
+						<x0>1150</x0>
+						<y0>1358</y0>
+						<x1>2331</x1>
+						<y1>1461</y1>
+					</Coordinates>
+				</CoordinatesList>
+				<Page>PG0</Page>
+				<FieldOrderNumber>15</FieldOrderNumber>
+				<ForceReview>false</ForceReview>
+				<FieldValueChangeScript>false</FieldValueChangeScript>
+				<ExtractionName>Key Value Extraction</ExtractionName>
+				<Category>Group 3</Category>
+				<readOnly>false</readOnly>
+				<hidden>false</hidden>
+			</DocumentLevelField>
+         </DocumentLevelFields>
+         <Pages>
+            <Page>
+               <Identifier>PG1</Identifier>
+               <OldFileName>employment-discrimination-complaint_sample2-0001-0000.tif</OldFileName>
+               <NewFileName>BI14_1.tif</NewFileName>
+               <PageLevelFields>
+                  <PageLevelField>
+                     <Name>Search_Engine_Classification</Name>
+                     <Value>EmploymentDiscriminationComplaint_First_Page</Value>
+                     <Type />
+                     <Confidence>50.57</Confidence>
+                     <LearnedFileName>employment-discrimination-complaint.pdf.tif</LearnedFileName>
+                     <OcrConfidenceThreshold>0.0</OcrConfidenceThreshold>
+                     <OcrConfidence>0.0</OcrConfidence>
+                     <FieldOrderNumber>0</FieldOrderNumber>
+                     <ForceReview>false</ForceReview>
+                     <AlternateValues>
+                        <AlternateValue>
+                           <Name>Search_Engine_Classification</Name>
+                           <Value>EmploymentDiscriminationComplaint_First_Page</Value>
+                           <Type />
+                           <Confidence>50.57</Confidence>
+                           <ForceReview>false</ForceReview>
+                        </AlternateValue>
+                        <AlternateValue>
+                           <Name>Search_Engine_Classification</Name>
+                           <Value>Attachment_Middle_Page</Value>
+                           <Type />
+                           <Confidence>0.594</Confidence>
+                           <ForceReview>false</ForceReview>
+                        </AlternateValue>
+                     </AlternateValues>
+                     <Category>Group 1</Category>
+                     <widgetType>TEXT</widgetType>
+                  </PageLevelField>
+               </PageLevelFields>
+               <HocrFileName>BI14_PG1_HOCR.xml</HocrFileName>
+               <ThumbnailFileName>BI14_PG1_displayThumb.png</ThumbnailFileName>
+               <DisplayFileName>BI14_PG1_displayImage.png</DisplayFileName>
+               <OCRInputFileName>BI14_1.tif</OCRInputFileName>
+               <Direction>NORTH</Direction>
+               <IsRotated>false</IsRotated>
+            </Page>
+         </Pages>
+         <MultiPagePdfFile>C:\Ephesoft\SharedFolders\final-drop-folder\BC4\BI14\2015-08-24\BC4BI142015-08-2412-57-15_DOC2.pdf</MultiPagePdfFile>
+      </Document>
+      <Document>
+         <Identifier>DOC3</Identifier>
+         <Type>Attachment</Type>
+         <Description>Attachment</Description>
+         <Confidence>32.69</Confidence>
+         <ConfidenceThreshold>20.0</ConfidenceThreshold>
+         <Valid>true</Valid>
+         <Reviewed>true</Reviewed>
+         <ErrorMessage />
+         <DocumentDisplayInfo />
+         <DocumentLevelFields>
+			<DocumentLevelField>
+				<Name>ComplaintDocID</Name>
+				<Value>DOC1</Value>
+				<Type>STRING</Type>
+				<Confidence>0.0</Confidence>
+				<OcrConfidenceThreshold>0.0</OcrConfidenceThreshold>
+				<OcrConfidence>0.0</OcrConfidence>
+				<FieldOrderNumber>1</FieldOrderNumber>
+				<ForceReview>false</ForceReview>
+				<FieldValueChangeScript>false</FieldValueChangeScript>
+				<ExtractionName>Recostar Extraction</ExtractionName>
+				<Category>Group 1</Category>
+				<readOnly>false</readOnly>
+				<hidden>false</hidden>
+			</DocumentLevelField>
+		 </DocumentLevelFields>
+         <Pages>
+            <Page>
+               <Identifier>PG2</Identifier>
+               <OldFileName>jog - part of sample 1 - attachment-0000.tif</OldFileName>
+               <NewFileName>BI14_2.tif</NewFileName>
+               <PageLevelFields>
+                  <PageLevelField>
+                     <Name>Search_Engine_Classification</Name>
+                     <Value>Attachment_First_Page</Value>
+                     <Type />
+                     <Confidence>65.37</Confidence>
+                     <LearnedFileName>jog - part of sample 1 - attachment.tif</LearnedFileName>
+                     <OcrConfidenceThreshold>0.0</OcrConfidenceThreshold>
+                     <OcrConfidence>0.0</OcrConfidence>
+                     <FieldOrderNumber>0</FieldOrderNumber>
+                     <ForceReview>false</ForceReview>
+                     <AlternateValues>
+                        <AlternateValue>
+                           <Name>Search_Engine_Classification</Name>
+                           <Value>Attachment_First_Page</Value>
+                           <Type />
+                           <Confidence>65.37</Confidence>
+                           <ForceReview>false</ForceReview>
+                        </AlternateValue>
+                     </AlternateValues>
+                     <Category>Group 1</Category>
+                     <widgetType>TEXT</widgetType>
+                  </PageLevelField>
+               </PageLevelFields>
+               <HocrFileName>BI14_PG2_HOCR.xml</HocrFileName>
+               <ThumbnailFileName>BI14_PG2_displayThumb.png</ThumbnailFileName>
+               <DisplayFileName>BI14_PG2_displayImage.png</DisplayFileName>
+               <OCRInputFileName>BI14_2.tif</OCRInputFileName>
+               <Direction>NORTH</Direction>
+               <IsRotated>false</IsRotated>
+            </Page>
+         </Pages>
+         <MultiPagePdfFile>C:\Ephesoft\SharedFolders\final-drop-folder\BC4\BI14\2015-08-24\BC4BI142015-08-2412-57-15_DOC3.pdf</MultiPagePdfFile>
+      </Document>
+      <Document>
+         <Identifier>DOC4</Identifier>
+         <Type>Attachment</Type>
+         <Description>Attachment</Description>
+         <Confidence>50.84</Confidence>
+         <ConfidenceThreshold>20.0</ConfidenceThreshold>
+         <Valid>true</Valid>
+         <Reviewed>true</Reviewed>
+         <ErrorMessage />
+         <DocumentDisplayInfo />
+         <DocumentLevelFields>
+			<DocumentLevelField>
+				<Name>ComplaintDocID</Name>
+				<Value>DOC2</Value>
+				<Type>STRING</Type>
+				<Confidence>0.0</Confidence>
+				<OcrConfidenceThreshold>0.0</OcrConfidenceThreshold>
+				<OcrConfidence>0.0</OcrConfidence>
+				<FieldOrderNumber>1</FieldOrderNumber>
+				<ForceReview>false</ForceReview>
+				<FieldValueChangeScript>false</FieldValueChangeScript>
+				<ExtractionName>Recostar Extraction</ExtractionName>
+				<Category>Group 1</Category>
+				<readOnly>false</readOnly>
+				<hidden>false</hidden>
+			</DocumentLevelField>
+		 </DocumentLevelFields>
+         <Pages>
+            <Page>
+               <Identifier>PG3</Identifier>
+               <OldFileName>perf_review part of sample 2 - attachment-0001-0000.tif</OldFileName>
+               <NewFileName>BI14_3.tif</NewFileName>
+               <PageLevelFields>
+                  <PageLevelField>
+                     <Name>Search_Engine_Classification</Name>
+                     <Value>Attachment_First_Page</Value>
+                     <Type />
+                     <Confidence>61.09</Confidence>
+                     <LearnedFileName>perf_review part of sample 2 - attachment.pdf-0001.tif</LearnedFileName>
+                     <OcrConfidenceThreshold>0.0</OcrConfidenceThreshold>
+                     <OcrConfidence>0.0</OcrConfidence>
+                     <FieldOrderNumber>0</FieldOrderNumber>
+                     <ForceReview>false</ForceReview>
+                     <AlternateValues>
+                        <AlternateValue>
+                           <Name>Search_Engine_Classification</Name>
+                           <Value>Attachment_First_Page</Value>
+                           <Type />
+                           <Confidence>61.09</Confidence>
+                           <ForceReview>false</ForceReview>
+                        </AlternateValue>
+                        <AlternateValue>
+                           <Name>Search_Engine_Classification</Name>
+                           <Value>Attachment_Middle_Page</Value>
+                           <Type />
+                           <Confidence>2.5289998</Confidence>
+                           <ForceReview>false</ForceReview>
+                        </AlternateValue>
+                     </AlternateValues>
+                     <Category>Group 1</Category>
+                     <widgetType>TEXT</widgetType>
+                  </PageLevelField>
+               </PageLevelFields>
+               <HocrFileName>BI14_PG3_HOCR.xml</HocrFileName>
+               <ThumbnailFileName>BI14_PG3_displayThumb.png</ThumbnailFileName>
+               <DisplayFileName>BI14_PG3_displayImage.png</DisplayFileName>
+               <OCRInputFileName>BI14_3.tif</OCRInputFileName>
+               <Direction>NORTH</Direction>
+               <IsRotated>false</IsRotated>
+            </Page>
+            <Page>
+               <Identifier>PG4</Identifier>
+               <OldFileName>perf_review part of sample 2 - attachment-0002-0001.tif</OldFileName>
+               <NewFileName>BI14_4.tif</NewFileName>
+               <PageLevelFields>
+                  <PageLevelField>
+                     <Name>Search_Engine_Classification</Name>
+                     <Value>Attachment_Middle_Page</Value>
+                     <Type />
+                     <Confidence>45.936</Confidence>
+                     <LearnedFileName>perf_review part of sample 2 - attachment.pdf-0002.tif</LearnedFileName>
+                     <OcrConfidenceThreshold>0.0</OcrConfidenceThreshold>
+                     <OcrConfidence>0.0</OcrConfidence>
+                     <FieldOrderNumber>0</FieldOrderNumber>
+                     <ForceReview>false</ForceReview>
+                     <AlternateValues>
+                        <AlternateValue>
+                           <Name>Search_Engine_Classification</Name>
+                           <Value>Attachment_Middle_Page</Value>
+                           <Type />
+                           <Confidence>45.936</Confidence>
+                           <ForceReview>false</ForceReview>
+                        </AlternateValue>
+                        <AlternateValue>
+                           <Name>Search_Engine_Classification</Name>
+                           <Value>Attachment_Last_Page</Value>
+                           <Type />
+                           <Confidence>1.552</Confidence>
+                           <ForceReview>false</ForceReview>
+                        </AlternateValue>
+                        <AlternateValue>
+                           <Name>Search_Engine_Classification</Name>
+                           <Value>EmploymentDiscriminationComplaint_First_Page</Value>
+                           <Type />
+                           <Confidence>0.13</Confidence>
+                           <ForceReview>false</ForceReview>
+                        </AlternateValue>
+                     </AlternateValues>
+                     <Category>Group 1</Category>
+                     <widgetType>TEXT</widgetType>
+                  </PageLevelField>
+               </PageLevelFields>
+               <HocrFileName>BI14_PG4_HOCR.xml</HocrFileName>
+               <ThumbnailFileName>BI14_PG4_displayThumb.png</ThumbnailFileName>
+               <DisplayFileName>BI14_PG4_displayImage.png</DisplayFileName>
+               <OCRInputFileName>BI14_4.tif</OCRInputFileName>
+               <Direction>NORTH</Direction>
+               <IsRotated>false</IsRotated>
+            </Page>
+            <Page>
+               <Identifier>PG5</Identifier>
+               <OldFileName>perf_review part of sample 2 - attachment-0003-0002.tif</OldFileName>
+               <NewFileName>BI14_5.tif</NewFileName>
+               <PageLevelFields>
+                  <PageLevelField>
+                     <Name>Search_Engine_Classification</Name>
+                     <Value>Attachment_Last_Page</Value>
+                     <Type />
+                     <Confidence>45.496</Confidence>
+                     <LearnedFileName>perf_review part of sample 2 - attachment.pdf-0003.tif</LearnedFileName>
+                     <OcrConfidenceThreshold>0.0</OcrConfidenceThreshold>
+                     <OcrConfidence>0.0</OcrConfidence>
+                     <FieldOrderNumber>0</FieldOrderNumber>
+                     <ForceReview>false</ForceReview>
+                     <AlternateValues>
+                        <AlternateValue>
+                           <Name>Search_Engine_Classification</Name>
+                           <Value>Attachment_Last_Page</Value>
+                           <Type />
+                           <Confidence>45.496</Confidence>
+                           <ForceReview>false</ForceReview>
+                        </AlternateValue>
+                        <AlternateValue>
+                           <Name>Search_Engine_Classification</Name>
+                           <Value>Attachment_Middle_Page</Value>
+                           <Type />
+                           <Confidence>16.128</Confidence>
+                           <ForceReview>false</ForceReview>
+                        </AlternateValue>
+                        <AlternateValue>
+                           <Name>Search_Engine_Classification</Name>
+                           <Value>EmploymentDiscriminationComplaint_First_Page</Value>
+                           <Type />
+                           <Confidence>0.17</Confidence>
+                           <ForceReview>false</ForceReview>
+                        </AlternateValue>
+                     </AlternateValues>
+                     <Category>Group 1</Category>
+                     <widgetType>TEXT</widgetType>
+                  </PageLevelField>
+               </PageLevelFields>
+               <HocrFileName>BI14_PG5_HOCR.xml</HocrFileName>
+               <ThumbnailFileName>BI14_PG5_displayThumb.png</ThumbnailFileName>
+               <DisplayFileName>BI14_PG5_displayImage.png</DisplayFileName>
+               <OCRInputFileName>BI14_5.tif</OCRInputFileName>
+               <Direction>NORTH</Direction>
+               <IsRotated>false</IsRotated>
+            </Page>
+         </Pages>
+         <MultiPagePdfFile>C:\Ephesoft\SharedFolders\final-drop-folder\BC4\BI14\2015-08-24\BC4BI142015-08-2412-57-15_DOC4.pdf</MultiPagePdfFile>
+      </Document>
+   </Documents>
+</Batch>
