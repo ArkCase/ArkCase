@@ -51,7 +51,6 @@
                 <value>services</value>
                 <value>templates</value>
                 <value>filters</value>
-                <value>custom_assets</value>
             </list>
         </property>
         <property name="assembledFoldersToCopyToDeployment">
@@ -63,7 +62,6 @@
                 <value>modules_config</value>
                 <value>services</value>
                 <value>filters</value>
-                <value>custom_assets</value>
             </list>
         </property>
         <property name="filesToCopyFromArchive">
