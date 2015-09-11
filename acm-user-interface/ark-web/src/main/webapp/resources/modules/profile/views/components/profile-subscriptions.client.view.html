@@ -1,3 +1,6 @@
 <section class="well">
-    <h4 class="well-small"> {{'profile.subscribtions.title' | translate}}</h4>
+    <div ng-controller="Profile.SubscriptionController" >
+        <h4 class="well-small"> {{'profile.subscribtions.title'| translate}}</h4>
+        <div id="subscribptionGrid" ui-grid-auto-resize ui-grid-resize-columns ui-grid="subscribptionGridOptions" class="grid"></div>
+    </div>
 </section>
