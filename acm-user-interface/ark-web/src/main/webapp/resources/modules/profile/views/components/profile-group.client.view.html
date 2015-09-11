@@ -1,3 +1,10 @@
 <section class="well">
     <h4 class="well-small">{{'profile.groups.title' | translate}}</h4>
+    <div ng-controller="Profile.GroupController">
+        <ul class="list-inline">
+            <li ng-repeat="items in profileGroups">
+                <span> {{items}}<span>
+            </li>
+        </ul>
+    </div>
 </section>

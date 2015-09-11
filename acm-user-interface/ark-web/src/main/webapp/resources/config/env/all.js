@@ -1,5 +1,4 @@
 'use strict';
-var appRoot = require('app-root-path');
 var path = require('path');
 
 
@@ -78,12 +77,13 @@ module.exports = {
         js: [
             'config.js',
             'application.js',
-            //'scripts/*/*.js',
             'scripts/*/**/*.js',
             'services/*.js',
             'services/*/*.js',
             'directives/*.js',
-            'directives/*/*.js'
+            'directives/*/*.js',
+            'filters/*.js',
+            'filters/*/*.js'
         ],
         jsModules: [
             'modules/*/*.js',
