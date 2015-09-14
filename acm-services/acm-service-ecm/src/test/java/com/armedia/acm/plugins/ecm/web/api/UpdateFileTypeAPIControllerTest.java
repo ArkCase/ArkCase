@@ -87,7 +87,7 @@ public class UpdateFileTypeAPIControllerTest  extends EasyMockSupport
 
         verifyAll();
 
-        LOG.info("Results: " + result.getResponse().getContentAsString());
+        LOG.info("Results: {}", result.getResponse().getContentAsString());
 
         ObjectMapper objectMapper = new ObjectMapper();
         EcmFile resultEcmFile = objectMapper.readValue(result.getResponse().getContentAsString(), EcmFile.class);

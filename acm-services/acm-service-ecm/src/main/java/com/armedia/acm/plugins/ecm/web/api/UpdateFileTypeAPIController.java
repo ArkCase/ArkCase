@@ -39,7 +39,7 @@ public class UpdateFileTypeAPIController
             HttpSession session) throws AcmObjectNotFoundException {
 
 
-        log.debug("Updating file type to '" + fileType + "'");
+        log.debug("Updating file type to '{}'", fileType);
 
         EcmFile file = null;
 
@@ -49,6 +49,7 @@ public class UpdateFileTypeAPIController
         }
         catch (AcmObjectNotFoundException e)
         {
+            log.error("Error wile updating file type: {}", e);
             throw e;
         }
 
