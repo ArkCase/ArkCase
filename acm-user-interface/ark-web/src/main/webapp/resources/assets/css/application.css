@@ -1,0 +1,173 @@
+/* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
+
+html {
+  height: 100%;
+}
+body {
+  background-color: transparent;
+  color: #788288;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  height: 100%;
+}
+
+h1 {
+  color: #000000;
+  font-size: 36px;
+}
+h2 {
+  color: #000000;
+  font-size: 32px;
+}
+h3 {
+  color: #000000;
+  font-size: 24px;
+  color: rgba(0,0,0,0.7);
+  margin: 0px;
+}
+h4 {
+  color: #000000;
+  font-size: 18px;
+  color: rgba(0,0,0,0.7);
+}
+h5 {
+  color: #000000;
+  font-size: 16px;
+}
+h6 {
+  color: #000000;
+  font-size: 14px;
+}
+.no-border {
+  border-color: transparent;
+  border-width: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.table-row {
+  display: table-row;
+  width: 100%;
+  height: 100%; }
+.btn {
+  border-radius: 2px;
+}
+
+.btn-default {
+  background-color: #fcfcfd;
+  background-image: none;
+  border: 1px solid #d2dae1;
+  border-bottom: 1px solid #cbd5dd;
+  box-shadow: 0 1px 1px rgba(90, 90, 90, 0.1);
+  color: #788288;
+  webkit-box-shadow: 0 1px 1px rgba(90, 90, 90, 0.1);
+}
+.btn-default:hover {
+  background-color: #ebeef4;
+  border: 1px solid #b9c6d0;
+}
+.panel {
+  border-radius: 2px;
+}
+.panel-success {
+  border: 1px solid #eaeef1;
+}
+.panel-success > .panel-heading {
+  background-color: #1ccacc;
+  background-image: none;
+  border: none;
+  color: #ebfcfc;
+  font-weight: 700;
+}
+.panel .panel-heading .collapse-icon {
+  color: #ffffff;
+  font-size: 9px;
+  padding: 0 0 0 7px;
+}
+.panel-grid > .panel-body {
+  padding: 0;
+}
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus {
+  background-color: #1ccacc;
+  border-radius: 2px;
+}
+.required-asterisk {
+  color: #dd1144;
+}
+.form-control {
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+div.well.ng-scope {
+  background: 0px;
+  border: 0px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  padding: 0px;
+}
+div.well.ng-scope a.list-group-item {
+  cursor: pointer; cursor: hand;
+}
+
+.form-control {
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.module-header {
+  background-color: #e9edf4;
+  padding-left: 20px;
+  padding-bottom: 13px;
+  padding-top: 20px;
+  min-height: 70px;
+  margin-bottom: 10px;
+}
+
+.module-content {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+.module-content .left-sidebar, .module-content .left-sidebar-sm {
+  display: table-cell;
+  vertical-align: top;
+  width: 300px;
+  padding-left: 0;
+  padding-right: 0;
+  background-color: #e9edf4;
+}
+.module-content .left-sidebar .header, .module-content .left-sidebar-sm .header {
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 20px;
+  height: 70px;
+  background-color: #e9edf4;
+}
+.module-content .left-sidebar .header h3, .module-content .left-sidebar-sm .header h3 {
+  margin: 0;
+  padding: 0;
+}
+.module-content .left-sidebar-sm {
+  width: 200px;
+}
+.module-content .right-sidebar {
+  display: table-cell;
+  vertical-align: top;
+  width: 500px;
+}
+.module-content .content-body {
+  display: table-cell;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+ul.ui-fancytree.fancytree-container {
+  background: none;
+  border: 0px;
+  outline: 0px;
+}
+
+.form-group.well-sm {
+  margin: 0px;
+}
