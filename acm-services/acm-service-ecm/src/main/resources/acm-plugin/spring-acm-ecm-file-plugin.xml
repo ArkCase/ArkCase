@@ -101,6 +101,11 @@
                     <property name="url" value="/api/{version}/service/ecm/bycategory/{parentObjectType}/{parentObjectId}"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
+                <bean id="updateFileTypeUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/ecm/file/{fileId}/type/{fileType}"/>
+                    <property name="requiredPrivilege" ref="filePrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>
