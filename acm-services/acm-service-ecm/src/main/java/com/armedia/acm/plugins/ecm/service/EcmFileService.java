@@ -148,4 +148,6 @@ public interface EcmFileService
     EcmFile setFilesActiveVersion(Long fileId,String versionTag) throws PersistenceException;
 
     EcmFile copyFile(Long documentId, AcmFolder targetFolder, AcmContainer targetContainer) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    EcmFile updateFileType(Long fileId, String fileType) throws AcmObjectNotFoundException;
 }
