@@ -49,7 +49,7 @@ public class UpdateFileTypeAPIController
         }
         catch (AcmObjectNotFoundException e)
         {
-            log.error("Error wile updating file type: {}", e);
+            log.error("Error wile updating file type: {}", e.getMessage(), e);
             throw e;
         }
 
