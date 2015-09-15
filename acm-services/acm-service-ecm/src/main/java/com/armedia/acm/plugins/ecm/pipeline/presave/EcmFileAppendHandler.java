@@ -47,11 +47,17 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
             ContentStream contentStream = (ContentStream) downloadResponse.getPayload();
             fileContentStream = contentStream.getStream();
         } catch (Exception e) {
-            log.error("Failed to get document: " + e.getMessage());
+            log.error("Failed to get document: {}", e.getMessage(), e);
         }
         return fileContentStream;
     }
 
+    /**
+     * Obtains a file from the given container with the given type if present
+     * @param containerId - unique identifier of the container in which the search will be performed
+     * @param fileType - this type will be searched for matches in the acm container
+     * @return - file object matching the requested type, or null if not found
+     */
     private EcmFile getDuplicateFile(Long containerId, String fileType)
     {
         EcmFile matchFile = null;
@@ -62,7 +68,7 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
             // Determines if the container has a file with the same type as the new file being uploaded
             matchFile = folderAndFilesUtils.findMatchFileType(containerList, fileType);
         } catch (Exception e) {
-            log.error("failed to lookup files: " + e.getMessage());
+            log.error("failed to lookup files: {}", e.getMessage(), e);
         }
         return matchFile;
     }
@@ -131,7 +137,7 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
                     pipelineContext.setCmisDocument(received.getPayload(Document.class));
                 }
             } catch (Exception e) {
-                log.error("mule pre save handler failed: " + e.getMessage());
+                log.error("mule pre save handler failed: {}", e.getMessage(), e);
                 throw new PipelineProcessException("mule pre save handler failed: " + e.getMessage());
             }
         } else { // non-pdf files go to capture folder to be sent to Ephesoft
@@ -163,7 +169,7 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
                 throw new Exception(exceptionPayload.getRootException());
 
         } catch (Exception e) { // since the rollback failed an orphan document will exist in Alfresco
-            log.error("rollback of file upload failed: " + e.getMessage());
+            log.error("rollback of file upload failed: {}", e.getMessage(), e);
             throw new PipelineProcessException("rollback of file upload failed: " + e.getMessage());
         }
         log.debug("mule pre save handler rollback ended");

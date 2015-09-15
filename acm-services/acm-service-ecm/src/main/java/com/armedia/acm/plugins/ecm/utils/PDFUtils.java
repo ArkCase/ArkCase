@@ -37,8 +37,8 @@ public class PDFUtils {
             log.debug("merged length: " + outputStreamBytes.toByteArray().length);
             mergedDocument = new ByteArrayInputStream(outputStreamBytes.toByteArray());
 
-        } catch (Exception textException) {
-            log.error("pdf merge failed: " + textException.getMessage());
+        } catch (Exception e) {
+            log.error("pdf merge failed: {}", e.getMessage(), e);
         }
         return mergedDocument;
     }

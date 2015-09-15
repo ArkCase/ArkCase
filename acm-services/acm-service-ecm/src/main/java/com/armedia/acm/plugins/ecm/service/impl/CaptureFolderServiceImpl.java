@@ -39,8 +39,7 @@ public class CaptureFolderServiceImpl implements CaptureFolderService {
                 IOUtils.copy(fileInputStream, captureFileOutputStream);
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
+            log.error("Failed to copy file to Ephesoft hot folder: {}", e.getMessage(), e);
         } finally {
             try {
                 if (captureFileOutputStream != null)
