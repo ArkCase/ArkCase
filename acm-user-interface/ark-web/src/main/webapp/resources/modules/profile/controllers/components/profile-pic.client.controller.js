@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('profile').controller('Profile.PicController', ['$scope', 'ConfigService', 'getUserInfo','userPicService','$http',
-    function ($scope, ConfigService, getUserInfo,userPicService,$http) {
+angular.module('profile').controller('Profile.PicController', ['$scope', 'ConfigService', 'userInfoService','userPicService',
+    function ($scope, ConfigService, userInfoService,userPicService) {
         $scope.config = ConfigService.getModule({moduleId: 'profile'});
         $scope.$on('req-component-config', onConfigRequest);
 
@@ -19,7 +19,7 @@ angular.module('profile').controller('Profile.PicController', ['$scope', 'Config
             $("#submit").click();
         };
         $scope.sub = function () {
-            getUserInfo.async().then(function (data) {
+            userInfoService.getUserInfo().then(function (data) {
                 var formData = new FormData();
                 var userID = data.userOrgId;
                 formData.append("parentObjectId", userID);
@@ -29,30 +29,30 @@ angular.module('profile').controller('Profile.PicController', ['$scope', 'Config
                 userPicService.changePic(formData)
                         .then(function(data){
                             var ecmFileID=data[0].fileId;
-                            $scope.profileEcmFieldID=ecmFileID;
-                            getUserInfo.async().then(function (infoData) {
-                                infoData.ecmFileId = $scope.profileEcmFieldID;
-                                return ($http.post('proxy/arkcase/api/latest/plugin/profile/userOrgInfo/set', infoData));
+                            $scope.profileEcmFileID=ecmFileID;
+                            userInfoService.getUserInfo().then(function (infoData) {
+                                infoData.ecmFileId = $scope.profileEcmFileID;
+                                userInfoService.updateUserInfo(infoData);
                             });
                         });
             });
         };
         $scope.update = function () {
             var profileInfo;
-            getUserInfo.async().then(function (infoData) {
+            userInfoService.getUserInfo().then(function (infoData) {
                 profileInfo = infoData;
                 profileInfo.fullName = $scope.profilePicFullName;
                 profileInfo.email = $scope.profilePicEmail;
                 profileInfo.title = $scope.profilePicTitle;
-                return ($http.post('proxy/arkcase/api/latest/plugin/profile/userOrgInfo/set', profileInfo));
+                userInfoService.updateUserInfo(profileInfo);
             });
         };
-        getUserInfo.async().then(function (data) {
+        userInfoService.getUserInfo().then(function (data) {
             $scope.profilePicFullName = data.fullName;
             $scope.profilePicEmail = data.email;
             $scope.profilePicTitle = data.title;
-            $scope.profileEcmFieldID=data.ecmFileId;
-            if($scope.profileEcmFieldID !== null){
+            $scope.profileEcmFileID=data.ecmFileId;
+            if($scope.profileEcmFileID !== null){
                $scope.profilePicDefault=false;
             }
         });
