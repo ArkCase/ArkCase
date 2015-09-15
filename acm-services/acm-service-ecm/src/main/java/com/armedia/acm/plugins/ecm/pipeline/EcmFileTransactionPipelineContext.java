@@ -20,6 +20,8 @@ public class EcmFileTransactionPipelineContext implements PipelineContext {
     private AcmContainer container;
     private Document cmisDocument;
     private EcmFile ecmFile;
+    private boolean isAppend;
+    private boolean isPDF;
 
     public String getOriginalFileName() {
         return originalFileName;
@@ -62,5 +64,17 @@ public class EcmFileTransactionPipelineContext implements PipelineContext {
     }
     public void setEcmFile(EcmFile ecmFile) {
         this.ecmFile = ecmFile;
+    }
+    public boolean getIsAppend() {
+        return isAppend;
+    }
+    public void setIsAppend(boolean isAppend) {
+        this.isAppend = isAppend;
+    }
+    public boolean getIsPDF() {
+        return isPDF;
+    }
+    public void setIsPDF(boolean isPDF) {
+        this.isPDF = isPDF;
     }
 }
