@@ -93,7 +93,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             pipelineManager.onPostSave(ecmFile, pipelineContext);
             ecmFile = pipelineContext.getEcmFile();
         } catch (Exception e) {
-            log.error("pipeline handler call failed: " + e.getMessage());
+            log.error("pipeline handler call failed: {}", e.getMessage(), e);
         }
 
         log.debug("Returning from addFileTransaction method");
@@ -151,7 +151,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             appendPipelineManager.onPostSave(ecmFile, pipelineContext);
             ecmFile = pipelineContext.getEcmFile();
         } catch (Exception e) {
-            log.error("append pipeline handler call failed: " + e.getMessage());
+            log.error("append pipeline handler call failed: {}", e.getMessage(), e);
         }
 
         log.debug("Returning from addOrAppendFileTransaction method");
