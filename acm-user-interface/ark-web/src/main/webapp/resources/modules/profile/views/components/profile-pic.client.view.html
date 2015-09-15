@@ -3,9 +3,9 @@
         <div ng-controller="Profile.PicController" class="row">
             <div class="col-xs-6 text-center">
                 <div>
-                    <img id="picLoading" class="img-circle img-responsive"  ng-src="{{profilePicDefault && 'modules/profile/img/nopic.png' || 'proxy/arkcase/api/latest/plugin/ecm/download?ecmFileId='+profileEcmFieldID+'&inline=true'}}" >
+                    <img id="picLoading" class="img-circle img-responsive"  ng-src="{{profilePicDefault && 'modules/profile/img/nopic.png' || 'proxy/arkcase/api/latest/plugin/ecm/download?ecmFileId='+profileEcmFileID+'&inline=true'}}" >
                     <div>
-                    <a id="lnkChangePicture" href="#" ng-click="changePic()"><u>{{'profile.pciture.title' | translate}}</u></a>
+                    <a id="lnkChangePicture" data-ui-sref="profile" ng-click="changePic()"><u>{{'profile.pciture.title' | translate}}</u></a>
                     </div>
                     <form id="formPicture" class="hidden" ng-submit="sub()">
                         <input type="file" id="file" name="file" onchange="angular.element(this).scope().selectImage()">

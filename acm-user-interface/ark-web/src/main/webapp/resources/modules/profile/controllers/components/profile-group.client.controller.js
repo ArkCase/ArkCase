@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('profile').controller('Profile.GroupController', ['$scope', 'ConfigService','getUserInfo',
-	function($scope, ConfigService, getUserInfo) {
+angular.module('profile').controller('Profile.GroupController', ['$scope', 'ConfigService','userInfoService',
+	function($scope, ConfigService, userInfoService) {
 		$scope.config = ConfigService.getModule({moduleId: 'profile'});
 		$scope.$on('req-component-config', onConfigRequest);
 
@@ -11,7 +11,7 @@ angular.module('profile').controller('Profile.GroupController', ['$scope', 'Conf
 				$scope.$broadcast('component-config', componentId, componentConfig);
 			});
 		}
-        getUserInfo.async().then(function(data) {
+       userInfoService.getUserInfo().then(function(data) {
             $scope.profileGroups = data.groups;
         });
 	}

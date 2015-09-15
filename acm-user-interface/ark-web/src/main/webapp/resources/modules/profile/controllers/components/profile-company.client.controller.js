@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('profile').controller('Profile.CompanyController', ['$scope', 'ConfigService','$http','getUserInfo',
-    function ($scope, ConfigService,$http, getUserInfo) {
+angular.module('profile').controller('Profile.CompanyController', ['$scope', 'ConfigService','userInfoService',
+    function ($scope, ConfigService, userInfoService) {
         $scope.config = ConfigService.getModule({moduleId: 'profile'});
         $scope.$on('req-component-config', onConfigRequest);
 
@@ -14,7 +14,7 @@ angular.module('profile').controller('Profile.CompanyController', ['$scope', 'Co
         ;
         $scope.update = function () {
             var profileInfo;
-            getUserInfo.async().then(function(infoData) {
+            userInfoService.getUserInfo().then(function(infoData) {
              profileInfo= infoData;
              profileInfo.companyName=$scope.profileCompanyName;
              profileInfo.firstAddress=$scope.profileCompanyAddress1;
@@ -25,10 +25,10 @@ angular.module('profile').controller('Profile.CompanyController', ['$scope', 'Co
              profileInfo.mainOfficePhone=$scope.profileCompanyMainPhone;
              profileInfo.fax=$scope.profileCompanyFax;
              profileInfo.website=$scope.profileCompanyWebsite;
-             return ($http.post('proxy/arkcase/api/latest/plugin/profile/userOrgInfo/set', profileInfo));
+             userInfoService.updateUserInfo(profileInfo);
             });
         };
-        getUserInfo.async().then(function(data) {
+        userInfoService.getUserInfo().then(function(data) {
             $scope.profileCompanyName = data.companyName;
             $scope.profileCompanyAddress1 = data.firstAddress;
             $scope.profileCompanyAddress2 = data.secondAddress;

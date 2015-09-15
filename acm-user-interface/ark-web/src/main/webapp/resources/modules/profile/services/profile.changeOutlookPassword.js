@@ -22,8 +22,8 @@ angular.module('profile').service('passwordService', function ($http, $q, $modal
     }
     function handleSuccess(response) {
         $modal.open({
-      template: 'Successfully Changed Password',
-      size:'sm'
+                    templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-successChangedPassword.client.view.html',
+                    size: 'sm'
     });
         return(response.data);
     }
