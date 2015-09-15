@@ -736,6 +736,22 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    public EcmFile updateFileType(Long fileId, String fileType) throws AcmObjectNotFoundException
+    {
+        EcmFile file = getEcmFileDao().find(fileId);
+        if( file == null  )
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File  not found", null);
+        }
+
+        file.setFileType(fileType);
+
+        EcmFile saved = getEcmFileDao().save(file);
+
+        return saved;
+    }
+
+    @Override
     public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException {
         AcmFolder folder = getFolderDao().find(dstFolderId);
         if (folder == null)
