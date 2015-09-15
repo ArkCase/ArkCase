@@ -163,6 +163,11 @@
             <artifactId>commons-fileupload</artifactId>
             <version>${apache-commons-file-upload.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>1.8.10</version>
+        </dependency>
 
         <!-- json -->
         <dependency>
