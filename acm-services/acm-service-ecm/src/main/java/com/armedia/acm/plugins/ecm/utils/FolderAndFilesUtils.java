@@ -101,4 +101,22 @@ public class FolderAndFilesUtils {
     	
     	return null;
     }
+
+    /**
+     * Returns a file which matches the supplied file type from the list
+     * @param fileList - List of ecmFiles which will be searched for the desired type
+     * @param fileType - type to search for in the ecm file list
+     * @return ecmFile which has the given type, or null if not found
+     */
+    public EcmFile findMatchFileType(List<EcmFile> fileList, String fileType)
+    {
+        EcmFile matchFile = null;
+        for (EcmFile ecmFile : fileList) {
+            LOG.debug(ecmFile.getFileName() + ": [" + ecmFile.getFileType() + "]");
+            if (ecmFile.getFileType().equals(fileType)) {
+                matchFile = ecmFile;
+            }
+        }
+        return matchFile;
+    }
 }
