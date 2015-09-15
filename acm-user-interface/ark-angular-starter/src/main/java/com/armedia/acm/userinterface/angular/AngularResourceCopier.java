@@ -88,6 +88,7 @@ public class AngularResourceCopier implements ServletContextAware
 
             // custom_modules is copied specially since we have to squash it into modules folder
             copyResources(resolver, rootPath, tmpDir, "custom_modules", "modules");
+            copyResources(resolver, rootPath, tmpDir, "custom_assets", "assets");
 
             for (String frontEndCommand : getFrontEndCommandsToBeExecuted())
             {

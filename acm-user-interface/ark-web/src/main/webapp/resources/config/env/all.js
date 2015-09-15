@@ -69,7 +69,8 @@ module.exports = {
         css: [
             'assets/css/application.css',
             'modules/**/css/*.css',
-            'custom_modules/**/css/*.css'
+            'custom_modules/**/css/*.css',
+            'assets/css/arkcase-extension.css'
         ],
         scss: [
             'modules/**/scss/*.scss',
