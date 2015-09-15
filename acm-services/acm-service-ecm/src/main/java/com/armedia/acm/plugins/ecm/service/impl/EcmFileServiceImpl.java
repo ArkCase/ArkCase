@@ -155,6 +155,43 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
+    @Override
+    public EcmFile uploadOrAppend(
+            String originalFileName,
+            String fileType,
+            MultipartFile file,
+            Authentication authentication,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        if ( log.isInfoEnabled() )
+        {
+            log.info("The user '" + authentication.getName() + "' uploaded file: '" + file.getOriginalFilename() + "'");
+            log.info("File size: " + file.getSize() + "; content type: " + file.getContentType());
+        }
+
+        AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
+
+        try
+        {
+            EcmFile uploaded = getEcmFileTransaction().addOrAppendFileTransaction(
+                    originalFileName,
+                    authentication,
+                    fileType,
+                    file.getInputStream(),
+                    file.getContentType(),
+                    file.getOriginalFilename(),
+                    targetCmisFolderId,
+                    container);
+
+            return uploaded;
+        } catch (IOException | MuleException e)
+        {
+            log.error("Could not upload file: " + e.getMessage(), e);
+            throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
+        }
+    }
 
     @Override
 	public EcmFile update(EcmFile ecmFile, MultipartFile file,

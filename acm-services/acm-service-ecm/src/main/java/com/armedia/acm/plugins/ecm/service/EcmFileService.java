@@ -54,7 +54,16 @@ public interface EcmFileService
             String targetCmisFolderId,
             String parentObjectType,
             Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
-    
+
+    EcmFile uploadOrAppend(
+            String originalFileName,
+            String fileType,
+            MultipartFile file,
+            Authentication authentication,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
+
     /**
      * 
      * @param ecmFile
