@@ -13,6 +13,13 @@
         "select-state": "Select State",
         "select-report": "Select Report"
       },
+      "reportDropdown": {
+        "turnaround": "Turnaround Time by Requestor",
+        "requester": "Requester Type Summary Pending Orders Report",
+        "associate": "Associate Productivity Report",
+        "origination": "Origination Count",
+        "transfers": "Transfers Report"
+      },
       "button": {
         "generate-report": "Generate report"
       }
