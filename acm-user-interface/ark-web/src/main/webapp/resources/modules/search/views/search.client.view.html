@@ -1,12 +1,14 @@
-<div ng-controller="SearchController" class="well-sm">
-
-    <h3>{{'search.title' | translate}}</h3>
-
-    <div class="clearfix">
-
-        <div class="scroll-body col-xs-3" slimscroll="{height: '800px'}"
-             ng-include="'modules/search/views/components/search-facets.client.view.html'">
+<div ng-controller="SearchController" >
+    <div class="module-content">
+        <div class="col-xs-3 left-sidebar">
+            <div class="module-header">
+                <h3>{{'search.title' | translate}}</h3>
+            </div>
+            <div class="scroll-body" slimscroll="{height: '800px'}"
+                 ng-include="'modules/search/views/components/search-facets.client.view.html'">
+            </div>
         </div>
+
 
         <div class="col-xs-9">
             <div ng-include="'modules/search/views/components/search-results.client.view.html'"></div>
@@ -15,7 +17,5 @@
         <div class="col-xs-12">
             <div class="scroll-body" slimscroll="{height: '800px'}" data-ui-view></div>
         </div>
-
     </div>
-
 </div>

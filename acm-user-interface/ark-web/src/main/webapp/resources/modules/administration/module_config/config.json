@@ -6,7 +6,7 @@
             "menuId": "leftnav",
             "menuItemURL": "administration",
             "menuItemTitle": "Administration",
-            "iconClass": "glyphicon glyphicon-cog",
+            "iconClass": "fa fa-wrench",
             "position": 40
         }
     ],
