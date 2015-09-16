@@ -52,10 +52,10 @@ public class CaptureFolderServiceImpl implements CaptureFolderService {
 
     /**
      * Creates the name of the Ephesoft capture document in the standard format
-     * which has the containerObjectId and fileId separated by an underscore
+     * which has the containerObjectId, containerObjectType, and fileId separated by underscores
      * @param ephesoftFile - contains the metadata for the file to send to Ephesoft
      * @param fileExtension - file type extension (e.x. png, tiff, jpg)
-     * @return filename formatted for Ephesoft containerId + "_" + fileId + "." + extension
+     * @return filename formatted for Ephesoft containerId + "_" + containerType + "_" fileId + "." + extension
      * @throws Exception if one of the components of the name is not present
      */
     private static String buildEphesoftFileName(EcmFile ephesoftFile, String fileExtension) throws Exception {
@@ -68,14 +68,17 @@ public class CaptureFolderServiceImpl implements CaptureFolderService {
         String fileName = ephesoftFile.getFileName();
         Long fileId = ephesoftFile.getFileId();
         Long containerObjectId = ephesoftFile.getContainer().getContainerObjectId();
+        String containerObjectType = ephesoftFile.getContainer().getContainerObjectType();
         if (fileName == null)
             throw new Exception("fileName is null");
         if (fileId == null)
             throw new Exception("fileId is null");
         if (containerObjectId == null)
             throw new Exception("containerObjectId is null");
+        if (containerObjectType == null || containerObjectType.length() == 0)
+            throw new Exception("containerObjectType is null or empty");
 
-        return containerObjectId + "_" + fileId + "." + fileExtension;
+        return containerObjectId + "_" + containerObjectType + "_" + fileId + "." + fileExtension;
     }
 
     /**
