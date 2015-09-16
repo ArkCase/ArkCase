@@ -90,7 +90,9 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
         log.debug("invoking the mule add file flow");
         MuleMessage received = getMuleContextManager().send("vm://addFile.in", newEcmFile, messageProps);
         MuleException e = received.getInboundProperty("saveException");
-        if (e != null) throw e;
+        if (e != null) {
+            throw e;
+        }
 
         // The next pipeline stage needs to have access to the cmis document returned from mule
         pipelineContext.setCmisDocument(received.getPayload(Document.class));
@@ -117,7 +119,9 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
         log.debug("invoking the mule replace file flow");
         MuleMessage received = getMuleContextManager().send("vm://updateFile.in", newEcmFile, messageProps);
         MuleException e = received.getInboundProperty("updateException");
-        if (e != null) throw e;
+        if (e != null) {
+            throw e;
+        }
 
         // The next pipeline stage needs to have access to the cmis document returned from mule
         pipelineContext.setCmisDocument(received.getPayload(Document.class));
@@ -127,8 +131,9 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
     {
         log.debug("mule pre save handler called");
-        if (entity == null)
+        if (entity == null) {
             throw new PipelineProcessException("ecmFile is null");
+        }
 
         // Must be PDF, need to check
         boolean isPDF = entity.getFileMimeType().equals("application/pdf");
@@ -193,8 +198,9 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
         try {
             // We need the cmis id of the file in order to delete it
             Document cmisDocument = pipelineContext.getCmisDocument();
-            if (cmisDocument == null)
+            if (cmisDocument == null) {
                 throw new Exception("cmisDocument is null");
+            }
 
             // This is the request payload for mule including the unique cmis id for the document to delete
             Map<String, Object> messageProps = new HashMap<>();
@@ -204,8 +210,9 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
             log.debug("rolling back file upload for cmis id: " + cmisDocument.getId() + " using vm://deleteFile.in mule flow");
             MuleMessage fileDeleteResponse = getMuleContextManager().send("vm://deleteFile.in", entity, messageProps);
             ExceptionPayload exceptionPayload = fileDeleteResponse.getExceptionPayload();
-            if (exceptionPayload != null)
+            if (exceptionPayload != null) {
                 throw new Exception(exceptionPayload.getRootException());
+            }
 
         } catch (Exception e) { // since the rollback failed an orphan document will exist in Alfresco
             log.error("rollback of file upload failed: {}", e.getMessage(), e);

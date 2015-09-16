@@ -29,43 +29,43 @@ public class EcmFileAppendMetadataHandler implements PipelineHandler<EcmFile, Ec
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
     {
         log.debug("metadata pre save handler called");
-
-        EcmFile toAdd = entity;
-        if (toAdd == null)
+        if (entity == null) {
             throw new PipelineProcessException("ecmFile is null");
+        }
 
         Document cmisDocument = pipelineContext.getCmisDocument();
-        if (cmisDocument == null)
+        if (cmisDocument == null) {
             throw new PipelineProcessException("cmisDocument is null");
+        }
 
-        toAdd.setVersionSeriesId(cmisDocument.getVersionSeriesId());
-        toAdd.setActiveVersionTag(cmisDocument.getVersionLabel());
-        toAdd.setFileName(pipelineContext.getOriginalFileName());
+        entity.setVersionSeriesId(cmisDocument.getVersionSeriesId());
+        entity.setActiveVersionTag(cmisDocument.getVersionLabel());
+        entity.setFileName(pipelineContext.getOriginalFileName());
 
         // Updates the versioning of the file (it may be replacing an older copy)
         EcmFileVersion version = new EcmFileVersion();
         version.setCmisObjectId(cmisDocument.getId());
         version.setVersionTag(cmisDocument.getVersionLabel());
-        toAdd.getVersions().add(version);
+        entity.getVersions().add(version);
 
         // Determines the folder and container in which the file should be saved
         AcmFolder folder = getFolderDao().findByCmisFolderId(pipelineContext.getCmisFolderId());
-        toAdd.setFolder(folder);
-        toAdd.setContainer(pipelineContext.getContainer());
+        entity.setFolder(folder);
+        entity.setContainer(pipelineContext.getContainer());
 
         if (!pipelineContext.getIsAppend()) {
             // Saves file metadata into ArkCase
-            EcmFile saved = getEcmFileDao().save(toAdd);
+            EcmFile saved = getEcmFileDao().save(entity);
             pipelineContext.setEcmFile(saved);
         } else {
             EcmFile oldFile = pipelineContext.getEcmFile();
-            toAdd.setFileId(oldFile.getFileId());
-            toAdd.setCreator(oldFile.getCreator());
-            toAdd.setCreated(oldFile.getCreated());
-            toAdd.setModified(new Date());
-            toAdd.setModifier(oldFile.getModifier());
-            toAdd.setStatus(oldFile.getStatus());
-            pipelineContext.setEcmFile(toAdd);
+            entity.setFileId(oldFile.getFileId());
+            entity.setCreator(oldFile.getCreator());
+            entity.setCreated(oldFile.getCreated());
+            entity.setModified(new Date());
+            entity.setModifier(oldFile.getModifier());
+            entity.setStatus(oldFile.getStatus());
+            pipelineContext.setEcmFile(entity);
         }
 
         // Non-pdf format documents need to be copied to the Ephesoft hot folder for processing
