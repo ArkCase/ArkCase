@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
+import com.armedia.acm.plugins.ecm.service.CaptureFolderService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.apache.chemistry.opencmis.client.api.Document;
@@ -22,6 +23,7 @@ public class EcmFileAppendMetadataHandler implements PipelineHandler<EcmFile, Ec
 
     private EcmFileDao ecmFileDao;
     private AcmFolderDao folderDao;
+    private CaptureFolderService captureFolderService;
 
     @Override
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
@@ -32,43 +34,51 @@ public class EcmFileAppendMetadataHandler implements PipelineHandler<EcmFile, Ec
         if (toAdd == null)
             throw new PipelineProcessException("ecmFile is null");
 
-        if (pipelineContext.getIsPDF()) {
-            Document cmisDocument = pipelineContext.getCmisDocument();
-            if (cmisDocument == null)
-                throw new PipelineProcessException("cmisDocument is null");
+        Document cmisDocument = pipelineContext.getCmisDocument();
+        if (cmisDocument == null)
+            throw new PipelineProcessException("cmisDocument is null");
 
-            toAdd.setVersionSeriesId(cmisDocument.getVersionSeriesId());
-            toAdd.setActiveVersionTag(cmisDocument.getVersionLabel());
-            toAdd.setFileName(pipelineContext.getOriginalFileName());
+        toAdd.setVersionSeriesId(cmisDocument.getVersionSeriesId());
+        toAdd.setActiveVersionTag(cmisDocument.getVersionLabel());
+        toAdd.setFileName(pipelineContext.getOriginalFileName());
 
-            // Updates the versioning of the file (it may be replacing an older copy)
-            EcmFileVersion version = new EcmFileVersion();
-            version.setCmisObjectId(cmisDocument.getId());
-            version.setVersionTag(cmisDocument.getVersionLabel());
-            toAdd.getVersions().add(version);
+        // Updates the versioning of the file (it may be replacing an older copy)
+        EcmFileVersion version = new EcmFileVersion();
+        version.setCmisObjectId(cmisDocument.getId());
+        version.setVersionTag(cmisDocument.getVersionLabel());
+        toAdd.getVersions().add(version);
 
-            // Determines the folder and container in which the file should be saved
-            AcmFolder folder = getFolderDao().findByCmisFolderId(pipelineContext.getCmisFolderId());
-            toAdd.setFolder(folder);
-            toAdd.setContainer(pipelineContext.getContainer());
+        // Determines the folder and container in which the file should be saved
+        AcmFolder folder = getFolderDao().findByCmisFolderId(pipelineContext.getCmisFolderId());
+        toAdd.setFolder(folder);
+        toAdd.setContainer(pipelineContext.getContainer());
 
-            if (!pipelineContext.getIsAppend()) {
-                // Saves file metadata into ArkCase
-                EcmFile saved = getEcmFileDao().save(toAdd);
-                pipelineContext.setEcmFile(saved);
-            } else {
-                EcmFile oldFile = pipelineContext.getEcmFile();
-                toAdd.setFileId(oldFile.getFileId());
-                toAdd.setCreator(oldFile.getCreator());
-                toAdd.setCreated(oldFile.getCreated());
-                toAdd.setModified(new Date());
-                toAdd.setModifier(oldFile.getModifier());
-                toAdd.setStatus(oldFile.getStatus());
-                pipelineContext.setEcmFile(toAdd);
-            }
+        if (!pipelineContext.getIsAppend()) {
+            // Saves file metadata into ArkCase
+            EcmFile saved = getEcmFileDao().save(toAdd);
+            pipelineContext.setEcmFile(saved);
         } else {
+            EcmFile oldFile = pipelineContext.getEcmFile();
+            toAdd.setFileId(oldFile.getFileId());
+            toAdd.setCreator(oldFile.getCreator());
+            toAdd.setCreated(oldFile.getCreated());
+            toAdd.setModified(new Date());
+            toAdd.setModifier(oldFile.getModifier());
+            toAdd.setStatus(oldFile.getStatus());
             pipelineContext.setEcmFile(toAdd);
         }
+
+        // Non-pdf format documents need to be copied to the Ephesoft hot folder for processing
+        if (!pipelineContext.getIsPDF()) {
+            try {
+                // Drops the file into the shared drive folder for Ephesoft
+                captureFolderService.copyToCaptureHotFolder(pipelineContext.getEcmFile(), pipelineContext.getFileInputStream());
+            } catch (Exception e) {
+                log.error("Failed to copy file to Ephesoft hot folder: {}", e.getMessage(), e);
+                throw new PipelineProcessException("Failed to copy file to Ephesoft hot folder: " + e.getMessage());
+            }
+        }
+
         log.debug("metadata pre save handler ended");
     }
 
@@ -89,5 +99,11 @@ public class EcmFileAppendMetadataHandler implements PipelineHandler<EcmFile, Ec
     }
     public void setFolderDao(AcmFolderDao folderDao) {
         this.folderDao = folderDao;
+    }
+    public CaptureFolderService getCaptureFolderService() {
+        return captureFolderService;
+    }
+    public void setCaptureFolderService(CaptureFolderService captureFolderService) {
+        this.captureFolderService = captureFolderService;
     }
 }
