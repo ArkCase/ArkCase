@@ -24,7 +24,30 @@ public interface EcmFileTransaction
                 AcmContainer container)
                 throws MuleException;
 
+        EcmFile addOrAppendFileTransaction(
+                String originalFileName,
+                Authentication authentication,
+                String fileType,
+                InputStream fileInputStream,
+                String mimeType,
+                String fileName,
+                String cmisFolderId,
+                AcmContainer container)
+                throws MuleException;
+
         EcmFile addFileTransaction(
+                String originalFileName,
+                Authentication authentication,
+                String fileType,
+                String fileCategory,
+                InputStream fileInputStream,
+                String mimeType,
+                String fileName,
+                String cmisFolderId,
+                AcmContainer container)
+                throws MuleException;
+
+        EcmFile addOrAppendFileTransaction(
                 String originalFileName,
                 Authentication authentication,
                 String fileType,
