@@ -41,6 +41,25 @@ public class FileUploadAPIController
 
     private final String uploadFileType = "attachment";
 
+    @RequestMapping(
+            value = "/uploadappend",
+            method = RequestMethod.POST,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<EcmFile> uploadOrAppendFile(
+            @RequestParam("parentObjectType") String parentObjectType,
+            @RequestParam("parentObjectId") Long parentObjectId,
+            @RequestParam(value = "folderId", required = false) Long folderId,
+            @RequestParam(value = "fileType", required = false, defaultValue = uploadFileType) String fileType,
+            MultipartHttpServletRequest request,
+            Authentication authentication,
+            HttpSession session) throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException
+    {
+        String folderCmisId = getCmisId(parentObjectType,parentObjectId,folderId);
+        List<EcmFile> uploaded = uploadOrAppendFiles(authentication, parentObjectType, parentObjectId, fileType, folderCmisId, request, session);
+        return uploaded;
+    }
 
     @RequestMapping(
             value = "/upload",
@@ -128,6 +147,62 @@ public class FileUploadAPIController
                                 true);
 
                         EcmFile temp = getEcmFileService().upload(
+                                attachment.getOriginalFilename(),
+                                fileType,
+                                f,
+                                authentication,
+                                folderCmisId,
+                                parentObjectType,
+                                parentObjectId);
+                        uploadedFiles.add(temp);
+
+                        // TODO: audit events
+                    }
+                }
+            }
+        }
+
+        return uploadedFiles;
+    }
+
+    protected List<EcmFile> uploadOrAppendFiles(
+            Authentication authentication,
+            String parentObjectType,
+            Long parentObjectId,
+            String fileType,
+            String folderCmisId,
+            MultipartHttpServletRequest request,
+            HttpSession session)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
+    {
+        String ipAddress = (String) session.getAttribute("acm_ip_address");
+
+        //for multiple files
+        MultiValueMap<String, MultipartFile> attachments = request.getMultiFileMap();
+
+        List<EcmFile> uploadedFiles = new ArrayList<>();
+
+        if ( attachments != null )
+        {
+            for ( Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet() )
+            {
+                final List<MultipartFile> attachmentsList = entry.getValue();
+
+                if (attachmentsList != null && !attachmentsList.isEmpty() )
+                {
+                    for (final MultipartFile attachment : attachmentsList)
+                    {
+                        AcmMultipartFile f = new AcmMultipartFile(
+                                attachment.getName(),
+                                attachment.getOriginalFilename(),
+                                attachment.getContentType(),
+                                attachment.isEmpty(),
+                                attachment.getSize(),
+                                attachment.getBytes(),
+                                attachment.getInputStream(),
+                                true);
+
+                        EcmFile temp = getEcmFileService().uploadOrAppend(
                                 attachment.getOriginalFilename(),
                                 fileType,
                                 f,

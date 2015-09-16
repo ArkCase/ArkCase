@@ -44,7 +44,7 @@ public class EcmFileSaveHandler implements PipelineHandler<EcmFile, EcmFileTrans
             // The next pipeline stage needs to have access to the cmis document returned from mule
             pipelineContext.setCmisDocument(received.getPayload(Document.class));
         } catch (Exception e) {
-            log.error("mule pre save handler failed: " + e.getMessage());
+            log.error("mule pre save handler failed: {}", e.getMessage());
             throw new PipelineProcessException("mule pre save handler failed: " + e.getMessage());
         }
         log.debug("mule pre save handler ended");
@@ -73,7 +73,7 @@ public class EcmFileSaveHandler implements PipelineHandler<EcmFile, EcmFileTrans
                 throw new Exception(exceptionPayload.getRootException());
 
         } catch (Exception e) { // since the rollback failed an orphan document will exist in Alfresco
-            log.error("rollback of file upload failed: " + e.getMessage());
+            log.error("rollback of file upload failed: {}", e.getMessage());
             throw new PipelineProcessException("rollback of file upload failed: " + e.getMessage());
         }
         log.debug("mule pre save handler rollback ended");

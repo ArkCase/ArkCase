@@ -11,6 +11,7 @@ var ApplicationConfiguration = (function() {
         'ngTouch',
         'ngSanitize',
         'ngAnimate',
+        'ngFileUpload',
         'ui.router',
         'ui.bootstrap',
         'pascalprecht.translate',
