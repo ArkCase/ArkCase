@@ -78,9 +78,9 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
      * Adds a new file to the repository using the addFile mule flow.
      * @param newEcmFile - contains metadata for the file whose contents will be added to the repository
      * @param pipelineContext - contains the data stream for the file contents and the cmis id of the drop folder
-     * @throws Exception if the mule call to save the file to the repository fails
+     * @throws MuleException if the mule call to save the file to the repository fails
      */
-    private void invokeAddFileFlow(EcmFile newEcmFile, EcmFileTransactionPipelineContext pipelineContext) throws Exception
+    private void invokeAddFileFlow(EcmFile newEcmFile, EcmFileTransactionPipelineContext pipelineContext) throws MuleException
     {
         // Mule upload request payload setup (specifies the folder in which to upload the supplied content stream)
         Map<String, Object> messageProps = new HashMap<>();
@@ -102,10 +102,10 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
      * @param originalFile - metadata for the old file whose contents will be replaced
      * @param fileInputStream - the binary data content which will be written to the repository
      * @param pipelineContext - contains variables for managing the add/append file pipeline process
-     * @throws Exception if the mule call to replace the file contents in the repository fails
+     * @throws MuleException if the mule call to replace the file contents in the repository fails
      */
     private void invokeUpdateFileFlow(EcmFile newEcmFile, EcmFile originalFile, InputStream fileInputStream,
-                                      EcmFileTransactionPipelineContext pipelineContext) throws Exception
+                                      EcmFileTransactionPipelineContext pipelineContext) throws MuleException
     {
         // mule payload
         Map<String, Object> messageProps = new HashMap<>();
