@@ -7,8 +7,11 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.services.pipeline.PipelineManager;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
@@ -33,6 +36,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private EcmFileDao ecmFileDao;
     private AcmFolderDao folderDao;
     private FolderAndFilesUtils folderAndFilesUtils;
+    private PipelineManager pipelineManager;
+    private PipelineManager appendPipelineManager;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -70,43 +75,89 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             AcmContainer container)
             throws MuleException
     {
-        EcmFile toAdd = new EcmFile();
-        toAdd.setFileMimeType(mimeType);
-        toAdd.setFileName(fileName);
-        toAdd.setFileType(fileType);
-        toAdd.setCategory(fileCategory);
+        log.debug("Creating ecm file pipeline context");
+        EcmFileTransactionPipelineContext pipelineContext = new EcmFileTransactionPipelineContext();
+        pipelineContext.setCmisFolderId(cmisFolderId);
+        pipelineContext.setFileInputStream(fileInputStream);
+        pipelineContext.setOriginalFileName(originalFileName);
+        pipelineContext.setContainer(container);
 
-        Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("cmisFolderId", cmisFolderId);
-        messageProps.put("inputStream", fileInputStream);
-
-        MuleMessage received = getMuleContextManager().send("vm://addFile.in", toAdd, messageProps);
-
-        MuleException e = received.getInboundProperty("saveException");
-        if ( e != null )
-        {
-            throw e;
+        EcmFile ecmFile = new EcmFile();
+        ecmFile.setFileMimeType(mimeType);
+        ecmFile.setFileName(fileName);
+        ecmFile.setFileType(fileType);
+        ecmFile.setCategory(fileCategory);
+        try {
+            log.debug("Calling pipeline manager handlers");
+            pipelineManager.onPreSave(ecmFile, pipelineContext);
+            pipelineManager.onPostSave(ecmFile, pipelineContext);
+            ecmFile = pipelineContext.getEcmFile();
+        } catch (Exception e) {
+            log.error("pipeline handler call failed: {}", e.getMessage(), e);
         }
 
-        Document cmisDocument = received.getPayload(Document.class);
-        toAdd.setVersionSeriesId(cmisDocument.getVersionSeriesId());
-        toAdd.setActiveVersionTag(cmisDocument.getVersionLabel());
-        toAdd.setFileName(originalFileName);
-
-        EcmFileVersion version = new EcmFileVersion();
-        version.setCmisObjectId(cmisDocument.getId());
-        version.setVersionTag(cmisDocument.getVersionLabel());
-        toAdd.getVersions().add(version);
-
-        AcmFolder folder = getFolderDao().findByCmisFolderId(cmisFolderId);
-        toAdd.setFolder(folder);
-
-        toAdd.setContainer(container);
-
-        EcmFile saved = getEcmFileDao().save(toAdd);
-        return saved;
+        log.debug("Returning from addFileTransaction method");
+        return ecmFile;
     }
-    
+
+    @Override
+    public EcmFile addOrAppendFileTransaction(
+            String originalFileName,
+            Authentication authentication,
+            String fileType,
+            InputStream fileInputStream,
+            String mimeType,
+            String fileName,
+            String cmisFolderId,
+            AcmContainer container)
+            throws MuleException
+    {
+        // by default, files are documents
+        String category = "Document";
+        EcmFile retval = addOrAppendFileTransaction(originalFileName, authentication, fileType, category, fileInputStream, mimeType, fileName,
+                cmisFolderId, container);
+
+        return retval;
+    }
+
+    @Override
+    public EcmFile addOrAppendFileTransaction(
+            String originalFileName,
+            Authentication authentication,
+            String fileType,
+            String fileCategory,
+            InputStream fileInputStream,
+            String mimeType,
+            String fileName,
+            String cmisFolderId,
+            AcmContainer container)
+            throws MuleException
+    {
+        log.debug("Creating ecm file pipeline context");
+        EcmFileTransactionPipelineContext pipelineContext = new EcmFileTransactionPipelineContext();
+        pipelineContext.setCmisFolderId(cmisFolderId);
+        pipelineContext.setFileInputStream(fileInputStream);
+        pipelineContext.setOriginalFileName(originalFileName);
+        pipelineContext.setContainer(container);
+
+        EcmFile ecmFile = new EcmFile();
+        ecmFile.setFileMimeType(mimeType);
+        ecmFile.setFileName(fileName);
+        ecmFile.setFileType(fileType);
+        ecmFile.setCategory(fileCategory);
+        try {
+            log.debug("Calling bactes pipeline manager handlers");
+            appendPipelineManager.onPreSave(ecmFile, pipelineContext);
+            appendPipelineManager.onPostSave(ecmFile, pipelineContext);
+            ecmFile = pipelineContext.getEcmFile();
+        } catch (Exception e) {
+            log.error("append pipeline handler call failed: {}", e.getMessage(), e);
+        }
+
+        log.debug("Returning from addOrAppendFileTransaction method");
+        return ecmFile;
+    }
+
     @Override
     public EcmFile updateFileTransaction(
             Authentication authentication,
@@ -246,5 +297,18 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
         this.folderAndFilesUtils = folderAndFilesUtils;
+    }
+
+    public PipelineManager getPipelineManager() {
+        return pipelineManager;
+    }
+    public void setPipelineManager(PipelineManager pipelineManager) {
+        this.pipelineManager = pipelineManager;
+    }
+    public PipelineManager getAppendPipelineManager() {
+        return appendPipelineManager;
+    }
+    public void setAppendPipelineManager(PipelineManager appendPipelineManager) {
+        this.appendPipelineManager = appendPipelineManager;
     }
 }

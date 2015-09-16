@@ -1,5 +1,4 @@
 'use strict';
-var appRoot = require('app-root-path');
 var path = require('path');
 
 
@@ -56,19 +55,22 @@ module.exports = {
                 'lib/angular-bootstrap/ui-bootstrap-tpls.js',
                 'lib/angular-ui-grid/ui-grid.js',
                 'lib/angular-schema-form/dist/schema-form.js',
+                'lib/angular-summernote/dist/angular-summernote.js',
                 'lib/angular-schema-form/dist/bootstrap-decorator.js',
                 'lib/angular-translate/angular-translate.js',
                 'lib/angular-translate-loader-partial/angular-translate-loader-partial.js',
-                'lib/fancytree/dist/jquery.fancytree.js',
                 'lib/angular-xeditable/dist/js/xeditable.js',
-                'lib/summernote/dist/summernote.js',
-                'lib/angular-summernote/dist/angular-summernote.js'
+                'lib/fancytree/dist/jquery.fancytree.js',
+                'lib/ng-file-upload/ng-file-upload.js',
+                'lib/ng-file-upload-shim/ng-file-upload-shim.js',
+                'lib/summernote/dist/summernote.js'
             ]
         },
         css: [
             'assets/css/application.css',
             'modules/**/css/*.css',
-            'custom_modules/**/css/*.css'
+            'custom_modules/**/css/*.css',
+            'assets/css/arkcase-extension.css'
         ],
         scss: [
             'modules/**/scss/*.scss',
@@ -77,12 +79,13 @@ module.exports = {
         js: [
             'config.js',
             'application.js',
-            //'scripts/*/*.js',
             'scripts/*/**/*.js',
             'services/*.js',
             'services/*/*.js',
             'directives/*.js',
-            'directives/*/*.js'
+            'directives/*/*.js',
+            'filters/*.js',
+            'filters/*/*.js'
         ],
         jsModules: [
             'modules/*/*.js',

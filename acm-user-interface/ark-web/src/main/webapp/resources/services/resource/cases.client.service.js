@@ -45,6 +45,12 @@ angular.module('services').factory('CasesService', ['$resource',
                 url: 'proxy/arkcase/api/latest/plugin/search/CASE_FILE?start=0&n=50',
                 isArray: false
             }
+
+            ,save: {
+                method: 'POST',
+                cache: false,
+                url: 'proxy/arkcase/api/latest/plugin/casefile'
+            }
         });
     }
 ]);

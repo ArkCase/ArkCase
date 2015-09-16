@@ -66,4 +66,14 @@
         <property name="captureFolderMonitor" ref="captureFileMonitor"/>
     </bean>
 
+    <!-- Working Folder -->
+    <bean id="workingFolder" factory-bean="vfsManager" factory-method="resolveFile">
+        <constructor-arg index="0" value="${capture.working.folder}"/>
+    </bean>
+
+    <!-- Completed Folder -->
+    <bean id="completedFolder" factory-bean="vfsManager" factory-method="resolveFile">
+        <constructor-arg index="0" value="${capture.completed.folder}"/>
+    </bean>
+
 </beans>
