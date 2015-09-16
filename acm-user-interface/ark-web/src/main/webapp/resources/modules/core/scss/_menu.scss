@@ -30,11 +30,11 @@
       color: $navbar-header-color;
       background-image: $navbar-logo-bg-img;
       background-size: $navbar-logo-bg-size;
-      background-repeat: $navbar-logo-bg-repeat;
+      background-repeat: no-repeat;
       background-position: $navbar-logo-bg-position;
-      position: $navbar-logo-position;
+      position: relative;
       width: $navbar-logo-width;
-      overflow: $navbar-logo-overflow;
+      overflow: hidden;
     }
   }
 
