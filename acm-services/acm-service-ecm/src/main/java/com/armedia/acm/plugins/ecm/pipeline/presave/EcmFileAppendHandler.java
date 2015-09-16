@@ -4,19 +4,21 @@ import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
-import com.armedia.acm.plugins.ecm.service.CaptureFolderService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.ecm.utils.PDFUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.commons.io.IOUtils;
 import org.mule.api.ExceptionPayload;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +33,6 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
     private MuleContextManager muleContextManager;
     private EcmFileDao ecmFileDao;
     private FolderAndFilesUtils folderAndFilesUtils;
-    private CaptureFolderService captureFolderService;
 
     /**
      * Downloads the contents of the specified document from the repository
@@ -73,12 +74,60 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
         return matchFile;
     }
 
+    /**
+     * Adds a new file to the repository using the addFile mule flow.
+     * @param newEcmFile - contains metadata for the file whose contents will be added to the repository
+     * @param pipelineContext - contains the data stream for the file contents and the cmis id of the drop folder
+     * @throws Exception if the mule call to save the file to the repository fails
+     */
+    private void invokeAddFileFlow(EcmFile newEcmFile, EcmFileTransactionPipelineContext pipelineContext) throws Exception
+    {
+        // Mule upload request payload setup (specifies the folder in which to upload the supplied content stream)
+        Map<String, Object> messageProps = new HashMap<>();
+        messageProps.put("cmisFolderId", pipelineContext.getCmisFolderId());
+        messageProps.put("inputStream", pipelineContext.getFileInputStream());
+
+        log.debug("invoking the mule add file flow");
+        MuleMessage received = getMuleContextManager().send("vm://addFile.in", newEcmFile, messageProps);
+        MuleException e = received.getInboundProperty("saveException");
+        if (e != null) throw e;
+
+        // The next pipeline stage needs to have access to the cmis document returned from mule
+        pipelineContext.setCmisDocument(received.getPayload(Document.class));
+    }
+
+    /**
+     * Updates the contents of an existing repository item using the mule updateFile flow.
+     * @param newEcmFile - metadata for the new file which will replace the old version
+     * @param originalFile - metadata for the old file whose contents will be replaced
+     * @param fileInputStream - the binary data content which will be written to the repository
+     * @param pipelineContext - contains variables for managing the add/append file pipeline process
+     * @throws Exception if the mule call to replace the file contents in the repository fails
+     */
+    private void invokeUpdateFileFlow(EcmFile newEcmFile, EcmFile originalFile, InputStream fileInputStream,
+                                      EcmFileTransactionPipelineContext pipelineContext) throws Exception
+    {
+        // mule payload
+        Map<String, Object> messageProps = new HashMap<>();
+        messageProps.put("ecmFileId", originalFile.getVersionSeriesId());
+        messageProps.put("fileName", originalFile.getFileName());
+        messageProps.put("mimeType", originalFile.getFileMimeType());
+        messageProps.put("inputStream", fileInputStream);
+
+        log.debug("invoking the mule replace file flow");
+        MuleMessage received = getMuleContextManager().send("vm://updateFile.in", newEcmFile, messageProps);
+        MuleException e = received.getInboundProperty("updateException");
+        if (e != null) throw e;
+
+        // The next pipeline stage needs to have access to the cmis document returned from mule
+        pipelineContext.setCmisDocument(received.getPayload(Document.class));
+    }
+
     @Override
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
     {
         log.debug("mule pre save handler called");
-        EcmFile toAdd = entity;
-        if (toAdd == null)
+        if (entity == null)
             throw new PipelineProcessException("ecmFile is null");
 
         // Must be PDF, need to check
@@ -105,43 +154,33 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
                     log.debug("merging the new document and the original");
                     InputStream fileInputStream = PDFUtils.mergeFiles(originalFileStream, pipelineContext.getFileInputStream());
 
-                    // mule payload
-                    Map<String, Object> messageProps = new HashMap<>();
-                    messageProps.put("ecmFileId", matchFile.getVersionSeriesId());
-                    messageProps.put("fileName", matchFile.getFileName());
-                    messageProps.put("mimeType", matchFile.getFileMimeType());
-                    messageProps.put("inputStream", fileInputStream);
-
-                    log.debug("invoking the mule replace file flow");
-                    MuleMessage received = getMuleContextManager().send("vm://updateFile.in", entity, messageProps);
-                    MuleException e = received.getInboundProperty("updateException");
-                    if (e != null) throw e;
-
-                    // The next pipeline stage needs to have access to the cmis document returned from mule
-                    pipelineContext.setCmisDocument(received.getPayload(Document.class));
+                    // Updates the Alfresco content repository with the new merged version of the file
+                    invokeUpdateFileFlow(entity, matchFile, fileInputStream, pipelineContext);
                 } else {
                     log.debug("no match found, uploading as a separate document");
                     pipelineContext.setIsAppend(false);
 
-                    // Mule upload request payload setup (specifies the folder in which to upload the supplied content stream)
-                    Map<String, Object> messageProps = new HashMap<>();
-                    messageProps.put("cmisFolderId", pipelineContext.getCmisFolderId());
-                    messageProps.put("inputStream", pipelineContext.getFileInputStream());
-
-                    log.debug("invoking the mule add file flow");
-                    MuleMessage received = getMuleContextManager().send("vm://addFile.in", toAdd, messageProps);
-                    MuleException e = received.getInboundProperty("saveException");
-                    if (e != null) throw e;
-
-                    // The next pipeline stage needs to have access to the cmis document returned from mule
-                    pipelineContext.setCmisDocument(received.getPayload(Document.class));
+                    // Adds the new file to the Alfresco content repository
+                    invokeAddFileFlow(entity, pipelineContext);
                 }
             } catch (Exception e) {
                 log.error("mule pre save handler failed: {}", e.getMessage(), e);
                 throw new PipelineProcessException("mule pre save handler failed: " + e.getMessage());
             }
-        } else { // non-pdf files go to capture folder to be sent to Ephesoft
-            captureFolderService.copyToCaptureHotFolder(pipelineContext.getOriginalFileName(), pipelineContext.getFileInputStream());
+        } else { // non-pdf file processing
+            pipelineContext.setIsAppend(false); // for non-pdf we don't append the files
+            try {
+                // We need to read the data more than once, so it needs to be copied to a byte array
+                ByteArrayOutputStream fileData = new ByteArrayOutputStream();
+                IOUtils.copy(pipelineContext.getFileInputStream(), fileData);
+                pipelineContext.setFileInputStream(new ByteArrayInputStream(fileData.toByteArray()));
+
+                // Adds the non-pdf file to the repository
+                invokeAddFileFlow(entity, pipelineContext);
+            } catch (Exception e) {
+                log.error("mule pre save handler failed: {}", e.getMessage(), e);
+                throw new PipelineProcessException("mule pre save handler failed: " + e.getMessage());
+            }
         }
         log.debug("mule pre save handler ended");
     }
@@ -192,11 +231,5 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
     }
     public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
         this.folderAndFilesUtils = folderAndFilesUtils;
-    }
-    public CaptureFolderService getCaptureFolderService() {
-        return captureFolderService;
-    }
-    public void setCaptureFolderService(CaptureFolderService captureFolderService) {
-        this.captureFolderService = captureFolderService;
     }
 }
