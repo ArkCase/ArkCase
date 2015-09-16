@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$stateParams', '$q', 'UtilService', 'CasesService', 'LookupService',
-    function($scope, $stateParams, $q, Util, CasesService, LookupService) {
+angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$stateParams', '$q', 'UtilService', 'ValidationService', 'CasesService', 'LookupService',
+    function($scope, $stateParams, $q, Util, Validator, CasesService, LookupService) {
         $scope.$emit('req-component-config', 'participants');
 
         $scope.config = null;
@@ -36,33 +36,51 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                     onRegisterApi: function(gridApi) {
                         $scope.gridApi = gridApi;
                         gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
+                            if (newValue == oldValue) {
+                                return;
+                            }
 
                             //
-                            //Insert code here to save data to service   //Acm.log("do save, newValue=" + newValue);
+                            // Fix participant names selection
                             //
-
                             if ("participantTypes" === colDef.lookup) {
                                 if ("*" === newValue) {
-                                    rowEntity.participantNames = [
+                                    rowEntity.$participantNames = [
                                         {id: "*", name: "*"}
                                     ];
                                 } else if ("owning group" === newValue) {
-                                    rowEntity.participantNames = $scope.participantGroups;
+                                    rowEntity.$participantNames = $scope.participantGroups;
                                 } else {
-                                    rowEntity.participantNames = $scope.participantUsers;
+                                    rowEntity.$participantNames = $scope.participantUsers;
                                 }
 
                                 $scope.$apply();
                             }
+
+                            //
+                            // Save changes
+                            //
+                            if (!Util.isEmpty(rowEntity.participantType) && !Util.isEmpty(rowEntity.participantLdapId)) {
+                                var caseInfo = Util.stripNg($scope.caseInfo);
+                                CasesService.save({}, caseInfo
+                                    ,function(caseSaved) {
+                                        if (Validator.validateCaseFile(caseSaved)) {
+                                            //if participant is newly added, fill incomplete values with the latest
+                                            if (Util.isEmpty(rowEntity.id)) {
+                                                var participants = Util.goodMapValue([caseSaved, "participants"], []);
+                                                var participantAdded = _.where(participants, {participantType: rowEntity.participantType, participantLdapId: rowEntity.participantLdapId});
+                                                if (0 < participantAdded.length) {
+                                                    rowEntity = _.merge(rowEntity, participantAdded[0]);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    ,function(errorData) {
+                                        var z = 2;
+                                    }
+                                );
+                            }
                         });
-
-
-                        //gridApi.rowEdit.on.saveRow($scope, function(rowEntity) {
-                        //    var z = 1;
-                        //});
-                        //gridApi.core.on.rowsRendered($scope, function(rowEntity) {
-                        //    var z = 1;
-                        //});
                     }
                 };
 
@@ -71,7 +89,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                     service: LookupService.getParticipantTypes
                     ,callback: function(data){
                         $scope.participantTypes = [{type: "*", name: "*"}];
-                        Util.forEachTypical(data, function(v, k) {
+                        Util.forEachStripNg(data, function(v, k) {
                             $scope.participantTypes.push({type: k, name: v});
                         });
                         return $scope.participantTypes;
@@ -125,12 +143,10 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                             $scope.gridOptions.columnDefs[i].enableCellEdit = true;
                             $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                            $scope.gridOptions.columnDefs[i].editDropdownRowEntityOptionsArrayPath = "participantNames";
-                            $scope.gridOptions.columnDefs[i].cellFilter = "mapIdValue: row.entity.participantNames:'id':'name'";
+                            $scope.gridOptions.columnDefs[i].editDropdownRowEntityOptionsArrayPath = "$participantNames";
+                            $scope.gridOptions.columnDefs[i].cellFilter = "mapIdValue: row.entity.$participantNames:'id':'name'";
                         }
                     }
-
-                    //$scope.$apply();
                 });
 
             }
@@ -138,20 +154,19 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
 
 
         $scope.$on('case-retrieved', function(e, data){
-            if (data) {
-                $scope.gridOptions.data = data.participants;
-                _.each($scope.gridOptions.data, function(item) {
-                    if ("*" === item.participantType) {
-                        item.participantNames = [
-                            {id: "*", name: "*"}
-                        ];
-                    } else if ("owning group" === item.participantType) {
-                        item.participantNames = $scope.participantGroups;
-                    } else {
-                        item.participantNames = $scope.participantUsers;
-                    }
-                });
-            }
+            $scope.caseInfo = Util.goodValue(data, {participants: []});
+            $scope.gridOptions.data = $scope.caseInfo.participants;
+            _.each($scope.gridOptions.data, function(item) {
+                if ("*" === item.participantType) {
+                    item.$participantNames = [
+                        {id: "*", name: "*"}
+                    ];
+                } else if ("owning group" === item.participantType) {
+                    item.$participantNames = $scope.participantGroups;
+                } else {
+                    item.$participantNames = $scope.participantUsers;
+                }
+            });
         });
 
         $scope.addNew = function() {
@@ -172,10 +187,19 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             }
 
             var id = Util.goodMapValue([row, "entity", "id"], 0);
-            if (0 < id) {    //not deleting a new row
-                //
-                // save data to server
-                //
+            if (0 < id) {    //do not need to call service when deleting a new row
+                var caseInfo = Util.stripNg($scope.caseInfo);
+                CasesService.save({}, caseInfo
+                    ,function(caseSaved) {
+                        if (Validator.validateCaseFile(caseSaved)) {
+                            var z = 1;
+                        }
+                        var z = 1;
+                    }
+                    ,function(errorData) {
+                        var z = 2;
+                    }
+                );
             }
 
         };
@@ -184,77 +208,4 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
 
 ;
 
-//
-//jwu: Commented out code are alternative solutions; will remove when most suitable solution chosen
-//
-//.filter('mapParticipantTypeName', function() {
-//    return function(input, typeNames) {
-//        var find = _(typeNames).filter(function(typeName) {
-//            return typeName.type == input;
-//        })
-//        .pluck("name")
-//        .value()
-//        ;
-//
-//        return (0 < find.length)? find[0] : input;
-//    };
-//})
-//
-//.filter('mapParticipantName', function() {
-//    return function(input, idNames) {
-//        var find = _(idNames).filter(function(idName) {
-//            return idName.id == input;
-//        })
-//        .pluck("name")
-//        .value()
-//        ;
-//
-//        return (0 < find.length)? find[0] : input;
-//    };
-//})
-//.filter('mapParticipantTypeName', ["LookupService", function(LookupService) {
-//	var participantTypeHash = null;
-//	var serviceInvoked = false;
-//
-//	var doFilter = function(input) {
-//		if (!input) {
-//			return '';
-//		} else if ("*" === input) {
-//			return "*";
-//		} else {
-//			return participantTypeHash[input];
-//		}
-//	};
-//
-//	return function(input) {
-//
-//		if (null === participantTypeHash) {
-//			if (!serviceInvoked) {
-//				serviceInvoked = true;
-//				LookupService.getParticipantTypes({}, function(data) {
-//					participantTypeHash = data;
-//				});
-//			}
-//			return input;
-//			//return "..."; //placeholder while loading
-//
-//		} else {
-//			return doFilter(input);
-//		}
-//	};
-//}])
-//
-//.filter('mapParticipantTypeName', function() {
-//	return function(input, participantTypeHash) {
-//		if (!input) {
-//			return '';
-//		} else if ("*" === input) {
-//			return "*";
-//		} else if (!participantTypeHash) {
-//			return input;
-//		} else {
-//			//return participantTypeHash[input];
-//			return "ooo" + input;
-//		}
-//	};
-//})
+
