@@ -45,8 +45,9 @@ public class CaptureFolderServiceImpl implements CaptureFolderService {
                 IOUtils.copy(fileInputStream, captureFileOutputStream);
             }
         } finally {
-            if (captureFileOutputStream != null)
+            if (captureFileOutputStream != null) {
                 captureFileOutputStream.close();
+            }
         }
     }
 
@@ -59,24 +60,30 @@ public class CaptureFolderServiceImpl implements CaptureFolderService {
      * @throws Exception if one of the components of the name is not present
      */
     private static String buildEphesoftFileName(EcmFile ephesoftFile, String fileExtension) throws Exception {
-        if (ephesoftFile == null)
+        if (ephesoftFile == null) {
             throw new Exception("ephesoftFile is null");
-        if (fileExtension == null || fileExtension.trim().length() == 0)
+        }
+        if (fileExtension == null || fileExtension.trim().length() == 0) {
             throw new Exception("fileExtension is null or empty");
+        }
 
         // To build the ephesoft format name we need the file id, container id, and the original filename
         String fileName = ephesoftFile.getFileName();
         Long fileId = ephesoftFile.getFileId();
         Long containerObjectId = ephesoftFile.getContainer().getContainerObjectId();
         String containerObjectType = ephesoftFile.getContainer().getContainerObjectType();
-        if (fileName == null)
+        if (fileName == null) {
             throw new Exception("fileName is null");
-        if (fileId == null)
+        }
+        if (fileId == null) {
             throw new Exception("fileId is null");
-        if (containerObjectId == null)
+        }
+        if (containerObjectId == null) {
             throw new Exception("containerObjectId is null");
-        if (containerObjectType == null || containerObjectType.length() == 0)
+        }
+        if (containerObjectType == null || containerObjectType.length() == 0) {
             throw new Exception("containerObjectType is null or empty");
+        }
 
         return containerObjectId + "_" + containerObjectType + "_" + fileId + "." + fileExtension;
     }
