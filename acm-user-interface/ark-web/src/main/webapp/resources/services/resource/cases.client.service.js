@@ -51,6 +51,19 @@ angular.module('services').factory('CasesService', ['$resource',
                 cache: false,
                 url: 'proxy/arkcase/api/latest/plugin/casefile'
             }
+
+            ,addPersonAssociation: {
+                method: 'POST',
+                cache: false,
+                url: 'proxy/arkcase/api/latest/plugin/personAssociation'
+            }
+
+            ,deletePersonAssociation: {
+                method: 'DELETE',
+                cache: false,
+                url: 'proxy/arkcase/api/latest/plugin/personAssociation/delete/:personAssociationId'
+            }
+
         });
     }
 ]);

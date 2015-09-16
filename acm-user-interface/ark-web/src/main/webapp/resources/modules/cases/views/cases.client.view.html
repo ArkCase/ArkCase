@@ -6,7 +6,7 @@
             </div>
         </div>
 
-        <section class="col-xs-9">
+        <section class="col-xs-9" ng-show="caseData">
             <div class="well">
                 <div ng-include="'modules/cases/views/components/case-info.client.view.html'"></div>
             </div>
@@ -28,6 +28,10 @@
             <div class="col-xs-12" >
                 <div class="scroll-body" slimscroll="{height: '800px'}"  data-ui-view></div>
             </div>
+        </section>
+
+        <section class="col-xs-9" ng-hide="caseData">
+            <div>{{'cases.noCase' | translate}}</div>
         </section>
     </div>
 </div>

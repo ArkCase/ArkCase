@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateParams', '$q', '$translate', 'UtilService', 'CasesService', 'LookupService',
-	function($scope, $stateParams, $q, $translate, Util, CasesService, LookupService) {
+angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateParams', '$q', '$translate', 'UtilService', 'ValidationService', 'CasesService', 'LookupService',
+	function($scope, $stateParams, $q, $translate, Util, Validator, CasesService, LookupService) {
 		$scope.$emit('req-component-config', 'people');
 
 		$scope.config = null;
@@ -43,12 +43,57 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
 
 						gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
-							//
-							//Insert code here to save data to service
-							//
-                            var a0 = 0;
-                            console.log("People afterCellEdit, newValue=" + newValue);
+                            if (newValue == oldValue) {
+                                return;
+                            }
 
+
+                            var givenName = Util.goodMapValue([rowEntity, "person", "givenName"]);
+                            var familyName = Util.goodMapValue([rowEntity, "person", "familyName"]);
+                            if (!Util.isEmpty(rowEntity.personType) && givenName && familyName) {
+                                //
+                                // add new person association
+                                //
+                                if (Util.isEmpty(rowEntity.id)) {
+                                    var pa = newPersonAssociation();
+                                    pa.parentId = $scope.caseInfo.id;
+                                    pa.parentType = "CASE_FILE";
+                                    pa.person.className = "com.armedia.acm.plugins.person.model.Person";
+                                    pa.person.givenName = givenName;
+                                    pa.person.familyName = familyName;
+                                    CasesService.addPersonAssociation({}, pa
+                                        ,function(personAssociationAdded) {
+                                            if (Validator.validatePersonAssociation(personAssociationAdded)) {
+                                                rowEntity = _.merge(rowEntity, personAssociationAdded);
+                                            }
+                                            var z = 1;
+                                        }
+                                        ,function(errorData) {
+                                            var z = 2;
+                                        }
+                                    );
+
+                                //
+                                // update
+                                //
+                                } else {
+                                    var caseInfo = Util.stripNg($scope.caseInfo);
+                                    CasesService.save({}, caseInfo
+                                        ,function(caseSaved) {
+                                            if (Validator.validateCaseFile(caseSaved)) {
+                                                console.log("updated People table");
+                                                var z = 1;
+                                            }
+                                            var z = 1;
+                                        }
+                                        ,function(errorData) {
+                                            var z = 2;
+                                        }
+                                    );
+                                }
+                                var z = 2;
+                            }
+                            var z = 1;
 						});
 					}
 				};
@@ -133,7 +178,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                         service: LookupService.getContactMethodTypes
                         ,callback: function(data){
                             $scope.contactMethodTypes = [];
-                            Util.forEachTypical(data, function(v, k) {
+                            Util.forEachStripNg(data, function(v, k) {
                                 $scope.contactMethodTypes.push({type: k, name: v});
                             });
                             return $scope.contactMethodTypes;
@@ -194,7 +239,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                         service: LookupService.getOrganizationTypes
                         ,callback: function(data){
                             $scope.organizationTypes = [];
-                            Util.forEachTypical(data, function(v, k) {
+                            Util.forEachStripNg(data, function(v, k) {
                                 $scope.organizationTypes.push({type: k, name: v});
                             });
                             return $scope.organizationTypes;
@@ -249,7 +294,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                         service: LookupService.getAddressTypes
                         ,callback: function(data){
                             $scope.addressTypes = [];
-                            Util.forEachTypical(data, function(v, k) {
+                            Util.forEachStripNg(data, function(v, k) {
                                 $scope.addressTypes.push({type: k, name: v});
                             });
                             return $scope.addressTypes;
@@ -304,7 +349,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                         service: LookupService.getAliasTypes
                         ,callback: function(data){
                             $scope.aliasTypes = [];
-                            Util.forEachTypical(data, function(v, k) {
+                            Util.forEachStripNg(data, function(v, k) {
                                 $scope.aliasTypes.push({type: k, name: v});
                             });
                             return $scope.aliasTypes;
@@ -359,7 +404,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                         service: LookupService.getSecurityTagTypes
                         ,callback: function(data){
                             $scope.securityTagTypes = [];
-                            Util.forEachTypical(data, function(v, k) {
+                            Util.forEachStripNg(data, function(v, k) {
                                 $scope.securityTagTypes.push({type: k, name: v});
                             });
                             return $scope.securityTagTypes;
@@ -431,9 +476,28 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
         }
 
         var onContactMethodChanged = function(personAssociation, rowEntity, colDef, newValue, oldValue){
-            //
-            //Insert code here to save data to service
-            //
+            if (newValue == oldValue) {
+                return;
+            }
+
+            var caseInfo = Util.stripNg($scope.caseInfo);
+            CasesService.save({}, caseInfo
+                ,function(caseSaved) {
+                    if (Validator.validateCaseFile(caseSaved)) {
+                        console.log("updated sub table");
+                        if (Util.isEmpty(rowEntity.id)) {
+                            var personAssociationsSaved = Util.goodMapValue([caseSaved, "personAssociations"], []);
+                            var personAssociationSaved = _.where(personAssociationsSaved, {id: personAssociation.id});
+                            var contactMethodSaved = _.where(personAssociationSaved.person.contactMethods, {id: rowEntity.id});
+                            if (0 < contactMethodSaved.length) {
+                                rowEntity = _.merge(rowEntity, contactMethodSaved[0]);
+                            }
+                        }
+                    }
+                }
+                ,function(errorData) {
+                }
+            );
             console.log("onContactMethodChanged, newValue=" + newValue);
         };
         var onOrganizationChanged = function(personAssociation, rowEntity, colDef, newValue, oldValue){
@@ -450,63 +514,67 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
         };
 
 		$scope.$on('case-retrieved', function(e, data){
-            var personAssociations = Util.goodMapValue([data, "personAssociations"], []);
-            $scope.gridOptions.data = personAssociations;
+            $scope.caseInfo = Util.goodValue(data, {personAssociations: []});
+            $scope.gridOptions.data = $scope.caseInfo.personAssociations;
 
-            for (var i = 0; i < personAssociations.length; i++) {
-                var personAssociation = personAssociations[i];
-
-                personAssociation.contactMethodsOptions = Util.goodValue($scope.contactMethods.gridOptions, {columnDefs: [], data: []});
-                personAssociation.contactMethodsOptions.onRegisterApi = function(gridApi) {
-                    personAssociation.contactMethodsOptions.gridApi = gridApi;
+            for (var i = 0; i < $scope.caseInfo.personAssociations.length; i++) {
+                var personAssociation = $scope.caseInfo.personAssociations[i];
+                personAssociation.$contactMethods = {};
+                personAssociation.$contactMethods.gridOptions = Util.goodValue($scope.contactMethods.gridOptions, {columnDefs: [], data: []});
+                personAssociation.$contactMethods.gridOptions.onRegisterApi = function(gridApi) {
+                    personAssociation.$contactMethods.gridApi = gridApi;
                     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
                         onContactMethodChanged(personAssociation, rowEntity, colDef, newValue, oldValue);
                     });
                 }
-                personAssociation.contactMethodsOptions.data = personAssociation.person.contactMethods;
+                personAssociation.$contactMethods.gridOptions.data = personAssociation.person.contactMethods;
 
 
-                personAssociation.organizationsOptions = Util.goodValue($scope.organizations.gridOptions, {columnDefs: [], data: []});
-                personAssociation.organizationsOptions.onRegisterApi = function(gridApi) {
-                    personAssociation.organizationsOptions.gridApi = gridApi;
+                personAssociation.$organizations = {};
+                personAssociation.$organizations.gridOptions = Util.goodValue($scope.organizations.gridOptions, {columnDefs: [], data: []});
+                personAssociation.$organizations.gridOptions.onRegisterApi = function(gridApi) {
+                    personAssociation.$organizations.gridApi = gridApi;
                     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
                         onOrganizationChanged(personAssociation, rowEntity, colDef, newValue, oldValue);
                     });
                 }
-                personAssociation.organizationsOptions.data = personAssociation.person.organizations;
+                personAssociation.$organizations.gridOptions.data = personAssociation.person.organizations;
 
 
 
-                personAssociation.addressesOptions = Util.goodValue($scope.addresses.gridOptions, {columnDefs: [], data: []});
-                personAssociation.addressesOptions.onRegisterApi = function(gridApi) {
-                    personAssociation.addressesOptions.gridApi = gridApi;
+                personAssociation.$addresses = {};
+                personAssociation.$addresses.gridOptions = Util.goodValue($scope.addresses.gridOptions, {columnDefs: [], data: []});
+                personAssociation.$addresses.gridOptions.onRegisterApi = function(gridApi) {
+                    personAssociation.$addresses.gridApi = gridApi;
                     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
                         onAddressChanged(personAssociation, rowEntity, colDef, newValue, oldValue);
                     });
                 }
-                personAssociation.addressesOptions.data = personAssociation.person.addresses;
+                personAssociation.$addresses.gridOptions.data = personAssociation.person.addresses;
 
 
 
-                personAssociation.aliasesOptions = Util.goodValue($scope.aliases.gridOptions, {columnDefs: [], data: []});
-                personAssociation.aliasesOptions.onRegisterApi = function(gridApi) {
-                    personAssociation.aliasesOptions.gridApi = gridApi;
+                personAssociation.$aliases = {};
+                personAssociation.$aliases.gridOptions = Util.goodValue($scope.aliases.gridOptions, {columnDefs: [], data: []});
+                personAssociation.$aliases.gridOptions.onRegisterApi = function(gridApi) {
+                    personAssociation.$aliases.gridApi = gridApi;
                     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
                         onAliasChanged(personAssociation, rowEntity, colDef, newValue, oldValue);
                     });
                 }
-                personAssociation.aliasesOptions.data = personAssociation.person.personAliases;
+                personAssociation.$aliases.gridOptions.data = personAssociation.person.personAliases;
 
 
 
-                personAssociation.securityTagsOptions = Util.goodValue($scope.securityTags.gridOptions, {columnDefs: [], data: []});
-                personAssociation.securityTagsOptions.onRegisterApi = function(gridApi) {
-                    personAssociation.securityTagsOptions.gridApi = gridApi;
+                personAssociation.$securityTags = {};
+                personAssociation.$securityTags.gridOptions = Util.goodValue($scope.securityTags.gridOptions, {columnDefs: [], data: []});
+                personAssociation.$securityTags.gridOptions.onRegisterApi = function(gridApi) {
+                    personAssociation.$securityTags.gridApi = gridApi;
                     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
                         onSecurityTagChanged(personAssociation, rowEntity, colDef, newValue, oldValue);
                     });
                 }
-                personAssociation.securityTagsOptions.data = personAssociation.person.securityTags;
+                personAssociation.$securityTags.gridOptions.data = personAssociation.person.securityTags;
             }
 		});
 
@@ -526,15 +594,15 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 //    var personAssociation = personAssociations[i];
 
                 //var organizations = personAssociation.person.contactMethods;
-                //personAssociation.contactMethodsOptions = _.cloneDeep(Util.goodValue($scope.contactMethods.gridOptions, {columnDefs: [], data: []}));
-                personAssociation.contactMethodsOptions = Util.goodValue($scope.contactMethods.gridOptions, {columnDefs: [], data: []});
-                personAssociation.contactMethodsOptions.onRegisterApi = function(gridApi) {
-                    personAssociation.contactMethodsOptions.gridApi = gridApi;
+                //personAssociation.$contactMethods.gridOptions = _.cloneDeep(Util.goodValue($scope.contactMethods.gridOptions, {columnDefs: [], data: []}));
+                personAssociation.$contactMethods.gridOptions = Util.goodValue($scope.contactMethods.gridOptions, {columnDefs: [], data: []});
+                personAssociation.$contactMethods.gridOptions.onRegisterApi = function(gridApi) {
+                    personAssociation.$contactMethods.gridApi = gridApi;
                     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
                         onContactMethodChanged(personAssociation, rowEntity, colDef, newValue, oldValue);
                     });
                 }
-                personAssociation.contactMethodsOptions.data = [{type: "Home phone", value: "703-555-5555", created: "09/03/05", creator: "Ant"}
+                personAssociation.$contactMethods.gridOptions.data = [{type: "Home phone", value: "703-555-5555", created: "09/03/05", creator: "Ant"}
                     ,{type: "Email", value: "abc@some.com", created: "08/03/05", creator: "ann-acm"}
                     ,{type: "Email", value: "abc2@some.com", created: "08/02/05", creator: "ann-acm"}
                     ,{type: "Email", value: "abc3@some.com", created: "08/02/05", creator: "ann-acm"}
@@ -544,14 +612,14 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 //,id      : Acm.goodValue(organizations[i].organizationId, 0)
                 //,type    : Acm.goodValue(organizations[i].organizationType)
                 //,value   : Acm.goodValue(organizations[i].organizationValue)
-                personAssociation.organizationsOptions = Util.goodValue($scope.organizations.gridOptions, {columnDefs: [], data: []});
-                personAssociation.organizationsOptions.onRegisterApi = function(gridApi) {
-                    personAssociation.organizationsOptions.gridApi = gridApi;
+                personAssociation.$organizations.gridOptions = Util.goodValue($scope.organizations.gridOptions, {columnDefs: [], data: []});
+                personAssociation.$organizations.gridOptions.onRegisterApi = function(gridApi) {
+                    personAssociation.$organizations.gridApi = gridApi;
                     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
                         onContactMethodChanged(personAssociation, rowEntity, colDef, newValue, oldValue);
                     });
                 }
-                personAssociation.organizationsOptions.data = [{type: "Government", value: "IRS"+i, created: "09/03/05", creator: "Ant"}
+                personAssociation.$organizations.gridOptions.data = [{type: "Government", value: "IRS"+i, created: "09/03/05", creator: "Ant"}
                     ,{type: "Non-profit", value: "Red Cross" + i, created: "08/03/05", creator: "Lee"}
                 ];
 
@@ -585,15 +653,25 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             var idx = _.findIndex($scope.gridOptions.data, function(obj) {
                 return (obj == row.entity);
             });
+            //var personAssociationId = 0;
             if (0 <= idx) {
+                //var personAssociationId = $scope.gridOptions.data[idx].id;
                 $scope.gridOptions.data.splice(idx, 1);
             }
 
             var id = Util.goodMapValue([row, "entity", "id"], 0);
-            if (0 < id) {    //not deleting a new row
-                //
-                // save data to server
-                //
+            if (0 < id) {    //do not need to save for deleting a new row
+                CasesService.deletePersonAssociation({personAssociationId: id}
+                    ,function(personAssociationDeleted) {
+                        if (Validator.validateDeletedPersonAssociation(personAssociationDeleted)) {
+                            console.log("deleted People row");
+                        }
+                        var z = 1;
+                    }
+                    ,function(errorData) {
+                        var z = 2;
+                    }
+                );
             }
 
         };
@@ -601,14 +679,12 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             var idx = _.findIndex($scope.gridOptions.data, function(obj) {
                 return (obj == rowParent.entity);
             });
-            if (Util.goodMapValue([$scope.gridOptions.data, ("[" + idx + "]"), "contactMethodsOptions", "gridApi"], false)) {
-                var gridApi = $scope.gridOptions.data[idx].contactMethodsOptions.gridApi;
+            if (Util.goodMapValue([$scope.gridOptions.data, ("[" + idx + "]"), "$contactMethods", "gridApi"], false)) {
+                var gridApi = $scope.gridOptions.data[idx].$contactMethods.gridApi;
                 var lastPage = gridApi.pagination.getTotalPages();
                 gridApi.pagination.seek(lastPage);
-                $scope.gridOptions.data[idx].contactMethodsOptions.data.push({});
+                $scope.gridOptions.data[idx].$contactMethods.gridOptions.data.push({});
             }
-
-            var z = 1;
         }
         $scope.deleteRowContactMethods = function(row) {
             var idx = _.findIndex($scope.contactMethods.gridOptions.data, function(obj) {
@@ -619,21 +695,31 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
 
             var id = Util.goodMapValue([row, "entity", "id"], 0);
-            if (0 < id) {    //not deleting a new row
-                //
-                // save data to server
-                //
+            if (0 < id) {    //do not need to save for deleting a new row
+                var caseInfo = Util.stripNg($scope.caseInfo);
+                CasesService.save({}, caseInfo
+                    ,function(caseSaved) {
+                        if (Validator.validateCaseFile(caseSaved)) {
+                            console.log("deleted sub table");
+                            var z = 1;
+                        }
+                        var z = 1;
+                    }
+                    ,function(errorData) {
+                        var z = 2;
+                    }
+                );
             }
         }
         $scope.addNewOrganizations = function(rowParent) {
             var idx = _.findIndex($scope.gridOptions.data, function(obj) {
                 return (obj == rowParent.entity);
             });
-            if (Util.goodMapValue([$scope.gridOptions.data, ("[" + idx + "]"), "organizationsOptions", "gridApi"], false)) {
-                var gridApi = $scope.gridOptions.data[idx].organizationsOptions.gridApi;
+            if (Util.goodMapValue([$scope.gridOptions.data, ("[" + idx + "]"), "$organizations.gridOptions", "gridApi"], false)) {
+                var gridApi = $scope.gridOptions.data[idx].$organizations.gridApi;
                 var lastPage = gridApi.pagination.getTotalPages();
                 gridApi.pagination.seek(lastPage);
-                $scope.gridOptions.data[idx].organizationsOptions.data.push({});
+                $scope.gridOptions.data[idx].$organizations.gridOptions.data.push({});
             }
         }
         $scope.deleteRowOrganizations = function(row) {
@@ -645,21 +731,31 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
 
             var id = Util.goodMapValue([row, "entity", "id"], 0);
-            if (0 < id) {    //not deleting a new row
-                //
-                // save data to server
-                //
+            if (0 < id) {    //do not need to save for deleting a new row
+                var caseInfo = Util.stripNg($scope.caseInfo);
+                CasesService.save({}, caseInfo
+                    ,function(caseSaved) {
+                        if (Validator.validateCaseFile(caseSaved)) {
+                            console.log("deleted sub table");
+                            var z = 1;
+                        }
+                        var z = 1;
+                    }
+                    ,function(errorData) {
+                        var z = 2;
+                    }
+                );
             }
         }
         $scope.addNewAddresses = function(rowParent) {
             var idx = _.findIndex($scope.gridOptions.data, function(obj) {
                 return (obj == rowParent.entity);
             });
-            if (Util.goodMapValue([$scope.gridOptions.data, ("[" + idx + "]"), "addressesOptions", "gridApi"], false)) {
-                var gridApi = $scope.gridOptions.data[idx].addressesOptions.gridApi;
+            if (Util.goodMapValue([$scope.gridOptions.data, ("[" + idx + "]"), "$addresses.gridOptions", "gridApi"], false)) {
+                var gridApi = $scope.gridOptions.data[idx].$addresses.gridApi;
                 var lastPage = gridApi.pagination.getTotalPages();
                 gridApi.pagination.seek(lastPage);
-                $scope.gridOptions.data[idx].addressesOptions.data.push({});
+                $scope.gridOptions.data[idx].$addresses.gridOptions.data.push({});
             }
         }
         $scope.deleteRowAddresses = function(row) {
@@ -671,21 +767,31 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
 
             var id = Util.goodMapValue([row, "entity", "id"], 0);
-            if (0 < id) {    //not deleting a new row
-                //
-                // save data to server
-                //
+            if (0 < id) {    //do not need to save for deleting a new row
+                var caseInfo = Util.stripNg($scope.caseInfo);
+                CasesService.save({}, caseInfo
+                    ,function(caseSaved) {
+                        if (Validator.validateCaseFile(caseSaved)) {
+                            console.log("deleted sub table");
+                            var z = 1;
+                        }
+                        var z = 1;
+                    }
+                    ,function(errorData) {
+                        var z = 2;
+                    }
+                );
             }
         }
         $scope.addNewAliases = function(rowParent) {
             var idx = _.findIndex($scope.gridOptions.data, function(obj) {
                 return (obj == rowParent.entity);
             });
-            if (Util.goodMapValue([$scope.gridOptions.data, ("[" + idx + "]"), "aliasesOptions", "gridApi"], false)) {
-                var gridApi = $scope.gridOptions.data[idx].aliasesOptions.gridApi;
+            if (Util.goodMapValue([$scope.gridOptions.data, ("[" + idx + "]"), "$aliases.gridOptions", "gridApi"], false)) {
+                var gridApi = $scope.gridOptions.data[idx].$aliases.gridApi;
                 var lastPage = gridApi.pagination.getTotalPages();
                 gridApi.pagination.seek(lastPage);
-                $scope.gridOptions.data[idx].aliasesOptions.data.push({});
+                $scope.gridOptions.data[idx].$aliases.gridOptions.data.push({});
             }
         }
         $scope.deleteRowAliases = function(row) {
@@ -697,21 +803,31 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
 
             var id = Util.goodMapValue([row, "entity", "id"], 0);
-            if (0 < id) {    //not deleting a new row
-                //
-                // save data to server
-                //
+            if (0 < id) {    //do not need to save for deleting a new row
+                var caseInfo = Util.stripNg($scope.caseInfo);
+                CasesService.save({}, caseInfo
+                    ,function(caseSaved) {
+                        if (Validator.validateCaseFile(caseSaved)) {
+                            console.log("deleted sub table");
+                            var z = 1;
+                        }
+                        var z = 1;
+                    }
+                    ,function(errorData) {
+                        var z = 2;
+                    }
+                );
             }
         }
         $scope.addNewSecurityTags = function(rowParent) {
             var idx = _.findIndex($scope.gridOptions.data, function(obj) {
                 return (obj == rowParent.entity);
             });
-            if (Util.goodMapValue([$scope.gridOptions.data, ("[" + idx + "]"), "securityTagsOptions", "gridApi"], false)) {
-                var gridApi = $scope.gridOptions.data[idx].securityTagsOptions.gridApi;
+            if (Util.goodMapValue([$scope.gridOptions.data, ("[" + idx + "]"), "$securityTags.gridOptions", "gridApi"], false)) {
+                var gridApi = $scope.gridOptions.data[idx].$securityTags.gridApi;
                 var lastPage = gridApi.pagination.getTotalPages();
                 gridApi.pagination.seek(lastPage);
-                $scope.gridOptions.data[idx].securityTagsOptions.data.push({});
+                $scope.gridOptions.data[idx].$securityTags.gridOptions.data.push({});
             }
         }
         $scope.deleteRowSecurityTags = function(row) {
@@ -723,11 +839,41 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
 
             var id = Util.goodMapValue([row, "entity", "id"], 0);
-            if (0 < id) {    //not deleting a new row
+            if (0 < id) {    //do not need to save for deleting a new row
                 //
                 // save data to server
                 //
             }
+        }
+
+
+        var newPersonAssociation = function() {
+            return {
+                id: null
+                ,personType: ""
+                ,parentId:null
+                ,parentType:""
+                ,personDescription: ""
+                ,notes:""
+                ,person:{
+                    id: null
+                    ,title: ""
+                    ,givenName: ""
+                    ,familyName: ""
+                    ,company: ""
+                    /*,hairColor:""
+                     ,eyeColor:""
+                     ,heightInInches:null*/
+                    ,weightInPounds:null
+                    /*,dateOfBirth:null
+                     ,dateMarried:null*/
+                    ,addresses: []
+                    ,contactMethods: []
+                    ,securityTags: []
+                    ,personAliases: []
+                    ,organizations: []
+                }
+            };
         }
 	}
 ])
