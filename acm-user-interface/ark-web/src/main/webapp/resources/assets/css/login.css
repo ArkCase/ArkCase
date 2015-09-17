@@ -1,5 +1,3 @@
-/* @override http://sharecaredev.armedianet.com/arkcase/assets/css/login.css */
-
 html {
 	background-color: #f2f4f8;
 	height: 100%;
@@ -10,6 +8,8 @@ body {
 	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	height: 100%;
 }
+
+
 h1 {
 	color: #000000;
 	font-size: 36px;
@@ -42,6 +42,15 @@ h6 {
 }
 #j_password {
 	background-color: transparent;
+}
+div.logo {
+	text-align: center;
+	width: 186px;
+	position: relative;
+	margin: 0 auto;
+}
+div.logo img {
+	width: 100%;
 }
 .login-wrapper {
 	margin: 0 auto;
