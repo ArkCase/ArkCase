@@ -10,14 +10,21 @@ angular.module('directives').directive('treeView', ['$q',
             },
 
             link: function(scope, element, attrs){
+                var treeOptions = {
+                    source: [],
+                    click: function (event, data) {
+                        scope.onSelect()(data.node.data);
+                    }
+                };
+                $(element).fancytree(treeOptions);
+
+
                 if (scope.treeData) {
-                    $q.when(scope.treeData).then(function(treeData){
-                        $(element).fancytree({
-                            source: treeData,
-                            click: function(event, data){
-                                scope.onSelect()(data.node.data);
-                            }
-                        });
+                    scope.$watchCollection('treeData', function(newValue, oldValue) {
+                        $q.when(newValue).then(function (treeData) {
+                            var tree = $(element).fancytree('getTree');
+                            tree.reload(treeData);
+                        }, true);
                     });
                 }
             }
