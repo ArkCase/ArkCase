@@ -106,7 +106,14 @@
 
   },
   "cases.comp.references": {
-    "title": "References"
+    "title": "References",
+    "table.columns": {
+      "targetName": "Number",
+      "targetTitle": "Title",
+      "modified": "Modified",
+      "targetType": "Reference Type",
+      "status": "Status"
+    }
   },
   "cases.comp.tasks": {
     "title": "Tasks",
