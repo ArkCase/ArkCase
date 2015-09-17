@@ -318,7 +318,45 @@
       "id" : "references",
       "title": "References",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "targetName",
+          "displayName": "cases.comp.references.table.columns.targetName",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.targetName}}</a>"
+        },
+        {
+          "name": "targetTitle",
+          "displayName": "cases.comp.references.table.columns.targetTitle",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.targetName}}</a>"
+        },
+        {
+          "name": "modified",
+          "displayName": "cases.comp.references.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'medium'}}</div>"
+        },
+        {
+          "name": "targetType",
+          "displayName": "cases.comp.references.table.columns.targetType",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "status",
+          "displayName": "cases.comp.references.table.columns.status",
+          "headerCellFilter": "translate"
+        }
+      ]
     },
 
     {
