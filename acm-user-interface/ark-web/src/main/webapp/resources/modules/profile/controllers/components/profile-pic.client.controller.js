@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('profile').controller('Profile.PicController', ['$scope', 'ConfigService', 'userInfoService','userPicService',
-    function ($scope, ConfigService, userInfoService,userPicService) {
+angular.module('profile').controller('Profile.PicController', ['$scope', 'ConfigService', 'userInfoService', 'userPicService',
+    function ($scope, ConfigService, userInfoService, userPicService) {
         $scope.config = ConfigService.getModule({moduleId: 'profile'});
         $scope.$on('req-component-config', onConfigRequest);
 
@@ -11,29 +11,24 @@ angular.module('profile').controller('Profile.PicController', ['$scope', 'Config
                 $scope.$broadcast('component-config', componentId, componentConfig);
             });
         }
-        $scope.profilePicDefault=true;
+        $scope.profilePicDefault = true;
         $scope.changePic = function () {
             $("#file").click();
         };
-        $scope.selectImage = function () {
-            $("#submit").click();
-        };
-        $scope.sub = function () {
+        $scope.submit = function () {
             userInfoService.getUserInfo().then(function (data) {
-                var formData = new FormData();
                 var userID = data.userOrgId;
-                formData.append("parentObjectId", userID);
-                formData.append("parentObjectType", "USER_ORG");
-                formData.append("fileType", "user_profile");
-                formData.append("file", $("#file")[0].files[0]);
-                userPicService.changePic(formData)
-                        .then(function(data){
-                            var ecmFileID=data[0].fileId;
-                            $scope.profileEcmFileID=ecmFileID;
+                userPicService.changePic($scope.userPicture, userID)
+                        .success(function (fileInfo) {
+                            var ecmFileID = fileInfo[0].fileId;
+                            $scope.profileEcmFileID = ecmFileID;
                             userInfoService.getUserInfo().then(function (infoData) {
                                 infoData.ecmFileId = $scope.profileEcmFileID;
                                 userInfoService.updateUserInfo(infoData);
                             });
+                        })
+                        .error(function () {
+                            console.log('error uploading');
                         });
             });
         };
@@ -51,9 +46,9 @@ angular.module('profile').controller('Profile.PicController', ['$scope', 'Config
             $scope.profilePicFullName = data.fullName;
             $scope.profilePicEmail = data.email;
             $scope.profilePicTitle = data.title;
-            $scope.profileEcmFileID=data.ecmFileId;
-            if($scope.profileEcmFileID !== null){
-               $scope.profilePicDefault=false;
+            $scope.profileEcmFileID = data.ecmFileId;
+            if ($scope.profileEcmFileID !== null) {
+                $scope.profilePicDefault = false;
             }
         });
     }

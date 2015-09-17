@@ -2,8 +2,7 @@
     <header>
         <div class="pull-right inline">
             <div>
-                <button class="btn btn-default btn-sm" data-title="Change Password" data-toggle="modal" data-target="#changePassword"><i class="fa fa-key"></i> {{'profile.buttons.password' | translate}}</button>
-            <div class="scroll-body" slimscroll="{height: '800px'}" ng-include="'modules/profile/views/components/modalTemplates/profile-modal-changePassword.client.view.html'"></div>
+                <button class="btn btn-default btn-sm" ng-click="openPasswordDialog()"><i class="fa fa-key"></i> {{'profile.buttons.password' | translate}}</button>
             </div>
         </div>
 

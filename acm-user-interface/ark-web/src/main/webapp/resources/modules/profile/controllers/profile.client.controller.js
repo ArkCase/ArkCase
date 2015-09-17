@@ -10,46 +10,13 @@ angular.module('profile').controller('ProfileController', ['$scope', 'ConfigServ
                 $scope.$broadcast('component-config', componentId, componentConfig);
             });
         }
-        $scope.changePassword = function () {
-            if (this.newPassword === '' || this.newPassword===undefined) {
-                 $modal.open({
-                    templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-emptyPassword.client.view.html',
-                    controller:'ModalController',
-                    backdrop:false,
-                    size: 'sm'
-                });
-            }
-            else if (this.newPasswordAgain === ''|| this.newPasswordAgain===undefined) {
-                $modal.open({
-                    templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-emptyPasswordAgain.client.view.html',
-                    controller:'ModalController',
-                    backdrop:false,
-                    size: 'sm'
-                });
-            }
-            else if (this.newPassword  !== this.newPasswordAgain ) {
-                $modal.open({
-                    templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-differentPasswords.client.view.html',
-                    controller:'ModalController',
-                    backdrop:false,
-                    size: 'sm'
-                });
-                this.newPassword='';
-                this.newPasswordAgain='';
-            }
-            else {
-                var data = '{"outlookPassword":' + '"' + this.newPassword + '"}';
-                passwordService.changePassword(data);
-                $("#changePassword").modal("hide");
-                this.newPassword='';
-                this.newPasswordAgain='';
-            }
-
-        };
-        $scope.cancel=function(){
-            $("#changePassword").modal("hide");
-            $scope.newPassword = '';
-            $scope.newPasswordAgain = '';
+        $scope.openPasswordDialog = function () {
+            $modal.open({
+                templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-changePassword.client.view.html',
+                controller: 'ChangePasswordModalController',
+                backdrop: false,
+                size: 'sm'
+            });
         };
     }
 ]);
@@ -59,8 +26,48 @@ angular.module('profile').run(function (editableOptions, editableThemes) {
     editableOptions.theme = 'bs3';
 });
 
-angular.module('profile').controller('ModalController', function ($scope, $modalInstance) {
-  $scope.close = function () {
-    $modalInstance.dismiss('cancel');
-  };
+angular.module('profile').controller('ChangePasswordModalController', function ($scope, $modalInstance, $modal,passwordService) {
+    $scope.close = function () {
+        $modalInstance.dismiss('cancel');
+    };
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+        $scope.newPassword = '';
+        $scope.newPasswordAgain = '';
+    };
+    $scope.changePassword = function () {
+        if (!this.newPassword) {
+            $modal.open({
+                templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-emptyPassword.client.view.html',
+                controller: 'ChangePasswordModalController',
+                backdrop: false,
+                size: 'sm'
+            });
+        }
+        else if (!this.newPasswordAgain) {
+            $modal.open({
+                templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-emptyPasswordAgain.client.view.html',
+                controller: 'ChangePasswordModalController',
+                backdrop: false,
+                size: 'sm'
+            });
+        }
+        else if (this.newPassword !== this.newPasswordAgain) {
+            $modal.open({
+                templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-differentPasswords.client.view.html',
+                controller: 'ChangePasswordModalController',
+                backdrop: false,
+                size: 'sm'
+            });
+            this.newPassword = '';
+            this.newPasswordAgain = '';
+        }
+        else {
+            var data = '{"outlookPassword":' + '"' + this.newPassword + '"}';
+            passwordService.changePassword(data);
+            $modalInstance.close('done');
+            this.newPassword = '';
+            this.newPasswordAgain = '';
+        }
+    };
 });

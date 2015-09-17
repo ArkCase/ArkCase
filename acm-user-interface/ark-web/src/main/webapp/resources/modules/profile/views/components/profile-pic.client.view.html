@@ -3,21 +3,18 @@
         <div ng-controller="Profile.PicController" class="row">
             <div class="col-xs-6 text-center">
                 <div>
-                    <img id="picLoading" class="img-circle img-responsive"  ng-src="{{profilePicDefault && 'modules/profile/img/nopic.png' || 'proxy/arkcase/api/latest/plugin/ecm/download?ecmFileId='+profileEcmFileID+'&inline=true'}}" >
+                    <img id="picLoading" class="img-circle img-responsive"  ng-src="{{profilePicDefault && 'modules/profile/img/nopic.png'|| 'proxy/arkcase/api/latest/plugin/ecm/download?ecmFileId='+profileEcmFileID+'&inline=true'}}" >
                     <div>
-                    <a id="lnkChangePicture" data-ui-sref="profile" ng-click="changePic()"><u>{{'profile.pciture.title' | translate}}</u></a>
+                        <a id="lnkChangePicture" data-ui-sref="profile" ng-click="changePic()"><u>{{'profile.pciture.title'| translate}}</u></a>
                     </div>
-                    <form id="formPicture" class="hidden" ng-submit="sub()">
-                        <input type="file" id="file" name="file" onchange="angular.element(this).scope().selectImage()">
-                        <input type="submit" id="submit" value="Submit" />
-                    </form>
+                    <button ngf-select ng-model="userPicture"  id="file"  class="btn btn-sm btn-default hidden" ngf-change="submit()" ></button>
                 </div>
             </div>
             <div class="col-xs-6">
-                <h4 id="fullName">{{profilePicFullName || 'Unknown'}}</h4>
-                <h4>  <a href="#"  editable-text="profilePicTitle" onaftersave="update()">{{ profilePicTitle || 'unknown' }}</a></h4>
-                <h4 id="email">{{ profilePicEmail  || 'Unknown'}}</h4>
-                <small> {{'profile.pciture.email' | translate}} </small>
+                <h4 id="fullName">{{profilePicFullName|| 'Unknown'}}</h4>
+                <h4>  <a href="#"  editable-text="profilePicTitle" onaftersave="update()">{{ profilePicTitle || 'profile.unknown' }}</a></h4>
+                <h4 id="email">{{ profilePicEmail || 'Unknown'}}</h4>
+                <small> {{'profile.pciture.email'| translate}} </small>
             </div>
         </div>
     </div>

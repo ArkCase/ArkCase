@@ -2,7 +2,6 @@
     "id": "profile",
     "title": "Profile",
     "menus": [
-        
         {
             "menuId": "usermenu",
             "menuItemURL": "profile",
@@ -10,8 +9,57 @@
             "iconClass": "glyphicon glyphicon-asterisk",
             "position": 100
         }
-        
+
     ],
     "components": [
-   ]
+        {
+            "id": "subscription",
+            "title": "Subscription",
+            "enabled": true,
+            "type": "grid",
+            "paginationPageSizes": [5, 10, 20, 50],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "title",
+                    "displayName": "profile.subscriptions.table.columns.title",
+                    "headerCellFilter": "translate",
+                    "width": "40%"
+                },
+                {
+                    "name": "type",
+                    "displayName": "profile.subscriptions.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "width": "20%"
+                },
+                {
+                    "name": "created",
+                    "displayName": "profile.subscriptions.table.columns.created",
+                    "headerCellFilter": "translate",
+                    "width": "25%"
+                },
+                {
+                    "name": "delete",
+                    "displayName": " ",
+                    "headerCellFilter": "translate",
+                    "width": "*",
+                    "headerCellTemplate": "<div></div>",
+                    "cellTemplate": "<div align='center'><button type='button' ng-click='grid.appScope.unsubscribe(row.entity)' class='btn btn-default btn-sm glyphicon glyphicon-minus'></button></div>'"
+                },
+                {
+                    "name": "parentID",
+                    "displayName": "profile.subscriptions.table.columns.parentId",
+                    "headerCellFilter": "translate",
+                    "visible": false
+                },
+                {
+                    "name": "userID",
+                    "displayName": "profile.subscriptions.table.columns.userId",
+                    "headerCellFilter": "translate",
+                    "visible": false
+                }
+
+            ]
+        }
+    ]
 }
