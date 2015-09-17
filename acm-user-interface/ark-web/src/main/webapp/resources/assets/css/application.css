@@ -1,5 +1,3 @@
-/* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
-
 html {
   height: 100%;
 }
@@ -7,9 +5,9 @@ body {
   background-color: transparent;
   color: #788288;
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
   height: 100%;
 }
-
 h1 {
   color: #000000;
   font-size: 36px;
@@ -49,8 +47,8 @@ h6 {
   height: 100%; }
 .btn {
   border-radius: 2px;
+  background-image: none;
 }
-
 .btn-default {
   background-color: #fcfcfd;
   background-image: none;
@@ -59,6 +57,43 @@ h6 {
   box-shadow: 0 1px 1px rgba(90, 90, 90, 0.1);
   color: #788288;
   webkit-box-shadow: 0 1px 1px rgba(90, 90, 90, 0.1);
+}
+.btn-primary {
+  color: #fff !important;
+  background-color: #177bbb;
+  border-color: #177bbb;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open .dropdown-toggle.btn-primary {
+  color: #fff !important;
+  background-color: #146ca4;
+  border-color: #136397;
+}
+.btn-primary:active,
+.btn-primary.active,
+.open .dropdown-toggle.btn-primary {
+  background-image: none;
+}
+.btn-primary.disabled,
+.btn-primary.disabled:hover,
+.btn-primary.disabled:focus,
+.btn-primary.disabled:active,
+.btn-primary.disabled.active,
+.btn-primary[disabled],
+.btn-primary[disabled]:hover,
+.btn-primary[disabled]:focus,
+.btn-primary[disabled]:active,
+.btn-primary[disabled].active,
+fieldset[disabled] .btn-primary,
+fieldset[disabled] .btn-primary:hover,
+fieldset[disabled] .btn-primary:focus,
+fieldset[disabled] .btn-primary:active,
+fieldset[disabled] .btn-primary.active {
+  background-color: #177bbb;
+  border-color: #177bbb;
 }
 .btn-default:hover {
   background-color: #ebeef4;
@@ -99,17 +134,16 @@ h6 {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-div.well.ng-scope {
+div.well {
   background: 0px;
   border: 0px;
   -webkit-box-shadow: none;
   box-shadow: none;
   padding: 0px;
 }
-div.well.ng-scope a.list-group-item {
+.ng-scope a.list-group-item {
   cursor: pointer; cursor: hand;
 }
-
 .form-control {
   border-radius: 0;
   -webkit-box-shadow: none;
@@ -121,9 +155,17 @@ div.well.ng-scope a.list-group-item {
   padding-bottom: 13px;
   padding-top: 20px;
   min-height: 70px;
-  margin-bottom: 10px;
 }
-
+.module-header .well-sm.pull-right {
+  position: relative;
+  margin-right: 15px;
+  top: -6px;
+}
+.module-header .well-sm.pull-right input {
+  width: 200px;
+  border: 0px;
+  border-radius: 2px;
+}
 .module-content {
   display: table;
   table-layout: fixed;
@@ -132,9 +174,9 @@ div.well.ng-scope a.list-group-item {
 .module-content .left-sidebar, .module-content .left-sidebar-sm {
   display: table-cell;
   vertical-align: top;
-  width: 300px;
-  padding-left: 0;
-  padding-right: 0;
+  max-width: 300px;
+  padding-left: 0px;
+  padding-right: 0px;
   background-color: #e9edf4;
 }
 .module-content .left-sidebar .header, .module-content .left-sidebar-sm .header {
@@ -148,8 +190,14 @@ div.well.ng-scope a.list-group-item {
   margin: 0;
   padding: 0;
 }
+.module-content .left-sidebar div.well-sm.ng-scope {
+  padding-top: 0px;
+}
 .module-content .left-sidebar-sm {
   width: 200px;
+}
+.module-content .left-sidebar-sm ul.nav.nav-pills.nav-stacked {
+  padding: 10px;
 }
 .module-content .right-sidebar {
   display: table-cell;
@@ -162,12 +210,15 @@ div.well.ng-scope a.list-group-item {
   padding-left: 0;
   padding-right: 0;
 }
+.module-content .col-xs-9 {
+  padding-top: 32px;
+}
 ul.ui-fancytree.fancytree-container {
   background: none;
   border: 0px;
   outline: 0px;
 }
-
 .form-group.well-sm {
   margin: 0px;
 }
+
