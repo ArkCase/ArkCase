@@ -1,10 +1,18 @@
 {
   "profile": {
-    "title": "User Profile"
+    "title": "User Profile",
+    "unknown":"Unknown"
   },
    "profile.subscriptions" : {
     "title":"Subscriptions",
-    "unsubscribeSelect":"Unsubscribe Selcted"
+    "unsubscribeSelect":"Unsubscribe Selcted",
+    "table.columns": {
+      "title": "Title",
+      "type": "Type",
+      "created":"Created",
+      "parentId":"Parent ID",
+      "userId":"User ID"
+    }
     },
    "profile.company": {
      "title":"Company Detail",
@@ -43,7 +51,7 @@
        "emptyPassword":"Password Can not be Empty",
        "comfirmation":"Please re-enter your password.",
        "differentPasswords":"Passwords do not match. Please try again.",
-       "OK":"OK",
+       "ok":"OK",
        "success":"Successfully Changed Outlook Password"
    }
 }

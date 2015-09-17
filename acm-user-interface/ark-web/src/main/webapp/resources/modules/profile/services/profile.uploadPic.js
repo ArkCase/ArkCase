@@ -1,32 +1,15 @@
 'use strict';
-angular.module('profile').service('userPicService', function ($http, $q) {
+angular.module('profile').service('userPicService', function ($http, $q ,Upload) {
     return({
-        changePic: changePic,
-        getPic: getPic
+        changePic: changePic
     });
-    function changePic(formData) {
-        var request = $http({
-            method: "POST",
-            processData: false,
-            url: "proxy/arkcase/api/latest/service/ecm/upload",
-            data: formData,
-            headers: {'Content-Type': undefined}
-        });
-        return(request.then(handleSuccess, handleError));
+    function changePic(file,userID) {
+                return Upload.upload({
+                    url: 'proxy/arkcase/api/latest/service/ecm/upload',
+                    fields: {parentObjectId: userID,
+                             parentObjectType:'USER_ORG',
+                             fileType:'user_profile'},
+                    file: file
+                });
     };
-    function getPic() {
-        
-    };
-    function handleError(response) {
-        if (
-                !angular.isObject(response.data) ||
-                !response.data.message
-                ) {
-            return($q.reject("An unknown error occurred."));
-        }
-        return($q.reject(response.data.message));
-    }
-    function handleSuccess(response) {
-        return(response.data);
-    }
 });
