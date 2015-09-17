@@ -60,6 +60,26 @@
                 }
 
             ]
+        },
+        {
+            "id":"company",
+            "title":"Company",
+            "enabled": true
+        },
+                {
+            "id":"contact",
+            "title":"Contact",
+            "enabled": true
+        },
+                {
+            "id":"group",
+            "title":"Group",
+            "enabled": true
+        },
+        {
+            "id":"picture",
+            "title":"Picture",
+            "enabled": true
         }
     ]
 }

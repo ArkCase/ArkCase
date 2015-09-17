@@ -1,16 +1,8 @@
 'use strict';
 
-angular.module('profile').controller('Profile.PicController', ['$scope', 'ConfigService', 'userInfoService', 'userPicService',
-    function ($scope, ConfigService, userInfoService, userPicService) {
-        $scope.config = ConfigService.getModule({moduleId: 'profile'});
-        $scope.$on('req-component-config', onConfigRequest);
-
-        function onConfigRequest(e, componentId) {
-            $scope.config.$promise.then(function (config) {
-                var componentConfig = _.find(config.components, {id: componentId})
-                $scope.$broadcast('component-config', componentId, componentConfig);
-            });
-        }
+angular.module('profile').controller('Profile.PicController', ['$scope', 'userInfoService', 'userPicService',
+    function ($scope, userInfoService, userPicService) {
+        $scope.$emit('req-component-config', 'picture');
         $scope.profilePicDefault = true;
         $scope.changePic = function () {
             $("#file").click();
