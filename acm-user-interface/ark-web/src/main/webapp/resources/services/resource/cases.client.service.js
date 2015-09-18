@@ -19,7 +19,7 @@ angular.module('services').factory('CasesService', ['$resource',
             queryTasks: {
                 method: 'GET',
                 cache: false,
-                url: 'proxy/arkcase/api/latest/plugin/search/children?parentType=CASE_FILE&childType=TASK&parentId=:id&start=:startWith&n=:count'
+                url: 'proxy/arkcase/api/latest/plugin/search/children?parentType=CASE_FILE&childType=TASK&parentId=:id&start=:startWith&n=:count&s=:sort'
             },
 
             queryContacts: {
