@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="attachmentCaptureFileListener" class="com.armedia.acm.ephesoft.service.AttachmentCaptureFileListener">
+        <property name="captureFolder" ref="captureFolder"/>
+        <property name="completedFolder" ref="completedFolder"/>
+        <property name="supportedObjectTypes" value="${capture.attachments.supported-object-types}"/>
+    </bean>
+
+
+
+    <!-- need a bean named "springEntityListenerConfigurer" but it doesn't have to be a real bean -->
+    <bean id="springEntityListenerConfigurer" class="java.lang.String">
+        <constructor-arg value="Not really a Spring listener bean"/>
+    </bean>
+
+    <!-- fake activitiProcessEngineConfiguration bean for testing.  Needed because the folder watcher has a
+           depends-on reference to activitiProcessEngineConfiguration -->
+    <bean id="activitiProcessEngineConfiguration" class="java.lang.String">
+        <constructor-arg value="Not really an activiti bean"/>
+    </bean>
+
+    <!-- dummy bean for the drools deployer -->
+    <bean id="drlDeployer" class="java.lang.String">
+        <constructor-arg value="This is a dummy bean.  Don't expect anything real in here."/>
+    </bean>
+</beans>
