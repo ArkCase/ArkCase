@@ -6,7 +6,7 @@
       "menuId": "leftnav",
       "menuItemURL": "search",
       "menuItemTitle": "Search",
-      "iconClass": "glyphicon glyphicon-asterisk",
+      "iconClass": "fa fa-search",
       "position": 120
     }
   ],
