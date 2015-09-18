@@ -269,6 +269,14 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 2,
       "columnDefs": [
         {
           "name": "object_id_s",
@@ -286,9 +294,10 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "created",
+          "name": "create_tdt",
           "displayName": "cases.comp.tasks.table.columns.created",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'medium'}}</div>"
         },
         {
           "name": "priority_s",
@@ -296,9 +305,10 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "due-tdt",
+          "name": "due_tdt",
           "displayName": "cases.comp.tasks.table.columns.due",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'medium'}}</div>"
         },
         {
           "name": "status_s",
