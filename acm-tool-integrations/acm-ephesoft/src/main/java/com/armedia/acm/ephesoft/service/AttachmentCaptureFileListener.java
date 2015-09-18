@@ -38,6 +38,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
     private EcmFileService ecmFileService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
+    private FileObject errorFolder;
     private FileObject captureFolder;
     private FileObject completedFolder;
     private Set<String> supportedObjectTypes;
@@ -74,7 +75,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
                         event.getBaseFileName(),
                         fileInfo.getParentObjectType(),
                         file.getContainer().getContainerObjectType());
-                moveToFolder(event.getCaptureFile(), completedFolder);
+                moveToFolder(event.getCaptureFile(), errorFolder);
                 return;
             }
             if (!file.getContainer().getContainerObjectId().equals(fileInfo.getParentObjectId()))
@@ -83,19 +84,26 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
                         event.getBaseFileName(),
                         fileInfo.getParentObjectId(),
                         file.getContainer().getContainerObjectId());
-                moveToFolder(event.getCaptureFile(), completedFolder);
+                moveToFolder(event.getCaptureFile(), errorFolder);
                 return;
             }
 
             //everything is fine just upload the document
-            saveAttachment(file.getContainer(), event.getCaptureFile(), file.getFileName());
-            log.debug("successfully processed File {}, moving to completed folder.", event.getBaseFileName());
-            moveToFolder(event.getCaptureFile(), completedFolder);
-            log.info("successfully moved File {} to completed folder.", event.getBaseFileName());
+            try
+            {
+                saveAttachment(file.getContainer(), event.getCaptureFile(), file.getFileName());
+                log.debug("successfully processed File {}, moving to completed folder.", event.getBaseFileName());
+                moveToFolder(event.getCaptureFile(), completedFolder);
+                log.info("successfully moved File {} to completed folder.", event.getBaseFileName());
+            } catch (Exception e)
+            {
+                log.error("file movement was not sucessfull: {}", e.getMessage(), e);
+                moveToFolder(event.getCaptureFile(), errorFolder);
+            }
         } else
         {
             log.warn("unable to process File {}, reason: doesn't exists in the database.", event.getBaseFileName());
-            moveToFolder(event.getCaptureFile(), completedFolder);
+            moveToFolder(event.getCaptureFile(), errorFolder);
         }
 
     }
@@ -111,7 +119,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
             return workingFile;
         } catch (Exception e)
         {
-            log.error("Cannot move {} to {} directory: " + e.getMessage(), file.getName(), folder.getName());
+            log.error("Cannot move {} to {} directory: {}", file.getName(), folder.getName(), e.getMessage());
         }
         return null;
     }
@@ -176,7 +184,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
         return fileName.substring(fileName.indexOf('_') + 1, fileName.lastIndexOf('_'));
     }
 
-    private void saveAttachment(AcmContainer container, File toBeUploaded, String originalFileName)
+    private void saveAttachment(AcmContainer container, File toBeUploaded, String originalFileName) throws Exception
     {
         try
         {
@@ -219,8 +227,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
                     container.getContainerObjectId());
         } catch (Throwable e)
         {
-            log.error("Cannot save attachment." + e.getMessage(), e);
-            throw new RuntimeException(e);
+            throw new Exception("Cannot save attachment: " + e.getMessage(), e);
         }
     }
 
@@ -252,6 +259,11 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
     public void setCompletedFolder(FileObject completedFolder)
     {
         this.completedFolder = completedFolder;
+    }
+
+    public void setErrorFolder(FileObject errorFolder)
+    {
+        this.errorFolder = errorFolder;
     }
 
     public void setSupportedObjectTypes(String supportedObjectTypesStr)

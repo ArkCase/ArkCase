@@ -5,8 +5,9 @@
 
 
     <bean id="attachmentCaptureFileListener" class="com.armedia.acm.ephesoft.service.AttachmentCaptureFileListener">
-        <property name="captureFolder" ref="captureFolder" />
-        <property name="completedFolder" ref="completedFolder" />
+        <property name="captureFolder" ref="captureFolder"/>
+        <property name="completedFolder" ref="completedFolder"/>
+        <property name="errorFolder" ref="errorFolder"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="supportedObjectTypes" value="${capture.attachments.supported-object-types}"/>
