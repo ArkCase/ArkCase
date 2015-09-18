@@ -34,6 +34,8 @@ import java.util.stream.Collectors;
  */
 public class AttachmentCaptureFileListener implements ApplicationListener<AbstractCaptureFileEvent>
 {
+    private final String FILE_NAME_PATTERN_STRING = "^\\d+_.+_\\d+$";
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private EcmFileService ecmFileService;
@@ -138,7 +140,8 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
             fileName = fileName.substring(0, fileName.indexOf('.'));
 
         //matches files with name like 123123_case_file_123
-        if (!Pattern.matches("^\\d*?_.*?_\\d*$", fileName))
+
+        if (!Pattern.matches(FILE_NAME_PATTERN_STRING, fileName))
             return null;
 
         String parentObjectIdStr = extractParentObjectIdStr(fileName);
