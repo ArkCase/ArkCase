@@ -40,7 +40,6 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration(locations = {
         "/spring/spring-library-ephesoft-test.xml",
         "/spring/spring-library-context-holder.xml",
-        "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-property-file-manager.xml",
 })
 @TransactionConfiguration(defaultRollback = true)
@@ -52,6 +51,11 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
     @Autowired
     FileObject captureFolder;
 
+    @Autowired
+    FileObject errorFolder;
+
+    @Autowired
+    FileObject completedFolder;
 
     private EcmFileService ecmFileService;
 
@@ -71,10 +75,11 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
     {
         Resource resource = new ClassPathResource("/data/321321_complaint_22121.pdf");
 
+        if (completedFolder.getChild("321321_complaint_22121.pdf") != null && completedFolder.getChild("321321_complaint_22121.pdf").exists())
+            completedFolder.getChild("321321_complaint_22121.pdf").delete();
 
         File toBeProcessedFile = new File(captureFolder.getURL().getFile() + File.separator + resource.getFile().getName());
         Files.copy(resource.getFile().toPath(), toBeProcessedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
 
 
         CaptureFileAddedEvent event = new CaptureFileAddedEvent(new FileChangeEvent(mockFileObject));
@@ -103,14 +108,20 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
 
         attachmentCaptureFileListener.onApplicationEvent(event);
 
-        verifyAll();
+        completedFolder.refresh();
+        assertNotNull(completedFolder.getChild("321321_complaint_22121.pdf"));
 
+        verifyAll();
     }
 
     @Test
     public void processValidCaseFileAttachments() throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
     {
         Resource resource = new ClassPathResource("/data/12313_case_file_32131.pdf");
+
+        if (completedFolder.getChild("12313_case_file_32131.pdf") != null && completedFolder.getChild("12313_case_file_32131.pdf").exists())
+            completedFolder.getChild("12313_case_file_32131.pdf").delete();
+
         File toBeProcessedFile = new File(captureFolder.getURL().getFile() + File.separator + resource.getFile().getName());
         Files.copy(resource.getFile().toPath(), toBeProcessedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
@@ -138,6 +149,50 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
         replayAll();
 
         attachmentCaptureFileListener.onApplicationEvent(event);
+
+        completedFolder.refresh();
+        assertNotNull(completedFolder.getChild("12313_case_file_32131.pdf"));
+
+        verifyAll();
+    }
+
+    @Test
+    public void processNotValidComplaintAttachments() throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException
+    {
+        if (errorFolder.getChild("321321_complaint_22121.pdf") != null && errorFolder.getChild("321321_complaint_22121.pdf").exists())
+            errorFolder.getChild("321321_complaint_22121.pdf").delete();
+
+        Resource resource = new ClassPathResource("/data/321321_complaint_22121.pdf");
+
+
+        File toBeProcessedFile = new File(captureFolder.getURL().getFile() + File.separator + resource.getFile().getName());
+        Files.copy(resource.getFile().toPath(), toBeProcessedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+
+        CaptureFileAddedEvent event = new CaptureFileAddedEvent(new FileChangeEvent(mockFileObject));
+        event.setBaseFileName("321321_complaint_22121");
+        event.setCaptureFile(toBeProcessedFile);
+
+
+        assertNotNull(attachmentCaptureFileListener);
+
+        EcmFile ecmFile = new EcmFile();
+        ecmFile.setFileName("file_name");
+        AcmContainer container = new AcmContainer();
+        AcmFolder folder = new AcmFolder();
+        folder.setCmisFolderId("cmisFodlerId");
+        container.setFolder(folder);
+        container.setContainerObjectType("COMPLAINT");
+        container.setContainerObjectId(321321l);
+        ecmFile.setContainer(container);
+        expect(ecmFileService.findById(22121l)).andReturn(null);
+
+        replayAll();
+
+        attachmentCaptureFileListener.onApplicationEvent(event);
+
+        errorFolder.refresh();
+        assertNotNull(errorFolder.getChild("321321_complaint_22121.pdf"));
 
         verifyAll();
 
