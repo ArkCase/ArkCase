@@ -1,16 +1,21 @@
 'use strict';
 
-angular.module('search').controller('Search.FacetsController', ['$scope', 'SearchService',
-    function ($scope, SearchService) {
+angular.module('search').controller('Search.FacetsController', ['$scope', 'SearchService', 'resultService',
+    function ($scope, SearchService, resultService) {
         $scope.$emit('req-component-config', 'facets');
-
-        $scope.config = null;
-        $scope.gridOptions = {};
-        $scope.$on('component-config', applyConfig);
-        function applyConfig(e, componentId, config) {
-            if (componentId == 'facets') {
-                $scope.config = config;
+        $scope.facets=[];
+        $scope.facetsDetails=[];
+        $scope.checkEmpty=function(value){
+            if(value.length>0){
+                return true;
+            }
+            else{
+                return false;
             }
         }
+        $scope.$on('queryComplete', function () {
+            console.log(resultService.data.facet_counts.facet_fields);
+            $scope.facets=resultService.data.facet_counts.facet_fields;
+        });
     }
 ]);

@@ -1,14 +1,14 @@
 'use strict';
 
-angular.module('search').controller('Search.ResultsController', ['$scope', 'SearchService',
-    function ($scope, SearchService) {
+angular.module('search').controller('Search.ResultsController', ['$scope', 'resultService', 'SearchService',
+    function ($scope, resultService, SearchService) {
         $scope.$emit('req-component-config', 'results');
 
         $scope.start = 0;
         $scope.pageSize = 10;
         $scope.sort = {by: "", dir: "asc"};
         $scope.filters = [];   //for future work
-
+        $scope.queryString = '';
         $scope.config = null;
         $scope.gridOptions = {};
         $scope.$on('component-config', applyConfig);
@@ -21,12 +21,10 @@ angular.module('search').controller('Search.ResultsController', ['$scope', 'Sear
                     enableRowHeaderSelection: false,
                     multiSelect: false,
                     noUnselect: false,
-
                     paginationPageSizes: config.paginationPageSizes,
                     paginationPageSize: config.paginationPageSize,
                     useExternalPagination: true,
                     useExternalSorting: true,
-
                     //comment out filtering until service side supports it
                     ////enableFiltering: config.enableFiltering,
                     //enableFiltering: true,
@@ -58,7 +56,7 @@ angular.module('search').controller('Search.ResultsController', ['$scope', 'Sear
                                     $scope.filters.push(filter);
                                 }
                             }
-                            $scope.updatePageData();
+                            //$scope.updatePageData();
                         });
                         $scope.gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
                             $scope.start = (newPage - 1) * pageSize;   //newPage is 1-based index
@@ -70,33 +68,50 @@ angular.module('search').controller('Search.ResultsController', ['$scope', 'Sear
                 };
 
                 $scope.pageSize = config.paginationPageSize;
-                $scope.updatePageData();
             }
         }
-
+        $scope.$on('queryComplete', function () {
+            $scope.gridOptions.data = resultService.data.response.docs;
+            $scope.gridOptions.totalItems = resultService.data.response.numFound;
+            $scope.queryString = resultService.queryString;
+        });
 
         $scope.updatePageData = function () {
-
             var sort = "";
             if ($scope.sort) {
                 if (!_.isEmpty($scope.sort.by) && !_.isEmpty($scope.sort.dir)) {
                     sort = $scope.sort.by + "%20" + $scope.sort.dir;
                 }
             }
-
-            var searchFacets = SearchService.queryFacetedSearch({
-                    searchString: "*",
-                    objectType: "",
-                    owner: "",
-                    startWith: $scope.start,
-                    count: $scope.pageSize,
-                    sort: sort
-                },
-                function (data) {
-                    $scope.gridOptions.data = data.response.docs;
-                    $scope.gridOptions.totalItems = data.response.numFound;
-                });
-
+            SearchService.queryFacetedSearch({
+                input: $scope.queryString,
+                start: $scope.start,
+                n: $scope.pageSize,
+                sort:sort
+            },
+            function (data) {
+                resultService.passData(data,$scope.queryString+'*');
+                
+            });
         };
+
+//        $scope.updatePageData = function () {
+//
+//            var sort = "";
+//            if ($scope.sort) {
+//                if (!_.isEmpty($scope.sort.by) && !_.isEmpty($scope.sort.dir)) {
+//                    sort = $scope.sort.by + "%20" + $scope.sort.dir;
+//                }
+//            }
+//
+//            var searchFacets = SearchService.queryFacetedSearch({
+//                },
+//                function (data) {
+//                    console.log(data);
+////                    $scope.gridOptions.data = data.response.docs;
+////                    $scope.gridOptions.totalItems = data.response.numFound;
+//                });
+//
+//        };
     }
 ]);

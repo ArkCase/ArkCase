@@ -1,33 +1,13 @@
 <div ng-controller="Search.FacetsController">
-    <div class="panel panel-success">
-        <div class="panel-heading">
-            <div class="panel-title">{{'search.comp.facets.title' | translate}}</div>
-        </div>
-
-        <div class="panel-body">
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox"> {{'search.comp.facets.people' | translate}}
-                </label>
-            </div>
-
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox"> {{'search.comp.facets.contacts' | translate}}
-                </label>
-            </div>
-
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox"> {{'search.comp.facets.city' | translate}}
-                </label>
-            </div>
-
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox"> {{'search.comp.facets.phone' | translate}}
-                </label>
-            </div>
-        </div>
-    </div>
+        <ul class="list-unstyled">
+        <li ng-repeat="(key, value) in facets" >
+            <div ng-show=checkEmpty(value) ><h6>{{key}}</h6></div>
+            <ul class="list-unstyled">
+            <li ng-repeat="x in value">
+                <input type="checkbox">{{x.name}} <span class="pull-right label label-info">{{x.count}}</span>
+            </li>
+            </ul>
+            
+        </li>
+        </ul>
 </div>
