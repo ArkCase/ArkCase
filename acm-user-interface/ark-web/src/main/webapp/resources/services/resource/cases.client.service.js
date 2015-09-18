@@ -42,7 +42,7 @@ angular.module('services').factory('CasesService', ['$resource',
             queryCases: {
                 method: 'GET',
                 cache: false,
-                url: 'proxy/arkcase/api/latest/plugin/search/CASE_FILE?start=0&n=50',
+                url: 'proxy/arkcase/api/latest/plugin/search/CASE_FILE?start=0&n=250&s=:sortBy :sortOrder',
                 isArray: false
             }
 

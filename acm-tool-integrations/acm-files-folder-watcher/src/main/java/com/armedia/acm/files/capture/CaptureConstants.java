@@ -6,6 +6,8 @@ package com.armedia.acm.files.capture;
 public interface CaptureConstants
 {
     String XML_BATCH_USER = "EPHESOFT_BATCH";
+    String PROCESS_ATTACHMENTS_USER = "PROCESS_ATTACHMENTS_USER";
+
 
     String XML_BATCH_CLASS_NAME_KEY = "BatchClassName";
     String XML_BATCH_DOCUMENTS_KEY = "Documents";
@@ -17,4 +19,6 @@ public interface CaptureConstants
     String XML_BATCH_TYPE_KEY = "Type";
     String XML_BATCH_MULTI_PAGE_PDF_FILE_KEY = "MultiPagePdfFile";
     String XML_BATCH_ATTACHMENT = "Attachment";
+
+
 }
