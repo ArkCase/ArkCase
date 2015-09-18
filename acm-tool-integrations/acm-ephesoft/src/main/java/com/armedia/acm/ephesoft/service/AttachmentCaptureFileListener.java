@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +34,8 @@ import java.util.stream.Collectors;
  */
 public class AttachmentCaptureFileListener implements ApplicationListener<AbstractCaptureFileEvent>
 {
+    private final String FILE_NAME_PATTERN_STRING = "^\\d+_.+_\\d+$";
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private EcmFileService ecmFileService;
@@ -47,16 +50,17 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
     public void onApplicationEvent(AbstractCaptureFileEvent event)
     {
         FileInfo fileInfo = null;
+
         if ((fileInfo = isSupported(event)) != null)
         {
-            log.debug("File {} is supported for processing!", event.getBaseFileName());
+            log.debug("File {} is supported for attachment processing!", event.getBaseFileName());
 
             processAttachment(event, fileInfo);
 
             log.debug("File {} finished processing!", event.getBaseFileName());
         } else
         {
-            log.debug("File {} is not supported for processing!", event.getBaseFileName());
+            log.info("File {} is not supported for processing!", event.getBaseFileName());
         }
     }
 
@@ -97,7 +101,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
                 log.info("successfully moved File {} to completed folder.", event.getBaseFileName());
             } catch (Exception e)
             {
-                log.error("file movement was not sucessfull: {}", e.getMessage(), e);
+                log.error("file movement was not successful: {}", e.getMessage(), e);
                 moveToFolder(event.getCaptureFile(), errorFolder);
             }
         } else
@@ -131,8 +135,14 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
 
         FileInfo fileInfo = new FileInfo();
         String fileName = event.getBaseFileName();
+
         if (fileName.contains("."))
             fileName = fileName.substring(0, fileName.indexOf('.'));
+
+        //matches files with name like 123123_case_file_123
+
+        if (!Pattern.matches(FILE_NAME_PATTERN_STRING, fileName))
+            return null;
 
         String parentObjectIdStr = extractParentObjectIdStr(fileName);
         String fileIdStr = extractFileIdStr(fileName);
