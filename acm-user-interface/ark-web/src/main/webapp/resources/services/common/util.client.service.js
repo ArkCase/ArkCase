@@ -122,11 +122,15 @@ angular.module('services').factory('UtilService', ['$q',
                 });
             }
 
-            ,stripNg: function(obj) {
+            // "$" prefix is used by Angular to add properties or objects to data object.
+            // "acm$_" prefix is used for additional properties or objects added to data object
+            // omitNg() omits any properties or objects starts with "$" or "acm$_". Original data object is not modified
+            //
+            , omitNg: function (obj) {
                 var copy = _.cloneDeep(obj);
                  _.cloneDeep(copy, function(v, k, o) {
                     if (_.isString(k)) {
-                        if (k.startsWith("$")) {
+                        if (k.startsWith("$") || k.startsWith("acm$_")) {
                             delete o[k];
                             var z = 1;
                         }

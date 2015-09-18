@@ -34,7 +34,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
         $scope.updateTitle = function() {
             //alert("update case title:" + $scope.caseInfo.title);
 
-            var caseInfo = Util.stripNg($scope.caseInfo);
+            var caseInfo = Util.omitNg($scope.caseInfo);
 
             CasesService.save({}, caseInfo
                 ,function(successData) {
