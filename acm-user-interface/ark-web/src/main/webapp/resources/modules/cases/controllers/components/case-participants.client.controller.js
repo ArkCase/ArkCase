@@ -45,13 +45,13 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                             //
                             if ("participantTypes" === colDef.lookup) {
                                 if ("*" === newValue) {
-                                    rowEntity.$participantNames = [
+                                    rowEntity.acm$_participantNames = [
                                         {id: "*", name: "*"}
                                     ];
                                 } else if ("owning group" === newValue) {
-                                    rowEntity.$participantNames = $scope.participantGroups;
+                                    rowEntity.acm$_participantNames = $scope.participantGroups;
                                 } else {
-                                    rowEntity.$participantNames = $scope.participantUsers;
+                                    rowEntity.acm$_participantNames = $scope.participantUsers;
                                 }
 
                                 $scope.$apply();
@@ -61,7 +61,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                             // Save changes
                             //
                             if (!Util.isEmpty(rowEntity.participantType) && !Util.isEmpty(rowEntity.participantLdapId)) {
-                                var caseInfo = Util.stripNg($scope.caseInfo);
+                                var caseInfo = Util.omitNg($scope.caseInfo);
                                 CasesService.save({}, caseInfo
                                     ,function(caseSaved) {
                                         if (Validator.validateCaseFile(caseSaved)) {
@@ -143,8 +143,8 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                             $scope.gridOptions.columnDefs[i].enableCellEdit = true;
                             $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                            $scope.gridOptions.columnDefs[i].editDropdownRowEntityOptionsArrayPath = "$participantNames";
-                            $scope.gridOptions.columnDefs[i].cellFilter = "mapIdValue: row.entity.$participantNames:'id':'name'";
+                            $scope.gridOptions.columnDefs[i].editDropdownRowEntityOptionsArrayPath = "acm$_participantNames";
+                            $scope.gridOptions.columnDefs[i].cellFilter = "mapIdValue: row.entity.acm$_participantNames:'id':'name'";
                         }
                     }
                 });
@@ -158,13 +158,13 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             $scope.gridOptions.data = $scope.caseInfo.participants;
             _.each($scope.gridOptions.data, function(item) {
                 if ("*" === item.participantType) {
-                    item.$participantNames = [
+                    item.acm$_participantNames = [
                         {id: "*", name: "*"}
                     ];
                 } else if ("owning group" === item.participantType) {
-                    item.$participantNames = $scope.participantGroups;
+                    item.acm$_participantNames = $scope.participantGroups;
                 } else {
-                    item.$participantNames = $scope.participantUsers;
+                    item.acm$_participantNames = $scope.participantUsers;
                 }
             });
         });
@@ -188,7 +188,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
 
             var id = Util.goodMapValue([row, "entity", "id"], 0);
             if (0 < id) {    //do not need to call service when deleting a new row
-                var caseInfo = Util.stripNg($scope.caseInfo);
+                var caseInfo = Util.omitNg($scope.caseInfo);
                 CasesService.save({}, caseInfo
                     ,function(caseSaved) {
                         if (Validator.validateCaseFile(caseSaved)) {

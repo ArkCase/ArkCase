@@ -27,7 +27,7 @@ angular.module('cases').controller('Cases.DetailsController', ['$scope', '$state
         //}
         $scope.saveDetails = function() {
             //$scope.editor.destroy();
-            var caseInfo = Util.stripNg($scope.caseInfo);
+			var caseInfo = Util.omitNg($scope.caseInfo);
             CasesService.save({}, caseInfo
                 ,function(successData) {
                 }
@@ -50,7 +50,7 @@ angular.module('cases').controller('Cases.DetailsController', ['$scope', '$state
          //   $scope.caseSaveStat.saveInProgress = true;
          //   $scope.editor.summernote('saveRange');
         //
-         //   var caseInfo = Util.stripNg($scope.caseInfo);
+		//   var caseInfo = Util.omitNg($scope.caseInfo);
          //   CasesService.save({}, caseInfo
          //       ,function(successData) {
          //           console.log('success, successData.details=' + successData.details);
