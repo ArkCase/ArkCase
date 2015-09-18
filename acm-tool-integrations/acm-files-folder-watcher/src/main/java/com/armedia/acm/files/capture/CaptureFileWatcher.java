@@ -119,7 +119,7 @@ public class CaptureFileWatcher implements FileListener, ApplicationEventPublish
     {
         String filePath = eventFile.getCanonicalPath();
         String replaced = filePath.replace(getBaseFolderPath(), "");
-        if (replaced.startsWith(File.separator))
+        if (replaced.startsWith(File.separator) && replaced.length() > 1)
             replaced = replaced.substring(1);
         return replaced;
     }
