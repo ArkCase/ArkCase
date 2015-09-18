@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module('search').controller('Search.ResultsController', ['$scope', 'resultService', 'SearchService',
-    function ($scope, resultService, SearchService) {
+angular.module('search').controller('Search.ResultsController', ['$scope', 'ResultService', 'SearchService',
+    function ($scope, ResultService, SearchService) {
         $scope.$emit('req-component-config', 'results');
 
         $scope.start = 0;
         $scope.pageSize = 10;
-        $scope.sort = {by: "", dir: "asc"};
+        $scope.sort = {by: '', dir: 'asc'};
         $scope.filters = [];   //for future work
         $scope.queryString = '';
         $scope.config = null;
@@ -28,8 +28,7 @@ angular.module('search').controller('Search.ResultsController', ['$scope', 'resu
                     //comment out filtering until service side supports it
                     ////enableFiltering: config.enableFiltering,
                     //enableFiltering: true,
-                    //useExternalFiltering: true,
-
+                    useExternalFiltering: true,
                     columnDefs: config.columnDefs,
                     onRegisterApi: function (gridApi) {
                         $scope.gridApi = gridApi;
@@ -63,55 +62,28 @@ angular.module('search').controller('Search.ResultsController', ['$scope', 'resu
                             $scope.pageSize = pageSize;
                             $scope.updatePageData();
                         });
-
                     }
                 };
 
                 $scope.pageSize = config.paginationPageSize;
             }
         }
-        $scope.$on('queryComplete', function () {
-            $scope.gridOptions.data = resultService.data.response.docs;
-            $scope.gridOptions.totalItems = resultService.data.response.numFound;
-            $scope.queryString = resultService.queryString;
+        $scope.$on('query-complete', function () {
+            $scope.gridOptions.data = ResultService.data.response.docs;
+            $scope.gridOptions.totalItems = ResultService.data.response.numFound;
+            $scope.queryString = ResultService.queryString;
         });
 
         $scope.updatePageData = function () {
-            var sort = "";
-            if ($scope.sort) {
-                if (!_.isEmpty($scope.sort.by) && !_.isEmpty($scope.sort.dir)) {
-                    sort = $scope.sort.by + "%20" + $scope.sort.dir;
-                }
-            }
             SearchService.queryFacetedSearch({
                 input: $scope.queryString,
                 start: $scope.start,
-                n: $scope.pageSize,
-                sort:sort
+                n: $scope.pageSize
             },
             function (data) {
-                resultService.passData(data,$scope.queryString+'*');
-                
+                ResultService.passData(data, $scope.queryString + '*');
+
             });
         };
-
-//        $scope.updatePageData = function () {
-//
-//            var sort = "";
-//            if ($scope.sort) {
-//                if (!_.isEmpty($scope.sort.by) && !_.isEmpty($scope.sort.dir)) {
-//                    sort = $scope.sort.by + "%20" + $scope.sort.dir;
-//                }
-//            }
-//
-//            var searchFacets = SearchService.queryFacetedSearch({
-//                },
-//                function (data) {
-//                    console.log(data);
-////                    $scope.gridOptions.data = data.response.docs;
-////                    $scope.gridOptions.totalItems = data.response.numFound;
-//                });
-//
-//        };
     }
 ]);

@@ -1,13 +1,12 @@
 <div ng-controller="Search.FacetsController">
-        <ul class="list-unstyled">
+    <ul class="list-unstyled">
         <li ng-repeat="(key, value) in facets" >
             <div ng-show=checkEmpty(value) ><h6>{{key}}</h6></div>
             <ul class="list-unstyled">
-            <li ng-repeat="x in value">
-                <input type="checkbox">{{x.name}} <span class="pull-right label label-info">{{x.count}}</span>
-            </li>
+                <li ng-repeat="x in value">
+                    <input type="checkbox" ng-click="facetSearch(x.name, key)">{{x.name}} <span class="pull-right label label-info">{{x.count}}</span>
+                </li>
             </ul>
-            
         </li>
-        </ul>
+    </ul>
 </div>
