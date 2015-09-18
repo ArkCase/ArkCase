@@ -61,6 +61,11 @@
         50
       ],
       "paginationPageSize": 10
+    },
+     {
+      "id": "input",
+      "title": "Input",
+      "enabled": true
     }
   ]
 }

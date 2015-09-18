@@ -1,6 +1,6 @@
 <div ng-controller="SearchController">
     <div class="module-header">
-        <h3>{{'search.title' | translate}}</h3>
+        <div ng-include="'modules/search/views/components/search-input.client.view.html'"></div>
     </div>
     <div class="module-content">
         <div class="scroll-body col-xs-3" slimscroll="{height: '800px'}"
