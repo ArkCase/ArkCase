@@ -101,10 +101,9 @@ public abstract class AbstractCaptureFileListener implements ApplicationListener
                     }
                 }
             }
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
-            LOG.error("Cannot check if the object type is supported: " + e.getMessage(), e);
+            LOG.warn("Cannot check if the file {} is supported: ", event.getBaseFileName());
         }
 
         return false;
@@ -112,7 +111,7 @@ public abstract class AbstractCaptureFileListener implements ApplicationListener
 
     /**
      * This method will return dynamic entity that is created for given XML file and XSD schema.
-     *
+     * <p/>
      * The XML file is the XML representation of the batch file that Ephesoft will send to this system.
      *
      * @param xmlBatch
@@ -134,10 +133,9 @@ public abstract class AbstractCaptureFileListener implements ApplicationListener
             Unmarshaller unmarshaller = context.createUnmarshaller();
 
             entity = (DynamicEntity) unmarshaller.unmarshal(xmlBatch);
-        }
-        catch(Exception e)
+        } catch (Exception e)
         {
-            LOG.error("Error while creating DynamicEntity from XML: " + e.getMessage(), e);
+            LOG.warn("Error while creating DynamicEntity from XML batch {}", xmlBatch != null ? xmlBatch.getName() : "null");
         }
 
         return entity;
@@ -158,8 +156,7 @@ public abstract class AbstractCaptureFileListener implements ApplicationListener
             FileUtils.moveFile(file, workingFile);
 
             return workingFile;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             LOG.error("Cannot move file to working directory: " + e.getMessage(), e);
         }
@@ -182,8 +179,7 @@ public abstract class AbstractCaptureFileListener implements ApplicationListener
             FileUtils.moveFile(file, completedFile);
 
             return completedFile;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             LOG.error("Cannot move file to completed directory: " + e.getMessage(), e);
         }
@@ -235,8 +231,7 @@ public abstract class AbstractCaptureFileListener implements ApplicationListener
                     LOG.error("Cannot take document: " + e.getMessage(), e);
                 }
             });
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             LOG.error("Cannot take documents for given batch file: " + e.getMessage(), e);
         }
@@ -264,8 +259,7 @@ public abstract class AbstractCaptureFileListener implements ApplicationListener
                     addAttachment(documents, document, found.get());
                 }
             }
-        }
-        catch(Exception e)
+        } catch (Exception e)
         {
             LOG.error("Cannot add attachment to document: " + e.getMessage(), e);
         }
