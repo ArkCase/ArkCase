@@ -195,7 +195,6 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
         assertNotNull(errorFolder.getChild("321321_complaint_22121.pdf"));
 
         verifyAll();
-
     }
 
 }
