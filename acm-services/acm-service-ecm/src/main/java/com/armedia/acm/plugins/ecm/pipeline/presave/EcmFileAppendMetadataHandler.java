@@ -58,7 +58,9 @@ public class EcmFileAppendMetadataHandler implements PipelineHandler<EcmFile, Ec
             EcmFile saved = getEcmFileDao().save(entity);
             pipelineContext.setEcmFile(saved);
         } else {
+            // The new content is merged into an existing document, so the old document metadata needs to be retained
             EcmFile oldFile = pipelineContext.getEcmFile();
+            entity.setFileName(oldFile.getFileName());
             entity.setFileId(oldFile.getFileId());
             entity.setCreator(oldFile.getCreator());
             entity.setCreated(oldFile.getCreated());
@@ -68,8 +70,8 @@ public class EcmFileAppendMetadataHandler implements PipelineHandler<EcmFile, Ec
             pipelineContext.setEcmFile(entity);
         }
 
-        // Non-pdf format documents need to be copied to the Ephesoft hot folder for processing
-        if (!pipelineContext.getIsPDF()) {
+        // Non-pdf format authorization/abstract type documents need to be copied to the Ephesoft hot folder for processing
+        if (!pipelineContext.getIsPDF() && pipelineContext.getIsAuthorizationOrAbstract()) {
             try {
                 // Drops the file into the shared drive folder for Ephesoft
                 captureFolderService.copyToCaptureHotFolder(pipelineContext.getEcmFile(), pipelineContext.getFileInputStream());

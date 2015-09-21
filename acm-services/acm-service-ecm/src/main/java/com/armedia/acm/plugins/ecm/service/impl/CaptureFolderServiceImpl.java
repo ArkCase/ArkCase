@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+import com.armedia.acm.plugins.ecm.exception.EphesoftException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.CaptureFolderService;
 import org.apache.commons.io.FilenameUtils;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +30,7 @@ public class CaptureFolderServiceImpl implements CaptureFolderService {
      * @param ephesoftFile - contains the metadata for the file to send to Ephesoft
      * @param fileInputStream - binary data comprising the non-pdf file
      */
-    public void copyToCaptureHotFolder(EcmFile ephesoftFile, InputStream fileInputStream) throws Exception {
+    public void copyToCaptureHotFolder(EcmFile ephesoftFile, InputStream fileInputStream) throws EphesoftException, IOException {
         FileOutputStream captureFileOutputStream = null;
         try {
             // Creates a filename in the format that Ephesoft expects for this drop file
@@ -40,7 +42,7 @@ public class CaptureFolderServiceImpl implements CaptureFolderService {
 
             // Copies supported file types to the Ephesoft hot folder
             if (isTypeSupported(fileExtension, captureSupportedTypes)) {
-                captureFileOutputStream = new FileOutputStream(new File(buildFullEphesoftDropPath(fileName, captureFolderToWatch)));
+                captureFileOutputStream = new FileOutputStream(new File(buildFullEphesoftDropPath(fileName)));
                 fileInputStream.reset(); // the stream was already read by the addFile mule flow in the previous stage, so it needs to be reset here
                 IOUtils.copy(fileInputStream, captureFileOutputStream);
             }
@@ -59,30 +61,26 @@ public class CaptureFolderServiceImpl implements CaptureFolderService {
      * @return filename formatted for Ephesoft containerId + "_" + containerType + "_" fileId + "." + extension
      * @throws Exception if one of the components of the name is not present
      */
-    private static String buildEphesoftFileName(EcmFile ephesoftFile, String fileExtension) throws Exception {
+    private String buildEphesoftFileName(EcmFile ephesoftFile, String fileExtension) throws EphesoftException {
         if (ephesoftFile == null) {
-            throw new Exception("ephesoftFile is null");
+            throw new EphesoftException("ephesoftFile is null");
         }
         if (fileExtension == null || fileExtension.trim().length() == 0) {
-            throw new Exception("fileExtension is null or empty");
+            throw new EphesoftException("fileExtension is null or empty");
         }
 
-        // To build the ephesoft format name we need the file id, container id, and the original filename
-        String fileName = ephesoftFile.getFileName();
+        // To build the ephesoft format filename we need the file id, container id and container type
         Long fileId = ephesoftFile.getFileId();
         Long containerObjectId = ephesoftFile.getContainer().getContainerObjectId();
         String containerObjectType = ephesoftFile.getContainer().getContainerObjectType();
-        if (fileName == null) {
-            throw new Exception("fileName is null");
-        }
         if (fileId == null) {
-            throw new Exception("fileId is null");
+            throw new EphesoftException("fileId is null");
         }
         if (containerObjectId == null) {
-            throw new Exception("containerObjectId is null");
+            throw new EphesoftException("containerObjectId is null");
         }
         if (containerObjectType == null || containerObjectType.length() == 0) {
-            throw new Exception("containerObjectType is null or empty");
+            throw new EphesoftException("containerObjectType is null or empty");
         }
 
         return containerObjectId + "_" + containerObjectType + "_" + fileId + "." + fileExtension;
@@ -92,16 +90,15 @@ public class CaptureFolderServiceImpl implements CaptureFolderService {
      * Combines the Ephesoft folder path (from configuration) with
      * the filename of the document.
      * @param fileName - name of the document
-     * @param captureFolder - name of the Ephesoft capture hot folder
      * @return full path for the file to be dropped into the Ephesoft hot folder
      */
-    private static String buildFullEphesoftDropPath(String fileName, String captureFolder) {
+    private String buildFullEphesoftDropPath(String fileName) {
         String fullPath = "";
-        if (captureFolder != null && fileName != null) {
-            if (captureFolder.endsWith("/")) {
-                fullPath = captureFolder + fileName;
+        if (captureFolderToWatch != null && fileName != null) {
+            if (captureFolderToWatch.endsWith("/")) {
+                fullPath = captureFolderToWatch + fileName;
             } else {
-                fullPath = captureFolder + "/" + fileName;
+                fullPath = captureFolderToWatch + "/" + fileName;
             }
         }
         return fullPath;

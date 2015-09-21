@@ -50,19 +50,19 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
     }
 
     /**
-     * Determines if the file is of a type which can be merged.
-     * The types (authorization, abstract) can be merged, and the document must be a PDF as well
+     * Determines if the file is of a type which can be merged/sent to Ephesoft.
+     * The types (authorization, abstract) can be merged/sent to Ephesoft
      * @param fileType - ArkCase type of the uploaded file (authorization, abstract)
-     * @return true if the given file type can be merged, false otherwise
+     * @return true if the given file type can be merged/sent to Ephesoft, false otherwise
      */
-    private boolean isFileTypeMergeable(String fileType) {
-        boolean isMergeable = false;
+    private boolean isFileTypeAuthorizationOrAbstract(String fileType) {
+        boolean isAuthorizationOrAbstract = false;
         if (fileType != null) {
             if (fileType.trim().equalsIgnoreCase("authorization") || fileType.trim().equalsIgnoreCase("abstract")) {
-                isMergeable = true;
+                isAuthorizationOrAbstract = true;
             }
         }
-        return isMergeable;
+        return isAuthorizationOrAbstract;
     }
 
     @Override
@@ -78,13 +78,16 @@ public class EcmFileAppendHandler implements PipelineHandler<EcmFile, EcmFileTra
         pipelineContext.setIsPDF(isPDF);
         log.debug("isPDF: " + isPDF);
 
+        // Authorization and Abstract files are treated differently from Correspondence files
+        pipelineContext.setIsAuthorizationOrAbstract(isFileTypeAuthorizationOrAbstract(entity.getFileType()));
+
         if (isPDF) {
             try {
                 // If the new PDF upload has an ArkCase type of either (authorization or abstract)
                 // and another PDF with the same ArkCase type can be found in Alfresco then that document
                 // will be pulled and merged together with the new one
                 EcmFile matchFile = null;
-                if (isFileTypeMergeable(entity.getFileType())) {
+                if (pipelineContext.getIsAuthorizationOrAbstract()) {
                     matchFile = getDuplicateFile(pipelineContext.getContainer().getId(), entity.getFileType());
                 }
 
