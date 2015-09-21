@@ -118,7 +118,10 @@ public class CaptureFileWatcher implements FileListener, ApplicationEventPublish
     private String getEventFileBasePath(File eventFile) throws IOException
     {
         String filePath = eventFile.getCanonicalPath();
-        return filePath.replace(getBaseFolderPath(), "");
+        String replaced = filePath.replace(getBaseFolderPath(), "");
+        if (replaced.startsWith(File.separator) && replaced.length() > 1)
+            replaced = replaced.substring(1);
+        return replaced;
     }
 
     private File getEventFile(FileChangeEvent fileChangeEvent) throws FileSystemException, URISyntaxException
