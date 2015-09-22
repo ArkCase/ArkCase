@@ -62,22 +62,7 @@ public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransfo
 
     @Override
     public SolrAdvancedSearchDocument toContentFileIndex(AcmObjectLock in) {
-        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
-
-        solr.setId(in.getId() + "-OBJECT_LOCK");
-        solr.setObject_id_s(in.getId().toString());
-        solr.setObject_type_s("OBJECT_LOCK");
-
-        solr.setParent_id_s(in.getObjectId().toString());
-        solr.setParent_type_s(in.getObjectType());
-
-
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
-
-        return solr;
+        return null;
     }
 
     @Override
