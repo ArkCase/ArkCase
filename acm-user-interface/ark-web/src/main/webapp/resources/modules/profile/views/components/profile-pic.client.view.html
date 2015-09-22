@@ -3,20 +3,18 @@
         <div ng-controller="Profile.PicController" class="row">
             <div class="col-xs-6 text-center">
                 <div>
-                    <img id="picLoading" class="img-circle" ng-src='modules/profile/img/nopic.png'>
+                    <img id="picLoading" class="img-circle img-responsive"  ng-src="{{profilePicDefault && 'modules/profile/img/nopic.png'|| 'proxy/arkcase/api/latest/plugin/ecm/download?ecmFileId='+profileEcmFileID+'&inline=true'}}" >
                     <div>
-                    <a id="lnkChangePicture" href="#" ng-click="changePic()"><u>{{'profile.pciture.title' | translate}}</u></a>
+                        <a id="lnkChangePicture" data-ui-sref="profile" ng-click="changePic()"><u>{{'profile.pciture.title'| translate}}</u></a>
                     </div>
-                    <form id="formPicture" class="hidden">
-                        <input type="file" id="file" name="file">
-                    </form>
+                    <button ngf-select ng-model="userPicture"  id="file"  class="btn btn-sm btn-default hidden" ngf-change="submit()" ></button>
                 </div>
             </div>
             <div class="col-xs-6">
-                <h4 id="fullName">{{profilePicFullName || 'Unknown'}}</h4>
-                <h4>  <a href="#"  editable-text="profile.pic.title" onaftersave="update()">{{ profilePicTitle|| 'unknown' }}</a></h4>
-                <h4 id="email">{{ profilePicEmail  || 'Unknown'}}</h4>
-                <small> {{'profile.pciture.email' | translate}} </small>
+                <h4 id="fullName">{{profilePicFullName|| 'Unknown'}}</h4>
+                <h4>  <a href="#"  editable-text="profilePicTitle" onaftersave="update()">{{ profilePicTitle || 'profile.unknown' }}</a></h4>
+                <h4 id="email">{{ profilePicEmail || 'Unknown'}}</h4>
+                <small> {{'profile.pciture.email'| translate}} </small>
             </div>
         </div>
     </div>

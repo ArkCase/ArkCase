@@ -8,4 +8,10 @@
     <bean id="objectLockService" class="com.armedia.acm.service.objectlock.service.AcmObjectLockServiceImpl">
         <property name="acmObjectLockDao" ref="objectLockDao"/>
     </bean>
+
+    <bean id="acmObjectLockToSolrTransformer"
+          class="com.armedia.acm.service.objectlock.transformer.AcmObjectLockToSolrTransformer">
+        <property name="dao" ref="objectLockDao"/>
+    </bean>
+    
 </beans>
