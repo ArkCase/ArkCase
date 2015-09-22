@@ -8,21 +8,23 @@ angular.module('profile').controller('Profile.PicController', ['$scope', 'userIn
             $("#file").click();
         };
         $scope.submit = function () {
-            userInfoService.getUserInfo().then(function (data) {
-                var userID = data.userOrgId;
-                userPicService.changePic($scope.userPicture, userID)
-                        .success(function (fileInfo) {
-                            var ecmFileID = fileInfo[0].fileId;
-                            $scope.profileEcmFileID = ecmFileID;
-                            userInfoService.getUserInfo().then(function (infoData) {
-                                infoData.ecmFileId = $scope.profileEcmFileID;
-                                userInfoService.updateUserInfo(infoData);
+            if ($scope.userPicture != null) {
+                userInfoService.getUserInfo().then(function (data) {
+                    var userID = data.userOrgId;
+                    userPicService.changePic($scope.userPicture, userID)
+                            .success(function (fileInfo) {
+                                var ecmFileID = fileInfo[0].fileId;
+                                $scope.profileEcmFileID = ecmFileID;
+                                userInfoService.getUserInfo().then(function (infoData) {
+                                    infoData.ecmFileId = $scope.profileEcmFileID;
+                                    userInfoService.updateUserInfo(infoData);
+                                });
+                            })
+                            .error(function () {
+                                console.log('error uploading');
                             });
-                        })
-                        .error(function () {
-                            console.log('error uploading');
-                        });
-            });
+                });
+            }
         };
         $scope.update = function () {
             var profileInfo;
