@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('CasesController', ['$scope', '$stateParams', 'ConfigService', 'CasesService',
-	function($scope, $stateParams, ConfigService, CasesService) {
+angular.module('cases').controller('CasesController', ['$scope', '$stateParams', 'UtilService', 'ValidationService', 'ConfigService', 'CasesService',
+	function($scope, $stateParams, Util, Validator, ConfigService, CasesService) {
 		$scope.config = ConfigService.getModule({moduleId: 'cases'});
 		$scope.$on('req-component-config', onConfigRequest);
 		function onConfigRequest(e, componentId) {
@@ -14,28 +14,24 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
 		$scope.$on('req-select-case', function(e, selectedCase){
 			$scope.$broadcast('case-selected', selectedCase);
 
-			var id;
-			if (selectedCase) {
-				id = selectedCase.id;
-			}
+			var id = Util.goodMapValue([selectedCase, "id"], null);
+			loadCase(id);
+		});
+
+
+		var loadCase = function(id) {
 			if (id) {
 				CasesService.get({id: id
 				}, function(data) {
-					$scope.$broadcast('case-retrieved', data);
+                    if (Validator.validateCaseFile(data)) {
+                        $scope.caseData = data;
+                        $scope.$broadcast('case-retrieved', data);
+                    }
 				});
 			}
+		}
 
-
-		});
-
-//        var id = $stateParams.id;
-//        if (id) {
-//            CasesService.get({
-//                id: id
-//            }, function(data) {
-//                $scope.$broadcast('case-retrieved', data);
-//            })
-//        }
-
+		var id = Util.goodMapValue([$stateParams, "id"], null);
+		loadCase(id);
 	}
 ]);
