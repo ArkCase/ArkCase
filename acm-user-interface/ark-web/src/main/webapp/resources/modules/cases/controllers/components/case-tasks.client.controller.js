@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.TasksController', ['$scope', '$stateParams', 'UtilService', 'ValidationService', 'LookupService', 'CasesService',
-    function ($scope, $stateParams, Util, Validator, LookupService, CasesService) {
+angular.module('cases').controller('Cases.TasksController', ['$scope', '$stateParams', '$q', 'UtilService', 'ValidationService', 'LookupService', 'CasesService',
+    function ($scope, $stateParams, $q, Util, Validator, LookupService, CasesService) {
 		$scope.$emit('req-component-config', 'tasks');
 
         $scope.currentId = $stateParams.id;
@@ -10,6 +10,49 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
         $scope.sort = {by: "", dir: "asc"};
         $scope.filters = [];
 
+
+        var promiseUsers = Util.servicePromise({
+            service: LookupService.getUsers
+            , callback: function (data) {
+                $scope.userFullNames = [];
+                var arr = Util.goodArray(data);
+                for (var i = 0; i < arr.length; i++) {
+                    var obj = Util.goodJsonObj(arr[i]);
+                    if (obj) {
+                        var user = {};
+                        user.id = Util.goodValue(obj.object_id_s);
+                        user.name = Util.goodValue(obj.name);
+                        $scope.userFullNames.push(user);
+                    }
+                }
+                return $scope.userFullNames;
+            }
+        });
+
+        var promiseMyTasks = Util.servicePromise({
+            service: CasesService.queryMyTasks
+            , param: {user: "ann-acm"}
+            , callback: function (data) {
+                var arr = Util.goodArray(data);
+                $scope.myTasks = _.map(data, _.partialRight(_.pick, "taskId", "adhocTask", "completed", "status", "availableOutcomes"));
+                //
+                //lodash equivalent to the following. It saves several lines of code, but is it really worth the sacrifice of readability?
+                //
+                //$scope.myTasks = [];
+                //for (var i = 0; i < arr.length; i++) {
+                //    var task = {};
+                //    task.taskId = Util.goodValue(arr[i].taskId);
+                //    task.adhocTask = Util.goodValue(arr[i].adhocTask);
+                //    task.completed = Util.goodValue(arr[i].completed);
+                //    task.status = Util.goodValue(arr[i].status);
+                //    task.availableOutcomes = Util.goodArray(arr[i].availableOutcomes);
+                //    $scope.myTasks.push(task);
+                //}
+                return $scope.myTasks;
+            }
+        });
+
+
         $scope.config = null;
         $scope.gridOptions = {};
         $scope.$on('component-config', applyConfig);
@@ -17,12 +60,11 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
 			if (componentId == 'tasks') {
 				$scope.config = config;
 				$scope.gridOptions = {
-					enableColumnResizing: true,
-					enableRowSelection: true,
-					enableRowHeaderSelection: false,
-					enableFiltering: config.enableFiltering,
-					multiSelect: false,
-					noUnselect : false,
+                    enableColumnResizing: true,
+                    enableRowSelection: false,
+                    enableRowHeaderSelection: false,
+                    multiSelect: false,
+                    noUnselect: false,
 
                     paginationPageSizes: config.paginationPageSizes,
                     paginationPageSize: config.paginationPageSize,
@@ -68,18 +110,23 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
 					}
 				};
 
+                $q.all([promiseUsers, promiseMyTasks]).then(function (data) {
+                    for (var i = 0; i < $scope.config.columnDefs.length; i++) {
+                        if ("userFullNames" == $scope.config.columnDefs[i].lookup) {
+                            $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: grid.appScope.userFullNames:'id':'name'";
+
+                        } else if ("taskOutcomes" == $scope.config.columnDefs[i].lookup) {
+                            $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
+                                + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
+                                + ' ng-model="row.entity.acm$_taskOutcome">'
+                                + ' </select>'
+                                + ' <span ng-hide="\'noop\'==row.entity.acm$_taskOutcome.id"><i class="fa fa-gear fa-lg" ng-click="grid.appScope.action(row.entity)"></i></span></span>';
+                        }
+                    }
+                });
+
                 $scope.pageSize = config.paginationPageSize;
                 $scope.updatePageData();
-
-                //var id = $stateParams.id;
-                //CasesService.queryTasks({
-                //	id: id,
-                //	startWith: 0,
-                //	count: 10
-                //}, function(data) {
-                //	//numFound  start
-                //	$scope.gridOptions.data = data.response.docs;
-                //})
 			}
 		}
 
@@ -101,62 +148,95 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                 count: $scope.pageSize,
                 sort: sort
             }, function (data) {
+                if (Validator.validateSolrData(data)) {
+                    $q.all([promiseUsers, promiseMyTasks]).then(function () {
+                        var tasks = data.response.docs;
+                        $scope.gridOptions.data = tasks;
+                        $scope.gridOptions.totalItems = data.response.numFound;
 
-                data = {
-                    "responseHeader": {
-                        "status": 0,
-                        "QTime": 1,
-                        "params": {
-                            "q": "parent_object_type_s:CASE_FILE AND parent_object_id_i:113 AND object_type_s:TASK AND -status_s:DELETED",
-                            "indent": "true",
-                            "topLevel": "if(exists(parent_ref_s), 0, 1)",
-                            "dac": "{!join from=id to=parent_ref_s}(not(exists(protected_object_b)) OR protected_object_b:false OR public_doc_b:true  OR allow_acl_ss:ann-acm OR allow_acl_ss:ROLE_INVESTIGATOR OR allow_acl_ss:ROLE_ADMINISTRATOR OR allow_acl_ss:ACM_INVESTIGATOR_DEV OR allow_acl_ss:ROLE_ANALYST OR allow_acl_ss:ROLE_INVESTIGATOR_SUPERVISOR OR allow_acl_ss:ACM_ADMINISTRATOR_DEV OR allow_acl_ss:ROLE_CALLCENTER ) AND -deny_acl_ss:ann-acm AND -deny_acl_ss:ROLE_INVESTIGATOR AND -deny_acl_ss:ROLE_ADMINISTRATOR AND -deny_acl_ss:ACM_INVESTIGATOR_DEV AND -deny_acl_ss:ROLE_ANALYST AND -deny_acl_ss:ROLE_INVESTIGATOR_SUPERVISOR AND -deny_acl_ss:ACM_ADMINISTRATOR_DEV AND -deny_acl_ss:ROLE_CALLCENTER",
-                            "start": "0",
-                            "fq": ["{!frange l=1}sum(if(exists(protected_object_b), 0, 1), if(protected_object_b, 0, 1), if(public_doc_b, 1, 0), termfreq(allow_acl_ss, ann-acm), termfreq(allow_acl_ss, ROLE_INVESTIGATOR), termfreq(allow_acl_ss, ROLE_ADMINISTRATOR), termfreq(allow_acl_ss, ACM_INVESTIGATOR_DEV), termfreq(allow_acl_ss, ROLE_ANALYST), termfreq(allow_acl_ss, ROLE_INVESTIGATOR_SUPERVISOR), termfreq(allow_acl_ss, ACM_ADMINISTRATOR_DEV), termfreq(allow_acl_ss, ROLE_CALLCENTER))",
-                                "-deny_acl_ss:ann-acm AND -deny_acl_ss:ROLE_INVESTIGATOR AND -deny_acl_ss:ROLE_ADMINISTRATOR AND -deny_acl_ss:ACM_INVESTIGATOR_DEV AND -deny_acl_ss:ROLE_ANALYST AND -deny_acl_ss:ROLE_INVESTIGATOR_SUPERVISOR AND -deny_acl_ss:ACM_ADMINISTRATOR_DEV AND -deny_acl_ss:ROLE_CALLCENTER",
-                                "{!frange l=1}sum($topLevel, $dac)"],
-                            "sort": "",
-                            "rows": "10",
-                            "wt": "json"
+                        for (var i = 0; i < tasks.length; i++) {
+                            var task = tasks[i];
+                            task.acm$_taskOutcomes = [{id: "noop", value: "(Select One)"}];
+                            task.acm$_taskOutcome = {id: "noop", value: "(Select One)"};
+                            task.acm$_taskActionDone = true;
+
+                            var found = _.where($scope.myTasks, {taskId: tasks[i].id});
+                            if (0 < found.length) {
+                                var myTask = found[0];
+                                if (!myTask.completed && myTask.adhocTask) {
+                                    task.acm$_taskOutcomes.push({id: "complete", value: "Complete"});
+                                    task.acm$_taskOutcomes.push({id: "delete", value: "Delete"});
+                                    task.acm$_taskActionDone = false;
+
+                                } else if (!myTask.completed && !myTask.adhocTask && !Util.isArrayEmpty(myTask.availableOutcomes)) {
+                                    var availableOutcomes = Util.goodArray(myTask.availableOutcomes);
+                                    for (var j = 0; j < availableOutcomes.length; j++) {
+                                        var outcome = {
+                                            id: Util.goodValue(availableOutcomes[j].description),
+                                            value: Util.goodValue(availableOutcomes[j].description)
+                                        };
+                                        task.acm$_taskOutcomes.push(outcome);
+                                    }
+                                    task.acm$_taskActionDone = (1 >= availableOutcomes.length); //1 for '(Select One)'
+                                }
+                            }
                         }
-                    },
-                    "response": {
-                        "numFound": 1, "start": 0, "docs": [
-                            {
-                                "id": "2943-TASK",
-                                "status_s": "CLOSED",
-                                "last_modified_tdt": "2015-09-15T19:47:05Z",
-                                "due_tdt": "2015-09-15T00:00:00Z",
-                                "name": "Please step in on this one, Sally",
-                                "object_id_s": "2943",
-                                "object_type_s": "TASK",
-                                "assignee_s": "sally-acm",
-                                "priority_s": "Medium",
-                                "parent_object_type_s": "CASE_FILE",
-                                "adhocTask_b": true,
-                                "public_doc_b": true,
-                                "protected_object_b": true,
-                                "title_parseable": "Please step in on this one, Sally",
-                                "description_no_html_tags_parseable": "\n                        ",
-                                "parent_object_id_i": 113,
-                                "hidden_b": false,
-                                "parent_ref_s": "113-CASE_FILE",
-                                "_version_": 1512409845180923904
-                            }]
-                    }
-                };
-
-
-                $scope.gridOptions.data = Util.goodMapValue([data, "response", "docs"], []);
-                $scope.gridOptions.totalItems = Util.goodMapValue([data, "response", "numFound"], 0);
+                    }); //end $q
+                }
             })
         };
 
-        $scope.cellAction = cellAction;
-        function cellAction(action, entity) {
-            alert('make task completed');
-        }
+        $scope.addNew = function () {
+            alert("TODO: Launch task wizard");
+        };
 
+        var completeTask = function (rowEntity) {
+            return CasesService.completeTask({taskId: rowEntity.id}, {}
+                , function (successData) {
+                    rowEntity.acm$_taskActionDone = true;
+                    rowEntity.status_s = "COMPLETE";
+                }
+                , function (errorData) {
+                }
+            );
+        };
+        var deleteTask = function (rowEntity) {
+            return CasesService.deleteTask({taskId: rowEntity.id}, {}
+                , function (successData) {
+                    rowEntity.acm$_taskActionDone = true;
+                    var tasks = Util.goodArray($scope.gridOptions.data);
+                    for (var i = 0; i < tasks.length; i++) {
+                        if (tasks[i].id == rowEntity.id) {
+                            tasks.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+                , function (errorData) {
+                }
+            );
+        };
+        var completeTaskWithOutcome = function (rowEntity) {
+            var task = Util.omitNg(rowEntity);
+            return CasesService.completeTaskWithOutcome({}, task
+                , function (successData) {
+                    rowEntity.acm$_taskActionDone = true;
+                    rowEntity.status_s = "COMPLETE";
+                }
+                , function (errorData) {
+                }
+            );
+        };
+        $scope.action = function (rowEntity) {
+            console.log("act, rowEntity.id=" + rowEntity.id + ", action=" + rowEntity.acm$_taskOutcome.id);
+            if ("complete" == rowEntity.acm$_taskOutcome.id) {
+                completeTask(rowEntity);
+            } else if ("delete" == rowEntity.acm$_taskOutcome.id) {
+                deleteTask(rowEntity);
+            } else {
+                completeTaskWithOutcome(rowEntity);
+            }
+        }
 
 	}
 ]);
