@@ -1,0 +1,104 @@
+[
+  {
+    "type": "COMPLAINT",
+    "description": "Complaint",
+    "iconName": "i i-notice",
+    "url": "home.html#!/complaints/:id/main"
+  },
+  {
+    "type": "CASE_FILE",
+    "description": "Case File",
+    "iconName": "i i-folder",
+    "url": "/home.html#!/cases/:id/main"
+  },
+  {
+    "type": "TASK",
+    "description": "Task",
+    "iconName": "i i-checkmark",
+    "url": "/home.html#!/tasks/:id/main"
+  },
+  {
+    "type": "DOCUMENT",
+    "description": "Document",
+    "iconName": "",
+    "url": ""
+  },
+  {
+    "type": "FILE",
+    "description": "File",
+    "iconName": "",
+    "url": ""
+  },
+  {
+    "type": "PERSON",
+    "description": "Person",
+    "iconName": "",
+    "url": ""
+  },
+  {
+    "type": "PERSON-ASSOCIATION",
+    "description": "Person Association",
+    "iconName": "",
+    "url": ""
+  },
+  {
+    "type": "CONTACT-METHOD",
+    "description": "Contact Method",
+    "iconName": "",
+    "url": ""
+  },
+  {
+    "type": "LOCATION",
+    "description": "Location",
+    "iconName": "",
+    "url": ""
+  },
+  {
+    "type": "ORGANIZATION",
+    "description": "Organization",
+    "iconName": "",
+    "url": ""
+  },
+  {
+    "type": "SECURITY-TAGS",
+    "description": "Security Tags",
+    "iconName": "",
+    "url": ""
+  },
+  {
+    "type": "GROUP",
+    "description": "Group",
+    "iconName": "",
+    "url": ""
+  },
+  {
+    "type": "USER",
+    "description": "User",
+    "iconName": "",
+    "url": ""
+  },
+  {
+    "type": "NOTIFICATION",
+    "description": "Notification",
+    "iconName": "i i-chat3",
+    "url": ""
+  },
+  {
+    "type": "SUBSCRIPTION_EVENT",
+    "description": "Subscription Event",
+    "iconName": "i i-alarm",
+    "url": ""
+  },
+  {
+    "type": "TIMESHEET",
+    "description": "Timesheet",
+    "iconName": "i i-alarm",
+    "url": "/home.html#!/timesheets/:id/main"
+  },
+  {
+    "type": "COSTSHEET",
+    "description": "Costsheet",
+    "iconName": "fa fa-money",
+    "url": "/home.html#!/costsheets/:id/main"
+  }
+]

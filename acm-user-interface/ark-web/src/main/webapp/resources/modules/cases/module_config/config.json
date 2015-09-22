@@ -269,6 +269,14 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 2,
       "columnDefs": [
         {
           "name": "object_id_s",
@@ -286,9 +294,10 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "created",
+          "name": "create_tdt",
           "displayName": "cases.comp.tasks.table.columns.created",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'medium'}}</div>"
         },
         {
           "name": "priority_s",
@@ -296,9 +305,10 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "due-tdt",
+          "name": "due_tdt",
           "displayName": "cases.comp.tasks.table.columns.due",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'medium'}}</div>"
         },
         {
           "name": "status_s",
@@ -318,7 +328,45 @@
       "id" : "references",
       "title": "References",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "targetName",
+          "displayName": "cases.comp.references.table.columns.targetName",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.targetName}}</a>"
+        },
+        {
+          "name": "targetTitle",
+          "displayName": "cases.comp.references.table.columns.targetTitle",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.targetName}}</a>"
+        },
+        {
+          "name": "modified",
+          "displayName": "cases.comp.references.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'medium'}}</div>"
+        },
+        {
+          "name": "targetType",
+          "displayName": "cases.comp.references.table.columns.targetType",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "status",
+          "displayName": "cases.comp.references.table.columns.status",
+          "headerCellFilter": "translate"
+        }
+      ]
     },
 
     {
