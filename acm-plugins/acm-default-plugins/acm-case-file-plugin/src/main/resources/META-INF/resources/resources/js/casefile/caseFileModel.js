@@ -427,6 +427,7 @@ CaseFile.Model = CaseFile.Model || {
             pa.parentId = caseFileId;
             pa.personType = personAssociation.personType;
             //pa.personDescription = personAssociation.personDescription;
+            pa.person.className = "com.armedia.acm.plugins.person.model.Person";
             pa.person.title = personAssociation.person.title;
             pa.person.givenName = personAssociation.person.givenName;
             pa.person.familyName = personAssociation.person.familyName;
