@@ -62,16 +62,21 @@
         <property name="captureExtensions" value="${capture.fileExtensions}"/>
     </bean>
 
+    <!-- Mule Utility Bean for downloading, updating, adding files -->
+    <bean id="ecmFileMuleUtils" class="com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils">
+        <property name="muleContextManager" ref="muleContextManager"/>
+    </bean>
+
     <!-- Bactes specific pipeline pre save handlers -->
     <bean id="ecmFileAppendMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileAppendMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
+        <property name="captureFolderService" ref="captureFolderHandler"/>
     </bean>
     <bean id="ecmFileAppendHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileAppendHandler">
-        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
-        <property name="captureFolderService" ref="captureFolderHandler"/>
     </bean>
 
     <!-- Bactes specific ecm file transaction pipeline process manager -->
