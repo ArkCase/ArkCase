@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('profile').controller('Profile.PicController', ['$scope', 'userInfoService', 'userPicService',
-    function ($scope, userInfoService, userPicService) {
+angular.module('profile').controller('Profile.PicController', ['$scope', 'userInfoService', 'userPicService','$log',
+    function ($scope, userInfoService, userPicService,$log) {
         $scope.$emit('req-component-config', 'picture');
         $scope.profilePicDefault = true;
         $scope.changePic = function () {
@@ -21,7 +21,7 @@ angular.module('profile').controller('Profile.PicController', ['$scope', 'userIn
                                 });
                             })
                             .error(function () {
-                                console.log('error uploading');
+                                $log.error('error during uploading user profile picture');
                             });
                 });
             }
