@@ -31,6 +31,8 @@ public class QueueCaseServiceImpl implements QueueCaseService
         getCaseFileDao().getEm().refresh(caseFile);
 
         CaseFilePipelineContext ctx = new CaseFilePipelineContext();
+        if (caseFile.getQueue() != null)
+            ctx.setQueueName(caseFile.getQueue().getName());
         ctx.setEnqueueName(queueName);
 
         getQueuePipelineManager().onPreSave(caseFile, ctx);
