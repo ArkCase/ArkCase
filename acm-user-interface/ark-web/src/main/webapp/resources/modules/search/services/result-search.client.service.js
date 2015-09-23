@@ -1,12 +1,13 @@
 'use strict';
-angular.module('search').factory('ResultService', function ($rootScope) {
+angular.module('search').factory('ResultService', function () {
     var result = {};
     result.data = '';
     result.queryString = '';
-    result.passData = function (data, queryString) {
+    result.filterParams='';
+    result.passData = function (data, queryString,filter) {
         result.data = data;
         result.queryString = queryString;
-        $rootScope.$broadcast('query-complete');
+        result.filterParams=filter;
     };
     return result;
 });

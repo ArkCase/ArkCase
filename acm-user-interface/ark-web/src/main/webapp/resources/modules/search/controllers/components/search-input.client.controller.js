@@ -3,8 +3,19 @@
 angular.module('search').controller('Search.InputController', ['$scope', 'SearchService', 'ResultService',
     function ($scope, SearchService, ResultService) {
         $scope.$emit('req-component-config', 'input');
-        $scope.start = 0;
-        $scope.count = 10;
+        $scope.config=null;
+        $scope.start='';
+        $scope.count='';
+        //$scope.start = 0;
+        //$scope.count = 10;
+        $scope.$on('component-config', applyConfig);
+        function applyConfig(e, componentId, config) {
+            if (componentId == 'input') {
+                $scope.config = config;
+                $scope.start=config.searchParams.start;
+                $scope.count=config.searchParams.n;
+            }
+        }
         $scope.keyDown = function (event) {
             if (event.keyCode == 13) {
                 queryData();
@@ -20,9 +31,8 @@ angular.module('search').controller('Search.InputController', ['$scope', 'Search
                 start: $scope.start,
                 n: $scope.count},
             function (data) {
-                ResultService.passData(data, $scope.searchQuery + '*');
+                ResultService.passData(data, $scope.searchQuery + '*','');
             });
-
         };
     }
 ]);

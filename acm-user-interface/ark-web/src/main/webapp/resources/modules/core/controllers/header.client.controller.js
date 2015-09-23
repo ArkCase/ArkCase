@@ -2,9 +2,22 @@
 
 angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus', '$state', 'ResultService', 'SearchService',
     function ($scope, Authentication, Menus, $state, ResultService, SearchService) {
+        $scope.$emit('req-component-config', 'header');
         $scope.authentication = Authentication;
         $scope.isCollapsed = false;
         $scope.menu = Menus.getMenu('topbar');
+        
+        $scope.config=null;
+        $scope.start='';
+        $scope.count='';
+        $scope.$on('component-config', applyConfig);
+        function applyConfig(e, componentId, config) {
+            if (componentId == 'header') {
+                $scope.config = config;
+                $scope.start=config.searchParams.start;
+                $scope.count=config.searchParams.n;
+            }
+        }
 
         $scope.toggleCollapsibleMenu = function () {
             $scope.isCollapsed = !$scope.isCollapsed;
@@ -16,15 +29,15 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         });
         $scope.search = function () {
             $state.go('search');
-            serviceCall();
+            callSearchService();
         };
         $scope.keyDown = function (event) {
             if (event.keyCode == 13) {
                 $state.go('search');
-                serviceCall();
+                callSearchService();
             }
         };
-        function serviceCall() {
+        function callSearchService() {
             SearchService.queryFacetedSearch({
                 input: $scope.inputQuery + '*',
                 start: 0,

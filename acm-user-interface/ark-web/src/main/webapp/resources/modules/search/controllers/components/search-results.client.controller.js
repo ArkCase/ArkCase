@@ -4,8 +4,8 @@ angular.module('search').controller('Search.ResultsController', ['$scope', 'Resu
     function ($scope, ResultService, SearchService) {
         $scope.$emit('req-component-config', 'results');
 
-        $scope.start = 0;
-        $scope.pageSize = 10;
+        $scope.start = '';
+        $scope.pageSize = '';
         $scope.sort = {by: '', dir: 'asc'};
         $scope.filters = [];   //for future work
         $scope.queryString = '';
@@ -15,6 +15,8 @@ angular.module('search').controller('Search.ResultsController', ['$scope', 'Resu
         function applyConfig(e, componentId, config) {
             if (componentId == 'results') {
                 $scope.config = config;
+                $scope.start = config.searchParams.start;
+                $scope.pageSize = config.searchParams.n;
                 $scope.gridOptions = {
                     enableColumnResizing: true,
                     enableRowSelection: true,
@@ -42,7 +44,7 @@ angular.module('search').controller('Search.ResultsController', ['$scope', 'Resu
                                 $scope.sort.by = sortColumns[0].field;
                                 $scope.sort.dir = sortColumns[0].sort.direction;
                             }
-                            $scope.updatePageData();
+                            $scope.sortData();
                         });
                         $scope.gridApi.core.on.filterChanged($scope, function () {
                             var grid = this.grid;
@@ -60,7 +62,12 @@ angular.module('search').controller('Search.ResultsController', ['$scope', 'Resu
                         $scope.gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
                             $scope.start = (newPage - 1) * pageSize;   //newPage is 1-based index
                             $scope.pageSize = pageSize;
-                            $scope.updatePageData();
+                            if (!$scope.sort.dir) {
+                                $scope.updatePageData();
+                            }
+                            else {
+                                $scope.sortData();
+                            }
                         });
                     }
                 };
@@ -68,22 +75,76 @@ angular.module('search').controller('Search.ResultsController', ['$scope', 'Resu
                 $scope.pageSize = config.paginationPageSize;
             }
         }
-        $scope.$on('query-complete', function () {
-            $scope.gridOptions.data = ResultService.data.response.docs;
-            $scope.gridOptions.totalItems = ResultService.data.response.numFound;
-            $scope.queryString = ResultService.queryString;
-        });
+        $scope.$watch(
+                function () {
+                    return ResultService.data;
+                },
+                function () {
+                    if (ResultService.data) {
+                        $scope.gridOptions.data = ResultService.data.response.docs;
+                        $scope.gridOptions.totalItems = ResultService.data.response.numFound;
+                        $scope.queryString = ResultService.queryString;
+                    }
+                }
+        );
+        $scope.sortData = function () {
+            //if no facets selected
+            if (!ResultService.filterParams)
+            {
+                SearchService.queryFacetedSearch({
+                    input: $scope.queryString,
+                    start: $scope.start,
+                    n: $scope.pageSize,
+                    s: $scope.sort.by + '%20' + $scope.sort.dir
+                },
+                function (data) {
+                    ResultService.passData(data, $scope.queryString + '*', '');
+
+                });
+            }
+            //if there is facets selected
+            else {
+                SearchService.queryFilteredSearch({
+                    input: $scope.queryString,
+                    start: $scope.start,
+                    n: $scope.pageSize,
+                    filters: ResultService.filterParams,
+                    s: $scope.sort.by + '%20' + $scope.sort.dir
+                },
+                function (data) {
+                    ResultService.passData(data, $scope.queryString + '*', ResultService.filterParams);
+
+                });
+            }
+        };
 
         $scope.updatePageData = function () {
-            SearchService.queryFacetedSearch({
-                input: $scope.queryString,
-                start: $scope.start,
-                n: $scope.pageSize
-            },
-            function (data) {
-                ResultService.passData(data, $scope.queryString + '*');
+            //if no facets selected
+            if (!ResultService.filterParams)
+            {
+                SearchService.queryFacetedSearch({
+                    input: $scope.queryString,
+                    start: $scope.start,
+                    n: $scope.pageSize
+                },
+                function (data) {
+                    ResultService.passData(data, $scope.queryString + '*', '');
 
-            });
+                });
+            }
+            //if there is facets selected
+            else {
+                SearchService.queryFilteredSearch({
+                    input: $scope.queryString,
+                    start: $scope.start,
+                    n: $scope.pageSize,
+                    filters: ResultService.filterParams
+                },
+                function (data) {
+                    ResultService.passData(data, $scope.queryString + '*', ResultService.filterParams);
+
+                });
+            }
         };
     }
 ]);
