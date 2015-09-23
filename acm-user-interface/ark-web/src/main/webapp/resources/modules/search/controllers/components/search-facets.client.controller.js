@@ -5,24 +5,35 @@ angular.module('search').controller('Search.FacetsController', ['$scope', 'Searc
         $scope.$emit('req-component-config', 'facets');
         $scope.facets = [];
         $scope.filter = '';  //filter parameter
-        $scope.start = 0;
-        $scope.count = 10;
+        $scope.start = '';
+        $scope.count = '';
         $scope.selected = {};  //object used to hold record for checkbox checked/unchecked
+        $scope.config=null;
+        $scope.$on('component-config', applyConfig);
+        function applyConfig(e, componentId, config) {
+            if (componentId == 'facets') {
+                $scope.config = config;
+                $scope.start=config.searchParams.start;
+                $scope.count=config.searchParams.n;
+            }
+        }
         //method for adding the filter parameters when checked
         function addFilterParams(value, key) {
-            if ($scope.filter == '') {
+            if (!$scope.filter) {
                 $scope.filter = '"' + key + '":' + value;
             }
             else {
                 $scope.filter += '%26fq="' + key + '":' + value;
             }
             return $scope.filter;
-        };
+        }
+        ;
         //method for removing filter parameter when unchecked
         function removeFilterParams(value, key) {
             var indexOfKey = $scope.filter.indexOf(key);
             if (indexOfKey == 1) {
                 //since the different key can have same value, use key position as index
+                // 2 is length of  ' ": ' and 7 is the length of ' %26fq=" '
                 $scope.filter = $scope.filter.substring(indexOfKey + key.length + 2 + value.length + 7);
             }
             else {
@@ -41,22 +52,25 @@ angular.module('search').controller('Search.FacetsController', ['$scope', 'Searc
         };
         //method to add a properties "selected" into data return, for checkbox used
         function addDataField() {
+            //$scope.facets is facet_counts.facet_fields
             _.forEach($scope.facets, function (value, key) {
                 _.forEach(value, function (value, key) {
-                    value.selected = false;
+                    value.checked = false;
                 });
             });
-        };
+        }
+        ;
         //apply the checked value for checkbox
         function applySelected() {
             _.forEach($scope.selected, function (value, key) {
                 for (var i = 0; i < $scope.facets[key].length; i++) {
                     if ($scope.selected[key].indexOf($scope.facets[key][i].name) > -1) {
-                        $scope.facets[key][i].selected = true;
+                        $scope.facets[key][i].checked = true;
                     }
                 }
             });
-        };
+        }
+        ;
         $scope.facetSearch = function (name, facetKey, facetSelected) {
             //checkbox is checked
             if (facetSelected) {
@@ -68,8 +82,7 @@ angular.module('search').controller('Search.FacetsController', ['$scope', 'Searc
                     filters: addFilterParams(name, facetKey)
                 },
                 function (data) {
-                    ResultService.passData(data, ResultService.queryString);
-                    applySelected();
+                    ResultService.passData(data, ResultService.queryString, $scope.filter);
                 });
             }
             //checkbox is unchecked
@@ -86,8 +99,7 @@ angular.module('search').controller('Search.FacetsController', ['$scope', 'Searc
                         n: $scope.count
                     },
                     function (data) {
-                        ResultService.passData(data, ResultService.queryString);
-                        applySelected();
+                        ResultService.passData(data, ResultService.queryString, '');
                     });
                 }
                 //else remove filter and call services
@@ -99,16 +111,29 @@ angular.module('search').controller('Search.FacetsController', ['$scope', 'Searc
                         filters: removeFilterParams(name, facetKey)
                     },
                     function (data) {
-                        ResultService.passData(data, ResultService.queryString);
-                        applySelected();
+                        ResultService.passData(data, ResultService.queryString, $scope.filter);
                     });
-                };
+                }
+                ;
             }
         };
         //listen on event
-        $scope.$on('query-complete', function () {
-            $scope.facets = ResultService.data.facet_counts.facet_fields;
-            addDataField();
-        });
+        $scope.$watch(
+                function () {
+                    return ResultService.data;
+                },
+                function () {
+                    if (ResultService.data) {
+                        $scope.facets = ResultService.data.facet_counts.facet_fields;
+                        addDataField();
+                        if(ResultService.filterParams){
+                            applySelected();
+                        }else{
+                            $scope.selected={};
+                            $scope.filter='';
+                        }
+                    };                     
+                }
+        );
     }
 ]);
