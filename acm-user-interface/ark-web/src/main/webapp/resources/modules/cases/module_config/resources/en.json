@@ -3,7 +3,8 @@
     "title": "Cases",
     "restrict": "Restrict?",
     "close.button": "Close Complaint",
-    "subscribe.button": "Subscribe"
+    "subscribe.button": "Subscribe",
+    "noCase": "[ No Case Data ]"
   },
   "cases.comp.calendar": {
     "title": "Calendar"
@@ -17,7 +18,7 @@
   "cases.comp.details": {
     "title": "Details",
     "msg": {
-      "noDetails": "No Details"
+      "noDetails": "No Details ____no longer used; to be deleted____"
     }
   },
   "cases.comp.documents": {
@@ -105,7 +106,14 @@
 
   },
   "cases.comp.references": {
-    "title": "References"
+    "title": "References",
+    "table.columns": {
+      "targetName": "Number",
+      "targetTitle": "Title",
+      "modified": "Modified",
+      "targetType": "Reference Type",
+      "status": "Status"
+    }
   },
   "cases.comp.tasks": {
     "title": "Tasks",
