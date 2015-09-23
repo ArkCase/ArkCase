@@ -5753,8 +5753,7 @@ function VirtualViewer() {
         Cz.addQuery("action", "sendDocument");
 
         // The document name, and the id and type of the parent node are needed by the backend Java split functionality
-        var parentWindowUri = new URI(document.referrer);
-        var parentNodeArgs = parentWindowUri.query();
+        var parentNodeArgs = myFlexSnap.arkCaseGetParentNodeArgs(window.location.href);
 
         // The url arguments are passed along with the document id/user/ticket and the operation type and operation parameters to the backend
         var argsForSnowBackend = A1.getDocumentId() + ((parentNodeArgs) ? ("&" + parentNodeArgs) : "");
