@@ -20,6 +20,11 @@ public class CaseFilePipelineContext implements PipelineContext
     private Authentication authentication;
 
     /**
+     * The queue that case file is already in.
+     */
+    private String queueName;
+
+    /**
      * The queue the case will be moved to; used in the queue pipeline.
      */
     private String enqueueName;
@@ -67,5 +72,15 @@ public class CaseFilePipelineContext implements PipelineContext
     public void setEnqueueName(String enqueueName)
     {
         this.enqueueName = enqueueName;
+    }
+
+    public String getQueueName()
+    {
+        return queueName;
+    }
+
+    public void setQueueName(String queueName)
+    {
+        this.queueName = queueName;
     }
 }
