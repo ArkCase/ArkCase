@@ -113,13 +113,71 @@ angular.module('services').factory('UtilService', ['$q',
                 }
                 return d.promise;
             }
-            ,forEachTypical: function(data, callback) {
+
+            ,forEachStripNg: function(data, callback) {
                 _.forEach(data, function(v, k) {
-                    if (("string" == (typeof k)) && !k.startsWith("$")) {
+                    if (_.isString(k) && !k.startsWith("$")) {
                         callback(v, k);
                     }
                 });
             }
+
+            // "$" prefix is used by Angular to add properties or objects to data object.
+            // "acm$_" prefix is used for additional properties or objects added to data object
+            // omitNg() omits any properties or objects starts with "$" or "acm$_". Original data object is not modified
+            //
+            , omitNg: function (obj) {
+                var copy = _.cloneDeep(obj);
+                 _.cloneDeep(copy, function(v, k, o) {
+                    if (_.isString(k)) {
+                        if (k.startsWith("$") || k.startsWith("acm$_")) {
+                            delete o[k];
+                            var z = 1;
+                        }
+                    }
+                });
+                return copy;
+                //return this.deepOmit(copy, blackList);
+            }
+            ,deepOmit: function(item, blackList) {
+                if (!_.isArray(blackList)) {
+                    blackList = [];
+                }
+
+                var res = item;
+                if (this.isArray(item)) {
+                    res = this._deepOmitArray(item, blackList);
+                } else {
+                    res = this._deepOmitObj(item, blackList);
+                }
+                return res;
+            }
+            ,_deepOmitObj: function(obj, blackList) {
+                var copy = _.omit(obj, blackList);
+                //var copy = _.omit(obj, function(v, k, o, d) {
+                //    if (_.contains(blackList, k)) {
+                //        return true;
+                //    } else if (_.isString(k) && k.startsWith("$")) {
+                //        return true;
+                //    }
+                //});
+                var that = this;
+                _.each(blackList, function(arg) {
+                    if (_.contains(arg, '.')) {
+                        var key  = _.first(arg.split('.'));
+                        var rest = arg.split('.').slice(1).join(".");
+                        copy[key] = that.deepOmit(copy[key], [rest]);
+                    }
+                });
+                return copy;
+            }
+            ,_deepOmitArray: function(arr, blackList) {
+                var that = this;
+                return _.map(arr, function(item) {
+                    return that.deepOmit(item, blackList);
+                });
+            }
+
         }
     }
 ]);

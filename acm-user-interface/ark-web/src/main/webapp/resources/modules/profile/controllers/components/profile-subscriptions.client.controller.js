@@ -1,9 +1,59 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+'use strict';
+
+angular.module('profile').controller('Profile.SubscriptionController', ['$scope', 'subscriptionService',
+    function ($scope, subscriptionService) {
+        $scope.$emit('req-component-config', 'subscription');
+        $scope.unsubscribe = function (rowEntity) {
+            var index = $scope.subscribptionGridOptions.data.indexOf(rowEntity);
+            var userID = rowEntity.userID;
+            var parentID = rowEntity.parentID;
+            var type = rowEntity.type;
+            subscriptionService.removeSubscriptions(userID, type, parentID);
+            $scope.subscribptionGridOptions.data.splice(index, 1);
+        };
+        $scope.unsubscriptSelected = function () {
+            var rowSelected = $scope.gridApi.selection.getSelectedRows();
+            for (var i = 0; i < rowSelected.length; i++) {
+                var index = $scope.subscribptionGridOptions.data.indexOf(rowSelected[i]);
+                var userID = rowSelected[i].userID;
+                var parentID = rowSelected[i].parentID;
+                var type = rowSelected[i].type;
+                subscriptionService.removeSubscriptions(userID, type, parentID);
+                $scope.subscribptionGridOptions.data.splice(index, 1);
+            }
+        };
+
+        $scope.config = null;
+        $scope.subscribptionGridOptions = {};
+        $scope.$on('component-config', applyConfig);
+        function applyConfig(e, componentId, config) {
+            if (componentId == 'subscription') {
+                $scope.config = config;
+                $scope.subscribptionGridOptions = {
+                    columnDefs: config.columnDefs,
+                    paginationPageSizes: config.paginationPageSizes,
+                    paginationPageSize: config.paginationPageSize,
+                    onRegisterApi: function (gridApi) {
+                        $scope.gridApi = gridApi;
+                    }
+                };
+
+            }
+        }
+        subscriptionService.getSubscriptions().then(function (data) {
+            for (var i = 0; i < data.length; i++) {
+                $scope.subscribptionGridOptions.data.push(
+                        {
+                            "title": data[i].objectTitle,
+                            "type": data[i].subscriptionObjectType,
+                            "created": moment(data[i].created).format('MM-DD-YYYY'),
+                            "parentID": data[i].objectId,
+                            "userID": data[i].userId
+                        }
+                );
+            }
+        });
 
 
-//FileHolder
-
+    }
+]);
