@@ -6,6 +6,7 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,4 +46,5 @@ public class AcmObjectLockDao extends AcmAbstractDao<AcmObjectLock> {
     public void remove(AcmObjectLock ol) {
         getEm().remove(ol);
     }
+
 }
