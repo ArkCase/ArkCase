@@ -4695,7 +4695,7 @@ var _initDashboard = function () {
                     }
                 ]
             })
-        }.call(this), angular.module("sample", ["adf", "sample.widgets.casesummary", "sample.widgets.mycases", "sample.widgets.mytasks", "sample.widgets.mycomplaints", "sample.widgets.news", "sample.widgets.weather", "sample.widgets.teamtaskworkload", "LocalStorageModule", "structures", "sample-01", "sample-02", "ngRoute", "ngTable"]).config(["$routeProvider", "localStorageServiceProvider",
+        }.call(this), angular.module("sample", ["adf", "sample.widgets.casesummary", "sample.widgets.mycases", "sample.widgets.mytasks", "sample.widgets.mycomplaints", "sample.widgets.news", "sample.widgets.weather", "sample.widgets.teamtaskworkload", "sample.widgets.activeordersbyqueue", "LocalStorageModule", "structures", "sample-01", "sample-02", "ngRoute", "ngTable"]).config(["$routeProvider", "localStorageServiceProvider",
         function ($routeProvider, localStorageServiceProvider) {
             localStorageServiceProvider.setPrefix("adf"), $routeProvider.when("/", {
                 templateUrl: "partials/sample.html",
@@ -11534,7 +11534,85 @@ var _initDashboard = function () {
                 }]
             })
         }
-    ]), angular.module("adf").run(["$templateCache",
+    ]),angular.module("sample.widgets.activeordersbyqueue", ["adf.provider", "highcharts-ng"]).config(["dashboardProvider",
+            function (dashboardProvider) {
+                var widget = {
+
+                    templateUrl: "scripts/widgets/activeordersbyqueue/activeordersbyqueue.html",
+                    reload: !0,
+                    resolve: {
+                        ordersByQueue: function (activeOrdersByQueueService, config) {
+                            return activeOrdersByQueueService.getActiveOrdersByQueue()
+                        }
+                    }
+                };
+                dashboardProvider.widget("activeOrdersByQueue", angular.extend({
+                    title: $.t('dashboard:plugins.active-orders-by-queue.title'),
+                    description: $.t('dashboard:plugins.active-orders-by-queue.label.description'),
+                    controller: "activeOrdersByQueueController",
+                    text: $.t('dashboard:plugins.active-orders-by-queue.title')
+                }, widget))
+            }
+        ]).service("activeOrdersByQueueService", ["$q", "$http",
+            function ($q, $http) {
+                return {
+                    getActiveOrdersByQueue: function () {
+                        var deferred = $q.defer(),
+                            url = App.getContextPath() + "/api/latest/plugin/casefile/number/by/queue";
+                        return $http.get(url).success(function (data) {
+                            data ? deferred.resolve(data) : deferred.reject()
+                        }).error(function () {
+                            deferred.reject()
+                        }), deferred.promise
+                    }
+                }
+            }
+        ]).controller("activeOrdersByQueueController", ["$scope", "config", "ordersByQueue",
+            function ($scope, config, ordersByQueue) {
+                $scope.text = $.t('dashboard:plugins.active-orders-by-queue.label.no-data')
+                $scope.showChart = angular.equals(null, ordersByQueue) || angular.equals({}, ordersByQueue) ? false : true;
+
+                var data = [];
+
+                angular.forEach(ordersByQueue, function(value, key){
+                    var item = {};
+                    item.name = key;
+                    item.y = value;
+                    item.drilldown = key;
+
+                    data.push(item);
+                });
+
+                ordersByQueue && ($scope.chartConfig = {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: ' '
+                    },
+                    xAxis: {
+                        type: 'category',
+                        title: {
+                            text: $.t('dashboard:plugins.active-orders-by-queue.label.xAxis-title')
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: $.t('dashboard:plugins.active-orders-by-queue.label.yAxis-title')
+                        }
+                    },
+                    series: [{
+                        type: 'column',
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y}'
+                        },
+                        name: $.t('dashboard:plugins.active-orders-by-queue.title'),
+                        data: data
+                    }]
+                })
+            }
+        ]), angular.module("adf").run(["$templateCache",
         function ($templateCache) {
             "use strict";
             $templateCache.put("../src/templates/dashboard-edit.html",
@@ -11664,6 +11742,8 @@ var _initDashboard = function () {
 
                 $templateCache.put("scripts/widgets/teamtaskworkload/edit.html", '<form role="form"><div class="form-group"><label for="path">' + $.t('dashboard:plugins.team-task-workload.label.select-due-date') + '</label><select type="text" class="form-control" id="due" ng-model="config.due"><option value="all" ng-selected="selected">' + $.t('dashboard:plugins.team-task-workload.label.all') + '</option><option value="pastDue">' + $.t('dashboard:plugins.team-task-workload.label.past-due') + '</option><option value="dueTomorrow" >' + $.t('dashboard:plugins.team-task-workload.label.due-tomorrow') + '</option><option value="dueInAWeek">' + $.t('dashboard:plugins.team-task-workload.label.due-7-days') + '</option><option value="dueInAMonth">' + $.t('dashboard:plugins.team-task-workload.label.select-due-date') + '</option></select></div></form>'),
                 $templateCache.put("scripts/widgets/teamtaskworkload/teamtaskworkload.html", '<div><div class="alert alert-info" ng-if="showChart==false"><p style="text-align:center; font-size:large;">{{chartTitle}}</p></br><p style="text-align:center;">{{text}}</p></div><div ng-if="showChart"><highchart id="chart1" config="chartConfig"></highchart></div></div>'),
+
+                $templateCache.put("scripts/widgets/activeordersbyqueue/activeordersbyqueue.html", '<div><div class="alert alert-info" ng-if="showChart==false"><p style="text-align:center; font-size:large;">{{chartTitle}}</p></br><p style="text-align:center;">{{text}}</p></div><div ng-if="showChart"><highchart id="chart2" config="chartConfig"></highchart></div></div>'),
 
                 $templateCache.put("scripts/widgets/casessum/caseStatus.html", '<div>' +
                 '<div class="alert alert-info" ng-if="!showChartCase"><p style="text-align:center; font-size:large;">{{chartTitle}}</p></br><p style="text-align:center;">'+ $.t('dashboard:plugins.casessum.label.no-outstanding-cases')  +'</p></div><div ng-if="showChartCase"><highchart id="chart1" config="chartConfig"></highchart></div></div>'),
