@@ -107,7 +107,7 @@
                     <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
                 </bean>
 
-                <bean id="numberOfActiveOrdersByQueueGetUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                <bean id="numberOfActiveCaseFilesByQueueGetUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/casefile/number/by/queue"/>
                     <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
