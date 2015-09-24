@@ -80,7 +80,7 @@
           {
             "name": "creator",
             "displayName": "cases.comp.people.contactMethods.table.columns.creator",
-            "headerCellFilter": "translate" ,
+            "headerCellFilter": "translate",
             "lookup": "userFullNames"
           }
         ]
@@ -260,13 +260,6 @@
       "id" : "notes",
       "title": "Notes",
       "enabled": true,
-      "type": "empty"
-    },
-
-    {
-      "id": "tasks",
-      "title": "Tasks",
-      "enabled": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -277,6 +270,42 @@
         50
       ],
       "paginationPageSize": 2,
+      "columnDefs": [
+        {
+          "name": "note",
+          "displayName": "cases.comp.notes.table.columns.note",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "created",
+          "displayName": "cases.comp.notes.table.columns.created",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+          "enableCellEdit": false
+        },
+        {
+          "name": "creator",
+          "displayName": "cases.comp.notes.table.columns.creator",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "lookup": "userFullNames"
+        }
+      ]
+    },
+
+    {
+      "id": "tasks",
+      "title": "Tasks",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "object_id_s",
@@ -291,7 +320,8 @@
         {
           "name": "assignee_s",
           "displayName": "cases.comp.tasks.table.columns.assignee",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         },
         {
           "name": "create_tdt",
@@ -319,7 +349,7 @@
           "name": "action",
           "displayName": "cases.comp.tasks.table.columns.action",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div><button class='btn-xs btn btn-default' ng-click='grid.appScope.cellAction(\"complete\", row.entity)'>Complete</button></div>"
+          "lookup": "taskOutcomes"
         }
       ]
     },
@@ -387,7 +417,8 @@
         {
           "name": "userId",
           "displayName": "cases.comp.history.table.columns.userId",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         }
       ]
     },

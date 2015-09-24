@@ -38,28 +38,10 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$wi
 
 
         $scope.$on('case-retrieved', function (e, data) {
-            $scope.caseInfo = Util.goodValue(data, {references: []});
-            $scope.gridOptions.data = $scope.caseInfo.references;
-
-            //var test = [{
-            //    associationId: 105
-            //    , associationType: "REFERENCE"
-            //    , category: null
-            //    , created: "2015-08-03T11:23:32.567-0400"
-            //    , creator: "ann-acm"
-            //    , modified: "2015-08-03T11:23:32.567-0400"
-            //    , modifier: "ann-acm"
-            //    , parentId: 104
-            //    , parentName: "20150803_104"
-            //    , parentType: "CASE_FILE"
-            //    , status: "ACTIVE"
-            //    , targetId: 106
-            //    , targetName: "20150803_106"
-            //    , targetSubtype: null
-            //    , targetTitle: "20150803_106"
-            //    , targetType: "COMPLAINT"
-            //}];
-            //$scope.gridOptions.data = test;
+            if (Validator.validateCaseFile(data)) {
+                $scope.caseInfo = Util.goodValue(data, {references: []});
+                $scope.gridOptions.data = $scope.caseInfo.references;
+            }
         });
 
 

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.HistoryController', ['$scope', '$stateParams', 'CasesService',
-    function ($scope, $stateParams, CasesService) {
+angular.module('cases').controller('Cases.HistoryController', ['$scope', '$stateParams', '$q', 'UtilService', 'ValidationService', 'LookupService', 'CasesService',
+    function ($scope, $stateParams, $q, Util, Validator, LookupService, CasesService) {
         $scope.$emit('req-component-config', 'history');
 
         $scope.currentId = $stateParams.id;
@@ -9,6 +9,26 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
         $scope.pageSize = 10;
         $scope.sort = {by: "", dir: "asc"};
         $scope.filters = [];   //[{by: "eventDate", with: "term"}];
+
+
+        var promiseUsers = Util.servicePromise({
+            service: LookupService.getUsers
+            , callback: function (data) {
+                $scope.userFullNames = [];
+                var arr = Util.goodArray(data);
+                for (var i = 0; i < arr.length; i++) {
+                    var obj = Util.goodJsonObj(arr[i]);
+                    if (obj) {
+                        var user = {};
+                        user.id = Util.goodValue(obj.object_id_s);
+                        user.name = Util.goodValue(obj.name);
+                        $scope.userFullNames.push(user);
+                    }
+                }
+                return $scope.userFullNames;
+            }
+        });
+
 
         $scope.config = null;
         $scope.gridOptions = {};
@@ -68,6 +88,14 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
                     }
                 };
 
+                $q.all([promiseUsers]).then(function (data) {
+                    for (var i = 0; i < $scope.config.columnDefs.length; i++) {
+                        if ("userFullNames" == $scope.config.columnDefs[i].lookup) {
+                            $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: grid.appScope.userFullNames:'id':'name'";
+                        }
+                    }
+                });
+
                 $scope.pageSize = config.paginationPageSize;
                 $scope.updatePageData();
             }
@@ -91,8 +119,12 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
                 count: $scope.pageSize,
                 sort: sort
             }, function (data) {
-                $scope.gridOptions.data = data.resultPage;
-                $scope.gridOptions.totalItems = data.totalCount;
+                if (Validator.validateHistory(data)) {
+                    $q.all([promiseUsers]).then(function () {
+                        $scope.gridOptions.data = data.resultPage;
+                        $scope.gridOptions.totalItems = data.totalCount;
+                    });
+                }
             })
         };
     }
