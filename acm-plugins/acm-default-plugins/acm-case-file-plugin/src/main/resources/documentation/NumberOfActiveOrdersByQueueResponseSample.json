@@ -1,0 +1,8 @@
+{
+  "Transcribe": 2,
+  "Fulfill Order": 4,
+  "QC Order": 3,
+  "Billing": 2,
+  "Distribution": 0,
+  "Non-Compliance": 0
+}

@@ -14,6 +14,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import com.armedia.acm.services.participants.model.ParticipantTypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
@@ -21,13 +23,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 8/26/14.
  */
 public class CaseFileDao extends AcmAbstractDao<CaseFile>
 {
+    private Logger LOG = LoggerFactory.getLogger(getClass());
+
     @Override
     protected Class<CaseFile> getPersistenceClass()
     {
@@ -179,9 +186,66 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
         Date today = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(today);
-        cal.add(Calendar.DATE,-daysFromToday);
+        cal.add(Calendar.DATE, -daysFromToday);
         nextDate = cal.getTime();
         return nextDate;
+    }
+
+    /**
+     * The method will return a map with all queues and sum of the orders in each queue
+     *
+     * @return - map object
+     */
+    public Map<String, Long> getNumberOfActiveOrdersByQueue()
+    {
+        Map<String, Long> retval = new LinkedHashMap<>();
+
+        String query = "SELECT " +
+                            "queue.displayOrder, " +
+                            "queue.name, " +
+                            "(SELECT " +
+                                "COUNT(order.status) " +
+                            "FROM " +
+                                "CaseFile AS order " +
+                            "WHERE " +
+                                "order.queue.name = queue.name) " +
+                        "FROM " +
+                            "AcmQueue AS queue " +
+                        "GROUP BY queue.displayOrder, queue.name " +
+                        "ORDER BY queue.displayOrder";
+
+        TypedQuery<Object[]> select = getEm().createQuery(query, Object[].class);
+        List<Object[]> result = select.getResultList();
+
+        try
+        {
+            retval = getNumberOfActiveOrdersByQueueResult(result);
+        }
+        catch(Exception e)
+        {
+            LOG.error("Cannot convert database result to Map object.", e);
+        }
+
+        return retval;
+    }
+
+    /**
+     * This method will convert the result taken from database in a LinkedHashMap - to keep ordering of the queues
+     *
+     * @param result - List of objects that database return after executing the query that is not related to any Object
+     * @return - map object
+     * @throws Exception
+     */
+    private Map<String, Long> getNumberOfActiveOrdersByQueueResult(List<Object[]> result) throws Exception
+    {
+        Map<String, Long> retval = new LinkedHashMap<>();
+
+        if (result != null)
+        {
+            retval = result.stream().collect(Collectors.toMap(resultItem -> (String) resultItem[1], resultItem -> (Long) resultItem[2], (v1, v2) -> null, LinkedHashMap::new));
+        }
+
+        return retval;
     }
 
 }
