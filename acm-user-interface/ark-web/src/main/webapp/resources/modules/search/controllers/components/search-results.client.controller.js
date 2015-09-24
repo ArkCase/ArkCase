@@ -1,37 +1,36 @@
 'use strict';
 
-angular.module('search').controller('Search.ResultsController', ['$scope', 'SearchService',
-    function ($scope, SearchService) {
+angular.module('search').controller('Search.ResultsController', ['$scope', 'ResultService', 'SearchService',
+    function ($scope, ResultService, SearchService) {
         $scope.$emit('req-component-config', 'results');
 
-        $scope.start = 0;
-        $scope.pageSize = 10;
-        $scope.sort = {by: "", dir: "asc"};
+        $scope.start = '';
+        $scope.pageSize = '';
+        $scope.sort = {by: '', dir: 'asc'};
         $scope.filters = [];   //for future work
-
+        $scope.queryString = '';
         $scope.config = null;
         $scope.gridOptions = {};
         $scope.$on('component-config', applyConfig);
         function applyConfig(e, componentId, config) {
             if (componentId == 'results') {
                 $scope.config = config;
+                $scope.start = config.searchParams.start;
+                $scope.pageSize = config.searchParams.n;
                 $scope.gridOptions = {
                     enableColumnResizing: true,
                     enableRowSelection: true,
                     enableRowHeaderSelection: false,
                     multiSelect: false,
                     noUnselect: false,
-
                     paginationPageSizes: config.paginationPageSizes,
                     paginationPageSize: config.paginationPageSize,
                     useExternalPagination: true,
                     useExternalSorting: true,
-
                     //comment out filtering until service side supports it
                     ////enableFiltering: config.enableFiltering,
                     //enableFiltering: true,
-                    //useExternalFiltering: true,
-
+                    useExternalFiltering: true,
                     columnDefs: config.columnDefs,
                     onRegisterApi: function (gridApi) {
                         $scope.gridApi = gridApi;
@@ -45,7 +44,7 @@ angular.module('search').controller('Search.ResultsController', ['$scope', 'Sear
                                 $scope.sort.by = sortColumns[0].field;
                                 $scope.sort.dir = sortColumns[0].sort.direction;
                             }
-                            $scope.updatePageData();
+                            $scope.sortData();
                         });
                         $scope.gridApi.core.on.filterChanged($scope, function () {
                             var grid = this.grid;
@@ -58,45 +57,94 @@ angular.module('search').controller('Search.ResultsController', ['$scope', 'Sear
                                     $scope.filters.push(filter);
                                 }
                             }
-                            $scope.updatePageData();
+                            //$scope.updatePageData();
                         });
                         $scope.gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
                             $scope.start = (newPage - 1) * pageSize;   //newPage is 1-based index
                             $scope.pageSize = pageSize;
-                            $scope.updatePageData();
+                            if (!$scope.sort.dir) {
+                                $scope.updatePageData();
+                            }
+                            else {
+                                $scope.sortData();
+                            }
                         });
-
                     }
                 };
 
                 $scope.pageSize = config.paginationPageSize;
-                $scope.updatePageData();
             }
         }
-
-
-        $scope.updatePageData = function () {
-
-            var sort = "";
-            if ($scope.sort) {
-                if (!_.isEmpty($scope.sort.by) && !_.isEmpty($scope.sort.dir)) {
-                    sort = $scope.sort.by + "%20" + $scope.sort.dir;
+        $scope.$watch(
+                function () {
+                    return ResultService.data;
+                },
+                function () {
+                    if (ResultService.data) {
+                        $scope.gridOptions.data = ResultService.data.response.docs;
+                        $scope.gridOptions.totalItems = ResultService.data.response.numFound;
+                        $scope.queryString = ResultService.queryString;
+                    }
                 }
-            }
-
-            var searchFacets = SearchService.queryFacetedSearch({
-                    searchString: "*",
-                    objectType: "",
-                    owner: "",
-                    startWith: $scope.start,
-                    count: $scope.pageSize,
-                    sort: sort
+        );
+        $scope.sortData = function () {
+            //if no facets selected
+            if (!ResultService.filterParams)
+            {
+                SearchService.queryFacetedSearch({
+                    input: $scope.queryString,
+                    start: $scope.start,
+                    n: $scope.pageSize,
+                    s: $scope.sort.by + '%20' + $scope.sort.dir
                 },
                 function (data) {
-                    $scope.gridOptions.data = data.response.docs;
-                    $scope.gridOptions.totalItems = data.response.numFound;
-                });
+                    ResultService.passData(data, $scope.queryString + '*', '');
 
+                });
+            }
+            //if there is facets selected
+            else {
+                SearchService.queryFilteredSearch({
+                    input: $scope.queryString,
+                    start: $scope.start,
+                    n: $scope.pageSize,
+                    filters: ResultService.filterParams,
+                    s: $scope.sort.by + '%20' + $scope.sort.dir
+                },
+                function (data) {
+                    ResultService.passData(data, $scope.queryString + '*', ResultService.filterParams);
+
+                });
+            }
+        };
+
+        $scope.updatePageData = function () {
+            //if no facets selected
+            if (!ResultService.filterParams)
+            {
+                SearchService.queryFacetedSearch({
+                    input: $scope.queryString,
+                    start: $scope.start,
+                    n: $scope.pageSize
+                },
+                function (data) {
+                    ResultService.passData(data, $scope.queryString + '*', '');
+
+                });
+            }
+            //if there is facets selected
+            else {
+                SearchService.queryFilteredSearch({
+                    input: $scope.queryString,
+                    start: $scope.start,
+                    n: $scope.pageSize,
+                    filters: ResultService.filterParams
+                },
+                function (data) {
+                    ResultService.passData(data, $scope.queryString + '*', ResultService.filterParams);
+
+                });
+            }
         };
     }
 ]);
