@@ -37,7 +37,12 @@
     "courtRoomName": "Court Room Name:"
   },
   "cases.comp.notes": {
-    "title": "Notes"
+    "title": "Notes",
+    "table.columns": {
+      "note": "Note",
+      "created": "Created",
+      "creator": "Author"
+    }
   },
   "cases.comp.participants": {
     "title": "Participants",

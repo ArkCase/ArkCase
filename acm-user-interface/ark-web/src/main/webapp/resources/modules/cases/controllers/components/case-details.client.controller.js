@@ -13,7 +13,9 @@ angular.module('cases').controller('Cases.DetailsController', ['$scope', '$state
 		}
 
 		$scope.$on('case-retrieved', function(e, data) {
-			$scope.caseInfo = Util.goodValue(data, {details: ""});
+			if (Validator.validateCaseFile(data)) {
+				$scope.caseInfo = data;
+			}
 		});
 
 
