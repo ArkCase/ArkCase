@@ -49,11 +49,11 @@
 			<div class="form-group">
 				<div class="input-group input-group-sm">
 					<span class="input-group-btn">
-						<button class="btn btn-default" type="submit">
+						<button class="btn btn-default" ng-click="search()">
 							<span class="fa fa-search"></span>
 						</button>
 					</span>
-					<input type="text" class="form-control input-sm" placeholder="Search complaints, cases...">
+					<input type="text" class="form-control input-sm" ng-keydown="keyDown($event)" ng-model="inputQuery" placeholder="Search complaints, cases...">
 				</div>
 			</div>
 		</form>
