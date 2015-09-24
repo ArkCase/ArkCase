@@ -162,16 +162,16 @@
             }
         }
     },
-    "active-orders-by-queue": {
+    "active-casefiles-by-queue": {
         "title": {
-            "value": "Active Orders by Queue",
-            "defaultValue": "Active Orders by Queue",
+            "value": "Active Case Files by Queue",
+            "defaultValue": "Active Case Files by Queue",
             "description": ""
         },
         "label": {
             "description": {
-                "value": "Show active Orders by Queue in bar chart",
-                "defaultValue": "Show active Orders by Queue in bar chart",
+                "value": "Show active Case Files by Queue in bar chart",
+                "defaultValue": "Show active Case Files by Queue in bar chart",
                 "description": ""
             },
             "xAxis-title": {
@@ -180,13 +180,13 @@
                 "description": ""
             },
             "yAxis-title": {
-                "value": "Number of Orders",
-                "defaultValue": "Number of Orders",
+                "value": "Number of Case Files",
+                "defaultValue": "Number of Case Files",
                 "description": ""
             },
             "no-data": {
-                "value": "There is no any data to be shown",
-                "defaultValue": "There is no any data to be shown",
+                "value": "No data found",
+                "defaultValue": "No data found",
                 "description": ""
             }
         }

@@ -34,12 +34,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-library-case-plugin-test.xml"
 })
-public class GetNumberOfActiveOrdersByQueueAPIControllerTest extends EasyMockSupport
+public class GetNumberOfActiveCaseFilesByQueueAPIControllerTest extends EasyMockSupport
 {
     private Logger LOG = LoggerFactory.getLogger(getClass());
 
     private MockMvc mockMvc;
-    private GetNumberOfActiveOrdersByQueueAPIController unit;
+    private GetNumberOfActiveCaseFilesByQueueAPIController unit;
     private Authentication mockAuthentication;
     private CaseFileDao mockCaseFileDao;
 
@@ -49,7 +49,7 @@ public class GetNumberOfActiveOrdersByQueueAPIControllerTest extends EasyMockSup
     @Before
     public void setUp() throws Exception
     {
-        unit = new GetNumberOfActiveOrdersByQueueAPIController();
+        unit = new GetNumberOfActiveCaseFilesByQueueAPIController();
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
@@ -60,7 +60,7 @@ public class GetNumberOfActiveOrdersByQueueAPIControllerTest extends EasyMockSup
     }
 
     @Test
-    public void testNumberOfActiveOrdersByQueue() throws Exception
+    public void testNumberOfActiveCaseFilesByQueue() throws Exception
     {
         Map<String, Long> expectedResult = new LinkedHashMap<>();
         expectedResult.put("Queue1", 5L);
@@ -70,7 +70,7 @@ public class GetNumberOfActiveOrdersByQueueAPIControllerTest extends EasyMockSup
         expectedResult.put("Queue5", 8L);
 
         expect(mockAuthentication.getName()).andReturn("user");
-        expect(mockCaseFileDao.getNumberOfActiveOrdersByQueue()).andReturn(expectedResult);
+        expect(mockCaseFileDao.getNumberOfActiveCaseFilesByQueue()).andReturn(expectedResult);
 
         replayAll();
 

@@ -192,11 +192,11 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
     }
 
     /**
-     * The method will return a map with all queues and sum of the orders in each queue
+     * The method will return a map with all queues and sum of the case files in each queue
      *
      * @return - map object
      */
-    public Map<String, Long> getNumberOfActiveOrdersByQueue()
+    public Map<String, Long> getNumberOfActiveCaseFilesByQueue()
     {
         Map<String, Long> retval = new LinkedHashMap<>();
 
@@ -204,11 +204,11 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
                             "queue.displayOrder, " +
                             "queue.name, " +
                             "(SELECT " +
-                                "COUNT(order.status) " +
+                                "COUNT(caseFile.status) " +
                             "FROM " +
-                                "CaseFile AS order " +
+                                "CaseFile AS caseFile " +
                             "WHERE " +
-                                "order.queue.name = queue.name) " +
+                                "caseFile.queue.name = queue.name) " +
                         "FROM " +
                             "AcmQueue AS queue " +
                         "GROUP BY queue.displayOrder, queue.name " +
@@ -219,7 +219,7 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
 
         try
         {
-            retval = getNumberOfActiveOrdersByQueueResult(result);
+            retval = getNumberOfActiveCaseFilesByQueueResult(result);
         }
         catch(Exception e)
         {
@@ -236,7 +236,7 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
      * @return - map object
      * @throws Exception
      */
-    private Map<String, Long> getNumberOfActiveOrdersByQueueResult(List<Object[]> result) throws Exception
+    private Map<String, Long> getNumberOfActiveCaseFilesByQueueResult(List<Object[]> result) throws Exception
     {
         Map<String, Long> retval = new LinkedHashMap<>();
 

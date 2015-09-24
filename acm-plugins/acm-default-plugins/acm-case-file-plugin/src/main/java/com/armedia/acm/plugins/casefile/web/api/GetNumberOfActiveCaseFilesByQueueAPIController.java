@@ -17,25 +17,25 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping({"/api/v1/plugin/casefile/number/by/queue", "/api/latest/plugin/casefile/number/by/queue"})
-public class GetNumberOfActiveOrdersByQueueAPIController
+public class GetNumberOfActiveCaseFilesByQueueAPIController
 {
     private Logger LOG = LoggerFactory.getLogger(getClass());
 
     private CaseFileDao caseFileDao;
 
     /**
-     * REST api for retrieving active orders by queue
+     * REST api for retrieving active case files by queue
      *
      * @param authentication
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
-    public Map<String, Long> getNumberOfActiveOrdersByQueue(Authentication authentication)
+    public Map<String, Long> getNumberOfActiveCaseFilesByQueue(Authentication authentication)
     {
-        LOG.debug("Get number of active orders by queue.");
+        LOG.debug("Get number of active Case Files by queue.");
 
-        Map<String, Long> retval = getCaseFileDao().getNumberOfActiveOrdersByQueue();
+        Map<String, Long> retval = getCaseFileDao().getNumberOfActiveCaseFilesByQueue();
 
         return retval;
     }
