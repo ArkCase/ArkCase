@@ -6,8 +6,7 @@
     <ul class="nav nav-main">
         <li ng-repeat="item in menu.items | orderBy: 'position' " ng-class="{ active: $state.includes(item.link)}">
             <a data-ui-sref="{{item.link}}" title="{{item.title}}" class="auto">
-                <i ng-if="item.iconClass" class="navigation-icon {{item.iconClass}}"> </i>
-                <strong>{{item.title}}</strong>
+                <i ng-if="item.iconClass" class="navigation-icon {{item.iconClass}}"> </i><strong>{{item.title}}</strong>
             </a>
         </li>
     </ul>
