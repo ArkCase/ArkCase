@@ -23,9 +23,9 @@
 }
 .navbar-arkcase .navbar-header a {
   background-image: url("../../../assets/img/logo.png");
-  background-size: 145px;
+  background-size: 135px;
   background-repeat: no-repeat;
-  background-position: 25px 10px;
+  background-position: 30px 10px;
   position: relative;
   width: 100%;
   color: #ffffff;
@@ -52,7 +52,6 @@ header.navbar-arkcase button.btn.btn-default {
 }
 header.navbar-arkcase input.form-control.input-sm {
   border: 0px;
-  margin-right: 10px;
   padding-left: 0px;
   width: 200px;
 }
@@ -71,8 +70,8 @@ header.navbar-arkcase .dropdown-menu span.text-muted.ng-binding {
 }
 .user-info {
   background-color: #e9edf4;
-  border-radius: 0;
   padding: 10px 0 10px 5px;
+  border-bottom: 1px solid #e1e6ef;
 }
 
 .user-info .user-pic img{
@@ -91,12 +90,12 @@ header.navbar-arkcase .dropdown-menu span.text-muted.ng-binding {
 }
 .leftnav-menu {
   background-color: #f7f8fb;
-  border-right: 1px solid #eaeef1;
   color: #3c4144;
   display: table-cell;
   height: 100%;
   vertical-align: top;
   width: 200px;
+  border-right: 1px solid #e1e6ef;
 }
 .leftnav-menu .title {
   color: #a1a8ac;
@@ -129,7 +128,7 @@ a.dropdown-toggle  .glyphicon {
   color: #3c4144;
 }
 .leftnav-menu > li > a:hover, .leftnav-menu > li > a:focus {
-  background-color: #e0e6ef;
+  background-color: #e8ecf4;
   color: #3c4144;
 }
 .leftnav-menu > li > a:hover a, .leftnav-menu > li > a:focus a {
@@ -144,3 +143,4 @@ a.dropdown-toggle  .glyphicon {
   height: 100%;
   width: 100%;
 }
+
