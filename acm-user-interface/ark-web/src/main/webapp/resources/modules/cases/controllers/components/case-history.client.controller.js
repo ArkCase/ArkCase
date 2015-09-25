@@ -106,7 +106,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
             var sort = "";
             if ($scope.sort) {
                 if (!_.isEmpty($scope.sort.by) && !_.isEmpty($scope.sort.dir)) {
-                    sort = $scope.sort.by + "%20" + $scope.sort.dir;
+                    sort = $scope.sort.by + " " + $scope.sort.dir;
                 }
             }
             //implement filtering here when service side supports it
