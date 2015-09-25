@@ -7,7 +7,8 @@
                         <!--<select class="input-sm form-control input-s-sm inline v-middle"-->
                         <!-- using class above as in old UI, the plus button becomes invisible; if no class specified, -->
                         <!-- the font is light and cannot be seen. Hard code style for temporary workaround. Need to fix in style sheet -->
-                        <select style="color:#555;"
+                        <!--<select style="color:#555;"-->
+                        <select
                                 ng-options="option.name for option in correspondenceForms track by option.value"
                                 ng-model="correspondenceForm">
                         </select>
