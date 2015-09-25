@@ -60,6 +60,7 @@
     <bean id="captureFolderHandler" class="com.armedia.acm.plugins.ecm.service.impl.CaptureFolderServiceImpl">
         <property name="captureFolderToWatch" value="${capture.rootFolderToWatch}"/>
         <property name="captureExtensions" value="${capture.fileExtensions}"/>
+        <property name="captureCopyTypes" value="${capture.copyFileTypes}"/>
     </bean>
 
     <!-- Mule Utility Bean for downloading, updating, adding files -->
@@ -68,23 +69,31 @@
     </bean>
 
     <!-- Bactes specific pipeline pre save handlers -->
+    <bean id="ecmFileMergeHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeHandler">
+        <property name="mergeableTypes" value="${capture.mergeableFileTypes}"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+    </bean>
+    <bean id="ecmFileAppendContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileAppendContentHandler">
+        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+    </bean>
     <bean id="ecmFileAppendMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileAppendMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
+    </bean>
+    <bean id="ecmFileCopyToEphesoftHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileCopyToEphesoftHandler">
         <property name="captureFolderService" ref="captureFolderHandler"/>
     </bean>
-    <bean id="ecmFileAppendHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileAppendHandler">
-        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
-        <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
-    </bean>
 
-    <!-- Bactes specific ecm file transaction pipeline process manager -->
+    <!-- This pipeline process merges PDF documents based on their (configurable) type -->
     <bean id="ecmFileAppendPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
             <list>
-                <ref bean="ecmFileAppendHandler"/>
+                <ref bean="ecmFileMergeHandler"/>
+                <ref bean="ecmFileAppendContentHandler"/>
                 <ref bean="ecmFileAppendMetadataHandler"/>
+                <!--<ref bean="ecmFileCopyToEphesoftHandler"/>-->
             </list>
         </property>
         <property name="postSaveHandlers">

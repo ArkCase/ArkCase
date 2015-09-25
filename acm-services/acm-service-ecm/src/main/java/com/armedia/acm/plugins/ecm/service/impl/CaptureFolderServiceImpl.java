@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.service.impl;
 import com.armedia.acm.plugins.ecm.exception.EphesoftException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.CaptureFolderService;
+import com.armedia.acm.plugins.ecm.utils.GenericUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -12,7 +13,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,6 +21,7 @@ import java.util.List;
 public class CaptureFolderServiceImpl implements CaptureFolderService {
     private String captureFolderToWatch;
     private String captureExtensions;
+    private String captureCopyTypes;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -37,11 +38,14 @@ public class CaptureFolderServiceImpl implements CaptureFolderService {
             String fileExtension = FilenameUtils.getExtension(ephesoftFile.getFileName());
             String fileName = buildEphesoftFileName(ephesoftFile, fileExtension);
 
-            // If the file is not a supported type then it will not be copied
-            List<String> captureSupportedTypes = parseStringList(captureExtensions);
+            // If the file is not a supported format then it will not be copied
+            List<String> captureSupportedTypes = GenericUtils.parseStringList(captureExtensions);
+
+            // Determines if the ecmFile's type (authorization, abstract, etc.) allows it to be copied
+            boolean isFileCopyable = GenericUtils.isFileTypeInList(ephesoftFile.getFileType(), captureCopyTypes);
 
             // Copies supported file types to the Ephesoft hot folder
-            if (isTypeSupported(fileExtension, captureSupportedTypes)) {
+            if (isFileCopyable && isFormatSupported(fileExtension, captureSupportedTypes)) {
                 captureFileOutputStream = new FileOutputStream(new File(buildFullEphesoftDropPath(fileName)));
                 fileInputStream.reset(); // the stream was already read by the addFile mule flow in the previous stage, so it needs to be reset here
                 IOUtils.copy(fileInputStream, captureFileOutputStream);
@@ -105,13 +109,13 @@ public class CaptureFolderServiceImpl implements CaptureFolderService {
     }
 
     /**
-     * Determines if Ephesoft supports the given file type by searching the
+     * Determines if Ephesoft supports the given file format by searching the
      * list of supported types
      * @param fileType - file extension of the file (e.x. .png, .tiff)
      * @param supportedList - list of the valid file type extensions supported by Ephesoft
      * @return true if the type is supported, false otherwise
      */
-    private static boolean isTypeSupported(String fileType, List<String> supportedList) {
+    private static boolean isFormatSupported(String fileType, List<String> supportedList) {
         boolean isSupported = false;
         if (supportedList != null && fileType != null) {
             for (String supportedType : supportedList) {
@@ -122,23 +126,6 @@ public class CaptureFolderServiceImpl implements CaptureFolderService {
             }
         }
         return isSupported;
-    }
-
-    /**
-     * Takes a string containing a comma separated list of string values and
-     * generates a list of trimmed String objects for each individual entry
-     * @param commaSeparatedList - comma separated list of string values (e.x. "1,abc,6c")
-     * @return array of Strings parsed from the list with trailing/leading whitespace removed from each entry
-     */
-    private static List<String> parseStringList(String commaSeparatedList) {
-        List<String> stringList = new ArrayList<String>();
-        if (commaSeparatedList != null && commaSeparatedList.length() > 0) {
-            String[] listItems = commaSeparatedList.split(",");
-            for (String listItem : listItems) {
-                stringList.add(listItem.trim());
-            }
-        }
-        return stringList;
     }
 
     public String getCaptureFolderToWatch() {
@@ -152,5 +139,11 @@ public class CaptureFolderServiceImpl implements CaptureFolderService {
     }
     public void setCaptureExtensions(String captureExtensions) {
         this.captureExtensions = captureExtensions;
+    }
+    public String getCaptureCopyTypes() {
+        return captureCopyTypes;
+    }
+    public void setCaptureCopyTypes(String captureCopyTypes) {
+        this.captureCopyTypes = captureCopyTypes;
     }
 }

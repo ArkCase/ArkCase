@@ -22,7 +22,7 @@ public class EcmFileTransactionPipelineContext implements PipelineContext {
     private EcmFile ecmFile;
     private boolean isAppend;
     private boolean isPDF;
-    private boolean isAuthorizationOrAbstract;
+    private InputStream mergedFileInputStream;
 
     public String getOriginalFileName() {
         return originalFileName;
@@ -78,10 +78,10 @@ public class EcmFileTransactionPipelineContext implements PipelineContext {
     public void setIsPDF(boolean isPDF) {
         this.isPDF = isPDF;
     }
-    public boolean getIsAuthorizationOrAbstract() {
-        return isAuthorizationOrAbstract;
+    public InputStream getMergedFileInputStream() {
+        return mergedFileInputStream;
     }
-    public void setIsAuthorizationOrAbstract(boolean isAuthorizationOrAbstract) {
-        this.isAuthorizationOrAbstract = isAuthorizationOrAbstract;
+    public void setMergedFileInputStream(InputStream mergedFileInputStream) {
+        this.mergedFileInputStream = mergedFileInputStream;
     }
 }
