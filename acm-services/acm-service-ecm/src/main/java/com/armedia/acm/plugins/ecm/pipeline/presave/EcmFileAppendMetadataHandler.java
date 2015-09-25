@@ -6,7 +6,6 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
-import com.armedia.acm.plugins.ecm.service.CaptureFolderService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.apache.chemistry.opencmis.client.api.Document;
@@ -23,7 +22,6 @@ public class EcmFileAppendMetadataHandler implements PipelineHandler<EcmFile, Ec
 
     private EcmFileDao ecmFileDao;
     private AcmFolderDao folderDao;
-    private CaptureFolderService captureFolderService;
 
     @Override
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
@@ -53,12 +51,11 @@ public class EcmFileAppendMetadataHandler implements PipelineHandler<EcmFile, Ec
         entity.setFolder(folder);
         entity.setContainer(pipelineContext.getContainer());
 
-        if (!pipelineContext.getIsAppend()) {
-            // Saves file metadata into ArkCase
+        if (!pipelineContext.getIsAppend()) { // Saves new file metadata into ArkCase database
             EcmFile saved = getEcmFileDao().save(entity);
             pipelineContext.setEcmFile(saved);
         } else {
-            // The new content is merged into an existing document, so the old document metadata needs to be retained
+            // The new content is merged into an existing document, so the old document metadata is returned
             EcmFile oldFile = pipelineContext.getEcmFile();
             entity.setFileName(oldFile.getFileName());
             entity.setFileId(oldFile.getFileId());
@@ -68,17 +65,6 @@ public class EcmFileAppendMetadataHandler implements PipelineHandler<EcmFile, Ec
             entity.setModifier(oldFile.getModifier());
             entity.setStatus(oldFile.getStatus());
             pipelineContext.setEcmFile(entity);
-        }
-
-        // Non-pdf format authorization/abstract type documents need to be copied to the Ephesoft hot folder for processing
-        if (!pipelineContext.getIsPDF() && pipelineContext.getIsAuthorizationOrAbstract()) {
-            try {
-                // Drops the file into the shared drive folder for Ephesoft
-                captureFolderService.copyToCaptureHotFolder(pipelineContext.getEcmFile(), pipelineContext.getFileInputStream());
-            } catch (Exception e) {
-                log.error("Failed to copy file to Ephesoft hot folder: {}", e.getMessage(), e);
-                throw new PipelineProcessException("Failed to copy file to Ephesoft hot folder: " + e.getMessage());
-            }
         }
 
         log.debug("metadata pre save handler ended");
@@ -101,11 +87,5 @@ public class EcmFileAppendMetadataHandler implements PipelineHandler<EcmFile, Ec
     }
     public void setFolderDao(AcmFolderDao folderDao) {
         this.folderDao = folderDao;
-    }
-    public CaptureFolderService getCaptureFolderService() {
-        return captureFolderService;
-    }
-    public void setCaptureFolderService(CaptureFolderService captureFolderService) {
-        this.captureFolderService = captureFolderService;
     }
 }
