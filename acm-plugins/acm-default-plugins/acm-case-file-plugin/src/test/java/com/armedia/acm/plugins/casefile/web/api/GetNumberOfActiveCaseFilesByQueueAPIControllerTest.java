@@ -1,6 +1,10 @@
 package com.armedia.acm.plugins.casefile.web.api;
 
-import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.casefile.model.AcmQueue;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.easymock.EasyMockSupport;
@@ -20,9 +24,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import java.util.LinkedHashMap;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -41,7 +49,7 @@ public class GetNumberOfActiveCaseFilesByQueueAPIControllerTest extends EasyMock
     private MockMvc mockMvc;
     private GetNumberOfActiveCaseFilesByQueueAPIController unit;
     private Authentication mockAuthentication;
-    private CaseFileDao mockCaseFileDao;
+    private ExecuteSolrQuery mockExecuteSolrQuery;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -54,23 +62,34 @@ public class GetNumberOfActiveCaseFilesByQueueAPIControllerTest extends EasyMock
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
         mockAuthentication = createMock(Authentication.class);
-        mockCaseFileDao = createMock(CaseFileDao.class);
+        mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
 
-        unit.setCaseFileDao(mockCaseFileDao);
+        unit.setExecuteSolrQuery(mockExecuteSolrQuery);
     }
 
     @Test
     public void testNumberOfActiveCaseFilesByQueue() throws Exception
     {
-        Map<String, Long> expectedResult = new LinkedHashMap<>();
-        expectedResult.put("Queue1", 5L);
-        expectedResult.put("Queue2", 3L);
-        expectedResult.put("Queue3", 0L);
-        expectedResult.put("Queue4", 1L);
-        expectedResult.put("Queue5", 8L);
+        AcmQueue transcribe = new AcmQueue(1L, "Transcribe", 1);
+        AcmQueue fulfillOrder = new AcmQueue(2L, "Fulfill Order", 2);
+        AcmQueue qcOrder = new AcmQueue(3L, "QC Order", 3);
+        AcmQueue billing = new AcmQueue(4L, "Billing", 4);
+        AcmQueue distribution = new AcmQueue(5L, "Distribution", 5);
+        AcmQueue nonCompliance = new AcmQueue(6L, "Non-Compliance", 6);
+
+        String queuesQuery = "object_type_s:QUEUE&sort=queue_order_s ASC";
+        String facetQuery = "object_type_s:CASE_FILE AND " + SearchConstants.PROPERTY_QUEUE_NAME_S + ":*&rows=1&fl=id&wt=json&indent=true&facet=true&facet.field=" + SearchConstants.PROPERTY_QUEUE_NAME_S;
+
+        InputStream queuesIputStream = getClass().getClassLoader().getResourceAsStream("SolrQueuesResponseGetNumberOfCaseFilesByQueueTest.json");
+        String queuesSolrResponse = IOUtils.toString(queuesIputStream, Charset.forName("UTF-8"));
+
+        InputStream facetInputStream = getClass().getClassLoader().getResourceAsStream("SolrFacetResponseGetNumberOfCaseFilesByQueueTest.json");
+        String facetSolrResponse = IOUtils.toString(facetInputStream, Charset.forName("UTF-8"));
 
         expect(mockAuthentication.getName()).andReturn("user");
-        expect(mockCaseFileDao.getNumberOfActiveCaseFilesByQueue()).andReturn(expectedResult);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, queuesQuery, 0, 50, "")).andReturn(queuesSolrResponse);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, queuesQuery, 50, 50, "")).andReturn(null);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, facetQuery, 0, 1, "")).andReturn(facetSolrResponse);
 
         replayAll();
 
@@ -90,18 +109,20 @@ public class GetNumberOfActiveCaseFilesByQueueAPIControllerTest extends EasyMock
         Map<String, Long> resultMap = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Map<String, Long>>() {});
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        assertEquals(5, resultMap.size());
+        assertEquals(6, resultMap.size());
 
-        assertEquals(expectedResult.keySet().toArray()[0], resultMap.keySet().toArray()[0]);
-        assertEquals(expectedResult.keySet().toArray()[1], resultMap.keySet().toArray()[1]);
-        assertEquals(expectedResult.keySet().toArray()[2], resultMap.keySet().toArray()[2]);
-        assertEquals(expectedResult.keySet().toArray()[3], resultMap.keySet().toArray()[3]);
-        assertEquals(expectedResult.keySet().toArray()[4], resultMap.keySet().toArray()[4]);
+        assertEquals(transcribe.getName(), ((Map.Entry) resultMap.entrySet().toArray()[0]).getKey());
+        assertEquals(fulfillOrder.getName(), ((Map.Entry) resultMap.entrySet().toArray()[1]).getKey());
+        assertEquals(qcOrder.getName(), ((Map.Entry) resultMap.entrySet().toArray()[2]).getKey());
+        assertEquals(billing.getName(), ((Map.Entry) resultMap.entrySet().toArray()[3]).getKey());
+        assertEquals(distribution.getName(), ((Map.Entry) resultMap.entrySet().toArray()[4]).getKey());
+        assertEquals(nonCompliance.getName(), ((Map.Entry) resultMap.entrySet().toArray()[5]).getKey());
 
-        assertEquals(expectedResult.entrySet().toArray()[0], resultMap.entrySet().toArray()[0]);
-        assertEquals(expectedResult.entrySet().toArray()[1], resultMap.entrySet().toArray()[1]);
-        assertEquals(expectedResult.entrySet().toArray()[2], resultMap.entrySet().toArray()[2]);
-        assertEquals(expectedResult.entrySet().toArray()[3], resultMap.entrySet().toArray()[3]);
-        assertEquals(expectedResult.entrySet().toArray()[4], resultMap.entrySet().toArray()[4]);
+        assertEquals(90L, ((Map.Entry) resultMap.entrySet().toArray()[0]).getValue());
+        assertEquals(17L, ((Map.Entry) resultMap.entrySet().toArray()[1]).getValue());
+        assertEquals(2L, ((Map.Entry) resultMap.entrySet().toArray()[2]).getValue());
+        assertEquals(0L, ((Map.Entry) resultMap.entrySet().toArray()[3]).getValue());
+        assertEquals(4L, ((Map.Entry) resultMap.entrySet().toArray()[4]).getValue());
+        assertEquals(4L, ((Map.Entry) resultMap.entrySet().toArray()[5]).getValue());
     }
 }
