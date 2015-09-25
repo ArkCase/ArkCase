@@ -144,11 +144,7 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
                 if (docs != null && docs.length() > 0)
                 {
                     start += n;
-                    for (int i = 0; i < docs.length(); i++)
-                    {
-                        // Add each name to the list
-                        queuesValues.add(getSearchResults().extractString(docs.getJSONObject(i), SearchConstants.PROPERTY_QUEUE_NAME_S));
-                    }
+                    queuesValues.addAll(getSearchResults().getListForField(docs, SearchConstants.PROPERTY_QUEUE_NAME_S));
                 }
                 else
                 {
