@@ -24,6 +24,7 @@
     {
       "id": "people",
       "title": "People",
+      "className": "com.armedia.acm.plugins.person.model.Person",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -378,7 +379,7 @@
           "name": "targetTitle",
           "displayName": "cases.comp.references.table.columns.targetTitle",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.targetName}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.targetTitle}}</a>"
         },
         {
           "name": "modified",
@@ -427,7 +428,38 @@
       "id": "correspondence",
       "title": "Correspondence",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 2,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "cases.comp.correspondence.table.columns.name",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.name}}</a>"
+        },
+        {
+          "name": "created",
+          "displayName": "cases.comp.correspondence.table.columns.created",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+          "enableCellEdit": false
+        },
+        {
+          "name": "creator",
+          "displayName": "cases.comp.correspondence.table.columns.creator",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "lookup": "userFullNames"
+        }
+      ]
     },
 
     {

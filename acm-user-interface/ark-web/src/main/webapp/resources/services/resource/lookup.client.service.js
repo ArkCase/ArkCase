@@ -75,6 +75,13 @@ angular.module('services').factory('LookupService', ['$resource',
                 ,isArray: true
             }
 
+            , getCorrespondenceForms: {
+                url: "modules_config/config/modules/cases/resources/correspondenceForms.json"
+                , method: "GET"
+                , cache: true
+                , isArray: true
+            }
+
         });
     }
 ]);

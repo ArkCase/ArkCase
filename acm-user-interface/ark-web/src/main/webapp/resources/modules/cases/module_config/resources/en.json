@@ -10,7 +10,12 @@
     "title": "Calendar"
   },
   "cases.comp.correspondence": {
-    "title": "Correspondence"
+    "title": "Correspondence",
+    "table.columns": {
+      "name": "Title",
+      "created": "Created",
+      "creator": "Creator"
+    }
   },
   "cases.comp.cost": {
     "title": "Cost"

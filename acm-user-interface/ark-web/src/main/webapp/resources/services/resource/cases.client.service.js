@@ -83,7 +83,7 @@ angular.module('services').factory('CasesService', ['$resource',
 
             , queryNotes: {
                 method: 'GET',
-                url: 'proxy/arkcase/api/latest/plugin/note/:objType/:objId?start=:startWith&n=:count&s=:sort',
+                url: 'proxy/arkcase/api/latest/plugin/note/:parentType/:parentId?start=:startWith&n=:count&s=:sort',
                 cache: false,
                 isArray: true
             }
@@ -98,6 +98,16 @@ angular.module('services').factory('CasesService', ['$resource',
                 cache: false
             }
 
+            , queryCorrespondence: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/latest/service/ecm/bycategory/:parentType/:parentId?category=Correspondence&start=:startWith&n=:count&s=:sort',
+                cache: false
+            }
+            , createCorrespondence: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/service/correspondence?templateName=:template&parentObjectType=:parentType&parentObjectId=:parentId&targetCmisFolderId=:folderId',
+                cache: false
+            }
 
         });
     }
