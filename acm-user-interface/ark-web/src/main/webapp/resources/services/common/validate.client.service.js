@@ -209,5 +209,83 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
+
+        , validateCorrespondences: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.containerObjectId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.folderId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.totalChildren)) {
+                return false;
+            }
+            if (!Util.isArray(data.children)) {
+                return false;
+            }
+            for (var i = 0; i < data.children.length; i++) {
+                if (!this.validateCorrespondence(data.children[i])) {
+                    return false;
+                }
+            }
+            if ("Correspondence" != data.category) {
+                return false;
+            }
+            return true;
+        }
+        , validateCorrespondence: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.objectId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.name)) {
+                return false;
+            }
+            if (Util.isEmpty(data.created)) {
+                return false;
+            }
+            if (Util.isEmpty(data.creator)) {
+                return false;
+            }
+            if ("file" != data.objectType) {
+                return false;
+            }
+            if ("Correspondence" != data.category) {
+                return false;
+            }
+            return true;
+        }
+        , validateNewCorrespondence: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.category)) {
+                return false;
+            }
+            if ("Correspondence" != data.category) {
+                return false;
+            }
+            if (Util.isEmpty(data.created)) {
+                return false;
+            }
+            if (Util.isEmpty(data.creator)) {
+                return false;
+            }
+            if (Util.isEmpty(data.fileId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.fileName)) {
+                return false;
+            }
+            if (Util.isEmpty(data.fileType)) {
+                return false;
+            }
+            return true;
+        }        
     }}
 ]);

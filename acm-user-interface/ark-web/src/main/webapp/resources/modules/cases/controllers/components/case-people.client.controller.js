@@ -605,7 +605,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 var pa = newPersonAssociation();
                 pa.parentId = $scope.caseInfo.id;
                 pa.parentType = "CASE_FILE";
-                pa.person.className = "com.armedia.acm.plugins.person.model.Person";
+                pa.person.className = Util.goodValue($scope.config.className); //"com.armedia.acm.plugins.person.model.Person";
                 pa.person.givenName = givenName;
                 pa.person.familyName = familyName;
                 CasesService.addPersonAssociation({}, pa
