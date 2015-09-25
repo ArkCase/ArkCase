@@ -128,8 +128,8 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             ////$scope.filters = [{by: "eventDate", with: "term"}];
 
             CasesService.queryNotes({
-                objType: "CASE_FILE",
-                objId: $scope.currentId,
+                parentType: "CASE_FILE",
+                parentId: $scope.currentId,
                 startWith: $scope.start,
                 count: $scope.pageSize,
                 sort: sort
