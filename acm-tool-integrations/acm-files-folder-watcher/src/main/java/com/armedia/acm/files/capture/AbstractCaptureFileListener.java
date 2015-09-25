@@ -209,9 +209,24 @@ public abstract class AbstractCaptureFileListener implements ApplicationListener
                 {
                     String id = element.<String>get(CaptureConstants.XML_BATCH_IDENTIFIER_KEY);
                     String type = element.<String>get(CaptureConstants.XML_BATCH_TYPE_KEY);
-                    String capturePath = getCaptureFolder().getURL().toString().replace("file:///", "");
-                    File tempDocument = new File(element.<String>get(CaptureConstants.XML_BATCH_MULTI_PAGE_PDF_FILE_KEY));
-                    File document = new File(capturePath + File.separator + tempDocument.getName());
+                    File captureFolder = new File(getCaptureFolder().getURL().toURI());
+                    String ephesoftFileName = element.<String>get(CaptureConstants.XML_BATCH_MULTI_PAGE_PDF_FILE_KEY);
+                    LOG.debug("File name from Ephesoft (may contain Ephesoft server path info): {}", ephesoftFileName);
+                    String winSeparator = "\\";
+                    if (ephesoftFileName.contains(winSeparator))
+                    {
+                        ephesoftFileName = ephesoftFileName.substring(ephesoftFileName.lastIndexOf(winSeparator) + 1);
+                    } else if (ephesoftFileName.contains("/"))
+                    {
+                        ephesoftFileName = ephesoftFileName.substring(ephesoftFileName.lastIndexOf("/") + 1);
+                    }
+
+                    LOG.debug("Filename part of Ephesoft file: {}", ephesoftFileName);
+
+                    File document = new File(captureFolder, ephesoftFileName);
+
+                    LOG.info("Expected path to file: {}", document.getCanonicalPath());
+                    LOG.info("File {} exists? {}", document.getCanonicalPath(), document.exists());
 
                     // If document not exist on the file system, do not create File object, just set null
                     if (document != null && !document.exists())
