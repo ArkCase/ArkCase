@@ -116,7 +116,8 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
     {
         try
         {
-            File workingFile = new File(folder.getURL().toString().replace("file:///", "") + File.separator + file.getName());
+            File parentFolder = new File(folder.getURL().toURI());
+            File workingFile = new File(parentFolder, file.getName());
 
             FileUtils.moveFile(file, workingFile);
 
