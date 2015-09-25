@@ -111,7 +111,7 @@ public abstract class AbstractCaptureFileListener implements ApplicationListener
 
     /**
      * This method will return dynamic entity that is created for given XML file and XSD schema.
-     * <p/>
+     * <p>
      * The XML file is the XML representation of the batch file that Ephesoft will send to this system.
      *
      * @param xmlBatch
@@ -151,7 +151,8 @@ public abstract class AbstractCaptureFileListener implements ApplicationListener
     {
         try
         {
-            File workingFile = new File(getWorkingFolder().getURL().toString().replace("file:///", "") + File.separator + file.getName());
+            File parentFolder = new File(getWorkingFolder().getURL().toURI());
+            File workingFile = new File(parentFolder, file.getName());
 
             FileUtils.moveFile(file, workingFile);
 
@@ -174,7 +175,8 @@ public abstract class AbstractCaptureFileListener implements ApplicationListener
     {
         try
         {
-            File completedFile = new File(getCompletedFolder().getURL().toString().replace("file:///", "") + File.separator + file.getName());
+            File parentFolder = new File(getCompletedFolder().getURL().toURI());
+            File completedFile = new File(parentFolder, file.getName());
 
             FileUtils.moveFile(file, completedFile);
 
