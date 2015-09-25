@@ -32,6 +32,8 @@ public interface SearchConstants
     String PROPERTY_RESPONSE = "response";
     String PROPERTY_DOCS = "docs";
     String PROPERTY_NAME = "name";
+    String PROPERTY_FACET_COUNTS = "facet_counts";
+    String PROPERTY_FACET_FIELDS = "facet_fields";
     String PROPERTY_OBJECT_ID_S = "object_id_s";
 
     String PROPERTY_FILE_CATEGORY = "category_s";
@@ -46,6 +48,9 @@ public interface SearchConstants
     String PROPERTY_MIME_TYPE = "mime_type_s";
     String PROPERTY_STATUS = "status_s";
     String PROPERTY_GROUPS_ID_SS = "groups_id_ss";
+    String PROPERTY_QUEUE_ID_S = "queue_id_s";
+    String PROPERTY_QUEUE_NAME_S = "queue_name_s";
+    String PROPERTY_QUEUE_ORDER_S = "queue_order_s";
 
     String USER = "${user}";
     /**
