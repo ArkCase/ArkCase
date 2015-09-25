@@ -33,6 +33,34 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
+        , validateSolrData: function (data) {
+            if (!data) {
+                return false;
+            }
+            if (Util.isEmpty(data.responseHeader) || Util.isEmpty(data.response)) {
+                return false;
+            }
+            if (Util.isEmpty(data.responseHeader.status)) {
+                return false;
+            }
+//            if (0 != responseHeader.status) {
+//                return false;
+//            }
+            if (Util.isEmpty(data.responseHeader.params)) {
+                return false;
+            }
+            if (Util.isEmpty(data.responseHeader.params.q)) {
+                return false;
+            }
+
+            if (Util.isEmpty(data.response.numFound) || Util.isEmpty(data.response.start)) {
+                return false;
+            }
+            if (!Util.isArray(data.response.docs)) {
+                return false;
+            }
+            return true;
+        }
         ,validateCaseFile: function(data) {
             if (Util.isEmpty(data)) {
                 return false;
@@ -99,14 +127,87 @@ angular.module('services').factory('ValidationService', ["UtilService",
             return true;
         }
         ,validateDeletedPersonAssociation: function(data) {
-            if (Acm.isEmpty(data)) {
+            if (Util.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isEmpty(data.deletedPersonAssociationId)) {
+            if (Util.isEmpty(data.deletedPersonAssociationId)) {
                 return false;
             }
             return true;
         }
-        
+        , validateHistory: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (!Util.isArray(data.resultPage)) {
+                return false;
+            }
+            for (var i = 0; i < data.resultPage.length; i++) {
+                if (!this.validateEvent(data.resultPage[i])) {
+                    return false;
+                }
+            }
+            if (Util.isEmpty(data.totalCount)) {
+                return false;
+            }
+            return true;
+        }
+        , validateEvent: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.eventDate)) {
+                return false;
+            }
+            if (Util.isEmpty(data.eventType)) {
+                return false;
+            }
+            if (Util.isEmpty(data.objectId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.objectType)) {
+                return false;
+            }
+            if (Util.isEmpty(data.userId)) {
+                return false;
+            }
+            return true;
+        }
+
+        , validateNotes: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (!Util.isArray(data)) {
+                return false;
+            }
+            for (var i = 0; i < data.length; i++) {
+                if (!this.validateNote(data[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        , validateNote: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.id)) {
+                return false;
+            }
+            if (Util.isEmpty(data.parentId)) {
+                return false;
+            }
+            return true;
+        }
+        , validateDeletedNote: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.deletedNoteId)) {
+                return false;
+            }
+            return true;
+        }
     }}
 ]);

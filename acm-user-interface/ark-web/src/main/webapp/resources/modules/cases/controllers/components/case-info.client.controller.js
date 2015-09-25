@@ -27,7 +27,9 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             //}
         });
         $scope.$on('case-retrieved', function(e, data){
-            $scope.caseInfo = Util.goodValue(data, {});
+            if (Validator.validateCaseFile(data)) {
+                $scope.caseInfo = data;
+            }
         });
 
 

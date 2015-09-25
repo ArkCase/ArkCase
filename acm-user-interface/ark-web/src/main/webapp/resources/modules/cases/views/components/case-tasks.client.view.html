@@ -1,10 +1,15 @@
 <div ng-controller="Cases.TasksController">
     <div class="panel panel-success">
         <div class="panel-heading">
-            <div class="panel-title">{{'cases.comp.tasks.title' | translate}}</div>
+            <div class="panel-title">{{'cases.comp.tasks.title' | translate}}
+                <div class="pull-right">
+                    <span class=""><i class='fa fa-plus' ng-click='addNew()'></i></span>
+                </div>
+            </div>
         </div>
         <div class="panel-body">
             <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination class="grid"></div>
         </div>
     </div>
 </div>
+
