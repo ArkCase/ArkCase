@@ -1,9 +1,26 @@
 <div ng-controller="Cases.CorrespondenceController">
     <div class="panel panel-success">
         <div class="panel-heading">
-            <div class="panel-title">{{'cases.comp.correspondence.title' | translate}}</div>
+            <div class="panel-title">{{'cases.comp.correspondence.title' | translate}}
+                <div class="pull-right">
+                    <span>
+                        <!--<select class="input-sm form-control input-s-sm inline v-middle"-->
+                        <!-- using class above as in old UI, the plus button becomes invisible; if no class specified, -->
+                        <!-- the font is light and cannot be seen. Hard code style for temporary workaround. Need to fix in style sheet -->
+                        <select style="color:#555;"
+                                ng-options="option.name for option in correspondenceForms track by option.value"
+                                ng-model="correspondenceForm">
+                        </select>
+                        <span ng-hide="'noop'==correspondenceForm.value">
+                            <i class="fa fa-plus" ng-click="addNew()"></i>
+                        </span>
+                    </span>
+
+                </div>
+            </div>
         </div>
         <div class="panel-body">
+            <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination class="grid"></div>
         </div>
     </div>
 </div>
