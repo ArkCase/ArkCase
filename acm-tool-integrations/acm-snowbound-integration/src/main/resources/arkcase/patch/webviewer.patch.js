@@ -12,6 +12,12 @@ if (myFlexSnap) {
     var ACM_USER_PARAM = "userid";
     var ACM_FILE_PARAM = "ecmFileId";
 
+    // Additional arguments needed for snowbound to communicate back with acm3
+    var ACM_PARENT_ID = "parentObjectId";
+    var ACM_PARENT_TYPE = "parentObjectType";
+    var ACM_DOCUMENT_NAME = "documentName";
+    var ACM_SELECTED_IDS = "selectedIds";
+
     // We need to make the pages list sortable, but since the pages
     // thumbnails are re-loaded by snowbound after certain events we
     // need to continue to apply the sortable functionality asynchronously
@@ -268,20 +274,27 @@ if (myFlexSnap) {
          "&" + ACM_USER_PARAM + "=" + documentIdComponents[ACM_USER_PARAM];
     };
 
+    myFlexSnap.arkCaseGetParentNodeArgs = function(urlString) {
+        var urlArgs = myFlexSnap.arkCaseGetUrlParamMap(urlString);
+        return ACM_DOCUMENT_NAME + "=" + urlArgs[ACM_DOCUMENT_NAME] +
+         "&" + ACM_PARENT_ID + "=" + urlArgs[ACM_PARENT_ID] +
+         "&" + ACM_PARENT_TYPE + "=" + urlArgs[ACM_PARENT_TYPE] +
+         "&" + ACM_SELECTED_IDS + "=" + urlArgs[ACM_SELECTED_IDS];
+    };
+
     myFlexSnap.arkCaseCreateInitDocumentList = function() {
         var documentsToOpen = [];
 
         // Obtains the parameters from the snowbound iframe and the parent window urls
-        var documentIdComponents = myFlexSnap.arkCaseGetUrlParamMap(unescape(window.location));
-        var parentUrlArguments = myFlexSnap.arkCaseGetUrlParamMap(unescape(document.referrer));
+        var iframeUrlArgs = myFlexSnap.arkCaseGetUrlParamMap(unescape(window.location));
 
         // Adds the document which was clicked on directly by the user to the list of documents which snowbound will open
-        var mainDocumentId = documentIdComponents[ACM_FILE_PARAM];
-        documentsToOpen.push(myFlexSnap.arkCaseCreateDocumentId(documentIdComponents, mainDocumentId));
+        var mainDocumentId = iframeUrlArgs[ACM_FILE_PARAM];
+        documentsToOpen.push(myFlexSnap.arkCaseCreateDocumentId(iframeUrlArgs, mainDocumentId));
 
         // If doctree sends a list of additional selected ids (attached to the parent ArkCase window url)
         // then it means that snowbound needs to open multiple documents at the same time
-        var docIdList = parentUrlArguments["selectedIds"];
+        var docIdList = iframeUrlArgs[ACM_SELECTED_IDS];
         if (docIdList && docIdList.trim().length > 0) {
             var docIds = docIdList.split(",");
 
@@ -289,7 +302,7 @@ if (myFlexSnap) {
             for (var i = 0; i < docIds.length; i++) {
                 var docId = docIds[i].trim();
                 if (docId.length > 0 && docId != mainDocumentId) // The directly opened document was already added to the list
-                    documentsToOpen.push(myFlexSnap.arkCaseCreateDocumentId(documentIdComponents, docIds[i]));
+                    documentsToOpen.push(myFlexSnap.arkCaseCreateDocumentId(iframeUrlArgs, docIds[i]));
             }
         }
         return documentsToOpen;

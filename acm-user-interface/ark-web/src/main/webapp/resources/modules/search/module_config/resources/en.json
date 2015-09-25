@@ -19,5 +19,10 @@
     "contacts": "Contacts",
     "city": "City",
     "phone": "Phone"
+  },
+  "search.comp.input":{
+      "title":"Input",
+      "placeholder":"Type in your search query to find complaints, cases, tasks, and documents.",
+      "button":"Go!"
   }
 }
