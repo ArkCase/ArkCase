@@ -1,6 +1,6 @@
 <div ng-controller="Reports.SelectionController" ng-cloak>
     <div class="well panel">
-            <div class="panel-body">
+        <div class="panel-body">
             <label for="selectReport"> {{'reports.navigation.label.select-report'| translate}} </label>
             <select name="priority" class="form-control" id="selectReport">
                 <option> {{'reports.navigation.placeholder.select-report'| translate}}</option>
@@ -22,10 +22,11 @@
             </select>
             <div ng-include="'modules/reports/views/components/reports-datepickers.client.view.html'"></div>
 
-        </div>
-        <div>
-            <button class="btn btn-sm btn-default left-block" type="button" id="generateReport">
-                {{'reports.navigation.button.generate-report'| translate}}
-            </button>
+            <div>
+                <button class="btn btn-sm btn-default left-block" type="button" id="generateReport">
+                    {{'reports.navigation.button.generate-report'| translate}}
+                </button>
+            </div>
         </div>
     </div>
+</div>

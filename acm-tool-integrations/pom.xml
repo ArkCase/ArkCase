@@ -31,6 +31,7 @@
         <module>acm-email</module>
         <module>acm-reload-properties</module>
         <module>acm-snowbound-integration</module>
+        <module>acm-ephesoft</module>
     </modules>
 
 </project>

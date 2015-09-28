@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Date;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -50,7 +51,8 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-note.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
-public class CaseFileDaoIT {
+public class CaseFileDaoIT
+{
     @Autowired
     private CaseFileDao caseFileDao;
 
@@ -66,7 +68,8 @@ public class CaseFileDaoIT {
     private Authentication authentication;
 
     @Before
-    public void setUp() {
+    public void setUp()
+    {
 
         authentication = new AcmAuthentication(null, null, null, true, "user");
         auditAdapter.setUserId("auditUser");
@@ -74,12 +77,13 @@ public class CaseFileDaoIT {
 
     @Test
     @Transactional
-    public void saveCaseFile() {
+    public void saveCaseFile()
+    {
         assertNotNull(caseFileDao);
         assertNotNull(entityManager);
 
         CaseFile caseFile = new CaseFile();
-        caseFile.setCaseNumber("caseNumber");
+        caseFile.setCaseNumber(UUID.randomUUID().toString());
         caseFile.setCaseType("caseType");
         caseFile.setStatus("status");
         caseFile.setTitle("title");
@@ -105,12 +109,13 @@ public class CaseFileDaoIT {
 
     @Test
     @Transactional
-    public void saveCaseFileWithLock() {
+    public void saveCaseFileWithLock()
+    {
         assertNotNull(caseFileDao);
         assertNotNull(entityManager);
 
         CaseFile caseFile = new CaseFile();
-        caseFile.setCaseNumber("caseNumber");
+        caseFile.setCaseNumber(UUID.randomUUID().toString());
         caseFile.setCaseType("caseType");
         caseFile.setStatus("status");
         caseFile.setTitle("title");
@@ -140,12 +145,13 @@ public class CaseFileDaoIT {
 
     @Test
     @Transactional
-    public void saveCaseQueue() {
+    public void saveCaseQueue()
+    {
         assertNotNull(caseFileDao);
         assertNotNull(entityManager);
 
         CaseFile caseFile = new CaseFile();
-        caseFile.setCaseNumber("caseNumber");
+        caseFile.setCaseNumber(UUID.randomUUID().toString());
         caseFile.setCaseType("caseType");
         caseFile.setStatus("status");
         caseFile.setTitle("title");
