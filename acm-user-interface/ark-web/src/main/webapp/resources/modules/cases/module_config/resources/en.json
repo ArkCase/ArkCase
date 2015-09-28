@@ -25,7 +25,8 @@
       "tally": "Total Cost",
       "modified": "Modified Date",
       "status": "Status"
-    }
+    },
+    "formNamePrefix": "Costsheet"
   },
   "cases.comp.details": {
     "title": "Details",
