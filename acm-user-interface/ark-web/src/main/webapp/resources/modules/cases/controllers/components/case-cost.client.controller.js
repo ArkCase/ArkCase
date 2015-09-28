@@ -1,33 +1,8 @@
 'use strict';
 
-angular.module('cases').controller('Cases.CostController', ['$scope', '$stateParams', '$q', '$window', 'UtilService', 'ValidationService', 'LookupService', 'CasesService',
-    function ($scope, $stateParams, $q, $window, Util, Validator, LookupService, CasesService) {
+angular.module('cases').controller('Cases.CostController', ['$scope', '$stateParams', '$q', '$window', '$translate', 'UtilService', 'ValidationService', 'LookupService', 'CasesService',
+    function ($scope, $stateParams, $q, $window, $translate, Util, Validator, LookupService, CasesService) {
         $scope.$emit('req-component-config', 'cost');
-
-        $scope.currentId = $stateParams.id;
-        $scope.start = 0;
-        $scope.pageSize = 10;
-        $scope.sort = {by: "", dir: "asc"};
-        $scope.filters = [];
-
-
-        var promiseUsers = Util.servicePromise({
-            service: LookupService.getUsers
-            , callback: function (data) {
-                $scope.userFullNames = [];
-                var arr = Util.goodArray(data);
-                for (var i = 0; i < arr.length; i++) {
-                    var obj = Util.goodJsonObj(arr[i]);
-                    if (obj) {
-                        var user = {};
-                        user.id = Util.goodValue(obj.object_id_s);
-                        user.name = Util.goodValue(obj.name);
-                        $scope.userFullNames.push(user);
-                    }
-                }
-                return $scope.userFullNames;
-            }
-        });
 
 
         $scope.config = null;
@@ -35,7 +10,50 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
         function applyConfig(e, componentId, config) {
             if (componentId == 'cost') {
                 $scope.config = config;
+
+                Util.uiGrid.typicalOptions(config, $scope);
+                $scope.gridOptions.columnDefs = config.columnDefs;
+
+                for (var i = 0; i < $scope.config.columnDefs.length; i++) {
+                    if ("name" == $scope.config.columnDefs[i].name) {
+                        $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.acm$_formName}}</a>";
+                    } else if ("tally" == $scope.config.columnDefs[i].name) {
+                        $scope.gridOptions.columnDefs[i].field = "acm$_costs";
+                    }
+                }
             }
         }
+
+
+        $scope.$on('case-retrieved', function (e, data) {
+            if (Validator.validateCaseFile(data)) {
+                $scope.caseInfo = data;
+
+                CasesService.queryCostsheets({
+                    objectType: "CASE_FILE",
+                    objectId: $scope.caseInfo.id
+                }, function (data) {
+                    if (Validator.validateCostsheets(data)) {
+                        var costsheets = data;
+                        for (var i = 0; i < costsheets.length; i++) {
+                            costsheets[i].acm$_formName = $translate.instant("cases.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
+                            costsheets[i].acm$_costs = _.reduce(Util.goodArray(costsheets[i].costs), function (total, n) {
+                                return total + Util.goodValue(n.value, 0);
+                            }, 0);
+                        }
+
+                        $scope.gridOptions.data = costsheets;
+                        $scope.gridOptions.totalItems = Util.goodValue(costsheets.length, 0);
+                    }
+
+                });
+            } //end validate
+        });
+
+
+        $scope.showUrl = function (event, rowEntity) {
+            event.preventDefault();
+            Util.uiGrid.showObject("COSTSHEET", Util.goodMapValue([rowEntity, "id"], 0), $scope);
+        };
     }
 ]);

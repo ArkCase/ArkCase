@@ -111,7 +111,7 @@ angular.module('services').factory('CasesService', ['$resource',
             , queryTimesheets: {
                 method: 'GET',
                 //url: 'proxy/arkcase/api/v1/service/timesheet/objectId/:objectId/objectType/:objectType?start=:startWith&n=:count&s=:sort',
-                url: 'proxy/arkcase/api/v1/service/costsheet/objectId/:objectId/objectType/:objectType',
+                url: 'proxy/arkcase/api/v1/service/timesheet/objectId/:objectId/objectType/:objectType',
                 cache: false,
                 isArray: true
             }

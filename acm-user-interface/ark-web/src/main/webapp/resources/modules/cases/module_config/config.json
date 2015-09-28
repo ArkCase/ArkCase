@@ -524,10 +524,8 @@
       "columnDefs": [
         {
           "name": "name",
-          "field": "getFormName(row.entity)",
           "displayName": "cases.comp.cost.table.columns.name",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.name}}</a>"
+          "headerCellFilter": "translate"
         },
         {
           "name": "user",
@@ -537,7 +535,6 @@
         },
         {
           "name": "tally",
-          "field": "calculateTotal(row.entity)",
           "displayName": "cases.comp.cost.table.columns.tally",
           "headerCellFilter": "translate"
         },
@@ -546,7 +543,7 @@
           "field": "modified",
           "displayName": "cases.comp.cost.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'medium'}}</div>"
         },
         {
           "name": "status",
