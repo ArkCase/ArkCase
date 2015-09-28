@@ -108,6 +108,20 @@ angular.module('services').factory('CasesService', ['$resource',
                 url: 'proxy/arkcase/api/latest/service/correspondence?templateName=:template&parentObjectType=:parentType&parentObjectId=:parentId&targetCmisFolderId=:folderId',
                 cache: false
             }
+            , queryTimesheets: {
+                method: 'GET',
+                //url: 'proxy/arkcase/api/v1/service/timesheet/objectId/:objectId/objectType/:objectType?start=:startWith&n=:count&s=:sort',
+                url: 'proxy/arkcase/api/v1/service/costsheet/objectId/:objectId/objectType/:objectType',
+                cache: false,
+                isArray: true
+            }
+            , queryCostsheets: {
+                method: 'GET',
+                //url: 'proxy/arkcase/api/v1/service/costsheet/objectId/:objectId/objectType/:objectType?start=:startWith&n=:count&s=:sort',
+                url: 'proxy/arkcase/api/v1/service/costsheet/objectId/:objectId/objectType/:objectType',
+                cache: false,
+                isArray: true
+            }
 
         });
     }

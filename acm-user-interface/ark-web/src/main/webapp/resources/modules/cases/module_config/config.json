@@ -431,13 +431,12 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "name",
@@ -466,14 +465,96 @@
       "id": "time",
       "title": "Time",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 2,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "cases.comp.time.table.columns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "user",
+          "field": "user.fullName",
+          "displayName": "cases.comp.time.table.columns.user",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "tally",
+          "displayName": "cases.comp.time.table.columns.tally",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified",
+          "field": "modified",
+          "displayName": "cases.comp.time.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'medium'}}</div>"
+        },
+        {
+          "name": "status",
+          "field": "status",
+          "displayName": "cases.comp.time.table.columns.status",
+          "headerCellFilter": "translate"
+        }
+      ]
     },
 
     {
       "id": "cost",
       "title": "Cost",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "name",
+          "field": "getFormName(row.entity)",
+          "displayName": "cases.comp.cost.table.columns.name",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.name}}</a>"
+        },
+        {
+          "name": "user",
+          "field": "user.fullName",
+          "displayName": "cases.comp.cost.table.columns.user",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "tally",
+          "field": "calculateTotal(row.entity)",
+          "displayName": "cases.comp.cost.table.columns.tally",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified",
+          "field": "modified",
+          "displayName": "cases.comp.cost.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>"
+        },
+        {
+          "name": "status",
+          "field": "status",
+          "displayName": "cases.comp.cost.table.columns.status",
+          "headerCellFilter": "translate"
+        }
+      ]
     },
 
     {
