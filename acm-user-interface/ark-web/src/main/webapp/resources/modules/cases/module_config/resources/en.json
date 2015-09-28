@@ -3,13 +3,19 @@
     "title": "Cases",
     "restrict": "Restrict?",
     "close.button": "Close Complaint",
-    "subscribe.button": "Subscribe"
+    "subscribe.button": "Subscribe",
+    "noCase": "[ No Case Data ]"
   },
   "cases.comp.calendar": {
     "title": "Calendar"
   },
   "cases.comp.correspondence": {
-    "title": "Correspondence"
+    "title": "Correspondence",
+    "table.columns": {
+      "name": "Title",
+      "created": "Created",
+      "creator": "Creator"
+    }
   },
   "cases.comp.cost": {
     "title": "Cost"
@@ -17,7 +23,7 @@
   "cases.comp.details": {
     "title": "Details",
     "msg": {
-      "noDetails": "No Details"
+      "noDetails": "No Details ____no longer used; to be deleted____"
     }
   },
   "cases.comp.documents": {
@@ -36,7 +42,12 @@
     "courtRoomName": "Court Room Name:"
   },
   "cases.comp.notes": {
-    "title": "Notes"
+    "title": "Notes",
+    "table.columns": {
+      "note": "Note",
+      "created": "Created",
+      "creator": "Author"
+    }
   },
   "cases.comp.participants": {
     "title": "Participants",
@@ -105,7 +116,14 @@
 
   },
   "cases.comp.references": {
-    "title": "References"
+    "title": "References",
+    "table.columns": {
+      "targetName": "Number",
+      "targetTitle": "Title",
+      "modified": "Modified",
+      "targetType": "Reference Type",
+      "status": "Status"
+    }
   },
   "cases.comp.tasks": {
     "title": "Tasks",

@@ -24,6 +24,7 @@
     {
       "id": "people",
       "title": "People",
+      "className": "com.armedia.acm.plugins.person.model.Person",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -80,7 +81,7 @@
           {
             "name": "creator",
             "displayName": "cases.comp.people.contactMethods.table.columns.creator",
-            "headerCellFilter": "translate" ,
+            "headerCellFilter": "translate",
             "lookup": "userFullNames"
           }
         ]
@@ -260,7 +261,37 @@
       "id" : "notes",
       "title": "Notes",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 2,
+      "columnDefs": [
+        {
+          "name": "note",
+          "displayName": "cases.comp.notes.table.columns.note",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "created",
+          "displayName": "cases.comp.notes.table.columns.created",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+          "enableCellEdit": false
+        },
+        {
+          "name": "creator",
+          "displayName": "cases.comp.notes.table.columns.creator",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "lookup": "userFullNames"
+        }
+      ]
     },
 
     {
@@ -269,6 +300,13 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "object_id_s",
@@ -283,12 +321,14 @@
         {
           "name": "assignee_s",
           "displayName": "cases.comp.tasks.table.columns.assignee",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         },
         {
-          "name": "created",
+          "name": "create_tdt",
           "displayName": "cases.comp.tasks.table.columns.created",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'medium'}}</div>"
         },
         {
           "name": "priority_s",
@@ -296,9 +336,10 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "due-tdt",
+          "name": "due_tdt",
           "displayName": "cases.comp.tasks.table.columns.due",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'medium'}}</div>"
         },
         {
           "name": "status_s",
@@ -309,7 +350,7 @@
           "name": "action",
           "displayName": "cases.comp.tasks.table.columns.action",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div><button class='btn-xs btn btn-default' ng-click='grid.appScope.cellAction(\"complete\", row.entity)'>Complete</button></div>"
+          "lookup": "taskOutcomes"
         }
       ]
     },
@@ -318,7 +359,45 @@
       "id" : "references",
       "title": "References",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "targetName",
+          "displayName": "cases.comp.references.table.columns.targetName",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.targetName}}</a>"
+        },
+        {
+          "name": "targetTitle",
+          "displayName": "cases.comp.references.table.columns.targetTitle",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.targetTitle}}</a>"
+        },
+        {
+          "name": "modified",
+          "displayName": "cases.comp.references.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'medium'}}</div>"
+        },
+        {
+          "name": "targetType",
+          "displayName": "cases.comp.references.table.columns.targetType",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "status",
+          "displayName": "cases.comp.references.table.columns.status",
+          "headerCellFilter": "translate"
+        }
+      ]
     },
 
     {
@@ -339,7 +418,8 @@
         {
           "name": "userId",
           "displayName": "cases.comp.history.table.columns.userId",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         }
       ]
     },
@@ -348,7 +428,38 @@
       "id": "correspondence",
       "title": "Correspondence",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 2,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "cases.comp.correspondence.table.columns.name",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.name}}</a>"
+        },
+        {
+          "name": "created",
+          "displayName": "cases.comp.correspondence.table.columns.created",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+          "enableCellEdit": false
+        },
+        {
+          "name": "creator",
+          "displayName": "cases.comp.correspondence.table.columns.creator",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "lookup": "userFullNames"
+        }
+      ]
     },
 
     {

@@ -1,0 +1,49 @@
+{
+  "responseHeader": {
+    "status": 0,
+    "QTime": 6,
+    "params": {
+      "q": "object_type_s:CASE_FILE AND queue_name_s:*",
+      "facet.field": "queue_name_s",
+      "indent": "true",
+      "fl": "id",
+      "rows": "1",
+      "wt": "json",
+      "facet": "true"
+    }
+  },
+  "response": {
+    "numFound": 117,
+    "start": 0,
+    "docs": [
+      {
+        "id": "146-CASE_FILE"
+      }
+    ]
+  },
+  "facet_counts": {
+    "facet_queries": {
+
+    },
+    "facet_fields": {
+      "queue_name_s": [
+        "Transcribe",
+        90,
+        "Fulfill Order",
+        17,
+        "Distribution",
+        4,
+        "Non-Compliance",
+        4,
+        "QC Order",
+        2
+      ]
+    },
+    "facet_dates": {
+
+    },
+    "facet_ranges": {
+
+    }
+  }
+}

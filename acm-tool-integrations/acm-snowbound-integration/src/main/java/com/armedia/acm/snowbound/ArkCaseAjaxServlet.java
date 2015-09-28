@@ -39,6 +39,7 @@ public class ArkCaseAjaxServlet extends AjaxServlet
 
     private String auditEventService;
     private String uploadNewFileService;
+    private String snowboundBaseUrl;
 
     public ArkCaseAjaxServlet()
     {
@@ -54,6 +55,12 @@ public class ArkCaseAjaxServlet extends AjaxServlet
         if (paramBaseURL != null)
         {
             this.baseURL = paramBaseURL;
+        }
+
+        String codebase = servletConfig.getInitParameter("codebase");
+        if (codebase != null)
+        {
+            this.snowboundBaseUrl = codebase;
         }
 
         String paramAuditEventService = servletConfig.getInitParameter("auditEventService");
@@ -77,16 +84,19 @@ public class ArkCaseAjaxServlet extends AjaxServlet
     {
         String action = getDecodedParameter(request, "action");
         LOG.log(Level.FINE, "action: " + action);
-        try {
+        try
+        {
             super.service(request, response);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             LOG.log(Level.SEVERE, e.getMessage());
             throw e;
         }
 
         if (action != null)
         {
-            if (action.equals("arkCaseCreateCustomImageStamp")) {
+            if (action.equals("arkCaseCreateCustomImageStamp"))
+            {
                 LOG.log(Level.FINE, "Requested creation of new stamp");
                 byte[] jsonBytes;
                 try
@@ -105,8 +115,10 @@ public class ArkCaseAjaxServlet extends AjaxServlet
                 }
 
                 LOG.log(Level.FINE, "Response: " + jsonBytes.toString());
-            } else if (action.equals("arkCaseDeleteDocumentPages")) {
-                try {
+            } else if (action.equals("arkCaseDeleteDocumentPages"))
+            {
+                try
+                {
                     LOG.log(Level.FINE, "Requested document pages deletion");
 
                     // Builds audit event notification target url to ArkCase
@@ -117,11 +129,14 @@ public class ArkCaseAjaxServlet extends AjaxServlet
 
                     // Notifies ArkCase that a delete has occurred
                     sendAuditEventNotificationToArkCase(targetUrl);
-                } catch (Exception e) {
+                } catch (Exception e)
+                {
                     LOG.log(Level.SEVERE, e.getMessage());
                 }
-            } else if (action.equals("arkCaseReorderDocumentPages")) {
-                try {
+            } else if (action.equals("arkCaseReorderDocumentPages"))
+            {
+                try
+                {
                     LOG.log(Level.FINE, "Requested document page reordering");
 
                     // Obtains the page re-order event description
@@ -136,11 +151,14 @@ public class ArkCaseAjaxServlet extends AjaxServlet
                     // Sends audit event notification to ArkCase that a document has been re-ordered
                     sendAuditEventNotificationToArkCase(targetUrl);
 
-                } catch (Exception e) {
+                } catch (Exception e)
+                {
                     LOG.log(Level.SEVERE, e.getMessage());
                 }
-            } else if (action.equals("arkCaseViewDocument")) {
-                try {
+            } else if (action.equals("arkCaseViewDocument"))
+            {
+                try
+                {
                     LOG.log(Level.FINE, "Document was viewed by the user");
 
                     // Builds audit event notification target url to ArkCase
@@ -151,7 +169,8 @@ public class ArkCaseAjaxServlet extends AjaxServlet
                     // Sends audit event notification to ArkCase that a document has been re-ordered
                     sendAuditEventNotificationToArkCase(targetUrl);
 
-                } catch (Exception e) {
+                } catch (Exception e)
+                {
                     LOG.log(Level.SEVERE, e.getMessage());
                 }
             }
@@ -161,38 +180,46 @@ public class ArkCaseAjaxServlet extends AjaxServlet
     /**
      * Generates the common portion of the audit event ArkCase url
      * which can be re-used for different event types
-     * @param request - standard servlet request object containing the url parameters
+     *
+     * @param request        - standard servlet request object containing the url parameters
      * @param auditEventType - identifies the type of event being raised (delete, reorder, viewed)
      * @return base audit event url including standard url arguments for ArkCase
      */
-    private String buildAuditEventBaseUrl(HttpServletRequest request, String auditEventType) {
+    private String buildAuditEventBaseUrl(HttpServletRequest request, String auditEventType)
+    {
         String acmTicket = getDecodedParameter(request, ArkCaseConstants.ACM_TICKET_PARAM);
         String ecmFileId = getDecodedParameter(request, ArkCaseConstants.ACM_FILE_PARAM);
         String userId = getDecodedParameter(request, ArkCaseConstants.ACM_USER_PARAM);
         return String.format("%s%s?acm_ticket=%s&file_id=%s&user_id=%s&audit_event_type=%s",
-                             baseURL, auditEventService, acmTicket, ecmFileId, userId, auditEventType);
+                baseURL, auditEventService, acmTicket, ecmFileId, userId, auditEventType);
     }
 
     /**
      * Makes an HTTP POST request to ArkCase to register an audit trail event
+     *
      * @param targetUrl - the full url including all url arguments of the ArkCase audit REST call
      * @throws Exception if a connection cannot be opened or the data cannot be transmitted to ArkCase
      */
-    private void sendAuditEventNotificationToArkCase(String targetUrl) throws Exception {
+    private void sendAuditEventNotificationToArkCase(String targetUrl) throws Exception
+    {
         HttpURLConnection connection = null;
-        try {
+        try
+        {
             URL url = new URL(targetUrl);
             LOG.log(Level.FINE, "open connection");
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             int responseCode = connection.getResponseCode();
-            if (HttpServletResponse.SC_OK == responseCode) {
+            if (HttpServletResponse.SC_OK == responseCode)
+            {
                 LOG.log(Level.FINE, "successfully sent audit event data");
-            } else {
+            } else
+            {
                 LOG.log(Level.SEVERE, "unable to send audit event data (" + responseCode + ")");
                 LOG.log(Level.SEVERE, connection.getResponseMessage());
             }
-        } finally {
+        } finally
+        {
             if (connection != null)
                 connection.disconnect();
         }
@@ -203,7 +230,7 @@ public class ArkCaseAjaxServlet extends AjaxServlet
         byte[] jsonBytes = null;
 
         String title = "Riste";
-        String imagePath = "http://localhost:8083/VirtualViewerJavaHTML5/resources/stamps/" + title + ".png";
+        String imagePath = snowboundBaseUrl + "/resources/stamps/" + title + ".png";
         int imageWidth = 500;
         int imageHeight = 500;
         String message = "";
