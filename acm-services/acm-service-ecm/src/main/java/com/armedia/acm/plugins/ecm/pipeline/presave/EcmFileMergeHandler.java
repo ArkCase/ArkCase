@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.ecm.utils.GenericUtils;
 import com.armedia.acm.plugins.ecm.utils.PDFUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +22,8 @@ import java.util.List;
 public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext> {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    private String mergeableTypes;
+    private String fileFormatsToMerge;
+    private String fileTypesToMerge;
     private EcmFileDao ecmFileDao;
     private FolderAndFilesUtils folderAndFilesUtils;
     private EcmFileMuleUtils ecmFileMuleUtils;
@@ -36,25 +38,23 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
         try {
             pipelineContext.setIsAppend(false);
 
-            // PDF and non-pdf files are handled differently (non-pdf are sent to Ephesoft)
-            boolean isPDF = entity.getFileMimeType().equals("application/pdf");
-            pipelineContext.setIsPDF(isPDF);
-            log.debug("isPDF: " + isPDF);
+            // Only certain file formats can be merged (PDF at this point is the only one supported)
+            String fileExtension = FilenameUtils.getExtension(entity.getFileName());
 
-            // Only PDF documents can be merged
-            if (isPDF) {
+            // Only certain file types (authorization, abstract, etc.) are merged directly within the Bactes extension application
+            boolean isFileTypeMergeable = GenericUtils.isFileTypeInList(entity.getFileType(), fileTypesToMerge);
+
+            // Only certain file formats (tiff, jpg, etc.) are merged directly within the Bactes extension application
+            boolean isFileFormatMergeable = GenericUtils.isFileTypeInList(fileExtension, fileFormatsToMerge);
+
+            if (isFileTypeMergeable && isFileFormatMergeable) {
 
                 // Checks for an existing repository file of a mergeable type
-                EcmFile matchFile = null;
-                if (GenericUtils.isFileTypeInList(entity.getFileType(), mergeableTypes)) {
-                    matchFile = getDuplicateFile(pipelineContext.getContainer().getId(), entity.getFileType());
-                }
+                EcmFile matchFile = getDuplicateFile(pipelineContext.getContainer().getId(), entity.getFileType());
 
                 // Appends new PDF to old one if a PDF of the appropriate matching type exists
                 if (matchFile != null) {
                     log.debug("pdf document type match found, need to merge the type: " + matchFile.getFileType());
-                    pipelineContext.setIsAppend(true);
-                    pipelineContext.setEcmFile(matchFile);
 
                     // We need to pull the original file contents from Alfresco in order to merge with the new file
                     log.debug("Pulling original document contents from repository");
@@ -68,19 +68,25 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
                     InputStream fileInputStream = PDFUtils.mergeFiles(originalFileStream, pipelineContext.getFileInputStream());
 
                     // The merged PDF content will be available to the next pipeline stage
-                    pipelineContext.setMergedFileInputStream(fileInputStream);
+                    if (fileInputStream != null) {
+                        pipelineContext.setMergedFileInputStream(fileInputStream);
+                        pipelineContext.setIsAppend(true);
+                        pipelineContext.setEcmFile(matchFile);
+                    } else {
+                        throw new Exception("The document merge failed");
+                    }
                 }
             }
         } catch (Exception e) {
             log.error("mule pre save handler failed: {}", e.getMessage(), e);
-            throw new PipelineProcessException("mule pre save handler failed: " + e.getMessage());
+            throw new PipelineProcessException(e);
         }
     }
 
     @Override
     public void rollback(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
     {
-        ;
+
     }
 
     /**
@@ -104,11 +110,17 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
         return matchFile;
     }
 
-    public String getMergeableTypes() {
-        return mergeableTypes;
+    public String getFileFormatsToMerge() {
+        return fileFormatsToMerge;
     }
-    public void setMergeableTypes(String mergeableTypes) {
-        this.mergeableTypes = mergeableTypes;
+    public void setFileFormatsToMerge(String fileFormatsToMerge) {
+        this.fileFormatsToMerge = fileFormatsToMerge;
+    }
+    public String getFileTypesToMerge() {
+        return fileTypesToMerge;
+    }
+    public void setFileTypesToMerge(String mergeableTypes) {
+        this.fileTypesToMerge = mergeableTypes;
     }
     public EcmFileDao getEcmFileDao() {
         return ecmFileDao;
