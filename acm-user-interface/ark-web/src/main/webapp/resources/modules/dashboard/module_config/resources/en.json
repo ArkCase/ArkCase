@@ -1,0 +1,55 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+
+    "widgets": {
+      "casesByStatus": {
+        "timePeriod": {
+          "label": "Select Time Period",
+          "lastWeek": "Last Week",
+          "lastMonth": "Last Month",
+          "lastYear": "Last Year",
+          "all": "All"
+        },
+        "noDataMessage": "Currently there are no cases info"
+      },
+      "myTasks": {
+        "rowNumbers.label": "Default Row Numbers",
+        "rowNumbers.placeholder": "Enter Default Row Numbers",
+        "table": {
+          "header" :{
+            "taskId": "Task ID",
+            "title": "Title",
+            "priority": "Priority",
+            "dueDate": "Due",
+            "status": "Status",
+            "caseId": "Case ID"
+          }
+        }
+      },
+
+      "newComplaints": {
+        "dueDate": {
+          "label": "Select Due Date Period",
+          "pastDue": "Past Due",
+          "dueTomorrow": "Due Tomorrow",
+          "dueWeek": "Due in 7 Days",
+          "dueMonth": "Due in Month",
+          "all": "All"
+        }
+      },
+
+      "teamWorkload": {
+        "dueDate": {
+          "label": "Select Due Date Period",
+          "pastDue": "Past Due",
+          "dueTomorrow": "Due Tomorrow",
+          "dueWeek": "Due in 7 Days",
+          "dueMonth": "Due in Month",
+          "all": "All"
+        },
+        "noDataMessage": "Currently there are no team tasks info"
+      }
+    }
+  }
+}
