@@ -193,13 +193,14 @@
         <property name="complaintDao" ref="acmComplaintDao"/>
     </bean>
 
-    <bean id="complaintCaptureFileListener" class="com.armedia.acm.plugins.complaint.service.ComplaintCaptureFileListener">
-        <property name="captureFolder" ref="captureFolder" />
-        <property name="workingFolder" ref="workingFolder" />
-        <property name="completedFolder" ref="completedFolder" />
-        <property name="saveComplaintTransaction" ref="saveComplaintTransaction" />
+    <bean id="complaintCaptureFileListener"
+          class="com.armedia.acm.plugins.complaint.service.ComplaintCaptureFileListener">
+        <property name="captureFolder" ref="captureFolder"/>
+        <property name="workingFolder" ref="workingFolder"/>
+        <property name="completedFolder" ref="completedFolder"/>
+        <property name="saveComplaintTransaction" ref="saveComplaintTransaction"/>
         <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="loadingDocumentsSeconds" value="${ephesoft.load.documents.seconds}" />
+        <property name="loadingDocumentsSeconds" value="${ephesoft.load.documents.seconds}"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 </beans>
