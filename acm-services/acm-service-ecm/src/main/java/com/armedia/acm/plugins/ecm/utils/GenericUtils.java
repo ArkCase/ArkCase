@@ -28,15 +28,20 @@ public class GenericUtils {
     /**
      * Determines if the file type is present in the supplied list of acceptable types
      * @param fileType - type of file to search for in the list
-     * @param typeList - comma separated types (e.x. ArkCase model type) to search
+     * @param typeListString - comma separated types (e.x. ArkCase model type) to search
      * @return true if the specified type is in the list, false otherwise
      */
-    public static boolean isFileTypeInList(String fileType, String typeList) {
-        boolean isFileCopyable = false;
-        if (fileType != null && typeList != null) {
-            List<String> copyTypeList = parseStringList(typeList);
-            isFileCopyable = copyTypeList.contains(fileType.trim());
+    public static boolean isFileTypeInList(String fileType, String typeListString) {
+        boolean isInList = false;
+        if (fileType != null && typeListString != null) {
+            List<String> typeList = parseStringList(typeListString);
+            for (String supportedType : typeList) {
+                if (supportedType.equalsIgnoreCase(fileType)) {
+                    isInList = true;
+                    break;
+                }
+            }
         }
-        return isFileCopyable;
+        return isInList;
     }
 }

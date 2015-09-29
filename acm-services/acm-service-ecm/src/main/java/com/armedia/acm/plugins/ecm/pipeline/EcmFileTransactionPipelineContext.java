@@ -21,7 +21,6 @@ public class EcmFileTransactionPipelineContext implements PipelineContext {
     private Document cmisDocument;
     private EcmFile ecmFile;
     private boolean isAppend;
-    private boolean isPDF;
     private InputStream mergedFileInputStream;
 
     public String getOriginalFileName() {
@@ -71,12 +70,6 @@ public class EcmFileTransactionPipelineContext implements PipelineContext {
     }
     public void setIsAppend(boolean isAppend) {
         this.isAppend = isAppend;
-    }
-    public boolean getIsPDF() {
-        return isPDF;
-    }
-    public void setIsPDF(boolean isPDF) {
-        this.isPDF = isPDF;
     }
     public InputStream getMergedFileInputStream() {
         return mergedFileInputStream;
