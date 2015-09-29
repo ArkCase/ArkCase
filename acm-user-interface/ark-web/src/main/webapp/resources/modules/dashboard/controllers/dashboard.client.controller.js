@@ -8,11 +8,15 @@ angular.module('dashboard').controller('DashboardController', ['$scope', 'Config
         $scope.dashboard = {
             structure: '6-6',
             collapsible: false,
-            maximizable: false
+            maximizable: false,
+            model: {
+                titleTemplateUrl: 'modules/dashboard/views/dashboard-title.client.view.html'
+            }
         };
 
         DashboardService.getConfig({}, function (data) {
-            $scope.dashboard.model = angular.fromJson(data.dashboardConfig);
+            $scope.dashboard.model = _.merge(angular.fromJson(data.dashboardConfig),$scope.dashboard.model) ;
+            // Set Dashboard custom title
         });
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {
