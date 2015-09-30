@@ -7,8 +7,9 @@
             <i class="glyphicon glyphicon-cog"></i>
         </a>
 
-        <a href ng-if="options.editable" title="{{editMode ? 'save changes' : 'enable edit mode'}}" ng-click=toggleEditMode()>
-            <i class=glyphicon x-ng-class="{'glyphicon-edit' : !editMode, 'glyphicon-save' : editMode}"></i>
+        <a href ng-if="options.editable" title="{{editMode ? 'save changes' : 'enable edit mode'}}"
+           ng-click="toggleEditMode()">
+            <i class="glyphicon" x-ng-class="{'glyphicon-edit' : !editMode, 'glyphicon-save' : editMode}"></i>
         </a>
 
         <a href ng-if="editMode" title="undo changes" ng-click="cancelEditMode()">

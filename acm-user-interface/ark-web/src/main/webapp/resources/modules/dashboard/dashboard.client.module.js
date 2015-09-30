@@ -4,6 +4,7 @@ ApplicationConfiguration.registerModule('dashboard', [
     'adf',
     'adf.provider',
     'highcharts-ng',
+    'dashboard.cases-by-queue',
     'dashboard.cases-by-status',
     'dashboard.my-cases',
     'dashboard.my-complaints',

@@ -9,6 +9,13 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
                 data: ''
             },
 
+            queryCasesByQueue: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/v1/plugin/casefile/number/by/queue',
+                isArray: false,
+                data: ''
+            },
+
             queryCasesByStatus: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/v1/plugin/casebystatus/:period',

@@ -1,3 +1,5 @@
 <div>
-    <h3>New Complaints Widget</h3>
+    <div class="alert alert-info" ng-if="!chartConfig">
+        <p class="text-center">{{'dashboard.widgets.newComplaints.noDataMessage' | translate}}</p>
+    </div>
 </div>
