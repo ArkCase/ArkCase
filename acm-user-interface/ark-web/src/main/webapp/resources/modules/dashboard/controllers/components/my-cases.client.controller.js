@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dashboard.my-cases', ['adf.provider'])
-    .config(function(dashboardProvider){
+    .config(function (dashboardProvider) {
         dashboardProvider
             .widget('myCases', {
                 title: 'My Cases',
@@ -11,6 +11,6 @@ angular.module('dashboard.my-cases', ['adf.provider'])
                 templateUrl: 'modules/dashboard/views/components/my-cases.client.view.html'
             });
     })
-    .controller('Dashboard.MyCasesController', function($scope){
+    .controller('Dashboard.MyCasesController', function ($scope) {
 
     });

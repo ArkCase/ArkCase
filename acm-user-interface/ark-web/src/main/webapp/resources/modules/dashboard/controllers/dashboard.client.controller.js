@@ -10,7 +10,7 @@ angular.module('dashboard').controller('DashboardController', ['$scope', 'Config
             collapsible: false,
             maximizable: false,
             model: {
-                titleTemplateUrl : 'modules/dashboard/views/dashboard-title.client.view.html'
+                titleTemplateUrl: 'modules/dashboard/views/dashboard-title.client.view.html'
             }
         };
 

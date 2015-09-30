@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dashboard.new-complaints', ['adf.provider'])
-    .config(function(dashboardProvider){
+    .config(function (dashboardProvider) {
         dashboardProvider
             .widget('newComplaints', {
                 title: 'New Complaints',
@@ -14,6 +14,6 @@ angular.module('dashboard.new-complaints', ['adf.provider'])
                 }
             });
     })
-    .controller('Dashboard.NewComplaintsController', function($scope){
+    .controller('Dashboard.NewComplaintsController', function ($scope) {
 
     });

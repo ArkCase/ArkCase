@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dashboard.cases-by-status', ['adf.provider'])
-    .config(function(dashboardProvider){
+    .config(function (dashboardProvider) {
         dashboardProvider
             .widget('casesByStatusSummary', {
                 title: 'Cases by Status',
@@ -15,17 +15,17 @@ angular.module('dashboard.cases-by-status', ['adf.provider'])
             });
     })
     .controller('Dashboard.CasesByStatusController', ['$scope', 'config', '$translate', 'Dashboard.DashboardService',
-        function($scope, config, $translate, DashboardService){
+        function ($scope, config, $translate, DashboardService) {
             $scope.chartConfig = null;
             if (!config.period) {
                 config.period = 'all';
             }
 
             // Load Cases info and render chart
-            DashboardService.queryCasesByStatus({period: config.period}, function(cases){
+            DashboardService.queryCasesByStatus({period: config.period}, function (cases) {
 
                 var chartTitle = '';
-                switch(config.period) {
+                switch (config.period) {
                     case 'all':
                         chartTitle = $translate.instant('dashboard.widgets.casesByStatus.timePeriod.all');
                         break;
@@ -41,12 +41,12 @@ angular.module('dashboard.cases-by-status', ['adf.provider'])
                 }
 
                 var seriesData = [];
-                _.forEach(cases, function(caseIter){
+                _.forEach(cases, function (caseIter) {
                     seriesData.push([caseIter.status, caseIter.count])
                 });
 
                 if (seriesData.length > 0) {
-                    seriesData.sort(function(a, b){
+                    seriesData.sort(function (a, b) {
                         return b[1] - a[1];
                     });
 
@@ -67,6 +67,7 @@ angular.module('dashboard.cases-by-status', ['adf.provider'])
                         title: {
                             text: chartTitle
                         },
+                        noData: $translate.instant('dashboard.widgets.casesByStatus.noDataMessage'),
                         plotOptions: {
                             pie: {
                                 allowPointSelect: true,
@@ -79,6 +80,7 @@ angular.module('dashboard.cases-by-status', ['adf.provider'])
                             data: seriesData
                         }]
                     }
-                };
+                }
             });
-    }]);
+        }
+    ]);

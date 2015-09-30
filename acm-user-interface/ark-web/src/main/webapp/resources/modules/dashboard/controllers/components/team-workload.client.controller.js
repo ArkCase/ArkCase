@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dashboard.team-workload', ['adf.provider'])
-    .config(function(dashboardProvider){
+    .config(function (dashboardProvider) {
         dashboardProvider
             .widget('teamTaskWorkload', {
                 title: 'Team Tasks Workload',
@@ -15,17 +15,17 @@ angular.module('dashboard.team-workload', ['adf.provider'])
             });
     })
     .controller('Dashboard.TeamWorkloadController', ['$scope', 'config', '$translate', 'Dashboard.DashboardService',
-        function($scope, config, $translate, DashboardService){
+        function ($scope, config, $translate, DashboardService) {
             $scope.chartConfig = null;
             if (!config.due) {
                 config.due = 'all';
             }
 
             // Load Cases info and render chart
-            DashboardService.queryTeamWorkload({due: config.due}, function(tasks){
+            DashboardService.queryTeamWorkload({due: config.due}, function (tasks) {
 
                 var chartTitle = '';
-                switch(config.due) {
+                switch (config.due) {
                     case 'all':
                         chartTitle = $translate.instant('dashboard.widgets.teamWorkload.dueDate.all');
                         break;
@@ -46,19 +46,19 @@ angular.module('dashboard.team-workload', ['adf.provider'])
 
                 // Count number of assigned tasks for users
                 var tasksData = {};
-                _.forEach(tasks, function(taskIter){
+                _.forEach(tasks, function (taskIter) {
                     var user = taskIter.assignee;
                     tasksData[user] ? tasksData[user]++ : tasksData[user] = 1;
                 });
 
 
                 var seriesData = [];
-                _.forEach(tasksData, function(count, user){
+                _.forEach(tasksData, function (count, user) {
                     seriesData.push([user, count])
                 });
 
                 if (seriesData.length > 0) {
-                    seriesData.sort(function(a, b){
+                    seriesData.sort(function (a, b) {
                         return b[1] - a[1];
                     });
 
@@ -79,6 +79,9 @@ angular.module('dashboard.team-workload', ['adf.provider'])
                         title: {
                             text: chartTitle
                         },
+
+                        noData: $translate.instant('dashboard.widgets.teamWorkload.noDataMessage'),
+
                         plotOptions: {
                             pie: {
                                 allowPointSelect: true,
@@ -91,9 +94,8 @@ angular.module('dashboard.team-workload', ['adf.provider'])
                             data: seriesData
                         }]
                     }
-                };
+                }
+                ;
             });
-
-
         }
     ]);
