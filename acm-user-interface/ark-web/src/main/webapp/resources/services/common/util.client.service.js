@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('services').factory('UtilService', ['$q',
-    function ($q) {
-        return {
+angular.module('services').factory('UtilService', ['$q', '$window', 'LookupService',
+    function ($q, $window, LookupService) {
+        var Util = {
             goodValue: function (val, replacement) {
                 var replacedWith = (undefined === replacement) ? "" : replacement;
                 return this.isEmpty(val) ? replacedWith : val;
@@ -178,6 +178,93 @@ angular.module('services').factory('UtilService', ['$q',
                 });
             }
 
-        }
+            , uiGrid: {
+                typicalOptions: function (config, scope) {
+                    scope.gridOptions = scope.gridOptions || {};
+
+                    scope.gridOptions.enableColumnResizing = true;
+                    scope.gridOptions.enableRowSelection = false;
+                    scope.gridOptions.enableRowHeaderSelection = false;
+                    scope.gridOptions.multiSelect = false;
+                    scope.gridOptions.noUnselect = false;
+
+                    scope.gridOptions.paginationPageSizes = config.paginationPageSizes;
+                    scope.gridOptions.paginationPageSize = config.paginationPageSize;
+                    scope.gridOptions.enableFiltering = config.enableFiltering;
+                    scope.gridOptions.onRegisterApi = function (gridApi) {
+                        scope.gridApi = gridApi;
+                    }
+                }
+                , externalPaging: function (config, scope, updatePageData) {
+                    scope.currentId = $stateParams.id;
+                    scope.start = 0;
+                    scope.pageSize = config.paginationPageSize || 10;
+                    scope.sort = {by: "", dir: "asc"};
+                    scope.filters = [];
+
+                    scope.gridOptions.useExternalPagination = true;
+                    scope.gridOptions.useExternalSorting = true;
+
+                    //comment out filtering until service side supports it
+                    //scope.gridOptions.enableFiltering = config.enableFiltering;
+                    //scope.gridOptions.useExternalFiltering = true;
+
+                    scope.gridOptions.onRegisterApi = function (gridApi) {
+                        scope.gridApi = gridApi;
+                        scope.gridApi.core.on.sortChanged(scope, function (grid, sortColumns) {
+                            if (0 >= sortColumns.length) {
+                                scope.sort.by = null;
+                                scope.sort.dir = null;
+                            } else {
+                                scope.sort.by = sortColumns[0].field;
+                                scope.sort.dir = sortColumns[0].sort.direction;
+                            }
+                            updatePageData();
+                        });
+                        scope.gridApi.core.on.filterChanged(scope, function () {
+                            var grid = this.grid;
+                            scope.filters = [];
+                            for (var i = 0; i < grid.columns.length; i++) {
+                                if (!_.isEmpty(grid.columns[i].filters[0].term)) {
+                                    var filter = {};
+                                    filter.by = grid.columns[i].field;
+                                    filter.with = grid.columns[i].filters[0].term;
+                                    scope.filters.push(filter);
+                                }
+                            }
+                            updatePageData();
+                        });
+                        scope.gridApi.pagination.on.paginationChanged(scope, function (newPage, pageSize) {
+                            scope.start = (newPage - 1) * pageSize;   //newPage is 1-based index
+                            scope.pageSize = pageSize;
+                            updatePageData();
+                        });
+                    }
+                }
+                , showObject: function (objType, objId, scope) {
+                    var promiseObjectTypes = Util.servicePromise({
+                        service: LookupService.getObjectTypes
+                        , callback: function (data) {
+                            scope.objectTypes = [];
+                            _.forEach(data, function (item) {
+                                scope.objectTypes.push(item);
+                            });
+                            return scope.objectTypes;
+                        }
+                    });
+
+                    $q.all([promiseObjectTypes]).then(function (data) {
+                        var find = _.where(scope.objectTypes, {type: objType});
+                        if (0 < find.length) {
+                            var url = Util.goodValue(find[0].url);
+                            url = url.replace(":id", objId);
+                            $window.location.href = url;
+                        }
+                    });
+                }
+            }
+
+        };
+        return Util;
     }
 ]);
