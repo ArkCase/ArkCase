@@ -187,7 +187,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
                         var correspondences = data.children;
                         $scope.gridOptions.data = correspondences;
                         $scope.gridOptions.totalItems = Util.goodValue(data.totalChildren, 0);
-                    }); //end $q
+                    });
                 }
             })
         };
@@ -203,7 +203,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
                     $window.location.href = url;
                 }
             });
-        }
+        };
 
         $scope.addNew = function () {
             var caseId = Util.goodValue($scope.caseInfo.id, 0);

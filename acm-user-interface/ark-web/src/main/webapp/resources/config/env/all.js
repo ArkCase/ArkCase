@@ -34,12 +34,14 @@ module.exports = {
                 'lib/components-font-awesome/css/font-awesome.css',
                 'lib/fancytree/dist/skin-win8/ui.fancytree.css',
                 'lib/angular-xeditable/dist/css/xeditable.css',
-                'lib/summernote/dist/summernote.css'
+                'lib/summernote/dist/summernote.css',
+                'lib/angular-dashboard-framework/dist/angular-dashboard-framework.css'
             ],
             js: [
                 'lib/jquery/dist/jquery.js',
                 'lib/jquery-ui/jquery-ui.js',
                 'lib/bootstrap/dist/js/bootstrap.js',
+                'lib/highcharts/highcharts.js',
                 'lib/tv4/tv4.js',
                 'lib/objectpath/lib/ObjectPath.js',
                 'lib/lodash/lodash.js',
@@ -60,7 +62,10 @@ module.exports = {
                 'lib/angular-translate/angular-translate.js',
                 'lib/angular-translate-loader-partial/angular-translate-loader-partial.js',
                 'lib/angular-xeditable/dist/js/xeditable.js',
+                'lib/Sortable/Sortable.js',
+                'lib/angular-dashboard-framework/dist/angular-dashboard-framework.js',
                 'lib/fancytree/dist/jquery.fancytree.js',
+                'lib/highcharts-ng/dist/highcharts-ng.js',
                 'lib/ng-file-upload/ng-file-upload.js',
                 'lib/ng-file-upload-shim/ng-file-upload-shim.js',
                 'lib/summernote/dist/summernote.js'
