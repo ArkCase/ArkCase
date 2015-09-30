@@ -1,7 +1,6 @@
 package com.armedia.acm.services.pipeline;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -38,16 +37,6 @@ public abstract class AbstractPipelineContext
     }
 
     /**
-     * return all keys
-     *
-     * @return returns Set<String>
-     */
-    public Set<String> keys()
-    {
-        return properties.keySet();
-    }
-
-    /**
      * Returns value for provided key. If key not found than return null.
      *
      * @param key
@@ -56,5 +45,16 @@ public abstract class AbstractPipelineContext
     public Object getPropertyValue(String key)
     {
         return properties.get(key);
+    }
+
+    /**
+     * removes object and key from the map
+     *
+     * @param key must not be null.
+     * @return returns Object associated with this key
+     */
+    public Object removeProperty(String key)
+    {
+        return properties.remove(key);
     }
 }
