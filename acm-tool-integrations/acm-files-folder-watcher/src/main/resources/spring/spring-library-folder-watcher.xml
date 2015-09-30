@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="userHomeFolder" class="java.io.File">
         <constructor-arg value="${user.home}"/>
@@ -13,12 +10,13 @@
     <bean id="vfsManager" class="org.apache.commons.vfs2.VFS" factory-method="getManager"/>
 
     <!-- Configuration File -->
-    <bean id="configFolder" factory-bean="vfsManager"  factory-method="resolveFile">
+    <bean id="configFolder" factory-bean="vfsManager" factory-method="resolveFile">
         <constructor-arg index="0" ref="userHomeFolder"/>
         <constructor-arg index="1" value=".acm"/>
     </bean>
 
-    <bean id="configFileListener" class="com.armedia.acm.files.ConfigFileWatcher" depends-on="springEntityListenerConfigurer">
+    <bean id="configFileListener" class="com.armedia.acm.files.ConfigFileWatcher"
+          depends-on="springEntityListenerConfigurer">
         <property name="baseFolder" ref="configFolder"/>
         <property name="ignoreFolders">
             <list>
@@ -35,22 +33,23 @@
     </bean>
 
     <bean id="configMonitorController" class="com.armedia.acm.files.ConfigFileController"
-            init-method="initBean"
-            destroy-method="stopBean"
-            depends-on="activitiProcessEngineConfiguration,drlDeployer">
+          init-method="initBean"
+          destroy-method="stopBean"
+          depends-on="activitiProcessEngineConfiguration,drlDeployer">
         <property name="configFolder" ref="configFolder"/>
         <property name="configFolderMonitor" ref="configFileMonitor"/>
     </bean>
-    
+
     <!-- Capture File -->
     <bean id="captureFolder" factory-bean="vfsManager" factory-method="resolveFile">
         <constructor-arg index="0" value="${capture.rootFolderToWatch}"/>
     </bean>
 
-    <bean id="captureFileListener" class="com.armedia.acm.files.capture.CaptureFileWatcher" depends-on="springEntityListenerConfigurer">
+    <bean id="captureFileListener" class="com.armedia.acm.files.capture.CaptureFileWatcher"
+          depends-on="springEntityListenerConfigurer">
         <property name="baseFolder" ref="captureFolder"/>
         <!-- Do not put a period before the extension -->
-        <property name="fileExtensions" value="${capture.fileExtensions}"/> 
+        <property name="fileExtensions" value="${capture.fileExtensions}"/>
     </bean>
 
     <bean id="captureFileMonitor" class="org.apache.commons.vfs2.impl.DefaultFileMonitor">
@@ -60,8 +59,8 @@
     </bean>
 
     <bean id="captureMonitorController" class="com.armedia.acm.files.capture.CaptureFileController"
-            init-method="initBean"
-            destroy-method="stopBean">
+          init-method="initBean"
+          destroy-method="stopBean">
         <property name="captureFolder" ref="captureFolder"/>
         <property name="captureFolderMonitor" ref="captureFileMonitor"/>
     </bean>

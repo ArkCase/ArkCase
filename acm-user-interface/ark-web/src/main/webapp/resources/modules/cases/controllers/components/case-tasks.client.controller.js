@@ -36,7 +36,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                 var arr = Util.goodArray(data);
                 $scope.myTasks = _.map(data, _.partialRight(_.pick, "taskId", "adhocTask", "completed", "status", "availableOutcomes"));
                 //
-                //lodash equivalent to the following. It saves several lines of code, but is it really worth the sacrifice of readability?
+                //lodash equivalent to the following:
                 //
                 //$scope.myTasks = [];
                 //for (var i = 0; i < arr.length; i++) {
@@ -135,7 +135,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
             var sort = "";
             if ($scope.sort) {
                 if (!_.isEmpty($scope.sort.by) && !_.isEmpty($scope.sort.dir)) {
-                    sort = $scope.sort.by + "%20" + $scope.sort.dir;
+                    sort = $scope.sort.by + " " + $scope.sort.dir;
                 }
             }
             //implement filtering here when service side supports it
