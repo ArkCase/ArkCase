@@ -27,7 +27,7 @@
     "type": "FILE",
     "description": "File",
     "iconName": "",
-    "url": ""
+    "url": "/proxy/arkcase/api/latest/plugin/ecm/download?ecmFileId=:id"
   },
   {
     "type": "PERSON",
