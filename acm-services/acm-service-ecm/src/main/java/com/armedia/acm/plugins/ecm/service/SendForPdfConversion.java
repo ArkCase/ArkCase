@@ -9,6 +9,6 @@ import java.io.InputStream;
 /**
  * Created by joseph.mcgrady on 9/14/2015.
  */
-public interface CaptureFolderService {
+public interface SendForPdfConversion {
     void copyToCaptureHotFolder(EcmFile ephesoftFile, InputStream fileInputStream) throws EphesoftException, IOException;
 }
