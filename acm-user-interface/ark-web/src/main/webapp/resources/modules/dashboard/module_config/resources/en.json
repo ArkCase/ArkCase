@@ -1,0 +1,73 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+
+    "widgets": {
+      "casesByQueue": {
+        "title": "Active Case Files by Queue",
+        "xAxis": "Queues",
+        "yAxis": "Number of Case Files",
+        "noDataMessage": "Currently there are no cases info"
+      },
+
+      "casesByStatus": {
+        "timePeriod": {
+          "label": "Select Time Period",
+          "lastWeek": "Last Week",
+          "lastMonth": "Last Month",
+          "lastYear": "Last Year",
+          "all": "All"
+        },
+        "noDataMessage": "Currently there are no cases info"
+      },
+
+      "myCases": {
+        "noDataMessage": "Currently there are no cases info"
+      },
+
+      "myComplaints": {
+        "noDataMessage": "Currently there are no complaints info"
+      },
+
+      "myTasks": {
+        "rowNumbers.label": "Default Row Numbers",
+        "rowNumbers.placeholder": "Enter Default Row Numbers",
+        "table": {
+          "header" :{
+            "taskId": "Task ID",
+            "title": "Title",
+            "priority": "Priority",
+            "dueDate": "Due",
+            "status": "Status",
+            "caseId": "Case ID"
+          }
+        },
+        "noDataMessage": "Currently there are no tasks info"
+      },
+
+      "newComplaints": {
+        "dueDate": {
+          "label": "Select Due Date Period",
+          "pastDue": "Past Due",
+          "dueTomorrow": "Due Tomorrow",
+          "dueWeek": "Due in 7 Days",
+          "dueMonth": "Due in Month",
+          "all": "All"
+        },
+        "noDataMessage": "Currently there are no complaints info"
+      },
+
+      "teamWorkload": {
+        "dueDate": {
+          "label": "Select Due Date Period",
+          "pastDue": "Past Due",
+          "dueTomorrow": "Due Tomorrow",
+          "dueWeek": "Due in 7 Days",
+          "dueMonth": "Due in Month",
+          "all": "All"
+        },
+        "noDataMessage": "Currently there are no team tasks info"
+      }
+    }
+  }
+}
