@@ -316,12 +316,12 @@
         <snapshotRepository>
             <id>armedia.snapshot</id>
             <name>Armedia Release Maven Repository</name>
-            <url>http://arm-proj-web01.armedia.com:8081/nexus/content/repositories/armedia.snapshot</url>
+            <url>http://10.20.20.71:8081/nexus/content/repositories/armedia.snapshot</url>
         </snapshotRepository>
         <repository>
             <id>armedia.release</id>
             <name>Armedia Release Maven Repository</name>
-            <url>http://arm-proj-web01.armedia.com:8081/nexus/content/repositories/armedia.release</url>
+            <url>http://10.20.20.71:8081/nexus/content/repositories/armedia.release</url>
         </repository>
         <site>
             <id>${maven.site.id}</id>
@@ -365,7 +365,7 @@
         <!-- Armedia repository -->
         <repository>
             <id>armedia-shared</id>
-            <url>http://arm-proj-web01.armedia.com:8081/nexus/content/groups/armedia</url>
+            <url>http://10.20.20.71:8081/nexus/content/groups/armedia</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
