@@ -57,9 +57,8 @@
     </bean>
 
     <!-- Bactes Capture folder handler to drop non-pdf files to the Ephesoft shared hot folder -->
-    <bean id="captureFolderHandler" class="com.armedia.acm.plugins.ecm.service.impl.CaptureFolderServiceImpl">
-        <property name="captureFolderToWatch" value="${capture.rootFolderToWatch}"/>
-        <property name="captureExtensions" value="${capture.fileExtensions}"/>
+    <bean id="captureFolderHandler" class="com.armedia.acm.plugins.ecm.service.impl.SendForPdfConversionImpl">
+        <property name="captureFolderToWatch" value="${capture.sendForPdfConversionFolder}"/>
     </bean>
 
     <!-- Mule Utility Bean for downloading, updating, adding files -->
@@ -68,23 +67,47 @@
     </bean>
 
     <!-- Bactes specific pipeline pre save handlers -->
-    <bean id="ecmFileAppendMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileAppendMetadataHandler">
-        <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="folderDao" ref="acmFolderDao"/>
-        <property name="captureFolderService" ref="captureFolderHandler"/>
-    </bean>
-    <bean id="ecmFileAppendHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileAppendHandler">
-        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+    <bean id="ecmFileMergeHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeHandler">
+        <property name="fileFormatsToMerge" value="${capture.fileFormatsToMerge}"/>
+        <property name="fileTypesToMerge" value="${capture.fileTypesToMerge}"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+    </bean>
+    <bean id="ecmFileDuplicateContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileDuplicateContentHandler">
+        <property name="fileFormatsToBeConvertedToPDF" value="${capture.fileFormatsToBeConvertedToPDF}"/>
+    </bean>
+    <bean id="ecmFileMergedContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeContentHandler">
+        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+    </bean>
+    <bean id="ecmFileNewContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewContentHandler">
+        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+    </bean>
+    <bean id="ecmFileNewMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewMetadataHandler">
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="folderDao" ref="acmFolderDao"/>
+    </bean>
+    <bean id="ecmFileMergedMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergedMetadataHandler">
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="folderDao" ref="acmFolderDao"/>
+    </bean>
+    <bean id="ecmFileSendForPdfConversionHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSendForPdfConversionHandler">
+        <property name="captureFolderService" ref="captureFolderHandler"/>
+        <property name="fileTypesToBeConvertedToPDF" value="${capture.fileTypesToBeConvertedToPDF}"/>
+        <property name="fileFormatsToBeConvertedToPDF" value="${capture.fileFormatsToBeConvertedToPDF}"/>
     </bean>
 
-    <!-- Bactes specific ecm file transaction pipeline process manager -->
+    <!-- This pipeline uploads document content to Alfresco and the metadata to the acm3 database -->
     <bean id="ecmFileAppendPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
             <list>
-                <ref bean="ecmFileAppendHandler"/>
-                <ref bean="ecmFileAppendMetadataHandler"/>
+                <!--<ref bean="ecmFileMergeHandler"/>-->
+                <ref bean="ecmFileDuplicateContentHandler"/>
+                <!--<ref bean="ecmFileMergedContentHandler"/>-->
+                <ref bean="ecmFileNewContentHandler"/>
+                <ref bean="ecmFileNewMetadataHandler"/>
+                <!--<ref bean="ecmFileMergedMetadataHandler"/>-->
+                <!--<ref bean="ecmFileSendForPdfConversionHandler"/>-->
             </list>
         </property>
         <property name="postSaveHandlers">
