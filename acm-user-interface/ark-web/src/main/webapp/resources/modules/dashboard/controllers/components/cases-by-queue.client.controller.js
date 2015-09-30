@@ -30,10 +30,6 @@ angular.module('dashboard.cases-by-queue', ['adf.provider'])
                     }
                 });
 
-                data.sort(function(a, b){
-                    return b.y - a.y;
-                });
-
                 $scope.chartConfig = {
                     chart: {
                         type: 'column'
