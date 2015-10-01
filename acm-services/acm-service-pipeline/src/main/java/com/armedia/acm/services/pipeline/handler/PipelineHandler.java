@@ -1,13 +1,13 @@
 package com.armedia.acm.services.pipeline.handler;
 
-import com.armedia.acm.services.pipeline.PipelineContext;
+import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 /**
  * Interface that all handlers for particular entity type must implement.
  * Created by Petar Ilin <petar.ilin@armedia.com> on 26.07.2015.
  */
-public interface PipelineHandler<T, S extends PipelineContext>
+public interface PipelineHandler<T, S extends AbstractPipelineContext>
 {
     /**
      * Execute handler actions.
