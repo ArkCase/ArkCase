@@ -3,24 +3,38 @@ package com.armedia.acm.service.objectlock.service;
 import com.armedia.acm.service.objectlock.dao.AcmObjectLockDao;
 import com.armedia.acm.service.objectlock.exception.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import org.apache.commons.lang.StringUtils;
+import org.mule.api.MuleException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by nebojsha on 25.08.2015.
  */
-public class AcmObjectLockServiceImpl implements AcmObjectLockService {
+public class AcmObjectLockServiceImpl implements AcmObjectLockService
+{
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+
     private AcmObjectLockDao acmObjectLockDao;
+    private ExecuteSolrQuery executeSolrQuery;
 
     @Override
     @Transactional
-    public AcmObjectLock createLock(Long objectId, String objectType, Authentication auth) {
+    public AcmObjectLock createLock(Long objectId, String objectType, Authentication auth)
+    {
 
         AcmObjectLock existingLock = acmObjectLockDao.findLock(objectId, objectType);
 
-        if (existingLock != null) {
+        if (existingLock != null)
+        {
             //if current user is same as creator of the lock than just return existingLock, else throw an exception
-            if (existingLock.getCreator().equals(auth.getName())) {
+            if (existingLock.getCreator().equals(auth.getName()))
+            {
                 return existingLock;
             } else
                 throw new AcmObjectLockException("Lock already exist for different user.");
@@ -34,14 +48,68 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService {
 
     @Override
     @Transactional
-    public void removeLock(Long objectId, String objectType) {
+    public void removeLock(Long objectId, String objectType)
+    {
         AcmObjectLock ol = acmObjectLockDao.findLock(objectId, objectType);
         if (ol == null)
             throw new AcmObjectLockException("Error removing. Lock for [objectId, objectType] = [" + objectId + ", " + objectType + "] doesn't exists!");
         acmObjectLockDao.remove(ol);
     }
 
-    public void setAcmObjectLockDao(AcmObjectLockDao acmObjectLockDao) {
+    @Override
+    public String getDocumentsWithoutLock(String objectType, Authentication auth, int firstRow, int maxRows, String sort, String fqParams) throws MuleException
+    {
+        StringBuilder query = new StringBuilder();
+        query.append("-({!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK)");
+        query.append(" AND ");
+        query.append("object_type_s").append(":").append(objectType);
+        log.debug("executing query for documents without lock: {}", query.toString());
+
+        return executeQuery(query.toString(), auth, firstRow, maxRows, sort, fqParams);
+    }
+
+
+    @Override
+    public String getDocumentsWithLock(String objectType, Authentication auth, boolean filterByAssignee, int firstRow, int maxRows, String sort, String fqParams) throws MuleException
+    {
+        StringBuilder query = new StringBuilder();
+        query.append("{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK ");
+        if (!StringUtils.isEmpty(objectType))
+        {
+            query.append(" AND ");
+            query.append("parent_type_s").append(":").append(objectType);
+        }
+        if (filterByAssignee && !StringUtils.isEmpty(auth.getName()))
+        {
+            query.append(" AND ");
+            query.append("assignee_id_lcs").append(":").append(auth.getName());
+        }
+        query.append(")");
+        log.debug("executing query for documents with lock: {}", query.toString());
+
+        return executeQuery(query.toString(), auth, firstRow, maxRows, sort, fqParams);
+    }
+
+    private String executeQuery(String query, Authentication auth, int firstRow, int maxRows, String sort, String fqParams) throws MuleException
+    {
+        if (!StringUtils.isEmpty(fqParams))
+            return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query.toString(), firstRow, maxRows, sort, fqParams);
+        else
+            return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query.toString(), firstRow, maxRows, sort);
+    }
+
+    public void setAcmObjectLockDao(AcmObjectLockDao acmObjectLockDao)
+    {
         this.acmObjectLockDao = acmObjectLockDao;
+    }
+
+    public ExecuteSolrQuery getExecuteSolrQuery()
+    {
+        return executeSolrQuery;
+    }
+
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
+    {
+        this.executeSolrQuery = executeSolrQuery;
     }
 }
