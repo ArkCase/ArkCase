@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('profile').controller('Profile.CompanyController', ['$scope','userInfoService',
-    function ($scope, userInfoService) {
+angular.module('profile').controller('Profile.CompanyController', ['$scope','Profile.UserInfoService',
+    function ($scope, UserInfoService) {
         $scope.$emit('req-component-config', 'company');
         $scope.update = function () {
             var profileInfo;
-            userInfoService.getUserInfo().then(function(infoData) {
+            UserInfoService.getUserInfo().then(function(infoData) {
              profileInfo= infoData;
              profileInfo.companyName=$scope.profileCompanyName;
              profileInfo.firstAddress=$scope.profileCompanyAddress1;
@@ -16,10 +16,10 @@ angular.module('profile').controller('Profile.CompanyController', ['$scope','use
              profileInfo.mainOfficePhone=$scope.profileCompanyMainPhone;
              profileInfo.fax=$scope.profileCompanyFax;
              profileInfo.website=$scope.profileCompanyWebsite;
-             userInfoService.updateUserInfo(profileInfo);
+             UserInfoService.updateUserInfo(profileInfo);
             });
         };
-        userInfoService.getUserInfo().then(function(data) {
+        UserInfoService.getUserInfo().then(function(data) {
             $scope.profileCompanyName = data.companyName;
             $scope.profileCompanyAddress1 = data.firstAddress;
             $scope.profileCompanyAddress2 = data.secondAddress;
