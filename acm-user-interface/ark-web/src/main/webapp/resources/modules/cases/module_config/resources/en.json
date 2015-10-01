@@ -18,7 +18,15 @@
     }
   },
   "cases.comp.cost": {
-    "title": "Cost"
+    "title": "Cost",
+    "table.columns": {
+      "name": "Form Name",
+      "user": "User",
+      "tally": "Total Cost",
+      "modified": "Modified Date",
+      "status": "Status"
+    },
+    "formNamePrefix": "Costsheet"
   },
   "cases.comp.details": {
     "title": "Details",
@@ -139,6 +147,14 @@
     }
   },
   "cases.comp.time": {
-    "title": "Time"
+    "title": "Time",
+    "table.columns": {
+      "name": "Form Name",
+      "user": "User",
+      "tally": "Total Hours",
+      "modified": "Modified Date",
+      "status": "Status"
+    },
+    "formNamePrefix": "Timesheet"
   }
 }

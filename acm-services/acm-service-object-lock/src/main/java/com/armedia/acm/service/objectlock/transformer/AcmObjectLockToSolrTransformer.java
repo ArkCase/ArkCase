@@ -10,18 +10,21 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by armdev on 3/23/15.
+ * Created by nebojsha on 21.08.2015.
  */
-public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmObjectLock> {
+public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmObjectLock>
+{
     private AcmObjectLockDao dao;
 
     @Override
-    public List<AcmObjectLock> getObjectsModifiedSince(Date lastModified, int start, int pageSize) {
+    public List<AcmObjectLock> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
+    {
         return getDao().findModifiedSince(lastModified, start, pageSize);
     }
 
     @Override
-    public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmObjectLock in) {
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmObjectLock in)
+    {
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
         solr.setId(in.getId() + "-OBJECT_LOCK");
@@ -30,7 +33,7 @@ public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransfo
 
         solr.setParent_id_s(in.getObjectId().toString());
         solr.setParent_type_s(in.getObjectType());
-
+        solr.setParent_ref_s(in.getObjectId() + "-" + in.getObjectType());
 
         solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());
@@ -41,7 +44,8 @@ public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransfo
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmObjectLock in) {
+    public SolrDocument toSolrQuickSearch(AcmObjectLock in)
+    {
 
         SolrDocument solr = new SolrDocument();
 
@@ -51,6 +55,7 @@ public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransfo
 
         solr.setParent_object_id_s(in.getObjectId().toString());
         solr.setParent_object_type_s(in.getObjectType());
+        solr.setParent_ref_s(in.getObjectId() + "-" + in.getObjectType());
 
         solr.setAuthor(in.getCreator());
         solr.setCreate_tdt(in.getCreated());
@@ -61,20 +66,24 @@ public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransfo
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmObjectLock in) {
+    public SolrAdvancedSearchDocument toContentFileIndex(AcmObjectLock in)
+    {
         return null;
     }
 
     @Override
-    public boolean isAcmObjectTypeSupported(Class acmObjectType) {
+    public boolean isAcmObjectTypeSupported(Class acmObjectType)
+    {
         return AcmObjectLock.class.equals(acmObjectType);
     }
 
-    public AcmObjectLockDao getDao() {
+    public AcmObjectLockDao getDao()
+    {
         return dao;
     }
 
-    public void setDao(AcmObjectLockDao dao) {
+    public void setDao(AcmObjectLockDao dao)
+    {
         this.dao = dao;
     }
 
