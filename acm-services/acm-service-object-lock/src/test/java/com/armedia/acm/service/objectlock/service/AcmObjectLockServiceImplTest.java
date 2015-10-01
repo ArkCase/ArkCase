@@ -144,7 +144,7 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
 
         expect(executeSolrQueryMock.getResultsByPredefinedQuery(authMock, SolrCore.ADVANCED_SEARCH, "{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK  AND parent_type_s:CASE_FILE AND assignee_id_lcs:auditUser)", 0, 1, "")).andReturn(jsonContent);
         replayAll();
-        String result = acmObjectLockService.getDocumentsWithLock("CASE_FILE", authMock, true, 0, 1, "", null);
+        String result = acmObjectLockService.getDocumentsWithLock("CASE_FILE", authMock, authMock, 0, 1, "", null);
 
         SearchResults results = new SearchResults();
         assertEquals(248, results.getNumFound(result));
@@ -162,7 +162,7 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
 
         expect(executeSolrQueryMock.getResultsByPredefinedQuery(authMock, SolrCore.ADVANCED_SEARCH, "{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK  AND parent_type_s:CASE_FILE AND assignee_id_lcs:auditUser)", 0, 1, "", "fq=status_s:OPEN")).andReturn(jsonContent);
         replayAll();
-        String result = acmObjectLockService.getDocumentsWithLock("CASE_FILE", authMock, true, 0, 1, "", filter);
+        String result = acmObjectLockService.getDocumentsWithLock("CASE_FILE", authMock, authMock, 0, 1, "", filter);
 
         SearchResults results = new SearchResults();
         assertEquals(248, results.getNumFound(result));
