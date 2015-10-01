@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.ecm.pipeline;
 
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.services.pipeline.PipelineContext;
+import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 import org.springframework.security.core.Authentication;
 import org.apache.chemistry.opencmis.client.api.Document;
 
@@ -11,7 +11,8 @@ import java.io.InputStream;
 /**
  * Created by joseph.mcgrady on 9/9/2015.
  */
-public class EcmFileTransactionPipelineContext implements PipelineContext {
+public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
+{
 
     private String originalFileName;
     private Authentication authentication;
