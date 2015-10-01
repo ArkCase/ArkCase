@@ -70,7 +70,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService
 
 
     @Override
-    public String getDocumentsWithLock(String objectType, Authentication auth, boolean filterByAssignee, int firstRow, int maxRows, String sort, String fqParams) throws MuleException
+    public String getDocumentsWithLock(String objectType, Authentication auth, Authentication lockHeldByUser, int firstRow, int maxRows, String sort, String fqParams) throws MuleException
     {
         StringBuilder query = new StringBuilder();
         query.append("{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK ");
@@ -79,10 +79,10 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService
             query.append(" AND ");
             query.append("parent_type_s").append(":").append(objectType);
         }
-        if (filterByAssignee && !StringUtils.isEmpty(auth.getName()))
+        if (lockHeldByUser != null && !StringUtils.isEmpty(lockHeldByUser.getName()))
         {
             query.append(" AND ");
-            query.append("assignee_id_lcs").append(":").append(auth.getName());
+            query.append("assignee_id_lcs").append(":").append(lockHeldByUser.getName());
         }
         query.append(")");
         log.debug("executing query for documents with lock: {}", query.toString());

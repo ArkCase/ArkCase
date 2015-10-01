@@ -32,7 +32,7 @@ public interface AcmObjectLockService
      *
      * @param objectType       document object type. Can be null, than returns every document.
      * @param auth             Authentication
-     * @param filterByAssignee weather to filter documents by assignee
+     * @param lockHeldByUser   filter locks by lock held by user. Can be null.
      * @param firstRow         start row
      * @param maxRows          max rows
      * @param sort             name of the fields with (asc|desc) separated by semicolon. Can be empty.
@@ -40,5 +40,5 @@ public interface AcmObjectLockService
      * @return return response from solr as String
      * @throws MuleException
      */
-    String getDocumentsWithLock(String objectType, Authentication auth, boolean filterByAssignee, int firstRow, int maxRows, String sort, String fqParams) throws MuleException;
+    String getDocumentsWithLock(String objectType, Authentication auth, Authentication lockHeldByUser, int firstRow, int maxRows, String sort, String fqParams) throws MuleException;
 }
