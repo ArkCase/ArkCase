@@ -1,5 +1,5 @@
 'use strict';
-angular.module('profile').service('subscriptionService', function ($http, $q, Authentication) {
+angular.module('profile').service('Profile.SubscriptionService', function ($http, $q, Authentication) {
     return({
         getSubscriptions: getSubscriptions,
         removeSubscriptions:removeSubscriptions
