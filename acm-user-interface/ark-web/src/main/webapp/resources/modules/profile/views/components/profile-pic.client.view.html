@@ -12,7 +12,7 @@
             </div>
             <div class="col-xs-6">
                 <h4 id="fullName">{{profilePicFullName|| 'Unknown'}}</h4>
-                <h4>  <a href="#"  editable-text="profilePicTitle" onaftersave="update()">{{ profilePicTitle || 'profile.unknown' }}</a></h4>
+                <h4>  <a href="#"  editable-text="profilePicTitle" onaftersave="update()">{{ profilePicTitle || 'profile.unknown' | translate}}</a></h4>
                 <h4 id="email">{{ profilePicEmail || 'Unknown'}}</h4>
                 <small> {{'profile.pciture.email'| translate}} </small>
             </div>
