@@ -32,30 +32,6 @@
         <property name="folderDao" ref="acmFolderDao"/>
     </bean>
 
-    <!-- EcmFile pre-save handlers -->
-    <bean id="ecmFileSaveHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSaveHandler">
-        <property name="muleContextManager" ref="muleContextManager"/>
-    </bean>
-    <bean id="ecmFileSaveMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSaveMetadataHandler">
-        <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="folderDao" ref="acmFolderDao"/>
-    </bean>
-
-    <!-- Pipeline process manager bean for the ecm file transaction pipeline -->
-    <bean id="ecmFileSavePipelineManager"
-          class="com.armedia.acm.services.pipeline.PipelineManager">
-        <property name="preSaveHandlers">
-            <list>
-                <ref bean="ecmFileSaveHandler"/>
-                <ref bean="ecmFileSaveMetadataHandler"/>
-            </list>
-        </property>
-        <property name="postSaveHandlers">
-            <list>
-            </list>
-        </property>
-    </bean>
-
     <!-- Bactes Capture folder handler to drop non-pdf files to the Ephesoft shared hot folder -->
     <bean id="captureFolderHandler" class="com.armedia.acm.plugins.ecm.service.impl.SendForPdfConversionImpl">
         <property name="captureFolderToWatch" value="${capture.sendForPdfConversionFolder}"/>
@@ -98,11 +74,11 @@
     </bean>
 
     <!-- This pipeline uploads document content to Alfresco and the metadata to the acm3 database -->
-    <bean id="ecmFileAppendPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
+    <bean id="ecmFileUploadPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
             <list>
                 <!--<ref bean="ecmFileMergeHandler"/>-->
-                <ref bean="ecmFileDuplicateContentHandler"/>
+                <!--<ref bean="ecmFileDuplicateContentHandler"/>-->
                 <!--<ref bean="ecmFileMergedContentHandler"/>-->
                 <ref bean="ecmFileNewContentHandler"/>
                 <ref bean="ecmFileNewMetadataHandler"/>
@@ -121,8 +97,7 @@
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
-        <property name="pipelineManager" ref="ecmFileSavePipelineManager"/>
-        <property name="appendPipelineManager" ref="ecmFileAppendPipelineManager"/>
+        <property name="pipelineManager" ref="ecmFileUploadPipelineManager"/>
     </bean>
 
     <bean id="ecmFileService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl">
