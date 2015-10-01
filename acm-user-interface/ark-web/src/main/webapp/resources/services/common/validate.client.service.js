@@ -12,6 +12,27 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
+        ,validateUserInfo: function(data){
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.userId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.fullName)) {
+                return false;
+            }
+            if (Util.isEmpty(data.mail)) {
+                return false;
+            }
+            if (Util.isEmpty(data.firstName)) {
+                return false;
+            }
+            if (Util.isEmpty(data.lastName)) {
+                return false;
+            }
+            return true;
+        }
         ,validateUser: function(data){
             if (Util.isEmpty(data)) {
                 return false;
@@ -65,7 +86,10 @@ angular.module('services').factory('ValidationService', ["UtilService",
             if (Util.isEmpty(data)) {
                 return false;
             }
-            if (Util.isEmpty(data.id) || Util.isEmpty(data.caseNumber)) {
+            if (0 >= Util.goodValue(data.id), 0) {
+                return false;
+            }
+            if (Util.isEmpty(data.caseNumber)) {
                 return false;
             }
             if (!Util.isArray(data.childObjects)) {
@@ -283,6 +307,153 @@ angular.module('services').factory('ValidationService', ["UtilService",
                 return false;
             }
             if (Util.isEmpty(data.fileType)) {
+                return false;
+            }
+            return true;
+        }
+
+
+        , validateCostsheets: function (data) {
+            if (!Util.isArray(data)) {
+                return false;
+            }
+            for (var i = 0; i < data.length; i++) {
+                if (!this.validateCostsheet(data[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        , validateCostsheet: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.id)) {
+                return false;
+            }
+            if (Util.isEmpty(data.user)) {
+                return false;
+            }
+            if (Util.isEmpty(data.user.userId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.parentId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.parentType)) {
+                return false;
+            }
+            if (Util.isEmpty(data.parentNumber)) {
+                return false;
+            }
+            if (!Util.isArray(data.costs)) {
+                return false;
+            }
+            if (Util.isEmpty(data.status)) {
+                return false;
+            }
+            if (Util.isEmpty(data.creator)) {
+                return false;
+            }
+            return true;
+        }
+        , validateCostRecord: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.id)) {
+                return false;
+            }
+            if (Util.isEmpty(data.title)) {
+                return false;
+            }
+            if (Util.isEmpty(data.value)) {
+                return false;
+            }
+            if (Util.isEmpty(data.date)) {
+                return false;
+            }
+            if (Util.isEmpty(data.creator)) {
+                return false;
+            }
+            if (Util.isEmpty(data.modified)) {
+                return false;
+            }
+            return true;
+        }
+
+
+        , validateTimesheets: function (data) {
+            if (!Util.isArray(data)) {
+                return false;
+            }
+            for (var i = 0; i < data.length; i++) {
+                if (!this.validateTimesheet(data[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        , validateTimesheet: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.id)) {
+                return false;
+            }
+            if (Util.isEmpty(data.user)) {
+                return false;
+            }
+            if (Util.isEmpty(data.user.userId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.startDate)) {
+                return false;
+            }
+            if (Util.isEmpty(data.endDate)) {
+                return false;
+            }
+            if (!Util.isArray(data.times)) {
+                return false;
+            }
+            if (Util.isEmpty(data.status)) {
+                return false;
+            }
+            if (Util.isEmpty(data.creator)) {
+                return false;
+            }
+            if (Util.isEmpty(data.modified)) {
+                return false;
+            }
+
+            return true;
+        }
+        , validateTimeRecord: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.id)) {
+                return false;
+            }
+            if (Util.isEmpty(data.code)) {
+                return false;
+            }
+            if (Util.isEmpty(data.type)) {
+                return false;
+            }
+            if (Util.isEmpty(data.objectId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.value)) {
+                return false;
+            }
+            if (Util.isEmpty(data.creator)) {
+                return false;
+            }
+            if (Util.isEmpty(data.modified)) {
+                return false;
+            }
+            if (Util.isEmpty(data.date)) {
                 return false;
             }
             return true;

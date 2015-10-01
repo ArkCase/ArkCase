@@ -152,7 +152,7 @@ vvConfig = {
     panIncrement: 30,
 
     // Whether or not to even attempt to request documents as SVG images 
-    enableSVGSupport: true,
+    enableSVGSupport: false,
 
     // Allows the copying of text
     copySelectedText: true,

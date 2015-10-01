@@ -1,14 +1,14 @@
 'use strict';
 
-angular.module('profile').controller('Profile.SubscriptionController', ['$scope', 'subscriptionService',
-    function ($scope, subscriptionService) {
+angular.module('profile').controller('Profile.SubscriptionController', ['$scope', 'Profile.SubscriptionService',
+    function ($scope, SubscriptionService) {
         $scope.$emit('req-component-config', 'subscription');
         $scope.unsubscribe = function (rowEntity) {
             var index = $scope.subscribptionGridOptions.data.indexOf(rowEntity);
             var userID = rowEntity.userID;
             var parentID = rowEntity.parentID;
             var type = rowEntity.type;
-            subscriptionService.removeSubscriptions(userID, type, parentID);
+            SubscriptionService.removeSubscriptions(userID, type, parentID);
             $scope.subscribptionGridOptions.data.splice(index, 1);
         };
         $scope.unsubscriptSelected = function () {
@@ -18,7 +18,7 @@ angular.module('profile').controller('Profile.SubscriptionController', ['$scope'
                 var userID = rowSelected[i].userID;
                 var parentID = rowSelected[i].parentID;
                 var type = rowSelected[i].type;
-                subscriptionService.removeSubscriptions(userID, type, parentID);
+                SubscriptionService.removeSubscriptions(userID, type, parentID);
                 $scope.subscribptionGridOptions.data.splice(index, 1);
             }
         };
@@ -40,7 +40,7 @@ angular.module('profile').controller('Profile.SubscriptionController', ['$scope'
 
             }
         }
-        subscriptionService.getSubscriptions().then(function (data) {
+        SubscriptionService.getSubscriptions().then(function (data) {
             for (var i = 0; i < data.length; i++) {
                 $scope.subscribptionGridOptions.data.push(
                         {
