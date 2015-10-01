@@ -11,7 +11,7 @@ import java.util.ListIterator;
 /**
  * Created by Petar Ilin <petar.ilin@armedia.com> on 26.07.2015.
  */
-public class PipelineManager<T, S extends PipelineContext>
+public class PipelineManager<T, S extends AbstractPipelineContext>
 {
     /**
      * List of handlers executed before saving the entity to database.
