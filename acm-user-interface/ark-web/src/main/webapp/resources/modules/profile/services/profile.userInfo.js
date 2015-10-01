@@ -1,5 +1,5 @@
 'use strict';
-angular.module('profile').service('userInfoService', function ($http, $q, Authentication) {
+angular.module('profile').service('Profile.UserInfoService', function ($http, $q, Authentication) {
     return({
         getUserInfo: getUserInfo,
         updateUserInfo:updateUserInfo
