@@ -1,7 +1,9 @@
 <div class="user-info" ng-controller="UserInfoController">
     <div>
         <div class="user-pic pull-left">
-            <img src="assets/img/ann.png"/>
+            <img ng-src="{{profilePicDefault && 'assets/img/nopic.png'|| 'proxy/arkcase/api/latest/plugin/ecm/download?ecmFileId='+profileEcmFileID+'&inline=true'}}" >
+
+            <!--<img src="assets/img/ann.png"/>-->
         </div>
 
         <div dropdown class="user-menu">

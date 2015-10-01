@@ -1,5 +1,5 @@
 'use strict';
-angular.module('profile').service('userPicService', function ($http, $q ,Upload) {
+angular.module('profile').service('Profile.ProfilePictureService', function ($http, $q ,Upload) {
     return({
         changePic: changePic
     });

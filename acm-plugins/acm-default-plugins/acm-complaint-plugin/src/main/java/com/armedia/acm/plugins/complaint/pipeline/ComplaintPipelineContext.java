@@ -1,13 +1,13 @@
 package com.armedia.acm.plugins.complaint.pipeline;
 
-import com.armedia.acm.services.pipeline.PipelineContext;
+import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 import org.springframework.security.core.Authentication;
 
 /**
  * Store all the complaint saving-related references in this context.
  * Created by Petar Ilin <petar.ilin@armedia.com> on 12.08.2015.
  */
-public class ComplaintPipelineContext implements PipelineContext
+public class ComplaintPipelineContext extends AbstractPipelineContext
 {
     /**
      * Spring authentication token.
