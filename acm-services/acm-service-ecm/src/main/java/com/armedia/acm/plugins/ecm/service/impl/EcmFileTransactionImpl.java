@@ -37,7 +37,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private AcmFolderDao folderDao;
     private FolderAndFilesUtils folderAndFilesUtils;
     private PipelineManager pipelineManager;
-    private PipelineManager appendPipelineManager;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -97,64 +96,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         }
 
         log.debug("Returning from addFileTransaction method");
-        return ecmFile;
-    }
-
-    @Override
-    public EcmFile addOrAppendFileTransaction(
-            String originalFileName,
-            Authentication authentication,
-            String fileType,
-            InputStream fileInputStream,
-            String mimeType,
-            String fileName,
-            String cmisFolderId,
-            AcmContainer container)
-            throws MuleException
-    {
-        // by default, files are documents
-        String category = "Document";
-        EcmFile retval = addOrAppendFileTransaction(originalFileName, authentication, fileType, category, fileInputStream, mimeType, fileName,
-                cmisFolderId, container);
-
-        return retval;
-    }
-
-    @Override
-    public EcmFile addOrAppendFileTransaction(
-            String originalFileName,
-            Authentication authentication,
-            String fileType,
-            String fileCategory,
-            InputStream fileInputStream,
-            String mimeType,
-            String fileName,
-            String cmisFolderId,
-            AcmContainer container)
-            throws MuleException
-    {
-        log.debug("Creating ecm file pipeline context");
-        EcmFileTransactionPipelineContext pipelineContext = new EcmFileTransactionPipelineContext();
-        pipelineContext.setCmisFolderId(cmisFolderId);
-        pipelineContext.setFileInputStream(fileInputStream);
-        pipelineContext.setOriginalFileName(originalFileName);
-        pipelineContext.setContainer(container);
-
-        EcmFile ecmFile = new EcmFile();
-        ecmFile.setFileMimeType(mimeType);
-        ecmFile.setFileName(fileName);
-        ecmFile.setFileType(fileType);
-        ecmFile.setCategory(fileCategory);
-        try {
-            log.debug("Calling bactes pipeline manager handlers");
-            appendPipelineManager.onPreSave(ecmFile, pipelineContext);
-            appendPipelineManager.onPostSave(ecmFile, pipelineContext);
-            ecmFile = pipelineContext.getEcmFile();
-        } catch (Exception e) {
-            log.error("append pipeline handler call failed: {}", e.getMessage(), e);
-        }
-
-        log.debug("Returning from addOrAppendFileTransaction method");
         return ecmFile;
     }
 
@@ -304,11 +245,5 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     }
     public void setPipelineManager(PipelineManager pipelineManager) {
         this.pipelineManager = pipelineManager;
-    }
-    public PipelineManager getAppendPipelineManager() {
-        return appendPipelineManager;
-    }
-    public void setAppendPipelineManager(PipelineManager appendPipelineManager) {
-        this.appendPipelineManager = appendPipelineManager;
     }
 }
