@@ -1,3 +1,4 @@
+
 html {
 	background-color: #f2f4f8;
 	height: 100%;
@@ -8,8 +9,6 @@ body {
 	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	height: 100%;
 }
-
-
 h1 {
 	color: #000000;
 	font-size: 36px;
@@ -60,7 +59,8 @@ div.logo img {
 .login-wrapper header {
 	margin: 15px;
 }
-.login-wrapper input [type="text"], .login-wrapper input[type=password] {
+.login-wrapper input [type="text"],
+.login-wrapper input[type=password] {
 	background-color: #faffbd;
 	color: #555;
 }
@@ -68,7 +68,6 @@ div.logo img {
 	background-color: #126da7;
 	color: #ffffff;
 }
-
 #footer div.text-center.padder p {
 	padding: 20px;
 }
