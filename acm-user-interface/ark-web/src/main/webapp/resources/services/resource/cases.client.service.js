@@ -83,7 +83,8 @@ angular.module('services').factory('CasesService', ['$resource',
 
             , queryNotes: {
                 method: 'GET',
-                url: 'proxy/arkcase/api/latest/plugin/note/:parentType/:parentId?start=:startWith&n=:count&s=:sort',
+                //url: 'proxy/arkcase/api/latest/plugin/note/:parentType/:parentId?start=:startWith&n=:count&s=:sort',
+                url: 'proxy/arkcase/api/latest/plugin/note/:parentType/:parentId',
                 cache: false,
                 isArray: true
             }

@@ -4,30 +4,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
     function ($scope, $stateParams, $q, Util, Validator, LookupService, CasesService) {
 		$scope.$emit('req-component-config', 'tasks');
 
-        $scope.currentId = $stateParams.id;
-        $scope.start = 0;
-        $scope.pageSize = 10;
-        $scope.sort = {by: "", dir: "asc"};
-        $scope.filters = [];
-
-
-        var promiseUsers = Util.servicePromise({
-            service: LookupService.getUsers
-            , callback: function (data) {
-                $scope.userFullNames = [];
-                var arr = Util.goodArray(data);
-                for (var i = 0; i < arr.length; i++) {
-                    var obj = Util.goodJsonObj(arr[i]);
-                    if (obj) {
-                        var user = {};
-                        user.id = Util.goodValue(obj.object_id_s);
-                        user.name = Util.goodValue(obj.name);
-                        $scope.userFullNames.push(user);
-                    }
-                }
-                return $scope.userFullNames;
-            }
-        });
+        var promiseUsers = Util.AcmGrid.getUsers($scope);
 
         var promiseMyTasks = Util.servicePromise({
             service: CasesService.queryMyTasks
@@ -36,7 +13,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                 var arr = Util.goodArray(data);
                 $scope.myTasks = _.map(data, _.partialRight(_.pick, "taskId", "adhocTask", "completed", "status", "availableOutcomes"));
                 //
-                //lodash equivalent to the following:
+                //Above lodash functions equivalent to the following:
                 //
                 //$scope.myTasks = [];
                 //for (var i = 0; i < arr.length; i++) {
@@ -53,69 +30,18 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
         });
 
 
-        $scope.config = null;
-        $scope.gridOptions = {};
-        $scope.$on('component-config', applyConfig);
-		function applyConfig(e, componentId, config) {
-			if (componentId == 'tasks') {
-				$scope.config = config;
-				$scope.gridOptions = {
-                    enableColumnResizing: true,
-                    enableRowSelection: false,
-                    enableRowHeaderSelection: false,
-                    multiSelect: false,
-                    noUnselect: false,
+        $scope.$on('component-config', function applyConfig(e, componentId, config) {
+            if (componentId == 'tasks') {
+                Util.AcmGrid.setColumnDefs($scope, config);
+                Util.AcmGrid.setBasicOptions($scope, config);
+                Util.AcmGrid.setExternalPaging($scope, config, $scope.retrieveGridData);
+                Util.AcmGrid.setUserNameFilter($scope, promiseUsers);
 
-                    paginationPageSizes: config.paginationPageSizes,
-                    paginationPageSize: config.paginationPageSize,
-                    useExternalPagination: true,
-                    useExternalSorting: true,
-
-                    //comment out filtering until service side supports it
-                    ////enableFiltering: config.enableFiltering,
-                    //enableFiltering: true,
-                    //useExternalFiltering: true,
-
-					columnDefs: config.columnDefs,
-					onRegisterApi: function(gridApi) {
-						$scope.gridApi = gridApi;
-                        $scope.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
-                            if (0 >= sortColumns.length) {
-                                $scope.sort.by = null;
-                                $scope.sort.dir = null;
-                            } else {
-                                $scope.sort.by = sortColumns[0].field;
-                                $scope.sort.dir = sortColumns[0].sort.direction;
-                            }
-                            $scope.updatePageData();
-                        });
-                        $scope.gridApi.core.on.filterChanged($scope, function () {
-                            var grid = this.grid;
-                            $scope.filters = [];
-                            for (var i = 0; i < grid.columns.length; i++) {
-                                if (!_.isEmpty(grid.columns[i].filters[0].term)) {
-                                    var filter = {};
-                                    filter.by = grid.columns[i].field;
-                                    filter.with = grid.columns[i].filters[0].term;
-                                    $scope.filters.push(filter);
-                                }
-                            }
-                            $scope.updatePageData();
-                        });
-                        $scope.gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
-                            $scope.start = (newPage - 1) * pageSize;   //newPage is 1-based index
-                            $scope.pageSize = pageSize;
-                            $scope.updatePageData();
-                        });
-					}
-				};
-
-                $q.all([promiseUsers, promiseMyTasks]).then(function (data) {
+                promiseMyTasks.then(function (data) {
                     for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                        if ("userFullNames" == $scope.config.columnDefs[i].lookup) {
-                            $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: grid.appScope.userFullNames:'id':'name'";
-
-                        } else if ("taskOutcomes" == $scope.config.columnDefs[i].lookup) {
+                        if ("taskId" == $scope.config.columnDefs[i].name) {
+                            $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.object_id_s}}</a>";
+                        } else if (Util.Constant.LOOKUP_TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
                             $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
                                 + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
                                 + ' ng-model="row.entity.acm$_taskOutcome">'
@@ -125,29 +51,16 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                     }
                 });
 
-                $scope.pageSize = config.paginationPageSize;
-                $scope.updatePageData();
-			}
-		}
-
-
-        $scope.updatePageData = function () {
-            var sort = "";
-            if ($scope.sort) {
-                if (!_.isEmpty($scope.sort.by) && !_.isEmpty($scope.sort.dir)) {
-                    sort = $scope.sort.by + " " + $scope.sort.dir;
-                }
+                $scope.retrieveGridData();
             }
-            //implement filtering here when service side supports it
-            //var filter = "";
-            ////$scope.filters = [{by: "eventDate", with: "term"}];
+        });
 
-            CasesService.queryTasks({
-                id: $scope.currentId,
-                startWith: $scope.start,
-                count: $scope.pageSize,
-                sort: sort
-            }, function (data) {
+
+        $scope.currentId = $stateParams.id;
+        $scope.retrieveGridData = function () {
+            CasesService.queryTasks(Util.AcmGrid.withPagingParams($scope, {
+                id: $scope.currentId
+            }), function (data) {
                 if (Validator.validateSolrData(data)) {
                     $q.all([promiseUsers, promiseMyTasks]).then(function () {
                         var tasks = data.response.docs;
@@ -160,16 +73,15 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                             task.acm$_taskOutcome = {id: "noop", value: "(Select One)"};
                             task.acm$_taskActionDone = true;
 
-                            var found = _.where($scope.myTasks, {taskId: tasks[i].id});
-                            if (0 < found.length) {
-                                var myTask = found[0];
-                                if (!myTask.completed && myTask.adhocTask) {
+                            var found = _.find($scope.myTasks, {taskId: tasks[i].id});
+                            if (found) {
+                                if (!found.completed && found.adhocTask) {
                                     task.acm$_taskOutcomes.push({id: "complete", value: "Complete"});
                                     task.acm$_taskOutcomes.push({id: "delete", value: "Delete"});
                                     task.acm$_taskActionDone = false;
 
-                                } else if (!myTask.completed && !myTask.adhocTask && !Util.isArrayEmpty(myTask.availableOutcomes)) {
-                                    var availableOutcomes = Util.goodArray(myTask.availableOutcomes);
+                                } else if (!found.completed && !found.adhocTask && !Util.isArrayEmpty(found.availableOutcomes)) {
+                                    var availableOutcomes = Util.goodArray(found.availableOutcomes);
                                     for (var j = 0; j < availableOutcomes.length; j++) {
                                         var outcome = {
                                             id: Util.goodValue(availableOutcomes[j].description),
@@ -237,6 +149,10 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                 completeTaskWithOutcome(rowEntity);
             }
         }
+        $scope.showUrl = function (event, rowEntity) {
+            event.preventDefault();
+            Util.AcmGrid.showObject($scope, Util.Constant.OBJTYPE_TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
+        };
 
 	}
 ]);

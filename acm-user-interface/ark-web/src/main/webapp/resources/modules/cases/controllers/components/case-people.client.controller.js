@@ -5,23 +5,8 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
         $scope.$emit('req-component-config', 'people');
 
 
-        var promiseUsers = Util.servicePromise({
-            service: LookupService.getUsers
-            , callback: function (data) {
-                $scope.userFullNames = [];
-                var arr = Util.goodArray(data);
-                for (var i = 0; i < arr.length; i++) {
-                    var obj = Util.goodJsonObj(arr[i]);
-                    if (obj) {
-                        var user = {};
-                        user.id = Util.goodValue(obj.object_id_s);
-                        user.name = Util.goodValue(obj.name);
-                        $scope.userFullNames.push(user);
-                    }
-                }
-                return $scope.userFullNames;
-            }
-        });
+        var promiseUsers = Util.AcmGrid.getUsers($scope);
+
         var promisePersonTypes = Util.servicePromise({
             service: LookupService.getPersonTypes
             , callback: function (data) {
@@ -84,311 +69,222 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
         });
 
 
-        $scope.config = null;
-        $scope.$on('component-config', applyConfig);
-        function applyConfig(e, componentId, config) {
-            if (componentId == 'people' && Util.goodMapValue([config, "columnDefs", "[0]"], false)) {
+        $scope.$on('component-config', function (e, componentId, config) {
+            if (componentId == 'people' && Util.goodMapValue(config, "columnDefs[0]", false)) {
+                configGridMain(config);
+                configGridContactMethod(config);
+                configGridOrganization(config);
+                configGridAddress(config);
+                configGridAlias(config);
+                configGridSecurityTag(config);
+            }
+        });
 
-                //
-                // People grid
-                //
-                $scope.config = config;
-                gridAddEntityButtons(config.columnDefs);
-                gridAddDeleteButtons(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
-                $scope.gridOptions = {
-                    enableColumnResizing: true,
-                    enableRowSelection: true,
-                    enableRowHeaderSelection: false,
-                    multiSelect: false,
-                    noUnselect: false,
+        var configGridMain = function (config) {
+            gridAddEntityButtons(config.columnDefs);
+            Util.AcmGrid.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+            Util.AcmGrid.setColumnDefs($scope, config);
+            Util.AcmGrid.setBasicOptions($scope, config);
+            Util.AcmGrid.setInPlaceEditing($scope, config, $scope.updateRow,
+                function (rowEntity) {
+                    return (!Util.isEmpty(rowEntity.personType)
+                        && Util.goodMapValue(rowEntity, "person.givenName", false)
+                        && Util.goodMapValue(rowEntity, "person.familyName", false)
+                    );
+                }
+            );
 
-                    paginationPageSizes: config.paginationPageSizes,
-                    paginationPageSize: config.paginationPageSize,
-                    enableFiltering: config.enableFiltering,
-                    columnDefs: config.columnDefs,
+            //
+            //$scope.gridOptions, $scope.gridOptions.promiseRegisterApi are now defined by above setBasicOptions()
+            //
 
-                    expandableRowTemplate: 'modules/cases/views/components/case-people.sub.view.html',
-                    expandableRowHeight: 305,
-                    expandableRowScope: {                            //from sample. what is it for?
-                        subGridVariable: 'subGridScopeVariable'
-                    },
+            $scope.gridOptions.expandableRowTemplate = "modules/cases/views/components/case-people.sub.view.html";
+            $scope.gridOptions.expandableRowHeight = 305;
+            $scope.gridOptions.expandableRowScope = {       //from sample. what is it for?
+                subGridVariable: 'subGridScopeVariable'
+            };
 
+            $scope.gridOptions.promiseRegisterApi.then(function (gridApi) {
+                gridApi.core.on.rowsRendered($scope, function () {
+                    $scope.gridApi.grid.columns[0].hideColumn();
+                });
+            });
 
-                    onRegisterApi: function (gridApi) {
-                        $scope.gridApi = gridApi;
-
-                        gridApi.core.on.rowsRendered($scope, function () {
-                            $scope.gridApi.grid.columns[0].hideColumn();
-                        });
-
-
-                        gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
-                            if (newValue == oldValue) {
-                                return;
-                            }
-
-                            if (!Util.isEmpty(rowEntity.personType)
-                                && Util.goodMapValue([rowEntity, "person", "givenName"], false)
-                                && Util.goodMapValue([rowEntity, "person", "familyName"], false)
-                            ) {
-                                $scope.updateRow(rowEntity);
-                            }
-                        });
+            promisePersonTypes.then(function (data) {
+                $scope.gridOptions.enableRowSelection = false;
+                for (var i = 0; i < $scope.config.columnDefs.length; i++) {
+                    if (Util.Constant.LOOKUP_PERSON_TYPES == $scope.config.columnDefs[i].lookup) {
+                        $scope.gridOptions.columnDefs[i].enableCellEdit = true;
+                        $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
+                        $scope.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
+                        $scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
+                        $scope.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.personTypes;
+                        $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
                     }
-                };
+                }
+            });
+        };
+
+        var configGridContactMethod = function (config) {
+            if (Util.goodMapValue(config, "contactMethods.columnDefs[0]", false)) {
+                $scope.contactMethods = {};
+                Util.AcmGrid.addDeleteButton(config.contactMethods.columnDefs, "grid.appScope.deleteRowContactMethods(row.entity)");
+                Util.AcmGrid.setColumnDefs($scope.contactMethods, config.contactMethods);
+                Util.AcmGrid.setBasicOptions($scope.contactMethods, config.contactMethods);
+                $scope.contactMethods.gridOptions.appScopeProvider = $scope;
+
+                $q.all([promiseContactMethodTypes, promiseUsers]).then(function (data) {
+                    for (var i = 0; i < $scope.config.contactMethods.columnDefs.length; i++) {
+                        if (Util.Constant.LOOKUP_CONTACT_METHODS_TYPES == $scope.config.contactMethods.columnDefs[i].lookup) {
+                            $scope.contactMethods.gridOptions.columnDefs[i].enableCellEdit = true;
+                            $scope.contactMethods.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
+                            $scope.contactMethods.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
+                            $scope.contactMethods.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
+                            $scope.contactMethods.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.contactMethodTypes;
+                            $scope.contactMethods.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
-                promisePersonTypes.then(function (data) {
-                    $scope.gridOptions.enableRowSelection = false;
-                    for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                        if ("personTypes" == $scope.config.columnDefs[i].lookup) {
-                            $scope.gridOptions.columnDefs[i].enableCellEdit = true;
-                            $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                            $scope.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
-                            $scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                            $scope.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.personTypes;
-                            $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
+                        } else if (Util.Constant.LOOKUP_USER_FULL_NAMES == $scope.config.contactMethods.columnDefs[i].lookup) {
+                            $scope.contactMethods.gridOptions.columnDefs[i].enableCellEdit = false;
+                            $scope.contactMethods.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
+                            $scope.contactMethods.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
+                            $scope.contactMethods.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.userFullNames;
+                            $scope.contactMethods.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'id':'name'";
                         }
                     }
                 });
 
-
-                //
-                //ContactMethods grid
-                //
-                if (Util.goodMapValue([config, "contactMethods", "columnDefs", "[0]"], false)) {
-                    gridAddDeleteButtons(config.contactMethods.columnDefs, "grid.appScope.deleteRowContactMethods(row.entity)");
-                    $scope.contactMethods = {};
-                    $scope.contactMethods.gridOptions = {
-                        enableColumnResizing: true,
-                        enableRowSelection: true,
-                        enableRowHeaderSelection: false,
-                        multiSelect: false,
-                        noUnselect: false,
-
-                        paginationPageSizes: config.contactMethods.paginationPageSizes,
-                        paginationPageSize: config.contactMethods.paginationPageSize,
-                        enableFiltering: config.contactMethods.enableFiltering,
-                        columnDefs: config.contactMethods.columnDefs,
-                        appScopeProvider: $scope, //$scope.subGridScope,
-
-                        //onRegisterApi: function(gridApi) {
-                        //    $scope.contactMethods.gridApi = gridApi;
-                        //    gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
-                        //        //
-                        //        //Insert code here to save data to service
-                        //        //
-                        //        var a = 1;
-                        //        console.log("contactMethods afterCellEdit, newValue=" + newValue);
-                        //    });
-                        //}
-                    };
-
-                    $q.all([promiseContactMethodTypes, promiseUsers]).then(function (data) {
-                        for (var i = 0; i < $scope.config.contactMethods.columnDefs.length; i++) {
-                            if ("contactMethodTypes" == $scope.config.contactMethods.columnDefs[i].lookup) {
-                                var a1 = $scope.contactMethods;
-                                var a2 = $scope.contactMethods.gridOptions;
-
-                                $scope.contactMethods.gridOptions.columnDefs[i].enableCellEdit = true;
-                                $scope.contactMethods.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                                $scope.contactMethods.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
-                                $scope.contactMethods.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                                $scope.contactMethods.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.contactMethodTypes;
-                                $scope.contactMethods.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
-
-
-                            } else if ("userFullNames" == $scope.config.contactMethods.columnDefs[i].lookup) {
-                                $scope.contactMethods.gridOptions.columnDefs[i].enableCellEdit = false;
-                                $scope.contactMethods.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                                $scope.contactMethods.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                                $scope.contactMethods.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.userFullNames;
-                                $scope.contactMethods.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'id':'name'";
-                            }
-                        }
-                    });
-
-                    //todo:
-                    //filter for create date??
-                }
-
-
-                //
-                //Organizations grid
-                //
-                if (Util.goodMapValue([config, "organizations", "columnDefs", "[0]"], false)) {
-                    gridAddDeleteButtons(config.organizations.columnDefs, "grid.appScope.deleteRowOrganizations(row.entity)");
-                    $scope.organizations = {};
-                    $scope.organizations.gridOptions = {
-                        enableColumnResizing: true,
-                        enableRowSelection: true,
-                        enableRowHeaderSelection: false,
-                        multiSelect: false,
-                        noUnselect: false,
-
-                        paginationPageSizes: config.organizations.paginationPageSizes,
-                        paginationPageSize: config.organizations.paginationPageSize,
-                        enableFiltering: config.organizations.enableFiltering,
-                        columnDefs: config.organizations.columnDefs,
-                        appScopeProvider: $scope,
-                    };
-
-                    $q.all([promiseOrganizationTypes, promiseUsers]).then(function (data) {
-                        for (var i = 0; i < $scope.config.organizations.columnDefs.length; i++) {
-                            if ("organizationTypes" == $scope.config.organizations.columnDefs[i].lookup) {
-                                $scope.organizations.gridOptions.columnDefs[i].enableCellEdit = true;
-                                $scope.organizations.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                                $scope.organizations.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
-                                $scope.organizations.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                                $scope.organizations.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.organizationTypes;
-                                $scope.organizations.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
-
-
-                            } else if ("userFullNames" == $scope.config.organizations.columnDefs[i].lookup) {
-                                $scope.organizations.gridOptions.columnDefs[i].enableCellEdit = false;
-                                $scope.organizations.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                                $scope.organizations.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                                $scope.organizations.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.userFullNames;
-                                $scope.organizations.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'id':'name'";
-                            }
-                        }
-                    });
-                }
-
-
-                //
-                //Addresses grid
-                //
-                if (Util.goodMapValue([config, "addresses", "columnDefs", "[0]"], false)) {
-                    gridAddDeleteButtons(config.addresses.columnDefs, "grid.appScope.deleteRowAddresses(row.entity)");
-                    $scope.addresses = {};
-                    $scope.addresses.gridOptions = {
-                        enableColumnResizing: true,
-                        enableRowSelection: true,
-                        enableRowHeaderSelection: false,
-                        multiSelect: false,
-                        noUnselect: false,
-
-                        paginationPageSizes: config.addresses.paginationPageSizes,
-                        paginationPageSize: config.addresses.paginationPageSize,
-                        enableFiltering: config.addresses.enableFiltering,
-                        columnDefs: config.addresses.columnDefs,
-                        appScopeProvider: $scope,
-                    };
-
-                    $q.all([promiseAddressTypes, promiseUsers]).then(function (data) {
-                        for (var i = 0; i < $scope.config.addresses.columnDefs.length; i++) {
-                            if ("addressTypes" == $scope.config.addresses.columnDefs[i].lookup) {
-                                $scope.addresses.gridOptions.columnDefs[i].enableCellEdit = true;
-                                $scope.addresses.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                                $scope.addresses.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
-                                $scope.addresses.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                                $scope.addresses.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.addressTypes;
-                                $scope.addresses.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
-
-
-                            } else if ("userFullNames" == $scope.config.addresses.columnDefs[i].lookup) {
-                                $scope.addresses.gridOptions.columnDefs[i].enableCellEdit = false;
-                                $scope.addresses.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                                $scope.addresses.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                                $scope.addresses.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.userFullNames;
-                                $scope.addresses.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'id':'name'";
-                            }
-                        }
-                    });
-                }
-
-
-                //
-                //Aliases grid
-                //
-                if (Util.goodMapValue([config, "aliases", "columnDefs", "[0]"], false)) {
-                    gridAddDeleteButtons(config.aliases.columnDefs, "grid.appScope.deleteRowAliases(row.entity)");
-                    $scope.aliases = {};
-                    $scope.aliases.gridOptions = {
-                        enableColumnResizing: true,
-                        enableRowSelection: true,
-                        enableRowHeaderSelection: false,
-                        multiSelect: false,
-                        noUnselect: false,
-
-                        paginationPageSizes: config.aliases.paginationPageSizes,
-                        paginationPageSize: config.aliases.paginationPageSize,
-                        enableFiltering: config.aliases.enableFiltering,
-                        columnDefs: config.aliases.columnDefs,
-                        appScopeProvider: $scope, //$scope.subGridScope,
-                    };
-
-                    $q.all([promiseAliasTypes, promiseUsers]).then(function (data) {
-                        for (var i = 0; i < $scope.config.aliases.columnDefs.length; i++) {
-                            if ("aliasTypes" == $scope.config.aliases.columnDefs[i].lookup) {
-                                $scope.aliases.gridOptions.columnDefs[i].enableCellEdit = true;
-                                $scope.aliases.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                                $scope.aliases.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
-                                $scope.aliases.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                                $scope.aliases.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.aliasTypes;
-                                $scope.aliases.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
-
-
-                            } else if ("userFullNames" == $scope.config.aliases.columnDefs[i].lookup) {
-                                $scope.aliases.gridOptions.columnDefs[i].enableCellEdit = false;
-                                $scope.aliases.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                                $scope.aliases.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                                $scope.aliases.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.userFullNames;
-                                $scope.aliases.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'id':'name'";
-                            }
-                        }
-                    });
-                }
-
-
-                //
-                //SecurityTags grid
-                //
-                if (Util.goodMapValue([config, "securityTags", "columnDefs", "[0]"], false)) {
-                    gridAddDeleteButtons(config.securityTags.columnDefs, "grid.appScope.deleteRowSecurityTags(row.entity)");
-                    $scope.securityTags = {};
-                    $scope.securityTags.gridOptions = {
-                        enableColumnResizing: true,
-                        enableRowSelection: true,
-                        enableRowHeaderSelection: false,
-                        multiSelect: false,
-                        noUnselect: false,
-
-                        paginationPageSizes: config.securityTags.paginationPageSizes,
-                        paginationPageSize: config.securityTags.paginationPageSize,
-                        enableFiltering: config.securityTags.enableFiltering,
-                        columnDefs: config.securityTags.columnDefs,
-                        appScopeProvider: $scope, //$scope.subGridScope,
-                    };
-
-                    $q.all([promiseSecurityTagTypes, promiseUsers]).then(function (data) {
-                        for (var i = 0; i < $scope.config.securityTags.columnDefs.length; i++) {
-                            if ("securityTagTypes" == $scope.config.securityTags.columnDefs[i].lookup) {
-                                $scope.securityTags.gridOptions.columnDefs[i].enableCellEdit = true;
-                                $scope.securityTags.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                                $scope.securityTags.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
-                                $scope.securityTags.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                                $scope.securityTags.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.securityTagTypes;
-                                $scope.securityTags.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
-
-
-                            } else if ("userFullNames" == $scope.config.securityTags.columnDefs[i].lookup) {
-                                $scope.securityTags.gridOptions.columnDefs[i].enableCellEdit = false;
-                                $scope.securityTags.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                                $scope.securityTags.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                                $scope.securityTags.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.userFullNames;
-                                $scope.securityTags.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'id':'name'";
-                            }
-                        }
-                    });
-                }
-
+                //todo:
+                //filter for create date??
             }
-        }
+        };
+
+        var configGridOrganization = function (config) {
+            if (Util.goodMapValue(config, "organizations.columnDefs[0]", false)) {
+                $scope.organizations = {};
+                Util.AcmGrid.addDeleteButton(config.organizations.columnDefs, "grid.appScope.deleteRowOrganizations(row.entity)");
+                Util.AcmGrid.setColumnDefs($scope.organizations, config.organizations);
+                Util.AcmGrid.setBasicOptions($scope.organizations, config.organizations);
+                $scope.organizations.gridOptions.appScopeProvider = $scope;
+
+                $q.all([promiseOrganizationTypes, promiseUsers]).then(function (data) {
+                    for (var i = 0; i < $scope.config.organizations.columnDefs.length; i++) {
+                        if (Util.Constant.LOOKUP_ORGANIZATION_TYPES == $scope.config.organizations.columnDefs[i].lookup) {
+                            $scope.organizations.gridOptions.columnDefs[i].enableCellEdit = true;
+                            $scope.organizations.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
+                            $scope.organizations.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
+                            $scope.organizations.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
+                            $scope.organizations.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.organizationTypes;
+                            $scope.organizations.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
+
+
+                        } else if (Util.Constant.LOOKUP_USER_FULL_NAMES == $scope.config.organizations.columnDefs[i].lookup) {
+                            $scope.organizations.gridOptions.columnDefs[i].enableCellEdit = false;
+                            $scope.organizations.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
+                            $scope.organizations.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
+                            $scope.organizations.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.userFullNames;
+                            $scope.organizations.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'id':'name'";
+                        }
+                    }
+                });
+            }
+        };
+
+        var configGridAddress = function (config) {
+            if (Util.goodMapValue(config, "addresses.columnDefs[0]", false)) {
+                $scope.addresses = {};
+                Util.AcmGrid.addDeleteButton(config.addresses.columnDefs, "grid.appScope.deleteRowAddresses(row.entity)");
+                Util.AcmGrid.setColumnDefs($scope.addresses, config.addresses);
+                Util.AcmGrid.setBasicOptions($scope.addresses, config.addresses);
+                $scope.addresses.gridOptions.appScopeProvider = $scope;
+
+                $q.all([promiseAddressTypes, promiseUsers]).then(function (data) {
+                    for (var i = 0; i < $scope.config.addresses.columnDefs.length; i++) {
+                        if (Util.Constant.LOOKUP_ADDRESS_TYPES == $scope.config.addresses.columnDefs[i].lookup) {
+                            $scope.addresses.gridOptions.columnDefs[i].enableCellEdit = true;
+                            $scope.addresses.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
+                            $scope.addresses.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
+                            $scope.addresses.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
+                            $scope.addresses.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.addressTypes;
+                            $scope.addresses.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
+
+
+                        } else if (Util.Constant.LOOKUP_USER_FULL_NAMES == $scope.config.addresses.columnDefs[i].lookup) {
+                            $scope.addresses.gridOptions.columnDefs[i].enableCellEdit = false;
+                            $scope.addresses.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
+                            $scope.addresses.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
+                            $scope.addresses.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.userFullNames;
+                            $scope.addresses.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'id':'name'";
+                        }
+                    }
+                });
+            }
+        };
+
+        var configGridAlias = function (config) {
+            if (Util.goodMapValue(config, "aliases.columnDefs[0]", false)) {
+                $scope.aliases = {};
+                Util.AcmGrid.addDeleteButton(config.aliases.columnDefs, "grid.appScope.deleteRowAliases(row.entity)");
+                Util.AcmGrid.setColumnDefs($scope.aliases, config.aliases);
+                Util.AcmGrid.setBasicOptions($scope.aliases, config.aliases);
+                $scope.aliases.gridOptions.appScopeProvider = $scope;
+
+                $q.all([promiseAliasTypes, promiseUsers]).then(function (data) {
+                    for (var i = 0; i < $scope.config.aliases.columnDefs.length; i++) {
+                        if (Util.Constant.LOOKUP_ALIAS_TYPES == $scope.config.aliases.columnDefs[i].lookup) {
+                            $scope.aliases.gridOptions.columnDefs[i].enableCellEdit = true;
+                            $scope.aliases.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
+                            $scope.aliases.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
+                            $scope.aliases.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
+                            $scope.aliases.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.aliasTypes;
+                            $scope.aliases.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
+
+
+                        } else if (Util.Constant.LOOKUP_USER_FULL_NAMES == $scope.config.aliases.columnDefs[i].lookup) {
+                            $scope.aliases.gridOptions.columnDefs[i].enableCellEdit = false;
+                            $scope.aliases.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
+                            $scope.aliases.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
+                            $scope.aliases.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.userFullNames;
+                            $scope.aliases.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'id':'name'";
+                        }
+                    }
+                });
+            }
+        };
+
+        var configGridSecurityTag = function (config) {
+            if (Util.goodMapValue(config, "securityTags.columnDefs[0]", false)) {
+                $scope.securityTags = {};
+                Util.AcmGrid.addDeleteButton(config.securityTags.columnDefs, "grid.appScope.deleteRowSecurityTags(row.entity)");
+                Util.AcmGrid.setColumnDefs($scope.securityTags, config.securityTags);
+                Util.AcmGrid.setBasicOptions($scope.securityTags, config.securityTags);
+                $scope.securityTags.gridOptions.appScopeProvider = $scope;
+
+                $q.all([promiseSecurityTagTypes, promiseUsers]).then(function (data) {
+                    for (var i = 0; i < $scope.config.securityTags.columnDefs.length; i++) {
+                        if (Util.Constant.LOOKUP_SECURITY_TAG_TYPES == $scope.config.securityTags.columnDefs[i].lookup) {
+                            $scope.securityTags.gridOptions.columnDefs[i].enableCellEdit = true;
+                            $scope.securityTags.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
+                            $scope.securityTags.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
+                            $scope.securityTags.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
+                            $scope.securityTags.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.securityTagTypes;
+                            $scope.securityTags.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
+
+
+                        } else if (Util.Constant.LOOKUP_USER_FULL_NAMES == $scope.config.securityTags.columnDefs[i].lookup) {
+                            $scope.securityTags.gridOptions.columnDefs[i].enableCellEdit = false;
+                            $scope.securityTags.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
+                            $scope.securityTags.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
+                            $scope.securityTags.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.userFullNames;
+                            $scope.securityTags.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'id':'name'";
+                        }
+                    }
+                });
+            }
+        };
 
         var gridAddEntityButtons = function (columnDefs) {
-            if ("entity" == Util.goodMapValue([columnDefs, "[0]", "name"])) {
+            if ("entity" == Util.goodMapValue(columnDefs, "[0].name")) {
                 var columnDef = columnDefs[0];
                 columnDef.width = 116;
                 columnDef.headerCellTemplate = "<span></span>";
@@ -399,20 +295,6 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                     + "<a ng-click='grid.appScope.expand(\"securityTags\", row)' title='" + $translate.instant("cases.comp.people.securityTags.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-shield'></i></a>"
                 ;
             }
-        }
-        var gridAddDeleteButtons = function (columnDefs, onClickDelete) {
-            var columnDef = {
-                name: "act"
-                , cellEditableCondition: false
-                //,enableFiltering: false
-                //,enableHiding: false
-                //,enableSorting: false                                 onClickDelete
-                //,enableColumnResizing: false
-                , width: 40
-                , headerCellTemplate: "<span></span>"
-                , cellTemplate: "<span><i class='fa fa-trash-o fa-lg' ng-click='" + onClickDelete + "'></i></span>"
-            };
-            columnDefs.push(columnDef);
         }
 
         $scope.expand = function (subGrid, row) {
@@ -523,80 +405,15 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         });
 
-        /* for testing purpose
-         $scope.$on('xxxx_for_test_xxxx_case-retrieved', function(e, data){
-         var personAssociations = Util.goodMapValue([data, "personAssociations"], []);
-         //$scope.gridOptions.data = personAssociations;
-         $scope.gridOptions.data = [{assocId: 101, personType: "Witness", person: {givenName: "John", familyName: "Doe"}}
-         ,{assocId: 102, personType: "Witness", person: {givenName: "John2", familyName: "Doe"}}
-         ,{assocId: 103, personType: "Witness", person: {givenName: "John3", familyName: "Doe"}}
-         ,{assocId: 104, personType: "Witness", person: {givenName: "John4", familyName: "Doe"}}
-         ,{assocId: 105, personType: "Witness", person: {givenName: "John5", familyName: "Doe"}}
-         ];
-         for (var i = 0; i < $scope.gridOptions.data.length; i++) {
-         var personAssociation = $scope.gridOptions.data[i];
-         //for (var i = 0; i < personAssociations.length; i++) {
-         //    var personAssociation = personAssociations[i];
 
-         //var organizations = personAssociation.person.contactMethods;
-         //personAssociation.acm$_contactMethods.gridOptions = _.cloneDeep(Util.goodValue($scope.contactMethods.gridOptions, {columnDefs: [], data: []}));
-         personAssociation.acm$_contactMethods.gridOptions = Util.goodValue($scope.contactMethods.gridOptions, {columnDefs: [], data: []});
-         personAssociation.acm$_contactMethods.gridOptions.onRegisterApi = function(gridApi) {
-         personAssociation.acm$_contactMethods.gridApi = gridApi;
-         gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
-         onContactMethodChanged(personAssociation, rowEntity, colDef, newValue, oldValue);
-         });
-         }
-         personAssociation.acm$_contactMethods.gridOptions.data = [{type: "Home phone", value: "703-555-5555", created: "09/03/05", creator: "Ant"}
-         ,{type: "Email", value: "abc@some.com", created: "08/03/05", creator: "ann-acm"}
-         ,{type: "Email", value: "abc2@some.com", created: "08/02/05", creator: "ann-acm"}
-         ,{type: "Email", value: "abc3@some.com", created: "08/02/05", creator: "ann-acm"}
-         ];
-
-         //var organizations = personAssociation.person.contactMethods;
-         //,id      : Acm.goodValue(organizations[i].organizationId, 0)
-         //,type    : Acm.goodValue(organizations[i].organizationType)
-         //,value   : Acm.goodValue(organizations[i].organizationValue)
-         personAssociation.acm$_organizations.gridOptions = Util.goodValue($scope.organizations.gridOptions, {columnDefs: [], data: []});
-         personAssociation.acm$_organizations.gridOptions.onRegisterApi = function(gridApi) {
-         personAssociation.acm$_organizations.gridApi = gridApi;
-         gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
-         onContactMethodChanged(personAssociation, rowEntity, colDef, newValue, oldValue);
-         });
-         }
-         personAssociation.acm$_organizations.gridOptions.data = [{type: "Government", value: "IRS"+i, created: "09/03/05", creator: "Ant"}
-         ,{type: "Non-profit", value: "Red Cross" + i, created: "08/03/05", creator: "Lee"}
-         ];
-
-
-         //var addresses = personAssociation.person.addresses;
-         //,streetAddress : Acm.goodValue(addresses[i].streetAddress)
-         //,city          : Acm.goodValue(addresses[i].city)
-         //,state         : Acm.goodValue(addresses[i].state)
-         //,zip           : Acm.goodValue(addresses[i].zip)
-         //,country       : Acm.goodValue(addresses[i].country)
-
-
-         //var personAliases = personAssociation.person.personAliases;
-         //,id      : Acm.goodValue(personAliases[i].id, 0)
-         //,type    : Acm.goodValue(personAliases[i].aliasType)
-         //,value   : Acm.goodValue(personAliases[i].aliasValue)
-         //,created : Acm.getDateFromDatetime(personAliases[i].created,$.t("common:date.short"))
-         //,creator : App.Model.Users.getUserFullName(Acm.goodValue(personAliases[i].creator))
-
-
-         //var securityTags = personAssociation.person.securityTags;
-         }
-         });
-         */
         $scope.addNew = function () {
             var lastPage = $scope.gridApi.pagination.getTotalPages();
             $scope.gridApi.pagination.seek(lastPage);
             $scope.gridOptions.data.push({});
         };
         $scope.updateRow = function (rowEntity) {
-            var givenName = Util.goodMapValue([rowEntity, "person", "givenName"]);
-            var familyName = Util.goodMapValue([rowEntity, "person", "familyName"]);
+            var givenName = Util.goodMapValue(rowEntity, "person.givenName");
+            var familyName = Util.goodMapValue(rowEntity, "person.familyName");
 
             //
             // add new person association
@@ -637,16 +454,9 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         }
         $scope.deleteRow = function (rowEntity) {
-            var idx = _.findIndex($scope.gridOptions.data, function (obj) {
-                return (obj == rowEntity);
-            });
-            //var personAssociationId = 0;
-            if (0 <= idx) {
-                //var personAssociationId = $scope.gridOptions.data[idx].id;
-                $scope.gridOptions.data.splice(idx, 1);
-            }
+            Util.AcmGrid.deleteRow($scope, rowEntity);
 
-            var id = Util.goodMapValue([rowEntity, "id"], 0);
+            var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
                 CasesService.deletePersonAssociation({personAssociationId: id}
                     , function (personAssociationDeleted) {
@@ -664,7 +474,8 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             var idx = _.findIndex($scope.gridOptions.data, function (obj) {
                 return (obj == rowParent.entity);
             });
-            if (Util.goodMapValue([$scope.gridOptions.data, ("[" + idx + "]"), "acm$_contactMethods", "gridApi"], false)) {
+
+            if (Util.goodMapValue($scope.gridOptions.data, "[" + idx + "].acm$_contactMethods.gridApi", false)) {
                 var gridApi = $scope.gridOptions.data[idx].acm$_contactMethods.gridApi;
                 var lastPage = gridApi.pagination.getTotalPages();
                 gridApi.pagination.seek(lastPage);
@@ -678,11 +489,13 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                     if (Validator.validateCaseFile(caseSaved)) {
                         console.log("updated sub table");
                         if (Util.isEmpty(rowEntity.id)) {
-                            var personAssociationsSaved = Util.goodMapValue([caseSaved, "personAssociations"], []);
-                            var personAssociationSaved = _.where(personAssociationsSaved, {id: personAssociation.id});
-                            var contactMethodSaved = _.where(personAssociationSaved.person.contactMethods, {id: rowEntity.id});
-                            if (0 < contactMethodSaved.length) {
-                                rowEntity = _.merge(rowEntity, contactMethodSaved[0]);
+                            var personAssociationsSaved = Util.goodMapValue(caseSaved, "personAssociations", []);
+                            var personAssociationSaved = _.find(personAssociationsSaved, {id: personAssociation.id});
+                            if (personAssociationSaved) {
+                                var contactMethodSaved = _.find(personAssociationSaved.person.contactMethods, {id: rowEntity.id});
+                                if (contactMethodSaved) {
+                                    rowEntity = _.merge(rowEntity, contactMethodSaved);
+                                }
                             }
                         }
                     }
@@ -692,14 +505,9 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             );
         };
         $scope.deleteRowContactMethods = function (rowEntity) {
-            var idx = _.findIndex($scope.contactMethods.gridOptions.data, function (obj) {
-                return (obj == rowEntity);
-            });
-            if (0 <= idx) {
-                $scope.contactMethods.gridOptions.data.splice(idx, 1);
-            }
+            Util.AcmGrid.deleteRow($scope.contactMethods, rowEntity);
 
-            var id = Util.goodMapValue([rowEntity, "id"], 0);
+            var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
                 var caseInfo = Util.omitNg($scope.caseInfo);
                 CasesService.save({}, caseInfo
@@ -720,7 +528,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             var idx = _.findIndex($scope.gridOptions.data, function (obj) {
                 return (obj == rowParent.entity);
             });
-            if (Util.goodMapValue([$scope.gridOptions.data, ("[" + idx + "]"), "acm$_organizations.gridOptions", "gridApi"], false)) {
+            if (Util.goodMapValue($scope.gridOptions.data, "[" + idx + "].acm$_organizations.gridApi", false)) {
                 var gridApi = $scope.gridOptions.data[idx].acm$_organizations.gridApi;
                 var lastPage = gridApi.pagination.getTotalPages();
                 gridApi.pagination.seek(lastPage);
@@ -730,14 +538,9 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
         $scope.updateRowOrganizations = function (personAssociation, rowEntity) {
         };
         $scope.deleteRowOrganizations = function (rowEntity) {
-            var idx = _.findIndex($scope.organizations.gridOptions.data, function (obj) {
-                return (obj == rowEntity);
-            });
-            if (0 <= idx) {
-                $scope.organizations.gridOptions.data.splice(idx, 1);
-            }
+            Util.AcmGrid.deleteRow($scope.organizations, rowEntity);
 
-            var id = Util.goodMapValue([rowEntity, "id"], 0);
+            var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
                 var caseInfo = Util.omitNg($scope.caseInfo);
                 CasesService.save({}, caseInfo
@@ -758,7 +561,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             var idx = _.findIndex($scope.gridOptions.data, function (obj) {
                 return (obj == rowParent.entity);
             });
-            if (Util.goodMapValue([$scope.gridOptions.data, ("[" + idx + "]"), "acm$_addresses.gridOptions", "gridApi"], false)) {
+            if (Util.goodMapValue($scope.gridOptions.data, "[" + idx + "].acm$_addresses.gridApi", false)) {
                 var gridApi = $scope.gridOptions.data[idx].acm$_addresses.gridApi;
                 var lastPage = gridApi.pagination.getTotalPages();
                 gridApi.pagination.seek(lastPage);
@@ -768,14 +571,9 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
         $scope.updateRowAddresses = function (personAssociation, rowEntity) {
         };
         $scope.deleteRowAddresses = function (rowEntity) {
-            var idx = _.findIndex($scope.addresses.gridOptions.data, function (obj) {
-                return (obj == rowEntity);
-            });
-            if (0 <= idx) {
-                $scope.addresses.gridOptions.data.splice(idx, 1);
-            }
+            Util.AcmGrid.deleteRow($scope.addresses, rowEntity);
 
-            var id = Util.goodMapValue([rowEntity, "id"], 0);
+            var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
                 var caseInfo = Util.omitNg($scope.caseInfo);
                 CasesService.save({}, caseInfo
@@ -796,7 +594,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             var idx = _.findIndex($scope.gridOptions.data, function (obj) {
                 return (obj == rowParent.entity);
             });
-            if (Util.goodMapValue([$scope.gridOptions.data, ("[" + idx + "]"), "acm$_aliases.gridOptions", "gridApi"], false)) {
+            if (Util.goodMapValue($scope.gridOptions.data, "[" + idx + "].acm$_aliases.gridApi", false)) {
                 var gridApi = $scope.gridOptions.data[idx].acm$_aliases.gridApi;
                 var lastPage = gridApi.pagination.getTotalPages();
                 gridApi.pagination.seek(lastPage);
@@ -806,14 +604,9 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
         $scope.updateRowAliases = function (personAssociation, rowEntity) {
         };
         $scope.deleteRowAliases = function (rowEntity) {
-            var idx = _.findIndex($scope.aliases.gridOptions.data, function (obj) {
-                return (obj == rowEntity);
-            });
-            if (0 <= idx) {
-                $scope.aliases.gridOptions.data.splice(idx, 1);
-            }
+            Util.AcmGrid.deleteRow($scope.aliases, rowEntity);
 
-            var id = Util.goodMapValue([rowEntity, "id"], 0);
+            var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
                 var caseInfo = Util.omitNg($scope.caseInfo);
                 CasesService.save({}, caseInfo
@@ -834,7 +627,8 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             var idx = _.findIndex($scope.gridOptions.data, function (obj) {
                 return (obj == rowParent.entity);
             });
-            if (Util.goodMapValue([$scope.gridOptions.data, ("[" + idx + "]"), "acm$_securityTags.gridOptions", "gridApi"], false)) {
+
+            if (Util.goodMapValue($scope.gridOptions.data, "[" + idx + "].acm$_securityTags..gridApi", false)) {
                 var gridApi = $scope.gridOptions.data[idx].acm$_securityTags.gridApi;
                 var lastPage = gridApi.pagination.getTotalPages();
                 gridApi.pagination.seek(lastPage);
@@ -844,14 +638,9 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
         $scope.updateRowSecurityTags = function (personAssociation, rowEntity) {
         };
         $scope.deleteRowSecurityTags = function (rowEntity) {
-            var idx = _.findIndex($scope.securityTags.gridOptions.data, function (obj) {
-                return (obj == rowEntity);
-            });
-            if (0 <= idx) {
-                $scope.securityTags.gridOptions.data.splice(idx, 1);
-            }
+            Util.AcmGrid.deleteRow($scope.securityTags, rowEntity);
 
-            var id = Util.goodMapValue([rowEntity, "id"], 0);
+            var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
                 //
                 // save data to server

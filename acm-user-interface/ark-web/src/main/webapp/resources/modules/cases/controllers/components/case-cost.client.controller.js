@@ -5,24 +5,21 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
         $scope.$emit('req-component-config', 'cost');
 
 
-        $scope.config = null;
-        $scope.$on('component-config', applyConfig);
-        function applyConfig(e, componentId, config) {
+        $scope.$on('component-config', function (e, componentId, config) {
             if (componentId == 'cost') {
-                $scope.config = config;
-
-                Util.uiGrid.typicalOptions(config, $scope);
-                $scope.gridOptions.columnDefs = config.columnDefs;
+                Util.AcmGrid.setColumnDefs($scope, config);
+                Util.AcmGrid.setBasicOptions($scope, config);
 
                 for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                     if ("name" == $scope.config.columnDefs[i].name) {
-                        $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.acm$_formName}}</a>";
+                        $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.acm$_formName}}</a>";
                     } else if ("tally" == $scope.config.columnDefs[i].name) {
                         $scope.gridOptions.columnDefs[i].field = "acm$_costs";
                     }
                 }
             }
-        }
+        });
+
 
 
         $scope.$on('case-retrieved', function (e, data) {
@@ -30,7 +27,7 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
                 $scope.caseInfo = data;
 
                 CasesService.queryCostsheets({
-                    objectType: "CASE_FILE",
+                    objectType: Util.Constant.OBJTYPE_CASE_FILE,
                     objectId: $scope.caseInfo.id
                 }, function (data) {
                     if (Validator.validateCostsheets(data)) {
@@ -51,9 +48,9 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
         });
 
 
-        $scope.showUrl = function (event, rowEntity) {
+        $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();
-            Util.uiGrid.showObject("COSTSHEET", Util.goodMapValue([rowEntity, "id"], 0), $scope);
+            Util.AcmGrid.showObject($scope, Util.Constant.OBJTYPE_COSTSHEET, Util.goodMapValue(rowEntity, "id", 0));
         };
     }
 ]);
