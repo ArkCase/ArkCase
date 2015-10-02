@@ -82,7 +82,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             var folderId = Util.goodMapValue($scope.caseInfo, "container.folder.cmisFolderId", "");
             var template = $scope.correspondenceForm.value;
             CasesService.createCorrespondence({
-                    parentType: "CASE_FILE",
+                    parentType: Util.Constant.OBJTYPE_CASE_FILE,
                     parentId: $scope.currentId,
                     folderId: folderId,
                     template: template
