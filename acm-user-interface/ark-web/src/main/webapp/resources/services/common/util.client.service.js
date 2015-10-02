@@ -3,7 +3,27 @@
 angular.module('services').factory('UtilService', ['$q', '$window', 'LookupService',
     function ($q, $window, LookupService) {
         var Util = {
-            goodValue: function (val, replacement) {
+            Constant: {
+                OBJTYPE_CASE_FILE: "CASE_FILE"
+                , OBJTYPE_COMPLAINT: "COMPLAINT"
+                , OBJTYPE_TASK: "TASK"
+                , OBJTYPE_TIMESHEET: "TIMESHEET"
+                , OBJTYPE_COSTSHEET: "COSTSHEET"
+                , OBJTYPE_FILE: "FILE"
+
+                , LOOKUP_USER_FULL_NAMES: "userFullNames"
+                , LOOKUP_PERSON_TYPES: "personTypes"
+                , LOOKUP_PARTICIPANT_TYPES: "participantTypes"
+                , LOOKUP_PARTICIPANT_NAMES: "participantNames"
+                , LOOKUP_TASK_OUTCOMES: "taskOutcomes"
+                , LOOKUP_CONTACT_METHODS_TYPES: "contactMethodTypes"
+                , LOOKUP_ORGANIZATION_TYPES: "organizationTypes"
+                , LOOKUP_ADDRESS_TYPES: "addressTypes"
+                , LOOKUP_ALIAS_TYPES: "aliasTypes"
+                , LOOKUP_SECURITY_TAG_TYPES: "securityTagTypes"
+            }
+
+            , goodValue: function (val, replacement) {
                 var replacedWith = (undefined === replacement) ? "" : replacement;
                 return this.isEmpty(val) ? replacedWith : val;
             }
@@ -15,8 +35,18 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
             //
             //todo: use lodash impl _.map(obj, 'some.arr[0].name');
             //
-            ,goodMapValue: function (arr, replacement) {
+            , goodMapValue: function (map, key, replacement) {
                 var replacedWith = (undefined === replacement) ? "" : replacement;
+
+                key = key.replace(/(?!^)\[/g, '.['); //replace "[" with ".[" except when "[" is at the beginning
+                var arr = key.split('.');
+                if (this.isArrayEmpty(arr)) {
+                    return replacedWith;
+                }
+                arr.unshift(map);
+                return this._goodMapValueArr(arr, replacedWith);
+            }
+            , _goodMapValueArr: function (arr, replacedWith) {
                 if (this.isArray(arr)) {
                     if (0 >= arr.length) {
                         return replacedWith;
@@ -178,9 +208,10 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                 });
             }
 
-            , uiGrid: {
-                typicalOptions: function (config, scope) {
+            , AcmGrid: {
+                setBasicOptions: function (scope, config) {
                     scope.gridOptions = scope.gridOptions || {};
+                    scope.config = config;
 
                     scope.gridOptions.enableColumnResizing = true;
                     scope.gridOptions.enableRowSelection = false;
@@ -191,12 +222,16 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                     scope.gridOptions.paginationPageSizes = config.paginationPageSizes;
                     scope.gridOptions.paginationPageSize = config.paginationPageSize;
                     scope.gridOptions.enableFiltering = config.enableFiltering;
+
+                    var d = $q.defer();
+                    scope.gridOptions.promiseRegisterApi = d.promise;
                     scope.gridOptions.onRegisterApi = function (gridApi) {
                         scope.gridApi = gridApi;
+                        d.resolve(gridApi);
                     }
                 }
-                , externalPaging: function (config, scope, updatePageData) {
-                    scope.currentId = $stateParams.id;
+                , setExternalPaging: function (scope, config, retrieveGridData) {
+                    //scope.currentId = $stateParams.id;
                     scope.start = 0;
                     scope.pageSize = config.paginationPageSize || 10;
                     scope.sort = {by: "", dir: "asc"};
@@ -207,10 +242,11 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
 
                     //comment out filtering until service side supports it
                     //scope.gridOptions.enableFiltering = config.enableFiltering;
+                    scope.gridOptions.enableFiltering = false;
                     //scope.gridOptions.useExternalFiltering = true;
 
-                    scope.gridOptions.onRegisterApi = function (gridApi) {
-                        scope.gridApi = gridApi;
+
+                    scope.gridOptions.promiseRegisterApi.then(function (gridApi) {
                         scope.gridApi.core.on.sortChanged(scope, function (grid, sortColumns) {
                             if (0 >= sortColumns.length) {
                                 scope.sort.by = null;
@@ -219,7 +255,7 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                                 scope.sort.by = sortColumns[0].field;
                                 scope.sort.dir = sortColumns[0].sort.direction;
                             }
-                            updatePageData();
+                            retrieveGridData();
                         });
                         scope.gridApi.core.on.filterChanged(scope, function () {
                             var grid = this.grid;
@@ -232,16 +268,38 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                                     scope.filters.push(filter);
                                 }
                             }
-                            updatePageData();
+                            retrieveGridData();
                         });
                         scope.gridApi.pagination.on.paginationChanged(scope, function (newPage, pageSize) {
                             scope.start = (newPage - 1) * pageSize;   //newPage is 1-based index
                             scope.pageSize = pageSize;
-                            updatePageData();
+                            retrieveGridData();
                         });
-                    }
+                    });
                 }
-                , showObject: function (objType, objId, scope) {
+                , setInPlaceEditing: function (scope, config, updateRow, canUpdate) {
+                    scope.gridOptions.promiseRegisterApi.then(function (gridApi) {
+                        gridApi.edit.on.afterCellEdit(scope, function (rowEntity, colDef, newValue, oldValue) {
+                            if (newValue == oldValue) {
+                                return;
+                            }
+
+                            if (Util.isEmpty(canUpdate) || canUpdate(rowEntity)) {
+                                updateRow(rowEntity);
+                            }
+                        });
+                    });
+                }
+                , addGridApiHandler: function (scope, handler) {
+                    scope.gridOptions.promiseRegisterApi.then(function (gridApi) {
+                        handler(gridApi);
+                    });
+                }
+                , setColumnDefs: function (scope, config) {
+                    scope.gridOptions = scope.gridOptions || {};
+                    scope.gridOptions.columnDefs = config.columnDefs;
+                }
+                , showObject: function (scope, objType, objId) {
                     var promiseObjectTypes = Util.servicePromise({
                         service: LookupService.getObjectTypes
                         , callback: function (data) {
@@ -253,14 +311,85 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                         }
                     });
 
-                    $q.all([promiseObjectTypes]).then(function (data) {
-                        var find = _.where(scope.objectTypes, {type: objType});
-                        if (0 < find.length) {
-                            var url = Util.goodValue(find[0].url);
+                    promiseObjectTypes.then(function (data) {
+                        var found = _.find(scope.objectTypes, {type: objType});
+                        if (found) {
+                            var url = Util.goodValue(found.url);
                             url = url.replace(":id", objId);
                             $window.location.href = url;
                         }
                     });
+                }
+                , getUsers: function (scope) {
+                    return Util.servicePromise({
+                        service: LookupService.getUsers
+                        , callback: function (data) {
+                            scope.userFullNames = [];
+                            var arr = Util.goodArray(data);
+                            for (var i = 0; i < arr.length; i++) {
+                                var obj = Util.goodJsonObj(arr[i]);
+                                if (obj) {
+                                    var user = {};
+                                    user.id = Util.goodValue(obj.object_id_s);
+                                    user.name = Util.goodValue(obj.name);
+                                    scope.userFullNames.push(user);
+                                }
+                            }
+                            return scope.userFullNames;
+                        }
+                    });
+                }
+                , setUserNameFilter: function (scope, promiseUsers) {
+                    $q.all([promiseUsers]).then(function (data) {
+                        for (var i = 0; i < scope.config.columnDefs.length; i++) {
+                            if (Util.Constant.LOOKUP_USER_FULL_NAMES == scope.config.columnDefs[i].lookup) {
+                                scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: grid.appScope.userFullNames:'id':'name'";
+                            }
+                        }
+                    });
+                }
+                , withPagingParams: function (scope, arg) {
+                    var sort = "";
+                    if (scope.sort) {
+                        if (!Util.isEmpty(scope.sort.by) && !Util.isEmpty(scope.sort.dir)) {
+                            sort = scope.sort.by + " " + scope.sort.dir;
+                        }
+                    }
+                    //implement filtering here when service side supports it
+                    //var filter = "";
+                    ////$scope.filters = [{by: "eventDate", with: "term"}];
+
+                    arg.startWith = scope.start;
+                    arg.count = scope.pageSize;
+                    arg.sort = sort;
+
+                    return arg;
+                }
+                , addDeleteButton: function (columnDefs, onClickDelete) {
+                    var columnDef = {
+                        name: "act"
+                        ,
+                        cellEditableCondition: false
+                        //,enableFiltering: false
+                        //,enableHiding: false
+                        //,enableSorting: false
+                        //,enableColumnResizing: false
+                        ,
+                        width: 40
+                        ,
+                        headerCellTemplate: "<span></span>"
+                        ,
+                        cellTemplate: "<span><i class='fa fa-trash-o fa-lg' ng-click='" + onClickDelete + "'></i></span>"
+                    };
+                    columnDefs.push(columnDef);
+                }
+                , deleteRow: function (scope, rowEntity) {
+                    var idx = _.findIndex(scope.gridOptions.data, function (obj) {
+                        return (obj == rowEntity);
+                    });
+                    if (0 <= idx) {
+                        scope.gridOptions.data.splice(idx, 1);
+                    }
                 }
             }
 
