@@ -101,6 +101,7 @@
         <zt-exec.version>1.8</zt-exec.version>
         <xmlgraphics.version>2.0.1</xmlgraphics.version>
         <fop.version>2.0</fop.version>
+        <pdfbox.version>1.8.10</pdfbox.version>
         <barcode4j.version>2.1</barcode4j.version>
     </properties>
 
@@ -1331,7 +1332,7 @@
                 <version>${tomcat-jdbc.version}</version>
             </dependency>
 
-            <!-- XML transformation to PDF (Apache FOP and dependencies -->
+            <!-- XML transformation to PDF (Apache FOP and dependencies) -->
             <dependency>
                 <groupId>org.apache.xmlgraphics</groupId>
                 <artifactId>xmlgraphics-commons</artifactId>
@@ -1342,6 +1343,12 @@
                 <groupId>org.apache.xmlgraphics</groupId>
                 <artifactId>fop</artifactId>
                 <version>${fop.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>${pdfbox.version}</version>
             </dependency>
 
             <!-- Barcode generation support for Apache FOP -->
