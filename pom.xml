@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia</groupId>
@@ -98,6 +99,10 @@
         <log4j.version>2.2</log4j.version>
         <bouncycastle.version>1.52</bouncycastle.version>
         <zt-exec.version>1.8</zt-exec.version>
+        <xmlgraphics.version>2.0.1</xmlgraphics.version>
+        <fop.version>2.0</fop.version>
+        <pdfbox.version>1.8.10</pdfbox.version>
+        <barcode4j.version>2.1</barcode4j.version>
     </properties>
 
     <organization>
@@ -1325,6 +1330,32 @@
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-jdbc</artifactId>
                 <version>${tomcat-jdbc.version}</version>
+            </dependency>
+
+            <!-- XML transformation to PDF (Apache FOP and dependencies) -->
+            <dependency>
+                <groupId>org.apache.xmlgraphics</groupId>
+                <artifactId>xmlgraphics-commons</artifactId>
+                <version>${xmlgraphics.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.xmlgraphics</groupId>
+                <artifactId>fop</artifactId>
+                <version>${fop.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>${pdfbox.version}</version>
+            </dependency>
+
+            <!-- Barcode generation support for Apache FOP -->
+            <dependency>
+                <groupId>net.sf.barcode4j</groupId>
+                <artifactId>barcode4j-fop-ext</artifactId>
+                <version>${barcode4j.version}</version>
             </dependency>
 
             <!-- testing -->
