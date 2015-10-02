@@ -4,6 +4,8 @@
 package com.armedia.acm.plugins.audit.web.api;
 
 import com.armedia.acm.event.model.AcmGenericApplicationEvent;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -33,6 +35,7 @@ import java.util.Map;
 public class PostAuditEventAPIController implements ApplicationEventPublisherAware
 {
     private ApplicationEventPublisher applicationEventPublisher;
+    private EcmFileDao ecmFileDao;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -71,12 +74,17 @@ public class PostAuditEventAPIController implements ApplicationEventPublisherAwa
     {
         log.debug("User '{}' viewed document '{}': '{}'", userId, fileId, documentViewed);
 
-        AcmGenericApplicationEvent event = new AcmGenericApplicationEvent("FILE");
+        // Obtains the metadata for the file on which the event occurred from the acm3 database
+        EcmFile sourceFile = ecmFileDao.find(fileId);
+
+        AcmGenericApplicationEvent event = new AcmGenericApplicationEvent(sourceFile);
         event.setIpAddress(ip);
         event.setUserId(user);
         event.setEventDate(new Date());
         event.setEventType("com.armedia.acm.ecm.file.document.viewed");
         event.setObjectId(fileId);
+        event.setObjectType("FILE");
+        event.setSucceeded(true);
 
         Map<String, Object> eventProperties = new HashMap<String, Object>();
         eventProperties.put("documentViewed", documentViewed);
@@ -88,12 +96,17 @@ public class PostAuditEventAPIController implements ApplicationEventPublisherAwa
     {
         log.debug("User '{}' executed page reorder on document '{}': '{}'", userId, fileId, pageReorderOperation);
 
-        AcmGenericApplicationEvent event = new AcmGenericApplicationEvent("FILE");
+        // Obtains the metadata for the file on which the event occurred from the acm3 database
+        EcmFile sourceFile = ecmFileDao.find(fileId);
+
+        AcmGenericApplicationEvent event = new AcmGenericApplicationEvent(sourceFile);
         event.setIpAddress(ip);
         event.setUserId(user);
         event.setEventDate(new Date());
         event.setEventType("com.armedia.acm.ecm.file.pages.reorder");
         event.setObjectId(fileId);
+        event.setObjectType("FILE");
+        event.setSucceeded(true);
 
         Map<String, Object> eventProperties = new HashMap<String, Object>();
         eventProperties.put("pageReorderOperation", pageReorderOperation);
@@ -105,12 +118,17 @@ public class PostAuditEventAPIController implements ApplicationEventPublisherAwa
     {
         log.debug("User '{}' deleted the following pages '{}' of file '{}'", userId, pages, fileId);
 
-        AcmGenericApplicationEvent event = new AcmGenericApplicationEvent("FILE");
+        // Obtains the metadata for the file on which the event occurred from the acm3 database
+        EcmFile sourceFile = ecmFileDao.find(fileId);
+
+        AcmGenericApplicationEvent event = new AcmGenericApplicationEvent(sourceFile);
         event.setIpAddress(ip);
         event.setUserId(user);
         event.setEventDate(new Date());
         event.setEventType("com.armedia.acm.ecm.file.pages.delete");
         event.setObjectId(fileId);
+        event.setObjectType("FILE");
+        event.setSucceeded(true);
 
         Map<String, Object> eventProperties = new HashMap<String, Object>();
         eventProperties.put("deletedPages", pages);
@@ -123,5 +141,8 @@ public class PostAuditEventAPIController implements ApplicationEventPublisherAwa
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
+    }
+    public void setEcmFileDao(EcmFileDao ecmFileDao) {
+        this.ecmFileDao = ecmFileDao;
     }
 }

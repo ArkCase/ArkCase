@@ -1,0 +1,10 @@
+<div>
+    <div ng-if="chartConfig">
+        <highchart config="chartConfig"></highchart>
+    </div>
+
+    <div class="alert alert-info" ng-if="!chartConfig">
+        <p class="text-center">{{'dashboard.widgets.casesByQueue.noDataMessage' | translate}}</p>
+    </div>
+</div>
+

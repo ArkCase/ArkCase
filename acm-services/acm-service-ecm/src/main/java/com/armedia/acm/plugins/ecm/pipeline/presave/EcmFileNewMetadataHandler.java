@@ -13,9 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by joseph.mcgrady on 9/9/2015.
+ * Created by joseph.mcgrady on 9/14/2015.
  */
-public class EcmFileSaveMetadataHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext> {
+public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext> {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private EcmFileDao ecmFileDao;
@@ -25,32 +25,37 @@ public class EcmFileSaveMetadataHandler implements PipelineHandler<EcmFile, EcmF
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
     {
         log.debug("metadata pre save handler called");
-        Document cmisDocument = pipelineContext.getCmisDocument();
-        if (cmisDocument == null)
-            throw new PipelineProcessException("cmisDocument is null");
 
-        EcmFile toAdd = entity; //pipelineContext.getEcmFile();
-        if (toAdd == null)
-            throw new PipelineProcessException("ecmFile is null");
+        // Writes metadata for new document uploads into the database
+        if (!pipelineContext.getIsAppend()) {
+            if (entity == null) {
+                throw new PipelineProcessException("ecmFile is null");
+            }
 
-        toAdd.setVersionSeriesId(cmisDocument.getVersionSeriesId());
-        toAdd.setActiveVersionTag(cmisDocument.getVersionLabel());
-        toAdd.setFileName(pipelineContext.getOriginalFileName());
+            Document cmisDocument = pipelineContext.getCmisDocument();
+            if (cmisDocument == null) {
+                throw new PipelineProcessException("cmisDocument is null");
+            }
 
-        // Updates the versioning of the file (it may be replacing an older copy)
-        EcmFileVersion version = new EcmFileVersion();
-        version.setCmisObjectId(cmisDocument.getId());
-        version.setVersionTag(cmisDocument.getVersionLabel());
-        toAdd.getVersions().add(version);
+            entity.setVersionSeriesId(cmisDocument.getVersionSeriesId());
+            entity.setActiveVersionTag(cmisDocument.getVersionLabel());
+            entity.setFileName(pipelineContext.getOriginalFileName());
 
-        // Determines the folder and container in which the file should be saved
-        AcmFolder folder = getFolderDao().findByCmisFolderId(pipelineContext.getCmisFolderId());
-        toAdd.setFolder(folder);
-        toAdd.setContainer(pipelineContext.getContainer());
+            // Sets the versioning of the file
+            EcmFileVersion version = new EcmFileVersion();
+            version.setCmisObjectId(cmisDocument.getId());
+            version.setVersionTag(cmisDocument.getVersionLabel());
+            entity.getVersions().add(version);
 
-        // Saves file metadata into ArkCase
-        EcmFile saved = getEcmFileDao().save(toAdd);
-        pipelineContext.setEcmFile(saved);
+            // Determines the folder and container in which the file should be saved
+            AcmFolder folder = getFolderDao().findByCmisFolderId(pipelineContext.getCmisFolderId());
+            entity.setFolder(folder);
+            entity.setContainer(pipelineContext.getContainer());
+
+            // Saves new file metadata into ArkCase database
+            EcmFile saved = getEcmFileDao().save(entity);
+            pipelineContext.setEcmFile(saved);
+        }
         log.debug("metadata pre save handler ended");
     }
 

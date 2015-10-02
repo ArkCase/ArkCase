@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('profile').controller('ProfileController', ['$scope', 'ConfigService', 'passwordService', '$modal',
-    function ($scope, ConfigService, passwordService, $modal) {
+angular.module('profile').controller('ProfileController', ['$scope', 'ConfigService', 'Profile.ChangePasswordService', '$modal',
+    function ($scope, ConfigService, ChangePasswordService, $modal) {
         $scope.config = ConfigService.getModule({moduleId: 'profile'});
         $scope.$on('req-component-config', onConfigRequest);
         function onConfigRequest(e, componentId) {
@@ -26,7 +26,7 @@ angular.module('profile').run(function (editableOptions, editableThemes) {
     editableOptions.theme = 'bs3';
 });
 
-angular.module('profile').controller('ChangePasswordModalController', function ($scope, $modalInstance, $modal,passwordService) {
+angular.module('profile').controller('ChangePasswordModalController', function ($scope, $modalInstance, $modal,ChangePasswordService) {
     $scope.close = function () {
         $modalInstance.dismiss('cancel');
     };
@@ -64,7 +64,7 @@ angular.module('profile').controller('ChangePasswordModalController', function (
         }
         else {
             var data = '{"outlookPassword":' + '"' + this.newPassword + '"}';
-            passwordService.changePassword(data);
+            ChangePasswordService.changePassword(data);
             $modalInstance.close('done');
             this.newPassword = '';
             this.newPasswordAgain = '';

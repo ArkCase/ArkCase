@@ -1,13 +1,13 @@
 package com.armedia.acm.plugins.casefile.pipeline;
 
-import com.armedia.acm.services.pipeline.PipelineContext;
+import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 import org.springframework.security.core.Authentication;
 
 /**
  * Store all the case file saving-related references in this context.
  * Created by Petar Ilin <petar.ilin@armedia.com> on 11.08.2015.
  */
-public class CaseFilePipelineContext implements PipelineContext
+public class CaseFilePipelineContext extends AbstractPipelineContext
 {
     /**
      * Flag showing whether new case file is created.
