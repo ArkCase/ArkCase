@@ -903,12 +903,15 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
         // The modified binary content needs to be saved into ArkCase, because when the page
         // is refreshed the document will be pulled from ArkCase, so if the new content is not pushed
         // into ArkCase then the user will get the original unmodified document again after refreshing
-        log.log(Level.FINE, "saving updated document to ArkCase");
-        try {
-            saveDocumentToArkCase(data, docIdString, ticket);
-        } catch (Exception e) {
-            log.log(Level.SEVERE, "failed to save document to ArkCase");
-            log.log(Level.SEVERE, e.getMessage());
+        if (data != null) {
+            log.log(Level.FINE, "saving updated document to ArkCase");
+            try {
+                saveDocumentToArkCase(data, docIdString, ticket);
+            } catch (Exception e) {
+                log.log(Level.SEVERE, e);
+            }
+        } else {
+            log.log(Level.FINE, "There are no content changes to update");
         }
 
         ContentHandlerResult result = new ContentHandlerResult();
