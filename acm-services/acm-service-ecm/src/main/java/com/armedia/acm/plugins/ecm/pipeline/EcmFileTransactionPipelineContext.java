@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.ecm.pipeline;
 
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.services.pipeline.PipelineContext;
+import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 import org.springframework.security.core.Authentication;
 import org.apache.chemistry.opencmis.client.api.Document;
 
@@ -11,7 +11,8 @@ import java.io.InputStream;
 /**
  * Created by joseph.mcgrady on 9/9/2015.
  */
-public class EcmFileTransactionPipelineContext implements PipelineContext {
+public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
+{
 
     private String originalFileName;
     private Authentication authentication;
@@ -21,8 +22,7 @@ public class EcmFileTransactionPipelineContext implements PipelineContext {
     private Document cmisDocument;
     private EcmFile ecmFile;
     private boolean isAppend;
-    private boolean isPDF;
-    private boolean isAuthorizationOrAbstract;
+    private InputStream mergedFileInputStream;
 
     public String getOriginalFileName() {
         return originalFileName;
@@ -72,16 +72,10 @@ public class EcmFileTransactionPipelineContext implements PipelineContext {
     public void setIsAppend(boolean isAppend) {
         this.isAppend = isAppend;
     }
-    public boolean getIsPDF() {
-        return isPDF;
+    public InputStream getMergedFileInputStream() {
+        return mergedFileInputStream;
     }
-    public void setIsPDF(boolean isPDF) {
-        this.isPDF = isPDF;
-    }
-    public boolean getIsAuthorizationOrAbstract() {
-        return isAuthorizationOrAbstract;
-    }
-    public void setIsAuthorizationOrAbstract(boolean isAuthorizationOrAbstract) {
-        this.isAuthorizationOrAbstract = isAuthorizationOrAbstract;
+    public void setMergedFileInputStream(InputStream mergedFileInputStream) {
+        this.mergedFileInputStream = mergedFileInputStream;
     }
 }

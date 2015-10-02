@@ -12,6 +12,27 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
+        ,validateUserInfo: function(data){
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.userId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.fullName)) {
+                return false;
+            }
+            if (Util.isEmpty(data.mail)) {
+                return false;
+            }
+            if (Util.isEmpty(data.firstName)) {
+                return false;
+            }
+            if (Util.isEmpty(data.lastName)) {
+                return false;
+            }
+            return true;
+        }
         ,validateUser: function(data){
             if (Util.isEmpty(data)) {
                 return false;

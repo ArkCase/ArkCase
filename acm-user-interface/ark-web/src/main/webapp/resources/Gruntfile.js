@@ -108,24 +108,28 @@ module.exports = function (grunt) {
         // Add missed modules
         _.forEach(modulesConfigFolders, function (folderName) {
             var fileName = path.join(folderName, 'config.json');
-            var moduleData = fs.readFileSync(fileName);
-            var moduleObj = JSON.parse(moduleData);
-            var moduleId = moduleObj.id;
 
-            // Check if module is not present in modules.json. Add if required
-            if (!_.find(modules, {id: moduleId})) {
-                newModulesFolders.push({
-                    id: moduleId,
-                    folder: folderName
-                });
-                modules.push({
-                    'id': moduleId,
-                    'title': moduleObj.title
-                });
-                newModules.push(moduleObj);
+            // This works only for modules that have config.json file
+            // other modules ingnored
+            if (fs.existsSync(fileName)) {
+                var moduleData = fs.readFileSync(fileName);
+                var moduleObj = JSON.parse(moduleData);
+                var moduleId = moduleObj.id;
+
+                // Check if module is not present in modules.json. Add if required
+                if (!_.find(modules, {id: moduleId})) {
+                    newModulesFolders.push({
+                        id: moduleId,
+                        folder: folderName
+                    });
+                    modules.push({
+                        'id': moduleId,
+                        'title': moduleObj.title
+                    });
+                    newModules.push(moduleObj);
+                }
+                allModules.push(moduleObj);
             }
-
-            allModules.push(moduleObj);
         });
 
         var removedModules = [];
