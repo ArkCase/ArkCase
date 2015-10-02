@@ -93,22 +93,18 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                     );
                 }
             );
+            Util.AcmGrid.addGridApiHandler($scope, function (gridApi) {
+                gridApi.core.on.rowsRendered($scope, function () {
+                    $scope.gridApi.grid.columns[0].hideColumn();
+                });
+            });
 
-            //
-            //$scope.gridOptions, $scope.gridOptions.promiseRegisterApi are now defined by above setBasicOptions()
-            //
-
+            //$scope.gridOptions is defined by above setBasicOptions()
             $scope.gridOptions.expandableRowTemplate = "modules/cases/views/components/case-people.sub.view.html";
             $scope.gridOptions.expandableRowHeight = 305;
             $scope.gridOptions.expandableRowScope = {       //from sample. what is it for?
                 subGridVariable: 'subGridScopeVariable'
             };
-
-            $scope.gridOptions.promiseRegisterApi.then(function (gridApi) {
-                gridApi.core.on.rowsRendered($scope, function () {
-                    $scope.gridApi.grid.columns[0].hideColumn();
-                });
-            });
 
             promisePersonTypes.then(function (data) {
                 $scope.gridOptions.enableRowSelection = false;
