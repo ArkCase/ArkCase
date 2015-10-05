@@ -1,1 +1,10 @@
 /* only meant for extensions, keep this file empty otherwise */
+
+
+/* Order Info page */
+form[name="documentsAttachments"] .grid,
+form[name="documentsAuthorization"] .grid,
+form[name="documentsAbstract"] .grid {
+    height: 200px;
+    width: 429px;
+}

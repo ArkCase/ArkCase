@@ -438,11 +438,3 @@ thead {
   padding-top: 60px;
   padding-right: 200px;
 }
-
-/* Order Info */
-form[name="documentsAttachments"] .grid,
-form[name="documentsAuthorization"] .grid,
-form[name="documentsAbstract"] .grid {
-  height: 200px;
-  width: 429px;
-}
