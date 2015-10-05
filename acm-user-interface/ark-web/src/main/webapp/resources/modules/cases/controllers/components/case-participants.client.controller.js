@@ -19,7 +19,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             service: LookupService.getUsersBasic
             , callback: function (data) {
                 $scope.participantUsers = [];
-                var arr = Util.goodMapValue([data, "response", "docs"], []);
+                var arr = Util.goodMapValue(data, "response.docs", []);
                 for (var i = 0; i < arr.length; i++) {
                     var user = {};
                     user.id = arr[i].object_id_s;
@@ -33,7 +33,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             service: LookupService.getGroups
             , callback: function (data) {
                 $scope.participantGroups = [];
-                var arr = Util.goodMapValue([data, "response", "docs"], []);
+                var arr = Util.goodMapValue(data, "response.docs", []);
                 for (var i = 0; i < arr.length; i++) {
                     var group = {};
                     group.id = arr[i].object_id_s;
@@ -45,69 +45,42 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
         });
 
 
-        $scope.config = null;
-        $scope.$on('component-config', applyConfig);
-        function applyConfig(e, componentId, config) {
+        $scope.$on('component-config', function (e, componentId, config) {
             if (componentId == 'participants' && !$scope.config) {
+                Util.AcmGrid.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+                Util.AcmGrid.setColumnDefs($scope, config);
+                Util.AcmGrid.setBasicOptions($scope, config);
+                Util.AcmGrid.addGridApiHandler($scope, function (gridApi) {
+                    $scope.gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
+                        if (newValue == oldValue) {
+                            return;
+                        }
 
-                var columnDef = {
-                    name: "act",
-                    cellEditableCondition: false,
-                    //,enableFiltering: false
-                    //,enableHiding: false
-                    //,enableSorting: false
-                    //,enableColumnResizing: false
-                    width: 40,
-                    headerCellTemplate: "<span></span>",
-                    cellTemplate: "<span><i class='fa fa-trash-o fa-lg' ng-click='grid.appScope.deleteRow(row.entity)'></i></span>"
-                };
-                config.columnDefs.push(columnDef);
-
-                $scope.config = config;
-                $scope.gridOptions = {
-                    enableColumnResizing: true,
-                    enableRowSelection: true,
-                    enableRowHeaderSelection: false,
-                    multiSelect: false,
-                    noUnselect: false,
-
-                    paginationPageSizes: config.paginationPageSizes,
-                    paginationPageSize: config.paginationPageSize,
-                    enableFiltering: config.enableFiltering,
-                    columnDefs: config.columnDefs,
-                    onRegisterApi: function (gridApi) {
-                        $scope.gridApi = gridApi;
-                        gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
-                            if (newValue == oldValue) {
-                                return;
+                        //
+                        // Fix participant names selection
+                        //
+                        if (Util.Constant.LOOKUP_PARTICIPANT_TYPES === colDef.lookup) {
+                            if ("*" === newValue) {
+                                rowEntity.acm$_participantNames = [
+                                    {id: "*", name: "*"}
+                                ];
+                            } else if ("owning group" === newValue) {
+                                rowEntity.acm$_participantNames = $scope.participantGroups;
+                            } else {
+                                rowEntity.acm$_participantNames = $scope.participantUsers;
                             }
 
-                            //
-                            // Fix participant names selection
-                            //
-                            if ("participantTypes" === colDef.lookup) {
-                                if ("*" === newValue) {
-                                    rowEntity.acm$_participantNames = [
-                                        {id: "*", name: "*"}
-                                    ];
-                                } else if ("owning group" === newValue) {
-                                    rowEntity.acm$_participantNames = $scope.participantGroups;
-                                } else {
-                                    rowEntity.acm$_participantNames = $scope.participantUsers;
-                                }
+                            $scope.$apply();
+                        }
 
-                                $scope.$apply();
-                            }
-
-                            //
-                            // Save changes
-                            //
-                            if (!Util.isEmpty(rowEntity.participantType) && !Util.isEmpty(rowEntity.participantLdapId)) {
-                                $scope.updateRow(rowEntity);
-                            }
-                        });
-                    }
-                };
+                        //
+                        // Save changes
+                        //
+                        if (!Util.isEmpty(rowEntity.participantType) && !Util.isEmpty(rowEntity.participantLdapId)) {
+                            $scope.updateRow(rowEntity);
+                        }
+                    });
+                });
 
 
                 $q.all([promiseTypes, promiseUsers, promiseGroups]).then(function (data) {
@@ -115,7 +88,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                     //$scope.gridOptions.enableCellEdit = true;
                     //$scope.gridOptions.enableCellEditOnFocus = true;
                     for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                        if ("participantTypes" == $scope.config.columnDefs[i].lookup) {
+                        if (Util.Constant.LOOKUP_PARTICIPANT_TYPES == $scope.config.columnDefs[i].lookup) {
                             $scope.gridOptions.columnDefs[i].enableCellEdit = true;
                             $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
@@ -124,7 +97,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                             $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
-                        } else if ("participantNames" == $scope.config.columnDefs[i].lookup) {
+                        } else if (Util.Constant.LOOKUP_PARTICIPANT_NAMES == $scope.config.columnDefs[i].lookup) {
                             $scope.gridOptions.columnDefs[i].enableCellEdit = true;
                             $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
@@ -135,7 +108,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                 });
 
             }
-        }
+        });
 
 
         $scope.$on('case-retrieved', function (e, data) {
@@ -170,13 +143,13 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                     if (Validator.validateCaseFile(caseSaved)) {
                         //if participant is newly added, fill incomplete values with the latest
                         if (Util.isEmpty(rowEntity.id)) {
-                            var participants = Util.goodMapValue([caseSaved, "participants"], []);
-                            var participantAdded = _.where(participants, {
+                            var participants = Util.goodMapValue(caseSaved, "participants", []);
+                            var participantAdded = _.find(participants, {
                                 participantType: rowEntity.participantType,
                                 participantLdapId: rowEntity.participantLdapId
                             });
-                            if (0 < participantAdded.length) {
-                                rowEntity = _.merge(rowEntity, participantAdded[0]);
+                            if (participantAdded) {
+                                rowEntity = _.merge(rowEntity, participantAdded);
                             }
                         }
                     }
@@ -187,14 +160,9 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             );
         };
         $scope.deleteRow = function (rowEntity) {
-            var idx = _.findIndex($scope.gridOptions.data, function (obj) {
-                return (obj == rowEntity);
-            });
-            if (0 <= idx) {
-                $scope.gridOptions.data.splice(idx, 1);
-            }
+            Util.AcmGrid.deleteRow($scope, rowEntity);
 
-            var id = Util.goodMapValue([rowEntity, "id"], 0);
+            var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row
                 var caseInfo = Util.omitNg($scope.caseInfo);
                 CasesService.save({}, caseInfo
