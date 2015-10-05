@@ -7,6 +7,7 @@ import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -21,7 +22,7 @@ public class QueueCaseServiceImpl implements QueueCaseService
 
     @Override
     @Transactional
-    public CaseFile enqueue(Long caseFileId, String queueName) throws PipelineProcessException
+    public CaseFile enqueue(Long caseFileId, String queueName, Authentication auth, String ipAddress) throws PipelineProcessException
     {
         log.debug("Case file {} is enqueuing to {}", caseFileId, queueName);
 
@@ -34,6 +35,8 @@ public class QueueCaseServiceImpl implements QueueCaseService
         if (caseFile.getQueue() != null)
             ctx.setQueueName(caseFile.getQueue().getName());
         ctx.setEnqueueName(queueName);
+        ctx.setAuthentication(auth);
+        ctx.setIpAddress(ipAddress);
 
         getQueuePipelineManager().onPreSave(caseFile, ctx);
 
