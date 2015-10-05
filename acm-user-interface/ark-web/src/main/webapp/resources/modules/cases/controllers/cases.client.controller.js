@@ -6,7 +6,7 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
 		$scope.$on('req-component-config', onConfigRequest);
 		function onConfigRequest(e, componentId) {
 			$scope.config.$promise.then(function(config){
-				var componentConfig = _.find(config.components, {id: componentId})
+				var componentConfig = _.find(config.components, {id: componentId});
 				$scope.$broadcast('component-config', componentId, componentConfig);
 			});
 		}
@@ -14,7 +14,7 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
 		$scope.$on('req-select-case', function(e, selectedCase){
 			$scope.$broadcast('case-selected', selectedCase);
 
-			var id = Util.goodMapValue([selectedCase, "id"], null);
+			var id = Util.goodMapValue(selectedCase, "id", null);
 			loadCase(id);
 		});
 
@@ -29,9 +29,9 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
                     }
 				});
 			}
-		}
+		};
 
-		var id = Util.goodMapValue([$stateParams, "id"], null);
+		var id = Util.goodMapValue($stateParams, "id", null);
 		loadCase(id);
 	}
 ]);
