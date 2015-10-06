@@ -5,6 +5,6 @@
             <div class="pull-right"><button type="button" ng-click="unsubscriptSelected()" class="btn  btn-sm btn-info">{{'profile.subscriptions.unsubscribeSelect'| translate}} </button></div>
         </div>
         </div>
-        <div id="subscribptionGrid" ui-grid-pagination ui-grid-selection  ui-grid="subscribptionGridOptions" class="grid"></div>
+        <div id="subscribptionGrid" ui-grid-auto-resize ui-grid-pagination ui-grid-selection  ui-grid="subscribptionGridOptions" class="grid" adjust-table-height="subscribptionGridOptions.data.length"></div>
     </div>
 </section>
