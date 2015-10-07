@@ -22,7 +22,15 @@
       },
 
       "myCases": {
-        "noDataMessage": "Currently there are no cases info"
+        "noDataMessage": "Currently there are no cases info",
+        "table": {
+          "header": {
+            "caseId": "Case ID",
+            "client": "Client",
+            "status": "Status",
+            "priority": "Priority"
+          }
+        }
       },
 
       "myComplaints": {
