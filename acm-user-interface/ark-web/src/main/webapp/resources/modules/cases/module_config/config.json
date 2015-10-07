@@ -309,40 +309,47 @@
       "paginationPageSize": 5,
       "columnDefs": [
         {
-          "name": "object_id_s",
-          "displayName": "cases.comp.tasks.table.columns.id",
+          "name": "taskId",
+          "field": "object_id_s",
+          "displayName": "cases.comp.tasks.table.columns.taskId",
           "headerCellFilter": "translate"
         },
         {
-          "name": "title_parseable",
+          "name": "title",
+          "field": "title_parseable",
           "displayName": "cases.comp.tasks.table.columns.title",
           "headerCellFilter": "translate"
         },
         {
-          "name": "assignee_s",
+          "name": "assignee",
+          "field": "assignee_s",
           "displayName": "cases.comp.tasks.table.columns.assignee",
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
         },
         {
-          "name": "create_tdt",
+          "name": "created",
+          "field": "create_tdt",
           "displayName": "cases.comp.tasks.table.columns.created",
           "headerCellFilter": "translate",
           "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'medium'}}</div>"
         },
         {
-          "name": "priority_s",
+          "name": "priority",
+          "field": "priority_s",
           "displayName": "cases.comp.tasks.table.columns.priority",
           "headerCellFilter": "translate"
         },
         {
-          "name": "due_tdt",
+          "name": "due",
+          "field": "due_tdt",
           "displayName": "cases.comp.tasks.table.columns.due",
           "headerCellFilter": "translate",
           "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'medium'}}</div>"
         },
         {
-          "name": "status_s",
+          "name": "status",
+          "field": "status_s",
           "displayName": "cases.comp.tasks.table.columns.status",
           "headerCellFilter": "translate"
         },
@@ -373,13 +380,13 @@
           "name": "targetName",
           "displayName": "cases.comp.references.table.columns.targetName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.targetName}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetName}}</a>"
         },
         {
           "name": "targetTitle",
           "displayName": "cases.comp.references.table.columns.targetTitle",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.targetTitle}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
         },
         {
           "name": "modified",
@@ -442,7 +449,7 @@
           "name": "name",
           "displayName": "cases.comp.correspondence.table.columns.name",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.name}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.name}}</a>"
         },
         {
           "name": "created",

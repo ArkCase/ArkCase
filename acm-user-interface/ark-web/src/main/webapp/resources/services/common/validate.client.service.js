@@ -160,9 +160,6 @@ angular.module('services').factory('ValidationService', ["UtilService",
             return true;
         }
         , validateHistory: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
             if (!Util.isArray(data.resultPage)) {
                 return false;
             }
