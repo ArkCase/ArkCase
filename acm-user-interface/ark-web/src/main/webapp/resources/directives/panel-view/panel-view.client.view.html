@@ -1,0 +1,13 @@
+<div class="panel panel-success">
+    <div class="panel-heading">
+        {{header}}
+        <div class="pull-right" ng-if="collapsible == 'true'">
+            <a class="collapse-icon" href="#" ng-click="onCollapseIconClick($event)">
+                <span ng-class="isCollapsed ? 'glyphicon glyphicon-triangle-bottom' : 'glyphicon glyphicon-triangle-top'"></span>
+            </a>
+        </div>
+    </div>
+    <div class="panel-body" collapse="isCollapsed">
+        <div ng-transclude></div>
+    </div>
+</div>
