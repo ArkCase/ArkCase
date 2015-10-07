@@ -33,7 +33,7 @@
           "enableSorting": true
         },
         {
-          "name": "status_s",
+          "name": "status_lcs",
           "displayName": "dashboard.widgets.myCases.table.header.status",
           "headerCellFilter": "translate",
           "enableSorting": true,
