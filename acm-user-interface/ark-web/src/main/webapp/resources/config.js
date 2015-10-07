@@ -5,6 +5,7 @@ var ApplicationConfiguration = (function() {
     // Init module configuration options
     var applicationModuleName = 'ArkCase';
     var applicationModuleVendorDependencies = [
+        'cgNotify',
         'ngResource',
         'ngCookies',
         'ngAnimate',
