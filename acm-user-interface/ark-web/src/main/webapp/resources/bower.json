@@ -36,7 +36,7 @@
     "ng-file-upload-shim": "~7.0.17"
   },
   "resolutions": {
-    "angular": "1.4.4",
+    "angular": "1.4.7",
     "angular-ui-utils": "~3.0.0"
   }
 }
