@@ -20,6 +20,7 @@ angular.module('dashboard.my-tasks', ['adf.provider'])
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'myTasks');
             $scope.config = null;
+            var userInfo = null;
 
             $scope.gridOptions = {
                 enableColumnResizing: true,
@@ -39,11 +40,16 @@ angular.module('dashboard.my-tasks', ['adf.provider'])
                     $scope.gridOptions.paginationPageSizes = config.paginationPageSizes;
                     $scope.gridOptions.paginationPageSize = config.paginationPageSize;
 
-                    DashboardService.queryMyTasks({userId: Authentication.user},
-                        function (data) {
-                            $scope.gridOptions.data = data;
-                        }
-                    );
+                    Authentication.queryUserInfo(function (responseUserInfo) {
+                        userInfo = responseUserInfo;
+
+                        DashboardService.queryMyTasks({userId: userInfo.userId},
+                            function (data) {
+                                $scope.gridOptions.data = data;
+                            }
+                        );
+
+                    });
                 }
             }
         }
