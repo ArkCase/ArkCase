@@ -35,7 +35,8 @@ module.exports = {
                 'lib/fancytree/dist/skin-win8/ui.fancytree.css',
                 'lib/angular-xeditable/dist/css/xeditable.css',
                 'lib/summernote/dist/summernote.css',
-                'lib/angular-dashboard-framework/dist/angular-dashboard-framework.css'
+                'lib/angular-dashboard-framework/dist/angular-dashboard-framework.css',
+                'lib/angular-notify/dist/angular-notify.css'
             ],
             js: [
                 'lib/jquery/dist/jquery.js',
@@ -56,6 +57,7 @@ module.exports = {
                 'lib/angular-ui-router/release/angular-ui-router.js',
                 'lib/angular-bootstrap/ui-bootstrap-tpls.js',
                 'lib/angular-ui-grid/ui-grid.js',
+                'lib/angular-notify/dist/angular-notify.js',
                 'lib/angular-schema-form/dist/schema-form.js',
                 'lib/angular-summernote/dist/angular-summernote.js',
                 'lib/angular-schema-form/dist/bootstrap-decorator.js',

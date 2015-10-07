@@ -13,6 +13,7 @@
     "angular-cookies": "~1.4.3",
     "angular-dashboard-framework": "~0.10.0",
     "angular-moment": "~0.10.2",
+    "angular-notify": "~2.5.0",
     "angular-resource": "~1.4.3",
     "angular-sanitize": "~1.4.3",
     "angular-schema-form": "~0.8.4",
