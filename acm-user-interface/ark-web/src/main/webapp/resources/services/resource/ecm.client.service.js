@@ -1,25 +1,15 @@
 'use strict';
 
-angular.module('services').factory('CasesService', ['$resource',
+angular.module('services').factory('EcmService', ['$resource',
     function ($resource) {
-        return $resource('proxy/arkcase/api/latest/plugin', {}, {
-            get: {
+        return $resource('proxy/arkcase/api/latest/service', {}, {
+            queryFolderList: {
                 method: 'GET',
-                url: 'proxy/arkcase/api/latest/plugin/casefile/byId/:id',
+                url: 'proxy/arkcase/api/latest/service/ecm/folder/:objType/:objId/:folderId?start=:start&n=:n&s=:sortBy&dir=:sortDir',
                 cache: false,
                 isArray: false
             }
-            , save: {
-                method: 'POST',
-                url: 'proxy/arkcase/api/latest/plugin/casefile',
-                cache: false
-            }
-            , queryCases: {
-                method: 'GET',
-                url: 'proxy/arkcase/api/latest/plugin/search/CASE_FILE?start=0&n=250&s=:sortBy :sortOrder',
-                cache: false,
-                isArray: false
-            }
+
 
             , queryContacts: {
                 url: 'proxy/arkcase/api/latest/plugin/casefile/byId/:id',

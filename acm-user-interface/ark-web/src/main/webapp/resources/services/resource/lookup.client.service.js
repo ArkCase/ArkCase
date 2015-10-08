@@ -4,7 +4,12 @@ angular.module('services').factory('LookupService', ['$resource',
     function ($resource) {
         return $resource('proxy/arkcase/api/latest/plugin', {}, {
 
-            getPriorities: {
+            getConfig: {
+                url: "proxy/arkcase/api/latest/service/config/:name"
+                , method: "GET"
+                , cache: true
+            }
+            , getPriorities: {
                 url: "proxy/arkcase/api/latest/plugin/complaint/priorities"
                 ,method: "GET"
                 ,cache: true
@@ -73,6 +78,12 @@ angular.module('services').factory('LookupService', ['$resource',
                 ,method: "GET"
                 ,cache: true
                 ,isArray: true
+            }
+            , getFileTypes: {
+                url: "modules_config/config/modules/cases/resources/fileTypes.json"
+                , method: "GET"
+                , cache: true
+                , isArray: true
             }
 
             , getCorrespondenceForms: {
