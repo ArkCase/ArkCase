@@ -51,7 +51,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         $scope.currentId = $stateParams.id;
         $scope.retrieveGridData = function () {
             CasesService.queryCorrespondence(Util.AcmGrid.withPagingParams($scope, {
-                parentType: "CASE_FILE",
+                parentType: Util.Constant.OBJTYPE_CASE_FILE,
                 parentId: $scope.currentId
             }), function (data) {
                 if (Validator.validateCorrespondences(data)) {

@@ -417,7 +417,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             if (Util.isEmpty(rowEntity.id)) {
                 var pa = newPersonAssociation();
                 pa.parentId = $scope.caseInfo.id;
-                pa.parentType = "CASE_FILE";
+                pa.parentType = Util.Constant.OBJTYPE_CASE_FILE;
                 pa.person.className = Util.goodValue($scope.config.className); //"com.armedia.acm.plugins.person.model.Person";
                 pa.person.givenName = givenName;
                 pa.person.familyName = familyName;
