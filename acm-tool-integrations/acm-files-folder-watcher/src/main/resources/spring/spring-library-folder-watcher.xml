@@ -65,6 +65,32 @@
         <property name="captureFolderMonitor" ref="captureFileMonitor"/>
     </bean>
 
+    <!-- Converted Folder -->
+    <bean id="convertedFilesFolder" factory-bean="vfsManager" factory-method="resolveFile">
+        <constructor-arg index="0" value="${capture.convertedPdfsFolder}"/>
+    </bean>
+
+    <bean id="convertedFileListener" class="com.armedia.acm.files.capture.ConvertedFileWatcher"
+          depends-on="springEntityListenerConfigurer">
+        <property name="baseFolder" ref="convertedFilesFolder"/>
+        <!-- since is called convertedPdfsFolder is logical that only pdf will need to be processed-->
+        <property name="fileExtensions" value="pdf"/>
+    </bean>
+
+    <bean id="convertedFileMonitor" class="org.apache.commons.vfs2.impl.DefaultFileMonitor">
+        <constructor-arg ref="convertedFileListener"/>
+        <property name="recursive" value="true"/>
+        <!--<property name="delay" value="3000"/>-->
+    </bean>
+
+    <bean id="convertedMonitorController" class="com.armedia.acm.files.capture.ConvertedFileController"
+          init-method="initBean"
+          destroy-method="stopBean">
+        <property name="convertedFolder" ref="convertedFilesFolder"/>
+        <property name="convertedFileMonitor" ref="convertedFileMonitor"/>
+    </bean>
+
+
     <!-- Working Folder -->
     <bean id="workingFolder" factory-bean="vfsManager" factory-method="resolveFile">
         <constructor-arg index="0" value="${capture.working.folder}"/>
