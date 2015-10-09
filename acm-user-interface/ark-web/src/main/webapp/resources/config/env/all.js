@@ -65,6 +65,7 @@ module.exports = {
                 'lib/angular-translate/angular-translate.js',
                 'lib/angular-translate-loader-partial/angular-translate-loader-partial.js',
                 'lib/angular-xeditable/dist/js/xeditable.js',
+                'lib/ui-router-extras/release/ct-ui-router-extras.js',
                 'lib/Sortable/Sortable.js',
                 'lib/angular-dashboard-framework/dist/angular-dashboard-framework.js',
                 'lib/fancytree/dist/jquery.fancytree.js',
