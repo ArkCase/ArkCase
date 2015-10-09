@@ -21,7 +21,7 @@
     "angular-touch": "~1.4.3",
     "angular-translate": "~2.7.2",
     "angular-translate-loader-partial": "~2.7.2",
-    "angular-ui-grid": "~3.0.1",
+    "angular-ui-grid": "~3.0.7",
     "angular-ui-router": "~0.2.15",
     "angular-ui-utils": "~3.0.0",
     "angular-xeditable": "~0.1.9",
@@ -32,8 +32,10 @@
     "highcharts-ng": "~0.0.11",
     "html5shiv": "~3.7.2",
     "lodash": "~3.10.0",
+    "multi-download": "~2.0.0",
     "ng-file-upload": "~7.0.17",
-    "ng-file-upload-shim": "~7.0.17"
+    "ng-file-upload-shim": "~7.0.17",
+    "ui-router-extras": "~0.0.14"
   },
   "resolutions": {
     "angular": "1.4.7",
