@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>acm-tool-integrations</artifactId>
+        <groupId>com.armedia.acm</groupId>
+        <version>3.0.35-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+    <artifactId>acm-pdf-utilities</artifactId>
+    <name>Tool Integrations: PDF creation and manipulation utilities</name>
+    <description>
+        PDF Creation using Apache XSL-FO implementation (Apache FOP) and PDF manipulation using Apache PDFBox
+    </description>
+
+    <dependencies>
+        <!-- acm -->
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-ecm</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <!-- XML transformation to PDF (Apache FOP and dependencies) -->
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>xmlgraphics-commons</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>fop</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+        </dependency>
+
+        <!-- Barcode generation support for Apache FOP -->
+        <dependency>
+            <groupId>net.sf.barcode4j</groupId>
+            <artifactId>barcode4j-fop-ext</artifactId>
+        </dependency>
+
+        <!-- logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

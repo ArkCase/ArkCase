@@ -4,32 +4,28 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
     function ($scope, $stateParams, $q, $window, $translate, Util, Validator, LookupService, CasesService) {
         $scope.$emit('req-component-config', 'time');
 
-        $scope.config = null;
-        $scope.$on('component-config', applyConfig);
-        function applyConfig(e, componentId, config) {
+        $scope.$on('component-config', function (e, componentId, config) {
             if (componentId == 'time') {
-                $scope.config = config;
-
-                Util.uiGrid.typicalOptions(config, $scope);
-                //Util.uiGrid.externalPaging(config, $scope, updatePageData);
-                $scope.gridOptions.columnDefs = config.columnDefs;
+                Util.AcmGrid.setColumnDefs($scope, config);
+                Util.AcmGrid.setBasicOptions($scope, config);
 
                 for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                     if ("name" == $scope.config.columnDefs[i].name) {
-                        $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.acm$_formName}}</a>";
+                        $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.acm$_formName}}</a>";
                     } else if ("tally" == $scope.config.columnDefs[i].name) {
                         $scope.gridOptions.columnDefs[i].field = "acm$_hours";
                     }
                 }
             }
-        }
+        });
+
 
         $scope.$on('case-retrieved', function (e, data) {
             if (Validator.validateCaseFile(data)) {
                 $scope.caseInfo = data;
 
                 CasesService.queryTimesheets({
-                    objectType: "CASE_FILE",
+                    objectType: Util.Constant.OBJTYPE_CASE_FILE,
                     objectId: $scope.caseInfo.id
                 }, function (data) {
                     if (Validator.validateTimesheets(data)) {
@@ -50,9 +46,9 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
         });
 
 
-        $scope.showUrl = function (event, rowEntity) {
+        $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();
-            Util.uiGrid.showObject("TIMESHEET", Util.goodMapValue([rowEntity, "id"], 0), $scope);
+            Util.AcmGrid.showObject($scope, Util.Constant.OBJTYPE_TIMESHEET, Util.goodMapValue(rowEntity, "id", 0));
         };
 
     }
