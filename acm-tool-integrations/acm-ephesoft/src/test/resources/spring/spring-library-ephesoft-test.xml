@@ -5,12 +5,9 @@
 
 
     <bean id="attachmentCaptureFileListener" class="com.armedia.acm.ephesoft.service.AttachmentCaptureFileListener">
-        <property name="captureFolder" ref="captureFolder"/>
-        <property name="completedFolder" ref="completedFolder"/>
+        <property name="convertedFolder" ref="convertedFilesFolder"/>
         <property name="errorFolder" ref="errorFolder"/>
-        <property name="supportedObjectTypes" value="${capture.attachments.supported-object-types}"/>
     </bean>
-
 
 
     <!-- need a bean named "springEntityListenerConfigurer" but it doesn't have to be a real bean -->
@@ -44,6 +41,11 @@
     <!-- Completed Folder -->
     <bean id="completedFolder" factory-bean="vfsManager" factory-method="resolveFile">
         <constructor-arg index="0" value="${capture.completed.folder}"/>
+    </bean>
+
+    <!-- Converted Folder -->
+    <bean id="convertedFilesFolder" factory-bean="vfsManager" factory-method="resolveFile">
+        <constructor-arg index="0" value="${capture.convertedPdfsFolder}"/>
     </bean>
 
     <!-- Error Folder -->

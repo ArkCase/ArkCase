@@ -12,7 +12,6 @@
             <ul class="dropdown-menu animated fadeInRight">
                 <li ng-repeat="item in menu.items  | orderBy: 'position' ">
                     <a data-ui-sref="{{item.link}}" title="{{item.title}}" class="auto">
-                        <i ng-if="item.iconClass" class="navigation-icon {{item.iconClass}}"> </i>
                         {{item.title}}
                     </a>
                 </li>
