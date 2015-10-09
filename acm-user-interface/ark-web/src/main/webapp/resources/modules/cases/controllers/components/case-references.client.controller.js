@@ -5,38 +5,12 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$wi
 		$scope.$emit('req-component-config', 'references');
 
 
-        var promiseObjectTypes = Util.servicePromise({
-            service: LookupService.getObjectTypes
-            , callback: function (data) {
-                $scope.objectTypes = [];
-                _.forEach(data, function (item) {
-                    $scope.objectTypes.push(item);
-                });
-                return $scope.objectTypes;
+        $scope.$on('component-config', function (e, componentId, config) {
+            if (componentId == 'references') {
+                Util.AcmGrid.setColumnDefs($scope, config);
+                Util.AcmGrid.setBasicOptions($scope, config);
             }
         });
-
-
-        $scope.config = null;
-        $scope.$on('component-config', applyConfig);
-		function applyConfig(e, componentId, config) {
-			if (componentId == 'references') {
-				$scope.config = config;
-
-                $scope.gridOptions = {
-                    enableColumnResizing: true,
-                    enableRowSelection: true,
-                    enableRowHeaderSelection: false,
-                    multiSelect: false,
-                    noUnselect: false,
-
-                    paginationPageSizes: config.paginationPageSizes,
-                    paginationPageSize: config.paginationPageSize,
-                    enableFiltering: config.enableFiltering,
-                    columnDefs: config.columnDefs
-                };
-			}
-		}
 
 
         $scope.$on('case-retrieved', function (e, data) {
@@ -46,20 +20,13 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$wi
             }
         });
 
-
-        $scope.showUrl = function (event, rowEntity) {
+        $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();
-            $q.all([promiseObjectTypes]).then(function (data) {
-                var type = Util.goodMapValue([rowEntity, "targetType"]);
-                var find = _.where($scope.objectTypes, {type: type});
-                if (0 < find.length) {
-                    var url = Util.goodValue(find[0].url);
-                    var id = Util.goodMapValue([rowEntity, "targetId"]);
-                    url = url.replace(":id", id);
-                    $window.location.href = url;
-                }
-            });
-        }
+
+            var targetType = Util.goodMapValueArr(rowEntity, "targetType");
+            var targetId = Util.goodMapValueArr(rowEntity, "targetId");
+            Util.AcmGrid.showObject($scope, targetType, targetId);
+        };
 
 	}
 ]);
