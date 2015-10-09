@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="info" additivity="false">
+<Configuration status="info" additivity="false" monitorInterval="30">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS} [%-5p] [%t] %c - %m%n"/>
         </Console>
         <RollingFile name="file-log" fileName="${sys:catalina.base}/logs/arkcase.log"
-          filePattern="${sys:catalina.base}/logs/arkcase-%d{yyyy-MM-dd}.log">
-          <PatternLayout>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} [%-5p] [%t] %c - %m%n</pattern>
-        </PatternLayout>
-        <Policies>
-            <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-        </Policies>
-    </RollingFile>
-
-</Appenders>
+                     filePattern="${sys:catalina.base}/logs/arkcase-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} [%-5p] [%t] %c - %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
     <Loggers>
         <!-- INFO and above to console and log file; com.armedia debug and above to log file -->
         <Logger name="com.armedia" level="debug" additivity="false">

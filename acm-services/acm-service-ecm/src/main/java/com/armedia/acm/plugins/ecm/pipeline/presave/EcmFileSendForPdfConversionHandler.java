@@ -10,12 +10,14 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 /**
  * Created by joseph.mcgrady on 9/24/2015.
  */
-public class EcmFileSendForPdfConversionHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext> {
+public class EcmFileSendForPdfConversionHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext>
+{
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private SendForPdfConversion sendForPdfConversion;
@@ -34,20 +36,25 @@ public class EcmFileSendForPdfConversionHandler implements PipelineHandler<EcmFi
         // Only certain file formats (tiff, jpg, etc.) are converted to PDF
         boolean isFileFormatConvertibleToPdf = GenericUtils.isFileTypeInList(fileExtension, fileFormatsToBeConvertedToPDF);
 
-        if (isFileFormatConvertibleToPdf && isFileTypeConvertibleToPdf) {
-            try {
+        if (isFileFormatConvertibleToPdf && isFileTypeConvertibleToPdf)
+        {
+            try
+            {
                 EcmFile toBeConverted = pipelineContext.getEcmFile();
-                if (toBeConverted == null) {
+                if (toBeConverted == null)
+                {
                     throw new Exception("the conversion file is null");
                 }
-                InputStream fileInputStream = pipelineContext.getFileInputStream();
-                if (fileInputStream == null) {
+                InputStream fileInputStream = new ByteArrayInputStream(pipelineContext.getFileByteArray());
+                if (fileInputStream == null)
+                {
                     throw new Exception("the conversion file input stream is null");
                 }
 
                 // Drops the file into the shared drive folder for Ephesoft
                 sendForPdfConversion.copyToCaptureHotFolder(toBeConverted, fileInputStream);
-            } catch (Exception e) {
+            } catch (Exception e)
+            {
                 log.error("Failed to copy file to Ephesoft hot folder: {}", e.getMessage(), e);
                 throw new PipelineProcessException(e);
             }
@@ -61,22 +68,33 @@ public class EcmFileSendForPdfConversionHandler implements PipelineHandler<EcmFi
         // other watcher process might see the document and try to pick it up, so a consistent end result may not be possible
     }
 
-    public SendForPdfConversion getCaptureFolderService() {
+    public SendForPdfConversion getCaptureFolderService()
+    {
         return sendForPdfConversion;
     }
-    public void setCaptureFolderService(SendForPdfConversion sendForPdfConversion) {
+
+    public void setCaptureFolderService(SendForPdfConversion sendForPdfConversion)
+    {
         this.sendForPdfConversion = sendForPdfConversion;
     }
-    public String getFileTypesToBeConvertedToPDF() {
+
+    public String getFileTypesToBeConvertedToPDF()
+    {
         return fileTypesToBeConvertedToPDF;
     }
-    public void setFileTypesToBeConvertedToPDF(String fileTypesToBeConvertedToPDF) {
+
+    public void setFileTypesToBeConvertedToPDF(String fileTypesToBeConvertedToPDF)
+    {
         this.fileTypesToBeConvertedToPDF = fileTypesToBeConvertedToPDF;
     }
-    public String getFileFormatsToBeConvertedToPDF() {
+
+    public String getFileFormatsToBeConvertedToPDF()
+    {
         return fileFormatsToBeConvertedToPDF;
     }
-    public void setFileFormatsToBeConvertedToPDF(String fileFormatsToBeConvertedToPDF) {
+
+    public void setFileFormatsToBeConvertedToPDF(String fileFormatsToBeConvertedToPDF)
+    {
         this.fileFormatsToBeConvertedToPDF = fileFormatsToBeConvertedToPDF;
     }
 }
