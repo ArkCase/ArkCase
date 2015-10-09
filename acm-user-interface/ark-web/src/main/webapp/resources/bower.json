@@ -34,7 +34,8 @@
     "lodash": "~3.10.0",
     "multi-download": "~2.0.0",
     "ng-file-upload": "~7.0.17",
-    "ng-file-upload-shim": "~7.0.17"
+    "ng-file-upload-shim": "~7.0.17",
+    "ui-router-extras": "~0.0.14"
   },
   "resolutions": {
     "angular": "1.4.7",
