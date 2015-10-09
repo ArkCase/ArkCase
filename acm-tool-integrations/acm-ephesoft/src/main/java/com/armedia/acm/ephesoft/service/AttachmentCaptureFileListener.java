@@ -67,7 +67,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
         if (file != null)
         {
             //verify that all information is correct
-            if (fileInfo.getParentObjectType() != null && file.getContainer().getContainerObjectType().toLowerCase().compareTo(fileInfo.getParentObjectType().toLowerCase()) != 0)
+            if (fileInfo.getParentObjectType() != null && !file.getContainer().getContainerObjectType().equalsIgnoreCase(fileInfo.getParentObjectType()))
             {
                 log.warn("unable to process File {}, reason: parent object type doesn't match. Contains in file name:{}, but should be {}.",
                         event.getBaseFileName(),
@@ -137,7 +137,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
 
         //remove extension in file name
         if (fileName.contains("."))
-            fileName = fileName.substring(0, fileName.indexOf('.'));
+            fileName = fileName.substring(0, fileName.lastIndexOf('.'));
 
         //matches files with name like 123123_case_file_123 OR 12313_123 or 123
         if (Pattern.matches(PARENT_ID_PARENT_TYPE_FILE_ID_PATTERN, fileName))
