@@ -4,14 +4,12 @@ import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
-import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
@@ -51,11 +49,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             String fileName,
             String cmisFolderId,
             AcmContainer container)
-            throws MuleException
+            throws MuleException, IOException
     {
         // by default, files are documents
         String category = "Document";
-        EcmFile retval = addFileTransaction(originalFileName,authentication, fileType, category, fileInputStream, mimeType, fileName,
+        EcmFile retval = addFileTransaction(originalFileName, authentication, fileType, category, fileInputStream, mimeType, fileName,
                 cmisFolderId, container);
 
         return retval;
@@ -72,12 +70,13 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             String fileName,
             String cmisFolderId,
             AcmContainer container)
-            throws MuleException
+            throws MuleException, IOException
     {
         log.debug("Creating ecm file pipeline context");
         EcmFileTransactionPipelineContext pipelineContext = new EcmFileTransactionPipelineContext();
         pipelineContext.setCmisFolderId(cmisFolderId);
-        pipelineContext.setFileInputStream(fileInputStream);
+        // we are storing byte array so we can read this stream multiple times
+        pipelineContext.setFileByteArray(IOUtils.toByteArray(fileInputStream));
         pipelineContext.setOriginalFileName(originalFileName);
         pipelineContext.setContainer(container);
 
@@ -86,12 +85,14 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         ecmFile.setFileName(fileName);
         ecmFile.setFileType(fileType);
         ecmFile.setCategory(fileCategory);
-        try {
+        try
+        {
             log.debug("Calling pipeline manager handlers");
             pipelineManager.onPreSave(ecmFile, pipelineContext);
             pipelineManager.onPostSave(ecmFile, pipelineContext);
             ecmFile = pipelineContext.getEcmFile();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             log.error("pipeline handler call failed: {}", e.getMessage(), e);
         }
 
@@ -116,7 +117,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         MuleMessage received = getMuleContextManager().send("vm://updateFile.in", ecmFile, messageProps);
 
         MuleException e = received.getInboundProperty("updateException");
-        if ( e != null )
+        if (e != null)
         {
             throw e;
         }
@@ -133,26 +134,27 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
         return ecmFile;
     }
-    
+
     @Override
-    public String downloadFileTransaction(EcmFile ecmFile) throws MuleException {
-    	try 
-		{
-			MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", ecmFile.getVersionSeriesId());
-			
-			String result = getContent((ContentStream) message.getPayload());
-			
-			return result;
-		} 
-		catch (MuleException e) 
-		{
-			log.error("Cannot download file: " + e.getMessage(), e);
-			throw e;
-		}
+    public String downloadFileTransaction(EcmFile ecmFile) throws MuleException
+    {
+        try
+        {
+            MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", ecmFile.getVersionSeriesId());
+
+            String result = getContent((ContentStream) message.getPayload());
+
+            return result;
+        } catch (MuleException e)
+        {
+            log.error("Cannot download file: " + e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Override
-    public InputStream downloadFileTransactionAsInputStream(EcmFile ecmFile) throws MuleException {
+    public InputStream downloadFileTransactionAsInputStream(EcmFile ecmFile) throws MuleException
+    {
         try
         {
             MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", ecmFile.getVersionSeriesId());
@@ -160,47 +162,43 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             InputStream result = ((ContentStream) message.getPayload()).getStream();
 
             return result;
-        }
-        catch (MuleException e)
+        } catch (MuleException e)
         {
             log.error("Cannot download file: " + e.getMessage(), e);
             throw e;
         }
     }
-    
-    private String getContent(ContentStream contentStream)
-	{
-		String content = "";
-		InputStream inputStream = null;
 
-		try
+    private String getContent(ContentStream contentStream)
+    {
+        String content = "";
+        InputStream inputStream = null;
+
+        try
         {
-			inputStream = contentStream.getStream();
-			StringWriter writer = new StringWriter();
-			IOUtils.copy(inputStream, writer);
-			content = writer.toString();
-        } 
-		catch (IOException e) 
-		{
-        	log.error("Could not copy input stream to the writer: " + e.getMessage(), e);
-		}
-		finally
+            inputStream = contentStream.getStream();
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(inputStream, writer);
+            content = writer.toString();
+        } catch (IOException e)
         {
-            if ( inputStream != null )
+            log.error("Could not copy input stream to the writer: " + e.getMessage(), e);
+        } finally
+        {
+            if (inputStream != null)
             {
                 try
                 {
-                	inputStream.close();
-                }
-                catch (IOException e)
+                    inputStream.close();
+                } catch (IOException e)
                 {
                     log.error("Could not close CMIS content stream: " + e.getMessage(), e);
                 }
             }
         }
-		
-		return content;
-	}
+
+        return content;
+    }
 
     public MuleContextManager getMuleContextManager()
     {
@@ -232,18 +230,23 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         this.folderDao = folderDao;
     }
 
-    public FolderAndFilesUtils getFolderAndFilesUtils() {
+    public FolderAndFilesUtils getFolderAndFilesUtils()
+    {
         return folderAndFilesUtils;
     }
 
-    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
+    {
         this.folderAndFilesUtils = folderAndFilesUtils;
     }
 
-    public PipelineManager getPipelineManager() {
+    public PipelineManager getPipelineManager()
+    {
         return pipelineManager;
     }
-    public void setPipelineManager(PipelineManager pipelineManager) {
+
+    public void setPipelineManager(PipelineManager pipelineManager)
+    {
         this.pipelineManager = pipelineManager;
     }
 }
