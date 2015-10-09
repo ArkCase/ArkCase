@@ -3,7 +3,7 @@ VirtualViewer.prototype.setReason = function (event, reason) {
     deleteReason = reason;
     // do not mess with jQuery events
     event.stopPropagation();
-}
+};
 
 if (myFlexSnap) {
 
@@ -11,6 +11,7 @@ if (myFlexSnap) {
     var ACM_TICKET_PARAM = "acm_ticket";
     var ACM_USER_PARAM = "userid";
     var ACM_FILE_PARAM = "ecmFileId";
+    var ACM_CACHE_REFRESH_PARAM = "refreshCacheTimestamp";
 
     // Additional arguments needed for snowbound to communicate back with acm3
     var ACM_PARENT_ID = "parentObjectId";
@@ -168,11 +169,11 @@ if (myFlexSnap) {
 
     myFlexSnap.arkCaseSplitDocument = function() {
         var splitDialog = $("#vvSplitDocumentDialog").dialog("open");
-    }
+    };
 
     myFlexSnap.arkCaseMergeDocument = function() {
         var mergeDialog = $("#vvMergeDocumentDialog").dialog("open");
-    }
+    };
 
     myFlexSnap.arkCaseReorderDocumentPages = function(pageOriginalIndex, movedPageNewIndex) {
 
@@ -269,9 +270,11 @@ if (myFlexSnap) {
 
     myFlexSnap.arkCaseCreateDocumentId = function(documentIdComponents, newDocumentId) {
         // Creates a snowbound document id (includes acm user, ticket, and file id) which can have an original file id if supplied
+        // The id also includes a timestamp parameter to make snowbound clear its server side cache
         return ACM_FILE_PARAM + "=" + ((newDocumentId) ? newDocumentId.trim() : documentIdComponents[ACM_FILE_PARAM]) +
          "&" + ACM_TICKET_PARAM + "=" + documentIdComponents[ACM_TICKET_PARAM] +
-         "&" + ACM_USER_PARAM + "=" + documentIdComponents[ACM_USER_PARAM];
+         "&" + ACM_USER_PARAM + "=" + documentIdComponents[ACM_USER_PARAM] +
+         "&" + ACM_CACHE_REFRESH_PARAM + "=" + ((documentIdComponents[ACM_CACHE_REFRESH_PARAM]) ? documentIdComponents[ACM_CACHE_REFRESH_PARAM] : (new Date()).getTime());
     };
 
     myFlexSnap.arkCaseGetParentNodeArgs = function(urlString) {
