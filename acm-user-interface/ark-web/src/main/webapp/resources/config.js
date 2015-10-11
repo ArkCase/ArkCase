@@ -14,7 +14,6 @@ var ApplicationConfiguration = (function() {
         'ngAnimate',
         'ngFileUpload',
         'ui.router',
-        'ct.ui.router.extras.dsr',
         'ui.bootstrap',
         'pascalprecht.translate',
         'schemaForm',
