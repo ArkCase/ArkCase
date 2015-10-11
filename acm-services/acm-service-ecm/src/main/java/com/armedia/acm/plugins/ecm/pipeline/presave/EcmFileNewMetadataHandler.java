@@ -9,13 +9,18 @@ import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 /**
  * Created by joseph.mcgrady on 9/14/2015.
  */
-public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext> {
+public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext>
+{
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private EcmFileDao ecmFileDao;
@@ -27,13 +32,16 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
         log.debug("metadata pre save handler called");
 
         // Writes metadata for new document uploads into the database
-        if (!pipelineContext.getIsAppend()) {
-            if (entity == null) {
+        if (!pipelineContext.getIsAppend())
+        {
+            if (entity == null)
+            {
                 throw new PipelineProcessException("ecmFile is null");
             }
 
             Document cmisDocument = pipelineContext.getCmisDocument();
-            if (cmisDocument == null) {
+            if (cmisDocument == null)
+            {
                 throw new PipelineProcessException("cmisDocument is null");
             }
 
@@ -52,6 +60,22 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
             entity.setFolder(folder);
             entity.setContainer(pipelineContext.getContainer());
 
+            // set page count
+            if ("application/pdf".equals(entity.getFileMimeType()))
+            {
+                try
+                {
+                    PDDocument pdDocument = PDDocument.load(new ByteArrayInputStream(pipelineContext.getFileByteArray()));
+                    entity.setPageCount(pdDocument.getNumberOfPages());
+                } catch (IOException e)
+                {
+                    throw new PipelineProcessException(e);
+                }
+            } else
+            {
+                log.warn("Still don't know how to retrieve the page count for [{}] mime type");
+            }
+
             // Saves new file metadata into ArkCase database
             EcmFile saved = getEcmFileDao().save(entity);
             pipelineContext.setEcmFile(saved);
@@ -65,16 +89,23 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
         // rollback not needed, JPA will rollback the database changes.
     }
 
-    public EcmFileDao getEcmFileDao() {
+    public EcmFileDao getEcmFileDao()
+    {
         return ecmFileDao;
     }
-    public void setEcmFileDao(EcmFileDao ecmFileDao) {
+
+    public void setEcmFileDao(EcmFileDao ecmFileDao)
+    {
         this.ecmFileDao = ecmFileDao;
     }
-    public AcmFolderDao getFolderDao() {
+
+    public AcmFolderDao getFolderDao()
+    {
         return folderDao;
     }
-    public void setFolderDao(AcmFolderDao folderDao) {
+
+    public void setFolderDao(AcmFolderDao folderDao)
+    {
         this.folderDao = folderDao;
     }
 }
