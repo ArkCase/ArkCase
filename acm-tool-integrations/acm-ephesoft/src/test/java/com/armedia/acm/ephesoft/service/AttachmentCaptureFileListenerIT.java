@@ -3,6 +3,7 @@ package com.armedia.acm.ephesoft.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.files.capture.CaptureConstants;
 import com.armedia.acm.files.capture.ConvertedFileAddedEvent;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -58,6 +59,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
     @Autowired
     FileObject completedFolder;
 
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private EcmFileService ecmFileService;
 
     private FileObject mockFileObject;
@@ -67,7 +69,8 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
     {
         ecmFileService = createMock(EcmFileService.class);
         attachmentCaptureFileListener.setEcmFileService(ecmFileService);
-        attachmentCaptureFileListener.setAuditPropertyEntityAdapter(createMock(AuditPropertyEntityAdapter.class));
+        auditPropertyEntityAdapter = createMock(AuditPropertyEntityAdapter.class);
+        attachmentCaptureFileListener.setAuditPropertyEntityAdapter(auditPropertyEntityAdapter);
         mockFileObject = createMock(FileObject.class);
     }
 
@@ -102,9 +105,14 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
         ecmFile.setContainer(container);
         expect(ecmFileService.findById(22121l)).andReturn(ecmFile);
 
+
+
         Capture<Authentication> authenticationCapture = EasyMock.newCapture();
         Capture<AcmMultipartFile> multipartFileCapture = EasyMock.newCapture();
         expect(ecmFileService.upload(eq("file_name"), eq("pdf"), capture(multipartFileCapture), capture(authenticationCapture), eq("cmisFodlerId"), eq("COMPLAINT"), eq(321321l))).andReturn(new EcmFile());
+
+        auditPropertyEntityAdapter.setUserId(CaptureConstants.PROCESS_ATTACHMENTS_USER);
+        expectLastCall();
 
         replayAll();
 
@@ -151,6 +159,9 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
         Capture<AcmMultipartFile> multipartFileCapture = EasyMock.newCapture();
         expect(ecmFileService.upload(eq("file_name"), eq("pdf"), capture(multipartFileCapture), capture(authenticationCapture), eq("cmisFodlerId"), eq("COMPLAINT"), eq(321321l))).andReturn(new EcmFile());
 
+        auditPropertyEntityAdapter.setUserId(CaptureConstants.PROCESS_ATTACHMENTS_USER);
+        expectLastCall();
+
         replayAll();
 
         attachmentCaptureFileListener.onApplicationEvent(event);
@@ -196,6 +207,9 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
         Capture<AcmMultipartFile> multipartFileCapture = EasyMock.newCapture();
         expect(ecmFileService.upload(eq("file_name"), eq("pdf"), capture(multipartFileCapture), capture(authenticationCapture), eq("cmisFodlerId"), eq("COMPLAINT"), eq(321321l))).andReturn(new EcmFile());
 
+        auditPropertyEntityAdapter.setUserId(CaptureConstants.PROCESS_ATTACHMENTS_USER);
+        expectLastCall();
+
         replayAll();
 
         attachmentCaptureFileListener.onApplicationEvent(event);
@@ -239,6 +253,9 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
         Capture<AcmMultipartFile> multipartFileCapture = EasyMock.newCapture();
         expect(ecmFileService.upload(eq("file_name"), eq("pdf"), capture(multipartFileCapture), capture(authenticationCapture), eq("cmisFodlerId"), eq("CASE_FILE"), eq(12313l))).andReturn(new EcmFile());
 
+        auditPropertyEntityAdapter.setUserId(CaptureConstants.PROCESS_ATTACHMENTS_USER);
+        expectLastCall();
+
         replayAll();
 
         attachmentCaptureFileListener.onApplicationEvent(event);
@@ -279,6 +296,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
         container.setContainerObjectType("COMPLAINT");
         container.setContainerObjectId(321321l);
         ecmFile.setContainer(container);
+
         expect(ecmFileService.findById(22121l)).andReturn(null);
 
         replayAll();

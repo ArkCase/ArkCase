@@ -189,6 +189,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
     {
         try
         {
+            auditPropertyEntityAdapter.setUserId(CaptureConstants.PROCESS_ATTACHMENTS_USER);
             // This will help us to recognize content type
             MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
 
