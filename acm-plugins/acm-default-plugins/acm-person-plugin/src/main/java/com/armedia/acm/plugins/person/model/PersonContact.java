@@ -52,6 +52,15 @@ public class PersonContact implements Serializable, AcmEntity
     @Column(name = "cm_person_contact_name")
     private String personName;
 
+    @Column(name = "cm_person_contact_first_name")
+    private String firstName;
+
+    @Column(name = "cm_person_contact_middle_inits")
+    private String middleInitials;
+
+    @Column(name = "cm_person_contact_last_name")
+    private String lastName;
+
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(
@@ -212,5 +221,35 @@ public class PersonContact implements Serializable, AcmEntity
 
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    public String getFirstName()
+    {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName)
+    {
+        this.firstName = firstName;
+    }
+
+    public String getMiddleInitials()
+    {
+        return middleInitials;
+    }
+
+    public void setMiddleInitials(String middleInitials)
+    {
+        this.middleInitials = middleInitials;
+    }
+
+    public String getLastName()
+    {
+        return lastName;
+    }
+
+    public void setLastName(String lastName)
+    {
+        this.lastName = lastName;
     }
 }

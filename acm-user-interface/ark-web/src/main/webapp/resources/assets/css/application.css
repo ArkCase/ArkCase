@@ -1,4 +1,3 @@
-/* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
 /* Typography */
 
 h1 {
@@ -188,7 +187,6 @@ iframe {
 }
 .dashboard .panel-default .panel-body .ui-grid-canvas {
   max-height: 300px !important;
-  overflow: auto;
 }
 .dashboard .panel-default .panel-body .highcharts-container {
   margin-top: 20px;
@@ -234,8 +232,11 @@ iframe {
   margin-right: 5px;
 }
 /* User Profile */
-
-.content-body .well-sm .col-xs-6 .well {
+.content-body .well-sm-nopadding {
+  padding: 0px;
+  margin-top: 15px;
+}
+.content-body .well-sm-nopadding .col-xs-6 .well {
   background: white;
   border-radius: 0px;
   padding: 10px;
@@ -408,6 +409,7 @@ iframe {
   bottom: 5px;
   right: 2px;
 }
+
 .ui-grid-pager-panel {
   background-color: #efefef;
   position: relative;
@@ -459,4 +461,96 @@ thead {
   filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
   color: #686d71;
   font-size: 13px;
+}
+
+
+/* Modal Window Columns */
+
+.modal-search {
+  width: 100%;
+  height: 100%;
+}
+.modal-search .modal-search-header {
+  width: 100%;
+  background-color: #ecedec;
+  padding: 10px;
+}
+.modal-search .modal-columns{
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.modal-search .modal-columns .modal-left {
+  width: 200px;
+  height: 100%;
+  position: absolute;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0px 10px 0px 10px;
+}
+.modal-search .modal-columns .modal-right {
+  width: 100%;
+  height: 100%;
+  padding-left: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Inlined Editing */
+.form-inline {
+  position: absolute;
+  margin-top: 30px;
+  background-color: #ebeceb;
+  border: 1px solid #AAA;
+  border-radius: 5px;
+  padding: 7px;
+  width: auto;
+  display: inline-block;
+  margin-left: -140px;
+  z-index: 2000;
+}
+
+.form-inline:before{
+  content:"";
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #AAA;
+  position:absolute;
+  top:-10px;
+  left: 40%;
+}
+
+.form-inline:after{
+  content:"";
+  width:0;
+  height:0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-bottom: 9px solid #ebeceb;
+  position: absolute;
+  top:-9px;
+  margin-left: 1px;
+  left: 40%;
+}
+
+a.editable.editable-click.editable-hide {
+  display: inline-block !important;
+}
+
+
+
+
+/* To Be Removed */
+
+.content-body .well-sm .col-xs-6 .well {
+  background: white;
+  border-radius: 0px;
+  padding: 10px;
+  border: 1px solid #eaeef1;
+}
+
+.ui-grid-pinned-container .ui-grid-header-canvas {
+  height: 60px !important;
 }
