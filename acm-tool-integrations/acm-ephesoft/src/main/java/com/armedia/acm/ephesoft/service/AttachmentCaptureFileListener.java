@@ -140,9 +140,9 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
         if (fileName.contains("."))
             fileName = fileName.substring(0, fileName.lastIndexOf('.'));
 
-        //remove _DOC1 suffix
-        if (fileName.contains("_DOC1"))
-            fileName = fileName.replace("_DOC1", "");
+        //ephesoft processing always adds _DOC1 at the end, so we are removing just to extract the information about object and his parent.
+        if (fileName.endsWith("_DOC1"))
+            fileName = fileName.substring(0, fileName.lastIndexOf('_'));
 
         //matches files with name like 123123_case_file_123 OR 12313_123 or 123
         if (Pattern.matches(PARENT_ID_PARENT_TYPE_FILE_ID_PATTERN, fileName))
