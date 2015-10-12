@@ -74,7 +74,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
     @Test
     public void processValidComplaintAttachments() throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException
     {
-        final String fileName = "321321_complaint_22121.pdf";
+        final String fileName = "321321_complaint_22121_DOC1.pdf";
         Resource resource = new ClassPathResource("/data/" + fileName);
 
         if (completedFolder.getChild(fileName) != null && completedFolder.getChild(fileName).exists())
@@ -119,7 +119,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
     @Test
     public void processValidComplaintAttachmentsParentIdFileId() throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
     {
-        final String fileName = "321321_22121.pdf";
+        final String fileName = "321321_22121_DOC1.pdf";
         Resource resource = new ClassPathResource("/data/" + fileName);
 
         if (completedFolder.getChild(fileName) != null && completedFolder.getChild(fileName).exists())
@@ -164,7 +164,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
     @Test
     public void processValidComplaintAttachmentsFileId() throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
     {
-        final String fileName = "22121.pdf";
+        final String fileName = "22121_DOC1.pdf";
         Resource resource = new ClassPathResource("/data/" + fileName);
 
         if (completedFolder.getChild(fileName) != null && completedFolder.getChild(fileName).exists())
@@ -209,7 +209,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
     @Test
     public void processValidCaseFileAttachments() throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
     {
-        final String fileName = "12313_case_file_32131.pdf";
+        final String fileName = "12313_case_file_32131_DOC1.pdf";
         Resource resource = new ClassPathResource("/data/" + fileName);
 
         if (completedFolder.getChild(fileName) != null && completedFolder.getChild(fileName).exists())
@@ -252,7 +252,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
     @Test
     public void processNotValidComplaintAttachments() throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException
     {
-        final String fileName = "321321_complaint_22121.pdf";
+        final String fileName = "321321_complaint_22121_DOC1.pdf";
         if (errorFolder.getChild(fileName) != null && errorFolder.getChild(fileName).exists())
             errorFolder.getChild(fileName).delete();
 
