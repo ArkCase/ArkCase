@@ -128,6 +128,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
     {
         String fileName = event.getBaseFileName();
 
+
         //checks for null and empty string
         if (StringUtils.isEmpty(fileName))
             return null;
@@ -138,6 +139,10 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
         //remove extension in file name
         if (fileName.contains("."))
             fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+
+        //remove _DOC1 suffix
+        if (fileName.contains("_DOC1"))
+            fileName = fileName.replace("_DOC1", "");
 
         //matches files with name like 123123_case_file_123 OR 12313_123 or 123
         if (Pattern.matches(PARENT_ID_PARENT_TYPE_FILE_ID_PATTERN, fileName))
