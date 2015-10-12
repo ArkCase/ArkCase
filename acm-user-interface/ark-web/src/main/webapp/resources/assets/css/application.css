@@ -1,3 +1,4 @@
+/* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
 /* Typography */
 
 h1 {
@@ -77,6 +78,21 @@ iframe {
 }
 .editable.editable-click {
   color: #177bbb;
+}
+.cg-notify-close {
+  color: white;
+  opacity: .7;
+}
+.cg-notify-close:hover {
+  color: white;
+  opacity: 1;
+}
+.cg-notify-message.ng-scope.cg-notify-message-right {
+  background-color: #232a31;
+  color: white;
+  box-shadow: none;
+  border: none;
+  padding: 20px;
 }
 /* Buttons */
 
@@ -167,6 +183,16 @@ iframe {
 .dashboard .panel-heading a.ng-scope {
   color: white;
 }
+.dashboard .panel-default .panel-body {
+  padding: 0px;
+}
+.dashboard .panel-default .panel-body .ui-grid-canvas {
+  max-height: 300px !important;
+  overflow: auto;
+}
+.dashboard .panel-default .panel-body .highcharts-container {
+  margin-top: 20px;
+}
 /* Navigation List (Grouped)  */
 
 .list-group-item {
@@ -204,7 +230,7 @@ iframe {
   width: 100%;
   margin-right: 5px;
 }
-.left-sidebar ul.list-unstyled li ul.list-unstyled li label input{
+.left-sidebar ul.list-unstyled li ul.list-unstyled li label input {
   margin-right: 5px;
 }
 /* User Profile */
@@ -224,17 +250,24 @@ iframe {
   padding-top: 20px;
   min-height: 71px;
   border-bottom: 1px solid #e1e6ef;
+  border-left: 0px;
+  border-right: 0px;
   width: 100%;
   z-index: 1000;
   position: relative;
 }
-.module-header div.well-sm .col-sm-8 .col-sm-2, .module-header div.well-sm .col-sm-8 .col-sm-3, .module-header div.well-sm .col-sm-8 .col-sm-4 {
+.module-header .btn-group {
+  margin-right: 15px;
+}
+
+.module-header div.well-sm .col-sm-8 .col-sm-2,
+.module-header div.well-sm .col-sm-8 .col-sm-3,
+.module-header div.well-sm .col-sm-8 .col-sm-4 {
   padding-right: 0px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .module-header div.well-sm .col-sm-8 label {
   font-size: 12px;
   color: #2d353e;
@@ -334,13 +367,17 @@ iframe {
   padding: 0px 10px 0 10px;
   margin: 0px;
 }
-.module-content .right-sidebar .tab-pane .panel-body.in .radio{
+.module-content .right-sidebar .tab-pane .panel-body.in .radio {
   margin: 5px 0px 5px 0px;
 }
 .module-content .right-sidebar .tab-pane .ui-grid {
-  width: 457px !important;
+  width: 456px !important;
   border-left: none;
   border-right: none;
+}
+.module-content .right-sidebar .tab-pane label {
+  width: 100%;
+  margin: 0px;
 }
 .module-content .right-sidebar .tab-pane .ui-grid-header-cell-row {
   border: none;
@@ -353,7 +390,6 @@ iframe {
 .ui-grid {
   height: auto !important;
 }
-
 .ui-grid-header-cell-row .ui-grid-cell-contents {
   color: #686d71;
   font-size: 13px;
@@ -378,7 +414,6 @@ iframe {
   padding-top: 6px;
   height: 40px;
 }
-
 .ui-grid-pager-panel button {
   background-color: transparent !important;
   border: 0px;
@@ -424,21 +459,4 @@ thead {
   filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
   color: #686d71;
   font-size: 13px;
-}
-
-/* To Be Removed*/
-
-.module-content .col-xs-9 {
-  padding-top: 32px;
-}
-.table-row {
-  vertical-align: top;
-  border-spacing: 0;
-  display: table;
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  padding-top: 60px;
-  padding-right: 200px;
 }
