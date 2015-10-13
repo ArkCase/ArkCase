@@ -11,8 +11,9 @@ angular.module('dashboard.my-cases', ['adf.provider'])
                 templateUrl: 'modules/dashboard/views/components/my-cases.client.view.html'
             });
     })
-    .controller('Dashboard.MyCasesController', ['$scope', 'Authentication', 'Dashboard.DashboardService',
-        function ($scope, Authentication, DashboardService) {
+    .controller('Dashboard.MyCasesController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
+        function ($scope, $translate, Authentication, DashboardService) {
+
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'myCases');
             $scope.config = null;

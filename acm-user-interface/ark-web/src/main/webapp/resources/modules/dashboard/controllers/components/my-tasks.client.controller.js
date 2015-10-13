@@ -15,8 +15,9 @@ angular.module('dashboard.my-tasks', ['adf.provider'])
             }
         );
     })
-    .controller('Dashboard.MyTasksController', ['$scope', 'Authentication', 'Dashboard.DashboardService',
-        function ($scope, Authentication, DashboardService) {
+    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
+        function ($scope, $translate, Authentication, DashboardService) {
+
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'myTasks');
             $scope.config = null;

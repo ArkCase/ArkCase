@@ -1,9 +1,15 @@
 'use strict';
 
-angular.module('dashboard').controller('DashboardController', ['$scope', 'ConfigService', 'Dashboard.DashboardService',
-    function ($scope, ConfigService, DashboardService) {
+angular.module('dashboard').controller('DashboardController', ['$scope', '$translate', 'dashboard', 'ConfigService', 'Dashboard.DashboardService',
+    function ($scope, $translate, dashboard, ConfigService, DashboardService) {
         $scope.config = ConfigService.getModule({moduleId: 'dashboard'});
         $scope.$on('req-component-config', onConfigRequest);
+
+        // Update all dashboard widget titles and descriptions
+        _.forEach(dashboard.widgets, function(widget, widgetId){
+            widget.title = $translate.instant('dashboard.widgets.' + widgetId + '.title');
+            widget.description = $translate.instant('dashboard.widgets.' + widgetId + '.description');
+        });
 
         $scope.dashboard = {
             structure: '6-6',
