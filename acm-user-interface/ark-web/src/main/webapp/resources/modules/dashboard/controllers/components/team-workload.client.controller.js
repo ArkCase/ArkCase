@@ -3,7 +3,7 @@
 angular.module('dashboard.team-workload', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('teamTaskWorkload', {
+            .widget('teamWorkload', {
                 title: 'Team Tasks Workload',
                 description: 'Displays team tasks workload',
                 controller: 'Dashboard.TeamWorkloadController',
@@ -16,6 +16,7 @@ angular.module('dashboard.team-workload', ['adf.provider'])
     })
     .controller('Dashboard.TeamWorkloadController', ['$scope', 'config', '$translate', 'Dashboard.DashboardService',
         function ($scope, config, $translate, DashboardService) {
+
             $scope.chartConfig = null;
             if (!config.due) {
                 config.due = 'all';
