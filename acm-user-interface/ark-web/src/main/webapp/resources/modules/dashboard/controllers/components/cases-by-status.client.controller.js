@@ -3,7 +3,7 @@
 angular.module('dashboard.cases-by-status', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('casesByStatusSummary', {
+            .widget('casesByStatus', {
                 title: 'Cases by Status',
                 description: 'Displays cases by status',
                 controller: 'Dashboard.CasesByStatusController',
@@ -16,6 +16,7 @@ angular.module('dashboard.cases-by-status', ['adf.provider'])
     })
     .controller('Dashboard.CasesByStatusController', ['$scope', 'config', '$translate', 'Dashboard.DashboardService',
         function ($scope, config, $translate, DashboardService) {
+
             $scope.chartConfig = null;
             if (!config.period) {
                 config.period = 'all';
