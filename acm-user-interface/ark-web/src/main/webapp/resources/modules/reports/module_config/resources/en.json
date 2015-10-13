@@ -19,7 +19,8 @@
         "pending": "Pending Orders Report",
         "associate": "Associate Productivity Report",
         "origination": "Origination Count",
-        "transfers": "Transfers Report"
+        "transfers": "Transfers Report",
+        "exceptions": "Exceptions Report"
       },
       "button": {
         "generate-report": "Generate report"
