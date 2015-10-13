@@ -205,7 +205,7 @@ body {
 
 .module-content .left-sidebar,
 .module-content .left-sidebar-sm {
-  display: table-cell;
+  float: left;
   vertical-align: top;
   padding-left: 0px;
   padding-right: 0px;
@@ -214,6 +214,7 @@ body {
   -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
   overflow-y: auto;
+  position: relative;
   height: 100%;
 }
 .module-content .left-sidebar {
@@ -221,12 +222,15 @@ body {
 }
 .module-content .left-sidebar .header,
 .module-content .left-sidebar-sm .header {
-  padding-left: 15px;
-  padding-right: 15px;
+  background-color: #ecedec;
+  padding-left: 20px;
+  padding-bottom: 13px;
   padding-top: 20px;
-  height: 71px;
-  background-color: #edeeed;
+  min-height: 71px;
   border-bottom: 1px solid #e1e6ef;
+  width: 100%;
+  z-index: 1000;
+  position: relative;
 }
 .module-content .left-sidebar .header h3,
 .module-content .left-sidebar-sm .header h3 {
@@ -249,6 +253,9 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   height: 100%;
+}
+.module-content .content-body iframe {
+  height: 600px !important;
 }
 /* Right Sidebar (Right Column) */
 
@@ -274,7 +281,7 @@ body {
   position: fixed;
   bottom: 0;
   right: 0;
-  padding:0px;
+  padding: 0px;
   margin: 0px;
   width: 480px;
   height: 60px;
@@ -379,7 +386,6 @@ body {
     z-index: 0;
     padding: 0px;
   }
-
 }
 /* Responsive - Extra Small Devices, Phones */
 

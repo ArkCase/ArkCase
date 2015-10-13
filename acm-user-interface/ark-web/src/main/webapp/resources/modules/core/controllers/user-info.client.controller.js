@@ -7,6 +7,7 @@ angular.module('core').controller('UserInfoController', ['$scope','Profile.UserI
 
         UserInfoService.getUserInfo().then(function (data) {
             $scope.profileEcmFileID = data.ecmFileId;
+            $scope.fullName = data.fullName;
             if ($scope.profileEcmFileID !== null) {
                 $scope.profilePicDefault = false;
             }
