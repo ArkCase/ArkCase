@@ -14,6 +14,8 @@ angular.module('dashboard.new-complaints', ['adf.provider'])
                 }
             });
     })
-    .controller('Dashboard.NewComplaintsController', function ($scope) {
+    .controller('Dashboard.NewComplaintsController', ['$scope',
+        function ($scope) {
 
-    });
+        }
+    ]);
