@@ -51,6 +51,9 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
             solrDoc.setName(personContact.getPersonName());
         }
 
+        solrDoc.setFirst_name_lcs(personContact.getFirstName());
+        solrDoc.setLast_name_lcs(personContact.getLastName());
+
         addContactMethods(personContact, solrDoc);
 
         addAddresses(personContact, solrDoc);
@@ -107,6 +110,11 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
         {
             solrDoc.setName(in.getPersonName());
         }
+
+        solrDoc.setName((in.getFirstName() + " " + in.getLastName()).trim());
+
+
+
 
         solrDoc.setObject_id_s(in.getId() + "");
 
