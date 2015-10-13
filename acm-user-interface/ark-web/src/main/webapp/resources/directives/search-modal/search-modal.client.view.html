@@ -1,0 +1,55 @@
+<div>
+    <div class="modal-header">
+        {{header}}
+    </div>
+
+    <div class="modal-grid">
+        <div class="modal-search">
+            <div class="modal-search-header">
+                <div class="input-group">
+                    <input class="form-control input-md" ng-model="searchQuery" placeholder="{{searchPlaceholder}}">
+                <span class="input-group-btn">
+                    <button class="btn btn-sm btn-primary" type="button" ng-click="queryExistingItems()">{{search}}</button>
+                </span>
+                </div>
+            </div>
+
+            <div class="modal-columns">
+                <div class="modal-left">
+                    <ul class="list-unstyled">
+                        <li ng-repeat="facet in facets" ng-if="facet.fields.length && facet.name !='Object Sub Type'"><strong>{{facet.name}}</strong>
+                            <ul class="list-unstyled">
+                                <li ng-repeat="field in facet.fields">
+                                    <div class="checkbox" ng-if="field.count > 0">
+                                        <label><input type="checkbox" ng-model="currentFacetSelection[field.name]" ng-click="selectFacet($event.target.checked,facet.name,field.name)"/>{{field.name}}<span class="pull-right label label-info">{{field.count}}</span></label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="modal-right">
+                    <div ui-grid="gridOptions"
+                         ui-grid-resize-columns
+                         ui-grid-pagination
+                         ui-grid-selection
+                         adjust-table-height="gridOptions.data.length"
+                         ui-grid-auto-resize
+                         class="grid">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-sm btn-default pull-left" ng-click="close()">
+            {{cancel}}
+        </button>
+        <button class="btn btn-sm btn-default pull-right" ng-click="addExistingItem()" ng-disabled="!selectedItem">
+            {{ok}}
+        </button>
+    </div>
+</div>
