@@ -12,7 +12,7 @@
       },
 
       "casesByStatus": {
-        "title": "Cases By Stats",
+        "title": "Cases By Status",
         "description": "Displays cases by status",
         "timePeriod": {
           "label": "Select Time Period",
