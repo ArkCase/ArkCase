@@ -5,7 +5,18 @@ angular.module('directives').directive('searchModal', ['SearchService',
         return {
             restrict: 'E',              //match only element name
             scope: {
-                //supplied by the caller
+                /**
+                 * directive parameters supplied by the parent scope
+                 * @param header - label for the header of the modal box
+                 * @param search - label for the search button
+                 * @param cancel - label for the cancel button
+                 * @param ok - label for the add button
+                 * @param searchPlaceholder - label for the input placeholder
+                 * @param filter - filter required to send to the faceted search by default (e.g. for client : "\"Object Sub Type\":CLIENT")
+                 * @param config - config of the parent scope used mostly for the UI-grid and to retrieve other params
+                 * @param modalInstance - current modalInstance in the parentScope, required to pass data when modal closes with "Add"
+                 **/
+
                 header: '@',            //@ : text binding (read-only and only strings)
                 search: '@',
                 cancel: '@',
