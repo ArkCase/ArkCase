@@ -209,7 +209,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
 
             // Create multipart file object - used "upload" service require it and using this service method is the best
             // way to upload file for given object - it creates AcmContainer object that we need for uploading
-            String fileName = FilenameUtils.removeExtension(toBeUploaded.getName())+".pdf";
+            String fileName = FilenameUtils.removeExtension(toBeUploaded.getName()) + ".pdf";
 
             AcmMultipartFile file = new AcmMultipartFile(
                     fileName,
