@@ -7,6 +7,7 @@ import com.armedia.acm.files.capture.CaptureConstants;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import liquibase.util.file.FilenameUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -208,7 +209,8 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
 
             // Create multipart file object - used "upload" service require it and using this service method is the best
             // way to upload file for given object - it creates AcmContainer object that we need for uploading
-            String fileName = changeExtensionToPdf(toBeUploaded.getName());
+            String fileName = FilenameUtils.removeExtension(toBeUploaded.getName())+".pdf";
+
             AcmMultipartFile file = new AcmMultipartFile(
                     fileName,
                     fileName,
@@ -231,13 +233,6 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
         {
             throw new Exception("Cannot save attachment: " + e.getMessage(), e);
         }
-    }
-
-    private String changeExtensionToPdf(String name)
-    {
-        int indexOf = name.lastIndexOf(".");
-
-        return name.substring(0, indexOf) + ".pdf";
     }
 
     public EcmFileService getEcmFileService()
