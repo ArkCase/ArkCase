@@ -8,7 +8,6 @@
     "unsubscribeSelect":"Unsubscribe Selcted",
     "table.columns": {
       "title": "Title",
-      "type": "Type",
       "created":"Created",
       "parentId":"Parent ID",
       "userId":"User ID"
