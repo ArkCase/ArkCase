@@ -96,6 +96,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
 
         EcmFile ecmFile = new EcmFile();
         ecmFile.setFileName("file_name");
+        ecmFile.setFileType("pdf");
         AcmContainer container = new AcmContainer();
         AcmFolder folder = new AcmFolder();
         folder.setCmisFolderId("cmisFodlerId");
@@ -146,6 +147,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
 
         EcmFile ecmFile = new EcmFile();
         ecmFile.setFileName("file_name");
+        ecmFile.setFileType("pdf");
         AcmContainer container = new AcmContainer();
         AcmFolder folder = new AcmFolder();
         folder.setCmisFolderId("cmisFodlerId");
@@ -194,6 +196,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
 
         EcmFile ecmFile = new EcmFile();
         ecmFile.setFileName("file_name");
+        ecmFile.setFileType("pdf");
         AcmContainer container = new AcmContainer();
         AcmFolder folder = new AcmFolder();
         folder.setCmisFolderId("cmisFodlerId");
@@ -240,6 +243,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
 
         EcmFile ecmFile = new EcmFile();
         ecmFile.setFileName("file_name");
+        ecmFile.setFileType("pdf");
         AcmContainer container = new AcmContainer();
         AcmFolder folder = new AcmFolder();
         folder.setCmisFolderId("cmisFodlerId");
@@ -289,6 +293,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
 
         EcmFile ecmFile = new EcmFile();
         ecmFile.setFileName("file_name");
+        ecmFile.setFileType("pdf");
         AcmContainer container = new AcmContainer();
         AcmFolder folder = new AcmFolder();
         folder.setCmisFolderId("cmisFodlerId");
