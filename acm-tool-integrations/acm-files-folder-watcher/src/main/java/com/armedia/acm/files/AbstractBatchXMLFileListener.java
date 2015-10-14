@@ -234,7 +234,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
                 File workingAttachment = moveFileToFolder(element.getDocument(), folder);
                 if (workingAttachment == null)
                 {
-                    // The file can be moved by other object. Give ability to be found there
+                    // The file might be already moved by other object. Give ability to be found there
                     workingAttachment = getFileForMoving(element.getDocument(), folder);
                 }
                 workingAttachments.add(new DocumentObject(element.getId(), workingAttachment, null, element.getEntity()));
