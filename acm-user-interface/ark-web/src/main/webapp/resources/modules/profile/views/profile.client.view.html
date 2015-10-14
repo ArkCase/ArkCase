@@ -1,13 +1,14 @@
 <section ng-controller="ProfileController">
-    <div class="module-header">
-        <div class="pull-right">
-            <div class="btn-group">
-                <button class="btn btn-default btn-sm" ng-click="openPasswordDialog()"><i class="fa fa-key"></i> {{'profile.buttons.password' | translate}}</button>
-            </div>
-        </div>
-        <h3> {{'profile.title' | translate}}</h3>
-    </div>
+    <div class="module-content">
     <div class="content-body">
+        <div class="module-header">
+            <div class="pull-right">
+                <div class="btn-group">
+                    <button class="btn btn-default btn-sm" ng-click="openPasswordDialog()"><i class="fa fa-key"></i> {{'profile.buttons.password' | translate}}</button>
+                </div>
+            </div>
+            <h3> {{'profile.title' | translate}}</h3>
+        </div>
         <div class="well-sm">
         <div class="col-xs-6" >
             <div class="scroll-body" slimscroll="{height: '800px'}" ng-include="'modules/profile/views/components/profile-pic.client.view.html'">
@@ -25,6 +26,7 @@
             </div>
         </div>
         </div>
+    </div>
     </div>
 </section>
 
