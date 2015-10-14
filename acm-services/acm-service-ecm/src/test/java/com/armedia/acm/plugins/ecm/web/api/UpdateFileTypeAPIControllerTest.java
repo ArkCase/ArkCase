@@ -4,8 +4,10 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +24,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
@@ -129,5 +135,53 @@ public class UpdateFileTypeAPIControllerTest  extends EasyMockSupport
 
         assertNotNull(exception);
         assertTrue("", exception.getCause() instanceof AcmObjectNotFoundException);
+    }
+
+    @Test
+    public void bulkUpdateFileType() throws Exception
+    {
+        EcmFile file1 = new EcmFile();
+        file1.setFileId(100L);
+        file1.setFileType("file_type");
+
+        EcmFile file2 = new EcmFile();
+        file2.setFileId(101L);
+        file2.setFileType("file_type");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String content = objectMapper.writeValueAsString(Arrays.asList(100, 101));
+
+        String newFileType = "new_file_type";
+
+        Capture<EcmFile> saved1 = EasyMock.newCapture();
+        Capture<EcmFile> saved2 = EasyMock.newCapture();
+        expect(mockAuthentication.getName()).andReturn("user");
+        expect(mockEcmFileDao.find(file1.getId())).andReturn(file1);
+        expect(mockEcmFileDao.find(file2.getId())).andReturn(file2);
+        expect(mockEcmFileDao.save(capture(saved1))).andReturn(file1);
+        expect(mockEcmFileDao.save(capture(saved2))).andReturn(file2);
+
+        replayAll();
+
+        MvcResult result = mockMvc.perform(
+                post("/api/latest/service/ecm/file/bulk/type/{fileType}", newFileType)
+                        .principal(mockAuthentication)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
+                .andReturn();
+
+        verifyAll();
+
+        LOG.info("Results: {}", result.getResponse().getContentAsString());
+
+        List<EcmFile> resultList = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<ArrayList<EcmFile>>(){});
+
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertNotNull(resultList);
+        assertTrue(resultList.size() == 2);
+        assertEquals(newFileType, saved1.getValue().getFileType());
+        assertEquals(newFileType, saved2.getValue().getFileType());
+        assertEquals(newFileType, resultList.get(0).getFileType());
+        assertEquals(newFileType, resultList.get(1).getFileType());
     }
 }

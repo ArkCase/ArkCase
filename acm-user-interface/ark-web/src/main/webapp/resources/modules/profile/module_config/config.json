@@ -27,12 +27,6 @@
                     "width": "40%"
                 },
                 {
-                    "name": "type",
-                    "displayName": "profile.subscriptions.table.columns.type",
-                    "headerCellFilter": "translate",
-                    "width": "20%"
-                },
-                {
                     "name": "created",
                     "displayName": "profile.subscriptions.table.columns.created",
                     "headerCellFilter": "translate",
