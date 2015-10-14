@@ -7,6 +7,7 @@ import com.armedia.acm.files.capture.CaptureConstants;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import liquibase.util.file.FilenameUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -61,6 +62,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
 
     private void processAttachment(AbstractConvertFileEvent event, FileInfo fileInfo)
     {
+        auditPropertyEntityAdapter.setUserId(CaptureConstants.PROCESS_ATTACHMENTS_USER);
         EcmFile file = ecmFileService.findById(fileInfo.getFileId());
 
         if (file != null)
@@ -188,7 +190,6 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
     {
         try
         {
-            auditPropertyEntityAdapter.setUserId(CaptureConstants.PROCESS_ATTACHMENTS_USER);
             // This will help us to recognize content type
             MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
 
@@ -208,9 +209,11 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
 
             // Create multipart file object - used "upload" service require it and using this service method is the best
             // way to upload file for given object - it creates AcmContainer object that we need for uploading
+            String fileName = FilenameUtils.removeExtension(toBeUploaded.getName()) + ".pdf";
+
             AcmMultipartFile file = new AcmMultipartFile(
-                    toBeUploaded.getName(),
-                    originalFile.getFileName(),
+                    fileName,
+                    fileName,
                     contentType,
                     false,
                     toBeUploaded.length(),
@@ -219,7 +222,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
                     true);
 
             // Upload file
-            getEcmFileService().upload(originalFile.getFileName(),
+            getEcmFileService().upload(fileName,
                     originalFile.getFileType(),
                     file,
                     auth,
