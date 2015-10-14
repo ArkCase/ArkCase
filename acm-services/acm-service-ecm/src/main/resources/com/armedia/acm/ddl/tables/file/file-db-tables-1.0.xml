@@ -336,5 +336,11 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="46-acm_file-add-file_source" author="riste.tutureski">
+        <addColumn tableName="acm_file">
+            <column name="cm_file_source" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 

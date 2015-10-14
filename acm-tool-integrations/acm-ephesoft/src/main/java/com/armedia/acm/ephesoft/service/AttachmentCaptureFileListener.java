@@ -4,7 +4,6 @@ import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.capture.AbstractConvertFileEvent;
 import com.armedia.acm.files.capture.CaptureConstants;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -89,7 +88,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
             //everything is fine just upload the document
             try
             {
-                saveAttachment(file.getContainer(), event.getConvertedFile(), file.getFileName());
+                saveAttachment(file, event.getConvertedFile());
                 log.debug("successfully processed File {}, ready for deletion.", event.getBaseFileName());
                 event.getConvertedFile().delete();
                 log.info("successfully deleted File {} after uploading.", event.getBaseFileName());
@@ -185,7 +184,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
         return fInfo;
     }
 
-    private void saveAttachment(AcmContainer container, File toBeUploaded, String originalFileName) throws Exception
+    private void saveAttachment(EcmFile originalFile, File toBeUploaded) throws Exception
     {
         try
         {
@@ -211,7 +210,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
             // way to upload file for given object - it creates AcmContainer object that we need for uploading
             AcmMultipartFile file = new AcmMultipartFile(
                     toBeUploaded.getName(),
-                    originalFileName,
+                    originalFile.getFileName(),
                     contentType,
                     false,
                     toBeUploaded.length(),
@@ -220,13 +219,13 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
                     true);
 
             // Upload file
-            getEcmFileService().upload(originalFileName,
-                    "pdf",
+            getEcmFileService().upload(originalFile.getFileName(),
+                    originalFile.getFileType(),
                     file,
                     auth,
-                    container.getFolder().getCmisFolderId(),
-                    container.getContainerObjectType(),
-                    container.getContainerObjectId());
+                    originalFile.getContainer().getFolder().getCmisFolderId(),
+                    originalFile.getContainer().getContainerObjectType(),
+                    originalFile.getContainer().getContainerObjectId());
         } catch (Throwable e)
         {
             throw new Exception("Cannot save attachment: " + e.getMessage(), e);
