@@ -20,7 +20,7 @@
         "associate": "Associate Productivity Report",
         "origination": "Origination Count",
         "transfers": "Transfers Report",
-        "exceptions": "Exceptions Report(Non-Compliance)"
+        "exceptions": "Exceptions Report (Non-Compliance)"
       },
       "button": {
         "generate-report": "Generate report"
