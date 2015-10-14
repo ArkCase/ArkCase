@@ -30,6 +30,7 @@ angular.module('profile').controller('Profile.SubscriptionController', ['$scope'
             if (componentId == 'subscription') {
                 $scope.config = config;
                 $scope.subscribptionGridOptions = {
+                    data : [],
                     columnDefs: config.columnDefs,
                     paginationPageSizes: config.paginationPageSizes,
                     paginationPageSize: config.paginationPageSize,
