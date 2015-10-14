@@ -61,6 +61,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
 
     private void processAttachment(AbstractConvertFileEvent event, FileInfo fileInfo)
     {
+        auditPropertyEntityAdapter.setUserId(CaptureConstants.PROCESS_ATTACHMENTS_USER);
         EcmFile file = ecmFileService.findById(fileInfo.getFileId());
 
         if (file != null)
@@ -188,7 +189,6 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
     {
         try
         {
-            auditPropertyEntityAdapter.setUserId(CaptureConstants.PROCESS_ATTACHMENTS_USER);
             // This will help us to recognize content type
             MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
 
@@ -208,9 +208,10 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
 
             // Create multipart file object - used "upload" service require it and using this service method is the best
             // way to upload file for given object - it creates AcmContainer object that we need for uploading
+            String fileName = changeExtensionToPdf(toBeUploaded.getName());
             AcmMultipartFile file = new AcmMultipartFile(
-                    toBeUploaded.getName(),
-                    originalFile.getFileName(),
+                    fileName,
+                    fileName,
                     contentType,
                     false,
                     toBeUploaded.length(),
@@ -219,7 +220,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
                     true);
 
             // Upload file
-            getEcmFileService().upload(originalFile.getFileName(),
+            getEcmFileService().upload(fileName,
                     originalFile.getFileType(),
                     file,
                     auth,
@@ -230,6 +231,13 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
         {
             throw new Exception("Cannot save attachment: " + e.getMessage(), e);
         }
+    }
+
+    private String changeExtensionToPdf(String name)
+    {
+        int indexOf = name.lastIndexOf(".");
+
+        return name.substring(0, indexOf) + ".pdf";
     }
 
     public EcmFileService getEcmFileService()
