@@ -4,6 +4,7 @@ import com.armedia.acm.files.capture.CaptureConstants;
 import com.armedia.acm.files.capture.DocumentObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.persistence.dynamic.DynamicEntity;
 import org.eclipse.persistence.jaxb.JAXBContextProperties;
 import org.eclipse.persistence.jaxb.dynamic.DynamicJAXBContext;
@@ -15,6 +16,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -143,9 +145,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
     {
         try
         {
-            File parentFolder = new File(folder.getURL().toURI());
-            File movedFile = new File(parentFolder, file.getName());
-
+            File movedFile = getFileForMoving(file, folder);
             FileUtils.moveFile(file, movedFile);
 
             return movedFile;
@@ -157,6 +157,32 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
         }
 
         return null;
+    }
+
+    /**
+     * This method should return File object that is prepared for moving.
+     * In some implementations that we have now, the file can be already moved by other object so, we should
+     * try to give him ability to find already moved file.
+     *
+     * @param file
+     * @param folder
+     * @return
+     */
+    private File getFileForMoving(File file, FileObject folder)
+    {
+        File movingFile = null;
+
+        try
+        {
+            File parentFolder = new File(folder.getURL().toURI());
+            movingFile = new File(parentFolder, file.getName());
+        }
+        catch (URISyntaxException | FileSystemException e)
+        {
+            LOG.warn("Cannot prepare the file for moving. Reason: {}", e.getMessage());
+        }
+
+        return movingFile;
     }
 
     /**
@@ -206,10 +232,12 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
             List<DocumentObject> workingAttachments = new ArrayList<DocumentObject>();
             docObject.getAttachments().stream().forEach(element -> {
                 File workingAttachment = moveFileToFolder(element.getDocument(), folder);
-                if (workingAttachment != null)
+                if (workingAttachment == null)
                 {
-                    workingAttachments.add(new DocumentObject(element.getId(), workingAttachment, null, element.getEntity()));
+                    // The file might be already moved by other object. Give ability to be found there
+                    workingAttachment = getFileForMoving(element.getDocument(), folder);
                 }
+                workingAttachments.add(new DocumentObject(element.getId(), workingAttachment, null, element.getEntity()));
             });
 
             docObject.setAttachments(workingAttachments);
