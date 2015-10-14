@@ -94,6 +94,9 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Column(name = "cm_page_count")
     private Integer pageCount = 0;
 
+    @Column(name = "cm_file_source")
+    private String fileSource;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "file")
     @OrderBy("created ASC")
     private List<EcmFileVersion> versions = new ArrayList<>();
@@ -306,6 +309,16 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public void setPageCount(Integer pageCount)
     {
         this.pageCount = pageCount;
+    }
+
+    public String getFileSource()
+    {
+        return fileSource;
+    }
+
+    public void setFileSource(String fileSource)
+    {
+        this.fileSource = fileSource;
     }
 
     @JsonIgnore
