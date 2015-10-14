@@ -1,0 +1,6 @@
+<div ng-controller="Search.InputController" class="input-group">
+    <input type="text" class="input-md form-control" ng-keydown="keyDown($event)" ng-model="searchQuery" placeholder="Search Subscriptions">
+    <span class="input-group-btn">
+        <button class="btn btn-md btn-default" id="subscriptionsSearch" type="button" ng-click="search()">Go!</button>
+    </span> 
+</div>
