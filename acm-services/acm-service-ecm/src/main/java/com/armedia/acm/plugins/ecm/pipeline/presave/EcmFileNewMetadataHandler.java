@@ -63,13 +63,26 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
             // set page count
             if ("application/pdf".equals(entity.getFileMimeType()))
             {
+                PDDocument pdDocument = null;
                 try
                 {
-                    PDDocument pdDocument = PDDocument.load(new ByteArrayInputStream(pipelineContext.getFileByteArray()));
+                    pdDocument = PDDocument.load(new ByteArrayInputStream(pipelineContext.getFileByteArray()));
                     entity.setPageCount(pdDocument.getNumberOfPages());
                 } catch (IOException e)
                 {
                     throw new PipelineProcessException(e);
+                } finally
+                {
+                    if (pdDocument != null)
+                    {
+                        try
+                        {
+                            pdDocument.close();
+                        } catch (Exception ex)
+                        {
+                            log.error("cannot close PDF: {}", ex.getMessage(), ex);
+                        }
+                    }
                 }
             } else
             {
