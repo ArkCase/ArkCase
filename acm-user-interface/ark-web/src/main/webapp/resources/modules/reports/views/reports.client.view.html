@@ -1,7 +1,7 @@
 <div ng-controller="ReportsController">
 
     <div class="module-content">
-        <div class="col-xs-3 left-sidebar">
+        <div class="left-sidebar">
             <div class="module-header">
                 <h3>{{'reports.title' | translate}}</h3>
             </div>
@@ -11,7 +11,7 @@
         </div>
 
 
-        <section class="col-xs-9">
+        <section class="content-body">
 
             <div>
                 <div class="col-xs-4">
@@ -24,7 +24,7 @@
                 <div class="scroll-body" slimscroll="{height: '800px'}" data-ui-view></div>
             </div>
         </section>
-        <div class="well col-xs-3">
+        <div class="well-sm">
             {{'reports.message' | translate}}
         </div>
     </div>

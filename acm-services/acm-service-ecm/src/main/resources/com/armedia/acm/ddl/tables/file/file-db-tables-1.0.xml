@@ -84,11 +84,11 @@
         <addUniqueConstraint tableName="acm_container_folder" columnNames="cm_object_id, cm_object_type"/>
         <addUniqueConstraint tableName="acm_container_folder" columnNames="cm_cmis_folder_id"/>
     </changeSet>
-    
+
     <changeSet id="files-09-rename-acm-container-folder" author="dmiller">
         <renameTable oldTableName="acm_container_folder" newTableName="acm_container"/>
     </changeSet>
-    
+
     <changeSet id="files-10-add-acm-folder-table" author="dmiller">
         <createTable tableName="acm_folder">
             <column name="cm_folder_id" type="${idType}">
@@ -127,18 +127,23 @@
         <addColumn tableName="acm_container">
             <column name="cm_folder_id" type="${fkIdType}">
                 <constraints
-                    foreignKeyName="fk_container_folder_id"
-                    referencedTableName="acm_folder"
-                    referencedColumnNames="cm_folder_id"
-                    deferrable="${deferrable}"
-                    initiallyDeferred="${initially.deferred}"/>
+                        foreignKeyName="fk_container_folder_id"
+                        referencedTableName="acm_folder"
+                        referencedColumnNames="cm_folder_id"
+                        deferrable="${deferrable}"
+                        initiallyDeferred="${initially.deferred}"/>
             </column>
         </addColumn>
-        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id" columnDataType="${fkIdType}"/>
-        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_created" newColumnName="cm_container_created" columnDataType="${timestampType}"/>
-        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_creator" newColumnName="cm_container_creator" columnDataType="VARCHAR(1024)"/>
-        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_modified" newColumnName="cm_container_modified" columnDataType="${timestampType}"/>
-        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_modifier" newColumnName="cm_container_modifier" columnDataType="VARCHAR(1024)"/>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"
+                      columnDataType="${fkIdType}"/>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_created"
+                      newColumnName="cm_container_created" columnDataType="${timestampType}"/>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_creator"
+                      newColumnName="cm_container_creator" columnDataType="VARCHAR(1024)"/>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_modified"
+                      newColumnName="cm_container_modified" columnDataType="${timestampType}"/>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_modifier"
+                      newColumnName="cm_container_modifier" columnDataType="VARCHAR(1024)"/>
         <dropPrimaryKey tableName="acm_container" constraintName="pk_container_folder"/>
         <addPrimaryKey tableName="acm_container" columnNames="cm_container_id" constraintName="pk_container"/>
     </changeSet>
@@ -182,7 +187,8 @@
     </changeSet>
 
     <changeSet id="files-17-update-acm-file-structure" author="dmiller">
-        <renameColumn tableName="acm_file" oldColumnName="cm_file_ecm_id" newColumnName="cm_version_series_id" columnDataType="VARCHAR(${cmVersionSeriesIdLength})"/>
+        <renameColumn tableName="acm_file" oldColumnName="cm_file_ecm_id" newColumnName="cm_version_series_id"
+                      columnDataType="VARCHAR(${cmVersionSeriesIdLength})"/>
         <addColumn tableName="acm_file">
             <column name="cm_folder_id" type="${fkIdType}">
                 <constraints foreignKeyName="fk_file_folder_id"
@@ -197,7 +203,8 @@
             <column name="cm_file_category" type="VARCHAR(128)"/>
         </addColumn>
         <dropUniqueConstraint tableName="acm_file" constraintName="uk_file_ecm_id"/>
-        <addUniqueConstraint tableName="acm_file" columnNames="cm_version_series_id" constraintName="uk_version_series_id"/>
+        <addUniqueConstraint tableName="acm_file" columnNames="cm_version_series_id"
+                             constraintName="uk_version_series_id"/>
     </changeSet>
 
     <!-- need to fix the unique key on acm_file before inserting the files from cases where those
@@ -249,8 +256,8 @@
             <column name="cm_outlook_folder_id" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
-    
-   	<changeSet id="files-38-add-attachment-folder-id-in-container-table" author="riste.tutureski">
+
+    <changeSet id="files-38-add-attachment-folder-id-in-container-table" author="riste.tutureski">
         <addColumn tableName="acm_container">
             <column name="cm_attachment_folder_id" type="${fkIdType}">
                 <constraints nullable="true"/>
@@ -270,7 +277,7 @@
     <changeSet id="files-39-add-object-type-in-acm-folder-table" author="dmiller">
         <addColumn tableName="acm_folder">
             <column name="cm_object_type" type="VARCHAR(100)" defaultValue="FOLDER">
-                    <constraints nullable="false"/>
+                <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
@@ -322,6 +329,17 @@
             <column name="cm_seq_num" value="100"></column>
             <column name="cm_seq_name" value="acm_file_version"></column>
         </insert>
+    </changeSet>
+    <changeSet id="45-acm_file-add-page_count" author="ilinpetar">
+        <addColumn tableName="acm_file">
+            <column name="cm_page_count" type="INTEGER"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="46-acm_file-add-file_source" author="riste.tutureski">
+        <addColumn tableName="acm_file">
+            <column name="cm_file_source" type="VARCHAR(255)"/>
+        </addColumn>
     </changeSet>
 
 </databaseChangeLog>

@@ -25,6 +25,7 @@ public class AcmCmisObject implements Serializable
     private String cmisObjectId;
     private String mimeType;
     private String status;
+    private Integer pageCount;
 
     public Long getObjectId()
     {
@@ -136,27 +137,43 @@ public class AcmCmisObject implements Serializable
         this.cmisObjectId = cmisObjectId;
     }
 
-	public String getMimeType() {
-		return mimeType;
-	}
+    public String getMimeType()
+    {
+        return mimeType;
+    }
 
-	public void setMimeType(String mimeType) {
-		this.mimeType = mimeType;
-	}
+    public void setMimeType(String mimeType)
+    {
+        this.mimeType = mimeType;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public String getStatus()
+    {
+        return status;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public void setStatus(String status)
+    {
+        this.status = status;
+    }
 
-    public List<EcmFileVersion> getVersionList() {
+    public List<EcmFileVersion> getVersionList()
+    {
         return versionList;
     }
 
-    public void setVersionList(List<EcmFileVersion> versionList) {
+    public void setVersionList(List<EcmFileVersion> versionList)
+    {
         this.versionList = versionList;
+    }
+
+    public Integer getPageCount()
+    {
+        return pageCount;
+    }
+
+    public void setPageCount(Integer pageCount)
+    {
+        this.pageCount = pageCount;
     }
 }

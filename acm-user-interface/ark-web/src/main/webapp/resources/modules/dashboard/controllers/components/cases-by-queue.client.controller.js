@@ -3,7 +3,7 @@
 angular.module('dashboard.cases-by-queue', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('caseFilesByQueue', {
+            .widget('casesByQueue', {
                 title: 'Cases by Queue',
                 description: 'Displays cases files by queue',
                 controller: 'Dashboard.CasesByQueueController',

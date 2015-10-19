@@ -27,12 +27,6 @@
                     "width": "40%"
                 },
                 {
-                    "name": "type",
-                    "displayName": "profile.subscriptions.table.columns.type",
-                    "headerCellFilter": "translate",
-                    "width": "20%"
-                },
-                {
                     "name": "created",
                     "displayName": "profile.subscriptions.table.columns.created",
                     "headerCellFilter": "translate",
@@ -44,7 +38,7 @@
                     "headerCellFilter": "translate",
                     "width": "*",
                     "headerCellTemplate": "<div></div>",
-                    "cellTemplate": "<div align='center'><button type='button' ng-click='grid.appScope.unsubscribe(row.entity)' class='btn btn-default btn-sm glyphicon glyphicon-minus'></button></div>'"
+                    "cellTemplate": "<div align='center'><button type='button' ng-click='grid.appScope.unsubscribe(row.entity)' class='btn btn-link fa fa-trash'></button></div>'"
                 },
                 {
                     "name": "parentID",

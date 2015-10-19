@@ -15,10 +15,12 @@
       },
       "reportDropdown": {
         "turnaround": "Turnaround Time by Requestor",
-        "requester": "Requester Type Summary Pending Orders Report",
+        "requester": "Requester Type Summary",
+        "pending": "Pending Orders Report",
         "associate": "Associate Productivity Report",
         "origination": "Origination Count",
-        "transfers": "Transfers Report"
+        "transfers": "Transfers Report",
+        "exceptions": "Exceptions Report (Non-Compliance)"
       },
       "button": {
         "generate-report": "Generate report"

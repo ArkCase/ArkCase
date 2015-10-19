@@ -2,14 +2,15 @@ package com.armedia.acm.ephesoft.service;
 
 import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.files.capture.AbstractCaptureFileEvent;
+import com.armedia.acm.files.capture.AbstractConvertFileEvent;
 import com.armedia.acm.files.capture.CaptureConstants;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import liquibase.util.file.FilenameUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,19 +23,16 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Created by nebojsha on 15/9/2015.
  */
-public class AttachmentCaptureFileListener implements ApplicationListener<AbstractCaptureFileEvent>
+public class AttachmentCaptureFileListener implements ApplicationListener<AbstractConvertFileEvent>
 {
-    private final String FILE_NAME_PATTERN_STRING = "^\\d+_.+_\\d+$";
+    private final String PARENT_ID_PARENT_TYPE_FILE_ID_PATTERN = "^\\d+_.+_\\d+$";
+    private final String PARENT_ID_FILE_ID_PATTERN = "^\\d+_\\d+$";
+    private final String FILE_ID_PATTERN = "^\\d+$";
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -42,16 +40,14 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     private FileObject errorFolder;
-    private FileObject captureFolder;
-    private FileObject completedFolder;
-    private Set<String> supportedObjectTypes;
+    private FileObject convertedFolder;
 
     @Override
-    public void onApplicationEvent(AbstractCaptureFileEvent event)
+    public void onApplicationEvent(AbstractConvertFileEvent event)
     {
         FileInfo fileInfo = null;
 
-        if ((fileInfo = isSupported(event)) != null)
+        if ((fileInfo = getSupported(event)) != null)
         {
             log.debug("File {} is supported for attachment processing!", event.getBaseFileName());
 
@@ -64,50 +60,49 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
         }
     }
 
-    private void processAttachment(AbstractCaptureFileEvent event, FileInfo fileInfo)
+    private void processAttachment(AbstractConvertFileEvent event, FileInfo fileInfo)
     {
-
-
+        auditPropertyEntityAdapter.setUserId(CaptureConstants.PROCESS_ATTACHMENTS_USER);
         EcmFile file = ecmFileService.findById(fileInfo.getFileId());
 
         if (file != null)
         {
             //verify that all information is correct
-            if (file.getContainer().getContainerObjectType().toLowerCase().compareTo(fileInfo.getParentObjectType().toLowerCase()) != 0)
+            if (fileInfo.getParentObjectType() != null && !file.getContainer().getContainerObjectType().equalsIgnoreCase(fileInfo.getParentObjectType()))
             {
                 log.warn("unable to process File {}, reason: parent object type doesn't match. Contains in file name:{}, but should be {}.",
                         event.getBaseFileName(),
                         fileInfo.getParentObjectType(),
                         file.getContainer().getContainerObjectType());
-                moveToFolder(event.getCaptureFile(), errorFolder);
+                moveToFolder(event.getConvertedFile(), errorFolder);
                 return;
             }
-            if (!file.getContainer().getContainerObjectId().equals(fileInfo.getParentObjectId()))
+            if (fileInfo.getParentObjectId() != null && !file.getContainer().getContainerObjectId().equals(fileInfo.getParentObjectId()))
             {
                 log.warn("unable to process File {}, reason: parent object id doesn't match. Contains in file name:{}, but should be {}.",
                         event.getBaseFileName(),
                         fileInfo.getParentObjectId(),
                         file.getContainer().getContainerObjectId());
-                moveToFolder(event.getCaptureFile(), errorFolder);
+                moveToFolder(event.getConvertedFile(), errorFolder);
                 return;
             }
 
             //everything is fine just upload the document
             try
             {
-                saveAttachment(file.getContainer(), event.getCaptureFile(), file.getFileName());
-                log.debug("successfully processed File {}, moving to completed folder.", event.getBaseFileName());
-                moveToFolder(event.getCaptureFile(), completedFolder);
-                log.info("successfully moved File {} to completed folder.", event.getBaseFileName());
+                saveAttachment(file, event.getConvertedFile());
+                log.debug("successfully processed File {}, ready for deletion.", event.getBaseFileName());
+                event.getConvertedFile().delete();
+                log.info("successfully deleted File {} after uploading.", event.getBaseFileName());
             } catch (Exception e)
             {
                 log.error("file movement was not successful: {}", e.getMessage(), e);
-                moveToFolder(event.getCaptureFile(), errorFolder);
+                moveToFolder(event.getConvertedFile(), errorFolder);
             }
         } else
         {
             log.warn("unable to process File {}, reason: doesn't exists in the database.", event.getBaseFileName());
-            moveToFolder(event.getCaptureFile(), errorFolder);
+            moveToFolder(event.getConvertedFile(), errorFolder);
         }
 
     }
@@ -130,72 +125,68 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
     }
 
 
-    private FileInfo isSupported(AbstractCaptureFileEvent event)
+    private FileInfo getSupported(AbstractConvertFileEvent event)
     {
-
-
-        FileInfo fileInfo = new FileInfo();
         String fileName = event.getBaseFileName();
 
+
+        //checks for null and empty string
+        if (StringUtils.isEmpty(fileName))
+            return null;
+
+        if (!fileName.toLowerCase().endsWith(".pdf"))
+            return null;
+
+        //remove extension in file name
         if (fileName.contains("."))
-            fileName = fileName.substring(0, fileName.indexOf('.'));
+            fileName = fileName.substring(0, fileName.lastIndexOf('.'));
 
-        //matches files with name like 123123_case_file_123
+        //ephesoft processing always adds _DOC1 at the end, so we are removing just to extract the information about object and his parent.
+        if (fileName.endsWith("_DOC1"))
+            fileName = fileName.substring(0, fileName.lastIndexOf('_'));
 
-        if (!Pattern.matches(FILE_NAME_PATTERN_STRING, fileName))
+        //matches files with name like 123123_case_file_123 OR 12313_123 or 123
+        if (Pattern.matches(PARENT_ID_PARENT_TYPE_FILE_ID_PATTERN, fileName))
+            return parseParentIdParentTypeFileIdPattern(fileName);
+        else if (Pattern.matches(PARENT_ID_FILE_ID_PATTERN, fileName))
+            return parseParentIdFileIdPattern(fileName);
+        else if (Pattern.matches(FILE_ID_PATTERN, fileName))
+            return parseFileIdPattern(fileName);
+        else
             return null;
-
-        String parentObjectIdStr = extractParentObjectIdStr(fileName);
-        String fileIdStr = extractFileIdStr(fileName);
-        String parentObjectType = extractParentObjectType(fileName);
-
-        if (fileIdStr == null || parentObjectIdStr == null || parentObjectType == null)
-        {
-            return null;
-        }
-
-        //verify object_type
-        Optional<String> found = supportedObjectTypes.stream().filter(s -> parentObjectType.toLowerCase().compareTo(s) == 0).findFirst();
-        if (!found.isPresent())
-            return null;
-
-        //verify attachment parent id exists and is only numbers
-        if (parentObjectIdStr.length() < 1 || parentObjectIdStr.replaceAll("\\d", "").length() > 0)
-            return null;
-        //verify attachment id exists and is only numbers
-        if (fileIdStr.length() < 1 || fileIdStr.replaceAll("\\d", "").length() > 0)
-            return null;
-
-        fileInfo.setParentObjectId(Long.parseLong(parentObjectIdStr));
-        fileInfo.setParentObjectType(parentObjectType);
-        fileInfo.setFileId(Long.parseLong(fileIdStr));
-
-        return fileInfo;
     }
 
-    private String extractFileIdStr(String fileName)
+    private FileInfo parseFileIdPattern(String fileName)
     {
-        if (!fileName.contains("_"))
-            return null;
-        return fileName.substring(fileName.lastIndexOf('_') + 1);
+        FileInfo fInfo = new FileInfo();
+        fInfo.setFileId(Long.parseLong(fileName));
+        return fInfo;
     }
 
-    private String extractParentObjectIdStr(String fileName)
+    private FileInfo parseParentIdFileIdPattern(String fileName)
     {
-        if (!fileName.contains("_"))
-            return null;
-        return fileName.substring(0, fileName.indexOf('_'));
+        String[] split = fileName.split("_");
+        FileInfo fInfo = new FileInfo();
+        fInfo.setFileId(Long.parseLong(split[0]));
+        fInfo.setFileId(Long.parseLong(split[1]));
+        return fInfo;
     }
 
-
-    private String extractParentObjectType(String fileName)
+    private FileInfo parseParentIdParentTypeFileIdPattern(String fileName)
     {
-        if (!fileName.contains("_"))
-            return null;
-        return fileName.substring(fileName.indexOf('_') + 1, fileName.lastIndexOf('_'));
+        //its better to use substring cause in object_type can have '_' and split is not usable
+        FileInfo fInfo = new FileInfo();
+        int firstIndex = fileName.indexOf("_");
+        int lastIndex = fileName.lastIndexOf("_");
+
+        fInfo.setFileId(Long.parseLong(fileName.substring(lastIndex + 1)));
+        fInfo.setParentObjectId(Long.parseLong(fileName.substring(0, firstIndex)));
+        fInfo.setParentObjectType(fileName.substring(firstIndex + 1, lastIndex));
+
+        return fInfo;
     }
 
-    private void saveAttachment(AcmContainer container, File toBeUploaded, String originalFileName) throws Exception
+    private void saveAttachment(EcmFile originalFile, File toBeUploaded) throws Exception
     {
         try
         {
@@ -218,9 +209,11 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
 
             // Create multipart file object - used "upload" service require it and using this service method is the best
             // way to upload file for given object - it creates AcmContainer object that we need for uploading
+            String fileName = FilenameUtils.removeExtension(toBeUploaded.getName()) + ".pdf";
+
             AcmMultipartFile file = new AcmMultipartFile(
-                    toBeUploaded.getName(),
-                    originalFileName,
+                    fileName,
+                    fileName,
                     contentType,
                     false,
                     toBeUploaded.length(),
@@ -229,13 +222,13 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
                     true);
 
             // Upload file
-            getEcmFileService().upload(originalFileName,
-                    "pdf",
+            getEcmFileService().upload(fileName,
+                    originalFile.getFileType(),
                     file,
                     auth,
-                    container.getFolder().getCmisFolderId(),
-                    container.getContainerObjectType(),
-                    container.getContainerObjectId());
+                    originalFile.getContainer().getFolder().getCmisFolderId(),
+                    originalFile.getContainer().getContainerObjectType(),
+                    originalFile.getContainer().getContainerObjectId());
         } catch (Throwable e)
         {
             throw new Exception("Cannot save attachment: " + e.getMessage(), e);
@@ -262,30 +255,14 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
-    public void setCaptureFolder(FileObject captureFolder)
+    public void setConvertedFolder(FileObject convertedFolder)
     {
-        this.captureFolder = captureFolder;
-    }
-
-    public void setCompletedFolder(FileObject completedFolder)
-    {
-        this.completedFolder = completedFolder;
+        this.convertedFolder = convertedFolder;
     }
 
     public void setErrorFolder(FileObject errorFolder)
     {
         this.errorFolder = errorFolder;
-    }
-
-    public void setSupportedObjectTypes(String supportedObjectTypesStr)
-    {
-        if (supportedObjectTypesStr != null && supportedObjectTypesStr.length() > 0)
-        {
-            supportedObjectTypes = Arrays.stream(supportedObjectTypesStr.split(",[\\s]*")).collect(Collectors.toSet());
-        } else
-        {
-            supportedObjectTypes = new HashSet<>();
-        }
     }
 
     class FileInfo

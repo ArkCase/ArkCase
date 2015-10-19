@@ -32,7 +32,9 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
 
             queryMyCases: {
                 method: 'GET',
-                url: 'proxy/arkcase/api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::userId+AND+object_type_s\\:CASE_FILE&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                url: 'proxy/arkcase/api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::userId+' +
+                      'AND+object_type_s\\:CASE_FILE+' +
+                      'AND+NOT+status_lcs\\:DRAFT&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
                 isArray: false,
                 data: ''
             },
