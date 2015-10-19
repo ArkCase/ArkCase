@@ -13,6 +13,7 @@
     "angular-cookies": "~1.4.3",
     "angular-dashboard-framework": "~0.10.0",
     "angular-moment": "~0.10.2",
+    "angular-notify": "~2.5.0",
     "angular-resource": "~1.4.3",
     "angular-sanitize": "~1.4.3",
     "angular-schema-form": "~0.8.4",
@@ -32,10 +33,11 @@
     "html5shiv": "~3.7.2",
     "lodash": "~3.10.0",
     "ng-file-upload": "~7.0.17",
-    "ng-file-upload-shim": "~7.0.17"
+    "ng-file-upload-shim": "~7.0.17",
+    "ui-contextmenu": "~1.11.0"
   },
   "resolutions": {
-    "angular": "1.4.4",
+    "angular": "1.4.7",
     "angular-ui-utils": "~3.0.0"
   }
 }

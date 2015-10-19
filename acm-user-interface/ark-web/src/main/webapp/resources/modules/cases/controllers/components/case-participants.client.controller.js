@@ -5,9 +5,9 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
         $scope.$emit('req-component-config', 'participants');
 
 
-        var promiseTypes = Util.servicePromise({
+        var promiseTypes = Util.serviceCall({
             service: LookupService.getParticipantTypes
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 $scope.participantTypes = [{type: "*", name: "*"}];
                 Util.forEachStripNg(data, function (v, k) {
                     $scope.participantTypes.push({type: k, name: v});
@@ -15,9 +15,9 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                 return $scope.participantTypes;
             }
         });
-        var promiseUsers = Util.servicePromise({
+        var promiseUsers = Util.serviceCall({
             service: LookupService.getUsersBasic
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 $scope.participantUsers = [];
                 var arr = Util.goodMapValue(data, "response.docs", []);
                 for (var i = 0; i < arr.length; i++) {
@@ -29,9 +29,9 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                 return $scope.participantUsers;
             }
         });
-        var promiseGroups = Util.servicePromise({
+        var promiseGroups = Util.serviceCall({
             service: LookupService.getGroups
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 $scope.participantGroups = [];
                 var arr = Util.goodMapValue(data, "response.docs", []);
                 for (var i = 0; i < arr.length; i++) {

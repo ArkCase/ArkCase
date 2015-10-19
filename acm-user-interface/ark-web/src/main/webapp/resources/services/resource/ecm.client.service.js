@@ -3,115 +3,69 @@
 angular.module('services').factory('EcmService', ['$resource',
     function ($resource) {
         return $resource('proxy/arkcase/api/latest/service', {}, {
-            queryFolderList: {
+            retrieveFolderList: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/latest/service/ecm/folder/:objType/:objId/:folderId?start=:start&n=:n&s=:sortBy&dir=:sortDir',
                 cache: false,
                 isArray: false
             }
-
-
-            , queryContacts: {
-                url: 'proxy/arkcase/api/latest/plugin/casefile/byId/:id',
-                cache: false,
-                isArray: true,
-                transformResponse: function (data, headerGetter) {
-                    var results = [];
-                    var caseObj = JSON.parse(data);
-                    if (caseObj && caseObj.personAssociations) {
-                        var persons = caseObj.personAssociations;
-                        for (var i = 0; i < persons.length; i++) {
-                            results.push(persons[i].person);
-                        }
-                    }
-                    return results;
-                }
+            , createFolder: {
+                method: 'PUT',
+                url: 'proxy/arkcase/api/latest/service/ecm/folder/:parentId/:folderName'
             }
-            , addPersonAssociation: {
-                method: 'POST',
-                url: 'proxy/arkcase/api/latest/plugin/personAssociation',
-                cache: false
-            }
-            , deletePersonAssociation: {
+            , deleteFolder: {
                 method: 'DELETE',
-                url: 'proxy/arkcase/api/latest/plugin/personAssociation/delete/:personAssociationId',
-                cache: false
+                url: 'proxy/arkcase/api/latest/service/ecm/folder/:folderId'
             }
-
-            , queryAudit: {
-                method: 'GET',
-                url: 'proxy/arkcase/api/latest/plugin/audit/CASE_FILE/:id?start=:startWith&n=:count&s=:sort',
-                cache: false
-            }
-
-            , queryTasks: {
-                method: 'GET',
-                url: 'proxy/arkcase/api/latest/plugin/search/children?parentType=CASE_FILE&childType=TASK&parentId=:id&start=:startWith&n=:count&s=:sort',
-                cache: false
-            }
-            , queryMyTasks: {
-                method: 'GET',
-                url: 'proxy/arkcase/api/latest/plugin/task/forUser/:user',
-                cache: false,
+            , uploadFiles: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/service/ecm/upload',
+                headers: {'Content-Type': undefined},
                 isArray: true
             }
-            , deleteTask: {
+            , replaceFile: {
                 method: 'POST',
-                url: 'proxy/arkcase/api/latest/plugin/task/deleteTask/:taskId',
-                cache: false
+                url: 'proxy/arkcase/api/latest/service/ecm/replace/:fileId'
             }
-            , completeTask: {
-                method: 'POST',
-                url: 'proxy/arkcase/api/latest/plugin/task/completeTask/:taskId',
-                cache: false
-            }
-            , completeTaskWithOutcome: {
-                method: 'POST',
-                url: 'proxy/arkcase/api/latest/plugin/task/completeTask/',
-                cache: false
-            }
-
-            , queryNotes: {
-                method: 'GET',
-                //url: 'proxy/arkcase/api/latest/plugin/note/:parentType/:parentId?start=:startWith&n=:count&s=:sort',
-                url: 'proxy/arkcase/api/latest/plugin/note/:parentType/:parentId',
-                cache: false,
-                isArray: true
-            }
-            , saveNote: {
-                method: 'POST',
-                url: 'proxy/arkcase/api/latest/plugin/note/',
-                cache: false
-            }
-            , deleteNote: {
+            , deleteFile: {
                 method: 'DELETE',
-                url: 'proxy/arkcase/api/latest/plugin/note/:noteId',
-                cache: false
+                url: 'proxy/arkcase/api/latest/service/ecm/id/:fileId'
             }
-
-            , queryCorrespondence: {
-                method: 'GET',
-                url: 'proxy/arkcase/api/latest/service/ecm/bycategory/:parentType/:parentId?category=Correspondence&start=:startWith&n=:count&s=:sort',
-                cache: false
-            }
-            , createCorrespondence: {
+            , renameFolder: {
                 method: 'POST',
-                url: 'proxy/arkcase/api/latest/service/correspondence?templateName=:template&parentObjectType=:parentType&parentObjectId=:parentId&targetCmisFolderId=:folderId',
-                cache: false
+                url: 'proxy/arkcase/api/latest/service/ecm/folder/:folderId/:folderName'
             }
-            , queryTimesheets: {
-                method: 'GET',
-                //url: 'proxy/arkcase/api/v1/service/timesheet/objectId/:objectId/objectType/:objectType?start=:startWith&n=:count&s=:sort',
-                url: 'proxy/arkcase/api/v1/service/timesheet/objectId/:objectId/objectType/:objectType',
-                cache: false,
-                isArray: true
+            , renameFile: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/service/ecm/file/:fileId/:name/:ext'
             }
-            , queryCostsheets: {
-                method: 'GET',
-                //url: 'proxy/arkcase/api/v1/service/costsheet/objectId/:objectId/objectType/:objectType?start=:startWith&n=:count&s=:sort',
-                url: 'proxy/arkcase/api/v1/service/costsheet/objectId/:objectId/objectType/:objectType',
-                cache: false,
-                isArray: true
+            , moveFile: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/service/ecm/moveToAnotherContainer/:objType/:objId'
+            }
+            , copyFile: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/service/ecm/copyToAnotherContainer/:objType/:objId'
+            }
+            , moveFolder: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/service/ecm/folder/move/:subFolderId/:folderId'
+            }
+            , copyFolder: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/service/ecm/folder/copy/:subFolderId/:folderId/:objType/:objId'
+            }
+            , setActiveVersion: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/service/ecm/file/:fileId/:version'
+            }
+            , sendEmail: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/service/notification/email'
+            }
+            , sendEmailWithAttachments: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/plugin/outlook/email/withattachments'
             }
 
         });
