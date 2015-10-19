@@ -125,21 +125,44 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                 return arr.length === 0;
             }
 
-            ,servicePromise: function(arg) {
+            , serviceCall: function (arg) {
                 var d = $q.defer();
-                var service = arg.service;
-                var param = this.goodValue(arg.param, {});
                 if (arg.result) {
                     d.resolve(arg.result);
 
                 } else {
-                    service(param, function(data) {
-                        if (arg.callback) {
-                            d.resolve(arg.callback(data));
+                    var service = arg.service;
+                    var param = this.goodValue(arg.param, {});
+                    var data = arg.data;
+                    var onSuccess = function (successData) {
+                        if (arg.onSuccess) {
+                            var rc = arg.onSuccess(successData);
+                            if (undefined == rc) {
+                                if (arg.onInvalid) {
+                                    d.reject(arg.onInvalid(successData));
+                                } else {
+                                    d.reject(); //"validation failure"
+                                }
+                            } else {
+                                d.resolve(rc);
+                            }
                         } else {
-                            d.resolve(data);
+                            d.resolve(successData);
                         }
-                    });
+                    };
+                    var onError = function (errorData) {
+                        var rc = errorData;
+                        if (arg.onError) {
+                            rc = arg.onError(errorData);
+                        }
+                        d.reject(rc);
+                    }
+
+                    if (data) {
+                        service(param, data, onSuccess, onError);
+                    } else {
+                        service(param, onSuccess, onError);
+                    }
                 }
                 return d.promise;
             }
@@ -391,9 +414,9 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                     scope.gridOptions.columnDefs = config.columnDefs;
                 }
                 , showObject: function (scope, objType, objId) {
-                    var promiseObjectTypes = Util.servicePromise({
+                    var promiseObjectTypes = Util.serviceCall({
                         service: LookupService.getObjectTypes
-                        , callback: function (data) {
+                        , onSuccess: function (data) {
                             scope.objectTypes = [];
                             _.forEach(data, function (item) {
                                 scope.objectTypes.push(item);
@@ -412,9 +435,9 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                     });
                 }
                 , getUsers: function (scope) {
-                    return Util.servicePromise({
+                    return Util.serviceCall({
                         service: LookupService.getUsers
-                        , callback: function (data) {
+                        , onSuccess: function (data) {
                             scope.userFullNames = [];
                             var arr = Util.goodArray(data);
                             for (var i = 0; i < arr.length; i++) {

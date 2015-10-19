@@ -30,6 +30,13 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
                 data: ''
             },
 
+            queryMyCases: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::userId+AND+object_type_s\\:CASE_FILE&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                isArray: false,
+                data: ''
+            },
+
             queryTeamWorkload: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/v1/plugin/task/list/:due',

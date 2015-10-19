@@ -1,6 +1,15 @@
 {
   "id": "cases",
   "title": "Cases",
+  "menus": [
+    {
+      "menuId": "leftnav",
+      "menuItemURL": "cases",
+      "menuItemTitle": "Case Files",
+      "iconClass": "fa fa-folder",
+      "position": 40
+    }
+  ],
   "components": [
     {
       "id": "info",

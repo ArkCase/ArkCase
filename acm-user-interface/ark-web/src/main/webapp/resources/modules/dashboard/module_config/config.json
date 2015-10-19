@@ -13,6 +13,43 @@
 
   "components": [
     {
+      "id": "myCases",
+      "title": "My Cases Widget",
+      "enableFiltering": false,
+      "paginationPageSizes": [25, 50, 75],
+      "paginationPageSize": 25,
+      "columnDefs": [
+        {
+          "name": "id",
+          "displayName": "dashboard.widgets.myCases.table.header.caseId",
+          "headerCellFilter": "translate",
+          "enableSorting": true,
+          "width": 130
+        },
+        {
+          "name": "client_name_s",
+          "displayName": "dashboard.widgets.myCases.table.header.client",
+          "headerCellFilter": "translate",
+          "enableSorting": true
+        },
+        {
+          "name": "status_lcs",
+          "displayName": "dashboard.widgets.myCases.table.header.status",
+          "headerCellFilter": "translate",
+          "enableSorting": true,
+          "width": 150
+        },
+        {
+          "name": "priority_s",
+          "displayName": "dashboard.widgets.myCases.table.header.priority",
+          "headerCellFilter": "translate",
+          "enableSorting": true,
+          "width": 70
+        }
+      ]
+
+    },
+    {
       "id": "myTasks",
       "title": "My Tasks Widget",
       "enableFiltering": false,

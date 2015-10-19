@@ -6,9 +6,9 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
 
         var promiseUsers = Util.AcmGrid.getUsers($scope);
 
-        var promiseObjectTypes = Util.servicePromise({
+        var promiseObjectTypes = Util.serviceCall({
             service: LookupService.getObjectTypes
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 $scope.objectTypes = [];
                 _.forEach(data, function (item) {
                     $scope.objectTypes.push(item);
@@ -20,9 +20,9 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
 
         $scope.correspondenceForms = [{"value": "noop", "name": "(Select One)"}];
         $scope.correspondenceForm = {"value": "noop", "name": "(Select One)"};
-        var promiseCorrespondenceForms = Util.servicePromise({
+        var promiseCorrespondenceForms = Util.serviceCall({
             service: LookupService.getCorrespondenceForms
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 $scope.correspondenceForms = Util.omitNg(Util.goodArray(data));
                 $scope.correspondenceForms.unshift({"value": "noop", "name": "(Select One)"});
                 return $scope.correspondenceForms;
