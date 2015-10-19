@@ -43,7 +43,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             }
         });
 
-        $scope.treeArgs = {b: "big", d: {dc: "dc123"}};
+        $scope.treeArgs = {};
 
         $scope.objectType = Util.Constant.OBJTYPE_CASE_FILE;
         $scope.objectId = $stateParams.id;
