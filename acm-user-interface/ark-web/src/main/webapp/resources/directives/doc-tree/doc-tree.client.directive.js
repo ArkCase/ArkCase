@@ -3358,8 +3358,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', 'UtilServ
                     }
                 }, true);
 
-
-                console.log("before create doc tree");
                 DocTree.createDocTree(scope.treeArgs);
                 DocTree.makeDownloadDocForm(DocTree.jqTree);
                 DocTree.makeUploadDocForm(DocTree.jqTree);
