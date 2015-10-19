@@ -11,6 +11,8 @@ angular.module('dashboard.my-complaints', ['adf.provider'])
                 templateUrl: 'modules/dashboard/views/components/my-complaints.client.view.html'
             });
     })
-    .controller('Dashboard.MyComplaintsController', function ($scope) {
+    .controller('Dashboard.MyComplaintsController', ['$scope',
+        function ($scope) {
 
-    });
+        }
+    ]);

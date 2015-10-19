@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 
     <bean id="ecmFileServiceProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -28,7 +26,8 @@
     <bean id="acmContainerFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmContainerDao"/>
     <bean id="acmFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmFolderDao"/>
 
-    <bean id="folderDataAccessUpdateLocator" class="com.armedia.acm.plugins.ecm.service.impl.FolderDataAccessUpdateLocator">
+    <bean id="folderDataAccessUpdateLocator"
+          class="com.armedia.acm.plugins.ecm.service.impl.FolderDataAccessUpdateLocator">
         <property name="folderDao" ref="acmFolderDao"/>
     </bean>
 
@@ -50,10 +49,8 @@
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
     </bean>
-    <bean id="ecmFileDuplicateContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileDuplicateContentHandler">
-        <property name="fileFormatsToBeConvertedToPDF" value="${capture.fileFormatsToBeConvertedToPDF}"/>
-    </bean>
-    <bean id="ecmFileMergedContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeContentHandler">
+    <bean id="ecmFileMergedContentHandler"
+          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeContentHandler">
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
     </bean>
     <bean id="ecmFileNewContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewContentHandler">
@@ -63,11 +60,13 @@
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
     </bean>
-    <bean id="ecmFileMergedMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergedMetadataHandler">
+    <bean id="ecmFileMergedMetadataHandler"
+          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergedMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
     </bean>
-    <bean id="ecmFileSendForPdfConversionHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSendForPdfConversionHandler">
+    <bean id="ecmFileSendForPdfConversionHandler"
+          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSendForPdfConversionHandler">
         <property name="captureFolderService" ref="captureFolderHandler"/>
         <property name="fileTypesToBeConvertedToPDF" value="${capture.fileTypesToBeConvertedToPDF}"/>
         <property name="fileFormatsToBeConvertedToPDF" value="${capture.fileFormatsToBeConvertedToPDF}"/>
@@ -78,7 +77,6 @@
         <property name="preSaveHandlers">
             <list>
                 <!--<ref bean="ecmFileMergeHandler"/>-->
-                <!--<ref bean="ecmFileDuplicateContentHandler"/>-->
                 <!--<ref bean="ecmFileMergedContentHandler"/>-->
                 <ref bean="ecmFileNewContentHandler"/>
                 <ref bean="ecmFileNewMetadataHandler"/>
@@ -138,7 +136,6 @@
     </bean>
 
 
-
     <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
         <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
@@ -157,12 +154,12 @@
     </bean>
 
     <!--<bean id="ecmFileTagChangeListener" class="com.armedia.acm.plugins.ecm.service.EcmFileAssociatedTagChangeListener">-->
-        <!--<property name="ecmFileDao" ref="ecmFileDao"/>-->
+    <!--<property name="ecmFileDao" ref="ecmFileDao"/>-->
     <!--</bean>-->
 
     <bean id="acmFolderService" class="com.armedia.acm.plugins.ecm.service.impl.AcmFolderServiceImpl">
         <property name="folderDao" ref="acmFolderDao"/>
-        <property name="containerDao" ref="acmContainerFolderDao" />
+        <property name="containerDao" ref="acmContainerFolderDao"/>
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="fileService" ref="ecmFileService"/>

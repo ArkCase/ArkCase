@@ -6,9 +6,11 @@
                 <option> {{'reports.navigation.placeholder.select-report'| translate}}</option>
                 <option> {{'reports.navigation.reportDropdown.turnaround'| translate}}</option>
                 <option> {{'reports.navigation.reportDropdown.requester'| translate}}</option>
+                <option> {{'reports.navigation.reportDropdown.pending'| translate}}</option>
                 <option> {{'reports.navigation.reportDropdown.associate'| translate}}</option>
                 <option> {{'reports.navigation.reportDropdown.origination'| translate}}</option>
                 <option> {{'reports.navigation.reportDropdown.transfers'| translate}}</option>
+                <option> {{'reports.navigation.reportDropdown.exceptions'| translate}}</option>
             </select>
             <label for="selectCaseState">{{'reports.navigation.label.select-state'| translate}}
             </label>
@@ -20,6 +22,7 @@
                 <option value="INACTIVE">INACTIVE</option>
                 <option value="ACTIVE">ACTIVE</option>
             </select>
+
             <div ng-include="'modules/reports/views/components/reports-datepickers.client.view.html'"></div>
 
             <div>

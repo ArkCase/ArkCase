@@ -48,6 +48,7 @@ module.exports = {
                 'lib/objectpath/lib/ObjectPath.js',
                 'lib/lodash/lodash.js',
                 'lib/moment/moment.js',
+                'lib/multi-download/browser.js',
                 'lib/angular/angular.js',
                 'lib/angular-moment/angular-moment.js',
                 'lib/angular-resource/angular-resource.js',

@@ -3,10 +3,8 @@ package com.armedia.acm.plugins.ecm.pipeline;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
-import org.springframework.security.core.Authentication;
 import org.apache.chemistry.opencmis.client.api.Document;
-
-import java.io.InputStream;
+import org.springframework.security.core.Authentication;
 
 /**
  * Created by joseph.mcgrady on 9/9/2015.
@@ -16,66 +14,102 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
 
     private String originalFileName;
     private Authentication authentication;
-    private InputStream fileInputStream;
+    private byte[] fileByteArray;
     private String cmisFolderId;
     private AcmContainer container;
     private Document cmisDocument;
     private EcmFile ecmFile;
     private boolean isAppend;
-    private InputStream mergedFileInputStream;
 
-    public String getOriginalFileName() {
+    private byte[] mergedFileByteArray;
+
+    public String getOriginalFileName()
+    {
         return originalFileName;
     }
-    public void setOriginalFileName(String originalFileName) {
+
+    public void setOriginalFileName(String originalFileName)
+    {
         this.originalFileName = originalFileName;
     }
-    public Authentication getAuthentication() {
+
+    public Authentication getAuthentication()
+    {
         return authentication;
     }
-    public void setAuthentication(Authentication authentication) {
+
+    public void setAuthentication(Authentication authentication)
+    {
         this.authentication = authentication;
     }
-    public InputStream getFileInputStream() {
-        return fileInputStream;
+
+    public byte[] getFileByteArray()
+    {
+        return fileByteArray;
     }
-    public void setFileInputStream(InputStream fileInputStream) {
-        this.fileInputStream = fileInputStream;
+
+    public void setFileByteArray(byte[] fileByteArray)
+    {
+        this.fileByteArray = fileByteArray;
     }
-    public String getCmisFolderId() {
+
+    public String getCmisFolderId()
+    {
         return cmisFolderId;
     }
-    public void setCmisFolderId(String cmisFolderId) {
+
+    public void setCmisFolderId(String cmisFolderId)
+    {
         this.cmisFolderId = cmisFolderId;
     }
-    public AcmContainer getContainer() {
+
+    public AcmContainer getContainer()
+    {
         return container;
     }
-    public void setContainer(AcmContainer container) {
+
+    public void setContainer(AcmContainer container)
+    {
         this.container = container;
     }
-    public Document getCmisDocument() {
+
+    public Document getCmisDocument()
+    {
         return cmisDocument;
     }
-    public void setCmisDocument(Document cmisDocument) {
+
+    public void setCmisDocument(Document cmisDocument)
+    {
         this.cmisDocument = cmisDocument;
     }
-    public EcmFile getEcmFile() {
+
+    public EcmFile getEcmFile()
+    {
         return ecmFile;
     }
-    public void setEcmFile(EcmFile ecmFile) {
+
+    public void setEcmFile(EcmFile ecmFile)
+    {
         this.ecmFile = ecmFile;
     }
-    public boolean getIsAppend() {
+
+    public boolean getIsAppend()
+    {
         return isAppend;
     }
-    public void setIsAppend(boolean isAppend) {
+
+    public void setIsAppend(boolean isAppend)
+    {
         this.isAppend = isAppend;
     }
-    public InputStream getMergedFileInputStream() {
-        return mergedFileInputStream;
+
+    public byte[] getMergedFileByteArray()
+    {
+        return mergedFileByteArray;
     }
-    public void setMergedFileInputStream(InputStream mergedFileInputStream) {
-        this.mergedFileInputStream = mergedFileInputStream;
+
+    public void setMergedFileByteArray(byte[] mergedFileByteArray)
+    {
+        this.mergedFileByteArray = mergedFileByteArray;
     }
 }

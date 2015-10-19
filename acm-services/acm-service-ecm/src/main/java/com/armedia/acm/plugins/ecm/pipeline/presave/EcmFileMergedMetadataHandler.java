@@ -8,15 +8,19 @@ import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.Date;
 
 /**
  * Created by joseph.mcgrady on 9/28/2015.
  */
-public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext> {
+public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext>
+{
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private EcmFileDao ecmFileDao;
@@ -26,16 +30,19 @@ public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, Ec
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
     {
         // This handler only executes when the file was merged with a pre-existing document
-        if (pipelineContext.getIsAppend()) {
+        if (pipelineContext.getIsAppend())
+        {
 
             // The new content is merged into an existing document, so the old document metadata is returned
             EcmFile oldFile = pipelineContext.getEcmFile();
-            if (oldFile == null) {
+            if (oldFile == null)
+            {
                 throw new PipelineProcessException("oldFile is null");
             }
 
             Document cmisDocument = pipelineContext.getCmisDocument();
-            if (cmisDocument == null) {
+            if (cmisDocument == null)
+            {
                 throw new PipelineProcessException("cmisDocument is null");
             }
 
@@ -47,6 +54,35 @@ public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, Ec
             version.setVersionTag(cmisDocument.getVersionLabel());
             oldFile.getVersions().add(version);
             oldFile.setModified(new Date());
+
+            // set page count
+            if ("application/pdf".equals(entity.getFileMimeType()))
+            {
+                PDDocument pdDocument = null;
+                try
+                {
+                    pdDocument = PDDocument.load(new ByteArrayInputStream(pipelineContext.getMergedFileByteArray()));
+                    oldFile.setPageCount(pdDocument.getNumberOfPages());
+                } catch (IOException e)
+                {
+                    throw new PipelineProcessException(e);
+                } finally
+                {
+                    if (pdDocument != null)
+                    {
+                        try
+                        {
+                            pdDocument.close();
+                        } catch (Exception ex)
+                        {
+                            log.error("cannot close PDF: {}", ex.getMessage(), ex);
+                        }
+                    }
+                }
+            } else
+            {
+                log.warn("Still don't know how to retrieve the page count for [{}] mime type");
+            }
 
             // Updates the database with the version changes
             EcmFile savedFile = ecmFileDao.save(oldFile);
@@ -62,16 +98,23 @@ public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, Ec
         // rollback not needed, JPA will rollback the database changes.
     }
 
-    public EcmFileDao getEcmFileDao() {
+    public EcmFileDao getEcmFileDao()
+    {
         return ecmFileDao;
     }
-    public void setEcmFileDao(EcmFileDao ecmFileDao) {
+
+    public void setEcmFileDao(EcmFileDao ecmFileDao)
+    {
         this.ecmFileDao = ecmFileDao;
     }
-    public AcmFolderDao getFolderDao() {
+
+    public AcmFolderDao getFolderDao()
+    {
         return folderDao;
     }
-    public void setFolderDao(AcmFolderDao folderDao) {
+
+    public void setFolderDao(AcmFolderDao folderDao)
+    {
         this.folderDao = folderDao;
     }
 }
