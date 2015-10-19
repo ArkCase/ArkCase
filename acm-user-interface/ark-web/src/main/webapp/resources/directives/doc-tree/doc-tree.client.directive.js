@@ -2,8 +2,6 @@
 
 angular.module('directives').directive('docTree', ['$q', '$translate', 'UtilService', 'ValidationService', 'StoreService', 'LookupService', 'EcmService',
     function ($q, $translate, Util, Validator, Store, Lookup, Ecm) {
-        console.log("docTree");
-
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
 
@@ -134,11 +132,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', 'UtilServ
                                 return false;
                             }
                             DocTree.setEditing(true);
-                            var z = 1;
                         }
                         , edit: function (event, data) {
                             data.input.select();
-                            var z = 1;
                         }
                         , beforeClose: function (event, data) {
                             // Return false to prevent cancel/save (data.input is available)
@@ -746,7 +742,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', 'UtilServ
                                 var nodeData = {};
                                 DocTree._fileDataToNodeData(child, nodeData);
                                 nodeData.folder = false;
-                                //nodeData.action = DocTree.Source.getHtmlAction();
                                 builder.addLeaf(nodeData);
                             }
                         }
@@ -773,13 +768,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', 'UtilServ
                     nodeData.cache = false;
                     nodeData.totalChildren = -1;
                     nodeData.children = [];
-                    //nodeData.action = DocTree.Source.getHtmlAction();
                     return nodeData;
                 }
                 , lazyLoad: function (event, data) {
-                    //data.result = [];
-                    //return;
-
                     var folderNode = data.node;
                     var folderId = Util.goodValue(folderNode.data.objectId, 0);
                     if (0 >= folderId && !DocTree.isTopNode(folderNode)) {
@@ -996,8 +987,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', 'UtilServ
                 }
                 , onKeyDown: function (event, data) {
                     var cmd = null;
-
-                    // console.log(event.type, $.ui.fancytree.eventToString(event));
                     switch ($.ui.fancytree.eventToString(event)) {
                         case "ctrl+shift+n":
                         case "meta+shift+n": // mac: cmd+shift+n
@@ -2053,16 +2042,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', 'UtilServ
                                 dfd.reject();
                             }
                         );
-                        //Util.Promise.resolvePromises(requests)
-                        //    .done(function () {
-                        //        if (DocTree.CLIPBOARD && DocTree.CLIPBOARD.src && DocTree.CLIPBOARD.batch) {
-                        //            DocTree.checkNodes(DocTree.CLIPBOARD.src, true);
-                        //        }
-                        //        dfd.resolve();
-                        //    })
-                        //    .fail(function () {
-                        //        dfd.reject();
-                        //    });
                     }
                     return dfd.promise();
                 }
@@ -3193,9 +3172,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', 'UtilServ
         };  //end DocTree
 
         var Email = {
-            a: 0
-
-            , sentEmail: function (emailData) {
+            sentEmail: function (emailData) {
                 var dfd = $.Deferred();
 
                 var failed = "";
@@ -3326,32 +3303,33 @@ angular.module('directives').directive('docTree', ['$q', '$translate', 'UtilServ
 
         return {
             restrict: 'E'
-            , template: '<table id="treeDoc" class="table table-striped th-sortable table-hover">'
-            + '<thead>'
-            + '<tr>'
-            + '<th id="selectDoc" width2="6%"><input type="checkbox"/></th>'
-            + '<th id="docID" width2="4%" >ID</th>'
-            + '<th id="docTitle" width="35%">Title</th>'
-            + '<th id="docType" width="12%">Type</th>'
-            + '<th id="docCreated" width="10%">Created</th>'
-            + '<th id="docAuthor" width="16%">Author</th>'
-            + '<th id="docVersion" width="6%">Version</th>'
-            + '<th id="docStatus" width="8%">Status</th>'
-            + '</tr>'
-            + '</thead>'
-            + '<tbody>'
-            + '<tr>'
-            + '<td headers="selectDoc"></td>'
-            + '<td headers="docID"></td>'
-            + '<td headers="docTitle"></td>'
-            + '<td headers="docType"></td>'
-            + '<td headers="docCreated"></td>'
-            + '<td headers="docAuthor"></td>'
-            + '<td headers="docVersion"></td>'
-            + '<td headers="docStatus"></td>'
-            + '</tr>'
-            + '</tbody>'
-            + '</table>'
+            //, template: '<table id="treeDoc" class="table table-striped th-sortable table-hover">'
+            //+ '<thead>'
+            //+ '<tr>'
+            //+ '<th id="selectDoc" width2="6%"><input type="checkbox"/></th>'
+            //+ '<th id="docID" width2="4%" >ID</th>'
+            //+ '<th id="docTitle" width="35%">Title</th>'
+            //+ '<th id="docType" width="12%">Type</th>'
+            //+ '<th id="docCreated" width="10%">Created</th>'
+            //+ '<th id="docAuthor" width="16%">Author</th>'
+            //+ '<th id="docVersion" width="6%">Version</th>'
+            //+ '<th id="docStatus" width="8%">Status</th>'
+            //+ '</tr>'
+            //+ '</thead>'
+            //+ '<tbody>'
+            //+ '<tr>'
+            //+ '<td headers="selectDoc"></td>'
+            //+ '<td headers="docID"></td>'
+            //+ '<td headers="docTitle"></td>'
+            //+ '<td headers="docType"></td>'
+            //+ '<td headers="docCreated"></td>'
+            //+ '<td headers="docAuthor"></td>'
+            //+ '<td headers="docVersion"></td>'
+            //+ '<td headers="docStatus"></td>'
+            //+ '</tr>'
+            //+ '</tbody>'
+            //+ '</table>'
+            , templateUrl: "directives/doc-tree/doc-tree.client.view.html"
             , scope: {
                 objectType: '='
                 , objectId: '='
@@ -3371,7 +3349,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', 'UtilServ
                 //    var newType = newValues[0];
                 //    var newId = newValues[1];
                 //    console.log("should never see this $watchGroup");
-                //    var z = 1;
                 //});
                 scope.$watch('fileTypes', function (newValue, oldValue) {
                     if (newValue) {
@@ -3386,35 +3363,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', 'UtilServ
                 DocTree.createDocTree(scope.treeArgs);
                 DocTree.makeDownloadDocForm(DocTree.jqTree);
                 DocTree.makeUploadDocForm(DocTree.jqTree);
-                return;
-
-                var treeOptions = {
-                    source: scope.loadData()(0),
-                    click: function (event, data) {
-                        scope.onSelect()(data.node.data);
-                    }
-                };
-                $(element).fancytree(treeOptions);
-
-
-                if (scope.treeData) {
-                    scope.$watchCollection('treeData', function (newValue, oldValue) {
-                        $q.when(newValue).then(function (treeData) {
-                            var tree = $(element).fancytree('getTree');
-                            tree.reload(treeData);
-                        }, true);
-                    });
-                }
             }
         };
 
-        //return {
-        //    restrict: 'E',
-        //    transclude: true,
-        //    template: '<h2>Hello world!</h2> <div role="tabpanel" ng-transclude></div>',
-        //    scope: {},
-        //    link: function (scope, elem, attr) {
-        //    }
-        //}
     }
 ]);
