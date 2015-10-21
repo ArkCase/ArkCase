@@ -125,6 +125,11 @@
             <artifactId>acm-service-pipeline</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-ephesoft</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- date time -->
         <dependency>
