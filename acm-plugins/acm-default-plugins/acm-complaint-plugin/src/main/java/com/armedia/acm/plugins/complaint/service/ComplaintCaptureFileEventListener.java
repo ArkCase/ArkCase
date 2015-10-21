@@ -107,7 +107,7 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
                 }
             } catch (Exception e)
             {
-                LOG.warn("Cannot check if the file {} is supported: ", event.getFileName());
+                LOG.warn("Cannot check if the file {} is supported", event.getFileName());
             }
         }
 
@@ -159,23 +159,23 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
 
             getAuditPropertyEntityAdapter().setUserId(CaptureConstants.XML_BATCH_USER);
 
-            Complaint saved = null;
             try
             {
                 // Save complaint
-                saved = getSaveComplaintTransaction().saveComplaint(complaint, null);
-            }
-            catch (PipelineProcessException e)
-            {
-                LOG.error("Cannot create complaint: " + e.getMessage(), e);
-            }
+                Complaint saved = getSaveComplaintTransaction().saveComplaint(complaint, null);
 
-            if (saved != null)
+                String cmisFolderId = saved != null && saved.getContainer() != null && saved.getContainer().getAttachmentFolder() != null ? saved.getContainer().getAttachmentFolder().getCmisFolderId() : null;
+                String objectFileType = saved != null && saved.getObjectType() != null ? saved.getObjectType().toLowerCase() : null;
+
+                if (cmisFolderId != null && objectFileType != null)
+                {
+                    // Save documents and attachments for complaint
+                    saveAttachments(cmisFolderId, saved.getId(), saved.getObjectType(), docObject, objectFileType, "attachment");
+                }
+            }
+            catch (Exception e)
             {
-                // Save documents and attachments for complaint
-                String cmisFolderId = saved.getContainer() != null && saved.getContainer().getAttachmentFolder() != null ? saved.getContainer().getAttachmentFolder().getCmisFolderId() : null;
-                String objectFileType = saved.getObjectType() != null ? saved.getObjectType().toLowerCase() : null;
-                saveAttachments(cmisFolderId, saved.getId(), saved.getObjectType(), docObject, objectFileType, "attachment");
+                LOG.error("Cannot create complaint or uploading attachments: {}", e.getMessage(), e);
             }
         }
     }
