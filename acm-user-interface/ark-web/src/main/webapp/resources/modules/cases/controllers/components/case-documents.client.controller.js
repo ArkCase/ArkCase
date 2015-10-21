@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', 'UtilService', 'ValidationService', 'StoreService', 'LookupService',
-    function ($scope, $stateParams, Util, Validator, Store, LookupService) {
+angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ValidationService', 'StoreService', 'LookupService',
+    function ($scope, $stateParams, $modal, Util, Validator, Store, LookupService) {
 		$scope.$emit('req-component-config', 'documents');
 
         $scope.config = null;

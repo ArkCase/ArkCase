@@ -25,7 +25,8 @@ angular.module('services').factory('EcmService', ['$resource',
             }
             , replaceFile: {
                 method: 'POST',
-                url: 'proxy/arkcase/api/latest/service/ecm/replace/:fileId'
+                url: 'proxy/arkcase/api/latest/service/ecm/replace/:fileId',
+                headers: {'Content-Type': undefined}
             }
             , deleteFile: {
                 method: 'DELETE',
@@ -57,7 +58,7 @@ angular.module('services').factory('EcmService', ['$resource',
             }
             , setActiveVersion: {
                 method: 'POST',
-                url: 'proxy/arkcase/api/latest/service/ecm/file/:fileId/:version'
+                url: 'proxy/arkcase/api/latest/service/ecm/file/:fileId?versionTag=:version'
             }
             , sendEmail: {
                 method: 'POST',

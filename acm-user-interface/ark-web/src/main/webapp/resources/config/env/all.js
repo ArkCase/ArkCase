@@ -77,7 +77,9 @@ module.exports = {
                 'lib/ng-file-upload/ng-file-upload.js',
                 'lib/ng-file-upload-shim/ng-file-upload-shim.js',
                 'lib/summernote/dist/summernote.js',
-                'lib/ui-contextmenu/jquery.ui-contextmenu.js'
+                'lib/ui-contextmenu/jquery.ui-contextmenu.js',
+                'lib/bootbox/bootbox.js',
+                'lib/ngBootbox/ngBootbox.js'
             ]
         },
         css: [
