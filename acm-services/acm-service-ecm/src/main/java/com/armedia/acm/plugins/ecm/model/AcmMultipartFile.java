@@ -26,13 +26,25 @@ public class AcmMultipartFile implements MultipartFile {
 	private long size;
 	private byte[] bytes;
 	private InputStream inputStream;
+	private String type;
 	
 	public AcmMultipartFile(){
 		
 	}
 	
-	public AcmMultipartFile(String name, String originalFileName, String contentType, boolean empty, long size, byte[] bytes, InputStream inputStream, boolean uniqueFileName){
+	public AcmMultipartFile(String name, String originalFileName, String contentType, boolean empty, long size, byte[] bytes, InputStream inputStream, boolean uniqueFileName)
+	{
+		init(name, originalFileName, contentType, empty, size, bytes, inputStream, uniqueFileName);
+	}
 
+	public AcmMultipartFile(String name, String originalFileName, String contentType, boolean empty, long size, byte[] bytes, InputStream inputStream, boolean uniqueFileName, String type)
+	{
+		init(name, originalFileName, contentType, empty, size, bytes, inputStream, uniqueFileName);
+		this.type = type;
+	}
+
+	private void init(String name, String originalFileName, String contentType, boolean empty, long size, byte[] bytes, InputStream inputStream, boolean uniqueFileName)
+	{
 		FolderAndFilesUtils folderAndFilesUtils = new FolderAndFilesUtils();
 		if (uniqueFileName)
 		{
@@ -41,10 +53,10 @@ public class AcmMultipartFile implements MultipartFile {
 		}
 		else
 		{
-			this.name = name;	
+			this.name = name;
 			this.originalFilename = originalFileName;
 		}
-		
+
 		this.contentType = contentType;
 		this.empty = empty;
 		this.size = size;
@@ -118,5 +130,15 @@ public class AcmMultipartFile implements MultipartFile {
 	@Override
 	public void transferTo(File dest) throws IOException, IllegalStateException {
 		FileCopyUtils.copy(bytes, dest);
+	}
+
+	public String getType()
+	{
+		return type;
+	}
+
+	public void setType(String type)
+	{
+		this.type = type;
 	}
 }
