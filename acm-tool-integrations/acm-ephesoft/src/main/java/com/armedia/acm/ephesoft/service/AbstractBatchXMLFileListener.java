@@ -1,8 +1,15 @@
-package com.armedia.acm.files;
+package com.armedia.acm.ephesoft.service;
 
+import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.files.FileConstants;
+import com.armedia.acm.files.FileEvent;
+import com.armedia.acm.files.FileEventListener;
 import com.armedia.acm.files.capture.CaptureConstants;
 import com.armedia.acm.files.capture.DocumentObject;
+import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.eclipse.persistence.dynamic.DynamicEntity;
@@ -11,16 +18,22 @@ import org.eclipse.persistence.jaxb.dynamic.DynamicJAXBContext;
 import org.eclipse.persistence.jaxb.dynamic.DynamicJAXBContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.xml.bind.Unmarshaller;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by riste.tutureski on 10/8/2015.
@@ -28,6 +41,8 @@ import java.util.Map;
 public abstract class AbstractBatchXMLFileListener extends FileEventListener
 {
     private Logger LOG = LoggerFactory.getLogger(getClass());
+    private EcmFileService ecmFileService;
+    private String OXMFilePath;
 
     @Override
     public void onApplicationEvent(FileEvent event)
@@ -87,8 +102,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
 
         try
         {
-            String userHome = System.getProperty("user.home");
-            InputStream oxm = new FileInputStream(userHome + getOXMFilePath());
+            InputStream oxm = new FileInputStream(getOXMFilePath());
 
             Map<String, Object> properties = new HashMap<>();
             properties.put(JAXBContextProperties.OXM_METADATA_SOURCE, oxm);
@@ -106,13 +120,6 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
     }
 
     /**
-     * Take OXM file destination
-     *
-     * @return - path in string representation
-     */
-    public abstract String getOXMFilePath();
-
-    /**
      * Take how many seconds we will trying to check if all documents are loaded.
      *
      * @return - number of seconds
@@ -120,19 +127,165 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
     public abstract Long getLoadingDocumentsSeconds();
 
     /**
-     * Take all documents for given XML batch file
-     *
-     * @param xmlBatch - XML batch file
-     * @return - map where key is document identifier, value is document object
-     */
-    public abstract Map<String, DocumentObject> getFileDocuments(File xmlBatch);
-
-    /**
      * Process batch file - create objects and save them to database
      *
      * @param documents - documents with their attachments
      */
     public abstract void processBatch( Map<String, DocumentObject> documents);
+
+    /**
+     * Check if entity is attachment or object for processing
+     *
+     * @param entity
+     * @return
+     */
+    public abstract boolean isAttachment(DynamicEntity entity);
+
+    /**
+     * Return attachments only these who will pass the filer. For different integrations, the way how we are taking
+     * attachments is different. If no filter needed, just return provided list of attachments
+     *
+     * @param docObject - document object where attachments should be attached
+     * @param attachments - attachments that should be attached to the object
+     * @return - list of document objects
+     */
+    public abstract List<DocumentObject> filterAttachments(DocumentObject docObject, List<DocumentObject> attachments);
+
+    /**
+     * Save all documents as attachments related to given object
+     *
+     * @param cmisFolderId - cmis folder id
+     * @param objectId - object id
+     * @param objectType - type of the object
+     * @param docObject - document object where the file is
+     * @param objectFileType - the type of the file that representing the object itself
+     * @param attachmentFileType - the type of the file that representing attachment for given object
+     */
+    public void saveAttachments(String cmisFolderId, Long objectId, String objectType, DocumentObject docObject, String objectFileType, String attachmentFileType)
+    {
+        if (docObject != null)
+        {
+            // Save Object PDF document as attachment in Alfresco
+            if (docObject.getDocument() != null)
+            {
+                saveAttachment(cmisFolderId, objectId, objectType, docObject, objectFileType);
+            }
+
+            // Save other documents as attachments
+            if (docObject.getAttachments() != null)
+            {
+                docObject.getAttachments().stream().forEach(doc -> saveAttachment(cmisFolderId, objectId, objectType, doc, attachmentFileType));
+            }
+        }
+    }
+
+    /**
+     * Save document as attachment for given order
+     *
+     * @param cmisFolderId - cmis folder id
+     * @param objectId - object id
+     * @param objectType - type of the object
+     * @param docObject - document object where the file is
+     * @param fileType - type of the file
+     */
+    public void saveAttachment(String cmisFolderId, Long objectId, String objectType, DocumentObject docObject, String fileType)
+    {
+        try
+        {
+            // This will help us to recognize content type
+            MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
+
+            // Take the input stream for given file
+            InputStream originalIS = new BufferedInputStream(new FileInputStream(docObject.getDocument()));
+            byte[] bytes = IOUtils.toByteArray(originalIS);
+
+            // Create clone of the input stream and close the original. We need this to be able to release
+            // original input stream to be able to move files through folders
+            InputStream cloneIS = new ByteArrayInputStream(bytes);
+            originalIS.close();
+
+            // Take content type and create authentication object (we need authentication object for
+            // EcmFileService - we need userID which in this case is set to FileConstants.XML_BATCH_USER value)
+            String contentType = mimetypesFileTypeMap.getContentType(docObject.getDocument());
+            Authentication auth = new AcmAuthentication(null, null, null, true, FileConstants.XML_BATCH_USER);
+
+            // Create multipart file object - used "upload" service require it and using this service method is the best
+            // way to upload file for given object - it creates AcmContainer object that we need for uploading
+            AcmMultipartFile file = new AcmMultipartFile(
+                    docObject.getDocument().getName(),
+                    docObject.getDocument().getName(),
+                    contentType,
+                    false,
+                    docObject.getDocument().length(),
+                    bytes,
+                    cloneIS,
+                    true);
+
+            // Upload file
+            getEcmFileService().upload(file.getOriginalFilename(), fileType, file, auth, cmisFolderId, objectType, objectId);
+        }
+        catch(Exception e)
+        {
+            LOG.error("Cannot save attachment. Reason: {}", e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Take all documents for given XML batch file
+     *
+     * @param xmlBatch - XML batch file
+     * @return - map where key is document identifier, value is document object
+     */
+    public Map<String, DocumentObject> getFileDocuments(File xmlBatch)
+    {
+        final Map<String, DocumentObject> documents = new HashMap<String, DocumentObject>();
+
+        try
+        {
+            DynamicEntity entity = getEntity(xmlBatch);
+            List<DynamicEntity> documentsList = entity.<List<DynamicEntity>>get(FileConstants.XML_BATCH_DOCUMENTS_KEY);
+
+            List<DocumentObject> attachments = getAllAttachments(documentsList);
+            documentsList.stream().forEach(element -> {
+                DocumentObject doc = getDocumentObject(element);
+                if (doc != null && doc.getId() != null && !isAttachment(doc.getEntity()))
+                {
+                    addAttachments(doc, attachments);
+                    documents.put(doc.getId(), doc);
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            LOG.error("Cannot take documents for given batch file. Reason: {}", e.getMessage(), e);
+        }
+
+        return documents;
+    }
+
+    /**
+     * Add attachments to the object
+     *
+     * @param docObject - the object where attachments should be attached
+     * @param attachments - attachments that should be attached to the object
+     */
+    public void addAttachments(DocumentObject docObject, List<DocumentObject> attachments)
+    {
+        if (docObject != null && attachments != null)
+        {
+            List<DocumentObject> filteredAttachments = filterAttachments(docObject, attachments);
+
+            if (docObject.getAttachments() == null)
+            {
+                docObject.setAttachments(new ArrayList<>());
+            }
+
+            if (filteredAttachments != null)
+            {
+                docObject.getAttachments().addAll(filteredAttachments);
+            }
+        }
+    }
 
     /**
      * Move file to given folder
@@ -294,7 +447,80 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
         return documents;
     }
 
+    /**
+     * Create DocumentObject for given information from XML file
+     *
+     * @param element - DynamicEntity object created from XML file
+     * @return - DocumentObject
+     */
+    public DocumentObject getDocumentObject(DynamicEntity element)
+    {
+        DocumentObject doc = null;
+        try
+        {
+            String id = element.<String>get(FileConstants.XML_BATCH_IDENTIFIER_KEY);
+            File watchFolder = new File(getWatchFolder().getURL().toURI());
+            String ephesoftFileName = element.<String>get(FileConstants.XML_BATCH_MULTI_PAGE_PDF_FILE_KEY);
+            LOG.debug("File name from Ephesoft (may contain Ephesoft server path info): {}", ephesoftFileName);
+            String winSeparator = "\\";
+            if (ephesoftFileName.contains(winSeparator))
+            {
+                ephesoftFileName = ephesoftFileName.substring(ephesoftFileName.lastIndexOf(winSeparator) + 1);
+            } else if (ephesoftFileName.contains("/"))
+            {
+                ephesoftFileName = ephesoftFileName.substring(ephesoftFileName.lastIndexOf("/") + 1);
+            }
 
+            LOG.debug("Filename part of Ephesoft file: {}", ephesoftFileName);
+
+            File document = new File(watchFolder, ephesoftFileName);
+
+            LOG.info("Expected path to file: {}", document.getCanonicalPath());
+            LOG.info("File {} exists? {}", document.getCanonicalPath(), document.exists());
+
+            // If document not exist on the file system, do not create File object, just set null
+            if (document != null && !document.exists())
+            {
+                document = null;
+            }
+
+            doc = new DocumentObject(id, document, null, element);
+        }
+        catch (FileSystemException | URISyntaxException e)
+        {
+            LOG.error("Cannot take document. Reason: {}", e.getMessage(), e);
+        }
+        catch (IOException e)
+        {
+            LOG.error("Cannot take document. Reason: {}", e.getMessage(), e);
+        }
+
+        return doc;
+    }
+
+    /**
+     * This method will return all attachments
+     *
+     * @param documentsList
+     * @return
+     */
+    public List<DocumentObject> getAllAttachments(List<DynamicEntity> documentsList)
+    {
+        List<DocumentObject> retval = new ArrayList<>();
+
+        if (documentsList != null)
+        {
+            documentsList.stream().forEach(element -> {
+                DocumentObject doc = getDocumentObject(element);
+                if (doc != null && doc.getId() != null && isAttachment(element))
+                {
+                    retval.add(doc);
+                }
+            });
+        }
+
+        return retval;
+    }
 
     /**
      * The method will return number of documents provided in the XML batch file
@@ -370,6 +596,50 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
         }
 
         return loaded;
+    }
+
+    /**
+     * This will return the value for given field name from the list of fields
+     *
+     * @param name
+     * @param documentLevelFields
+     * @return
+     */
+    public String getDocumentLevelFieldValue(String name, List<DynamicEntity> documentLevelFields)
+    {
+        String retval = null;
+
+        if (name != null && documentLevelFields != null)
+        {
+            // Try to find DynamicEntity object for given name
+            Optional<DynamicEntity> found = documentLevelFields.stream().filter(element -> name.equals(element.<String>get(CaptureConstants.XML_BATCH_NAME_KEY))).findFirst();
+            if (found != null && found.isPresent())
+            {
+                retval = found.get().<String>get(CaptureConstants.XML_BATCH_VALUE_KEY);
+            }
+        }
+
+        return retval;
+    }
+
+    public EcmFileService getEcmFileService()
+    {
+        return ecmFileService;
+    }
+
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
+        this.ecmFileService = ecmFileService;
+    }
+
+    public String getOXMFilePath()
+    {
+        return OXMFilePath;
+    }
+
+    public void setOXMFilePath(String OXMFilePath)
+    {
+        this.OXMFilePath = OXMFilePath;
     }
 
     public Logger getLOG()

@@ -1,5 +1,8 @@
 package com.armedia.acm.files.capture;
 
+import com.armedia.acm.files.FileAddedEvent;
+import com.armedia.acm.files.FileEvent;
+import com.armedia.acm.files.FileWatcher;
 import org.apache.commons.vfs2.FileChangeEvent;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
@@ -41,7 +44,7 @@ public class CaptureFileWatcherTest extends EasyMockSupport
     @Mock
     private FileName mockFileName;
 
-    private CaptureFileWatcher unit;
+    private FileWatcher unit;
     private String fileSeparator = File.separator;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -59,20 +62,21 @@ public class CaptureFileWatcherTest extends EasyMockSupport
     @Before
     public void setUp() throws Exception
     {
-        unit = new CaptureFileWatcher();
-        unit.setBaseFolderPath(baseFolderPath);
-        unit.setFileExtensions(allowedFileExtensions);
+        unit = new FileWatcher();
+        unit.setWatchFolderPath(baseFolderPath);
+        unit.setAllowedFileExtensions(allowedFileExtensions);
     }
 
     @Test
     public void setApplicationContext_noFilesOrFoldersFound() throws Exception
     {
+        expect(mockFileObject.getName()).andReturn(mockFileName);
         expect(mockFileObject.getURL()).andReturn(new URL(baseFolderPath));
         expect(mockFileObject.findFiles(anyObject(FileTypeSelector.class))).andReturn(null).times(2);
 
         replayAll();
 
-        unit.setBaseFolder(mockFileObject);
+        unit.setWatchFolder(mockFileObject);
         unit.setApplicationContext(null);
 
         verifyAll();
@@ -85,14 +89,14 @@ public class CaptureFileWatcherTest extends EasyMockSupport
 
         replayAll();
 
-        unit.setBaseFolder(mockFileObject);
+        unit.setWatchFolder(mockFileObject);
 
         verifyAll();
 
 
         String expected = (runningOnWindows ? "C:" : "") + fileSeparator + "temp";
 
-        assertEquals(expected, unit.getBaseFolderPath());
+        assertEquals(expected, unit.getWatchFolderPath());
     }
 
     @Test
@@ -102,7 +106,7 @@ public class CaptureFileWatcherTest extends EasyMockSupport
 
         replayAll();
 
-        unit.setFileExtensions(fileExtensions);
+        unit.setAllowedFileExtensions(fileExtensions);
 
         verifyAll();
 
@@ -111,20 +115,20 @@ public class CaptureFileWatcherTest extends EasyMockSupport
         expected.add("txt");
         expected.add("html");
 
-        assertEquals(expected, unit.getFileExtensionsList());
+        assertEquals(expected, unit.getAllowedFileExtensionsList());
     }
 
     @Test
     public void raiseEvent_whenFileIsAdded_allowed() throws Exception
     {
 
-        Capture<AbstractCaptureFileEvent> capturedEvent =
-                setupEventTest(unit.getBaseFolderPath() + fileSeparator + "file.xml", "xml");
+        Capture<FileEvent> capturedEvent =
+                setupEventTest(unit.getWatchFolderPath() + fileSeparator + "file.xml", "xml");
 
         unit.fileCreated(mockFileChangeEvent);
 
         verifyEventTestResults(capturedEvent);
-        assertEquals(CaptureFileAddedEvent.class, capturedEvent.getValue().getClass());
+        assertEquals(FileAddedEvent.class, capturedEvent.getValue().getClass());
     }
 
     @Test
@@ -133,16 +137,14 @@ public class CaptureFileWatcherTest extends EasyMockSupport
         // we don't watch for png files so we shouldn't get an event
 
         String extension = "png";
-        String fileUrl = unit.getBaseFolderPath() + fileSeparator + "file.png";
+        String fileUrl = unit.getWatchFolderPath() + fileSeparator + "file.png";
 
         unit.setApplicationEventPublisher(mockPublisher);
 
+        expect(mockFileObject.getName()).andReturn(mockFileName);
         expect(mockFileChangeEvent.getFile()).andReturn(mockFileObject).atLeastOnce();
         expect(mockFileObject.getName()).andReturn(mockFileName).anyTimes();
         expect(mockFileName.getExtension()).andReturn(extension);
-
-        URL fileUrlObj = new URL(fileUrl);
-        expect(mockFileObject.getURL()).andReturn(fileUrlObj);
 
         log.debug("File URL: " + fileUrl);
 
@@ -154,20 +156,20 @@ public class CaptureFileWatcherTest extends EasyMockSupport
         verifyAll();
     }
 
-    private void verifyEventTestResults(Capture<AbstractCaptureFileEvent> capturedEvent)
+    private void verifyEventTestResults(Capture<FileEvent> capturedEvent)
     {
         verifyAll();
 
-        assertEquals("file.xml", capturedEvent.getValue().getCaptureFile().getName());
-        assertNotNull(capturedEvent.getValue().getCaptureFile());
+        assertEquals("file.xml", capturedEvent.getValue().getFile().getName());
+        assertNotNull(capturedEvent.getValue().getFile());
     }
 
-    private Capture<AbstractCaptureFileEvent> setupEventTest(String fileUrl, String extension) throws FileSystemException, MalformedURLException
+    private Capture<FileEvent> setupEventTest(String fileUrl, String extension) throws FileSystemException, MalformedURLException
     {
         unit.setApplicationEventPublisher(mockPublisher);
 
 
-        Capture<AbstractCaptureFileEvent> capturedEvent = new Capture<>();
+        Capture<FileEvent> capturedEvent = new Capture<>();
 
         expect(mockFileChangeEvent.getFile()).andReturn(mockFileObject).atLeastOnce();
         expect(mockFileObject.getName()).andReturn(mockFileName).anyTimes();
