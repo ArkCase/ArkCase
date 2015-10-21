@@ -1,5 +1,7 @@
 'use strict';
 
+//angular.module('services').factory('UtilService', ['$q', '$window', 'ngBootbox', 'LookupService',
+//    function ($q, $window, $ngBootbox, LookupService) {
 angular.module('services').factory('UtilService', ['$q', '$window', 'LookupService',
     function ($q, $window, LookupService) {
         var Util = {
@@ -505,8 +507,9 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                         scope.gridOptions.data.splice(idx, 1);
                     }
                 }
-            }
+            } //AcmGrid
 
+            , Ui: {}
         };
         return Util;
     }
