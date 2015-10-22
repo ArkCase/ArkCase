@@ -1,0 +1,35 @@
+{
+  "common": {
+  },
+  "common.directive.docTree": {
+    "btnRefresh": "Refresh",
+    "waitUploading": "Uploading...",
+    "confirmVersion": "Are you sure to set back to older version?",
+    "declareSuccessful": "Declare successful. Refreshing Document Tree...",
+    "prevItems": " items above...",
+    "prevItemsTooltip": "Review previous items",
+    "moreItems": " more items...",
+    "moreItemsTooltip": "Load more items",
+    "moreItemsBegin": "More items...",
+    "menu": {
+      "noop": "(Select Item)",
+      "newFolder": "New Folder <kbd>Ctrl+N</kbd>",
+      "newFile": "New Document",
+      "rename": "Rename <kbd>[F2]</kbd>",
+      "cut": "Cut <kbd>Ctrl+X</kbd>",
+      "copy": "Copy <kbd>Ctrl+C</kbd>",
+      "paste": "Paste <kbd>Ctrl+V</kbd>",
+      "delete": "Delete <kbd>Ctrl+D</kbd>",
+      "open": "Open",
+      "edit": "Edit",
+      "download": "Download",
+      "replace": "Replace",
+      "email": "Email",
+      "print": "Print <kbd>Ctrl+P</kbd>",
+      "declare": "Declare as Record(s)"
+    },
+    "error": {
+      "nodeTitle": "(Error)"
+    }
+  }
+}

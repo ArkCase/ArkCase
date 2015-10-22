@@ -27,7 +27,8 @@ var ApplicationConfiguration = (function() {
         'ui.grid.expandable',
         'ui.grid.edit',
         'xeditable',
-        'summernote'
+        'summernote',
+        'ngBootbox'
     ];
 
     // Add a new vertical module
