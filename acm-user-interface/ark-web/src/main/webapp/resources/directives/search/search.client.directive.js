@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('directive').directive('facetedSearch', ['FacetedSearchService',
-    function (FacetedSearchService) {
+angular.module('directive').directive('search', ['SearchService',
+    function (SearchService) {
         return {
             restrict: 'E',              //match only element name
             scope: {
@@ -30,7 +30,7 @@ angular.module('directive').directive('facetedSearch', ['FacetedSearchService',
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
                 scope.queryExistingItems = function (){
-                    FacetedSearchService.queryFilteredSearch({
+                    SearchService.queryFilteredSearch({
                             input: scope.searchQuery + "*",
                             start: scope.start,
                             n: scope.pageSize,
@@ -101,7 +101,7 @@ angular.module('directive').directive('facetedSearch', ['FacetedSearchService',
                 }
             },
 
-            templateUrl: 'directives/faceted-search/faceted-search.client.view.html'
+            templateUrl: 'directives/search/search.client.view.html'
         };
     }
 ]);
