@@ -31,6 +31,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
                             var notes = data;
                             $scope.gridOptions.data = notes;
                             $scope.gridOptions.totalItems = notes.length;
+                            Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
                         });
                     }
                 });
@@ -46,6 +47,8 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             newRow.created = "2015-09-28T13:17:52.036-0400"; //Acm.getCurrentDay();
             newRow.creator = "ann-acm"; //App.getUserName();
             $scope.gridOptions.data.push(newRow);
+            $scope.gridOptions.totalItems++;
+            Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
         };
         $scope.updateRow = function (rowEntity) {
             var note = Util.omitNg(rowEntity);

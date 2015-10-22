@@ -28,6 +28,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
                         promiseUsers.then(function () {
                             $scope.gridOptions.data = data.resultPage;
                             $scope.gridOptions.totalItems = data.totalCount;
+                            Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
                         });
                     }
                 });
