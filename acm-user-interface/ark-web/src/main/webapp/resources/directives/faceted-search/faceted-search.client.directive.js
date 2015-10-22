@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('notfications').directive('notification', ['NotificationService',
-    function (NotificationService) {
+angular.module('directive').directive('facetedSearch', ['FacetedSearchService',
+    function (FacetedSearchService) {
         return {
             restrict: 'E',              //match only element name
             scope: {
@@ -14,7 +14,6 @@ angular.module('notfications').directive('notification', ['NotificationService',
                  * @param searchPlaceholder - label for the input placeholder
                  * @param filter - filter required to send to the faceted search by default (e.g. for client : "\"Object Sub Type\":CLIENT")
                  * @param config - config of the parent scope used mostly for the UI-grid and to retrieve other params
-                 * @param modalInstance - current modalInstance in the parentScope, required to pass data when modal closes with "Add"
                  **/
 
                 header: '@',            //@ : text binding (read-only and only strings)
@@ -31,7 +30,7 @@ angular.module('notfications').directive('notification', ['NotificationService',
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
                 scope.queryExistingItems = function (){
-                    NotificationService.queryFilteredSearch({
+                    FacetedSearchService.queryFilteredSearch({
                             input: scope.searchQuery + "*",
                             start: scope.start,
                             n: scope.pageSize,
@@ -102,7 +101,7 @@ angular.module('notfications').directive('notification', ['NotificationService',
                 }
             },
 
-            templateUrl: 'modules/notifications/notification.client.view.html'
+            templateUrl: 'modules/notifications/faceted-search.client.view.html'
         };
     }
 ]);
