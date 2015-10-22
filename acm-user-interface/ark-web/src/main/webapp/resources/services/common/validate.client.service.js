@@ -454,6 +454,238 @@ angular.module('services').factory('ValidationService', ["UtilService",
                 return false;
             }
             return true;
-        }        
+        }
+
+        , validateFolderList: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (!Util.isArray(data.children)) {
+                return false;
+            }
+            return true;
+        }
+        , validateCreateInfo: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.id)) {
+                return false;
+            }
+            if (0 == data.id) {
+                return false;
+            }
+            if (Util.isEmpty(data.parentFolderId)) {
+                return false;
+            }
+            return true;
+        }
+        , validateDeletedFolder: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.deletedFolderId)) {
+                return false;
+            }
+            return true;
+        }
+        , validateDeletedFile: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.deletedFileId)) {
+                return false;
+            }
+            return true;
+        }
+        , validateRenamedFolder: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.id)) {
+                return false;
+            }
+            if (Util.isEmpty(data.name)) {
+                return false;
+            }
+            return true;
+        }
+        , validateRenamedFile: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.fileId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.fileName)) {
+                return false;
+            }
+            return true;
+        }
+        , validateMoveFileInfo: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.fileId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.folder)) {
+                return false;
+            }
+            if (Util.isEmpty(data.folder.id)) {
+                return false;
+            }
+            return true;
+        }
+        , validateCopyFileInfo: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.originalId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.newFile)) {
+                return false;
+            }
+            if (Util.isEmpty(data.newFile.fileId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.newFile.folder)) {
+                return false;
+            }
+            if (Util.isEmpty(data.newFile.folder.id)) {
+                return false;
+            }
+            return true;
+        }
+        , validateMoveFolderInfo: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.id)) {
+                return false;
+            }
+            return true;
+        }
+        , validateCopyFolderInfo: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.originalFolderId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.newFolder)) {
+                return false;
+            }
+            if (Util.isEmpty(data.newFolder.id)) {
+                return false;
+            }
+            if (Util.isEmpty(data.newFolder.parentFolderId)) {
+                return false;
+            }
+            return true;
+        }
+        , validateUploadInfo: function (data) {
+            if (Util.isArrayEmpty(data)) {
+                return false;
+            }
+            for (var i = 0; i < data.length; i++) {
+                if (!this.validateUploadInfoItem(data[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        , validateReplaceInfo: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.fileId)) {
+                return false;
+            }
+            return true;
+        }
+        , validateUploadInfoItem: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.fileId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.folder)) {
+                return false;
+            }
+            if (!Util.isArray(data.versions)) {
+                return false;
+            }
+            if (!Util.isArray(data.tags)) {
+                return false;
+            }
+            return true;
+        }
+        , validateActiveVersion: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.fileId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.activeVersionTag)) {
+                return false;
+            }
+            return true;
+        }
+        , validateSentEmails: function (data) {
+            if (!Util.isArray(data)) {
+                return false;
+            }
+            for (var i = 0; i < data.length; i++) {
+                if (!this.validateSentEmail(data[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        , validateSentEmail: function (data) {
+            if (Util.isEmpty(data.state)) {
+                return false;
+            }
+            if (Util.isEmpty(data.userEmail)) {
+                return false;
+            }
+            return true;
+        }
+        , validateFileTypes: function (data) {
+            if (!Util.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        , validatePlainForms: function (data) {
+            if (!Util.isArray(data)) {
+                return false;
+            }
+            for (var i = 0; i < data.length; i++) {
+                if (!this.validatePlainForm(data[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        , validatePlainForm: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.key) && Util.isEmpty(data.type)) {  //different attribute name. service data use "key"; menu item use "type"
+                return false;
+            }
+            if (Util.isEmpty(data.url)) {
+                return false;
+            }
+            if (!Util.isArray(data.urlParameters)) {
+                return false;
+            }
+            return true;
+        }
     }}
 ]);
