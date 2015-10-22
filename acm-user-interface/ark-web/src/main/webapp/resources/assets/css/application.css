@@ -1,3 +1,4 @@
+/* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
 /* Typography */
 
 h1 {
@@ -502,7 +503,7 @@ thead {
 /* Inlined Editing */
 
 .form-inline {
-    position: absolute;
+    position: fixed;
     margin-top: 30px;
     background-color: #ebeceb;
     border: 1px solid #AAA;
