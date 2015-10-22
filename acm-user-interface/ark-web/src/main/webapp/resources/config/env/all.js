@@ -1,7 +1,6 @@
 'use strict';
 var path = require('path');
 
-
 module.exports = {
 
     appPath: '/arkcase/',
@@ -17,7 +16,6 @@ module.exports = {
         defaultModulesFolder: 'modules/',
         customModulesFolder: 'custom_modules/'
     },
-
 
     homePage: {
         title: "ArkCase Application",
@@ -104,4 +102,4 @@ module.exports = {
             'custom_modules/*/**/*.js'
         ]
     }
-}
+};
