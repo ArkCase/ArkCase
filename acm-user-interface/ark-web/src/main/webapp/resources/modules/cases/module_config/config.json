@@ -426,6 +426,12 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
+          "name": "eventType",
+          "displayName": "cases.comp.history.table.columns.eventName",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.eventType }}</div>"
+        },
+        {
           "name": "eventDate",
           "displayName": "cases.comp.history.table.columns.eventDate",
           "headerCellFilter": "translate",
