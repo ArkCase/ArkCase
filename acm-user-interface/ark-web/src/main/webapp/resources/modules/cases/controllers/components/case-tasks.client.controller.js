@@ -6,10 +6,10 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
 
         var promiseUsers = Util.AcmGrid.getUsers($scope);
 
-        var promiseMyTasks = Util.servicePromise({
+        var promiseMyTasks = Util.serviceCall({
             service: CasesService.queryMyTasks
             , param: {user: "ann-acm"}
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 var arr = Util.goodArray(data);
                 $scope.myTasks = _.map(data, _.partialRight(_.pick, "taskId", "adhocTask", "completed", "status", "availableOutcomes"));
                 //

@@ -30,8 +30,6 @@ public interface ComplaintConstants {
 	String XML_BATCH_EMPLOYER_ZIP_CODE_KEY = "EmployerZipCode";
 	String XML_BATCH_EMPLOYER_PHONE_KEY = "EmployerPhone";
 	String XML_BATCH_COMPLAINT_DOC_ID = "ComplaintDocID";
-
-
-	String OXM_FILE_PATH = "/.acm/ephesoft/oxm/ephesoft_complaint_oxm.xml";
+	String XML_BATCH_EVENT_TYPE = "CAPTURE";
 	
 }
