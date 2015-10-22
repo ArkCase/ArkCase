@@ -19,6 +19,11 @@ angular.module('cases').config(['$stateProvider', '$urlRouterProvider',
 				}
 			})
 
+			.state('cases.id', {
+				url: '/:id',
+				templateUrl: 'modules/cases/views/components/case-calendar.client.view.html'
+			})
+
 			.state('cases.calendar', {
 				url: '/:id/calendar',
 				templateUrl: 'modules/cases/views/components/case-calendar.client.view.html'
