@@ -1,8 +1,14 @@
 'use strict';
 
-// Pages module config
-angular.module('cases').run(['Menus',
-	function(Menus) {
-		//Menus.addMenuItem('leftnav', 'Cases', 'cases');
+angular.module('cases').run(['Menus', 'ConfigService',
+    function (Menus, ConfigService) {
+        var config = ConfigService.getModule({moduleId: 'cases'});
+        config.$promise.then(function (config) {
+            if (config.menus) {
+                Menus.addMenuItems(config.menus);
+            }
+        });
 	}
 ]);
+
+
