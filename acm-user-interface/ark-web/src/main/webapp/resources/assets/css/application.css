@@ -565,3 +565,15 @@ a.editable.editable-click.editable-hide {
 .module-content .left-sidebar-lg .ui-grid-pinned-container .ui-grid-header-canvas {
     height: auto !important;
 }
+
+
+/* Cases Module - Header */
+
+.module-header .col-xs-12.col-md-4 .h4.font-bold {
+	font-size: 15px;
+	margin: 0px;
+}
+
+.module-header .col-xs-6.text-right h4 {
+	margin-right: 20px;
+}
