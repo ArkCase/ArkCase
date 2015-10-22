@@ -101,7 +101,7 @@ angular.module('directive').directive('facetedSearch', ['FacetedSearchService',
                 }
             },
 
-            templateUrl: 'modules/notifications/faceted-search.client.view.html'
+            templateUrl: 'directives/faceted-search/faceted-search.client.view.html'
         };
     }
 ]);
