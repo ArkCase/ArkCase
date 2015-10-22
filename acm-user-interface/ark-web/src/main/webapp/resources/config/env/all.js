@@ -26,6 +26,7 @@ module.exports = {
     assets: {
         lib: {
             css: [
+                'lib/jquery-ui/themes/ui-lightness/jquery-ui.css',
                 'lib/bootstrap/dist/css/bootstrap.css',
                 'lib/bootstrap/dist/css/bootstrap-theme.css',
                 'lib/angular-ui-grid/ui-grid.css',
@@ -66,10 +67,17 @@ module.exports = {
                 'lib/Sortable/Sortable.js',
                 'lib/angular-dashboard-framework/dist/angular-dashboard-framework.js',
                 'lib/fancytree/dist/jquery.fancytree.js',
+                'lib/fancytree/dist/src/jquery.fancytree.table.js',
+                'lib/fancytree/dist/src/jquery.fancytree.gridnav.js',
+                'lib/fancytree/dist/src/jquery.fancytree.edit.js',
+                'lib/fancytree/dist/src/jquery.fancytree.dnd.js',
                 'lib/highcharts-ng/dist/highcharts-ng.js',
                 'lib/ng-file-upload/ng-file-upload.js',
                 'lib/ng-file-upload-shim/ng-file-upload-shim.js',
-                'lib/summernote/dist/summernote.js'
+                'lib/summernote/dist/summernote.js',
+                'lib/ui-contextmenu/jquery.ui-contextmenu.js',
+                'lib/bootbox/bootbox.js',
+                'lib/ngBootbox/ngBootbox.js'
             ]
         },
         css: [

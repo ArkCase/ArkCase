@@ -7,9 +7,9 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
         var promiseUsers = Util.AcmGrid.getUsers($scope);
 
-        var promisePersonTypes = Util.servicePromise({
+        var promisePersonTypes = Util.serviceCall({
             service: LookupService.getPersonTypes
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 $scope.personTypes = [];
                 _.forEach(data, function (v, k) {
                     $scope.personTypes.push({type: v, name: v});
@@ -17,9 +17,9 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 return $scope.personTypes;
             }
         });
-        var promiseContactMethodTypes = Util.servicePromise({
+        var promiseContactMethodTypes = Util.serviceCall({
             service: LookupService.getContactMethodTypes
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 $scope.contactMethodTypes = [];
                 Util.forEachStripNg(data, function (v, k) {
                     $scope.contactMethodTypes.push({type: k, name: v});
@@ -27,9 +27,9 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 return $scope.contactMethodTypes;
             }
         });
-        var promiseOrganizationTypes = Util.servicePromise({
+        var promiseOrganizationTypes = Util.serviceCall({
             service: LookupService.getOrganizationTypes
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 $scope.organizationTypes = [];
                 Util.forEachStripNg(data, function (v, k) {
                     $scope.organizationTypes.push({type: k, name: v});
@@ -37,9 +37,9 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 return $scope.organizationTypes;
             }
         });
-        var promiseAddressTypes = Util.servicePromise({
+        var promiseAddressTypes = Util.serviceCall({
             service: LookupService.getAddressTypes
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 $scope.addressTypes = [];
                 Util.forEachStripNg(data, function (v, k) {
                     $scope.addressTypes.push({type: k, name: v});
@@ -47,9 +47,9 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 return $scope.addressTypes;
             }
         });
-        var promiseAliasTypes = Util.servicePromise({
+        var promiseAliasTypes = Util.serviceCall({
             service: LookupService.getAliasTypes
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 $scope.aliasTypes = [];
                 Util.forEachStripNg(data, function (v, k) {
                     $scope.aliasTypes.push({type: k, name: v});
@@ -57,9 +57,9 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 return $scope.aliasTypes;
             }
         });
-        var promiseSecurityTagTypes = Util.servicePromise({
+        var promiseSecurityTagTypes = Util.serviceCall({
             service: LookupService.getSecurityTagTypes
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 $scope.securityTagTypes = [];
                 Util.forEachStripNg(data, function (v, k) {
                     $scope.securityTagTypes.push({type: k, name: v});
@@ -417,7 +417,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             if (Util.isEmpty(rowEntity.id)) {
                 var pa = newPersonAssociation();
                 pa.parentId = $scope.caseInfo.id;
-                pa.parentType = "CASE_FILE";
+                pa.parentType = Util.Constant.OBJTYPE_CASE_FILE;
                 pa.person.className = Util.goodValue($scope.config.className); //"com.armedia.acm.plugins.person.model.Person";
                 pa.person.givenName = givenName;
                 pa.person.familyName = familyName;
