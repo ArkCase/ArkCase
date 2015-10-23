@@ -1,10 +1,17 @@
 'use strict';
 
-angular.module('cases').controller('Cases.NotesController', ['$scope', '$stateParams', '$q', 'UtilService', 'ValidationService', 'LookupService', 'CasesService',
-    function ($scope, $stateParams, $q, Util, Validator, LookupService, CasesService) {
+angular.module('cases').controller('Cases.NotesController', ['$scope', '$stateParams', '$q', 'UtilService', 'ValidationService', 'LookupService', 'CasesService', 'Authentication',
+    function ($scope, $stateParams, $q, Util, Validator, LookupService, CasesService, Authentication) {
         $scope.$emit('req-component-config', 'notes');
 
         var promiseUsers = Util.AcmGrid.getUsers($scope);
+
+        // Retrieves the currently logged in user
+        $scope.userId = null;
+        Authentication.queryUserInfo({})
+        .$promise.then(function(data) {
+            $scope.userId = data.userId;
+        });
 
         $scope.$on('component-config', function (e, componentId, config) {
             if (componentId == 'notes') {
@@ -44,8 +51,8 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             var newRow = {};
             newRow.parentId = $scope.currentId;
             newRow.parentType = Util.Constant.OBJTYPE_CASE_FILE;
-            newRow.created = "2015-09-28T13:17:52.036-0400"; //Acm.getCurrentDay();
-            newRow.creator = "ann-acm"; //App.getUserName();
+            newRow.created = Util.getCurrentDay();
+            newRow.creator = $scope.userId;
             $scope.gridOptions.data.push(newRow);
             $scope.gridOptions.totalItems++;
             Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
