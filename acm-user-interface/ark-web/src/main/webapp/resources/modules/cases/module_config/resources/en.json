@@ -40,7 +40,7 @@
   "cases.comp.history": {
     "title": "History",
     "table.columns": {
-      "eventName": "Event Name",
+      "eventType": "Event Name",
       "eventDate": "Date",
       "userId": "User"
     }
