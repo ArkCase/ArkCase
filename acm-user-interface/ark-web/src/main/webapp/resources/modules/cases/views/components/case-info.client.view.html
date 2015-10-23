@@ -1,33 +1,31 @@
 <div ng-controller="Cases.InfoController">
-    <div class="clearfix">
-        <div class="col-sm-6">
-            <h4 ng-cloak><a href="#" editable-text="caseInfo.title" onaftersave="updateTitle()">{{caseInfo.title || "Unknown" }}</a>({{caseInfo.status}})</h4>
-        </div>
-        <div class="col-sm-6">
-            <!--<b>{{'cases.comp.info.caseId' | translate}}</b>{{selectedCase.name}}-->
-            <!--<b>{{'cases.comp.info.caseNumber' | translate}}</b>{{caseInfo.caseNumber}}-->
-            <b>{{'cases.comp.info.caseId' | translate}}</b>{{caseInfo.caseNumber}}
-        </div>
-
-        <div class="col-sm-6">
-            <b>Create Date: </b>{{caseInfo.created | date: "MM/dd/yyyy"}}
-        </div>
-        <div class="col-sm-6">
-            <b>Priority: </b><a href="#" editable-select="caseInfo.priority" e-ng-options="p.value as p.text for p in priorities">{{ caseInfo.priority  || 'Unknown'}}</a>
-            <!--<b>Priority: </b><a href="#" editable-select="caseInfo.priority" e-ng-options="p as p for p in priorities">{{ caseInfo.priority  || 'Unknown'}}</a>-->
-            <!--<select ng-model="myselect" ng-options="o as o for o in myoptions"></select>-->
-
-
-        </div>
-        <div class="col-sm-6">
-            <b>Due Date: </b><a href="#" editable-date="caseInfo.dueDate">{{ caseInfo.dueDate | date: "MM/dd/yyyy" || 'Unknown' }}</a>
-            <!--<b>Due Date: </b><a href="#" editable-bsdate="caseInfo.dueDate" e-datepicker-popup="MM/dd/yyyy">{{ caseInfo.dueDate | date: "MM/dd/yyyy" || 'Unknown' }}</a>-->
-        </div>
-
-
-    </div>
-
-    <!--<div class="clearfix">-->
-        <!--<div class="col-md-4"><b>{{'cases.comp.info.courtRoomName' | translate}}</b> {{caseInfo.courtroomName}}</div>-->
-    <!--</div>-->
+<div class="clearfix">
+	  <div class="row">
+		<div class="col-xs-6">
+		  <h4><a href="#" editable-text="caseInfo.title" onaftersave="updateTitle()">{{caseInfo.title || "Unknown" }}</a> ({{caseInfo.status}})</h4>
+		</div>
+		<div class="col-xs-6  text-right">
+		  <!--<b>{{'cases.comp.info.caseId' | translate}}</b>{{selectedCase.name}}-->
+        <!--<b>{{'cases.comp.info.caseNumber' | translate}}</b>{{caseInfo.caseNumber}}-->
+		  <h4>{{'cases.comp.info.caseId' | translate}}</h4>
+		</div>
+	  </div>
+	  <div class="row">
+		<div class="col-xs-12 col-md-4">
+		  <div class="h4 font-bold">{{caseInfo.created | date: "MM/dd/yyyy"}}</div>
+		  <small class="text-muted">Created Date</small> </div>
+		<div class="col-xs-12 col-md-4">
+		  <div class="h4 font-bold"><a href="#" editable-select="caseInfo.priority" e-ng-options="p.value as p.text for p in priorities">{{ caseInfo.priority  || 'Unknown'}}</a></div>
+		  <small class="text-muted">Priority</small> </div>
+		   <!--<b>Priority: </b><a href="#" editable-select="caseInfo.priority" e-ng-options="p as p for p in priorities">{{ caseInfo.priority  || 'Unknown'}}</a>-->
+           <!--<select ng-model="myselect" ng-options="o as o for o in myoptions"></select>-->
+		<div class="col-xs-12 col-md-4">
+		  <div class="h4 font-bold"><a href="#" editable-date="caseInfo.dueDate">{{ caseInfo.dueDate | date: "MM/dd/yyyy" || 'Unknown' }}</a></div>
+		  <small class="text-muted">Due Date</small> </div>
+		  <!--<b>Due Date: </b><a href="#" editable-bsdate="caseInfo.dueDate" e-datepicker-popup="MM/dd/yyyy">{{ caseInfo.dueDate | date: "MM/dd/yyyy" || 'Unknown' }}</a>-->
+		  <!--<div class="clearfix">-->
+          <!--<div class="col-md-4"><b>{{'cases.comp.info.courtRoomName' | translate}}</b> {{caseInfo.courtroomName}}</div>-->
+          <!--</div>-->
+	  </div>
+</div>
 </div>
