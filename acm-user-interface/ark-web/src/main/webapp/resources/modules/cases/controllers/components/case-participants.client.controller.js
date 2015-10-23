@@ -116,6 +116,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                 $q.all([promiseTypes, promiseUsers, promiseGroups]).then(function () {
                     $scope.caseInfo = data;
                     $scope.gridOptions.data = $scope.caseInfo.participants;
+                    Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.caseInfo.participants.length);
                     _.each($scope.gridOptions.data, function (item) {
                         if ("*" === item.participantType) {
                             item.acm$_participantNames = [
@@ -135,6 +136,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             var lastPage = $scope.gridApi.pagination.getTotalPages();
             $scope.gridApi.pagination.seek(lastPage);
             $scope.gridOptions.data.push({});
+            Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.data.length);
         };
         $scope.updateRow = function (rowEntity) {
             var caseInfo = Util.omitNg($scope.caseInfo);
