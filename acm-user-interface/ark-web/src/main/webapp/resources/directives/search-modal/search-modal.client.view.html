@@ -9,7 +9,7 @@
                 <div class="input-group">
                     <input class="form-control input-md" ng-model="searchQuery" placeholder="{{searchPlaceholder}}">
                 <span class="input-group-btn">
-                    <button class="btn btn-sm btn-primary" type="button" ng-click="queryExistingItems()">{{search}}</button>
+                    <button class="btn btn-md btn-primary" type="button" ng-click="queryExistingItems()">{{search}}</button>
                 </span>
                 </div>
             </div>
@@ -48,7 +48,7 @@
         <button class="btn btn-sm btn-default pull-left" ng-click="close()">
             {{cancel}}
         </button>
-        <button class="btn btn-sm btn-default pull-right" ng-click="addExistingItem()" ng-disabled="!selectedItem">
+        <button class="btn btn-sm btn-primary pull-right" ng-click="addExistingItem()" ng-disabled="!selectedItem">
             {{ok}}
         </button>
     </div>
