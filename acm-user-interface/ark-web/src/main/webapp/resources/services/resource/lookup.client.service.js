@@ -9,6 +9,11 @@ angular.module('services').factory('LookupService', ['$resource',
                 , method: "GET"
                 , cache: true
             }
+            , getCaseTypes: {
+                url: 'proxy/arkcase/api/latest/plugin/casefile/caseTypes'
+                , cache: true
+                , isArray: true
+            }
             , getPriorities: {
                 url: "proxy/arkcase/api/latest/plugin/complaint/priorities"
                 , method: "GET"
