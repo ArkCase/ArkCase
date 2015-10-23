@@ -350,7 +350,7 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
             , AcmGrid: {
                 hidePagingControlsIfAllDataShown: function (scope, totalCount) {
                     if (scope && scope.gridOptions && scope.gridOptions.paginationPageSize) {
-                        if (totalCount < scope.gridOptions.paginationPageSize) {
+                        if (totalCount <= scope.gridOptions.paginationPageSize) {
                             // Hides pagination controls since there is only 1 page of data
                             scope.gridOptions.enablePaginationControls = false;
                         } else {
