@@ -17,6 +17,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$wi
             if (Validator.validateCaseFile(data)) {
                 $scope.caseInfo = Util.goodValue(data, {references: []});
                 $scope.gridOptions.data = $scope.caseInfo.references;
+                Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.caseInfo.references.length);
             }
         });
 
