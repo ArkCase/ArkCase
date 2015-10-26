@@ -11,7 +11,7 @@
  *
  * The treeView directive renders simple FansyTree based Tree View
  *
- * @param {expression} treeData Data structure used fot tree rendering
+ * @param {expression} treeData Data structure used for tree rendering
  * @param {expression} onSelect Expression to evaluate upon tree item select.
  *
  * @example
