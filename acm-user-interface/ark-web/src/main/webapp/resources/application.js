@@ -18,6 +18,10 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 
         $translateProvider.preferredLanguage('en');
 
+        //jwu: This works somewhat. It enables the common resource; but disables the other resources.
+        //     I addPart() at each individual modules where the common resource is needed
+        //$translatePartialLoaderProvider.addPart('common');
+
 
         // Add HTTP error interceptor
         function httpInterceptor($q, MessageService) {

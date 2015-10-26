@@ -13,6 +13,7 @@ angular.module('cases').config(['$stateProvider', '$urlRouterProvider',
 				templateUrl: 'modules/cases/views/cases.client.view.html',
 				resolve: {
 					translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+						$translatePartialLoader.addPart('common');
 						$translatePartialLoader.addPart('cases');
 						return $translate.refresh();
 					}]

@@ -1,5 +1,7 @@
 'use strict';
 
+//angular.module('services').factory('UtilService', ['$q', '$window', 'ngBootbox', 'LookupService',
+//    function ($q, $window, $ngBootbox, LookupService) {
 angular.module('services').factory('UtilService', ['$q', '$window', 'LookupService',
     function ($q, $window, LookupService) {
         var Util = {
@@ -125,21 +127,44 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                 return arr.length === 0;
             }
 
-            ,servicePromise: function(arg) {
+            , serviceCall: function (arg) {
                 var d = $q.defer();
-                var service = arg.service;
-                var param = this.goodValue(arg.param, {});
                 if (arg.result) {
                     d.resolve(arg.result);
 
                 } else {
-                    service(param, function(data) {
-                        if (arg.callback) {
-                            d.resolve(arg.callback(data));
+                    var service = arg.service;
+                    var param = this.goodValue(arg.param, {});
+                    var data = arg.data;
+                    var onSuccess = function (successData) {
+                        if (arg.onSuccess) {
+                            var rc = arg.onSuccess(successData);
+                            if (undefined == rc) {
+                                if (arg.onInvalid) {
+                                    d.reject(arg.onInvalid(successData));
+                                } else {
+                                    d.reject(); //"validation failure"
+                                }
+                            } else {
+                                d.resolve(rc);
+                            }
                         } else {
-                            d.resolve(data);
+                            d.resolve(successData);
                         }
-                    });
+                    };
+                    var onError = function (errorData) {
+                        var rc = errorData;
+                        if (arg.onError) {
+                            rc = arg.onError(errorData);
+                        }
+                        d.reject(rc);
+                    }
+
+                    if (data) {
+                        service(param, data, onSuccess, onError);
+                    } else {
+                        service(param, onSuccess, onError);
+                    }
                 }
                 return d.promise;
             }
@@ -208,7 +233,132 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                 });
             }
 
+
+
+            //
+            // Depth first tree builder for fancytree (more accurately a forest builder)
+            //
+            , FancyTreeBuilder: {
+                _path: []
+                , _depth: 0
+                , _pushDepth: function (node) {
+                    if (this._path.length > this._depth) {
+                        this._path[this._depth] = node;
+                    } else {
+                        this._path.push(node);
+                    }
+                    this._depth++;
+                }
+                , _popDepth: function () {
+                    if (0 >= this._depth) {
+                        return null;
+                    }
+                    this._depth--;
+                    return this._path[this._depth];
+                }
+                , _peekDepth: function () {
+                    if (0 >= this._depth) {
+                        return null;
+                    }
+                    return this._path[this._depth - 1];
+                }
+
+                , _nodes: []
+                , reset: function () {
+                    this._path = [];
+                    this._depth = 0;
+                    this._nodes = [];
+                    return this;
+                }
+                , addBranch: function (node) {
+                    return this._addNode(node, false);
+                }
+                , addBranchLast: function (node) {
+                    return this._addNode(node, true);
+                }
+                , makeLast: function () {
+                    //keep popping stack until a node that is not the last child is found
+                    var nonLastChildFound = false;
+                    do {
+                        var item = this._peekDepth();
+                        nonLastChildFound = false;
+                        if (item) {
+                            if (item.isLast) {
+                                this._popDepth();
+                                nonLastChildFound = true;
+                            }
+                        }
+                    } while (nonLastChildFound);
+
+                    this._popDepth();   //the node found is not last child, so next node to insert should be its sibling. Pop to parent to prepare for inserting its sibling
+
+                    return this;
+                }
+                , addLeaf: function (node) {
+                    this._addNode(node, false);
+                    this._popDepth();
+                    return this;
+                }
+                , addLeafLast: function (node) {
+                    this._addNode(node, true);
+                    this._popDepth();
+                    this.makeLast();
+                    return this;
+                }
+                , _addNode: function (node, isLast) {
+                    if (0 == this._depth) {
+                        this._nodes.push(node);
+                    } else {
+                        var parent = this._peekDepth();
+                        if (!parent.node.children) {
+                            parent.node.children = [node];
+                        } else {
+                            parent.node.children.push(node);
+                        }
+                    }
+                    this._pushDepth({node: node, isLast: isLast});
+                    return this;
+                }
+                , getTree: function () {
+                    return this._nodes;
+                }
+            }
+
+            , _padZero: function(i) {
+                return (10 > i) ? "0" + i : "" + i;
+            }
+
+            //get day string in "yyyy-mm-dd" format
+            //parameter d is java Date() format; for some reason getDate() is 1 based while getMonth() is zero based
+            , dateToString: function(d) {
+                if (null == d) {
+                    return "";
+                }
+                var month = d.getMonth()+1;
+                var day = d.getDate();
+                var year = d.getFullYear();
+                return this._padZero(month)
+                    + "/" + this._padZero(day)
+                    + "/" + year;
+            }
+
+            , getCurrentDay: function() {
+                var d = new Date();
+                return this.dateToString(d);
+            }
+
             , AcmGrid: {
+                hidePagingControlsIfAllDataShown: function (scope, totalCount) {
+                    if (scope && scope.gridOptions && scope.gridOptions.paginationPageSize) {
+                        if (totalCount <= scope.gridOptions.paginationPageSize) {
+                            // Hides pagination controls since there is only 1 page of data
+                            scope.gridOptions.enablePaginationControls = false;
+                        } else {
+                            // need to re-enable pagination if a record is added to the next page
+                            scope.gridOptions.enablePaginationControls = true;
+                        }
+                    }
+                },
                 setBasicOptions: function (scope, config) {
                     scope.gridOptions = scope.gridOptions || {};
                     scope.config = config;
@@ -300,9 +450,9 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                     scope.gridOptions.columnDefs = config.columnDefs;
                 }
                 , showObject: function (scope, objType, objId) {
-                    var promiseObjectTypes = Util.servicePromise({
+                    var promiseObjectTypes = Util.serviceCall({
                         service: LookupService.getObjectTypes
-                        , callback: function (data) {
+                        , onSuccess: function (data) {
                             scope.objectTypes = [];
                             _.forEach(data, function (item) {
                                 scope.objectTypes.push(item);
@@ -321,9 +471,9 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                     });
                 }
                 , getUsers: function (scope) {
-                    return Util.servicePromise({
+                    return Util.serviceCall({
                         service: LookupService.getUsers
-                        , callback: function (data) {
+                        , onSuccess: function (data) {
                             scope.userFullNames = [];
                             var arr = Util.goodArray(data);
                             for (var i = 0; i < arr.length; i++) {
@@ -391,8 +541,9 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                         scope.gridOptions.data.splice(idx, 1);
                     }
                 }
-            }
+            } //AcmGrid
 
+            , Ui: {}
         };
         return Util;
     }
