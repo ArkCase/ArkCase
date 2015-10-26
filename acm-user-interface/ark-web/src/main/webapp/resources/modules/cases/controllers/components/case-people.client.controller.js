@@ -310,6 +310,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes]).then(function () {
                     $scope.caseInfo = data;
                     $scope.gridOptions.data = $scope.caseInfo.personAssociations;
+                    Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.caseInfo.personAssociations.length);
 
                     for (var i = 0; i < $scope.caseInfo.personAssociations.length; i++) {
                         var personAssociation = $scope.caseInfo.personAssociations[i];

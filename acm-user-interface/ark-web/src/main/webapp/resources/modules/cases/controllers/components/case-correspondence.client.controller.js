@@ -59,6 +59,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
                         var correspondences = data.children;
                         $scope.gridOptions.data = correspondences;
                         $scope.gridOptions.totalItems = Util.goodValue(data.totalChildren, 0);
+                        Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
                     });
                 }
             })
@@ -101,6 +102,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
                             correspondence.category = "Correspondence";
                             $scope.gridOptions.data.push(correspondence);
                             $scope.gridOptions.totalItems++;
+                            Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
 
                             //var lastPage = $scope.gridApi.pagination.getTotalPages();
                             //$scope.gridApi.pagination.seek(lastPage);
