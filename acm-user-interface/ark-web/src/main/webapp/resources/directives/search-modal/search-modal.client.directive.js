@@ -70,6 +70,12 @@ angular.module('directives').directive('searchModal', ['SearchService',
                     }
                 }
 
+                scope.keyDown = function (event) {
+                    if (event.keyCode == 13 && scope.searchQuery) {
+                        scope.queryExistingItems();
+                    }
+                };
+
                 scope.addExistingItem = function() {
                     //when the modal is closed, the parent scope gets
                     //the selectedItem via the two-way binding

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('directive').directive('search', ['SearchService',
+angular.module('directives').directive('search', ['SearchService',
     function (SearchService) {
         return {
             restrict: 'E',              //match only element name
