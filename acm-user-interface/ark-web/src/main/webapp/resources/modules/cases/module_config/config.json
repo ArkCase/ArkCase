@@ -37,7 +37,13 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
-      "paginationPageSizes": [2, 5, 10, 20, 50],
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
       "paginationPageSize": 2,
       "columnDefs": [
         {
@@ -68,7 +74,13 @@
         "id": "contactMethods",
         "title": "Contact Methods",
         "enableFiltering": true,
-        "paginationPageSizes": [2, 5, 10, 20, 50],
+        "paginationPageSizes": [
+          2,
+          5,
+          10,
+          20,
+          50
+        ],
         "paginationPageSize": 2,
         "columnDefs": [
           {
@@ -99,7 +111,12 @@
         "id": "organizations",
         "title": "Organizations",
         "enableFiltering": true,
-        "paginationPageSizes": [5, 10, 20, 50],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
         "paginationPageSize": 5,
         "columnDefs": [
           {
@@ -123,7 +140,7 @@
           {
             "name": "creator",
             "displayName": "cases.comp.people.organizations.table.columns.creator",
-            "headerCellFilter": "translate" ,
+            "headerCellFilter": "translate",
             "lookup": "userFullNames"
           }
         ]
@@ -132,7 +149,12 @@
         "id": "addresses",
         "title": "Addresses",
         "enableFiltering": true,
-        "paginationPageSizes": [5, 10, 20, 50],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
         "paginationPageSize": 5,
         "columnDefs": [
           {
@@ -174,7 +196,7 @@
           {
             "name": "creator",
             "displayName": "cases.comp.people.addresses.table.columns.creator",
-            "headerCellFilter": "translate" ,
+            "headerCellFilter": "translate",
             "lookup": "userFullNames"
           }
         ]
@@ -183,7 +205,12 @@
         "id": "Aliases",
         "title": "aliases",
         "enableFiltering": true,
-        "paginationPageSizes": [5, 10, 20, 50],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
         "paginationPageSize": 5,
         "columnDefs": [
           {
@@ -205,7 +232,7 @@
           {
             "name": "creator",
             "displayName": "cases.comp.people.aliases.table.columns.creator",
-            "headerCellFilter": "translate" ,
+            "headerCellFilter": "translate",
             "lookup": "userFullNames"
           }
         ]
@@ -214,7 +241,12 @@
         "id": "securityTags",
         "title": "Security Tags",
         "enableFiltering": true,
-        "paginationPageSizes": [5, 10, 20, 50],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
         "paginationPageSize": 5,
         "columnDefs": [
           {
@@ -236,7 +268,7 @@
           {
             "name": "creator",
             "displayName": "cases.comp.people.securityTags.table.columns.creator",
-            "headerCellFilter": "translate" ,
+            "headerCellFilter": "translate",
             "lookup": "userFullNames"
           }
         ]
@@ -248,7 +280,13 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
-      "paginationPageSizes": [2, 5, 10, 20, 50],
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
       "paginationPageSize": 2,
       "columnDefs": [
         {
@@ -265,9 +303,8 @@
         }
       ]
     },
-
     {
-      "id" : "notes",
+      "id": "notes",
       "title": "Notes",
       "enabled": true,
       "type": "grid",
@@ -302,7 +339,6 @@
         }
       ]
     },
-
     {
       "id": "tasks",
       "title": "Tasks",
@@ -370,9 +406,8 @@
         }
       ]
     },
-
     {
-      "id" : "references",
+      "id": "references",
       "title": "References",
       "enabled": true,
       "type": "grid",
@@ -415,16 +450,25 @@
         }
       ]
     },
-
     {
-      "id" : "history",
+      "id": "history",
       "title": "History",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
-      "paginationPageSizes": [5, 10, 20, 50],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
       "paginationPageSize": 10,
       "columnDefs": [
+        {
+          "name": "eventType",
+          "displayName": "cases.comp.history.table.columns.eventType",
+          "headerCellFilter": "translate"
+        },
         {
           "name": "eventDate",
           "displayName": "cases.comp.history.table.columns.eventDate",
@@ -439,7 +483,6 @@
         }
       ]
     },
-
     {
       "id": "correspondence",
       "title": "Correspondence",
@@ -476,7 +519,6 @@
         }
       ]
     },
-
     {
       "id": "time",
       "title": "Time",
@@ -523,7 +565,6 @@
         }
       ]
     },
-
     {
       "id": "cost",
       "title": "Cost",
@@ -569,7 +610,6 @@
         }
       ]
     },
-
     {
       "id": "calendar",
       "title": "Calendar",

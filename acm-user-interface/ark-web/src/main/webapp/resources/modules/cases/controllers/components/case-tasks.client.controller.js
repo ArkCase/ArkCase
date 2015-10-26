@@ -66,6 +66,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                         var tasks = data.response.docs;
                         $scope.gridOptions.data = tasks;
                         $scope.gridOptions.totalItems = data.response.numFound;
+                        Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
 
                         for (var i = 0; i < tasks.length; i++) {
                             var task = tasks[i];
