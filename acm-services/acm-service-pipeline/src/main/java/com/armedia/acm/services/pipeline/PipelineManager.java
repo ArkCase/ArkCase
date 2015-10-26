@@ -9,6 +9,13 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
+ * Pipeline manager which holds a list of pre-save and post-save handlers which are to be
+ * executed prior to and after the DAO save method, respectively.
+ * <p/>
+ * Note: pre-save handlers, save method and post-save handlers should all reside in a single
+ * transaction (@Transactional annotated method) so even the changes on the entity applied
+ * in the post-save handlers (after the save method) will be persisted at the end of the transaction.
+ * <p/>
  * Created by Petar Ilin <petar.ilin@armedia.com> on 26.07.2015.
  */
 public class PipelineManager<T, S extends AbstractPipelineContext>
