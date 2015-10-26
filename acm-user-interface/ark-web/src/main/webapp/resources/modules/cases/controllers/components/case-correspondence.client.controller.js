@@ -6,9 +6,9 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
 
         var promiseUsers = Util.AcmGrid.getUsers($scope);
 
-        var promiseObjectTypes = Util.servicePromise({
+        var promiseObjectTypes = Util.serviceCall({
             service: LookupService.getObjectTypes
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 $scope.objectTypes = [];
                 _.forEach(data, function (item) {
                     $scope.objectTypes.push(item);
@@ -20,9 +20,9 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
 
         $scope.correspondenceForms = [{"value": "noop", "name": "(Select One)"}];
         $scope.correspondenceForm = {"value": "noop", "name": "(Select One)"};
-        var promiseCorrespondenceForms = Util.servicePromise({
+        var promiseCorrespondenceForms = Util.serviceCall({
             service: LookupService.getCorrespondenceForms
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 $scope.correspondenceForms = Util.omitNg(Util.goodArray(data));
                 $scope.correspondenceForms.unshift({"value": "noop", "name": "(Select One)"});
                 return $scope.correspondenceForms;
@@ -51,7 +51,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         $scope.currentId = $stateParams.id;
         $scope.retrieveGridData = function () {
             CasesService.queryCorrespondence(Util.AcmGrid.withPagingParams($scope, {
-                parentType: "CASE_FILE",
+                parentType: Util.Constant.OBJTYPE_CASE_FILE,
                 parentId: $scope.currentId
             }), function (data) {
                 if (Validator.validateCorrespondences(data)) {
@@ -59,6 +59,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
                         var correspondences = data.children;
                         $scope.gridOptions.data = correspondences;
                         $scope.gridOptions.totalItems = Util.goodValue(data.totalChildren, 0);
+                        Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
                     });
                 }
             })
@@ -101,6 +102,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
                             correspondence.category = "Correspondence";
                             $scope.gridOptions.data.push(correspondence);
                             $scope.gridOptions.totalItems++;
+                            Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
 
                             //var lastPage = $scope.gridApi.pagination.getTotalPages();
                             //$scope.gridApi.pagination.seek(lastPage);

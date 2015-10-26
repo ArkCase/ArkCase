@@ -5,9 +5,9 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
         $scope.$emit('req-component-config', 'participants');
 
 
-        var promiseTypes = Util.servicePromise({
+        var promiseTypes = Util.serviceCall({
             service: LookupService.getParticipantTypes
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 $scope.participantTypes = [{type: "*", name: "*"}];
                 Util.forEachStripNg(data, function (v, k) {
                     $scope.participantTypes.push({type: k, name: v});
@@ -15,9 +15,9 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                 return $scope.participantTypes;
             }
         });
-        var promiseUsers = Util.servicePromise({
+        var promiseUsers = Util.serviceCall({
             service: LookupService.getUsersBasic
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 $scope.participantUsers = [];
                 var arr = Util.goodMapValue(data, "response.docs", []);
                 for (var i = 0; i < arr.length; i++) {
@@ -29,9 +29,9 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                 return $scope.participantUsers;
             }
         });
-        var promiseGroups = Util.servicePromise({
+        var promiseGroups = Util.serviceCall({
             service: LookupService.getGroups
-            , callback: function (data) {
+            , onSuccess: function (data) {
                 $scope.participantGroups = [];
                 var arr = Util.goodMapValue(data, "response.docs", []);
                 for (var i = 0; i < arr.length; i++) {
@@ -116,6 +116,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                 $q.all([promiseTypes, promiseUsers, promiseGroups]).then(function () {
                     $scope.caseInfo = data;
                     $scope.gridOptions.data = $scope.caseInfo.participants;
+                    Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.caseInfo.participants.length);
                     _.each($scope.gridOptions.data, function (item) {
                         if ("*" === item.participantType) {
                             item.acm$_participantNames = [
@@ -135,6 +136,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             var lastPage = $scope.gridApi.pagination.getTotalPages();
             $scope.gridApi.pagination.seek(lastPage);
             $scope.gridOptions.data.push({});
+            Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.data.length);
         };
         $scope.updateRow = function (rowEntity) {
             var caseInfo = Util.omitNg($scope.caseInfo);

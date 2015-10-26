@@ -39,6 +39,7 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
 
                         $scope.gridOptions.data = timesheets;
                         $scope.gridOptions.totalItems = Util.goodValue(timesheets.length, 0);
+                        Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
                     }
 
                 });

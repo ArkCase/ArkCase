@@ -21,7 +21,7 @@
     "type": "DOCUMENT",
     "description": "Document",
     "iconName": "",
-    "url": ""
+    "url": "/home.html#!/documents/:id/main"
   },
   {
     "type": "FILE",
