@@ -1,5 +1,16 @@
 'use strict';
 
+/**
+ * @ngdoc service
+ * @name services.MessageService
+
+ * @description
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/common/message.client.service.js services/common/message.client.service.js}
+ *
+ * The MessageService displays notify messages
+ *
+ */
+
 // Authentication service for user variables
 angular.module('services').factory('MessageService', ['$injector',
     function ($injector) {
@@ -9,9 +20,16 @@ angular.module('services').factory('MessageService', ['$injector',
         var notifyOptions = {};
 
         return {
+
             /**
-             * Display http error
-             * @param response
+             * @ngdoc method
+             * @name httpError
+             * @methodOf services.MessageService
+             *
+             * @param {HttpResponse} httpResponse Http resposne
+             *
+             * @description
+             * This method takes information from httpResponse and displays Notify error message
              */
             httpError: function (response) {
                 var showNotifyMessage = function (msg) {
