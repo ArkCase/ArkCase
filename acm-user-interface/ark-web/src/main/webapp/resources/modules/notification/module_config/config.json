@@ -6,7 +6,7 @@
             "menuId": "leftnav",
             "menuItemURL": "notifications",
             "menuItemTitle": "Notifications",
-            "iconClass": "fa fa-notifications",
+            "iconClass": "fa fa-bell-o",
             "position": 120
         }
     ],
