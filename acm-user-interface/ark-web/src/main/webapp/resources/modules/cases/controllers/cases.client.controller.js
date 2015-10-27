@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('CasesController', ['$scope', '$stateParams', 'UtilService', 'ValidationService', 'ConfigService', 'CasesService',
-	function($scope, $stateParams, Util, Validator, ConfigService, CasesService) {
+angular.module('cases').controller('CasesController', ['$scope', '$state', '$stateParams', 'UtilService', 'ValidationService', 'ConfigService', 'CasesService',
+	function($scope, $state, $stateParams, Util, Validator, ConfigService, CasesService) {
 		$scope.config = ConfigService.getModule({moduleId: 'cases'});
 		$scope.$on('req-component-config', onConfigRequest);
 		function onConfigRequest(e, componentId) {
@@ -10,6 +10,20 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
 				$scope.$broadcast('component-config', componentId, componentConfig);
 			});
 		}
+
+        $scope.loadNewCaseFrevvoForm = loadNewCaseFrevvoForm;
+
+        /**
+          * @ngdoc method
+          * @name loadNewCaseFrevvoForm
+          * @methodOf CasesController
+          *
+          * @description
+          * Displays the create new case Frevvo form for the user
+          */
+        function loadNewCaseFrevvoForm() {
+            $state.go('wizard');
+        }
 
 		$scope.$on('req-select-case', function(e, selectedCase){
 			$scope.$broadcast('case-selected', selectedCase);
