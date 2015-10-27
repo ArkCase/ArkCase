@@ -34,7 +34,7 @@
 
 <header data-ng-include="'modules/core/views/header.client.view.html'" class="navbar-arkcase"></header>
 
-<div class="page-wrapper">
+<div ng-init="menuCollapsed=false" class="page-wrapper {{menuCollapsed && 'collapsed' || 'uncollapsed' }}">
     <div style="display:table-row">
         <div class="leftnav-menu" ng-include="'modules/core/views/left-navigation.client.view.html'"></div>
         <div class="page-content">
