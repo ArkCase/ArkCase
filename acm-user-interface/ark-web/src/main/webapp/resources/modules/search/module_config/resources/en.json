@@ -5,6 +5,7 @@
   "search.comp.results": {
     "title": "Results",
     "table.columns": {
+      "id": "ID",
       "name": "Name",
       "type": "Type",
       "title": "Title",
