@@ -77,9 +77,10 @@
                 "start": 0,
                 "n": 10
             },
-            "caseFileCondition":"row.entity.object_type_s == 'CASE_FILE'",
-            "objectIdName":"cases.id",
-            "stateName":"id"
+            "supportedObjectType": "CASE_FILE",
+            "supportedObjectSubType": "",
+            "objectIdName":"id",
+            "stateName":"cases.id"
 
         },
         {

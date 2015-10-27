@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('search').controller('Search.ResultsController', ['$scope', '$state', 'ResultService', 'SearchService',
-    function ($scope, $state, ResultService, SearchService) {
+angular.module('search').controller('Search.ResultsController', ['$scope', '$state', 'ResultService', 'SearchService', 'UtilService',
+    function ($scope, $state, ResultService, SearchService, Util) {
         $scope.$emit('req-component-config', 'results');
 
         $scope.start = '';
@@ -151,11 +151,13 @@ angular.module('search').controller('Search.ResultsController', ['$scope', '$sta
          * @param row
          */
         $scope.rowClick = function(row){
-             if(eval($scope.config.caseFileCondition)){
-                 var stateData = {};
-                 stateData[$scope.config.objectIdName] = row.entity.object_id_s;
-                 $state.go($scope.config.stateName,stateData);
-             }
+            var objectType = Util.goodValue(row.entity.object_type_s);
+            var objectSubType = Util.goodValue(row.entity.object_sub_type_s);
+            if(objectType == $scope.config.supportedObjectType && objectSubType == $scope.config.supportedObjectSubType){
+                var stateData = {};
+                stateData[$scope.config.objectIdName] = row.entity.object_id_s;
+                $state.go($scope.config.stateName,stateData);
+            }
         };
     }
 ]);
