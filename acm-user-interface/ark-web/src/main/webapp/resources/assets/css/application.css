@@ -154,7 +154,6 @@ iframe {
 .panel-grid > .panel-body {
     padding: 0;
 }
-
 /* Navigation List (Pills) */
 
 .nav-pills > li a {
@@ -439,7 +438,6 @@ iframe {
 }
 .ui-grid-pager-panel .ui-grid-pager-max-pages-number {
     position: relative;
-    bottom: 3px;
     left: 5px;
 }
 .ui-grid-pager-panel .ui-grid-pager-max-pages-number abbr {
@@ -541,7 +539,6 @@ thead {
 a.editable.editable-click.editable-hide {
     display: inline-block !important;
 }
-
 /* User Profile */
 
 .module-content .left-sidebar-lg .row.profile {
@@ -561,66 +558,65 @@ a.editable.editable-click.editable-hide {
     border-radius: 0px;
     border: 1px solid #eaeef1;
 }
-
-
 /* Cases Module - Header */
 
 .module-header .col-xs-12.col-md-4 .h4.font-bold {
-	font-size: 15px;
-	margin: 0px;
+    font-size: 15px;
+    margin: 0px;
 }
-
 .module-header .col-xs-6.text-right h4 {
-	margin-right: 20px;
+    margin-right: 20px;
 }
-
 /* Cases Module - Summernote Editor */
 
 .note-editor.panel.panel-default {
-	margin: 0px;
-	border: 0px;
-	border-radius: 0;
+    margin: 0px;
+    border: 0px;
+    border-radius: 0;
 }
-
 .note-toolbar.panel-heading {
-	background: #f3f3f3;
-	background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, #ffffff));
-	background: -ms-linear-gradient(bottom, #eeeeee, #ffffff);
-	background: -moz-linear-gradient(center bottom, #eeeeee 0%, #ffffff 100%);
-	background: -o-linear-gradient(#ffffff, #eeeeee);
-	filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
-	color: #686d71;
-	font-size: 13px;
-	padding-top: 5px;
+    background: #f3f3f3;
+    background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, #ffffff));
+    background: -ms-linear-gradient(bottom, #eeeeee, #ffffff);
+    background: -moz-linear-gradient(center bottom, #eeeeee 0%, #ffffff 100%);
+    background: -o-linear-gradient(#ffffff, #eeeeee);
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
+    color: #686d71;
+    font-size: 13px;
+    padding-top: 5px;
 }
-
 .note-toolbar.panel-heading .btn-group {
-	margin: 0px !important;
-	padding: 0px 0px 0px 5px  !important;
+    margin: 0px !important;
+    padding: 0px 0px 0px 5px !important;
 }
-
-.note-toolbar.panel-heading .btn-group .btn{
-	background-color: white;
-	color: black;
+.note-toolbar.panel-heading .btn-group .btn {
+    background-color: white;
+    color: black;
 }
-.note-toolbar.panel-heading .btn-group .btn.active{
-	background: none;
-	background-color: #333;
-	color: #fff;
+.note-toolbar.panel-heading .btn-group .btn.active {
+    background: none;
+    background-color: #333;
+    color: #fff;
 }
-
+.note-editable.panel-body {
+    min-height: 100px;
+}
 /* Cases Module - FancyTree Table */
 
 .fancytree-container.fancytree-ext-table.fancytree-ext-gridnav.fancytree-ext-edit.ui-draggable-handle {
-	margin: 0px;
+    margin: 0px;
 }
-
+.fancytree-container .fancytree-checkbox {
+    margin: 2px 0px 0px 0px !important;
+}
+.fancytree-container input {
+    margin: 0px 0px 0px 2px !important;
+}
 /* To Be Removed */
 
 .ui-grid-pinned-container .ui-grid-header-canvas {
     height: 60px !important;
 }
-
 .module-content .left-sidebar-lg .ui-grid-pinned-container .ui-grid-header-canvas {
     height: auto !important;
 }
