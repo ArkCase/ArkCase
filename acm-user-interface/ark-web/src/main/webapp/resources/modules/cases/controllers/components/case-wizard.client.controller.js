@@ -32,11 +32,12 @@ angular.module('cases').controller('Cases.WizardController', ['$scope', '$stateP
 
             // Loads the Frevvo url template and adds the values of its parameters
             var urlTemplate = acmFormsProperties['frevvo.uri'];
+            var caseType = acmFormsProperties['active.case.form'];
             urlTemplate = urlTemplate.replace('{tenant}', acmFormsProperties['frevvo.tenant']);
             urlTemplate = urlTemplate.replace('{user}', acmFormsProperties['frevvo.designer.user']);
-            urlTemplate = urlTemplate.replace('{application}', acmFormsProperties['case_file.application.id']);
-            urlTemplate = urlTemplate.replace('{type}', acmFormsProperties['case_file.type']);
-            urlTemplate = urlTemplate.replace('{mode}', acmFormsProperties['case_file.mode']);
+            urlTemplate = urlTemplate.replace('{application}', acmFormsProperties[caseType + '.application.id']);
+            urlTemplate = urlTemplate.replace('{type}', acmFormsProperties[caseType + '.type']);
+            urlTemplate = urlTemplate.replace('{mode}', acmFormsProperties[caseType + '.mode']);
             urlTemplate = urlTemplate.replace('{frevvo_timezone}', acmFormsProperties['frevvo.timezone']);
             urlTemplate = urlTemplate.replace('{frevvo_locale}', acmFormsProperties['frevvo.locale']);
             urlTemplate = urlTemplate.replace('{acm_ticket}', $scope.acmTicket);
