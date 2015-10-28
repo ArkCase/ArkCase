@@ -12,6 +12,7 @@ angular.module('cases').controller('CasesController', ['$scope', '$state', '$sta
 		}
 
         $scope.loadNewCaseFrevvoForm = loadNewCaseFrevvoForm;
+        $scope.loadChangeCaseStatusFrevvoForm = loadChangeCaseStatusFrevvoForm;
 
         /**
           * @ngdoc method
@@ -23,6 +24,22 @@ angular.module('cases').controller('CasesController', ['$scope', '$state', '$sta
           */
         function loadNewCaseFrevvoForm() {
             $state.go('wizard');
+        }
+
+        /**
+          * @ngdoc method
+          * @name loadChangeCaseStatusFrevvoForm
+          * @methodOf CasesController
+          *
+          * @param caseData contains the metadata for the existing case which will be edited
+          *
+          * @description
+          * Displays the change case status Frevvo form for the user
+          */
+        function loadChangeCaseStatusFrevvoForm(caseData) {
+            if (caseData && caseData.id && caseData.caseNumber) {
+                $state.go('status', {id: caseData.id, caseNumber: caseData.caseNumber});
+            }
         }
 
 		$scope.$on('req-select-case', function(e, selectedCase){
