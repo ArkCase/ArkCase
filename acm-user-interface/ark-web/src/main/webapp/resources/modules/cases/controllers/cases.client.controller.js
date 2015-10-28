@@ -31,6 +31,8 @@ angular.module('cases').controller('CasesController', ['$scope', '$state', '$sta
           * @name loadChangeCaseStatusFrevvoForm
           * @methodOf CasesController
           *
+          * @param caseData contains the metadata for the existing case which will be edited
+          *
           * @description
           * Displays the change case status Frevvo form for the user
           */
