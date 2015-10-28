@@ -21,7 +21,7 @@ angular.module('cases').config(['$stateProvider', '$urlRouterProvider',
 			})
 
             .state('status', {
-                url: '/status',
+                url: '/status/:id/:caseNumber',
                 templateUrl: 'modules/cases/views/components/case-status.client.view.html'
             })
 
