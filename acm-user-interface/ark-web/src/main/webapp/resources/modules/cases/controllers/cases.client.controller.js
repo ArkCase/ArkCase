@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('CasesController', ['$scope', '$stateParams', 'UtilService', 'ValidationService', 'ConfigService', 'CasesService',
-	function($scope, $stateParams, Util, Validator, ConfigService, CasesService) {
+angular.module('cases').controller('CasesController', ['$scope', '$state', '$stateParams', 'UtilService', 'ValidationService', 'ConfigService', 'CasesService',
+	function($scope, $state, $stateParams, Util, Validator, ConfigService, CasesService) {
 		$scope.config = ConfigService.getModule({moduleId: 'cases'});
 		$scope.$on('req-component-config', onConfigRequest);
 		function onConfigRequest(e, componentId) {
@@ -10,6 +10,37 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
 				$scope.$broadcast('component-config', componentId, componentConfig);
 			});
 		}
+
+        $scope.loadNewCaseFrevvoForm = loadNewCaseFrevvoForm;
+        $scope.loadChangeCaseStatusFrevvoForm = loadChangeCaseStatusFrevvoForm;
+
+        /**
+          * @ngdoc method
+          * @name loadNewCaseFrevvoForm
+          * @methodOf CasesController
+          *
+          * @description
+          * Displays the create new case Frevvo form for the user
+          */
+        function loadNewCaseFrevvoForm() {
+            $state.go('wizard');
+        }
+
+        /**
+          * @ngdoc method
+          * @name loadChangeCaseStatusFrevvoForm
+          * @methodOf CasesController
+          *
+          * @param caseData contains the metadata for the existing case which will be edited
+          *
+          * @description
+          * Displays the change case status Frevvo form for the user
+          */
+        function loadChangeCaseStatusFrevvoForm(caseData) {
+            if (caseData && caseData.id && caseData.caseNumber) {
+                $state.go('status', {id: caseData.id, caseNumber: caseData.caseNumber});
+            }
+        }
 
 		$scope.$on('req-select-case', function(e, selectedCase){
 			$scope.$broadcast('case-selected', selectedCase);
