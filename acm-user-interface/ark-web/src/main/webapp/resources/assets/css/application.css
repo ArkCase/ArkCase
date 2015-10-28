@@ -460,6 +460,14 @@ thead {
     color: #686d71;
     font-size: 13px;
 }
+
+/* Highlight error grid's cell */
+.ui-grid .ui-grid-cell.error-cell {
+    background-color: #ff7373;
+    color: #fff;
+}
+
+
 /* Modal Window Columns */
 
 .modal-search {
