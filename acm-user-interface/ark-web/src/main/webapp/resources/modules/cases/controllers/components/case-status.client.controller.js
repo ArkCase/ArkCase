@@ -1,29 +1,28 @@
 'use strict';
 
-angular.module('cases').controller('Cases.WizardController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'FrevvoFormService',
+angular.module('cases').controller('Cases.StatusController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'FrevvoFormService',
     function($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, FrevvoFormService) {
-        $scope.$emit('req-component-config', 'wizard');
+        $scope.$emit('req-component-config', 'status');
 
         $scope.acmTicket = '';
         $scope.acmFormsProperties = {};
         $scope.frevvoFormUrl = '';
 
         // Methods
-        $scope.openCreateCaseFrevvoForm = openCreateCaseFrevvoForm;
+        $scope.openChangeCaseStatusFrevvoForm = openChangeCaseStatusFrevvoForm;
 
         /**
           * @ngdoc method
-          * @name openCreateCaseFrevvoForm
-          * @methodOf Cases.WizardController
+          * @name openChangeCaseStatusFrevvoForm
+          * @methodOf Cases.StatusController
           *
           * @description
-          * This method generates the create new case Frevvo form url and loads the form
+          * This method generates the change case status Frevvo form url and loads the form
           * into an iframe as a trusted resource.  It can only be called after the
           * acm-forms.properties config and the acmTicket have been obtained.
           */
-        function openCreateCaseFrevvoForm() {
-            var caseType = $scope.acmFormsProperties['active.case.form'];
-            var formUrl = FrevvoFormService.buildFrevvoUrl($scope.acmFormsProperties, caseType, $scope.acmTicket);
+        function openChangeCaseStatusFrevvoForm() {
+            var formUrl = FrevvoFormService.buildFrevvoUrl($scope.acmFormsProperties, 'change_case_status', $scope.acmTicket);
             $scope.frevvoFormUrl = $sce.trustAsResourceUrl(formUrl);
         }
 
@@ -38,14 +37,14 @@ angular.module('cases').controller('Cases.WizardController', ['$scope', '$stateP
                 $scope.acmTicket = data[0].data;
                 $scope.acmFormsProperties = data[1];
 
-                // Opens the new case Frevvo form for the user
-                openCreateCaseFrevvoForm();
+                // Opens the change case status Frevvo form for the user
+                openChangeCaseStatusFrevvoForm();
             });
 
         $scope.config = null;
         $scope.$on('component-config', applyConfig);
         function applyConfig(e, componentId, config) {
-            if (componentId == 'wizard') {
+            if (componentId == 'status') {
                 $scope.config = config;
             }
         }
