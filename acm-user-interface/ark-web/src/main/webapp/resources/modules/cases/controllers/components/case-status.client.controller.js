@@ -22,7 +22,11 @@ angular.module('cases').controller('Cases.StatusController', ['$scope', '$stateP
           * acm-forms.properties config and the acmTicket have been obtained.
           */
         function openChangeCaseStatusFrevvoForm() {
-            var formUrl = FrevvoFormService.buildFrevvoUrl($scope.acmFormsProperties, 'change_case_status', $scope.acmTicket);
+            var caseFile = {
+                id: $stateParams['id'],
+                caseNumber: $stateParams['caseNumber']
+            };
+            var formUrl = FrevvoFormService.buildFrevvoUrl($scope.acmFormsProperties, 'change_case_status', $scope.acmTicket, caseFile);
             $scope.frevvoFormUrl = $sce.trustAsResourceUrl(formUrl);
         }
 

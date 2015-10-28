@@ -34,8 +34,10 @@ angular.module('cases').controller('CasesController', ['$scope', '$state', '$sta
           * @description
           * Displays the change case status Frevvo form for the user
           */
-        function loadChangeCaseStatusFrevvoForm() {
-            $state.go('status');
+        function loadChangeCaseStatusFrevvoForm(caseData) {
+            if (caseData && caseData.id && caseData.caseNumber) {
+                $state.go('status', {id: caseData.id, caseNumber: caseData.caseNumber});
+            }
         }
 
 		$scope.$on('req-select-case', function(e, selectedCase){
