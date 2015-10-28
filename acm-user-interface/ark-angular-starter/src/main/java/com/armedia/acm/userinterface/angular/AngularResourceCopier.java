@@ -73,7 +73,7 @@ public class AngularResourceCopier implements ServletContextAware
                 log.info("Old folder path: {}", oldFolder.getCanonicalPath());
                 if (oldFolder.exists())
                 {
-                    log.info("Removing old folder");
+                    log.info("Removing old folder {}", oldFolder.getCanonicalPath());
                     FileSystemUtils.deleteRecursively(oldFolder);
                 }
             }
