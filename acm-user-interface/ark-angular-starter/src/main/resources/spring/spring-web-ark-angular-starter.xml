@@ -30,6 +30,10 @@
         <property name="oldDeployFoldersToBeRemovedBeforeBuild">
             <list>
                 <value>/modules_config/config</value>
+                <value>/directives</value>
+                <value>/modules</value>
+                <value>/services</value>
+                <value>/templates</value>
             </list>
         </property>
         <property name="frontEndCommandsToBeExecuted">
