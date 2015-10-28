@@ -612,6 +612,12 @@ a.editable.editable-click.editable-hide {
 .fancytree-container input {
     margin: 0px 0px 0px 2px !important;
 }
+
+.case-frevvo-iframe {
+    width: 100%;
+    height: 800px;
+}
+
 /* To Be Removed */
 
 .ui-grid-pinned-container .ui-grid-header-canvas {
