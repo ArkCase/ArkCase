@@ -17,7 +17,7 @@ angular.module('services').factory('TicketService', ['$http',
                     method: 'GET',
                     data: ''
                 });
-            },
+            }
         }
     }
 ]);
