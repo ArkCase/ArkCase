@@ -34,6 +34,7 @@
                 <value>/modules</value>
                 <value>/services</value>
                 <value>/templates</value>
+                <value>/filters</value>
             </list>
         </property>
         <property name="frontEndCommandsToBeExecuted">
