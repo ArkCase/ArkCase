@@ -29,9 +29,16 @@
             "enableFiltering": true,
             "columnDefs": [
                 {
+                    "name": "object_id_s",
+                    "displayName": "search.comp.results.table.columns.id",
+                    "headerCellFilter": "translate",
+                    "visible": false
+                },
+                {
                     "name": "name",
                     "displayName": "search.comp.results.table.columns.name",
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row)' style='cursor:pointer;'  class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>"
                 },
                 {
                     "name": "object_type_s",
@@ -69,7 +76,11 @@
             "searchParams": {
                 "start": 0,
                 "n": 10
-            }
+            },
+            "supportedObjectType": "CASE_FILE",
+            "supportedObjectSubType": "",
+            "objectIdName":"id",
+            "stateName":"cases.id"
 
         },
         {

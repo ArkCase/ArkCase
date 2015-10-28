@@ -1,0 +1,14 @@
+{
+    "id": "notifications",
+    "title": "Notifications",
+    "menus": [
+        {
+            "menuId": "leftnav",
+            "menuItemURL": "notifications",
+            "menuItemTitle": "Notifications",
+            "iconClass": "fa fa-bell-o",
+            "position": 120
+        }
+    ],
+    "filter": "\"Object Type\": NOTIFICATION"
+}
