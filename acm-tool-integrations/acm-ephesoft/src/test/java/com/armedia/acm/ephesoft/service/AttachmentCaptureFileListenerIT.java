@@ -95,7 +95,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
         assertNotNull(attachmentCaptureFileListener);
 
         EcmFile ecmFile = new EcmFile();
-        ecmFile.setFileName("file_name");
+        ecmFile.setFileName(fileName);
         ecmFile.setFileType("pdf");
         AcmContainer container = new AcmContainer();
         AcmFolder folder = new AcmFolder();
@@ -107,10 +107,9 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
         expect(ecmFileService.findById(22121l)).andReturn(ecmFile);
 
 
-
         Capture<Authentication> authenticationCapture = EasyMock.newCapture();
         Capture<AcmMultipartFile> multipartFileCapture = EasyMock.newCapture();
-        expect(ecmFileService.upload(eq("file_name"), eq("pdf"), capture(multipartFileCapture), capture(authenticationCapture), eq("cmisFodlerId"), eq("COMPLAINT"), eq(321321l))).andReturn(new EcmFile());
+        expect(ecmFileService.upload(eq(fileName), eq("pdf"), capture(multipartFileCapture), capture(authenticationCapture), eq("cmisFodlerId"), eq("COMPLAINT"), eq(321321l))).andReturn(new EcmFile());
 
         auditPropertyEntityAdapter.setUserId(CaptureConstants.PROCESS_ATTACHMENTS_USER);
         expectLastCall();
@@ -146,7 +145,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
         assertNotNull(attachmentCaptureFileListener);
 
         EcmFile ecmFile = new EcmFile();
-        ecmFile.setFileName("file_name");
+        ecmFile.setFileName(fileName);
         ecmFile.setFileType("pdf");
         AcmContainer container = new AcmContainer();
         AcmFolder folder = new AcmFolder();
@@ -159,7 +158,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
 
         Capture<Authentication> authenticationCapture = EasyMock.newCapture();
         Capture<AcmMultipartFile> multipartFileCapture = EasyMock.newCapture();
-        expect(ecmFileService.upload(eq("file_name"), eq("pdf"), capture(multipartFileCapture), capture(authenticationCapture), eq("cmisFodlerId"), eq("COMPLAINT"), eq(321321l))).andReturn(new EcmFile());
+        expect(ecmFileService.upload(eq(fileName), eq("pdf"), capture(multipartFileCapture), capture(authenticationCapture), eq("cmisFodlerId"), eq("COMPLAINT"), eq(321321l))).andReturn(new EcmFile());
 
         auditPropertyEntityAdapter.setUserId(CaptureConstants.PROCESS_ATTACHMENTS_USER);
         expectLastCall();
@@ -195,7 +194,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
         assertNotNull(attachmentCaptureFileListener);
 
         EcmFile ecmFile = new EcmFile();
-        ecmFile.setFileName("file_name");
+        ecmFile.setFileName(fileName);
         ecmFile.setFileType("pdf");
         AcmContainer container = new AcmContainer();
         AcmFolder folder = new AcmFolder();
@@ -208,7 +207,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
 
         Capture<Authentication> authenticationCapture = EasyMock.newCapture();
         Capture<AcmMultipartFile> multipartFileCapture = EasyMock.newCapture();
-        expect(ecmFileService.upload(eq("file_name"), eq("pdf"), capture(multipartFileCapture), capture(authenticationCapture), eq("cmisFodlerId"), eq("COMPLAINT"), eq(321321l))).andReturn(new EcmFile());
+        expect(ecmFileService.upload(eq(fileName), eq("pdf"), capture(multipartFileCapture), capture(authenticationCapture), eq("cmisFodlerId"), eq("COMPLAINT"), eq(321321l))).andReturn(new EcmFile());
 
         auditPropertyEntityAdapter.setUserId(CaptureConstants.PROCESS_ATTACHMENTS_USER);
         expectLastCall();
@@ -242,7 +241,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
         assertNotNull(attachmentCaptureFileListener);
 
         EcmFile ecmFile = new EcmFile();
-        ecmFile.setFileName("file_name");
+        ecmFile.setFileName(fileName);
         ecmFile.setFileType("pdf");
         AcmContainer container = new AcmContainer();
         AcmFolder folder = new AcmFolder();
@@ -255,7 +254,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
 
         Capture<Authentication> authenticationCapture = EasyMock.newCapture();
         Capture<AcmMultipartFile> multipartFileCapture = EasyMock.newCapture();
-        expect(ecmFileService.upload(eq("file_name"), eq("pdf"), capture(multipartFileCapture), capture(authenticationCapture), eq("cmisFodlerId"), eq("CASE_FILE"), eq(12313l))).andReturn(new EcmFile());
+        expect(ecmFileService.upload(eq(fileName), eq("pdf"), capture(multipartFileCapture), capture(authenticationCapture), eq("cmisFodlerId"), eq("CASE_FILE"), eq(12313l))).andReturn(new EcmFile());
 
         auditPropertyEntityAdapter.setUserId(CaptureConstants.PROCESS_ATTACHMENTS_USER);
         expectLastCall();
@@ -292,7 +291,7 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
         assertNotNull(attachmentCaptureFileListener);
 
         EcmFile ecmFile = new EcmFile();
-        ecmFile.setFileName("file_name");
+        ecmFile.setFileName(fileName);
         ecmFile.setFileType("pdf");
         AcmContainer container = new AcmContainer();
         AcmFolder folder = new AcmFolder();
@@ -303,6 +302,8 @@ public class AttachmentCaptureFileListenerIT extends EasyMockSupport
         ecmFile.setContainer(container);
 
         expect(ecmFileService.findById(22121l)).andReturn(null);
+
+        auditPropertyEntityAdapter.setUserId(CaptureConstants.PROCESS_ATTACHMENTS_USER);
 
         replayAll();
 
