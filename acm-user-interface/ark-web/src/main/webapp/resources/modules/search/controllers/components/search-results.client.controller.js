@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('search').controller('Search.ResultsController', ['$scope', 'ResultService', 'SearchService',
-    function ($scope, ResultService, SearchService) {
+angular.module('search').controller('Search.ResultsController', ['$scope', '$state', 'ResultService', 'SearchService', 'UtilService',
+    function ($scope, $state, ResultService, SearchService, Util) {
         $scope.$emit('req-component-config', 'results');
 
         $scope.start = '';
@@ -34,7 +34,6 @@ angular.module('search').controller('Search.ResultsController', ['$scope', 'Resu
                     columnDefs: config.columnDefs,
                     onRegisterApi: function (gridApi) {
                         $scope.gridApi = gridApi;
-
 
                         $scope.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
                             if (0 >= sortColumns.length) {
@@ -144,6 +143,20 @@ angular.module('search').controller('Search.ResultsController', ['$scope', 'Resu
                     ResultService.passData(data, $scope.queryString + '*', ResultService.filterParams);
 
                 });
+            }
+        };
+
+        /**
+         * handles row click event on Name column and opens order info page
+         * @param row
+         */
+        $scope.rowClick = function(row){
+            var objectType = Util.goodValue(row.entity.object_type_s);
+            var objectSubType = Util.goodValue(row.entity.object_sub_type_s);
+            if(objectType == $scope.config.supportedObjectType && objectSubType == $scope.config.supportedObjectSubType){
+                var stateData = {};
+                stateData[$scope.config.objectIdName] = row.entity.object_id_s;
+                $state.go($scope.config.stateName,stateData);
             }
         };
     }

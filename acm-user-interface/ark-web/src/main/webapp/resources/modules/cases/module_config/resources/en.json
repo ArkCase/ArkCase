@@ -2,8 +2,13 @@
   "cases": {
     "title": "Cases",
     "restrict": "Restrict?",
-    "close.button": "Close Complaint",
+    "new.button": "New",
+    "edit.button": "Edit",
+    "status.button": "Change Case Status",
+    "reinvestigate.button": "Reinvestigate",
     "subscribe.button": "Subscribe",
+    "merge.button": "Merge",
+    "split.button": "Split",
     "noCase": "[ No Case Data ]"
   },
   "cases.comp.calendar": {

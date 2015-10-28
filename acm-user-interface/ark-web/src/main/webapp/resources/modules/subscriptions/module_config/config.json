@@ -6,7 +6,7 @@
             "menuId": "leftnav",
             "menuItemURL": "subscriptions",
             "menuItemTitle": "Subscriptions",
-            "iconClass": "fa fa-subscriptions",
+            "iconClass": "fa fa-bullhorn",
             "position": 120
         }
     ],
