@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('subscription').controller('Subscription.ResultsController', ['$scope', 'Subscription', 'SubscriptionService',
+angular.module('subscriptions').controller('Subscription.ResultsController', ['$scope', 'Subscription', 'SubscriptionService',
     function ($scope, ResultService, SubscriptionService) {
         $scope.$emit('req-component-config', 'results');
 
