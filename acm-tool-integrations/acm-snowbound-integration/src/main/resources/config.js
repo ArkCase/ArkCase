@@ -78,7 +78,7 @@ vvConfig = {
     // Reload the document model after a save.  Used for systems like
     // FileNet which generate a documentId on the server
     //reloadDocumentOnSave: true,
-    reloadDocumentOnSave: false,
+    reloadDocumentOnSave: true,
 
     // If true, newly added text annotations will immediately enter 'edit'
     // mode with the contents highlighted.
