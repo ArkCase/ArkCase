@@ -13,21 +13,21 @@ angular.module('services').factory('FrevvoFormService', [
     function () {
         return {
             /**
-              * @ngdoc method
-              * @name buildFrevvoUrl
-              * @methodOf FrevvoFormService
-              *
-              * @param {JSON Object} acmFormsProperties properties from the acm-forms.properties configuration file
-              * @param (String) type of the form to load (case_file, change_case_status, etc.)
-              * @param (String) authentication token for ArkCase for the currently logged in user
-              * @param (JSON Object) optional caseFile metadata for an existing case file to be modified
-              *
-              * @description
-              * This method takes the configuration from acm-forms.properties and generates the
-              * full Frevvo form url for the specified form type.  If a caseFile is specified,
-              * then that case file data will be loaded into the form to edit.
-              */
-            buildFrevvoUrl: function(acmFormsProperties, formType, acmTicket, caseFile) {
+             * @ngdoc method
+             * @name buildFrevvoUrl
+             * @methodOf FrevvoFormService
+             *
+             * @param {JSON} acmFormsProperties properties from the acm-forms.properties configuration file
+             * @param {String} type of the form to load (case_file, change_case_status, etc.)
+             * @param {String} authentication token for ArkCase for the currently logged in user
+             * @param {JSON} optional caseFile metadata for an existing case file to be modified
+             *
+             * @description
+             * This method takes the configuration from acm-forms.properties and generates the
+             * full Frevvo form url for the specified form type.  If a caseFile is specified,
+             * then that case file data will be loaded into the form to edit.
+             */
+            buildFrevvoUrl: function (acmFormsProperties, formType, acmTicket, caseFile) {
 
                 // Loads Frevvo server basic configuration
                 var protocol = acmFormsProperties['frevvo.protocol'];
