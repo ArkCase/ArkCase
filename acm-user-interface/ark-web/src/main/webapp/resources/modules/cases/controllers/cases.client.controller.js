@@ -1,5 +1,14 @@
 'use strict';
 
+/**
+ * @ngdoc controller
+ * @name cases.controller:CasesController
+ *
+ * @description
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/cases.client.controller.js modules/cases/controllers/cases.client.controller.js}
+ *
+ * The Cases module main controller
+ */
 angular.module('cases').controller('CasesController', ['$scope', '$state', '$stateParams', 'UtilService', 'ValidationService', 'ConfigService', 'CasesService',
 	function($scope, $state, $stateParams, Util, Validator, ConfigService, CasesService) {
 		$scope.config = ConfigService.getModule({moduleId: 'cases'});
@@ -17,7 +26,7 @@ angular.module('cases').controller('CasesController', ['$scope', '$state', '$sta
         /**
           * @ngdoc method
           * @name loadNewCaseFrevvoForm
-          * @methodOf CasesController
+          * @methodOf cases.controller:CasesController
           *
           * @description
           * Displays the create new case Frevvo form for the user
@@ -29,9 +38,9 @@ angular.module('cases').controller('CasesController', ['$scope', '$state', '$sta
         /**
           * @ngdoc method
           * @name loadChangeCaseStatusFrevvoForm
-          * @methodOf CasesController
+          * @methodOf cases.controller:CasesController
           *
-          * @param caseData contains the metadata for the existing case which will be edited
+          * @param {Object} caseData contains the metadata for the existing case which will be edited
           *
           * @description
           * Displays the change case status Frevvo form for the user

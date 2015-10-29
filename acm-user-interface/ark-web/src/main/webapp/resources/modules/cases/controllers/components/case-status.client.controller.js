@@ -1,5 +1,13 @@
 'use strict';
-
+/**
+ * @ngdoc controller
+ * @name cases.controller:Cases.StatusController
+ *
+ * @description
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/components/case-status.client.controller.js modules/cases/controllers/components/case-status.client.controller.js}
+ *
+ * The Status Controller
+ */
 angular.module('cases').controller('Cases.StatusController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'FrevvoFormService',
     function($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, FrevvoFormService) {
         $scope.$emit('req-component-config', 'status');
@@ -14,7 +22,7 @@ angular.module('cases').controller('Cases.StatusController', ['$scope', '$stateP
         /**
           * @ngdoc method
           * @name openChangeCaseStatusFrevvoForm
-          * @methodOf Cases.StatusController
+          * @methodOf cases.controller:Cases.StatusController
           *
           * @description
           * This method generates the change case status Frevvo form url and loads the form
