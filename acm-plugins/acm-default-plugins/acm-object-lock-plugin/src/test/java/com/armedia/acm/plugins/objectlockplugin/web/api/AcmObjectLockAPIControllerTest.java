@@ -119,7 +119,7 @@ public class AcmObjectLockAPIControllerTest extends EasyMockSupport
 
 
         MvcResult result = mockMvc.perform(
-                delete("/api/v1/plugin/CASE_FILE/1123/unlock")
+                delete("/api/v1/plugin/CASE_FILE/1123/lock")
                         .session(session)
                         .principal(mockAuthentication)
         ).andExpect(status().isOk()).andReturn();
