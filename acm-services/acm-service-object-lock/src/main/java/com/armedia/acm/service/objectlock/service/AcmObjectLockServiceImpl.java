@@ -82,9 +82,8 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService
         if (lockHeldByUser != null && !StringUtils.isEmpty(lockHeldByUser.getName()))
         {
             query.append(" AND ");
-            query.append("assignee_id_lcs").append(":").append(lockHeldByUser.getName());
+            query.append("creator_lcs").append(":").append(lockHeldByUser.getName());
         }
-        query.append(")");
         log.debug("executing query for documents with lock: {}", query.toString());
 
         return executeQuery(query.toString(), auth, firstRow, maxRows, sort, fqParams);
