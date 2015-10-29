@@ -467,6 +467,25 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
         return result;
     }
 
+    public void deleteBurntAnnotations(String documentId)
+    {
+        String annotationFilename = documentId + ".Default" + ".ann";
+        String fullFilePath = gFilePath + annotationFilename;
+        log.log(Logger.FINEST, "Deleting annotation file: " + fullFilePath);
+        try
+        {
+            File file = new File(fullFilePath);
+            if(file.exists()){
+                file.delete();
+            }
+        } catch (Throwable e)
+        {
+            Logger.getInstance().log(Logger.INFO,
+                    "Attempt to delete layer " + annotationFilename
+                            + ": " + e.getMessage());
+        }
+    }
+
     @Override
     public ContentHandlerResult deleteAnnotation(ContentHandlerInput contentHandlerInput) throws FlexSnapSIAPIException
     {
@@ -534,7 +553,12 @@ public class ArkCaseContentHandler implements FlexSnapSIContentHandlerInterface,
                 operationType = "replace";
 
             log.log(Level.FINE, "get merge annotations");
+
+            // Burn the annotations and delete annotations file to remove any layers
             boolean mergeAnnotations = contentHandlerInput.mergeAnnotations();
+            if(mergeAnnotations){
+                deleteBurntAnnotations(docIdString);
+            }
 
             // The binary data comprising the document is included in the content handler hash table
             log.log(Level.FINE, "get doc content");

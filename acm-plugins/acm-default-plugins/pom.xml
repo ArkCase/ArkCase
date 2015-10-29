@@ -24,6 +24,7 @@
         <module>acm-report-plugin</module>
         <module>acm-profile-plugin</module>
         <module>acm-audit-plugin</module>
+        <module>acm-object-lock-plugin</module>
 
     </modules>
 

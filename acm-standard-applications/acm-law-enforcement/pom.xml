@@ -343,6 +343,12 @@
             <version>${acm.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-object-lock-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
