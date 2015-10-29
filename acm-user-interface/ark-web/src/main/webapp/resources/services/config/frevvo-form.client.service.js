@@ -15,7 +15,7 @@ angular.module('services').factory('FrevvoFormService', [
             /**
              * @ngdoc method
              * @name buildFrevvoUrl
-             * @methodOf FrevvoFormService
+             * @methodOf services.service:FrevvoFormService
              *
              * @param {JSON} acmFormsProperties properties from the acm-forms.properties configuration file
              * @param {String} type of the form to load (case_file, change_case_status, etc.)
