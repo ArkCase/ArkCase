@@ -39,7 +39,7 @@ public class AcmObjectLockAPIController
         return objectLockService.createLock(objectId, objectType, authentication);
     }
 
-    @RequestMapping(value = {"/api/v1/plugin/{objectType}/{objectId}/unlock", "/api/latest/plugin/{objectType}/{objectId}/unlock"}, method = RequestMethod.DELETE)
+    @RequestMapping(value = {"/api/v1/plugin/{objectType}/{objectId}/lock", "/api/latest/plugin/{objectType}/{objectId}/lock"}, method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void unlockObject(
             @PathVariable(value = "objectType") String objectType,
