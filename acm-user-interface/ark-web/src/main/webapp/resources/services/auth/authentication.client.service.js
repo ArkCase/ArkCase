@@ -1,4 +1,5 @@
 'use strict';
+
 /**
  * @ngdoc service
  * @name services.service:Authentication
@@ -8,7 +9,6 @@
  *
  * The Authentication service retrieves user information from server
  */
-
 angular.module('services').factory('Authentication', ['$resource', 'ValidationService',
     function ($resource, Validator) {
         return $resource('proxy/arkcase/api/v1/users/info', {}, {
