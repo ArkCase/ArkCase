@@ -581,6 +581,7 @@ a.editable.editable-click.editable-hide {
     margin: 0px;
     border: 0px;
     border-radius: 0;
+    overflow: visible;
 }
 .note-toolbar.panel-heading {
     background: #f3f3f3;
