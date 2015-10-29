@@ -98,21 +98,6 @@
             <filtered>false</filtered>
         </file>
         <file>
-            <source>src/main/resources/resources/add.png</source>
-            <outputDirectory>/resources</outputDirectory>
-            <filtered>false</filtered>
-        </file>
-        <file>
-            <source>src/main/resources/resources/split.png</source>
-            <outputDirectory>/resources</outputDirectory>
-            <filtered>false</filtered>
-        </file>
-        <file>
-            <source>src/main/resources/resources/merge.png</source>
-            <outputDirectory>/resources</outputDirectory>
-            <filtered>false</filtered>
-        </file>
-        <file>
             <source>src/main/resources/WEB-INF/web.xml</source>
             <outputDirectory>/WEB-INF</outputDirectory>
             <filtered>false</filtered>
@@ -127,5 +112,21 @@
             <outputDirectory>/</outputDirectory>
             <filtered>false</filtered>
         </file>
+
+
     </files>
+
+    <fileSets>
+        <fileSet>
+            <directory>src/main/resources/resources</directory>
+
+            <includes>
+                <include>/*.png</include>
+                <include>/*.svg</include>
+            </includes>
+            <outputDirectory>/resources</outputDirectory>
+            <filtered>false</filtered>
+        </fileSet>
+    </fileSets>
+
 </assembly>
