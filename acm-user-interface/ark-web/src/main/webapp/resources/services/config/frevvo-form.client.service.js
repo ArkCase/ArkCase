@@ -1,17 +1,26 @@
 'use strict';
 
+/**
+ * @ngdoc service
+ * @name services.service:FrevvoFormService
+ *
+ * @description
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/config/frevvo-form.client.service.js services/config/frevvo-form.client.service.js}
+ *
+ * This service contains functionality for Frevvo form management.
+ */
 angular.module('services').factory('FrevvoFormService', [
     function () {
         return {
             /**
               * @ngdoc method
               * @name buildFrevvoUrl
-              * @methodOf FrevvoFormService
+              * @methodOf services.service:FrevvoFormService
               *
-              * @param {JSON Object} acmFormsProperties properties from the acm-forms.properties configuration file
-              * @param (String) type of the form to load (case_file, change_case_status, etc.)
-              * @param (String) authentication token for ArkCase for the currently logged in user
-              * @param (JSON Object) optional caseFile metadata for an existing case file to be modified
+              * @param {JSON} acmFormsProperties properties from the acm-forms.properties configuration file
+              * @param {String} type of the form to load (case_file, change_case_status, etc.)
+              * @param {String} authentication token for ArkCase for the currently logged in user
+              * @param {JSON} optional caseFile metadata for an existing case file to be modified
               *
               * @description
               * This method takes the configuration from acm-forms.properties and generates the
