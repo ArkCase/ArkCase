@@ -15,7 +15,7 @@ angular.module('directives').directive('search', ['SearchService',
                  **/
 
                 header: '@',            //@ : text binding (read-only and only strings)
-                search: '@',
+                searchBtn: '@',
                 searchPlaceholder: '@',
                 filter: '@',
                 config: '&',            //& : one way binding (read-only, can return key, value pair via a getter function)
@@ -65,6 +65,7 @@ angular.module('directives').directive('search', ['SearchService',
                 }
 
                 //prepare the UI-grid
+                scope.gridOptions = {};
                 if (scope.config()) {
                     scope.pageSize = scope.config().paginationPageSize;
                     scope.start = scope.config().start;

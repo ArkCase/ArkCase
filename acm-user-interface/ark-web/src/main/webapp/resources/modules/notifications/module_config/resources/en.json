@@ -1,0 +1,18 @@
+{
+  "notifications": {
+    "title": "Notifications",
+    "search.btn": "Search",
+    "search.placeholder": "Search for notifications",
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "ID",
+          "description": "Description",
+          "objNumber": "Object Number",
+          "objType": "Object Type",
+          "modified": "Modified"
+        }
+      }
+    }
+  }
+}
