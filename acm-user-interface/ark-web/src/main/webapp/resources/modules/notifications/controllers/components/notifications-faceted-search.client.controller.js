@@ -1,9 +1,11 @@
-angular.module('notifications').controller('NotificationController', ['$scope',
+'use strict';
+
+angular.module('notifications').controller('Notifications.FacetedSearchController', ['$scope',
         function ($scope) {
-            $scope.$emit('req-component-config', 'notifications');
+            $scope.$emit('req-component-config', 'notificationsFacetedSearch');
             $scope.$on('component-config', applyConfig)
             function applyConfig(e, componentId, config) {
-                if (componentId == 'notifications') {
+                if (componentId == 'notificationsFacetedSearch') {
                     $scope.config = config;
                     $scope.filter = config.filter;
                 }
@@ -11,5 +13,3 @@ angular.module('notifications').controller('NotificationController', ['$scope',
         }
     ]
 );
-
-

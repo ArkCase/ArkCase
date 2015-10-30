@@ -1,7 +1,15 @@
 'use strict';
-
+/**
+ * @ngdoc controller
+ * @name cases.controller:Cases.StatusController
+ *
+ * @description
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/components/case-status.client.controller.js modules/cases/controllers/components/case-status.client.controller.js}
+ *
+ * The Status Controller
+ */
 angular.module('cases').controller('Cases.StatusController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'FrevvoFormService',
-    function($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, FrevvoFormService) {
+    function ($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, FrevvoFormService) {
         $scope.$emit('req-component-config', 'status');
 
         $scope.acmTicket = '';
@@ -12,21 +20,23 @@ angular.module('cases').controller('Cases.StatusController', ['$scope', '$stateP
         $scope.openChangeCaseStatusFrevvoForm = openChangeCaseStatusFrevvoForm;
 
         /**
-          * @ngdoc method
-          * @name openChangeCaseStatusFrevvoForm
-          * @methodOf Cases.StatusController
-          *
-          * @description
-          * This method generates the change case status Frevvo form url and loads the form
-          * into an iframe as a trusted resource.  It can only be called after the
-          * acm-forms.properties config and the acmTicket have been obtained.
-          */
+         * @ngdoc method
+         * @name openChangeCaseStatusFrevvoForm
+         * @methodOf cases.controller:Cases.StatusController
+         *
+         * @description
+         * This method generates the change case status Frevvo form url and loads the form
+         * into an iframe as a trusted resource.  It can only be called after the
+         * acm-forms.properties config and the acmTicket have been obtained.
+         */
         function openChangeCaseStatusFrevvoForm() {
             var caseFile = {
                 id: $stateParams['id'],
-                caseNumber: $stateParams['caseNumber']
+                caseNumber: $stateParams['caseNumber'],
+                status: $stateParams['status']
             };
-            var formUrl = FrevvoFormService.buildFrevvoUrl($scope.acmFormsProperties, 'change_case_status', $scope.acmTicket, caseFile);
+            var changeStatusType = $scope.acmFormsProperties['active.change_status.form'];
+            var formUrl = FrevvoFormService.buildFrevvoUrl($scope.acmFormsProperties, changeStatusType, $scope.acmTicket, caseFile);
             $scope.frevvoFormUrl = $sce.trustAsResourceUrl(formUrl);
         }
 
@@ -37,7 +47,7 @@ angular.module('cases').controller('Cases.StatusController', ['$scope', '$stateP
         var acmFormsInfo = LookupService.getConfig({name: 'acm-forms'});
 
         $q.all([ticketInfo, acmFormsInfo.$promise])
-            .then(function(data) {
+            .then(function (data) {
                 $scope.acmTicket = data[0].data;
                 $scope.acmFormsProperties = data[1];
 

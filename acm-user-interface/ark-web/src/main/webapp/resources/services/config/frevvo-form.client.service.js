@@ -1,24 +1,33 @@
 'use strict';
 
+/**
+ * @ngdoc service
+ * @name services.service:FrevvoFormService
+ *
+ * @description
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/config/frevvo-form.client.service.js services/config/frevvo-form.client.service.js}
+ *
+ * This service contains functionality for Frevvo form management.
+ */
 angular.module('services').factory('FrevvoFormService', [
     function () {
         return {
             /**
-              * @ngdoc method
-              * @name buildFrevvoUrl
-              * @methodOf FrevvoFormService
-              *
-              * @param {JSON Object} acmFormsProperties properties from the acm-forms.properties configuration file
-              * @param (String) type of the form to load (case_file, change_case_status, etc.)
-              * @param (String) authentication token for ArkCase for the currently logged in user
-              * @param (JSON Object) optional caseFile metadata for an existing case file to be modified
-              *
-              * @description
-              * This method takes the configuration from acm-forms.properties and generates the
-              * full Frevvo form url for the specified form type.  If a caseFile is specified,
-              * then that case file data will be loaded into the form to edit.
-              */
-            buildFrevvoUrl: function(acmFormsProperties, formType, acmTicket, caseFile) {
+             * @ngdoc method
+             * @name buildFrevvoUrl
+             * @methodOf services.service:FrevvoFormService
+             *
+             * @param {JSON} acmFormsProperties properties from the acm-forms.properties configuration file
+             * @param {String} type of the form to load (case_file, change_case_status, etc.)
+             * @param {String} authentication token for ArkCase for the currently logged in user
+             * @param {JSON} optional caseFile metadata for an existing case file to be modified
+             *
+             * @description
+             * This method takes the configuration from acm-forms.properties and generates the
+             * full Frevvo form url for the specified form type.  If a caseFile is specified,
+             * then that case file data will be loaded into the form to edit.
+             */
+            buildFrevvoUrl: function (acmFormsProperties, formType, acmTicket, caseFile) {
 
                 // Loads Frevvo server basic configuration
                 var protocol = acmFormsProperties['frevvo.protocol'];
@@ -40,7 +49,7 @@ angular.module('services').factory('FrevvoFormService', [
 
                 // Frevvo will load an existing case file if we are changing the status/editing a case file
                 if (caseFile) {
-                    var caseFileArgs = "caseId:'" + caseFile.id + "',caseNumber:'" + caseFile.caseNumber + "',acm_ticket:";
+                    var caseFileArgs = "caseId:'" + caseFile.id + "',actionNumber:'" + caseFile.caseNumber + "',status:'" + caseFile.status + "',acm_ticket:";
                     urlTemplate = urlTemplate.replace('acm_ticket:', caseFileArgs);
                 }
 

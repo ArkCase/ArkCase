@@ -5775,6 +5775,7 @@ function VirtualViewer() {
         Cz.query("");
         $.ajax({
             url: Cz.toString(), type: "POST", data: C0, dataType: "json", success: function (C1) {
+                window.location.reload(true);
                 if (AB(C1) === true) {
                     return
                 }
