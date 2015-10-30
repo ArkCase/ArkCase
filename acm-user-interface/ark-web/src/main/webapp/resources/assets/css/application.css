@@ -526,13 +526,14 @@ iframe {
 
 .ui-grid-pager-panel .ui-grid-pager-max-pages-number {
     position: relative;
-    left: 5px;
+    left: 7px;
+    bottom: 2px;
 }
 
 .ui-grid-pager-panel .ui-grid-pager-max-pages-number abbr {
-    position: relative;
-    top: 4px;
-    right: 1px;
+    position: absolute;
+    top: -2px;
+    left: -7px;
 }
 
 .ui-grid-pager-panel input.ui-grid-pager-control-input {
@@ -687,6 +688,7 @@ a.editable.editable-click.editable-hide {
     margin: 0px;
     border: 0px;
     border-radius: 0;
+    overflow: visible;
 }
 
 .note-toolbar.panel-heading {

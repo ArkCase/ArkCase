@@ -142,7 +142,7 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
         Resource resourceFile = new ClassPathResource("/solrResponseCaseFile.json");
         String jsonContent = new String(Files.readAllBytes(resourceFile.getFile().toPath()));
 
-        expect(executeSolrQueryMock.getResultsByPredefinedQuery(authMock, SolrCore.ADVANCED_SEARCH, "{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK  AND parent_type_s:CASE_FILE AND assignee_id_lcs:auditUser)", 0, 1, "")).andReturn(jsonContent);
+        expect(executeSolrQueryMock.getResultsByPredefinedQuery(authMock, SolrCore.ADVANCED_SEARCH, "{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK  AND parent_type_s:CASE_FILE AND creator_lcs:auditUser", 0, 1, "")).andReturn(jsonContent);
         replayAll();
         String result = acmObjectLockService.getDocumentsWithLock("CASE_FILE", authMock, authMock, 0, 1, "", null);
 
@@ -160,7 +160,7 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
 
         String filter = "fq=status_s:OPEN";
 
-        expect(executeSolrQueryMock.getResultsByPredefinedQuery(authMock, SolrCore.ADVANCED_SEARCH, "{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK  AND parent_type_s:CASE_FILE AND assignee_id_lcs:auditUser)", 0, 1, "", "fq=status_s:OPEN")).andReturn(jsonContent);
+        expect(executeSolrQueryMock.getResultsByPredefinedQuery(authMock, SolrCore.ADVANCED_SEARCH, "{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK  AND parent_type_s:CASE_FILE AND creator_lcs:auditUser", 0, 1, "", "fq=status_s:OPEN")).andReturn(jsonContent);
         replayAll();
         String result = acmObjectLockService.getDocumentsWithLock("CASE_FILE", authMock, authMock, 0, 1, "", filter);
 
