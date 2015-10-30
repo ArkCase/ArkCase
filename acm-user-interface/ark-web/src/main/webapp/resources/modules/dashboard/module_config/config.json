@@ -20,7 +20,7 @@
       "paginationPageSize": 25,
       "columnDefs": [
         {
-          "name": "id",
+          "name": "object_id_s",
           "displayName": "dashboard.widgets.myCases.table.header.caseId",
           "headerCellFilter": "translate",
           "enableSorting": true,
