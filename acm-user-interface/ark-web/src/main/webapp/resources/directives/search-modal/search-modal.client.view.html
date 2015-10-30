@@ -17,7 +17,7 @@
             <div class="modal-columns">
                 <div class="modal-left">
                     <ul class="list-unstyled">
-                        <li ng-repeat="facet in facets" ng-if="facet.fields.length && facet.name !=('Object Sub Type' && 'Object Type')"><strong>{{facet.name}}</strong>
+                        <li ng-repeat="facet in facets" ng-if="facet.fields.length && facet.name!='Object Sub Type' && facet.name!= 'Object Type'"><strong>{{facet.name}}</strong>
                             <ul class="list-unstyled">
                                 <li ng-repeat="field in facet.fields">
                                     <div class="checkbox" ng-if="field.count > 0">
