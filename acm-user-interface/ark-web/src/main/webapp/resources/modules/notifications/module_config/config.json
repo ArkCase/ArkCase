@@ -1,0 +1,57 @@
+{
+    "id": "notifications",
+    "title": "Notifications",
+    "menus": [
+        
+        {
+            "menuId": "leftnav",
+            "menuItemURL": "notifications",
+            "menuItemTitle": "Notifications",
+            "iconClass": "fa fa-bell-o",
+            "position": 120
+        }
+        
+    ],
+    "components": [
+        {
+            "id": "notificationsFacetedSearch",
+            "title": "Notifications Faceted Search",
+            "enabled": "true",
+            "type": "grid",
+            "enableFiltering": false,
+            "columnDefs": [
+                {
+                    "name": "object_id_s",
+                    "displayName": "notifications.comp.grid.columns.id",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "description_parseable",
+                    "displayName": "notifications.comp.grid.columns.description",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "notifications.comp.grid.columns.objType",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modified_date_tdt",
+                    "type": "date",
+                    "displayName": "notifications.comp.grid.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "date : 'MM/dd/yyyy HH:MM'"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0,
+            "filter": "\"Object Type\": NOTIFICATION"
+        }
+    ]
+}

@@ -41,6 +41,7 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
 
                         $scope.gridOptions.data = costsheets;
                         $scope.gridOptions.totalItems = Util.goodValue(costsheets.length, 0);
+                        Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
                     }
 
                 });
