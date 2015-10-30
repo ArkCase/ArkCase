@@ -1,3 +1,4 @@
+@import "variables";
 // Set login page variables
 
 .login-wrapper {
@@ -9,6 +10,7 @@
     background-image: $login-logo;
     background-position: center;
     background-repeat: no-repeat;
+    max-width: $login-logo-max-width;
   }
 
   header {
@@ -24,4 +26,15 @@
     background-color: $login-submit-button-bg;
     color: $login-submit-button-color;
   }
+}
+
+.no-border {
+  border-color: transparent;
+  border-width: 0;
+  -webkit-box-shadow: none; //change
+  box-shadow: none; //change
+}
+
+#footer div.text-center.padder p {
+  padding: $login-footer-padding;
 }

@@ -1,0 +1,71 @@
+<div class="panel panel-success" ng-show="'contactMethods' == grid.appScope.currentSubGrid">
+    <div class="panel-heading">
+        <div class="panel-title">{{"cases.comp.people.contactMethods.title" | translate}}
+            <div class="pull-right">
+                <span class=""><i class='fa fa-plus' ng-click='grid.appScope.addNewContactMethods(row)'></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div ui-grid="row.entity.acm$_contactMethods.gridOptions" ui-grid-resize-columns ui-grid-auto-resize
+             ui-grid-pagination ui-grid-edit class="grid" style="height:240px;"></div>
+    </div>
+
+</div>
+
+<div class="panel panel-success" ng-show="'organizations' == grid.appScope.currentSubGrid">
+    <div class="panel-heading">
+        <div class="panel-title">{{"cases.comp.people.organizations.title" | translate}}
+            <div class="pull-right">
+                <span class=""><i class='fa fa-plus' ng-click='grid.appScope.addNewOrganizations()'></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div ui-grid="row.entity.acm$_organizations.gridOptions" ui-grid-resize-columns ui-grid-auto-resize
+             ui-grid-pagination ui-grid-edit class="grid" style="height:250px;"></div>
+    </div>
+</div>
+
+<div class="panel panel-success" ng-show="'addresses' == grid.appScope.currentSubGrid">
+    <div class="panel-heading">
+        <div class="panel-title">{{"cases.comp.people.addresses.title" | translate}}
+            <div class="pull-right">
+                <span class=""><i class='fa fa-plus' ng-click='grid.appScope.addNewAddresses()'></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div ui-grid="row.entity.acm$_addresses.gridOptions" ui-grid-resize-columns ui-grid-auto-resize
+             ui-grid-pagination ui-grid-edit class="grid" style="height:250px;"></div>
+    </div>
+</div>
+
+<div class="panel panel-success" ng-show="'aliases' == grid.appScope.currentSubGrid">
+    <div class="panel-heading">
+        <div class="panel-title">{{"cases.comp.people.aliases.title" | translate}}
+            <div class="pull-right">
+                <span class=""><i class='fa fa-plus' ng-click='grid.appScope.addNewAliases()'></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div ui-grid="row.entity.acm$_aliases.gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination
+             ui-grid-edit class="grid" style="height:250px;"></div>
+    </div>
+</div>
+
+<div class="panel panel-success" ng-show="'securityTags' == grid.appScope.currentSubGrid">
+    <div class="panel-heading">
+        <div class="panel-title">{{"cases.comp.people.securityTags.title" | translate}}
+            <div class="pull-right">
+                <span class=""><i class='fa fa-plus' ng-click='grid.appScope.addNewSecurityTags()'></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div ui-grid="row.entity.acm$_securityTags.gridOptions" ui-grid-resize-columns ui-grid-auto-resize
+             ui-grid-pagination ui-grid-edit class="grid" style="height:250px;"></div>
+    </div>
+</div>
+

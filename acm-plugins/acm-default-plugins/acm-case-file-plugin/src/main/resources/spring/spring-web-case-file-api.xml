@@ -9,19 +9,22 @@
 
     <bean id="findCaseByIdAPIController" class="com.armedia.acm.plugins.casefile.web.api.FindCaseByIdAPIController">
         <property name="caseFileDao" ref="caseFileDao"/>
-        <property name="changeCaseStatusDao" ref="changeCaseStatusDao" />
+        <property name="changeCaseStatusDao" ref="changeCaseStatusDao"/>
     </bean>
 
-    <bean id="getCasesByStatusAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetCasesByStatusAPIController">
+    <bean id="getCasesByStatusAPIController"
+          class="com.armedia.acm.plugins.casefile.web.api.GetCasesByStatusAPIController">
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
-    <bean id="listCaseFilesByUserAPIController" class="com.armedia.acm.plugins.casefile.web.api.ListCaseFilesByUserAPIController">
+    <bean id="listCaseFilesByUserAPIController"
+          class="com.armedia.acm.plugins.casefile.web.api.ListCaseFilesByUserAPIController">
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
     </bean>
 
-    <bean id="getCaseFileStatusSummaryAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetCaseFileStatusSummaryAPIController">
+    <bean id="getCaseFileStatusSummaryAPIController"
+          class="com.armedia.acm.plugins.casefile.web.api.GetCaseFileStatusSummaryAPIController">
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
     </bean>
@@ -35,5 +38,12 @@
     </bean>
     <bean id="splitCaseFileAPIController" class="com.armedia.acm.plugins.casefile.web.api.SplitCaseFilesAPIController">
         <property name="splitCaseService" ref="splitCaseService"/>
+    </bean>
+    <bean id="getQueuesApiController" class="com.armedia.acm.plugins.casefile.web.api.GetQueuesAPIController">
+        <property name="acmQueueService" ref="acmQueueService"/>
+    </bean>
+
+    <bean id="getNumberOfActiveCaseFilesByQueueAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetNumberOfActiveCaseFilesByQueueAPIController">
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 </beans>

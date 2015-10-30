@@ -170,6 +170,17 @@
         </property>
     </bean>
 
+    <bean id="priorityLevelToNumberMap" class="java.util.HashMap">
+        <constructor-arg>
+            <map key-type="java.lang.String" value-type="java.lang.Integer">
+                <entry key="Low" value="10"/>
+                <entry key="Medium" value="50"/>
+                <entry key="High" value="70"/>
+                <entry key="Expedite" value="90"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
     <bean id="acmTaskDao" class="com.armedia.acm.plugins.task.service.impl.ActivitiTaskDao">
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiRepositoryService" ref="activitiRepositoryService"/>
@@ -183,14 +194,7 @@
         <property name="taskBusinessRule" ref="taskBusinessRule"/>
         <property name="taskExtractor" ref="extractAcmTaskFromEvent"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="priorityLevelToNumberMap">
-            <map>
-                <entry key="Low" value="10"/>
-                <entry key="Medium" value="50"/>
-                <entry key="High" value="70"/>
-                <entry key="Expedite" value="90"/>
-            </map>
-        </property>
+        <property name="priorityLevelToNumberMap" ref="priorityLevelToNumberMap"/>
         <property name="requiredFieldsPerOutcomeMap">
             <map>
                 <entry key="APPROVE">

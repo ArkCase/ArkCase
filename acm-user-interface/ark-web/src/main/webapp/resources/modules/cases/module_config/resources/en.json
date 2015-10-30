@@ -2,22 +2,41 @@
   "cases": {
     "title": "Cases",
     "restrict": "Restrict?",
-    "close.button": "Close Complaint",
-    "subscribe.button": "Subscribe"
+    "new.button": "New",
+    "edit.button": "Edit",
+    "status.button": "Change Case Status",
+    "reinvestigate.button": "Reinvestigate",
+    "subscribe.button": "Subscribe",
+    "merge.button": "Merge",
+    "split.button": "Split",
+    "noCase": "[ No Case Data ]"
   },
   "cases.comp.calendar": {
     "title": "Calendar"
   },
   "cases.comp.correspondence": {
-    "title": "Correspondence"
+    "title": "Correspondence",
+    "table.columns": {
+      "name": "Title",
+      "created": "Created",
+      "creator": "Creator"
+    }
   },
   "cases.comp.cost": {
-    "title": "Cost"
+    "title": "Cost",
+    "table.columns": {
+      "name": "Form Name",
+      "user": "User",
+      "tally": "Total Cost",
+      "modified": "Modified Date",
+      "status": "Status"
+    },
+    "formNamePrefix": "Costsheet"
   },
   "cases.comp.details": {
     "title": "Details",
     "msg": {
-      "noDetails": "No Details"
+      "noDetails": "No Details ____no longer used; to be deleted____"
     }
   },
   "cases.comp.documents": {
@@ -26,30 +45,103 @@
   "cases.comp.history": {
     "title": "History",
     "table.columns": {
+      "eventType": "Event Name",
       "eventDate": "Date",
       "userId": "User"
     }
   },
   "cases.comp.info": {
     "caseId": "Case id:",
+    "caseNumber": "Case Number:",
     "courtRoomName": "Court Room Name:"
   },
   "cases.comp.notes": {
-    "title": "Notes"
+    "title": "Notes",
+    "table.columns": {
+      "note": "Note",
+      "created": "Created",
+      "creator": "Author"
+    }
   },
   "cases.comp.participants": {
-    "title": "Participants"
+    "title": "Participants",
+    "table.columns": {
+      "type": "Type",
+      "name": "Name"
+    }
   },
   "cases.comp.people": {
-    "title": "People"
+    "title": "People",
+    "table.columns": {
+      "entity": "Entity",
+      "type": "Type",
+      "firstName": "FirstName",
+      "lastName": "LastName"
+    },
+    "contactMethods": {
+      "title": "ContactMethods",
+      "table.columns": {
+        "type": "Type",
+        "value": "Value",
+        "created": "Date Added",
+        "creator": "Added By"
+      }
+    },
+    "organizations": {
+      "title": "Organizations",
+      "table.columns": {
+        "type": "Type",
+        "value": "Value",
+        "created": "Date Added",
+        "creator": "Added By"
+      }
+    },
+    "addresses": {
+      "title": "Addresses",
+      "table.columns": {
+        "type": "Type",
+        "streetAddress": "Address",
+        "city": "City",
+        "state": "State",
+        "zip": "Zip",
+        "country": "Country",
+        "created": "Date Added",
+        "creator": "Added By"
+      }
+    },
+    "aliases": {
+      "title": "Aliases",
+      "table.columns": {
+        "type": "Type",
+        "value": "Value",
+        "created": "Date Added",
+        "creator": "Added By"
+      }
+    },
+    "securityTags": {
+      "title": "Security Tags",
+      "table.columns": {
+        "type": "Type",
+        "value": "Value",
+        "created": "Date Added",
+        "creator": "Added By"
+      }
+    }
   },
   "cases.comp.references": {
-    "title": "References"
+    "title": "References",
+    "table.columns": {
+      "targetName": "Number",
+      "targetTitle": "Title",
+      "modified": "Modified",
+      "targetType": "Reference Type",
+      "status": "Status"
+    }
   },
   "cases.comp.tasks": {
     "title": "Tasks",
     "table.columns": {
-      "id": "ID",
+      "taskId": "ID",
       "title": "Title",
       "assignee": "Assignee",
       "created": "Created",
@@ -60,6 +152,14 @@
     }
   },
   "cases.comp.time": {
-    "title": "Time"
+    "title": "Time",
+    "table.columns": {
+      "name": "Form Name",
+      "user": "User",
+      "tally": "Total Hours",
+      "modified": "Modified Date",
+      "status": "Status"
+    },
+    "formNamePrefix": "Timesheet"
   }
 }

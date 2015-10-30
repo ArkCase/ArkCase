@@ -1,0 +1,20 @@
+
+<section class="well">
+    <h4 class="well-small"> {{'profile.contact.title' | translate}} </h4>
+    <ul class="list-unstyled">
+        <li>
+            <div ng-controller="Profile.ContactController" class="row">
+                <div class="col-xs-6">
+                    <h4>  <a href="#"  editable-text="profileContactLocation" onaftersave="update()">{{ profileContactLocation || 'profile.unknown'  | translate}}</a></h4>
+                    <small>{{'profile.contact.location' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profileContactIM" onaftersave="update()"  >{{ profileContactIM || 'profile.unknown'  | translate}}</a> ( <a href="#" editable-text="profileContactIMSystem" onaftersave="update()"  >{{ profileContactIMSystem || 'profile.unknown'  | translate}}</a> )</h4>
+                    <small> {{'profile.contact.im' | translate}} </small> </div>
+                <div class="col-xs-6">
+                    <h4>  <a href="#" editable-text="profileContactOfficephone" onaftersave="update()" >{{ profileContactOfficephone || 'profile.unknown'  | translate}}</a></h4>
+                    <small> {{'profile.contact.officePhone' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profileContactMobilephone" onaftersave="update()" >{{ profileContactMobilephone || 'profile.unknown'  | translate}}</a></h4>
+                    <small> {{'profile.contact.mobilePhone' | translate}} </small> </div>
+            </div>
+        </li>
+    </ul>
+</section>

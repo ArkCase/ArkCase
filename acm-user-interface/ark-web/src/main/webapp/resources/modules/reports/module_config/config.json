@@ -1,0 +1,26 @@
+{
+  "id": "reports",
+  "title": "Reports",
+  "menus": [
+    {
+      "menuId": "leftnav",
+      "menuItemURL": "reports",
+      "menuItemTitle": "Reports",
+      "iconClass": "fa fa-bar-chart",
+      "position": 100
+    }
+  ],
+  "components": [
+    {
+      "id": "datepickers",
+      "title": "Datepickers",
+      "enabled": true,
+      "type": "empty"
+    },
+    {
+      "id": "reportselection",
+      "title": "Reports",
+      "enabled": true
+    }
+  ]
+}

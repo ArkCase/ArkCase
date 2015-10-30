@@ -427,6 +427,7 @@ CaseFile.Model = CaseFile.Model || {
             pa.parentId = caseFileId;
             pa.personType = personAssociation.personType;
             //pa.personDescription = personAssociation.personDescription;
+            pa.person.className = "com.armedia.acm.plugins.person.model.Person";
             pa.person.title = personAssociation.person.title;
             pa.person.givenName = personAssociation.person.givenName;
             pa.person.familyName = personAssociation.person.familyName;
@@ -1529,9 +1530,9 @@ CaseFile.Model = CaseFile.Model || {
         , API_RETRIEVE_COSTSHEETS: "/api/v1/service/costsheet/"
 
         ,retrieveCostsheets : function(caseFileId) {
-            var costsheets = CaseFile.Model.Time.cacheTimesheets.get(caseFileId);
+            var costsheets = CaseFile.Model.Cost.cacheCostsheets.get(caseFileId);
             if (costsheets) {
-                return Acm.Promise.donePromise(costsheets).donePromise();
+                return Acm.Promise.donePromise(costsheets).promise();
             }
 
             var url = this.API_RETRIEVE_COSTSHEETS;

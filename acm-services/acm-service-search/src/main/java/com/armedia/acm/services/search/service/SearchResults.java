@@ -111,4 +111,45 @@ public class SearchResults
         }
         return null;
     }
+
+	public List<Object> extractObjectList(JSONObject object, String fieldName)
+	{
+		List<Object> extractedList = new ArrayList<>();
+
+		if ( object.has(fieldName))
+		{
+			JSONArray jsonArray = object.getJSONArray(fieldName);
+			if (jsonArray != null)
+			{
+				for (int i = 0; i < jsonArray.length(); i++)
+				{
+					extractedList.add(jsonArray.get(i));
+				}
+			}
+		}
+
+		return extractedList;
+	}
+
+	public JSONObject getFacetFields(String jsonResults)
+	{
+		JSONObject retval = null;
+
+		if (jsonResults != null)
+		{
+			JSONObject json = new JSONObject(jsonResults);
+
+			if (json != null && json.has(SearchConstants.PROPERTY_FACET_COUNTS))
+			{
+				JSONObject jsonFacetCounts = json.getJSONObject(SearchConstants.PROPERTY_FACET_COUNTS);
+
+				if (jsonFacetCounts != null && jsonFacetCounts.has(SearchConstants.PROPERTY_FACET_FIELDS))
+				{
+					retval = jsonFacetCounts.getJSONObject(SearchConstants.PROPERTY_FACET_FIELDS);
+				}
+			}
+		}
+
+		return retval;
+	}
 }

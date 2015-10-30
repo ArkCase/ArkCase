@@ -1,0 +1,12 @@
+@import "variables";
+
+
+.required-asterisk {
+  color: $red;
+}
+
+.form-control {
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}

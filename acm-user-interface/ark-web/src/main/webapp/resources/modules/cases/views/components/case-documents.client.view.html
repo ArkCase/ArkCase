@@ -1,9 +1,12 @@
-<div ng-controller="CaseDocumentsController">
-    <div class="panel panel-success">
+<div ng-controller="Cases.DocumentsController">
+    <div class="panel panel-success panel-grid">
         <div class="panel-heading">
             <div class="panel-title">{{'cases.comp.documents.title' | translate}}</div>
         </div>
         <div class="panel-body">
+            <doc-tree object-type="objectType" object-id="objectId" treeArgs="treeArgs" file-types="fileTypes"
+                      upload-form="uploadForm">
+            </doc-tree>
         </div>
     </div>
 </div>

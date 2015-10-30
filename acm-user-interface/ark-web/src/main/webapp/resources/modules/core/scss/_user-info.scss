@@ -1,0 +1,15 @@
+.user-info {
+  height:               $user-info-height;
+  padding:              ($user-info-height - $user-pic-height) / 2;
+  background-color:     $user-info-bg;
+
+  .user-pic {
+    img {
+      height:             $user-pic-height;
+      width:              $user-pic-width;
+      background-color:   $user-pic-bg;
+      border-radius:      500px;
+
+    }
+  }
+}

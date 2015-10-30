@@ -91,11 +91,14 @@ var Acm = Acm || {
         return this.isEmpty(val) ? replacedWith : val;
     }
 
-    //Usage ex)   To get good value of grandParent.parent.node.name
+    //Usage ex
+    //To get good value of grandParent.parent.node.name
     //   Acm.goodValue([grandParent, "parent", "node", "name"], "N/A");
+    //To get good value of grandParent.parent.arr[3].name
+    //   Acm.goodValue([grandParent, "parent", "arr", "[3]", "name"], "N/A");
     ,goodValue2: function (arr, replacement)  {
         var replacedWith = (undefined === replacement) ? "" : replacement;
-        if (Acm.isArray(arr)) {
+        if (this.isArray(arr)) {
             if (0 >= arr.length) {
                 return replacedWith;
             }
@@ -106,7 +109,19 @@ var Acm = Acm || {
                     v = arr[0];
                 } else {
                     var k = arr[i];
-                    v = v[k];
+                    if (k.match(/^\[[0-9]+\]$/)) {  // match to [ numbers ]
+                        if (!this.isArray(v)) {
+                            return replacedWith;
+                        }
+                        var idx = k.substring(1, k.length - 1);
+                        if (v.length <= idx) {
+                            return replacedWith;
+                        }
+                        v = v[idx];
+
+                    } else {
+                        v = v[k];
+                    }
                 }
 
                 if (this.isEmpty(v)) {

@@ -1,0 +1,19 @@
+@import "variables";
+
+.btn {
+  border-radius: $theme-radius;
+}
+
+.btn-default {
+  @include              box-shadow(0, 1px, 1px, rgba(90, 90, 90, 0.1));
+  color:                $theme-btn-default-color;
+  background-color:     $theme-btn-default-bg;
+  background-image:     $theme-btn-default-bg-img;
+  border:               $theme-btn-default-border;
+  border-bottom:        $theme-btn-default-border-bottom;
+}
+
+.btn-default:hover {
+  background-color:     $theme-btn-default-bg-hover;
+  border:               $theme-btn-default-border-hover;
+}

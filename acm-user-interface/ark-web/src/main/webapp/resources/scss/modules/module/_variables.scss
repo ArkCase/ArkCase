@@ -1,4 +1,8 @@
 @import "../../base/variables";
 
-$left-sidebar-width:          250px !default;
-$right-sidebar-width:         500px !default;
+$left-sidebar-width:            300px !default;
+$left-sidebar-sm-width:         200px !default;
+$left-sidebar-bg:               $white-dark !default;
+$left-sidebar-header-bg:        $blue-lighter2 !default;
+$left-sidebar-height:           80px !default;
+$right-sidebar-width:           500px !default;

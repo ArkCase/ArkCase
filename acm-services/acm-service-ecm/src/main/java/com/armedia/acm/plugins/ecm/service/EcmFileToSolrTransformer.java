@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by marjan.stefanoski on 05.02.2015.
@@ -60,6 +61,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         solr.setProtected_object_b(false);
 
         solr.setHidden_b(isHidden(in));
+
+        mapAdditionalProperties(in, solr.getAdditionalProperties());
 
         return solr;
     }
@@ -114,7 +117,17 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         
         doc.setHidden_b(isHidden(in));
 
+        mapAdditionalProperties(in, doc.getAdditionalProperties());
+
         return doc;
+    }
+
+    private void mapAdditionalProperties(EcmFile in, Map<String, Object> additionalProperties)
+    {
+        if (in.getFileSource() != null)
+        {
+            additionalProperties.put("file_source_s", in.getFileSource());
+        }
     }
 
     @Override

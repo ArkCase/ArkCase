@@ -1,6 +1,15 @@
 {
   "id": "cases",
   "title": "Cases",
+  "menus": [
+    {
+      "menuId": "leftnav",
+      "menuItemURL": "cases",
+      "menuItemTitle": "Case Files",
+      "iconClass": "fa fa-folder",
+      "position": 40
+    }
+  ],
   "components": [
     {
       "id": "info",
@@ -24,56 +33,368 @@
     {
       "id": "people",
       "title": "People",
+      "className": "com.armedia.acm.plugins.person.model.Person",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 2,
+      "columnDefs": [
+        {
+          "name": "entity",
+          "displayName": "cases.comp.people.table.columns.entity",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "personType",
+          "displayName": "cases.comp.people.table.columns.type",
+          "headerCellFilter": "translate",
+          "lookup": "personTypes"
+        },
+        {
+          "name": "firstName",
+          "field": "person.givenName",
+          "displayName": "cases.comp.people.table.columns.firstName",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "lastName",
+          "field": "person.familyName",
+          "displayName": "cases.comp.people.table.columns.lastName",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "contactMethods": {
+        "id": "contactMethods",
+        "title": "Contact Methods",
+        "enableFiltering": true,
+        "paginationPageSizes": [
+          2,
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 2,
+        "columnDefs": [
+          {
+            "name": "type",
+            "displayName": "cases.comp.people.contactMethods.table.columns.type",
+            "headerCellFilter": "translate",
+            "lookup": "contactMethodTypes"
+          },
+          {
+            "name": "value",
+            "displayName": "cases.comp.people.contactMethods.table.columns.value",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "created",
+            "displayName": "cases.comp.people.contactMethods.table.columns.created",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "creator",
+            "displayName": "cases.comp.people.contactMethods.table.columns.creator",
+            "headerCellFilter": "translate",
+            "lookup": "userFullNames"
+          }
+        ]
+      },
+      "organizations": {
+        "id": "organizations",
+        "title": "Organizations",
+        "enableFiltering": true,
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 5,
+        "columnDefs": [
+          {
+            "name": "type",
+            "field": "organizationType",
+            "displayName": "cases.comp.people.organizations.table.columns.type",
+            "headerCellFilter": "translate",
+            "lookup": "organizationTypes"
+          },
+          {
+            "name": "value",
+            "field": "organizationValue",
+            "displayName": "cases.comp.people.organizations.table.columns.value",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "created",
+            "displayName": "cases.comp.people.organizations.table.columns.created",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "creator",
+            "displayName": "cases.comp.people.organizations.table.columns.creator",
+            "headerCellFilter": "translate",
+            "lookup": "userFullNames"
+          }
+        ]
+      },
+      "addresses": {
+        "id": "addresses",
+        "title": "Addresses",
+        "enableFiltering": true,
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 5,
+        "columnDefs": [
+          {
+            "name": "type",
+            "displayName": "cases.comp.people.addresses.table.columns.type",
+            "headerCellFilter": "translate",
+            "lookup": "addressTypes"
+          },
+          {
+            "name": "streetAddress",
+            "displayName": "cases.comp.people.addresses.table.columns.streetAddress",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "city",
+            "displayName": "cases.comp.people.addresses.table.columns.city",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "state",
+            "displayName": "cases.comp.people.addresses.table.columns.state",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "zip",
+            "displayName": "cases.comp.people.addresses.table.columns.zip",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "country",
+            "displayName": "cases.comp.people.addresses.table.columns.country",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "created",
+            "displayName": "cases.comp.people.addresses.table.columns.created",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "creator",
+            "displayName": "cases.comp.people.addresses.table.columns.creator",
+            "headerCellFilter": "translate",
+            "lookup": "userFullNames"
+          }
+        ]
+      },
+      "aliases": {
+        "id": "Aliases",
+        "title": "aliases",
+        "enableFiltering": true,
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 5,
+        "columnDefs": [
+          {
+            "name": "type",
+            "displayName": "cases.comp.people.aliases.table.columns.type",
+            "headerCellFilter": "translate",
+            "lookup": "aliasTypes"
+          },
+          {
+            "name": "value",
+            "displayName": "cases.comp.people.aliases.table.columns.value",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "created",
+            "displayName": "cases.comp.people.aliases.table.columns.created",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "creator",
+            "displayName": "cases.comp.people.aliases.table.columns.creator",
+            "headerCellFilter": "translate",
+            "lookup": "userFullNames"
+          }
+        ]
+      },
+      "securityTags": {
+        "id": "securityTags",
+        "title": "Security Tags",
+        "enableFiltering": true,
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 5,
+        "columnDefs": [
+          {
+            "name": "type",
+            "displayName": "cases.comp.people.securityTags.table.columns.type",
+            "headerCellFilter": "translate",
+            "lookup": "securityTagTypes"
+          },
+          {
+            "name": "value",
+            "displayName": "cases.comp.people.securityTags.table.columns.value",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "created",
+            "displayName": "cases.comp.people.securityTags.table.columns.created",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "creator",
+            "displayName": "cases.comp.people.securityTags.table.columns.creator",
+            "headerCellFilter": "translate",
+            "lookup": "userFullNames"
+          }
+        ]
+      }
     },
-
     {
-      "id" : "notes",
+      "id": "participants",
+      "title": "Participants",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 2,
+      "columnDefs": [
+        {
+          "name": "participantType",
+          "displayName": "cases.comp.participants.table.columns.type",
+          "headerCellFilter": "translate",
+          "lookup": "participantTypes"
+        },
+        {
+          "name": "participantLdapId",
+          "displayName": "cases.comp.participants.table.columns.name",
+          "headerCellFilter": "translate",
+          "lookup": "participantNames"
+        }
+      ]
+    },
+    {
+      "id": "notes",
       "title": "Notes",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 2,
+      "columnDefs": [
+        {
+          "name": "note",
+          "displayName": "cases.comp.notes.table.columns.note",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "created",
+          "displayName": "cases.comp.notes.table.columns.created",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+          "enableCellEdit": false
+        },
+        {
+          "name": "creator",
+          "displayName": "cases.comp.notes.table.columns.creator",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "lookup": "userFullNames"
+        }
+      ]
     },
-
     {
       "id": "tasks",
       "title": "Tasks",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
       "columnDefs": [
         {
-          "name": "object_id_s",
-          "displayName": "cases.comp.tasks.table.columns.id",
+          "name": "taskId",
+          "field": "object_id_s",
+          "displayName": "cases.comp.tasks.table.columns.taskId",
           "headerCellFilter": "translate"
         },
         {
-          "name": "title_parseable",
+          "name": "title",
+          "field": "title_parseable",
           "displayName": "cases.comp.tasks.table.columns.title",
           "headerCellFilter": "translate"
         },
         {
-          "name": "assignee_s",
+          "name": "assignee",
+          "field": "assignee_s",
           "displayName": "cases.comp.tasks.table.columns.assignee",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         },
         {
           "name": "created",
+          "field": "create_tdt",
           "displayName": "cases.comp.tasks.table.columns.created",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'medium'}}</div>"
         },
         {
-          "name": "priority_s",
+          "name": "priority",
+          "field": "priority_s",
           "displayName": "cases.comp.tasks.table.columns.priority",
           "headerCellFilter": "translate"
         },
         {
-          "name": "due-tdt",
+          "name": "due",
+          "field": "due_tdt",
           "displayName": "cases.comp.tasks.table.columns.due",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'medium'}}</div>"
         },
         {
-          "name": "status_s",
+          "name": "status",
+          "field": "status_s",
           "displayName": "cases.comp.tasks.table.columns.status",
           "headerCellFilter": "translate"
         },
@@ -81,25 +402,73 @@
           "name": "action",
           "displayName": "cases.comp.tasks.table.columns.action",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div><button class='btn-xs btn btn-default' ng-click='grid.appScope.cellAction(\"complete\", row.entity)'>Complete</button></div>"
+          "lookup": "taskOutcomes"
         }
       ]
     },
-
     {
-      "id" : "references",
+      "id": "references",
       "title": "References",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "targetName",
+          "displayName": "cases.comp.references.table.columns.targetName",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetName}}</a>"
+        },
+        {
+          "name": "targetTitle",
+          "displayName": "cases.comp.references.table.columns.targetTitle",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
+        },
+        {
+          "name": "modified",
+          "displayName": "cases.comp.references.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'medium'}}</div>"
+        },
+        {
+          "name": "targetType",
+          "displayName": "cases.comp.references.table.columns.targetType",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "status",
+          "displayName": "cases.comp.references.table.columns.status",
+          "headerCellFilter": "translate"
+        }
+      ]
     },
-
     {
-      "id" : "history",
+      "id": "history",
       "title": "History",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
       "columnDefs": [
+        {
+          "name": "eventType",
+          "displayName": "cases.comp.history.table.columns.eventType",
+          "headerCellFilter": "translate"
+        },
         {
           "name": "eventDate",
           "displayName": "cases.comp.history.table.columns.eventDate",
@@ -109,32 +478,138 @@
         {
           "name": "userId",
           "displayName": "cases.comp.history.table.columns.userId",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         }
       ]
     },
-
     {
       "id": "correspondence",
       "title": "Correspondence",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "cases.comp.correspondence.table.columns.name",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.name}}</a>"
+        },
+        {
+          "name": "created",
+          "displayName": "cases.comp.correspondence.table.columns.created",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+          "enableCellEdit": false
+        },
+        {
+          "name": "creator",
+          "displayName": "cases.comp.correspondence.table.columns.creator",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "lookup": "userFullNames"
+        }
+      ]
     },
-
     {
       "id": "time",
       "title": "Time",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 2,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "cases.comp.time.table.columns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "user",
+          "field": "user.fullName",
+          "displayName": "cases.comp.time.table.columns.user",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "tally",
+          "displayName": "cases.comp.time.table.columns.tally",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified",
+          "field": "modified",
+          "displayName": "cases.comp.time.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'medium'}}</div>"
+        },
+        {
+          "name": "status",
+          "field": "status",
+          "displayName": "cases.comp.time.table.columns.status",
+          "headerCellFilter": "translate"
+        }
+      ]
     },
-
     {
       "id": "cost",
       "title": "Cost",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "cases.comp.cost.table.columns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "user",
+          "field": "user.fullName",
+          "displayName": "cases.comp.cost.table.columns.user",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "tally",
+          "displayName": "cases.comp.cost.table.columns.tally",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified",
+          "field": "modified",
+          "displayName": "cases.comp.cost.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'medium'}}</div>"
+        },
+        {
+          "name": "status",
+          "field": "status",
+          "displayName": "cases.comp.cost.table.columns.status",
+          "headerCellFilter": "translate"
+        }
+      ]
     },
-
     {
       "id": "calendar",
       "title": "Calendar",

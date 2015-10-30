@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.0.34</version>
+    <version>3.0.35</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -67,7 +67,7 @@
         <maven.site.id>acm3-documentation</maven.site.id>
         <maven.site.url>scp://arm-proj-web02.armedia.com/var/www/html/acm3</maven.site.url>
         <maven.taglist.version>2.4</maven.taglist.version>
-        <maven-jgitflow-plugin.version>1.0-m4.3</maven-jgitflow-plugin.version>
+        <maven-jgitflow-plugin.version>1.0-m5.1</maven-jgitflow-plugin.version>
 
         <mule.version>3.7.0</mule.version>
         <mule-cmis-connector.version>1.14.1</mule-cmis-connector.version>
@@ -98,6 +98,10 @@
         <log4j.version>2.2</log4j.version>
         <bouncycastle.version>1.52</bouncycastle.version>
         <zt-exec.version>1.8</zt-exec.version>
+        <xmlgraphics.version>2.0.1</xmlgraphics.version>
+        <fop.version>2.0</fop.version>
+        <pdfbox.version>1.8.10</pdfbox.version>
+        <barcode4j.version>2.1</barcode4j.version>
     </properties>
 
     <organization>
@@ -316,12 +320,12 @@
         <snapshotRepository>
             <id>armedia.snapshot</id>
             <name>Armedia Release Maven Repository</name>
-            <url>http://arm-proj-web01.armedia.com:8081/nexus/content/repositories/armedia.snapshot</url>
+            <url>http://10.20.20.71:8081/nexus/content/repositories/armedia.snapshot</url>
         </snapshotRepository>
         <repository>
             <id>armedia.release</id>
             <name>Armedia Release Maven Repository</name>
-            <url>http://arm-proj-web01.armedia.com:8081/nexus/content/repositories/armedia.release</url>
+            <url>http://10.20.20.71:8081/nexus/content/repositories/armedia.release</url>
         </repository>
         <site>
             <id>${maven.site.id}</id>
@@ -365,7 +369,7 @@
         <!-- Armedia repository -->
         <repository>
             <id>armedia-shared</id>
-            <url>http://arm-proj-web01.armedia.com:8081/nexus/content/groups/armedia</url>
+            <url>http://10.20.20.71:8081/nexus/content/groups/armedia</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -1215,6 +1219,11 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>org.eclipse.persistence</groupId>
+                <artifactId>org.eclipse.persistence.moxy</artifactId>
+                <version>${eclipselink-jpa.version}</version>
+            </dependency>
 
 
             <!-- bean validation -->
@@ -1320,6 +1329,32 @@
                 <groupId>org.apache.tomcat</groupId>
                 <artifactId>tomcat-jdbc</artifactId>
                 <version>${tomcat-jdbc.version}</version>
+            </dependency>
+
+            <!-- XML transformation to PDF (Apache FOP and dependencies) -->
+            <dependency>
+                <groupId>org.apache.xmlgraphics</groupId>
+                <artifactId>xmlgraphics-commons</artifactId>
+                <version>${xmlgraphics.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.xmlgraphics</groupId>
+                <artifactId>fop</artifactId>
+                <version>${fop.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>${pdfbox.version}</version>
+            </dependency>
+
+            <!-- Barcode generation support for Apache FOP -->
+            <dependency>
+                <groupId>net.sf.barcode4j</groupId>
+                <artifactId>barcode4j-fop-ext</artifactId>
+                <version>${barcode4j.version}</version>
             </dependency>
 
             <!-- testing -->

@@ -73,7 +73,7 @@ public class AngularResourceCopier implements ServletContextAware
                 log.info("Old folder path: {}", oldFolder.getCanonicalPath());
                 if (oldFolder.exists())
                 {
-                    log.info("Removing old folder");
+                    log.info("Removing old folder {}", oldFolder.getCanonicalPath());
                     FileSystemUtils.deleteRecursively(oldFolder);
                 }
             }
@@ -88,6 +88,7 @@ public class AngularResourceCopier implements ServletContextAware
 
             // custom_modules is copied specially since we have to squash it into modules folder
             copyResources(resolver, rootPath, tmpDir, "custom_modules", "modules");
+            copyResources(resolver, rootPath, tmpDir, "custom_assets", "assets");
 
             for (String frontEndCommand : getFrontEndCommandsToBeExecuted())
             {

@@ -92,4 +92,13 @@
             </column>
         </addColumn>
     </changeSet>
+
+    <changeSet id="07-acm_person-contact-add-first-middle-last-names" author="manoj.dhungana">
+        <addColumn tableName="acm_person_contact">
+            <column name="cm_person_contact_first_name" type="VARCHAR(1024)"/>
+            <column name="cm_person_contact_middle_inits" type="VARCHAR(1024)"/>
+            <column name="cm_person_contact_last_name" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

@@ -41,7 +41,6 @@ public class FileUploadAPIController
 
     private final String uploadFileType = "attachment";
 
-
     @RequestMapping(
             value = "/upload",
             method = RequestMethod.POST,

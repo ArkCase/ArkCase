@@ -30,6 +30,11 @@
         <property name="oldDeployFoldersToBeRemovedBeforeBuild">
             <list>
                 <value>/modules_config/config</value>
+                <value>/directives</value>
+                <value>/modules</value>
+                <value>/services</value>
+                <value>/templates</value>
+                <value>/filters</value>
             </list>
         </property>
         <property name="frontEndCommandsToBeExecuted">
@@ -50,6 +55,7 @@
                 <value>scss</value>
                 <value>services</value>
                 <value>templates</value>
+                <value>filters</value>
             </list>
         </property>
         <property name="assembledFoldersToCopyToDeployment">
@@ -60,6 +66,7 @@
                 <value>modules</value>
                 <value>modules_config</value>
                 <value>services</value>
+                <value>filters</value>
             </list>
         </property>
         <property name="filesToCopyFromArchive">

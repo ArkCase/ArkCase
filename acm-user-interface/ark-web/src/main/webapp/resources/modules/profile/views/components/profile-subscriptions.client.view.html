@@ -1,0 +1,10 @@
+<section class="well">
+    <div ng-controller="Profile.SubscriptionController"  class="panel panel-success">
+        <div class="panel-heading">
+            <div class="panel-title">{{'profile.subscriptions.title'| translate}}        
+            <div class="pull-right"><button type="button" ng-click="unsubscriptSelected()" class="btn btn-xs btn-default">{{'profile.subscriptions.unsubscribeSelect'| translate}} </button></div>
+        </div>
+        </div>
+        <div id="subscribptionGrid" ui-grid-auto-resize ui-grid-pagination ui-grid-selection  ui-grid="subscribptionGridOptions" class="grid" adjust-table-height="subscribptionGridOptions.data.length"></div>
+    </div>
+</section>

@@ -1,13 +1,13 @@
 package com.armedia.acm.plugins.casefile.pipeline;
 
-import com.armedia.acm.services.pipeline.PipelineContext;
+import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 import org.springframework.security.core.Authentication;
 
 /**
  * Store all the case file saving-related references in this context.
  * Created by Petar Ilin <petar.ilin@armedia.com> on 11.08.2015.
  */
-public class CaseFilePipelineContext implements PipelineContext
+public class CaseFilePipelineContext extends AbstractPipelineContext
 {
     /**
      * Flag showing whether new case file is created.
@@ -18,6 +18,16 @@ public class CaseFilePipelineContext implements PipelineContext
      * Spring authentication token.
      */
     private Authentication authentication;
+
+    /**
+     * The queue that case file is already in.
+     */
+    private String queueName;
+
+    /**
+     * The queue the case will be moved to; used in the queue pipeline.
+     */
+    private String enqueueName;
 
     /**
      * IP Address.
@@ -52,5 +62,25 @@ public class CaseFilePipelineContext implements PipelineContext
     public void setIpAddress(String ipAddress)
     {
         this.ipAddress = ipAddress;
+    }
+
+    public String getEnqueueName()
+    {
+        return enqueueName;
+    }
+
+    public void setEnqueueName(String enqueueName)
+    {
+        this.enqueueName = enqueueName;
+    }
+
+    public String getQueueName()
+    {
+        return queueName;
+    }
+
+    public void setQueueName(String queueName)
+    {
+        this.queueName = queueName;
     }
 }

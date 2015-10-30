@@ -5,22 +5,30 @@ var ApplicationConfiguration = (function() {
     // Init module configuration options
     var applicationModuleName = 'ArkCase';
     var applicationModuleVendorDependencies = [
+        'cgNotify',
         'ngResource',
         'ngCookies',
         'ngAnimate',
         'ngTouch',
         'ngSanitize',
+        'ngAnimate',
+        'ngFileUpload',
         'ui.router',
         'ui.bootstrap',
         'pascalprecht.translate',
         'schemaForm',
+        'angularMoment',
         //'ui.utils',
         'ui.grid',
         'ui.grid.pagination',
         'ui.grid.resizeColumns',
         'ui.grid.autoResize',
         'ui.grid.selection',
-        'ui.grid.expandable'
+        'ui.grid.expandable',
+        'ui.grid.edit',
+        'xeditable',
+        'summernote',
+        'ngBootbox'
     ];
 
     // Add a new vertical module
