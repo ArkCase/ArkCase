@@ -738,8 +738,14 @@ a.editable.editable-click.editable-hide {
 }
 
 .case-frevvo-iframe {
+    position: absolute;
+    top: 0;
+    left: 200px;
     width: 100%;
-    height: 850px;
+    height: 100%;
+    overflow-x: scroll;
+    padding-top: 60px;
+    padding-right: 200px;
 }
 
 /* To Be Removed */
