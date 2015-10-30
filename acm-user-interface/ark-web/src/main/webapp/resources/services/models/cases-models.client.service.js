@@ -4,7 +4,7 @@
 angular.module('services').factory('CasesModelsService', ['$q', '$resource', 'CasesService', 'ConfigService',
     function ($q, $resource, CasesService, ConfigService) {
         return {
-            queryCasesTree: function () {
+            x_no_longer_in_use_queryCasesTree: function () {
                 var deferred = $q.defer();
                 var configPromise = ConfigService.getModule({moduleId: 'cases'}).$promise.then(function(config){
                     return config;
