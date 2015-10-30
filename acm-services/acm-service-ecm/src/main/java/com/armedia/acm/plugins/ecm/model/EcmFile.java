@@ -7,7 +7,22 @@ import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -76,18 +91,24 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Column(name = "cm_file_category")
     private String category = "Document";
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="file")
+    @Column(name = "cm_page_count")
+    private Integer pageCount = 0;
+
+    @Column(name = "cm_file_source")
+    private String fileSource;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "file")
     @OrderBy("created ASC")
     private List<EcmFileVersion> versions = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="cm_parent_object_id")
+    @JoinColumn(name = "cm_parent_object_id")
     private List<AcmAssociatedTag> tags = new ArrayList<>();
 
     @PrePersist
     protected void beforeInsert()
     {
-        if ( getStatus() == null || getStatus().trim().isEmpty() )
+        if (getStatus() == null || getStatus().trim().isEmpty())
         {
             setStatus("ACTIVE");
         }
@@ -103,7 +124,7 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
 
     private void fixChildPointers()
     {
-        for ( EcmFileVersion version : getVersions() )
+        for (EcmFileVersion version : getVersions())
         {
             version.setFile(this);
         }
@@ -270,28 +291,53 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
         this.container = container;
     }
 
-    public List<AcmAssociatedTag> getTags() {
+    public List<AcmAssociatedTag> getTags()
+    {
         return tags;
     }
 
-    public void setTags(List<AcmAssociatedTag> tags) {
+    public void setTags(List<AcmAssociatedTag> tags)
+    {
         this.tags = tags;
+    }
+
+    public Integer getPageCount()
+    {
+        return pageCount;
+    }
+
+    public void setPageCount(Integer pageCount)
+    {
+        this.pageCount = pageCount;
+    }
+
+    public String getFileSource()
+    {
+        return fileSource;
+    }
+
+    public void setFileSource(String fileSource)
+    {
+        this.fileSource = fileSource;
     }
 
     @JsonIgnore
     @Override
-    public String getObjectType() {
+    public String getObjectType()
+    {
         return OBJECT_TYPE;
     }
 
     @JsonIgnore
     @Override
-    public Long getId() {
+    public Long getId()
+    {
         return fileId;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return ToStringBuilder.reflectionToString(this);
     }
 }

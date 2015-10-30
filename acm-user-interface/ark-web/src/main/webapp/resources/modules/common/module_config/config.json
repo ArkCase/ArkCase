@@ -1,0 +1,10 @@
+{
+    "id": "common",
+    "title": "Common settings",
+
+    "notifyMessage": {
+        "duration": 5000,
+        "position": "right",
+        "maximumOpen": 5
+    }
+}

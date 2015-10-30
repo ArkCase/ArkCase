@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="attachmentCaptureFileListener" class="com.armedia.acm.ephesoft.service.AttachmentCaptureFileListener">
+        <property name="convertedFolder" ref="convertedFilesFolder"/>
+        <property name="errorFolder" ref="errorFolder"/>
+    </bean>
+
+
+    <!-- need a bean named "springEntityListenerConfigurer" but it doesn't have to be a real bean -->
+    <bean id="springEntityListenerConfigurer" class="java.lang.String">
+        <constructor-arg value="Not really a Spring listener bean"/>
+    </bean>
+
+    <!-- fake activitiProcessEngineConfiguration bean for testing.  Needed because the folder watcher has a
+           depends-on reference to activitiProcessEngineConfiguration -->
+    <bean id="activitiProcessEngineConfiguration" class="java.lang.String">
+        <constructor-arg value="Not really an activiti bean"/>
+    </bean>
+
+    <!-- dummy bean for the drools deployer -->
+    <bean id="drlDeployer" class="java.lang.String">
+        <constructor-arg value="This is a dummy bean.  Don't expect anything real in here."/>
+    </bean>
+
+    <bean id="vfsManager" class="org.apache.commons.vfs2.VFS" factory-method="getManager"/>
+
+    <!-- Capture File -->
+    <bean id="captureFolder" factory-bean="vfsManager" factory-method="resolveFile">
+        <constructor-arg index="0" value="${capture.rootFolderToWatch}"/>
+    </bean>
+
+    <!-- Working Folder -->
+    <bean id="workingFolder" factory-bean="vfsManager" factory-method="resolveFile">
+        <constructor-arg index="0" value="${capture.working.folder}"/>
+    </bean>
+
+    <!-- Completed Folder -->
+    <bean id="completedFolder" factory-bean="vfsManager" factory-method="resolveFile">
+        <constructor-arg index="0" value="${capture.completed.folder}"/>
+    </bean>
+
+    <!-- Converted Folder -->
+    <bean id="convertedFilesFolder" factory-bean="vfsManager" factory-method="resolveFile">
+        <constructor-arg index="0" value="${capture.convertedPdfsFolder}"/>
+    </bean>
+
+    <!-- Error Folder -->
+    <bean id="errorFolder" factory-bean="vfsManager" factory-method="resolveFile">
+        <constructor-arg index="0" value="${capture.error.folder}"/>
+    </bean>
+
+
+</beans>

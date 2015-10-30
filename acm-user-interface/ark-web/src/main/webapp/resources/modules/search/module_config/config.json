@@ -1,0 +1,96 @@
+{
+    "id": "search",
+    "title": "Search",
+    "menus": [
+        {
+            "menuId": "leftnav",
+            "menuItemURL": "search",
+            "menuItemTitle": "Search",
+            "iconClass": "fa fa-search",
+            "position": 120
+        }
+    ],
+    "components": [
+        {
+            "id": "facets",
+            "title": "Facets",
+            "enabled": true,
+            "searchParams": {
+                "start": 0,
+                "n": 10
+            }
+
+        },
+        {
+            "id": "results",
+            "title": "Results",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "columnDefs": [
+                {
+                    "name": "object_id_s",
+                    "displayName": "search.comp.results.table.columns.id",
+                    "headerCellFilter": "translate",
+                    "visible": false
+                },
+                {
+                    "name": "name",
+                    "displayName": "search.comp.results.table.columns.name",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row)' style='cursor:pointer;'  class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "search.comp.results.table.columns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title_parseable",
+                    "displayName": "search.comp.results.table.columns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "parent",
+                    "displayName": "search.comp.results.table.columns.parent",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "assignee_full_name_lcs",
+                    "displayName": "search.comp.results.table.columns.assignee",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modified_date_tdt",
+                    "displayName": "search.comp.results.table.columns.modified",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "searchParams": {
+                "start": 0,
+                "n": 10
+            },
+            "supportedObjectType": "CASE_FILE",
+            "supportedObjectSubType": "",
+            "objectIdName":"id",
+            "stateName":"cases.id"
+
+        },
+        {
+            "id": "input",
+            "title": "Input",
+            "enabled": true,
+            "searchParams": {
+                "start": 0,
+                "n": 10
+            }
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+<section class="well">
+    <h4 class="well-small"> {{'profile.company.title' | translate}}</h4>
+    <ul class="list-unstyled">
+        <li>
+            <div ng-controller="Profile.CompanyController" class="row">
+                <div  class="col-xs-6">
+                    <h4>  <a href="#" editable-text="profileCompanyName" onaftersave="update()">{{profileCompanyName || 'profile.unknown' | translate}}</a></h4>
+                    <small> {{'profile.company.name' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profileCompanyAddress1" onaftersave="update()">{{profileCompanyAddress1 || 'profile.unknown' | translate}}</a></h4>
+                    <small> {{'profile.company.address1' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profileCompanyAddress2" onaftersave="update()">{{profileCompanyAddress2 || 'profile.unknown' | translate}}</a></h4>
+                    <small> {{'profile.company.address2' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profileCompanyCity" onaftersave="update()">{{profileCompanyCity || 'profile.unknown' | translate}}</a></h4>
+                    <small> {{'profile.company.city' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profileCompanyState" onaftersave="update()">{{profileCompanyState || 'profile.unknown' | translate}}</a></h4>
+                    <small> {{'profile.company.state' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profileCompanyZip" onaftersave="update()">{{profileCompanyZip || 'profile.unknown' | translate}}</a></h4>
+                    <small> {{'profile.company.zip' | translate}} </small> </div>
+                <div class="col-xs-6">
+                    <h4>  <a href="#" editable-text="profileCompanyMainPhone" onaftersave="update()">{{profileCompanyMainPhone || 'profile.unknown' | translate}}</a></h4>
+                    <small> {{'profile.company.mainPhone' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profileCompanyFax" onaftersave="update()">{{profileCompanyFax || 'profile.unknown' | translate}}</a></h4>
+                    <small> {{'profile.company.fax' | translate}} </small>
+                    <h4>  <a href="#" editable-text="profileCompanyWebsite" onaftersave="update()">{{profileCompanyWebsite || 'profile.unknown' | translate}}</a></h4>
+                    <small> {{'profile.company.website' | translate}} </small> </div>
+            </div>
+        </li>
+    </ul>
+</section>

@@ -1,0 +1,43 @@
+<div class="module-content">
+    <div class="left-sidebar">
+        <div class="module-header">
+            <h3>{{header}}</h3>
+        </div>
+        <div class="scroll-body">
+            <ul class="list-unstyled">
+                <li ng-repeat="facet in facets" ng-if="facet.fields.length && facet.name != 'object_type_s'"><strong>{{facet.name}}</strong>
+                    <ul class="list-unstyled">
+                        <li ng-repeat="field in facet.fields">
+                            <div class="checkbox" ng-if="field.count > 0">
+                                <label><input type="checkbox" ng-model="currentFacetSelection[field.name]" ng-click="selectFacet($event.target.checked, facet.name, field.name)"/>{{field.name}}<span class="pull-right label label-info">{{field.count}}</span></label>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="content-body">
+        <div class="module-header">
+            <div class="input-group">
+                <input class="form-control input-md" ng-model="searchQuery" placeholder="{{searchPlaceholder}}">
+                <span class="input-group-btn">
+                    <button class="btn btn-sm btn-primary" type="button" ng-click="queryExistingItems()">{{searchBtn}}</button>
+                </span>
+            </div>
+        </div>
+        <div class="well-sm panel panel-success panel-grid">
+            <div class="panel-heading">
+                <div class="panel-title">Results</div>
+            </div>
+            <div ui-grid="gridOptions"
+                 ui-grid-resize-columns
+                 ui-grid-pagination
+                 ui-grid-selection
+                 adjust-table-height="gridOptions.data.length"
+                 ui-grid-auto-resize
+                 class="grid">
+            </div>
+        </div>
+    </div>
+</div>

@@ -26,7 +26,7 @@
         <intercept-url pattern="/**" access="ROLE_USER_INTERFACE" />
         <form-login
                 login-page="/login"
-                default-target-url="/home.html"
+                default-target-url="/home.html#!/dashboard"
                 always-use-default-target="true"
                 authentication-failure-url="/login?login_error=1"/>
         <logout

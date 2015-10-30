@@ -1,0 +1,32 @@
+$theme-radius:                        2px;
+
+//////////////////////////////////////
+// Default button
+$theme-btn-default-color:             $gray !default;
+$theme-btn-default-bg:                #fcfcfd !default;
+$theme-btn-default-bg-img:            none !default;
+$theme-btn-default-border:            1px solid #d2dae1 !default;
+$theme-btn-default-border-bottom:     1px solid #cbd5dd !default;
+
+$theme-btn-default-bg-hover:          #ebeef4;
+$theme-btn-default-border-hover:      1px solid #b9c6d0 !default;
+
+
+//////////////////////////////////////
+// Navigation
+$theme-nav-pills-active-bg:           $green-lighter !default;
+
+
+/////////////////////////////////////
+// Panels
+$theme-panel-success-border:          1px solid #eaeef1 !default;
+$theme-panel-success-heading-bg:      $green-lighter !default;
+$theme-panel-success-heading-color:   #ebfcfc;
+$theme-panel-success-heading-border:  none;
+$theme-panel-success-heading-bg-img:  none;
+
+
+
+$theme-panel-collapse-icon-color:     $white;
+$theme-panel-collapse-font-size:      9px;
+$theme-panel-collapse-padding:        0 0 0 7px;

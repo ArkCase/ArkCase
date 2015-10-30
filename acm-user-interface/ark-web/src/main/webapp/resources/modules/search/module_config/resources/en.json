@@ -1,0 +1,29 @@
+{
+  "search": {
+    "title": "Search"
+  },
+  "search.comp.results": {
+    "title": "Results",
+    "table.columns": {
+      "id": "ID",
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "parent": "Parent",
+      "assignee": "Assignee",
+      "modified": "Modified"
+    }
+  },
+  "search.comp.facets": {
+    "title": "Facets",
+    "people": "People",
+    "contacts": "Contacts",
+    "city": "City",
+    "phone": "Phone"
+  },
+  "search.comp.input":{
+      "title":"Input",
+      "placeholder":"Type in your search query to find complaints, cases, tasks, and documents.",
+      "button":"Go!"
+  }
+}

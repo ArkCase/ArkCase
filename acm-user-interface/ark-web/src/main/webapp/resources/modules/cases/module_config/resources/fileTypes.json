@@ -1,0 +1,31 @@
+[
+  {
+    "type": "mr",
+    "label": "Medical Release"
+  },
+  {
+    "type": "gr",
+    "label": "General Release"
+  },
+  {
+    "type": "ev",
+    "label": "eDelivery"
+  },
+  {
+    "type": "sig",
+    "label": "SF86 Signature"
+  },
+  {
+    "type": "noi",
+    "label": "Notice of Investigation"
+  },
+  {
+    "type": "wir",
+    "label": "Witness Interview Request"
+  },
+  {
+    "type": "Other",
+    "label": "Other"
+  }
+]
+

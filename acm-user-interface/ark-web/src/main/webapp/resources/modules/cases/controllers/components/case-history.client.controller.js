@@ -1,38 +1,38 @@
 'use strict';
 
-angular.module('cases').controller('CaseHistoryController', ['$scope', '$stateParams', 'CasesService',
-    function ($scope, $stateParams, CasesService) {
-        $scope.$on('component-config', applyConfig);
+angular.module('cases').controller('Cases.HistoryController', ['$scope', '$stateParams', '$q', 'UtilService', 'ValidationService', 'LookupService', 'CasesService',
+    function ($scope, $stateParams, $q, Util, Validator, LookupService, CasesService) {
         $scope.$emit('req-component-config', 'history');
-        $scope.config = null;
-        $scope.gridOptions = {};
 
-        function applyConfig(e, componentId, config) {
+        var promiseUsers = Util.AcmGrid.getUsers($scope);
+
+        $scope.$on('component-config', function (e, componentId, config) {
             if (componentId == 'history') {
-                $scope.config = config;
-                $scope.gridOptions = {
-                    enableColumnResizing: true,
-                    enableRowSelection: true,
-                    enableRowHeaderSelection: false,
-                    enableFiltering: config.enableFiltering,
-                    multiSelect: false,
-                    noUnselect: false,
-                    columnDefs: config.columnDefs,
-                    onRegisterApi: function (gridApi) {
-                        $scope.gridApi = gridApi;
-                    }
-                };
+                Util.AcmGrid.setColumnDefs($scope, config);
+                Util.AcmGrid.setBasicOptions($scope, config);
+                Util.AcmGrid.setExternalPaging($scope, config, $scope.retrieveGridData);
+                Util.AcmGrid.setUserNameFilter($scope, promiseUsers);
 
-                var id = $stateParams.id;
-                CasesService.queryAudit({
-                    id: id,
-                    startWith: 0,
-                    count: 10
-                }, function (data) {
-                    $scope.gridOptions.data = data.resultPage;
-                    $scope.gridOptions.totalItems = data.totalCount;
-                })
+                $scope.retrieveGridData();
             }
-        }
+        });
+
+
+        $scope.currentId = $stateParams.id;
+        $scope.retrieveGridData = function () {
+            if ($scope.currentId) {
+                CasesService.queryAudit(Util.AcmGrid.withPagingParams($scope, {
+                    id: $scope.currentId
+                }), function (data) {
+                    if (Validator.validateHistory(data)) {
+                        promiseUsers.then(function () {
+                            $scope.gridOptions.data = data.resultPage;
+                            $scope.gridOptions.totalItems = data.totalCount;
+                            Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
+                        });
+                    }
+                });
+            }
+        };
     }
 ]);

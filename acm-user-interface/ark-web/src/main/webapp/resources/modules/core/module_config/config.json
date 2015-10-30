@@ -1,0 +1,15 @@
+{
+    "id": "core",
+    "title": "Core",
+    "components": [
+        {
+            "id": "header",
+            "title": "Header",
+            "enabled": true,
+            "searchProperties": {
+                "start": 0,
+                "n": 10
+            }
+        }
+    ]
+}

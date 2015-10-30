@@ -179,7 +179,17 @@ AcmDocument.View = AcmDocument.View || {
         }
         ,onInitialized: function() {
             Acm.deferredTimer(null, 500).done(function() {
-                AcmDocument.View.DocViewer.$iframeViewer.attr("src", AcmDocument.View.MicroData.viewerSrc);
+
+                // Extracts the snowbound arguments passed from doctree (container type/id, etc)
+                var viewerPluginUrl = window.location.href;
+                var viewerPluginUrlArgs = "";
+                var urlComponents = viewerPluginUrl.split("?");
+                if (urlComponents.length >= 2) {
+                    viewerPluginUrlArgs = "&" + urlComponents[urlComponents.length - 1];
+                }
+
+                // Loads snowbound into an iframe with the arguments passed in the url
+                AcmDocument.View.DocViewer.$iframeViewer.attr("src", AcmDocument.View.MicroData.viewerSrc + viewerPluginUrlArgs);
                 //document.location.reload(true);
             });
 

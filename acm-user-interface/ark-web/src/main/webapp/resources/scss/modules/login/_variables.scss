@@ -1,5 +1,6 @@
 // Logo
-$login-logo: url('../../../public/assets/img/logo.png') !default;
+$login-logo: url('../../../assets/img/logo.png') !default;
+$login-logo-max-width: 100% !default;
 
 $login-bg: #f2f4f8 !default;
 
@@ -18,3 +19,6 @@ $login-input-color: $gray-dark !default;
 // Submit button
 $login-submit-button-color: $white !default;
 $login-submit-button-bg: $blue-dark !default;
+
+// Footer
+$login-footer-padding: 20px !default;

@@ -1,16 +1,20 @@
 <div ng-controller="CasesController">
-    <h2>{{'cases.title' | translate}}</h2>
-    <div class="clearfix">
-        <div class="col-xs-3">
-            <div class="scroll-body" slimscroll="{height: '800px'}" ng-include="'modules/cases/views/cases-list.client.view.html'">
+    <div class="module-content">
+        <div class="left-sidebar">
+            <div class="module-header">
+                <h3>{{'cases.title' | translate}}</h3>
+            </div>
+
+            <div class="scroll-body" slimscroll="{height: '800px'}"
+                 ng-include="'modules/cases/views/cases-list.client.view.html'">
             </div>
         </div>
 
-        <section class="col-xs-9">
-            <div class="well">
+        <section class="content-body" ng-show="caseData">
+            <div class="module-header">
                 <div ng-include="'modules/cases/views/components/case-info.client.view.html'"></div>
             </div>
-            <div>
+            <div class="clearfix well-sm">
                 <div class="col-xs-4">
                     <div class="checkbox">
                         <label>
@@ -19,15 +23,40 @@
                     </div>
                 </div>
 
-                <div class="col-xs-4 col-xs-offset-4 text-right">
-                    <button class="btn btn-xs btn-default">{{'cases.close.button' | translate}}</button>
-                    <button class="btn btn-xs btn-default">{{'cases.subscribe.button' | translate}}</button>
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button class="btn btn-sm btn-default" ng-click="loadNewCaseFrevvoForm()"><i
+                                class="fa fa-edit"></i> {{'cases.new.button' | translate}}
+                        </button>
+                        <button class="btn btn-sm btn-default"><i class="fa fa-edit"></i> {{'cases.edit.button' |
+                            translate}}
+                        </button>
+                        <button class="btn btn-sm btn-default" ng-click="loadChangeCaseStatusFrevvoForm(caseData)"><i
+                                class="fa fa-edit"></i> {{'cases.status.button' | translate}}
+                        </button>
+                        <button class="btn btn-sm btn-default"><i class="fa fa-reply"></i>
+                            {{'cases.reinvestigate.button' | translate}}
+                        </button>
+                        <button class="btn btn-sm btn-default"><i class="fa fa-bullhorn"></i> {{'cases.subscribe.button'
+                            | translate}}
+                        </button>
+                        <button class="btn btn-sm btn-default"><i class="fa fa-random"></i> {{'cases.merge.button' |
+                            translate}}
+                        </button>
+                        <button class="btn btn-sm btn-default"><i class="fa fa-code-fork"></i> {{'cases.split.button' |
+                            translate}}
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div class="col-xs-12" >
-                <div class="scroll-body" slimscroll="{height: '800px'}"  data-ui-view></div>
+            <div class="well-sm">
+                <div data-ui-view></div>
             </div>
+        </section>
+
+        <section class="content-body" ng-hide="caseData">
+            <div>{{'cases.noCase' | translate}}</div>
         </section>
     </div>
 </div>

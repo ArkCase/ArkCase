@@ -78,7 +78,7 @@ vvConfig = {
     // Reload the document model after a save.  Used for systems like
     // FileNet which generate a documentId on the server
     //reloadDocumentOnSave: true,
-    reloadDocumentOnSave: false,
+    reloadDocumentOnSave: true,
 
     // If true, newly added text annotations will immediately enter 'edit'
     // mode with the contents highlighted.
@@ -114,7 +114,8 @@ vvConfig = {
 
     // Multiple Document mode
     // Accepted values for multipleDocMode are: availableDocuments, viewedDocuments, specifiedDocuments
-    multipleDocMode: vvDefines.multipleDocModes.availableDocuments,
+    //multipleDocMode: vvDefines.multipleDocModes.availableDocuments,
+    multipleDocMode: vvDefines.multipleDocModes.specifiedDocuments,
 
     // Enable/Disable Page Manipulation Functionality
     pageManipulations: true,
@@ -151,7 +152,7 @@ vvConfig = {
     panIncrement: 30,
 
     // Whether or not to even attempt to request documents as SVG images 
-    enableSVGSupport: true,
+    enableSVGSupport: false,
 
     // Allows the copying of text
     copySelectedText: true,

@@ -101,4 +101,23 @@ public class FolderAndFilesUtils {
     	
     	return null;
     }
+
+    /**
+     * Returns a PDF file which matches the supplied ArkCase model file type from the list
+     * and which is a PDF document since only PDF files can be merged
+     * @param fileList - List of ecmFiles which will be searched for the desired type
+     * @param fileType - type to search for in the ecm file list
+     * @return ecmFile which has the given ArkCase type and is a PDF, or null if not found
+     */
+    public EcmFile findMatchingPDFFileType(List<EcmFile> fileList, String fileType)
+    {
+        EcmFile matchFile = null;
+        for (EcmFile ecmFile : fileList) {
+            if (ecmFile.getFileType().equalsIgnoreCase(fileType) &&
+                ecmFile.getFileMimeType().equals("application/pdf")) {
+                matchFile = ecmFile;
+            }
+        }
+        return matchFile;
+    }
 }

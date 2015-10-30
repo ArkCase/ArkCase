@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.0.34</version>
+        <version>3.0.35</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -26,11 +26,13 @@
         <module>acm-spring-context-holder</module>
         <module>acm-spring-data-source</module>
         <module>acm-report-configuration</module>
-    	<module>acm-object-converter</module>
+        <module>acm-object-converter</module>
         <module>acm-encryption</module>
         <module>acm-email</module>
         <module>acm-reload-properties</module>
         <module>acm-snowbound-integration</module>
+        <module>acm-ephesoft</module>
+        <module>acm-pdf-utilities</module>
     </modules>
 
 </project>
