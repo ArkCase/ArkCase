@@ -342,7 +342,41 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                 }
             }
 
+            , _padZero: function(i) {
+                return (10 > i) ? "0" + i : "" + i;
+            }
+
+            //get day string in "yyyy-mm-dd" format
+            //parameter d is java Date() format; for some reason getDate() is 1 based while getMonth() is zero based
+            , dateToString: function(d) {
+                if (null == d) {
+                    return "";
+                }
+                var month = d.getMonth()+1;
+                var day = d.getDate();
+                var year = d.getFullYear();
+                return this._padZero(month)
+                    + "/" + this._padZero(day)
+                    + "/" + year;
+            }
+
+            , getCurrentDay: function() {
+                var d = new Date();
+                return this.dateToString(d);
+            }
+
             , AcmGrid: {
+                hidePagingControlsIfAllDataShown: function (scope, totalCount) {
+                    if (scope && scope.gridOptions && scope.gridOptions.paginationPageSize) {
+                        if (totalCount <= scope.gridOptions.paginationPageSize) {
+                            // Hides pagination controls since there is only 1 page of data
+                            scope.gridOptions.enablePaginationControls = false;
+                        } else {
+                            // need to re-enable pagination if a record is added to the next page
+                            scope.gridOptions.enablePaginationControls = true;
+                        }
+                    }
+                },
                 setBasicOptions: function (scope, config) {
                     scope.gridOptions = scope.gridOptions || {};
                     scope.config = config;
