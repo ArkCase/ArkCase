@@ -50,6 +50,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -775,6 +776,73 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         EcmFile saved = getEcmFileDao().save(file);
 
         return saved;
+    }
+
+    @Override
+    public int getTotalPageCount(String parentObjectType, Long parentObjectId, List<String> totalPageCountFileTypes, List<String> totalPageCountMimeTypes, Authentication auth)
+    {
+        int totalCount = 0;
+        try
+        {
+            int startRow = 0;
+            int maxRows = 50;
+
+            String typeQuery = createQueryFormListAndOperator(totalPageCountFileTypes, "OR");
+            String mimeQuery = createQueryFormListAndOperator(totalPageCountMimeTypes, "OR");
+
+            String query = "object_type_s:FILE AND type_s:" + typeQuery + " AND mime_type_s:" + mimeQuery + " AND parent_object_type_s:" + parentObjectType + " AND parent_object_id_i:" + parentObjectId;
+
+            JSONArray docs;
+
+            do
+            {
+                String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH, query, startRow, maxRows, "");
+                docs = getSearchResults().getDocuments(results);
+
+                if (docs != null)
+                {
+                    for (int i = 0; i < docs.length(); i++)
+                    {
+                        JSONObject doc = docs.getJSONObject(i);
+
+                        if (doc != null && doc.has("page_count_i"))
+                        {
+                            int pageCount = doc.getInt("page_count_i");
+                            totalCount += pageCount;
+                        }
+                    }
+                }
+
+                startRow += maxRows;
+            }while(docs != null && docs.length() > 0);
+        }
+        catch (MuleException e)
+        {
+            log.error("Cannot take total count. 'Parent Object Type': {}, 'Parent Object ID': {}", parentObjectType, parentObjectId);
+        }
+
+        return totalCount;
+    }
+
+    private String createQueryFormListAndOperator(List<String> elements, String operator)
+    {
+        String query = "";
+
+        if (elements != null)
+        {
+            Optional<String> reduced = elements.stream().reduce((x, y) -> x + " " + operator + " " + y);
+            if (reduced != null && reduced.isPresent())
+            {
+                query = reduced.get();
+
+                if (query.contains(" " + operator + " "))
+                {
+                    query = "(" + query + ")";
+                }
+            }
+        }
+
+        return query;
     }
 
     @Override
