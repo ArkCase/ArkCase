@@ -14,7 +14,7 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
 		$scope.$on('req-select-case', function(e, selectedCase){
 			$scope.$broadcast('case-selected', selectedCase);
 
-			var id = Util.goodMapValue(selectedCase, "id", null);
+            var id = Util.goodMapValue(selectedCase, "nodeId", null);
 			loadCase(id);
 		});
 
@@ -31,7 +31,7 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
 			}
 		};
 
-		var id = Util.goodMapValue($stateParams, "id", null);
+        var id = Util.goodMapValue($stateParams, "nodeId", null);
 		loadCase(id);
 	}
 ]);
