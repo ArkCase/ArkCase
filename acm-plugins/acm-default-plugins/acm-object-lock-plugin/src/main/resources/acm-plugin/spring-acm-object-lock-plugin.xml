@@ -20,7 +20,7 @@
                 </bean>
                 <bean id="objectUnLockUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="DELETE"/>
-                    <property name="url" value="/api/{version}/plugin/{objectType}/{objectId}/unlock"/>
+                    <property name="url" value="/api/{version}/plugin/{objectType}/{objectId}/lock"/>
                     <property name="requiredPrivilege" ref="objectUnLockPrivilege"/>
                 </bean>
             </list>
