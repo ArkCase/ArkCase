@@ -34,10 +34,10 @@ angular.module('services').factory('CasesService', ['$resource',
              * Query list of cases from SOLR.
              *
              * @param {Object} params Map of input parameter.
-             *                 'start' - zero based index of result starts from;
-             *                 'n' - max number of list to return;
-             *                 'sort' - sort value. Allowed choice is based on backend specification;
-             *                 'filters' - filter value. Allowed choice is based on backend specification
+             * @param {Number} params.start  zero based index of result starts from
+             * @param {Number} params.n max number of list to return
+             * @param {String} params.sort  sort value. Allowed choice is based on backend specification
+             * @param {String} params.filters  filter value. Allowed choice is based on backend specification
              * @param {Function} onSuccess Callback function of success query.
              * @param {Function} onError Callback function when fail.
              *

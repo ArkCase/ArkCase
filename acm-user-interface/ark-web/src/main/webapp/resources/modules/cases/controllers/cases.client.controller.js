@@ -30,7 +30,7 @@ angular.module('cases').controller('CasesController', ['$scope', '$state', '$sta
          */
         $scope.loadNewCaseFrevvoForm = function () {
             $state.go('wizard');
-        }
+        };
 
         /**
          * @ngdoc method
@@ -46,7 +46,7 @@ angular.module('cases').controller('CasesController', ['$scope', '$state', '$sta
             if (caseData && caseData.id && caseData.caseNumber && caseData.status) {
                 $state.go('status', {id: caseData.id, caseNumber: caseData.caseNumber, status: caseData.status});
             }
-        }
+        };
 
         $scope.$on('req-select-case', function (e, selectedCase) {
             $scope.$broadcast('case-selected', selectedCase);
