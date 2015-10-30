@@ -77,7 +77,8 @@ module.exports = {
                 'lib/summernote/dist/summernote.js',
                 'lib/ui-contextmenu/jquery.ui-contextmenu.js',
                 'lib/bootbox/bootbox.js',
-                'lib/ngBootbox/ngBootbox.js'
+                'lib/ngBootbox/ngBootbox.js',
+                'http://internal.armedia.com/jira/s/31413758042897b94fd2d74d89768365-T/en_US9cltp4/6346/2/1.4.16/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?locale=en-US&collectorId=aad5f79b'
             ]
         },
         css: [
