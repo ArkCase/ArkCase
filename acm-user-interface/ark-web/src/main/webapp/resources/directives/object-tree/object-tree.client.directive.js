@@ -122,7 +122,7 @@
         } else if (4 == start) {
             return page3;
         } else {
-            retunr [];
+            return [];
         }
     };
 
@@ -294,8 +294,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     });
                 }
 
-                for (var i = 0; i < objList.length; i++) {
-                    var obj = objList[i];
+                _.each(objList, function (obj) {
                     var nodeId = obj.nodeId;
                     var nodeType = obj.nodeType;
                     var nodeTitle = obj.nodeTitle;
@@ -315,7 +314,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                             , nodeId: nodeId
                         });
                     }
-                } //end for i
+                });
                 builder.makeLast();
 
                 if ((0 > treeInfo.total)                                    //unknown size
@@ -343,13 +342,9 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 if (Util.isArray(arr) && 2 == arr.length) {
                     var nodeType = arr[1];
                     _.each(nodeTypes, function (nodeType) {
-                        var z = nodeType;
-                    });
-
-                    for (var i = 0; i < nodeTypes.length; i++) {
-                        var type = Util.goodValue(nodeTypes[i].type);
-                        var label = Util.goodValue(nodeTypes[i].label);
-                        var components = Util.goodArray(nodeTypes[i].components);
+                        var type = Util.goodValue(nodeType.type);
+                        var label = Util.goodValue(nodeType.label);
+                        var components = Util.goodArray(nodeType.components);
                         if (0 == type.indexOf(nodeTypePath)) {
                             var lastSep = type.lastIndexOf(Tree.Key.KEY_SEPARATOR);
                             if (nodeTypePath.length == lastSep) {
@@ -362,7 +357,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                                 });
                             }
                         }
-                    }
+                    });
                 }
 
                 data.result = builder.getTree();
@@ -500,7 +495,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 , _treeInfo: {
                     name: null
                     , start: 0
-                    , n: 30
+                    , n: 32
                     , total: -1
                     , sorter: ""
                     , filter: ""
@@ -548,7 +543,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     return true;
                 }
                 , readTreeInfo: function () {
-                    this._initTreeInfo = new Store.SessionData("AcmTreeInfo");
+                    this._initTreeInfo = new Store.SessionData("AcmCaseTreeInfo");
 
                     var ti = this.getTreeInfo();
                     var tiInit = this._initTreeInfo.get();
@@ -570,12 +565,9 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     }
 
                     if (0 == ti.nodeId && null == ti.key) {
-                        //var nodeId = Acm.Object.MicroData.get("objId");
-                        //var nodeType = Acm.Object.MicroData.get("objType");
-                        //if (!Util.isEmpty(nodeId)) {
-                        //    ti.nodeId = nodeId;
-                        //    ti.nodeType = nodeType;
-                        //}
+                        //
+                        // todo: to activate a tree node at initialization
+                        //
                     }
                 }
                 , sameResultSet: function (treeInfo) {
