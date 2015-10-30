@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.armedia.acm.services.users.web.api.group;
 
@@ -26,283 +26,283 @@ import java.util.Map;
 
 /**
  * @author riste.tutureski
- *
  */
 @Controller
-@RequestMapping({ "/api/v1/users", "/api/latest/users" })
-public class GetGroupAPIController {
-	
-	private Logger LOG = LoggerFactory.getLogger(getClass());
-	
-	private AcmGroupDao groupDao;
-	private MuleContextManager muleContextManager;
-	
-	@RequestMapping(value="/groups/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping({"/api/v1/users", "/api/latest/users"})
+public class GetGroupAPIController
+{
+
+    private Logger LOG = LoggerFactory.getLogger(getClass());
+
+    private AcmGroupDao groupDao;
+    private MuleContextManager muleContextManager;
+
+    @RequestMapping(value = "/groups/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getAllGroupsAndSubgroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-				              @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,			
-				              @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-    						  Authentication auth,
-    						  HttpSession httpSession) throws MuleException, Exception
+                                           @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
+                                           @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+                                           Authentication auth,
+                                           HttpSession httpSession) throws MuleException, Exception
     {
-		if (LOG.isInfoEnabled()) 
-		{
-			LOG.info("Taking all groups and subgroups from Solr.");
-		}
-		
-		String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
-		
-		if ( LOG.isDebugEnabled() )
+        if (LOG.isInfoEnabled())
         {
-			LOG.debug("User '" + auth.getName() + "' is searching for '" + query + "'");
+            LOG.info("Taking all groups and subgroups from Solr.");
         }
-		
-		Map<String, Object> headers = new HashMap<>();
+
+        String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+
+        if (LOG.isDebugEnabled())
+        {
+            LOG.debug("User '" + auth.getName() + "' is searching for '" + query + "'");
+        }
+
+        Map<String, Object> headers = new HashMap<>();
         headers.put("query", query);
         headers.put("firstRow", startRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
-		headers.put("acmUser", auth);
+        headers.put("acmUser", auth);
 
         MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
 
         LOG.debug("Response type: " + response.getPayload().getClass());
 
-        if ( response.getPayload() instanceof String )
+        if (response.getPayload() instanceof String)
         {
             String responsePayload = (String) response.getPayload();
-          
+
             return responsePayload;
         }
 
         throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
-		
+
     }
-	
-	@RequestMapping(value="/group/{groupId}/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @RequestMapping(value = "/group/{groupId}/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String getGroup(@PathVariable("groupId") String groupId, 
-				              @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-				              @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,			
-				              @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-    						  Authentication auth,
-    						  HttpSession httpSession) throws MuleException, Exception
+    public String getGroup(@PathVariable("groupId") String groupId,
+                           @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+                           @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
+                           @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+                           Authentication auth,
+                           HttpSession httpSession) throws MuleException, Exception
     {
-		if (LOG.isInfoEnabled()) 
-		{
-			LOG.info("Taking group from Solr with ID = " + groupId);
-		}
-		
-		String query = "object_id_s:" + groupId + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
-		
-		if ( LOG.isDebugEnabled() )
+        if (LOG.isInfoEnabled())
         {
-			LOG.debug("User '" + auth.getName() + "' is searching for '" + query + "'");
+            LOG.info("Taking group from Solr with ID = " + groupId);
         }
-		
-		Map<String, Object> headers = new HashMap<>();
+
+        String query = "object_id_s:" + groupId + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+
+        if (LOG.isDebugEnabled())
+        {
+            LOG.debug("User '" + auth.getName() + "' is searching for '" + query + "'");
+        }
+
+        Map<String, Object> headers = new HashMap<>();
         headers.put("query", query);
         headers.put("firstRow", startRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
-		headers.put("acmUser", auth);
+        headers.put("acmUser", auth);
 
         MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
 
         LOG.debug("Response type: " + response.getPayload().getClass());
 
-        if ( response.getPayload() instanceof String )
+        if (response.getPayload() instanceof String)
         {
             String responsePayload = (String) response.getPayload();
-          
+
             return responsePayload;
         }
 
         throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
-		
+
     }
-	
-	@RequestMapping(value="/group/{groupId}/get/subgroups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @RequestMapping(value = "/group/{groupId}/get/subgroups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String getSubGroup(@PathVariable("groupId") String groupId, 
-				              @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-				              @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,			
-				              @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-    						  Authentication auth,
-    						  HttpSession httpSession) throws MuleException, Exception
+    public String getSubGroup(@PathVariable("groupId") String groupId,
+                              @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+                              @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
+                              @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+                              Authentication auth,
+                              HttpSession httpSession) throws MuleException, Exception
     {
-		if (LOG.isInfoEnabled()) 
-		{
-			LOG.info("Taking subgroups from Solr with ID = " + groupId);
-		}
-		
+        if (LOG.isInfoEnabled())
+        {
+            LOG.info("Taking subgroups from Solr with ID = " + groupId);
+        }
+
         String groupString = getGroup(groupId, 0, 1, sort, auth);
-        
+
         if (groupString != null)
-		{
-			JSONObject groupJson = new JSONObject(groupString);
-			
-			if (groupJson != null && groupJson.getJSONObject("response") != null && 
-				groupJson.getJSONObject("response").getJSONArray("docs") != null &&
-				groupJson.getJSONObject("response").getJSONArray("docs").length() == 1)
-			{
-				JSONObject doc = groupJson.getJSONObject("response").getJSONArray("docs").getJSONObject(0);
-				JSONArray childIds = null;
-				try
-				{
-					childIds = doc.getJSONArray("child_id_ss");
-				}
-				catch(Exception e)
-				{
-					throw new IllegalStateException("There are no any subgroups for group with ID = " + groupId);
-				}
-				if(doc.getJSONArray("child_id_ss") != null)
-				{
-					return getSubGroups(groupId, childIds, startRow, maxRows, sort, auth);
-				}
-			}
-		}
-        
+        {
+            JSONObject groupJson = new JSONObject(groupString);
+
+            if (groupJson != null && groupJson.getJSONObject("response") != null &&
+                    groupJson.getJSONObject("response").getJSONArray("docs") != null &&
+                    groupJson.getJSONObject("response").getJSONArray("docs").length() == 1)
+            {
+                JSONObject doc = groupJson.getJSONObject("response").getJSONArray("docs").getJSONObject(0);
+                JSONArray childIds = null;
+                try
+                {
+                    childIds = doc.getJSONArray("child_id_ss");
+                } catch (Exception e)
+                {
+                    throw new IllegalStateException("There are no any subgroups for group with ID = " + groupId);
+                }
+                if (doc.getJSONArray("child_id_ss") != null)
+                {
+                    return getSubGroups(groupId, childIds, startRow, maxRows, sort, auth);
+                }
+            }
+        }
+
         throw new IllegalStateException("Cannot retrieve subgroups for group with ID = " + groupId);
-		
+
     }
-	
-	@RequestMapping(value="/group/get/toplevel", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @RequestMapping(value = "/group/get/toplevel", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getTolLevelGroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-				              @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,			
-				              @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-    						  Authentication auth,
-    						  HttpSession httpSession) throws MuleException, Exception
+                                    @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
+                                    @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+                                    Authentication auth,
+                                    HttpSession httpSession) throws MuleException, Exception
     {
-		if (LOG.isInfoEnabled()) 
-		{
-			LOG.info("Taking all top level groups from Solr.");
-		}
-		
-		String query = "object_type_s:GROUP AND -parent_id_s:* AND -status_s:COMPLETE AND -status_s:DELETE AND -status_lcs:INACTIVE AND -status_s:CLOSED";
-		
-		if ( LOG.isDebugEnabled() )
+        if (LOG.isInfoEnabled())
         {
-			LOG.debug("User '" + auth.getName() + "' is searching for '" + query + "'");
+            LOG.info("Taking all top level groups from Solr.");
         }
-		
-		Map<String, Object> headers = new HashMap<>();
+
+        String query = "object_type_s:GROUP AND -parent_id_s:* AND -status_s:COMPLETE AND -status_s:DELETE AND -status_lcs:INACTIVE AND -status_s:CLOSED";
+
+        if (LOG.isDebugEnabled())
+        {
+            LOG.debug("User '" + auth.getName() + "' is searching for '" + query + "'");
+        }
+
+        Map<String, Object> headers = new HashMap<>();
         headers.put("query", query);
         headers.put("firstRow", startRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
-		headers.put("acmUser", auth);
+        headers.put("acmUser", auth);
 
         MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
 
         LOG.debug("Response type: " + response.getPayload().getClass());
 
-        if ( response.getPayload() instanceof String )
+        if (response.getPayload() instanceof String)
         {
             String responsePayload = (String) response.getPayload();
-          
+
             return responsePayload;
         }
 
         throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
-		
+
     }
-	
-	private String getGroup(String groupId, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
-	{
-		String query = "object_id_s:" + groupId + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
-		
-		if ( LOG.isDebugEnabled() )
+
+    private String getGroup(String groupId, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
+    {
+        String query = "object_id_s:" + groupId + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+
+        if (LOG.isDebugEnabled())
         {
-			LOG.debug("User '" + auth.getName() + "' is searching for '" + query + "'");
+            LOG.debug("User '" + auth.getName() + "' is searching for '" + query + "'");
         }
-		
-		Map<String, Object> headers = new HashMap<>();
+
+        Map<String, Object> headers = new HashMap<>();
         headers.put("query", query);
         headers.put("firstRow", startRow);
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
-		headers.put("acmUser", auth);
+        headers.put("acmUser", auth);
 
         MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
 
         LOG.debug("Response type: " + response.getPayload().getClass());
 
-        if ( response.getPayload() instanceof String )
+        if (response.getPayload() instanceof String)
         {
             String responsePayload = (String) response.getPayload();
-          
+
             return responsePayload;
         }
 
         throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
-	}
-	
-	private String getSubGroups(String groupId, JSONArray subgroupIds, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
-	{
-		if (subgroupIds != null && subgroupIds.length() > 0)
-		{		
-			String query = "object_id_s:(";
-			
-			for (int i = 0; i < subgroupIds.length(); i++)
-			{
-				if (i < subgroupIds.length() - 1)
-				{
-					query += subgroupIds.getString(i) + " OR ";
-				}
-				else
-				{
-					query += subgroupIds.getString(i) + ")";
-				}
-			}
-			
-			query += " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
-			
-			if ( LOG.isDebugEnabled() )
-	        {
-				LOG.debug("User '" + auth.getName() + "' is searching for '" + query + "'");
-	        }
-			
-			Map<String, Object> headers = new HashMap<>();
-	        headers.put("query", query);
-	        headers.put("firstRow", startRow);
-	        headers.put("maxRows", maxRows);
-	        headers.put("sort", sort);
-			headers.put("acmUser", auth);
+    }
 
-	        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
-	
-	        LOG.debug("Response type: " + response.getPayload().getClass());
-	
-	        if ( response.getPayload() instanceof String )
-	        {
-	            String responsePayload = (String) response.getPayload();
-	          
-	            return responsePayload;
-	        }
-	
-	        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
-		}
-		
-		throw new IllegalStateException("There are no any subgroups for group with ID = " + groupId);
-	}
+    private String getSubGroups(String groupId, JSONArray subgroupIds, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
+    {
+        if (subgroupIds != null && subgroupIds.length() > 0)
+        {
+            String query = "object_id_s:(";
 
-	public AcmGroupDao getGroupDao() {
-		return groupDao;
-	}
+            for (int i = 0; i < subgroupIds.length(); i++)
+            {
+                if (i < subgroupIds.length() - 1)
+                {
+                    query += subgroupIds.getString(i) + " OR ";
+                } else
+                {
+                    query += subgroupIds.getString(i) + ")";
+                }
+            }
 
-	public void setGroupDao(AcmGroupDao groupDao) {
-		this.groupDao = groupDao;
-	}
+            query += " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 
-	public MuleContextManager getMuleContextManager()
-	{
-		return muleContextManager;
-	}
+            if (LOG.isDebugEnabled())
+            {
+                LOG.debug("User '" + auth.getName() + "' is searching for '" + query + "'");
+            }
 
-	public void setMuleContextManager(MuleContextManager muleContextManager)
-	{
-		this.muleContextManager = muleContextManager;
-	}
+            Map<String, Object> headers = new HashMap<>();
+            headers.put("query", query);
+            headers.put("firstRow", startRow);
+            headers.put("maxRows", maxRows);
+            headers.put("sort", sort);
+            headers.put("acmUser", auth);
+
+            MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
+
+            LOG.debug("Response type: " + response.getPayload().getClass());
+
+            if (response.getPayload() instanceof String)
+            {
+                String responsePayload = (String) response.getPayload();
+
+                return responsePayload;
+            }
+
+            throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
+        }
+
+        throw new IllegalStateException("There are no any subgroups for group with ID = " + groupId);
+    }
+
+    public AcmGroupDao getGroupDao()
+    {
+        return groupDao;
+    }
+
+    public void setGroupDao(AcmGroupDao groupDao)
+    {
+        this.groupDao = groupDao;
+    }
+
+    public MuleContextManager getMuleContextManager()
+    {
+        return muleContextManager;
+    }
+
+    public void setMuleContextManager(MuleContextManager muleContextManager)
+    {
+        this.muleContextManager = muleContextManager;
+    }
 }
