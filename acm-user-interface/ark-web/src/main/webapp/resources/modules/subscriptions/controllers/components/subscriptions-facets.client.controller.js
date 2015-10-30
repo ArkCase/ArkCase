@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('subscription').controller('Subscriptions.FacetsController', ['$scope', 'SubscriptionService', 'ResultService',
+angular.module('subscriptions').controller('Subscriptions.FacetsController', ['$scope', 'SubscriptionService', 'ResultService',
     function ($scope, SubscriptionService, ResultService) {
         $scope.$emit('req-component-config', 'facets');
         $scope.facets = [];
