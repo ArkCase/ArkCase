@@ -237,7 +237,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 };
             } //end _getDefaultTreeArgs
 
-            , createDocTree: function (treeArgs) {
+            , create: function (treeArgs) {
                 var treeArgsToUse = this._getDefaultTreeArgs();
                 _.merge(treeArgsToUse, treeArgs);
 
@@ -3735,10 +3735,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             //+ '</table>'
             , templateUrl: "directives/doc-tree/doc-tree.client.view.html"
             , scope: {
-                objectType: '='
+                treeArgs: '='
+                , objectType: '='
                 , objectId: '='
                 , fileTypes: '='
-                , treeArgs: '='
                 , uploadForm: '&'
             },
 
@@ -3751,7 +3751,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.doUploadForm = (scope.uploadForm) ? scope.uploadForm() : (function () {
                 }); //if not defined, do nothing
 
-                DocTree.createDocTree(scope.treeArgs);
+                DocTree.create(scope.treeArgs);
                 DocTree.makeDownloadDocForm(DocTree.jqTree);
                 DocTree.makeUploadDocForm(DocTree.jqTree);
 
