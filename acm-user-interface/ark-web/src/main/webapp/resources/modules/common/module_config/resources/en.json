@@ -31,5 +31,14 @@
     "error": {
       "nodeTitle": "(Error)"
     }
+  },
+  "common.directive.objectTree": {
+    "btnPrev.title": " records above...",
+    "btnPrev.toolTip": "Review previous records",
+    "btnNext.titleUnknownSize": "More records...",
+    "btnNext.title": " more records...",
+    "btnNext.toolTip": "Load more records",
+    "edtQuery.placeHolder": "Search",
+    "btnQuery.text": "Go!"
   }
 }
