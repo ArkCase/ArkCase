@@ -1,5 +1,18 @@
 'use strict';
 
+/**
+ * @ngdoc service
+ * @name services:ValidationService
+ *
+ * @description
+ *
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/common/validate.client.service.js services/common/validate.client.service.js}
+ *
+ * All external data (data from database, SOLR queries, configuration, etc.) need to be validated to ensure
+ * the robustness of the web application. ValidationService contains validation functions used through out the
+ * application. Each validation function has the same pattern: returns false for invalid data conditions one
+ * by one and return true at the end to indicate data is validated.
+ */
 angular.module('services').factory('ValidationService', ["UtilService",
     function (Util) {return {
 
@@ -683,6 +696,15 @@ angular.module('services').factory('ValidationService', ["UtilService",
                 return false;
             }
             if (!Util.isArray(data.urlParameters)) {
+                return false;
+            }
+            return true;
+        }
+        , validateConfigComponents: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (!Util.isArray(data.components)) {
                 return false;
             }
             return true;

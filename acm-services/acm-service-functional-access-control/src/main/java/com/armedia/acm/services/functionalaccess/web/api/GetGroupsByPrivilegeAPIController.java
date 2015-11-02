@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping(value = { "/api/v1/service/functionalaccess", "/api/latest/service/functionalaccess" } )
+@RequestMapping(value = {"/api/v1/service/functionalaccess", "/api/latest/service/functionalaccess"})
 public class GetGroupsByPrivilegeAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -31,20 +31,22 @@ public class GetGroupsByPrivilegeAPIController
             method = RequestMethod.GET,
             value = "/groups/{privilege}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody String groupsByPrivilege(@PathVariable(value = "privilege") String privilege,
-    		@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,			
-            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-			Authentication auth) throws MuleException
+    public
+    @ResponseBody
+    String groupsByPrivilege(@PathVariable(value = "privilege") String privilege,
+                             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+                             @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
+                             @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+                             Authentication auth) throws MuleException
     {
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
             log.debug("Looking for users for privilege '" + privilege);
         }
-        
+
         List<String> rolesForPrivilege = getPluginManager().getRolesForPrivilege(privilege);
-        Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups(); 
-        
+        Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
+
         String retval = getFunctionalAccessService().getGroupsByPrivilege(rolesForPrivilege, rolesToGroups, startRow, maxRows, sort, auth);
 
         return retval;
@@ -70,12 +72,14 @@ public class GetGroupsByPrivilegeAPIController
         return userDao;
     }
 
-	public FunctionalAccessService getFunctionalAccessService() {
-		return functionalAccessService;
-	}
+    public FunctionalAccessService getFunctionalAccessService()
+    {
+        return functionalAccessService;
+    }
 
-	public void setFunctionalAccessService(
-			FunctionalAccessService functionalAccessService) {
-		this.functionalAccessService = functionalAccessService;
-	}
+    public void setFunctionalAccessService(
+            FunctionalAccessService functionalAccessService)
+    {
+        this.functionalAccessService = functionalAccessService;
+    }
 }
