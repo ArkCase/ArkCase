@@ -20,9 +20,6 @@ angular.module('cases').controller('CasesController', ['$scope', '$state', '$sta
             });
         }
 
-        $scope.loadNewCaseFrevvoForm = loadNewCaseFrevvoForm;
-        $scope.loadChangeCaseStatusFrevvoForm = loadChangeCaseStatusFrevvoForm;
-
         /**
          * @ngdoc method
          * @name loadNewCaseFrevvoForm
@@ -31,9 +28,9 @@ angular.module('cases').controller('CasesController', ['$scope', '$state', '$sta
          * @description
          * Displays the create new case Frevvo form for the user
          */
-        function loadNewCaseFrevvoForm() {
+        $scope.loadNewCaseFrevvoForm = function () {
             $state.go('wizard');
-        }
+        };
 
         /**
          * @ngdoc method
@@ -45,16 +42,16 @@ angular.module('cases').controller('CasesController', ['$scope', '$state', '$sta
          * @description
          * Displays the change case status Frevvo form for the user
          */
-        function loadChangeCaseStatusFrevvoForm(caseData) {
+        $scope.loadChangeCaseStatusFrevvoForm = function (caseData) {
             if (caseData && caseData.id && caseData.caseNumber && caseData.status) {
                 $state.go('status', {id: caseData.id, caseNumber: caseData.caseNumber, status: caseData.status});
             }
-        }
+        };
 
         $scope.$on('req-select-case', function (e, selectedCase) {
             $scope.$broadcast('case-selected', selectedCase);
 
-            var id = Util.goodMapValue(selectedCase, "id", null);
+            var id = Util.goodMapValue(selectedCase, "nodeId", null);
             loadCase(id);
         });
 
@@ -71,8 +68,7 @@ angular.module('cases').controller('CasesController', ['$scope', '$state', '$sta
                 });
             }
         };
-
         var id = Util.goodMapValue($stateParams, "id", null);
-        loadCase(id);
-    }
+		loadCase(id);
+	}
 ]);
