@@ -787,16 +787,20 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             int startRow = 0;
             int maxRows = 50;
 
-            String typeQuery = createQueryFormListAndOperator(totalPageCountFileTypes, "OR");
-            String mimeQuery = createQueryFormListAndOperator(totalPageCountMimeTypes, "OR");
+            String typeQuery = createQueryFormListAndOperator(totalPageCountFileTypes, SearchConstants.OPERATOR_OR);
+            String mimeQuery = createQueryFormListAndOperator(totalPageCountMimeTypes, SearchConstants.OPERATOR_OR);
 
-            String query = "object_type_s:FILE AND type_s:" + typeQuery + " AND mime_type_s:" + mimeQuery + " AND parent_object_type_s:" + parentObjectType + " AND parent_object_id_i:" + parentObjectId;
+            String query = SearchConstants.PROPERTY_OBJECT_TYPE + ":FILE AND " +
+                           (typeQuery != null && !typeQuery.isEmpty() ? SearchConstants.PROPERTY_FILE_TYPE + ":" + typeQuery + " AND " : "") +
+                           (mimeQuery != null && !mimeQuery.isEmpty() ? SearchConstants.PROPERTY_MIME_TYPE + ":" + mimeQuery + " AND " : "") +
+                           SearchConstants.PROPERTY_PARENT_OBJECT_TYPE_S + ":" + parentObjectType + " AND " +
+                           SearchConstants.PROPERTY_PARENT_OBJECT_ID_I + ":" + parentObjectId;
 
             JSONArray docs;
 
             do
             {
-                String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH, query, startRow, maxRows, "");
+                String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH, query, startRow, maxRows, SearchConstants.PROPERTY_OBJECT_ID_S + " DESC");
                 docs = getSearchResults().getDocuments(results);
 
                 if (docs != null)
@@ -805,9 +809,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     {
                         JSONObject doc = docs.getJSONObject(i);
 
-                        if (doc != null && doc.has("page_count_i"))
+                        if (doc != null && doc.has(SearchConstants.PROPERTY_PAGE_COUNT_I))
                         {
-                            int pageCount = doc.getInt("page_count_i");
+                            int pageCount = doc.getInt(SearchConstants.PROPERTY_PAGE_COUNT_I);
                             totalCount += pageCount;
                         }
                     }
