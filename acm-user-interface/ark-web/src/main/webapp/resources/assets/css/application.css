@@ -757,3 +757,8 @@ a.editable.editable-click.editable-hide {
 .module-content .left-sidebar-lg .ui-grid-pinned-container .ui-grid-header-canvas {
     height: auto !important;
 }
+
+/* Style of invalid fields */
+input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
+    border-color: #ff7373;
+}

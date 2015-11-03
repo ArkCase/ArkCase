@@ -1,5 +1,16 @@
 'use strict';
 
+/**
+ * @ngdoc service
+ * @name services.service:UtilService
+ *
+ * @description
+ *
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/common/util.client.service.js services/common/util.client.service.js}
+ *
+ * This service package contains various commonly used functions, support functions, or miscellaneous help functions.
+ */
+
 //angular.module('services').factory('UtilService', ['$q', '$window', 'ngBootbox', 'LookupService',
 //    function ($q, $window, $ngBootbox, LookupService) {
 angular.module('services').factory('UtilService', ['$q', '$window', 'LookupService',
@@ -35,7 +46,7 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
             }
 
             //
-            //todo: use lodash impl _.map(obj, 'some.arr[0].name');
+            //todo: consider using lodash impl _.map(obj, 'some.arr[0].name');
             //
             , goodMapValue: function (map, key, replacement) {
                 var replacedWith = (undefined === replacement) ? "" : replacement;
@@ -86,7 +97,7 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                 }
             }
 
-            //todo: use lodash imppl
+            //todo: consider using lodash imppl
             //function parseLodash(str){
             //    return _.attempt(JSON.parse.bind(null, str));
             //}
@@ -126,9 +137,39 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                 }
                 return arr.length === 0;
             }
+            , compare: function (left, right) {  //equals() name is taken, so use compare()
+                if (this.isEmpty(left)) {
+                    return this.isEmpty(right);
+                }
+                return left == right;
+            }
 
             , serviceCall: function (arg) {
                 var d = $q.defer();
+                var onSuccess = function (successData) {
+                    if (arg.onSuccess) {
+                        var rc = arg.onSuccess(successData);
+                        if (undefined == rc) {
+                            if (arg.onInvalid) {
+                                d.reject(arg.onInvalid(successData));
+                            } else {
+                                d.reject("Validation failure");
+                            }
+                        } else {
+                            d.resolve(rc);
+                        }
+                    } else {
+                        d.resolve(successData);
+                    }
+                };
+                var onError = function (errorData) {
+                    var rc = errorData;
+                    if (arg.onError) {
+                        rc = arg.onError(errorData);
+                    }
+                    d.reject(rc);
+                };
+
                 if (arg.result) {
                     d.resolve(arg.result);
 
@@ -136,29 +177,6 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                     var service = arg.service;
                     var param = this.goodValue(arg.param, {});
                     var data = arg.data;
-                    var onSuccess = function (successData) {
-                        if (arg.onSuccess) {
-                            var rc = arg.onSuccess(successData);
-                            if (undefined == rc) {
-                                if (arg.onInvalid) {
-                                    d.reject(arg.onInvalid(successData));
-                                } else {
-                                    d.reject(); //"validation failure"
-                                }
-                            } else {
-                                d.resolve(rc);
-                            }
-                        } else {
-                            d.resolve(successData);
-                        }
-                    };
-                    var onError = function (errorData) {
-                        var rc = errorData;
-                        if (arg.onError) {
-                            rc = arg.onError(errorData);
-                        }
-                        d.reject(rc);
-                    }
 
                     if (data) {
                         service(param, data, onSuccess, onError);

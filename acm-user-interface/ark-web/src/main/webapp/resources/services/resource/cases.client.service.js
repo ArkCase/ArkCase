@@ -1,5 +1,15 @@
 'use strict';
 
+/**
+ * @ngdoc service
+ * @name services.service:CasesService
+ *
+ * @description
+ *
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/resource/cases.client.service.js services/resource/cases.client.service.js}
+
+ * CasesService includes group of REST calls related to Cases module. Functions are implemented using $resoruce.
+ */
 angular.module('services').factory('CasesService', ['$resource',
     function ($resource) {
         return $resource('proxy/arkcase/api/latest/plugin', {}, {
@@ -14,9 +24,28 @@ angular.module('services').factory('CasesService', ['$resource',
                 url: 'proxy/arkcase/api/latest/plugin/casefile',
                 cache: false
             }
+
+            /**
+             * @ngdoc method
+             * @name queryCases
+             * @methodOf services.service:CasesService
+             *
+             * @description
+             * Query list of cases from SOLR.
+             *
+             * @param {Object} params Map of input parameter.
+             * @param {Number} params.start  zero based index of result starts from
+             * @param {Number} params.n max number of list to return
+             * @param {String} params.sort  sort value. Allowed choice is based on backend specification
+             * @param {String} params.filters  filter value. Allowed choice is based on backend specification
+             * @param {Function} onSuccess Callback function of success query.
+             * @param {Function} onError Callback function when fail.
+             *
+             * @returns {Object} Object returned by $resource
+             */
             , queryCases: {
                 method: 'GET',
-                url: 'proxy/arkcase/api/latest/plugin/search/CASE_FILE?start=0&n=250&s=:sortBy :sortOrder',
+                url: 'proxy/arkcase/api/latest/plugin/search/CASE_FILE?start=:start&n=:n&sort=:sort&filters=:filters',
                 cache: false,
                 isArray: false
             }
