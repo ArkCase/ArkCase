@@ -1,14 +1,6 @@
 {
   "cases": {
     "title": "Cases",
-    "_restrict": "Restrict?",
-    "_new.button": "New",
-    "_edit.button": "Edit",
-    "_status.button": "Change Case Status",
-    "_reinvestigate.button": "Reinvestigate",
-    "_subscribe.button": "Subscribe",
-    "_merge.button": "Merge",
-    "_split.button": "Split",
     "progressNoCase": "[ No case file data ]",
     "progressLoading": "Loading case file ",
     "progressError": "Failed to load case file"
