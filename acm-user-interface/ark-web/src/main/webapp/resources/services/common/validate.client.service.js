@@ -700,8 +700,11 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
-        , validateConfigComponents: function (data) {
+        , validateCasesConfig: function (data) {
             if (Util.isEmpty(data)) {
+                return false;
+            }
+            if ('cases' != Util.goodValue(data.id)) {
                 return false;
             }
             if (!Util.isArray(data.components)) {
@@ -709,5 +712,61 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
+        , validatePriorities: function (data) {
+            if (!Util.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        , validateMyTasks: function (data) {
+            if (!Util.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        , validateParticipantTypes: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        }
+        , validatePersonTypes: function (data) {
+            if (!Util.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        , validateContactMethodTypes: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        }
+        , validateOrganizationTypes: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        }
+        , validateAddressTypes: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        }
+        , validateAliasTypes: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        }
+        , validateSecurityTagTypes: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        }
+
+
     }}
 ]);
