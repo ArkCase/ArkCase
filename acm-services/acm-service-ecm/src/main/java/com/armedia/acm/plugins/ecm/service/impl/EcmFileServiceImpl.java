@@ -50,6 +50,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -775,6 +776,77 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         EcmFile saved = getEcmFileDao().save(file);
 
         return saved;
+    }
+
+    @Override
+    public int getTotalPageCount(String parentObjectType, Long parentObjectId, List<String> totalPageCountFileTypes, List<String> totalPageCountMimeTypes, Authentication auth)
+    {
+        int totalCount = 0;
+        try
+        {
+            int startRow = 0;
+            int maxRows = 50;
+
+            String typeQuery = createQueryFormListAndOperator(totalPageCountFileTypes, SearchConstants.OPERATOR_OR);
+            String mimeQuery = createQueryFormListAndOperator(totalPageCountMimeTypes, SearchConstants.OPERATOR_OR);
+
+            String query = SearchConstants.PROPERTY_OBJECT_TYPE + ":FILE AND " +
+                           (typeQuery != null && !typeQuery.isEmpty() ? SearchConstants.PROPERTY_FILE_TYPE + ":" + typeQuery + " AND " : "") +
+                           (mimeQuery != null && !mimeQuery.isEmpty() ? SearchConstants.PROPERTY_MIME_TYPE + ":" + mimeQuery + " AND " : "") +
+                           SearchConstants.PROPERTY_PARENT_OBJECT_TYPE_S + ":" + parentObjectType + " AND " +
+                           SearchConstants.PROPERTY_PARENT_OBJECT_ID_I + ":" + parentObjectId;
+
+            JSONArray docs;
+
+            do
+            {
+                String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH, query, startRow, maxRows, SearchConstants.PROPERTY_OBJECT_ID_S + " DESC");
+                docs = getSearchResults().getDocuments(results);
+
+                if (docs != null)
+                {
+                    for (int i = 0; i < docs.length(); i++)
+                    {
+                        JSONObject doc = docs.getJSONObject(i);
+
+                        if (doc != null && doc.has(SearchConstants.PROPERTY_PAGE_COUNT_I))
+                        {
+                            int pageCount = doc.getInt(SearchConstants.PROPERTY_PAGE_COUNT_I);
+                            totalCount += pageCount;
+                        }
+                    }
+                }
+
+                startRow += maxRows;
+            }while(docs != null && docs.length() > 0);
+        }
+        catch (MuleException e)
+        {
+            log.error("Cannot take total count. 'Parent Object Type': {}, 'Parent Object ID': {}", parentObjectType, parentObjectId);
+        }
+
+        return totalCount;
+    }
+
+    private String createQueryFormListAndOperator(List<String> elements, String operator)
+    {
+        String query = "";
+
+        if (elements != null)
+        {
+            Optional<String> reduced = elements.stream().reduce((x, y) -> x + " " + operator + " " + y);
+            if (reduced != null && reduced.isPresent())
+            {
+                query = reduced.get();
+
+                if (query.contains(" " + operator + " "))
+                {
+                    query = "(" + query + ")";
+                }
+            }
+        }
+
+        return query;
     }
 
     @Override
