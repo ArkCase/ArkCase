@@ -17,8 +17,8 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
             SessionCacheNames: {
                 USER_INFO: "AcmUserInfo"
                 , USER_FULL_NAMES: "AcmUserFullNames"
-                , ASSIGNABLE_USERS: "AcmAssignableUsers"
-                , OWNING_GROUPS: "AcmOwningGroups"
+                , USERS: "AcmUsers"
+                , GROUPS: "AcmGroups"
                 , PRIORITIES: "AcmPriorities"
                 , CASE_TYPES: "AcmCaseTypes"
                 , CASES_CONFIG: "AcmCasesConfig"

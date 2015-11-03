@@ -38,11 +38,11 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         }).then(
             function (personTypes) {
-                var personTypesOptions = [];
+                var options = [];
                 _.forEach(personTypes, function (v, k) {
-                    personTypesOptions.push({type: v, name: v});
+                    options.push({type: v, name: v});
                 });
-                $scope.personTypes = personTypesOptions;
+                $scope.personTypes = options;
                 return personTypes;
             }
         );
@@ -62,11 +62,11 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         }).then(
             function (contactMethodTypes) {
-                var contactMethodTypesOptions = [];
+                var options = [];
                 Util.forEachStripNg(contactMethodTypes, function (v, k) {
-                    contactMethodTypesOptions.push({type: k, name: v});
+                    options.push({type: k, name: v});
                 });
-                $scope.contactMethodTypes = contactMethodTypesOptions;
+                $scope.contactMethodTypes = options;
                 return contactMethodTypes;
             }
         );
@@ -85,11 +85,11 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         }).then(
             function (organizationTypes) {
-                var organizationTypesOptions = [];
+                var options = [];
                 Util.forEachStripNg(organizationTypes, function (v, k) {
-                    organizationTypesOptions.push({type: k, name: v});
+                    options.push({type: k, name: v});
                 });
-                $scope.organizationTypes = organizationTypesOptions;
+                $scope.organizationTypes = options;
                 return organizationTypes;
             }
         );
@@ -108,11 +108,11 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         }).then(
             function (addressTypes) {
-                var addressTypesOptions = [];
+                var options = [];
                 Util.forEachStripNg(addressTypes, function (v, k) {
-                    addressTypesOptions.push({type: k, name: v});
+                    options.push({type: k, name: v});
                 });
-                $scope.addressTypes = addressTypesOptions;
+                $scope.addressTypes = options;
                 return addressTypes;
             }
         );
@@ -131,11 +131,11 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         }).then(
             function (aliasTypes) {
-                var aliasTypesOptions = [];
+                var options = [];
                 Util.forEachStripNg(aliasTypes, function (v, k) {
-                    aliasTypesOptions.push({type: k, name: v});
+                    options.push({type: k, name: v});
                 });
-                $scope.aliasTypes = aliasTypesOptions;
+                $scope.aliasTypes = options;
                 return aliasTypes;
             }
         );
@@ -154,11 +154,11 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         }).then(
             function (securityTagTypes) {
-                var securityTagTypesOptions = [];
+                var options = [];
                 Util.forEachStripNg(securityTagTypes, function (v, k) {
-                    securityTagTypesOptions.push({type: k, name: v});
+                    options.push({type: k, name: v});
                 });
-                $scope.securityTagTypes = securityTagTypesOptions;
+                $scope.securityTagTypes = options;
                 return securityTagTypes;
             }
         );

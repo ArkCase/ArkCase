@@ -36,37 +36,77 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
         );
 
         $scope.assignableUsers = [];
-        //var cacheAssignableUsers = new Store.SessionData(Helper.SessionCacheNames.ASSIGNABLE_USERS);
-        //var assignableUsers = cacheAssignableUsers.get();
-        LookupService.getUsers({}, function (data) {
-            $scope.assignableUsers = [];
-            _.forEach(data, function (item) {
-                var userInfo = JSON.parse(item);
-                $scope.assignableUsers.push({value: userInfo.object_id_s, text: userInfo.object_id_s});
-            });
-        });
+        var cacheUsers = new Store.SessionData(Helper.SessionCacheNames.USERS);
+        var users = cacheUsers.get();
+        Util.serviceCall({
+            service: LookupService.getUsers
+            , result: users
+            , onSuccess: function (data) {
+                if (Validator.validateUsers(data)) {
+                    users = data;
+                    cacheUsers.set(users);
+                    return users;
+                }
+            }
+        }).then(
+            function (users) {
+                var options = [];
+                _.each(users, function (user) {
+                    var userInfo = JSON.parse(user);
+                    options.push({value: userInfo.object_id_s, text: userInfo.object_id_s});
+                });
+                $scope.assignableUsers = options;
+                return users;
+            }
+        );
 
         $scope.owningGroups = [];
-        //var cacheOwningGroups = new Store.SessionData(Helper.SessionCacheNames.OWNING_GROUPS);
-        //var owningGroups = cacheOwningGroups.get();
-        LookupService.getGroups({}, function (data) {
-            $scope.owningGroups = [];
-            var groups = data.response.docs;
-            _.forEach(groups, function (item) {
-                $scope.owningGroups.push({value: item.name, text: item.name});
-            });
-        });
+        var cacheGroups = new Store.SessionData(Helper.SessionCacheNames.GROUPS);
+        var groups = cacheGroups.get();
+        Util.serviceCall({
+            service: LookupService.getGroups
+            , result: groups
+            , onSuccess: function (data) {
+                if (Validator.validateSolrData(data)) {
+                    var groups = data.response.docs;
+                    cacheGroups.set(groups);
+                    return groups;
+                }
+            }
+        }).then(
+            function (groups) {
+                var options = [];
+                _.each(groups, function (item) {
+                    options.push({value: item.name, text: item.name});
+                });
+                $scope.owningGroups = options;
+                return groups;
+            }
+        );
 
         $scope.caseTypes = [];
-        //var cacheCaseTypes = new Store.SessionData(Helper.SessionCacheNames.CASE_TYPES);
-        //var caseTypes = cacheCaseTypes.get();
-        LookupService.getCaseTypes({}, function (data) {
-            $scope.caseTypes = [];
-            _.forEach(data, function (item) {
-                $scope.caseTypes.push({value: item, text: item});
-            });
-        });
-
+        var cacheCaseTypes = new Store.SessionData(Helper.SessionCacheNames.CASE_TYPES);
+        var caseTypes = cacheCaseTypes.get();
+        Util.serviceCall({
+            service: LookupService.getCaseTypes
+            , result: caseTypes
+            , onSuccess: function (data) {
+                if (Validator.validateCaseTypes(data)) {
+                    caseTypes = data;
+                    cacheCaseTypes.set(caseTypes);
+                    return caseTypes;
+                }
+            }
+        }).then(
+            function (caseTypes) {
+                var options = [];
+                _.forEach(caseTypes, function (item) {
+                    options.push({value: item, text: item});
+                });
+                $scope.caseTypes = options;
+                return caseTypes;
+            }
+        );
 
         $scope.caseSolr = null;
         $scope.caseInfo = null;

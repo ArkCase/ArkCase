@@ -766,6 +766,12 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
+        , validateCaseTypes: function (data) {
+            if (!Util.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
 
 
     }}
