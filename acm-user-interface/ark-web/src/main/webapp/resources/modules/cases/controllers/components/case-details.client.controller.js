@@ -3,14 +3,11 @@
 angular.module('cases').controller('Cases.DetailsController', ['$scope', '$stateParams', 'UtilService', 'ValidationService', 'CasesService',
 	function($scope, $stateParams, Util, Validator, CasesService) {
 		$scope.$emit('req-component-config', 'details');
-
-		$scope.config = null;
-		$scope.$on('component-config', applyConfig);
-		function applyConfig(e, componentId, config) {
-			if (componentId == 'details') {
+        $scope.$on('component-config', function (e, componentId, config) {
+            if ('details' == componentId) {
 				$scope.config = config;
 			}
-		}
+        });
 
 		$scope.$on('case-retrieved', function(e, data) {
 			if (Validator.validateCaseFile(data)) {
@@ -30,12 +27,10 @@ angular.module('cases').controller('Cases.DetailsController', ['$scope', '$state
         $scope.saveDetails = function() {
             //$scope.editor.destroy();
 			var caseInfo = Util.omitNg($scope.caseInfo);
-            CasesService.save({}, caseInfo
-                ,function(successData) {
-                }
-                ,function(errorData) {
-                }
-            );
+            Util.serviceCall({
+                service: CasesService.save
+                , data: caseInfo
+            });
         };
 
 

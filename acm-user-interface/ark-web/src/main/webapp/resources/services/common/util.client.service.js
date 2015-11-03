@@ -147,8 +147,9 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
             , serviceCall: function (arg) {
                 var d = $q.defer();
                 var onSuccess = function (successData) {
+                    var rc = successData;
                     if (arg.onSuccess) {
-                        var rc = arg.onSuccess(successData);
+                        rc = arg.onSuccess(successData);
                         if (undefined == rc) {
                             if (arg.onInvalid) {
                                 d.reject(arg.onInvalid(successData));
@@ -161,6 +162,7 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                     } else {
                         d.resolve(successData);
                     }
+                    return rc;
                 };
                 var onError = function (errorData) {
                     var rc = errorData;
@@ -168,6 +170,7 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                         rc = arg.onError(errorData);
                     }
                     d.reject(rc);
+                    return rc;
                 };
 
                 if (arg.result) {

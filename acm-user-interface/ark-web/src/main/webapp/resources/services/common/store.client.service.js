@@ -2,6 +2,7 @@
 
 angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
     function ($rootScope, Util) {
+
         var storeMap;
         if (!$rootScope._storeMap) {
             $rootScope._storeMap = {};
@@ -25,13 +26,15 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             }
 
             , CacheFifo: function (arg) {
+                if ("string" == typeof arg) {
+                    arg = {name: arg};
+                }
                 this.maxSize = Util.goodMapValue(arg, "maxSize", this.DEFAULT_MAX_CACHE_SIZE);
                 this.reset();
 
                 this.name = Util.goodMapValue(arg, "name", "Cache" + Math.floor((Math.random() * 1000000000)));
                 this.expiration = Util.goodMapValue(arg, "expiration", this.DEFAULT_EXPIRATION);   //arg.expiration in milliseconds; -1 if never expired
                 this.evict(this.name, this.expiration);
-
             }
         };
 
