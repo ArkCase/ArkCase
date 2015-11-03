@@ -1,4 +1,5 @@
-/* @override http://sharecaredev.armedianet.com/arkcase/modules/core/css/core.css */
+/* @override http://sharecaredev.armedianet.com/arkcase/modules/core/css/core.css
+	http://10.21.4.149/arkcase/modules/core/css/core.css */
 
 html {
     height: 100%;
@@ -235,6 +236,7 @@ body {
     text-align: center;
     width: 65px;
 }
+
 /* Page Content (Right Column) */
 
 .page-content {
@@ -272,19 +274,7 @@ body {
     position: relative;
     height: 100%;
 }
-.module-content .left-sidebar .header,
-.module-content .left-sidebar-sm .header,
-.module-content .left-sidebar-lg .header {
-    background-color: #ecedec;
-    padding-left: 20px;
-    padding-bottom: 13px;
-    padding-top: 20px;
-    min-height: 71px;
-    border-bottom: 1px solid #e1e6ef;
-    width: 100%;
-    z-index: 1000;
-    position: relative;
-}
+
 .module-content .left-sidebar .header h3,
 .module-content .left-sidebar-sm .header h3,
 .module-content .left-sidebar-lg .header h3 {
@@ -345,7 +335,7 @@ body {
     margin: 0px;
     width: 480px;
     height: 60px;
-    margin-left: 20px;
+    margin-left: 10px;
     margin-right: 10px;
     z-index: 1001;
     border: 1px solid #ddd;
@@ -462,11 +452,43 @@ body {
         display: inline-block;
     }
     .leftnav-menu ul.nav.nav-main li a {
-        text-align: left;
+		text-align: left;
+		float: left;
+		width: 33%;
     }
     .leftnav-menu ul.nav.nav-main li i.navigation-icon {
         font-size: inherit;
     }
+    
+    .page-wrapper.collapsed .leftnav-menu {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+    .page-wrapper.collapsed .leftnav-menu .user-info .fullname {
+        display: inline-block;
+    }
+    .page-wrapper.collapsed .leftnav-menu .title {
+        display: inline-block;
+    }
+    .page-wrapper.collapsed .leftnav-menu a.dropdown-toggle .glyphicon {
+        margin-left: 8px;
+    }
+    .page-wrapper.collapsed .leftnav-menu ul.nav.nav-main li strong {
+        display: inline-block;
+    }
+    .page-wrapper.collapsed .leftnav-menu ul.nav.nav-main li a {
+         text-align: left;
+         float: left;
+         width: 33%;
+    }
+    .page-wrapper.collapsed .leftnav-menu ul.nav.nav-main li i.navigation-icon {
+        font-size: inherit;
+    }
+    .page-wrapper.collapsed .module-content {
+        padding-right: 0px !important;
+    }
+    
     .module-content {
         padding-right: 0 !important;
     }
@@ -513,10 +535,26 @@ body {
         z-index: 0;
         padding: 0px;
     }
+    
 }
 /* Responsive - Extra Small Devices, Phones */
 
-@media only screen and (max-width: 480px) {}
+@media only screen and (max-width: 480px) {
+
+
+	.leftnav-menu ul.nav.nav-main li a {
+		text-align: left;
+		float: left;
+		width: 50%;
+	}
+	
+	.page-wrapper.collapsed .leftnav-menu ul.nav.nav-main li a {
+	     text-align: left;
+	     float: left;
+	     width: 50%;
+	}
+
+}
 /* Responsive - Custom, iPhone Retina */
 
 @media only screen and (max-width: 320px) {}
