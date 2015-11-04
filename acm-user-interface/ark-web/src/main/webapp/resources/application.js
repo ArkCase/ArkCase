@@ -26,14 +26,8 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
         // Add HTTP error interceptor
         function httpInterceptor($q, MessageService, SessionService) {
             return {
-                response: response,
                 responseError: responseError
             };
-
-            function response(response) {
-                SessionService.update();
-                return response;
-            }
 
             // Intercept the failed response.
             function responseError(response) {
