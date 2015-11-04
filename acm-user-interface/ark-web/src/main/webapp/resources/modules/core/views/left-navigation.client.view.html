@@ -10,13 +10,15 @@
             </a>
         </li>
     </ul>
+
+    <footer class="hidden-xs">
+        <button class="btn btn-icon" ng-hide="isCollapsed" ng-click="isCollapsed = true">
+            <i class="fa fa-chevron-circle-left"></i>
+        </button>
+        <button class="btn btn-icon" ng-show="isCollapsed" ng-click="isCollapsed = false">
+            <i class="fa fa-chevron-circle-right"></i>
+        </button>
+    </footer>
+
 </nav>
 
-<footer class="hidden-xs">
-	<button class="btn btn-icon" ng-hide="menuCollapsed" ng-click="menuCollapsed = true">
-		<i class="fa fa-chevron-circle-left"></i>
-	</button>
-	<button class="btn btn-icon" ng-show="menuCollapsed" ng-click="menuCollapsed = false">
-		<i class="fa fa-chevron-circle-right"></i>
-	</button>
-</footer>

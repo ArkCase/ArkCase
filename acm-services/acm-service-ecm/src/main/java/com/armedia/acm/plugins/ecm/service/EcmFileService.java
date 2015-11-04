@@ -150,4 +150,6 @@ public interface EcmFileService
     EcmFile copyFile(Long documentId, AcmFolder targetFolder, AcmContainer targetContainer) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     EcmFile updateFileType(Long fileId, String fileType) throws AcmObjectNotFoundException;
+
+    int getTotalPageCount(String parentObjectType, Long parentObjectId, List<String> totalPageCountFileTypes, List<String> totalPageCountMimeTypes, Authentication auth);
 }
