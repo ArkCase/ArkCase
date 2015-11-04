@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name services:CasesService
+ * @name CasesService
  *
  * @description
  *
@@ -28,7 +28,7 @@ angular.module('services').factory('CasesService', ['$resource',
             /**
              * @ngdoc method
              * @name queryCases
-             * @methodOf services:CasesService
+             * @methodOf CasesService
              *
              * @description
              * Query list of cases from SOLR.

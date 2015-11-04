@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name services:ValidationService
+ * @name ValidationService
  *
  * @description
  *
@@ -772,6 +772,13 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
+        , validateObjectTypes: function (data) {
+            if (!Util.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+
 
 
     }}

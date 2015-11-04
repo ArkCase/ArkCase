@@ -1,14 +1,18 @@
 'use strict';
 
-/**
- * @ngdoc controller
- * @name cases.controller:CasesController
- *
- * @description
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/cases.client.controller.js modules/cases/controllers/cases.client.controller.js}
- *
- * The Cases module main controller
- */
+//
+//jwu: need ngdoc in controller ???
+//
+
+///**
+// * @ngdoc controller
+// * @name cases.controller:CasesController
+// *
+// * @description
+// * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/cases.client.controller.js modules/cases/controllers/cases.client.controller.js}
+// *
+// * The Cases module main controller
+// */
 angular.module('cases').controller('CasesController', ['$scope', '$stateParams', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'ConfigService', 'CasesService',
     function ($scope, $stateParams, $translate, Store, Util, Validator, Helper, ConfigService, CasesService) {
         //$scope.config = ConfigService.getModule({moduleId: 'cases'});
