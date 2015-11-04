@@ -120,10 +120,11 @@ angular.module('services').factory('UserActivityService', ['$document', '$timeou
             timer = $timeout(timeoutCallback, timeout);
         }
 
+        /**
+         * Performs timeout reset and execute callback function on timeout
+         */
         function timeoutCallback(){
             api.stop();
-            $timeout.cancel(timer);
-            timer = null;
             callbacFunc();
         }
     }
