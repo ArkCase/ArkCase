@@ -1,0 +1,18 @@
+{
+  "responseHeader":{
+    "status":0,
+    "QTime":14,
+    "params":{
+      "dac":"{!join from=id to=parent_ref_s}(not(exists(protected_object_b)) OR protected_object_b:false OR public_doc_b:true  OR allow_acl_ss:ann-acm OR allow_acl_ss:ROLE_ADMINISTRATOR OR allow_acl_ss:ACM_ADMINISTRATOR_DEV OR allow_acl_ss:CPC_0020_INITIATOR ) AND -deny_acl_ss:ann-acm AND -deny_acl_ss:ROLE_ADMINISTRATOR AND -deny_acl_ss:ACM_ADMINISTRATOR_DEV AND -deny_acl_ss:CPC_0020_INITIATOR",
+      "sort":"",
+      "indent":"true",
+      "start":"0",
+      "q":"object_type_s:FILE AND type_s:(authorization OR abstract) AND mime_type_s:application/pdf AND parent_object_type_s:CASE_FILE AND parent_object_id_i:179",
+      "wt":"json",
+      "topLevel":"if(exists(parent_ref_s), 0, 1)",
+      "fq":["{!frange l=1}sum(if(exists(protected_object_b), 0, 1), if(protected_object_b, 0, 1), if(public_doc_b, 1, 0), termfreq(allow_acl_ss, ann-acm), termfreq(allow_acl_ss, ROLE_ADMINISTRATOR), termfreq(allow_acl_ss, ACM_ADMINISTRATOR_DEV), termfreq(allow_acl_ss, CPC_0020_INITIATOR))",
+        "-deny_acl_ss:ann-acm AND -deny_acl_ss:ROLE_ADMINISTRATOR AND -deny_acl_ss:ACM_ADMINISTRATOR_DEV AND -deny_acl_ss:CPC_0020_INITIATOR",
+        "{!frange l=1}sum($topLevel, $dac)"],
+      "rows":"50"}},
+  "response":{"numFound":0,"start":0,"docs":[]
+  }}

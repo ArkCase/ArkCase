@@ -6,5 +6,9 @@ angular.module('core').controller('LeftNavigationController', ['$scope', '$state
         $scope.authentication = Authentication;
         $scope.isCollapsed = false;
         $scope.menu = Menus.getMenu('leftnav');
+
+        $scope.$watch('isCollapsed', function(){
+            $scope.$emit('isCollapsed', $scope.isCollapsed);
+        })
     }
 ]);
