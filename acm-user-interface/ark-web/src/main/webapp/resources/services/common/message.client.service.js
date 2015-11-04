@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name services.MessageService
+ * @name services.service:MessageService
 
  * @description
  * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/common/message.client.service.js services/common/message.client.service.js}
@@ -63,7 +63,7 @@ angular.module('services').factory('MessageService', ['$injector',
             /**
              * @ngdoc method
              * @name error
-             * @methodOf services.MessageService
+             * @methodOf services.service:MessageService
              *
              * @param {String} message Displayed error message
              *
@@ -77,7 +77,7 @@ angular.module('services').factory('MessageService', ['$injector',
             /**
              * @ngdoc method
              * @name httpError
-             * @methodOf services.MessageService
+             * @methodOf services.service:MessageService
              *
              * @param {HttpResponse} httpResponse Http resposne
              *
@@ -103,7 +103,7 @@ angular.module('services').factory('MessageService', ['$injector',
             /**
              * @ngdoc method
              * @name info
-             * @methodOf services.MessageService
+             * @methodOf services.service:MessageService
              *
              * @param {String} message Displayed info message
              *
