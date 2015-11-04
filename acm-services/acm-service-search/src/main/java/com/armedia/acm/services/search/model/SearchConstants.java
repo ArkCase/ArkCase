@@ -51,6 +51,9 @@ public interface SearchConstants
     String PROPERTY_QUEUE_ID_S = "queue_id_s";
     String PROPERTY_QUEUE_NAME_S = "queue_name_s";
     String PROPERTY_QUEUE_ORDER_S = "queue_order_s";
+    String PROPERTY_PARENT_OBJECT_TYPE_S = "parent_object_type_s";
+    String PROPERTY_PARENT_OBJECT_ID_I = "parent_object_id_i";
+    String PROPERTY_PAGE_COUNT_I = "page_count_i";
 
     String USER = "${user}";
     /**

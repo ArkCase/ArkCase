@@ -33,8 +33,7 @@
 <body class="ng-cloak">
 
 <header data-ng-include="'modules/core/views/header.client.view.html'" class="navbar-arkcase"></header>
-
-<div class="page-wrapper">
+<div ng-controller="PageController" ng-class="isCollapsed ? 'page-wrapper collapsed' : 'page-wrapper uncollapsed'">
     <div style="display:table-row">
         <div class="leftnav-menu" ng-include="'modules/core/views/left-navigation.client.view.html'"></div>
         <div class="page-content">
