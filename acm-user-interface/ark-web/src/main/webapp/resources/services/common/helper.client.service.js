@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name services:HelperService
+ * @name HelperService
  *
  * @description
  *
@@ -48,22 +48,38 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                 , CASE_TIME_SHEETS: "CaseTimeSheets"
             }
 
+            /**
+             * @ngdoc method
+             * @name requestComponentConfig
+             * @methodOf HelperService
+             *
+             * @param {Object} scope Angular scope
+             * @param {String} theComponentId Component ID
+             * @param {Function} onConfigAcquired Callback function when configuration is acquired
+             *
+             * @description
+             * This method asks for config data for a specified component
+             */
             , requestComponentConfig: function (scope, theComponentId, onConfigAcquired) {
                 var dfd = $q.defer();
-                //if (scope.config) {
-                //    dfd.resolve(config);
-                //} else {
                 scope.$emit('req-component-config', theComponentId);
                 scope.$on('component-config', function (e, componentId, config) {
                     if (theComponentId == componentId) {
-                        scope.config = config;
                         onConfigAcquired(config);
                         dfd.resolve(config);
                     }
                 });
-                //}
                 return dfd.promise;
             }
+
+            /**
+             * @ngdoc method
+             * @name getUserInfo
+             * @methodOf HelperService
+             *
+             * @description
+             * Retrieves current login user info
+             */
             , getUserInfo: function () {
                 var cacheUserInfo = new Store.SessionData(Helper.SessionCacheNames.USER_INFO);
                 var userInfo = cacheUserInfo.get();
@@ -80,7 +96,28 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                 });
             }
 
+            /**
+             * @ngdoc service
+             * @name HelperService.Grid
+             *
+             * @description
+             *
+             * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/common/helper.client.service.js services/common/helper.client.service.js}
+             *
+             * Grid contains frequently used functions to help creating ui-grid.
+             */
             , Grid: {
+                /**
+                 * @ngdoc method
+                 * @name hidePagingControlsIfAllDataShown
+                 * @methodOf HelperService.Grid
+                 *
+                 * @param {Object} scope Angular scope
+                 * @param {Number} totalCount Total number of grid rows
+                 *
+                 * @description
+                 * Hide paging controls of Angular ui-grid if all data has already shown
+                 */
                 hidePagingControlsIfAllDataShown: function (scope, totalCount) {
                     if (scope && scope.gridOptions && scope.gridOptions.paginationPageSize) {
                         if (totalCount <= scope.gridOptions.paginationPageSize) {
@@ -91,8 +128,21 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                             scope.gridOptions.enablePaginationControls = true;
                         }
                     }
-                },
-                setBasicOptions: function (scope, config) {
+                }
+
+
+                /**
+                 * @ngdoc method
+                 * @name setBasicOptions
+                 * @methodOf HelperService.Grid
+                 *
+                 * @param {Object} scope Angular scope
+                 * @param {Object} config Configuration data
+                 *
+                 * @description
+                 * Set some typical ui-grid options.
+                 */
+                , setBasicOptions: function (scope, config) {
                     scope.gridOptions = scope.gridOptions || {};
                     scope.config = config;
 
@@ -113,6 +163,19 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                         d.resolve(gridApi);
                     }
                 }
+
+                /**
+                 * @ngdoc method
+                 * @name setExternalPaging
+                 * @methodOf HelperService.Grid
+                 *
+                 * @param {Object} scope Angular scope
+                 * @param {Object} config Configuration data
+                 * @param {Function} retrieveGridData Callback function to call when need to retrieve data for ui-grid
+                 *
+                 * @description
+                 * Set ui-grid options to support external paging.
+                 */
                 , setExternalPaging: function (scope, config, retrieveGridData) {
                     //scope.currentId = $stateParams.id;
                     scope.start = 0;
@@ -160,6 +223,20 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                         });
                     });
                 }
+
+                /**
+                 * @ngdoc method
+                 * @name setInPlaceEditing
+                 * @methodOf HelperService.Grid
+                 *
+                 * @param {Object} scope Angular scope
+                 * @param {Object} config Configuration data
+                 * @param {Function} updateRow Callback function to update a row of a ui-grid
+                 * @param {Function} canUpdate Callback function to to check condition if a row can be updated
+                 *
+                 * @description
+                 * Set ui-grid options to support in place editing.
+                 */
                 , setInPlaceEditing: function (scope, config, updateRow, canUpdate) {
                     scope.gridOptions.promiseRegisterApi.then(function (gridApi) {
                         gridApi.edit.on.afterCellEdit(scope, function (rowEntity, colDef, newValue, oldValue) {
@@ -173,28 +250,67 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                         });
                     });
                 }
+
+                /**
+                 * @ngdoc method
+                 * @name setInPlaceEditing
+                 * @methodOf HelperService.Grid
+                 *
+                 * @param {Object} scope Angular scope
+                 * @param {Function} handler Callback function to to check condition if a row can be updated
+                 *
+                 * @description
+                 * Register an handler function when grid API is ready.
+                 */
                 , addGridApiHandler: function (scope, handler) {
                     scope.gridOptions.promiseRegisterApi.then(function (gridApi) {
                         handler(gridApi);
                     });
                 }
+
+                /**
+                 * @ngdoc method
+                 * @name setColumnDefs
+                 * @methodOf HelperService.Grid
+                 *
+                 * @param {Object} scope Angular scope
+                 * @param {Object} config Configuration data
+                 *
+                 * @description
+                 * Define ui-grid columns
+                 */
                 , setColumnDefs: function (scope, config) {
                     scope.gridOptions = scope.gridOptions || {};
                     scope.gridOptions.columnDefs = config.columnDefs;
                 }
+
+                /**
+                 * @ngdoc method
+                 * @name showObject
+                 * @methodOf HelperService.Grid
+                 *
+                 * @param {Object} scope Angular scope
+                 * @param {String} objType ArkCase Object type
+                 * @param {String} objId ArkCase Object ID
+                 *
+                 * @description
+                 * Go to a page that show the specified ArkCase Object (Case, Complaint, Document, etc.)
+                 */
                 , showObject: function (scope, objType, objId) {
                     var cacheObjectTypes = new Store.SessionData(Helper.SessionCacheNames.OBJECT_TYPES);
                     var objectTypes = cacheObjectTypes.get();
                     var promiseObjectTypes = Util.serviceCall({
                         service: LookupService.getObjectTypes
-                        , result: objectTypesStore
+                        , result: cacheObjectTypes
                         , onSuccess: function (data) {
-                            objectTypes = [];
-                            _.forEach(data, function (item) {
-                                objectTypes.push(item);
-                            });
-                            cacheObjectTypes.set(objectTypes);
-                            return objectTypes;
+                            if (Validator.validateObjectTypes(data)) {
+                                objectTypes = [];
+                                _.forEach(data, function (item) {
+                                    objectTypes.push(item);
+                                });
+                                cacheObjectTypes.set(objectTypes);
+                                return objectTypes;
+                            }
                         }
                     }).then(
                         function (objectTypes) {
@@ -212,6 +328,17 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                         }
                     });
                 }
+
+                /**
+                 * @ngdoc method
+                 * @name getUsers
+                 * @methodOf HelperService.Grid
+                 *
+                 * @param {Object} scope Angular scope
+                 *
+                 * @description
+                 * Get list of user full names
+                 */
                 , getUsers: function (scope) {
                     var cacheUserFullNames = new Store.SessionData(Helper.SessionCacheNames.USER_FULL_NAMES);
                     var userFullNames = cacheUserFullNames.get();
@@ -242,6 +369,18 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                         }
                     );
                 }
+
+                /**
+                 * @ngdoc method
+                 * @name setUserNameFilter
+                 * @methodOf HelperService.Grid
+                 *
+                 * @param {Object} scope Angular scope
+                 * @param {Object} promiseUsers Promise of acquiring list of user full names
+                 *
+                 * @description
+                 * Set 'mapKeyValue' filter of user full name column when user full names are ready
+                 */
                 , setUserNameFilter: function (scope, promiseUsers) {
                     $q.all([promiseUsers]).then(function (data) {
                         for (var i = 0; i < scope.config.columnDefs.length; i++) {
@@ -251,6 +390,23 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                         }
                     });
                 }
+
+                /**
+                 * @ngdoc method
+                 * @name withPagingParams
+                 * @methodOf HelperService.Grid
+                 *
+                 * @param {Object} scope Angular scope
+                 * @param {Object} arg Map with paging related arguments
+                 * @param {Object} arg.sort Sort argument
+                 * @param {Object} arg.sort.by Sort field
+                 * @param {Object} arg.sort.dir Sort direction, either 'asc' or 'desc'
+                 * @param {Object} arg.startWith Records where page starts
+                 * @param {Object} arg.count Number of records in a page (page size)
+                 *
+                 * @description
+                 * Create paging arguments
+                 */
                 , withPagingParams: function (scope, arg) {
                     var sort = "";
                     if (scope.sort) {
@@ -268,6 +424,18 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
 
                     return arg;
                 }
+
+                /**
+                 * @ngdoc method
+                 * @name withPagingParams
+                 * @methodOf HelperService.Grid
+                 *
+                 * @param {Object} columnDefs ui-grid column definition
+                 * @param {Function} onClickDelete Callback function to response to button click event
+                 *
+                 * @description
+                 * Create a new column with delete button
+                 */
                 , addDeleteButton: function (columnDefs, onClickDelete) {
                     var columnDef = {
                         name: "act"
@@ -286,6 +454,18 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                     };
                     columnDefs.push(columnDef);
                 }
+
+                /**
+                 * @ngdoc method
+                 * @name withPagingParams
+                 * @methodOf HelperService.Grid
+                 *
+                 * @param {Object} scope Angular scope
+                 * @param {Object} rowEntity Row entity object of ui-grid representing a row
+                 *
+                 * @description
+                 * Remove a row
+                 */
                 , deleteRow: function (scope, rowEntity) {
                     var idx = _.findIndex(scope.gridOptions.data, function (obj) {
                         return (obj == rowEntity);
