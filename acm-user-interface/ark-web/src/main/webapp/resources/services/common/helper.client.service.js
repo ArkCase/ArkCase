@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name HelperService
+ * @name services.service:HelperService
  *
  * @description
  *
@@ -51,7 +51,7 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
             /**
              * @ngdoc method
              * @name requestComponentConfig
-             * @methodOf HelperService
+             * @methodOf services.service:HelperService
              *
              * @param {Object} scope Angular scope
              * @param {String} theComponentId Component ID
@@ -75,7 +75,7 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
             /**
              * @ngdoc method
              * @name getUserInfo
-             * @methodOf HelperService
+             * @methodOf services.service:HelperService
              *
              * @description
              * Retrieves current login user info

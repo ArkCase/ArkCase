@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name StoreService
+ * @name services.service:StoreService
  *
  * @description
  *

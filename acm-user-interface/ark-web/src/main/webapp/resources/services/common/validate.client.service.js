@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name ValidationService
+ * @name services.service:ValidationService
  *
  * @description
  *
