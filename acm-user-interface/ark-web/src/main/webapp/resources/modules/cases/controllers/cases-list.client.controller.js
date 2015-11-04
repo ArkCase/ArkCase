@@ -1,24 +1,32 @@
 'use strict';
 
-angular.module('cases').controller('CasesListController', ['$scope', '$state', '$stateParams', 'UtilService', 'ValidationService', 'StoreService', 'CasesService', 'ConfigService', 'CasesModelsService',
-    function ($scope, $state, $stateParams, Util, Validator, Store, CasesService, ConfigService, CasesModelsService) {
-        Util.serviceCall({
+angular.module('cases').controller('CasesListController', ['$scope', '$state', '$stateParams', 'UtilService', 'ValidationService', 'StoreService', 'HelperService', 'CasesService', 'ConfigService', 'CasesModelsService',
+    function ($scope, $state, $stateParams, Util, Validator, Store, Helper, CasesService, ConfigService, CasesModelsService) {
+        var cacheCasesConfig = new Store.SessionData(Helper.SessionCacheNames.CASES_CONFIG);
+        var config = cacheCasesConfig.get();
+        var promiseGetModule = Util.serviceCall({
             service: ConfigService.getModule
             , param: {moduleId: 'cases'}
+            , result: config
             , onSuccess: function (data) {
-                if (Validator.validateConfigComponents(data)) {
-                    var config = data;
-                    $scope.treeConfig = config.tree;
-                    $scope.componentsConfig = config.components;
+                if (Validator.validateCasesConfig(data)) {
+                    config = data;
+                    cacheCasesConfig.set(config);
                     return config;
                 }
             }
-        });
+        }).then(
+            function (config) {
+                $scope.treeConfig = config.tree;
+                $scope.componentsConfig = config.components;
+                return config;
+            }
+        );
 
-        var cache = new Store.CacheFifo();
+        var cacheCaseList = new Store.CacheFifo(Helper.CacheNames.CASE_LIST);
         $scope.onLoad = function (start, n, sort, filters) {
             var cacheKey = start + "." + n + "." + sort + "." + filters;
-            var treeData = cache.get(cacheKey);
+            var treeData = cacheCaseList.get(cacheKey);
 
             var param = {};
             param.start = start;
@@ -41,7 +49,7 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
                                 , nodeToolTip: Util.goodValue(doc.title_parseable)
                             });
                         });
-                        cache.put(cacheKey, treeData);
+                        cacheCaseList.put(cacheKey, treeData);
                         return treeData;
                     }
                 }
@@ -49,10 +57,6 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
                 function (treeData) {
                     $scope.treeData = treeData;
                     return treeData;
-                }
-                , function (errorData) {
-                    //$scope.treeData = {total: 0, docs: []};
-                    return errorData;
                 }
             );
         };

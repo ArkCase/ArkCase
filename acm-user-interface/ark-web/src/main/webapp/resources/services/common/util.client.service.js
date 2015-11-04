@@ -36,6 +36,17 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                 , LOOKUP_SECURITY_TAG_TYPES: "securityTagTypes"
             }
 
+            /**
+             * @ngdoc method
+             * @name goodValue
+             * @methodOf services.service:UtilService
+             *
+             * @param {Object} val An object, including value
+             * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to ""
+             *
+             * @description
+             * This function check if 'val' is empty. Returns it only it is not empty. Else 'replacement' is used.
+             */
             , goodValue: function (val, replacement) {
                 var replacedWith = (undefined === replacement) ? "" : replacement;
                 return this.isEmpty(val) ? replacedWith : val;
@@ -45,6 +56,49 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                 return this.isArray(val) ? val : replacedWith;
             }
 
+
+            /**
+             * @ngdoc method
+             * @name goodMapValue
+             * @methodOf services.service:UtilService
+             *
+             * @param {Object} map An object
+             * @param {String} key A key. Use '.' to for parent-child linked key, and '[i]' for array item 'i'
+             * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to ""
+             *
+             * @description
+             * This function check if value of given map with given key is empty. Returns the value only it is not empty. Else 'replacement' is used.
+             *
+             * Example:
+             *
+             * var emp = {name: "John",
+             *   id: {
+             *       ssn: "123-45-6789"
+             *       driveLicence: "ABCD1234"
+             *  }
+             *   phone: [
+             *       {type: "home", number: "555-555-5555"}
+             *       {type: "cell", number: "555-555-5556"}
+             *       ]
+             *   }
+             *
+             * var  name = UtilService.goodMapValue(emp, "name");               //returns "John"
+             *
+             * var  ssn = UtilService.goodMapValue(emp, "id.ssn");              //returns "123-45-6789"
+             *
+             * var  phoneType = UtilService.goodMapValue(emp, "phone[1].type"); //returns "cell"
+             *
+             * var  noName = UtilService.goodMapValue(null, "name");            //returns ""
+             *
+             * var  noName2 = UtilService.goodMapValue(emp, "noSuch", "NA");    //returns "NA"
+             *
+             * var  noSsn = UtilService.goodMapValue(emp, "id.ssnWrong");       //returns ""
+             *
+             * var  noSsn2 = UtilService.goodMapValue(emp, "idWrong.ssn");      //returns ""
+             *
+             * var  noType = UtilService.goodMapValue(emp, "phone[2].type", "Array out of bound"); //returns "Array out of bound"
+             *
+             */
             //
             //todo: consider using lodash impl _.map(obj, 'some.arr[0].name');
             //
@@ -111,6 +165,17 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                 }
                 return json;
             }
+
+            /**
+             * @ngdoc method
+             * @name isEmpty
+             * @methodOf services.service:UtilService
+             *
+             * @param {Object} val An object, including value
+             *
+             * @description
+             * Return true if 'val' is undefined, null, "", or "null"; false otherwise
+             */
             ,isEmpty: function (val) {
                 if (undefined == val) {
                     return true;
@@ -123,6 +188,17 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                 }
                 return false;
             }
+
+            /**
+             * @ngdoc method
+             * @name isArray
+             * @methodOf services.service:UtilService
+             *
+             * @param {Object} arr An object, including value
+             *
+             * @description
+             * Return true if 'arr' is an array
+             */
             ,isArray: function(arr) {
                 if (arr) {
                     if (arr instanceof Array) {
@@ -131,12 +207,35 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                 }
                 return false;
             }
+
+            /**
+             * @ngdoc method
+             * @name isArrayEmpty
+             * @methodOf services.service:UtilService
+             *
+             * @param {Object} arr An object, including value
+             *
+             * @description
+             * Return true for empty array or it is not an array at all
+             */
             ,isArrayEmpty: function (arr) {
                 if(!this.isArray(arr)) {
                     return true;
                 }
                 return arr.length === 0;
             }
+
+            /**
+             * @ngdoc method
+             * @name compare
+             * @methodOf services.service:UtilService
+             *
+             * @param {Object} left An object, including value
+             * @param {Object} right An object, including value
+             *
+             * @description
+             * Return true if both values are equal. Returns true as well if both values are empty.
+             */
             , compare: function (left, right) {  //equals() name is taken, so use compare()
                 if (this.isEmpty(left)) {
                     return this.isEmpty(right);
@@ -144,11 +243,30 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                 return left == right;
             }
 
+
+            /**
+             * @ngdoc method
+             * @name serviceCall
+             * @methodOf services.service:UtilService
+             *
+             * @param {Object} arg Argument
+             * @param {Function} arg.service Function to be called. It is usually defined in service using $resource,
+             * @param {Object} arg.param (Optional)Parameters passed to service function. If not specified, it is default to {}
+             * @param {Object} arg.data Data passed to service function. For GET call, 'data' should not be provided; For non-GET call, 'data' is mandatory, even with no data to pass (use {}, in this case)
+             * @param {Object} arg.result (Optional)If result is truthy, it is used as result to resolve. No service call will be made; otherwise service call will be made. This is designed to be used with cached result
+             * @param {Function} arg.onSuccess (Optional)Callback function when service call response is success. This function returns non-null object or value to indicate valid data. If no value is return, it is rejected as error. If not provided, the response from service function call is used to resolve
+             * @param {Function} arg.onError (Optional)Callback function when service call response has error. If not provided, error is handle by default
+             * @param {Function} arg.onInvalid (Optional)Callback function to create invalidate result to be resolved. If not provide, default result is used
+             *
+             * @description
+             * This is a wrap function to call a service function, which is typically defined as a service using $resource to make REST call. It returns a promise
+             */
             , serviceCall: function (arg) {
                 var d = $q.defer();
                 var onSuccess = function (successData) {
+                    var rc = successData;
                     if (arg.onSuccess) {
-                        var rc = arg.onSuccess(successData);
+                        rc = arg.onSuccess(successData);
                         if (undefined == rc) {
                             if (arg.onInvalid) {
                                 d.reject(arg.onInvalid(successData));
@@ -161,6 +279,7 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                     } else {
                         d.resolve(successData);
                     }
+                    return rc;
                 };
                 var onError = function (errorData) {
                     var rc = errorData;
@@ -168,6 +287,7 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                         rc = arg.onError(errorData);
                     }
                     d.reject(rc);
+                    return rc;
                 };
 
                 if (arg.result) {

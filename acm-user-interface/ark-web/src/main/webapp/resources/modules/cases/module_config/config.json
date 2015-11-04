@@ -200,6 +200,13 @@
       "editable": false
     },
     {
+      "id": "actions",
+      "title": "Actions",
+      "enabled": false,
+      "type": "empty",
+      "editable": false
+    },
+    {
       "id": "details",
       "title": "Details",
       "enabled": true,
