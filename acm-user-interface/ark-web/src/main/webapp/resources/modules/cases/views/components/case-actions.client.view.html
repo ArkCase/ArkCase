@@ -1,0 +1,36 @@
+<div ng-controller="Cases.ActionsController">
+    <div class="col-xs-4">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox"> {{'cases.comp.actions.restrict' | translate}}
+            </label>
+        </div>
+    </div>
+
+    <div class="pull-right">
+        <div class="btn-group">
+            <button class="btn btn-sm btn-default" ng-click="loadNewCaseFrevvoForm()"><i
+                    class="fa fa-edit"></i> {{'cases.comp.actions.new.button' | translate}}
+            </button>
+            <button class="btn btn-sm btn-default"><i class="fa fa-edit"></i> {{'cases.comp.actions.edit.button' |
+                translate}}
+            </button>
+            <button class="btn btn-sm btn-default" ng-click="loadChangeCaseStatusFrevvoForm(caseData)"><i
+                    class="fa fa-edit"></i> {{'cases.comp.actions.status.button' | translate}}
+            </button>
+            <button class="btn btn-sm btn-default"><i class="fa fa-reply"></i>
+                {{'cases.comp.actions.reinvestigate.button' | translate}}
+            </button>
+            <button class="btn btn-sm btn-default"><i class="fa fa-bullhorn"></i>
+                {{'cases.comp.actions.subscribe.button'
+                | translate}}
+            </button>
+            <button class="btn btn-sm btn-default"><i class="fa fa-random"></i> {{'cases.comp.actions.merge.button' |
+                translate}}
+            </button>
+            <button class="btn btn-sm btn-default"><i class="fa fa-code-fork"></i> {{'cases.comp.actions.split.button' |
+                translate}}
+            </button>
+        </div>
+    </div>
+</div>
