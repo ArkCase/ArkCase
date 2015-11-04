@@ -12,8 +12,8 @@
 angular.module('services').factory('SessionService', ['$injector',
     function ($injector) {
         var SESSION_TIMEOUT_COOKIE = 'ARKCASE_SESSION';
-        var SESSION_CHECK_PERIOD = 20000;
-        var SESSION_TIMEOUT = 600000;
+        var SESSION_CHECK_PERIOD = 30000;
+        var SESSION_TIMEOUT = 3600000;
 
         // Dependencies
         var $cookies = null;
