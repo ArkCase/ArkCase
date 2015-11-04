@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name UtilService
+ * @name services.service:UtilService
  *
  * @description
  *
@@ -39,7 +39,7 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
             /**
              * @ngdoc method
              * @name goodValue
-             * @methodOf UtilService
+             * @methodOf services.service:UtilService
              *
              * @param {Object} val An object, including value
              * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to ""
@@ -60,7 +60,7 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
             /**
              * @ngdoc method
              * @name goodMapValue
-             * @methodOf UtilService
+             * @methodOf services.service:UtilService
              *
              * @param {Object} map An object
              * @param {String} key A key. Use '.' to for parent-child linked key, and '[i]' for array item 'i'
@@ -169,7 +169,7 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
             /**
              * @ngdoc method
              * @name isEmpty
-             * @methodOf UtilService
+             * @methodOf services.service:UtilService
              *
              * @param {Object} val An object, including value
              *
@@ -192,7 +192,7 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
             /**
              * @ngdoc method
              * @name isArray
-             * @methodOf UtilService
+             * @methodOf services.service:UtilService
              *
              * @param {Object} arr An object, including value
              *
@@ -211,7 +211,7 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
             /**
              * @ngdoc method
              * @name isArrayEmpty
-             * @methodOf UtilService
+             * @methodOf services.service:UtilService
              *
              * @param {Object} arr An object, including value
              *
@@ -228,7 +228,7 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
             /**
              * @ngdoc method
              * @name compare
-             * @methodOf UtilService
+             * @methodOf services.service:UtilService
              *
              * @param {Object} left An object, including value
              * @param {Object} right An object, including value
@@ -247,7 +247,7 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
             /**
              * @ngdoc method
              * @name serviceCall
-             * @methodOf UtilService
+             * @methodOf services.service:UtilService
              *
              * @param {Object} arg Argument
              * @param {Function} arg.service Function to be called. It is usually defined in service using $resource,
