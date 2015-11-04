@@ -22,11 +22,12 @@
             <div class="input-group">
                 <input class="form-control input-md" ng-keydown="keyDown($event)" ng-model="searchQuery" placeholder="{{searchPlaceholder}}">
                 <span class="input-group-btn">
-                    <button class="btn btn-sm btn-primary" type="button" ng-click="queryExistingItems()">{{searchBtn}}</button>
+                    <button class="btn btn-md btn-primary" type="button" ng-click="queryExistingItems()">{{searchBtn}}</button>
                 </span>
             </div>
         </div>
-        <div class="well-sm panel panel-success panel-grid">
+        <div class="well-sm">
+        <div class="panel panel-success panel-grid">
             <div class="panel-heading">
                 <div class="panel-title">Results</div>
             </div>
@@ -38,6 +39,7 @@
                  ui-grid-auto-resize
                  class="grid">
             </div>
+        </div>
         </div>
     </div>
 </div>
