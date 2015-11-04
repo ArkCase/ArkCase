@@ -24,7 +24,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 
 
         // Add HTTP error interceptor
-        function httpInterceptor($q, MessageService, SessionService) {
+        function httpInterceptor($q, MessageService) {
             return {
                 responseError: responseError
             };
