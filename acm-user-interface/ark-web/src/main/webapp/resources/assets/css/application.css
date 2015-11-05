@@ -759,6 +759,11 @@ a.editable.editable-click.editable-hide {
     margin: 0px 0px 0px 2px !important;
 }
 
+.case-snowbound-iframe {
+    width: 100%;
+    height: 700px;
+}
+
 .case-frevvo-iframe {
     position: absolute;
     top: 0;
