@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+
             http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
     <bean id="dacServicePluginProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -28,15 +27,18 @@
         <property name="pluginName" value="Data Access Control Plugin"/>
     </bean>
 
-    <bean id="acmAssignmentBusinessRule" class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule">
+    <bean id="acmAssignmentBusinessRule"
+          class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule">
         <property name="ruleSpreadsheetFilename" value="drools-assignment-rules.xlsx"/>
     </bean>
 
-    <bean id="acmDataAccessControlBusinessRule" class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule">
+    <bean id="acmDataAccessControlBusinessRule"
+          class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule">
         <property name="ruleSpreadsheetFilename" value="drools-access-control-rules.xlsx"/>
     </bean>
 
-    <bean id="dataAccessPrivilegeListener" class="com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener">
+    <bean id="dataAccessPrivilegeListener"
+          class="com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener">
         <property name="assignmentBusinessRule" ref="acmAssignmentBusinessRule"/>
         <property name="accessControlBusinessRule" ref="acmDataAccessControlBusinessRule"/>
     </bean>
@@ -51,9 +53,11 @@
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="searchResults" ref="searchResults"/>
         <property name="participantDao" ref="acmParticipantDao"/>
+        <property name="accessControlService" ref="accessControlService"/>
     </bean>
 
-    <bean id="acmDataAccessBatchUpdater" class="com.armedia.acm.services.dataaccess.service.impl.AcmDataAccessBatchUpdater">
+    <bean id="acmDataAccessBatchUpdater"
+          class="com.armedia.acm.services.dataaccess.service.impl.AcmDataAccessBatchUpdater">
         <property name="dataAccessPrivilegeListener" ref="dataAccessPrivilegeListener"/>
     </bean>
 
@@ -72,10 +76,20 @@
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="batchSize" value="${dac.batchUpdateBatchSize}"/>
         <property name="batchUpdateBasedOnLastModifiedEnabled" value="${dac.batchUpdateBasedOnLastModifiedEnabled}"/>
-        <property name="lastBatchUpdatePropertyFileLocation" value="${user.home}/.acm/dataAccessPolicyLastBatchUpdate.properties"/>
+        <property name="lastBatchUpdatePropertyFileLocation"
+                  value="${user.home}/.acm/dataAccessPolicyLastBatchUpdate.properties"/>
         <property name="propertyFileManager">
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>
+    </bean>
+
+    <bean id="aclConfigurationFile" class="java.io.File">
+        <constructor-arg value="${user.home}/.acm/accessControlList.json"/>
+    </bean>
+
+    <bean id="accessControlService" class="com.armedia.acm.services.dataaccess.service.impl.AccessControlServiceImpl"
+          init-method="postConstruct">
+        <property name="configurationFile" ref="aclConfigurationFile"/>
     </bean>
 
 </beans>
