@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus', '$state', 'ResultService', 'SearchService',
-    function ($scope, Authentication, Menus, $state, ResultService, SearchService) {
+angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus', '$state',
+    function ($scope, Authentication, Menus, $state) {
         $scope.$emit('req-component-config', 'header');
         $scope.authentication = Authentication;
         $scope.isCollapsed = false;
@@ -38,13 +38,13 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
             }
         };
         function callSearchService() {
-            SearchService.queryFacetedSearch({
+            /*SearchService.queryFacetedSearch({
                 input: $scope.inputQuery + '*',
                 start: 0,
                 n: 10},
             function (data) {
                 ResultService.passData(data, $scope.inputQuery + '*');
-            });
+            });*/
         }
     }
 ]);

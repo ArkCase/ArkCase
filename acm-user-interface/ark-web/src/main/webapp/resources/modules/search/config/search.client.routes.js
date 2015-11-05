@@ -12,10 +12,6 @@ angular.module('search').config(['$stateProvider',
 					return $translate.refresh();
 				}]
 			}
-		})
-		.state('search.results', {
-			url: '/results',
-			templateUrl: 'modules/search/views/components/search-results.client.view.html',
-		})
+		});
 	}
 ]);
