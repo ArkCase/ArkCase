@@ -6,10 +6,6 @@ angular.module('audit').controller('Audit.SelectionController', ['$scope',
         $scope.$emit('req-component-config', 'auditselection');
         $scope.config = null;
 
-       /* $scope.$watch('selectId', function(){
-            $scope.$emit('send-type-id', $scope.auditDropdown, $scope.selectId);
-        });
-*/
         $scope.$watchGroup(['selectId','auditDropdown'], function(){
             $scope.$emit('send-type-id', $scope.auditDropdown, $scope.selectId);
         });

@@ -7,13 +7,13 @@
             "menuId": "leftnav",
             "menuItemURL": "audit",
             "menuItemTitle": "Audit",
-            "iconClass": "glyphicon glyphicon-asterisk",
+            "iconClass": "fa fa-bolt",
             "position": 100
         }
         
     ],
     "dateFormat": "MM-DD-YYYY",
-    "pentahoFormatDate": "MM/DD/YYYY",
+    "pentahoDateFormat": "MM/DD/YYYY",
     "components": [
         {
             "id": "auditselection",
