@@ -9,8 +9,8 @@
  *
  * The Authentication service retrieves user information from server
  */
-angular.module('services').factory('Authentication', ['$resource', 'ValidationService',
-    function ($resource, Validator) {
+angular.module('services').factory('Authentication', ['$resource',
+    function ($resource) {
         return $resource('proxy/arkcase/api/v1/users/info', {}, {
             /**
              * @ngdoc method
@@ -24,16 +24,8 @@ angular.module('services').factory('Authentication', ['$resource', 'ValidationSe
              */
             queryUserInfo: {
                 method: 'GET',
-                cache: true,
                 url: 'proxy/arkcase/api/v1/users/info',
-                isArray: false,
-                transformResponse: function (data, headers) {
-                    var userInfo = {};
-                    if (Validator.validateUserInfo(JSON.parse(data))) {
-                        userInfo = JSON.parse(data);
-                    }
-                    return userInfo;
-                }
+                cache: true
             }
         });
     }

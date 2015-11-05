@@ -1,43 +1,16 @@
 'use strict';
 
-angular.module('cases').controller('Cases.TasksController', ['$scope', '$stateParams', '$q', 'UtilService', 'ValidationService', 'LookupService', 'CasesService',
-    function ($scope, $stateParams, $q, Util, Validator, LookupService, CasesService) {
+angular.module('cases').controller('Cases.TasksController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
+    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, LookupService, CasesService) {
 		$scope.$emit('req-component-config', 'tasks');
+        $scope.$on('component-config', function (e, componentId, config) {
+            if ("tasks" == componentId) {
+                Helper.Grid.setColumnDefs($scope, config);
+                Helper.Grid.setBasicOptions($scope, config);
+                Helper.Grid.setExternalPaging($scope, config, $scope.retrieveGridData);
+                Helper.Grid.setUserNameFilter($scope, promiseUsers);
 
-        var promiseUsers = Util.AcmGrid.getUsers($scope);
-
-        var promiseMyTasks = Util.serviceCall({
-            service: CasesService.queryMyTasks
-            , param: {user: "ann-acm"}
-            , onSuccess: function (data) {
-                var arr = Util.goodArray(data);
-                $scope.myTasks = _.map(data, _.partialRight(_.pick, "taskId", "adhocTask", "completed", "status", "availableOutcomes"));
-                //
-                //Above lodash functions equivalent to the following:
-                //
-                //$scope.myTasks = [];
-                //for (var i = 0; i < arr.length; i++) {
-                //    var task = {};
-                //    task.taskId = Util.goodValue(arr[i].taskId);
-                //    task.adhocTask = Util.goodValue(arr[i].adhocTask);
-                //    task.completed = Util.goodValue(arr[i].completed);
-                //    task.status = Util.goodValue(arr[i].status);
-                //    task.availableOutcomes = Util.goodArray(arr[i].availableOutcomes);
-                //    $scope.myTasks.push(task);
-                //}
-                return $scope.myTasks;
-            }
-        });
-
-
-        $scope.$on('component-config', function applyConfig(e, componentId, config) {
-            if (componentId == 'tasks') {
-                Util.AcmGrid.setColumnDefs($scope, config);
-                Util.AcmGrid.setBasicOptions($scope, config);
-                Util.AcmGrid.setExternalPaging($scope, config, $scope.retrieveGridData);
-                Util.AcmGrid.setUserNameFilter($scope, promiseUsers);
-
-                promiseMyTasks.then(function (data) {
+                promiseMyTasks.promise.then(function (data) {
                     for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                         if ("taskId" == $scope.config.columnDefs[i].name) {
                             $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.object_id_s}}</a>";
@@ -56,9 +29,57 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
         });
 
 
+        var promiseUsers = Helper.Grid.getUsers($scope);
+
+        var promiseMyTasks = $q.defer();
+        Helper.getUserInfo().then(function (data) {
+            var userId = data.userId;
+
+            var cacheMyTasks = new Store.CacheFifo(Helper.CacheNames.MY_TASKS);
+            var cacheKey = $scope.currentId;
+            var myTasks = cacheMyTasks.get(cacheKey);
+            Util.serviceCall({
+                service: CasesService.queryMyTasks
+                , param: {user: userId}
+                , result: myTasks
+                , onSuccess: function (data) {
+                    if (Validator.validateMyTasks(data)) {
+                        myTasks = _.map(data, _.partialRight(_.pick, "taskId", "adhocTask", "completed", "status", "availableOutcomes"));
+                        //
+                        //Above lodash functions equivalent to the following:
+                        //
+                        //$scope.myTasks = [];
+                        //for (var i = 0; i < arr.length; i++) {
+                        //    var task = {};
+                        //    task.taskId = Util.goodValue(arr[i].taskId);
+                        //    task.adhocTask = Util.goodValue(arr[i].adhocTask);
+                        //    task.completed = Util.goodValue(arr[i].completed);
+                        //    task.status = Util.goodValue(arr[i].status);
+                        //    task.availableOutcomes = Util.goodArray(arr[i].availableOutcomes);
+                        //    $scope.myTasks.push(task);
+                        //}
+                        cacheMyTasks.put(cacheKey, myTasks);
+                        return myTasks;
+                    }
+                }
+            }).then(
+                function (myTasks) {
+                    $scope.myTasks = myTasks;
+                    promiseMyTasks.resolve(myTasks);
+                    return myTasks;
+                }
+                , function (error) {
+                    promiseMyTasks.reject(error);
+                    return error;
+                }
+            );
+
+        });
+
+
         $scope.currentId = $stateParams.id;
         $scope.retrieveGridData = function () {
-            CasesService.queryTasks(Util.AcmGrid.withPagingParams($scope, {
+            CasesService.queryTasks(Helper.Grid.withPagingParams($scope, {
                 id: $scope.currentId
             }), function (data) {
                 if (Validator.validateSolrData(data)) {
@@ -66,7 +87,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                         var tasks = data.response.docs;
                         $scope.gridOptions.data = tasks;
                         $scope.gridOptions.totalItems = data.response.numFound;
-                        Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
+                        Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
 
                         for (var i = 0; i < tasks.length; i++) {
                             var task = tasks[i];
@@ -104,18 +125,34 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
         };
 
         var completeTask = function (rowEntity) {
-            return CasesService.completeTask({taskId: rowEntity.id}, {}
-                , function (successData) {
+            return Util.serviceCall({
+                service: CasesService.completeTask
+                , param: {taskId: rowEntity.id}
+                , data: {}
+            }).then(
+                function (successData) {
                     rowEntity.acm$_taskActionDone = true;
                     rowEntity.status_s = "COMPLETE";
-                }
-                , function (errorData) {
+                    return successData;
                 }
             );
+
+            //CasesService.completeTask({taskId: rowEntity.id}, {}
+            //    , function (successData) {
+            //        rowEntity.acm$_taskActionDone = true;
+            //        rowEntity.status_s = "COMPLETE";
+            //    }
+            //    , function (errorData) {
+            //    }
+            //);
         };
         var deleteTask = function (rowEntity) {
-            return CasesService.deleteTask({taskId: rowEntity.id}, {}
-                , function (successData) {
+            return Util.serviceCall({
+                service: CasesService.deleteTask
+                , param: {taskId: rowEntity.id}
+                , data: {}
+            }).then(
+                function (successData) {
                     rowEntity.acm$_taskActionDone = true;
                     var tasks = Util.goodArray($scope.gridOptions.data);
                     for (var i = 0; i < tasks.length; i++) {
@@ -124,21 +161,44 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                             break;
                         }
                     }
-                }
-                , function (errorData) {
+                    return successData;
                 }
             );
+            //CasesService.deleteTask({taskId: rowEntity.id}, {}
+            //    , function (successData) {
+            //        rowEntity.acm$_taskActionDone = true;
+            //        var tasks = Util.goodArray($scope.gridOptions.data);
+            //        for (var i = 0; i < tasks.length; i++) {
+            //            if (tasks[i].id == rowEntity.id) {
+            //                tasks.splice(i, 1);
+            //                break;
+            //            }
+            //        }
+            //    }
+            //    , function (errorData) {
+            //    }
+            //);
         };
         var completeTaskWithOutcome = function (rowEntity) {
             var task = Util.omitNg(rowEntity);
-            return CasesService.completeTaskWithOutcome({}, task
-                , function (successData) {
+            return Util.serviceCall({
+                service: CasesService.completeTaskWithOutcome
+                , data: task
+            }).then(
+                function (successData) {
                     rowEntity.acm$_taskActionDone = true;
                     rowEntity.status_s = "COMPLETE";
-                }
-                , function (errorData) {
+                    return successData;
                 }
             );
+            //CasesService.completeTaskWithOutcome({}, task
+            //    , function (successData) {
+            //        rowEntity.acm$_taskActionDone = true;
+            //        rowEntity.status_s = "COMPLETE";
+            //    }
+            //    , function (errorData) {
+            //    }
+            //);
         };
         $scope.action = function (rowEntity) {
             console.log("act, rowEntity.id=" + rowEntity.id + ", action=" + rowEntity.acm$_taskOutcome.id);
@@ -152,7 +212,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
         }
         $scope.showUrl = function (event, rowEntity) {
             event.preventDefault();
-            Util.AcmGrid.showObject($scope, Util.Constant.OBJTYPE_TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
+            Helper.Grid.showObject($scope, Util.Constant.OBJTYPE_TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
         };
 
 	}
