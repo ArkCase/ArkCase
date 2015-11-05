@@ -26,6 +26,22 @@ angular.module('dashboard.my-cases', ['adf.provider'])
                 sortDir: 'desc'
             };
 
+            /**
+             * @ngdoc method
+             * @name openViewer
+             * @methodOf dashboard.my-cases:Dashboard.MyCasesController
+             *
+             * @param {Object} data from the current row of the ui-grid (including the file id)
+             *
+             * @description
+             * This method opens the selected file in the snowbound viewer
+             */
+            $scope.openViewer = function (rowData) {
+                if (rowData && rowData.entity.object_id_s) {
+                    window.open(window.location.href.split('!')[0] + '!/cases/' + rowData.entity.object_id_s + '/main');
+                }
+            };
+
             $scope.gridOptions = {
                 enableColumnResizing: true,
                 enableRowSelection: true,
