@@ -1,16 +1,16 @@
 package com.armedia.acm.data;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by armdev on 10/21/14.
  */
 public class AcmObjectChangelist
 {
-    private List<Object> addedObjects = new ArrayList<>();
-    private List<Object> updatedObjects = new ArrayList<>();
-    private List<Object> deletedObjects = new ArrayList<>();
+    private List<Object> addedObjects = new CopyOnWriteArrayList<>();
+    private List<Object> updatedObjects = new CopyOnWriteArrayList<>();
+    private List<Object> deletedObjects = new CopyOnWriteArrayList<>();
 
     public List<Object> getAddedObjects()
     {

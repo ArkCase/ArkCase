@@ -13,8 +13,8 @@
 // *
 // * The Cases module actions controller
 // */
-angular.module('cases').controller('Cases.ActionsController', ['$scope', 'ConfigService', 'CasesService', 'UtilService', 'ValidationService',
-    function ($scope, ConfigService, CasesService, Util, Validator) {
+angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state', 'ConfigService', 'CasesService', 'UtilService', 'ValidationService',
+    function ($scope, $state, ConfigService, CasesService, Util, Validator) {
         $scope.$emit('req-component-config', 'actions');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('actions' == componentId) {
