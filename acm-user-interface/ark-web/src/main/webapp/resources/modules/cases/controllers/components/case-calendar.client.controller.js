@@ -2,14 +2,11 @@
 
 angular.module('cases').controller('Cases.CalendarController', ['$scope',
 	function($scope) {
-		$scope.$on('component-config', applyConfig);
 		$scope.$emit('req-component-config', 'calendar');
-		$scope.config = null;
-
-		function applyConfig(e, componentId, config) {
+        $scope.$on('component-config', function (e, componentId, config) {
 			if (componentId == 'calendar') {
 				$scope.config = config;
 			}
-		}
+        });
 	}
 ]);

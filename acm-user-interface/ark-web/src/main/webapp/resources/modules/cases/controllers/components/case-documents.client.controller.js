@@ -1,47 +1,64 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ValidationService', 'StoreService', 'LookupService',
-    function ($scope, $stateParams, $modal, Util, Validator, Store, LookupService) {
+angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ValidationService', 'StoreService', 'HelperService', 'LookupService',
+    function ($scope, $stateParams, $modal, Util, Validator, Store, Helper, LookupService) {
 		$scope.$emit('req-component-config', 'documents');
-
-        $scope.config = null;
-        $scope.$on('component-config', applyConfig);
-		function applyConfig(e, componentId, config) {
-			if (componentId == 'documents') {
-				$scope.config = config;
-			}
-		}
-
-        var promiseFileTypes = Util.serviceCall({
-            service: LookupService.getFileTypes
-            , onSuccess: function (data) {
-                if (Validator.validateFileTypes(data)) {
-                    $scope.fileTypes = $scope.fileTypes || [];
-                    $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(data));
-                    return $scope.fileTypes;
-                }
+        $scope.$on('component-config', function (e, componentId, config) {
+            if ('documents' == componentId) {
+                $scope.config = config;
             }
         });
+
+        var cacheFileTypes = new Store.SessionData(Helper.SessionCacheNames.FILE_TYPES);
+        var fileTypes = cacheFileTypes.get();
+        var promiseFileTypes = Util.serviceCall({
+            service: LookupService.getFileTypes
+            , result: fileTypes
+            , onSuccess: function (data) {
+                if (Validator.validateFileTypes(data)) {
+                    fileTypes = data;
+                    cacheFileTypes.set(fileTypes);
+                    return fileTypes;
+                }
+            }
+        }).then(
+            function (fileTypes) {
+                $scope.fileTypes = $scope.fileTypes || [];
+                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
+                return fileTypes;
+            }
+        );
+
+        var cacheFormTypes = new Store.SessionData(Helper.SessionCacheNames.FORM_TYPES);
+        var formTypes = cacheFormTypes.get();
         var promiseFormTypes = Util.serviceCall({
             service: LookupService.getPlainforms
             , param: {objType: Util.Constant.OBJTYPE_CASE_FILE}
+            , result: formTypes
             , onSuccess: function (data) {
                 if (Validator.validatePlainForms(data)) {
                     var plainForms = data;
-                    $scope.fileTypes = $scope.fileTypes || [];
-                    for (var i = 0; i < plainForms.length; i++) {
-                        var fileType = {};
-                        fileType.type = plainForms[i].key;
-                        fileType.label = Util.goodValue(plainForms[i].name);
-                        fileType.url = Util.goodValue(plainForms[i].url);
-                        fileType.urlParameters = Util.goodArray(plainForms[i].urlParameters);
-                        fileType.form = true;
-                        $scope.fileTypes.unshift(fileType);
-                    }
-                    return $scope.fileTypes;
+                    formTypes = [];
+                    _.each(plainForms, function (plainForm) {
+                        var formType = {};
+                        formType.type = plainForm.key;
+                        formType.label = Util.goodValue(plainForm.name);
+                        formType.url = Util.goodValue(plainForm.url);
+                        formType.urlParameters = Util.goodArray(plainForm.urlParameters);
+                        formType.form = true;
+                        formTypes.unshift(formType);
+                    });
+                    cacheFormTypes.set(formTypes);
+                    return formTypes;
                 }
             }
-        });
+        }).then(
+            function (formTypes) {
+                $scope.fileTypes = $scope.fileTypes || [];
+                $scope.fileTypes = formTypes.concat(Util.goodArray($scope.fileTypes));
+                return formTypes;
+            }
+        );
 
         $scope.treeArgs = {};
 
