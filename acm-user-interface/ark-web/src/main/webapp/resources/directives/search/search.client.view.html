@@ -5,7 +5,7 @@
         </div>
         <div class="scroll-body">
             <ul class="list-unstyled">
-                <li ng-repeat="facet in facets" ng-if="facet.fields.length && facet.name != 'object_type_s'"><strong>{{facet.name}}</strong>
+                <li ng-repeat="facet in facets" ng-if="facet.fields.length && facet.name != filterName"><strong>{{facet.name}}</strong>
                     <ul class="list-unstyled">
                         <li ng-repeat="field in facet.fields">
                             <div class="checkbox" ng-if="field.count > 0">
@@ -20,7 +20,7 @@
     <div class="content-body">
         <div class="module-header">
             <div class="input-group">
-                <input class="form-control input-md" ng-model="searchQuery" placeholder="{{searchPlaceholder}}">
+                <input class="form-control input-md" ng-keydown="keyDown($event)" ng-model="searchQuery" placeholder="{{searchPlaceholder}}">
                 <span class="input-group-btn">
                     <button class="btn btn-md btn-primary" type="button" ng-click="queryExistingItems()">{{searchBtn}}</button>
                 </span>
