@@ -2,10 +2,10 @@
 
 angular.module('core').controller('PageController', ['$scope',
     function ($scope) {
-        $scope.isCollapsed = false;
+        $scope.isLeftMenuCollapsed = false;
 
-        $scope.$on('isCollapsed', function(e,isCollapsed){
-            $scope.isCollapsed = isCollapsed;
+        $scope.$on('isLeftMenuCollapsed', function(e,isLeftMenuCollapsed){
+            $scope.isLeftMenuCollapsed = isLeftMenuCollapsed;
         })
     }
 ]);
