@@ -2,6 +2,7 @@
     "id": "subscriptions",
     "title": "Subscriptions",
     "menus": [
+
         {
             "menuId": "leftnav",
             "menuItemURL": "subscriptions",
@@ -9,54 +10,37 @@
             "iconClass": "fa fa-bullhorn",
             "position": 120
         }
+        
     ],
     "components": [
         {
-            "id": "facets",
-            "title": "Facets",
-            "enabled": true,
-            "SubscriptionsParams": {
-                "start": 0,
-                "n": 10
-            }
-
-        },
-        {
-            "id": "results",
-            "title": "Results",
-            "enabled": true,
+            "id": "subscriptionsFacetedSearch",
+            "title": "Subscriptions Faceted Search",
+            "enabled": "true",
             "type": "grid",
-            "enableFiltering": true,
+            "enableFiltering": false,
             "columnDefs": [
                 {
-                    "name": "name",
-                    "displayName": "subscriptions.comp.results.table.columns.name",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "object_type_s",
-                    "displayName": "subscriptions.comp.results.table.columns.type",
-                    "headerCellFilter": "translate"
-                },
-                {
                     "name": "title_parseable",
-                    "displayName": "subscriptions.comp.results.table.columns.title",
+                    "displayName": "subscriptions.comp.grid.columns.event",
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "parent",
-                    "displayName": "subscriptions.comp.results.table.columns.parent",
+                    "name": "parent_name_t",
+                    "displayName": "subscriptions.comp.grid.columns.parentName",
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "assignee_full_name_lcs",
-                    "displayName": "subscriptions.comp.results.table.columns.assignee",
+                    "name": "parent_type_s",
+                    "displayName": "subscriptions.comp.grid.columns.parentType",
                     "headerCellFilter": "translate"
                 },
                 {
                     "name": "modified_date_tdt",
-                    "displayName": "subscriptions.comp.results.table.columns.modified",
-                    "headerCellFilter": "translate"
+                    "type": "date",
+                    "displayName": "subscriptions.comp.grid.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "date : 'MM/dd/yyyy HH:MM'"
                 }
             ],
             "paginationPageSizes": [
@@ -66,20 +50,10 @@
                 50
             ],
             "paginationPageSize": 10,
-            "SubscriptionsParams": {
-                "start": 0,
-                "n": 10
-            }
-
-        },
-        {
-            "id": "input",
-            "title": "Input",
-            "enabled": true,
-            "subscriptionsParams": {
-                "start": 0,
-                "n": 10
-            }
+            "start": 0,
+            "filter": "\"Object Type\": SUBSCRIPTION_EVENT",
+            "filterName" : "Object Type"
         }
+
     ]
 }
