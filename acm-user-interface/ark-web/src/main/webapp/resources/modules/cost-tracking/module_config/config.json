@@ -1,0 +1,17 @@
+{
+    "id": "cost-tracking",
+    "title": "Cost tracking",
+    "menus": [
+        
+        {
+            "menuId": "leftnav",
+            "menuItemURL": "cost-tracking",
+            "menuItemTitle": "Cost tracking",
+            "iconClass": "glyphicon glyphicon-asterisk",
+            "position": 100
+        }
+        
+    ],
+    "components": [
+   ]
+}
