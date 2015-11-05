@@ -1,0 +1,32 @@
+{
+  "accessControlEntryList": [
+    {
+      "actionName": "actionName1",
+      "objectType": "objectType1",
+      "objectSubType": "objectSubType1",
+      "objectProperties": {
+        "key1": "value1",
+        "key2": "value2"
+      },
+      "userRoles": [
+        "ADMIN",
+        "GUEST",
+        "DBA"
+      ]
+    },
+    {
+      "actionName": "actionName2",
+      "objectType": "objectType2",
+      "objectSubType": "objectSubType2",
+      "objectProperties": {
+        "key1": "value1",
+        "key2": "value2"
+      },
+      "userRoles": [
+        "ADMIN",
+        "GUEST",
+        "DBA"
+      ]
+    }
+  ]
+}

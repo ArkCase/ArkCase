@@ -1,7 +1,7 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
-import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.services.dataaccess.model.DataAccessControlConstants;
+import com.armedia.acm.services.dataaccess.service.AccessControlService;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -26,13 +26,12 @@ import java.io.Serializable;
  * <p/>
  * For other access types, we run queries against the acm_participant_privilege table.  A user has access if:
  * <ul>
- *     <li>The user is specifically in the table and has access</li>
- *     <li>The default user has access</li>
- *     <li>The user is in a group that has access</li>
+ * <li>The user is specifically in the table and has access</li>
+ * <li>The default user has access</li>
+ * <li>The user is in a group that has access</li>
  * </ul>
  * <p/>
  * The first two conditions are checked in a single query.  The group access is checked in a separate query.
- *
  */
 public class ArkPermissionEvaluator implements PermissionEvaluator
 {
@@ -41,54 +40,66 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;
     private AcmParticipantDao participantDao;
+    private AccessControlService accessControlService;
 
     @Override
-    public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission)
+    public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission)
     {
-        if ( targetDomainObject == null )
+        if (targetId == null)
         {
-            log.error("Null targetDomainObject, refusing access!");
+            log.error("Null targetId, refusing access!");
             return false;
         }
 
-        if ( log.isTraceEnabled() )
+        if (!Long.class.isAssignableFrom(targetId.getClass()))
         {
-            log.trace("Checking " + permission + " for " + authentication.getName() + " on object of type '" +
-                    targetDomainObject.getClass().getName() + "'");
+            log.error("The id type '" + targetId.getClass().getName() + "' is not a Long - denying access");
+            return false;
         }
 
-        if ( ! AcmObject.class.isAssignableFrom(targetDomainObject.getClass()) )
-        {
-            log.info("The type '" + targetDomainObject.getClass().getName() + "' is not an AcmObject; granting access.");
-            return true;
-        }
-
-        if ( permission == null || !(permission instanceof String) )
+        if (permission == null || !(permission instanceof String))
         {
             log.error("Permission must be a non-null string... returning false");
             return false;
         }
 
-        AcmObject domainObject = (AcmObject) targetDomainObject;
-        Long objectId = domainObject.getId();
-        String objectType = domainObject.getObjectType();
+        Long id = (Long) targetId;
 
-        boolean hasRead = checkForReadAccess(authentication, objectId, objectType);
+        if (log.isTraceEnabled())
+        {
+            log.trace("Checking " + permission + " for " + authentication.getName() + " on object of type '" +
+                    targetType + "'");
+        }
 
-        return evaluateAccess(authentication, objectId, objectType, (String) permission, hasRead);
+        boolean hasRead = checkForReadAccess(authentication, id, targetType);
+
+        // break here and return true if any of ACL rules match (see SBI-956)
+        if (accessControlService.isAccessGranted(authentication, id, targetType, permission))
+        {
+            return true;
+        }
+
+        return evaluateAccess(authentication, id, targetType, (String) permission, hasRead);
+    }
+
+    @Override
+    public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission)
+    {
+        // we do not support permission check on an object instance since the client (sender) can fake it
+        throw new UnsupportedOperationException("Checking permissions on an object reference is not supported");
     }
 
     private boolean evaluateAccess(Authentication authentication, Long objectId, String objectType, String permission,
                                    boolean hasReadAccess)
     {
-        if ( !hasReadAccess )
+        if (!hasReadAccess)
         {
             // no access since they can't read it
             log.trace("No read access, returning false");
             return hasReadAccess;
         }
 
-        if (DataAccessControlConstants.ACCESS_LEVEL_READ.equals(permission) )
+        if (DataAccessControlConstants.ACCESS_LEVEL_READ.equals(permission))
         {
             // they want read, and we already know whether they can read, so we're done
             log.trace("Read access requested - returning read access level");
@@ -98,7 +109,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
         boolean hasAccessDirectlyOrViaDefaultUser = getParticipantDao().hasObjectAccess(
                 authentication.getName(), objectId, objectType, permission, DataAccessControlConstants.ACCESS_GRANT);
 
-        if ( hasAccessDirectlyOrViaDefaultUser )
+        if (hasAccessDirectlyOrViaDefaultUser)
         {
             // we know they can read it, we're all set.
             log.trace("Has access directly or via default user");
@@ -126,7 +137,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
             String solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
                     query, 0, 1, "id asc");
 
-            if ( log.isTraceEnabled() )
+            if (log.isTraceEnabled())
             {
                 log.trace("Response from SOLR: " + solrResponse);
             }
@@ -134,46 +145,11 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
             int numFound = getSearchResults().getNumFound(solrResponse);
 
             return numFound > 0;
-        }
-        catch (MuleException e)
+        } catch (MuleException e)
         {
             log.error("Could not check for object access - denying access");
             return false;
         }
-    }
-
-    @Override
-    public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission)
-    {
-        if ( targetId == null )
-        {
-            log.error("Null targetId, refusing access!");
-            return false;
-        }
-
-        if ( ! Long.class.isAssignableFrom(targetId.getClass()) )
-        {
-            log.error("The id type '" + targetId.getClass().getName() + "' is not a Long - denying access");
-            return false;
-        }
-
-        if ( permission == null || !(permission instanceof String) )
-        {
-            log.error("Permission must be a non-null string... returning false");
-            return false;
-        }
-
-        Long id = (Long) targetId;
-
-        if ( log.isTraceEnabled() )
-        {
-            log.trace("Checking " + permission + " for " + authentication.getName() + " on object of type '" +
-                    targetType + "'");
-        }
-
-        boolean hasRead = checkForReadAccess(authentication, id, targetType);
-
-        return evaluateAccess(authentication, id, targetType, (String) permission, hasRead);
     }
 
     public ExecuteSolrQuery getExecuteSolrQuery()
@@ -204,5 +180,15 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
     public void setParticipantDao(AcmParticipantDao participantDao)
     {
         this.participantDao = participantDao;
+    }
+
+    public AccessControlService getAccessControlService()
+    {
+        return accessControlService;
+    }
+
+    public void setAccessControlService(AccessControlService accessControlService)
+    {
+        this.accessControlService = accessControlService;
     }
 }
