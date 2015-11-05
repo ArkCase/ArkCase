@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('search').controller('SearchController', ['$scope', '$stateParams', 'ConfigService', 'SearchService',
-	function ($scope, $stateParams, ConfigService, SearchService) {
+angular.module('search').controller('SearchController', ['$scope', 'ConfigService',
+	function($scope, ConfigService) {
 		$scope.config = ConfigService.getModule({moduleId: 'search'});
 		$scope.$on('req-component-config', onConfigRequest);
 

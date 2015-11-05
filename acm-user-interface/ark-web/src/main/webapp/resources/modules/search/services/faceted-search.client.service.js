@@ -7,7 +7,7 @@ angular.module('services').factory('SearchService', ['$resource',
         return $resource('proxy/arkcase/api/latest/plugin/search', {}, {
             queryFacetedSearch: {
                 method: 'GET',
-                url: "proxy/arkcase/api/v1/plugin/search/facetedSearch?q=:input&n=:n&start=:start",
+                url: "proxy/arkcase/api/v1/plugin/search/facetedSearch?q=:query",
                 cache: true,
                 isArray: false,
                 transformResponse: function (data, headerGetter) {
@@ -39,7 +39,7 @@ angular.module('services').factory('SearchService', ['$resource',
             },
             queryFilteredSearch: {
                 method: 'GET',
-                url: "proxy/arkcase/api/v1/plugin/search/facetedSearch?q=:input&filters=fq=:filters&n=:n&start=:start",
+                url: "proxy/arkcase/api/v1/plugin/search/facetedSearch?q=:query",
                 cache: true,
                 isArray: false,
                 transformResponse: function (data, headerGetter) {

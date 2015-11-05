@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('directives').directive('search', ['SearchService',
-    function (SearchService) {
+angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService',
+    function (SearchService, SearchQueryBuilder) {
         return {
             restrict: 'E',              //match only element name
             scope: {
@@ -26,17 +26,18 @@ angular.module('directives').directive('search', ['SearchService',
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
                 scope.queryExistingItems = function (){
-                    SearchService.queryFilteredSearch({
-                            input: scope.searchQuery + "*",
-                            start: scope.start,
-                            n: scope.pageSize,
-                            filters: scope.filter
-                        },
-                        function (data) {
-                            updateFacets(data.facet_counts.facet_fields);
-                            scope.gridOptions.data = data.response.docs;
-                            scope.gridOptions.totalItems = data.response.numFound;
-                        });
+                    var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*",scope.filter,scope.pageSize,scope.start);
+                    if(query){
+                        SearchService.queryFilteredSearch({
+                                query: query
+                            },
+                            function (data) {
+                                updateFacets(data.facet_counts.facet_fields);
+                                scope.gridOptions.data = data.response.docs;
+                                scope.gridOptions.totalItems = data.response.numFound;
+                            }
+                        );
+                    }
                 };
 
                 function updateFacets(facets){
