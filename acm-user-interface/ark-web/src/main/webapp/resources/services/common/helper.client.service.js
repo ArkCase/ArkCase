@@ -14,18 +14,35 @@
 angular.module('services').factory('HelperService', ['$q', '$window', 'StoreService', 'UtilService', 'ValidationService', 'LookupService', 'Authentication',
     function ($q, $window, Store, Util, Validator, LookupService, Authentication) {
         var Helper = {
-            SessionCacheNames: {
+            ObjectTypes: {
+                CASE_FILE: "CASE_FILE"
+                , COMPLAINT: "COMPLAINT"
+                , TASK: "TASK"
+                , TIMESHEET: "TIMESHEET"
+                , COSTSHEET: "COSTSHEET"
+                , FILE: "FILE"
+            }
+            , Lookups: {
+                USER_FULL_NAMES: "userFullNames"
+                , PERSON_TYPES: "personTypes"
+                , PARTICIPANT_TYPES: "participantTypes"
+                , PARTICIPANT_NAMES: "participantNames"
+                , TASK_OUTCOMES: "taskOutcomes"
+                , CONTACT_METHODS_TYPES: "contactMethodTypes"
+                , ORGANIZATION_TYPES: "organizationTypes"
+                , ADDRESS_TYPES: "addressTypes"
+                , ALIAS_TYPES: "aliasTypes"
+                , SECURITY_TAG_TYPES: "securityTagTypes"
+            }
+            , SessionCacheNames: {
                 USER_INFO: "AcmUserInfo"
                 , USER_FULL_NAMES: "AcmUserFullNames"
                 , USERS: "AcmUsers"
                 , GROUPS: "AcmGroups"
                 , PRIORITIES: "AcmPriorities"
-                , CASE_TYPES: "AcmCaseTypes"
-                , CASES_CONFIG: "AcmCasesConfig"
                 , OBJECT_TYPES: "AcmObjectTypes"
                 , FILE_TYPES: "AcmFileTypes"
                 , FORM_TYPES: "AcmFormTypes"
-                , CASE_CORRESPONDENCE_FORMS: "AcmCaseCorrespondenceForms"
                 , PARTICIPANT_TYPES: "AcmParticipantTypes"
                 , PARTICIPANT_USERS: "AcmParticipantUsers"
                 , PARTICIPANT_GROUPS: "AcmParticipantGroups"
@@ -35,6 +52,14 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                 , ADDRESS_TYPES: "AcmAddressTypes"
                 , ALIAS_TYPES: "AcmAliasTypes"
                 , SECURITY_TAG_TYPES: "AcmSecurityTagTypes"
+
+                , CASES_CONFIG: "AcmCasesConfig"
+                , CASE_TYPES: "AcmCaseTypes"
+                , CASE_CORRESPONDENCE_FORMS: "AcmCaseCorrespondenceForms"
+
+                , COMPLAINTS_CONFIG: "AcmComplaintsConfig"
+                , COMPLAINT_TYPES: "AcmComplaintTypes"
+                , COMPLAINT_CORRESPONDENCE_FORMS: "AcmComplaintCorrespondenceForms"
 
             }
             , CacheNames: {
@@ -46,6 +71,14 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                 , CASE_NOTES: "CaseNotes"
                 , CASE_COST_SHEETS: "CaseCostSheets"
                 , CASE_TIME_SHEETS: "CaseTimeSheets"
+
+                , COMPLAINT_LIST: "ComplaintList"
+                , COMPLAINT_INFO: "ComplaintInfo"
+                , COMPLAINT_HISTORY_DATA: "ComplaintHistoryData"
+                , COMPLAINT_CORRESPONDENCE_DATA: "ComplaintCorrespondenceData"
+                , COMPLAINT_NOTES: "ComplaintNotes"
+                , COMPLAINT_COST_SHEETS: "ComplaintCostSheets"
+                , COMPLAINT_TIME_SHEETS: "ComplaintTimeSheets"
             }
 
             /**
@@ -384,7 +417,7 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                 , setUserNameFilter: function (scope, promiseUsers) {
                     $q.all([promiseUsers]).then(function (data) {
                         for (var i = 0; i < scope.config.columnDefs.length; i++) {
-                            if (Util.Constant.LOOKUP_USER_FULL_NAMES == scope.config.columnDefs[i].lookup) {
+                            if (Helper.Lookups.USER_FULL_NAMES == scope.config.columnDefs[i].lookup) {
                                 scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: grid.appScope.userFullNames:'id':'name'";
                             }
                         }
