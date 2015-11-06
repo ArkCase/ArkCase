@@ -1,0 +1,19 @@
+<div ng-controller="Complaints.ParticipantsController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">{{"complaints.comp.participants.title" | translate}}
+                <div class="pull-right">
+                    <span class=""><i class='fa fa-plus' ng-click='addNew()'></i></span>
+                    <!--<span class=""><i class='fa fa-save' ng-click='saveRow(row)'></i></span>-->
+                    <!--<span class=""><i class='fa fa-pencil' ng-click='addRow()'></i></span>-->
+                </div>
+            </div>
+
+        </div>
+        <div class="panel-body">
+            <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination ui-grid-edit
+                 adjust-table-height="gridOptions.data.length" class="grid"></div>
+        </div>
+    </div>
+
+</div>
