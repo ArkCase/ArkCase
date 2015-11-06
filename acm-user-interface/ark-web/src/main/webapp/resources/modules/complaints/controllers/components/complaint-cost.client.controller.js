@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.CostController', ['$scope', '$stateParams', '$q', '$window', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
-    function ($scope, $stateParams, $q, $window, $translate, Store, Util, Validator, Helper, LookupService, CasesService) {
+angular.module('complaints').controller('Complaints.CostController', ['$scope', '$stateParams', '$q', '$window', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'ComplaintsService',
+    function ($scope, $stateParams, $q, $window, $translate, Store, Util, Validator, Helper, LookupService, ComplaintsService) {
+        var z = 1;
+        return;
         $scope.$emit('req-component-config', 'cost');
         $scope.$on('component-config', function (e, componentId, config) {
             if (componentId == 'cost') {
@@ -19,30 +21,30 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
         });
 
 
-        $scope.$on('case-retrieved', function (e, data) {
-            if (Validator.validateCaseFile(data)) {
-                $scope.caseInfo = data;
+        $scope.$on('complaint-retrieved', function (e, data) {
+            if (Validator.validateComplaint(data)) {
+                $scope.complaintInfo = data;
 
-                var cacheCaseCost = new Store.CacheFifo(Helper.CacheNames.CASE_COST_SHEETS);
-                var cacheKey = Helper.ObjectTypes.CASE_FILE + "." + $scope.caseInfo.id;
-                var costsheets = cacheCaseCost.get(cacheKey);
+                var cacheComplaintCost = new Store.CacheFifo(Helper.CacheNames.CASE_COST_SHEETS);
+                var cacheKey = Helper.ObjectTypes.CASE_FILE + "." + $scope.complaintInfo.id;
+                var costsheets = cacheComplaintCost.get(cacheKey);
                 Util.serviceCall({
-                    service: CasesService.queryCostsheets
+                    service: ComplaintsService.queryCostsheets
                     , param: {
-                        objectType: Helper.ObjectTypes.CASE_FILE,
-                        objectId: $scope.caseInfo.id
+                        objectType: Helper.ObjectTypes.COMPLAINT,
+                        objectId: $scope.complaintInfo.id
                     }
                     , result: costsheets
                     , onSuccess: function (data) {
                         if (Validator.validateCostsheets(data)) {
                             costsheets = data;
                             for (var i = 0; i < costsheets.length; i++) {
-                                costsheets[i].acm$_formName = $translate.instant("cases.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
+                                costsheets[i].acm$_formName = $translate.instant("complaints.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
                                 costsheets[i].acm$_costs = _.reduce(Util.goodArray(costsheets[i].costs), function (total, n) {
                                     return total + Util.goodValue(n.value, 0);
                                 }, 0);
                             }
-                            cacheCaseCost.put(cacheKey, costsheets);
+                            cacheComplaintCost.put(cacheKey, costsheets);
                             return costsheets;
                         }
                     }

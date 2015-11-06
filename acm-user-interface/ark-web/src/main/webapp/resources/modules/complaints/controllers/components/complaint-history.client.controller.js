@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.HistoryController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
+angular.module('complaints').controller('Cases.HistoryController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
     function ($scope, $stateParams, $q, Store, Util, Validator, Helper, LookupService, CasesService) {
+        var z = 1;
+        return;
         $scope.$emit('req-component-config', 'history');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('history' == componentId) {
@@ -22,7 +24,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
         $scope.retrieveGridData = function () {
             if ($scope.currentId) {
                 var cacheCaseHistoryData = new Store.CacheFifo(Helper.CacheNames.CASE_HISTORY_DATA);
-                var cacheKey = Helper.ObjectTypes.CASE_FILE + "." + $scope.currentId;
+                var cacheKey = Helper.ObjectTypes.COMPLAINT + "." + $scope.currentId;
                 var historyData = cacheCaseHistoryData.get(cacheKey);
                 var promiseQueryAudit = Util.serviceCall({
                     service: CasesService.queryAudit

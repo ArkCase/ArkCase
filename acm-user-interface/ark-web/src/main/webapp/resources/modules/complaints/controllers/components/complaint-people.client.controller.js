@@ -1,8 +1,10 @@
 'use strict';
 
-angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateParams', '$q', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'CasesService', 'LookupService',
-    function ($scope, $stateParams, $q, $translate, Store, Util, Validator, Helper, CasesService, LookupService) {
-        var deferPeopleData = new Store.Variable("deferCasePeopleData");    // used to hold grid data before grid config is ready
+angular.module('complaints').controller('Complaints.PeopleController', ['$scope', '$stateParams', '$q', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'ComplaintsService', 'LookupService',
+    function ($scope, $stateParams, $q, $translate, Store, Util, Validator, Helper, ComplaintsService, LookupService) {
+        var z = 1;
+        return;
+        var deferPeopleData = new Store.Variable("deferComplaintPeopleData");    // used to hold grid data before grid config is ready
 
         var promiseConfig = Helper.requestComponentConfig($scope, "people", function (config) {
             configGridMain(config);
@@ -13,9 +15,9 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             configGridSecurityTag(config);
 
             $q.all([promisePersonTypes, promiseUsers, promiseContactMethodTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes]).then(function (data) {
-                var caseInfo = deferPeopleData.get();
-                if (caseInfo) {
-                    updateGridData(caseInfo);
+                var complaintInfo = deferPeopleData.get();
+                if (complaintInfo) {
+                    updateGridData(complaintInfo);
                     deferPeopleData.set(null);
                 }
             });
@@ -164,7 +166,6 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
         );
 
 
-
         var configGridMain = function (config) {
             gridAddEntityButtons(config.columnDefs);
             Helper.Grid.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
@@ -185,7 +186,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             });
 
             //$scope.gridOptions is defined by above setBasicOptions()
-            $scope.gridOptions.expandableRowTemplate = "modules/cases/views/components/case-people.sub.view.html";
+            $scope.gridOptions.expandableRowTemplate = "modules/complaints/views/components/complaint-people.sub.view.html";
             $scope.gridOptions.expandableRowHeight = 305;
             $scope.gridOptions.expandableRowScope = {       //from sample. what is it for?
                 subGridVariable: 'subGridScopeVariable'
@@ -369,11 +370,11 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 var columnDef = columnDefs[0];
                 columnDef.width = 116;
                 columnDef.headerCellTemplate = "<span></span>";
-                columnDef.cellTemplate = "<a ng-click='grid.appScope.expand(\"contactMethods\", row)' title='" + $translate.instant("cases.comp.people.contactMethods.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-phone'></i></a>"
-                    + "<a ng-click='grid.appScope.expand(\"organizations\", row)' title='" + $translate.instant("cases.comp.people.organizations.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-cubes'></i></a>"
-                    + "<a ng-click='grid.appScope.expand(\"addresses\", row)' title='" + $translate.instant("cases.comp.people.addresses.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-map-marker'></i></a>"
-                    + "<a ng-click='grid.appScope.expand(\"aliases\", row)' title='" + $translate.instant("cases.comp.people.aliases.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-users'></i></a>"
-                    + "<a ng-click='grid.appScope.expand(\"securityTags\", row)' title='" + $translate.instant("cases.comp.people.securityTags.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-shield'></i></a>"
+                columnDef.cellTemplate = "<a ng-click='grid.appScope.expand(\"contactMethods\", row)' title='" + $translate.instant("complaints.comp.people.contactMethods.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-phone'></i></a>"
+                    + "<a ng-click='grid.appScope.expand(\"organizations\", row)' title='" + $translate.instant("complaints.comp.people.organizations.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-cubes'></i></a>"
+                    + "<a ng-click='grid.appScope.expand(\"addresses\", row)' title='" + $translate.instant("complaints.comp.people.addresses.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-map-marker'></i></a>"
+                    + "<a ng-click='grid.appScope.expand(\"aliases\", row)' title='" + $translate.instant("complaints.comp.people.aliases.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-users'></i></a>"
+                    + "<a ng-click='grid.appScope.expand(\"securityTags\", row)' title='" + $translate.instant("complaints.comp.people.securityTags.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-shield'></i></a>"
                 ;
             }
         };
@@ -392,12 +393,12 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
         var updateGridData = function (data) {
             $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, promiseConfig]).then(function () {
-                $scope.caseInfo = data;
-                $scope.gridOptions.data = $scope.caseInfo.personAssociations;
-                Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.caseInfo.personAssociations.length);
+                $scope.complaintInfo = data;
+                $scope.gridOptions.data = $scope.complaintInfo.personAssociations;
+                Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.complaintInfo.personAssociations.length);
 
-                for (var i = 0; i < $scope.caseInfo.personAssociations.length; i++) {
-                    var personAssociation = $scope.caseInfo.personAssociations[i];
+                for (var i = 0; i < $scope.complaintInfo.personAssociations.length; i++) {
+                    var personAssociation = $scope.complaintInfo.personAssociations[i];
                     personAssociation.acm$_contactMethods = {};
                     personAssociation.acm$_contactMethods.gridOptions = Util.goodValue($scope.contactMethods.gridOptions, {
                         columnDefs: [],
@@ -484,8 +485,8 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 }
             }); //end $q            
         };
-        $scope.$on('case-retrieved', function (e, data) {
-            if (Validator.validateCaseFile(data)) {
+        $scope.$on('complaint-retrieved', function (e, data) {
+            if (Validator.validateComplaint(data)) {
                 if (data.id == $stateParams.id) {
                     updateGridData(data);
                 } else {                      // condition when data comes before state is routed and config is not set
@@ -509,13 +510,13 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             //
             if (Util.isEmpty(rowEntity.id)) {
                 var pa = newPersonAssociation();
-                pa.parentId = $scope.caseInfo.id;
-                pa.parentType = Helper.ObjectTypes.CASE_FILE;
+                pa.parentId = $scope.complaintInfo.id;
+                pa.parentType = Helper.ObjectTypes.COMPLAINT;
                 pa.person.className = Util.goodValue($scope.config.className); //"com.armedia.acm.plugins.person.model.Person";
                 pa.person.givenName = givenName;
                 pa.person.familyName = familyName;
                 Util.serviceCall({
-                    service: CasesService.addPersonAssociation
+                    service: ComplaintsService.addPersonAssociation
                     , data: pa
                     , onSuccess: function (data) {
                         if (Validator.validatePersonAssociation(data)) {
@@ -528,7 +529,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                         return personAssociationAdded;
                     }
                 );
-                //CasesService.addPersonAssociation({}, pa
+                //ComplaintsService.addPersonAssociation({}, pa
                 //    , function (successData) {
                 //        if (Validator.validatePersonAssociation(successData)) {
                 //            var personAssociationAdded = successData;
@@ -543,34 +544,24 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 // update person association
                 //
             } else {
-                var caseInfo = Util.omitNg($scope.caseInfo);
+                var complaintInfo = Util.omitNg($scope.complaintInfo);
                 Util.serviceCall({
-                    service: CasesService.save
-                    , data: caseInfo
+                    service: ComplaintsService.save
+                    , data: complaintInfo
                     , onSuccess: function (data) {
-                        if (Validator.validateCaseFile(data)) {
-                            var caseSaved = data;
-                            return caseSaved;
+                        if (Validator.validateComplaint(data)) {
+                            var complaintSaved = data;
+                            return complaintSaved;
                         }
                     }
                 }).then(
-                    function (caseSaved) {
-                        return caseSaved;
+                    function (complaintSaved) {
+                        return complaintSaved;
                     }
                     , function (error) {
                         return error;
                     }
                 );
-                //CasesService.save({}, caseInfo
-                //    , function (successData) {
-                //        if (Validator.validateCaseFile(successData)) {
-                //            var caseSaved = successData;
-                //            console.log("updated People table");
-                //        }
-                //    }
-                //    , function (errorData) {
-                //    }
-                //);
             }
         };
         $scope.deleteRow = function (rowEntity) {
@@ -579,7 +570,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
                 Util.serviceCall({
-                    service: CasesService.deletePersonAssociation
+                    service: ComplaintsService.deletePersonAssociation
                     , param: {personAssociationId: id}
                     , data: {}
                     , onSuccess: function (data) {
@@ -595,7 +586,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                         return error;
                     }
                 );
-                //CasesService.deletePersonAssociation({personAssociationId: id}
+                //ComplaintsService.deletePersonAssociation({personAssociationId: id}
                 //    , function (personAssociationDeleted) {
                 //        if (Validator.validateDeletedPersonAssociation(personAssociationDeleted)) {
                 //            console.log("deleted People row");
@@ -620,19 +611,19 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         };
         $scope.updateRowContactMethods = function (personAssociation, rowEntity) {
-            var caseInfo = Util.omitNg($scope.caseInfo);
+            var complaintInfo = Util.omitNg($scope.complaintInfo);
             Util.serviceCall({
-                service: CasesService.save
-                , data: caseInfo
+                service: ComplaintsService.save
+                , data: complaintInfo
                 , onSuccess: function (data) {
-                    if (Validator.validateCaseFile(data)) {
+                    if (Validator.validateComplaint(data)) {
                         return data;
                     }
                 }
             }).then(
-                function (caseSaved) {
+                function (complaintSaved) {
                     if (Util.isEmpty(rowEntity.id)) {
-                        var personAssociationsSaved = Util.goodMapValue(caseSaved, "personAssociations", []);
+                        var personAssociationsSaved = Util.goodMapValue(complaintSaved, "personAssociations", []);
                         var personAssociationSaved = _.find(personAssociationsSaved, {id: personAssociation.id});
                         if (personAssociationSaved) {
                             var contactMethodSaved = _.find(personAssociationSaved.person.contactMethods, {id: rowEntity.id});
@@ -641,56 +632,25 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                             }
                         }
                     }
-                    return caseSaved;
+                    return complaintSaved;
                 }
             );
-            //CasesService.save({}, caseInfo
-            //    , function (caseSaved) {
-            //        if (Validator.validateCaseFile(caseSaved)) {
-            //            console.log("updated sub table");
-            //            if (Util.isEmpty(rowEntity.id)) {
-            //                var personAssociationsSaved = Util.goodMapValue(caseSaved, "personAssociations", []);
-            //                var personAssociationSaved = _.find(personAssociationsSaved, {id: personAssociation.id});
-            //                if (personAssociationSaved) {
-            //                    var contactMethodSaved = _.find(personAssociationSaved.person.contactMethods, {id: rowEntity.id});
-            //                    if (contactMethodSaved) {
-            //                        rowEntity = _.merge(rowEntity, contactMethodSaved);
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
-            //    , function (errorData) {
-            //    }
-            //);
         };
         $scope.deleteRowContactMethods = function (rowEntity) {
             Helper.Grid.deleteRow($scope.contactMethods, rowEntity);
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var caseInfo = Util.omitNg($scope.caseInfo);
+                var complaintInfo = Util.omitNg($scope.complaintInfo);
                 Util.serviceCall({
-                    service: CasesService.save
-                    , data: caseInfo
+                    service: ComplaintsService.save
+                    , data: complaintInfo
                     , onSuccess: function (data) {
-                        if (Validator.validateCaseFile(data)) {
+                        if (Validator.validateComplaint(data)) {
                             return data;
                         }
                     }
                 });
-                //CasesService.save({}, caseInfo
-                //    , function (caseSaved) {
-                //        if (Validator.validateCaseFile(caseSaved)) {
-                //            console.log("deleted sub table");
-                //            var z = 1;
-                //        }
-                //        var z = 1;
-                //    }
-                //    , function (errorData) {
-                //        var z = 2;
-                //    }
-                //);
             }
         };
         $scope.addNewOrganizations = function (rowParent) {
@@ -711,29 +671,17 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var caseInfo = Util.omitNg($scope.caseInfo);
+                var complaintInfo = Util.omitNg($scope.complaintInfo);
                 Util.serviceCall({
-                    service: CasesService.save
-                    , data: caseInfo
+                    service: ComplaintsService.save
+                    , data: complaintInfo
                     , onSuccess: function (data) {
-                        if (Validator.validateCaseFile(data)) {
-                            var caseSaved = data;
-                            return caseSaved;
+                        if (Validator.validateComplaint(data)) {
+                            var complaintSaved = data;
+                            return complaintSaved;
                         }
                     }
                 });
-                //CasesService.save({}, caseInfo
-                //    , function (caseSaved) {
-                //        if (Validator.validateCaseFile(caseSaved)) {
-                //            console.log("deleted sub table");
-                //            var z = 1;
-                //        }
-                //        var z = 1;
-                //    }
-                //    , function (errorData) {
-                //        var z = 2;
-                //    }
-                //);
             }
         };
         $scope.addNewAddresses = function (rowParent) {
@@ -754,28 +702,16 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var caseInfo = Util.omitNg($scope.caseInfo);
+                var complaintInfo = Util.omitNg($scope.complaintInfo);
                 Util.serviceCall({
-                    service: CasesService.save
-                    , data: caseInfo
-                    , onSuccess: function (caseSaved) {
-                        if (Validator.validateCaseFile(caseSaved)) {
-                            return caseSaved;
+                    service: ComplaintsService.save
+                    , data: complaintInfo
+                    , onSuccess: function (complaintSaved) {
+                        if (Validator.validateComplaint(complaintSaved)) {
+                            return complaintSaved;
                         }
                     }
                 });
-                //CasesService.save({}, caseInfo
-                //    , function (caseSaved) {
-                //        if (Validator.validateCaseFile(caseSaved)) {
-                //            console.log("deleted sub table");
-                //            var z = 1;
-                //        }
-                //        var z = 1;
-                //    }
-                //    , function (errorData) {
-                //        var z = 2;
-                //    }
-                //);
             }
         };
         $scope.addNewAliases = function (rowParent) {
@@ -796,28 +732,16 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var caseInfo = Util.omitNg($scope.caseInfo);
+                var complaintInfo = Util.omitNg($scope.complaintInfo);
                 Util.serviceCall({
-                    service: CasesService.save
-                    , data: caseInfo
-                    , onSuccess: function (caseSaved) {
-                        if (Validator.validateCaseFile(caseSaved)) {
-                            return caseSaved;
+                    service: ComplaintsService.save
+                    , data: complaintInfo
+                    , onSuccess: function (complaintSaved) {
+                        if (Validator.validateComplaint(complaintSaved)) {
+                            return complaintSaved;
                         }
                     }
                 });
-                //CasesService.save({}, caseInfo
-                //    , function (caseSaved) {
-                //        if (Validator.validateCaseFile(caseSaved)) {
-                //            console.log("deleted sub table");
-                //            var z = 1;
-                //        }
-                //        var z = 1;
-                //    }
-                //    , function (errorData) {
-                //        var z = 2;
-                //    }
-                //);
             }
         };
         $scope.addNewSecurityTags = function (rowParent) {
