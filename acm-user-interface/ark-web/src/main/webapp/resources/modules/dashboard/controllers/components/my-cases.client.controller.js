@@ -47,7 +47,7 @@ angular.module('dashboard.my-cases', ['adf.provider'])
              */
             $scope.openViewer = function (rowData) {
                 if (rowData && rowData.entity.object_id_s) {
-                    window.open(window.location.href.split('!')[0] + '!/cases/' + rowData.entity.object_id_s + '/main');
+                    window.open(window.location.href.split('!')[0] + '!/cases/' + rowData.entity.object_id_s + '/main', '_self');
                 }
             };
 
