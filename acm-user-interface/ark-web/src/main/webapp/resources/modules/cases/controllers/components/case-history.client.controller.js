@@ -22,7 +22,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
         $scope.retrieveGridData = function () {
             if ($scope.currentId) {
                 var cacheCaseHistoryData = new Store.CacheFifo(Helper.CacheNames.CASE_HISTORY_DATA);
-                var cacheKey = Util.Constant.OBJTYPE_CASE_FILE + "." + $scope.currentId;
+                var cacheKey = Helper.ObjectTypes.CASE_FILE + "." + $scope.currentId;
                 var historyData = cacheCaseHistoryData.get(cacheKey);
                 var promiseQueryAudit = Util.serviceCall({
                     service: CasesService.queryAudit

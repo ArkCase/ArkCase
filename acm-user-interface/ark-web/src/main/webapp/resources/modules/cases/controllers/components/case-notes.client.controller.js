@@ -30,7 +30,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
                 var promiseQueryNotes = Util.serviceCall({
                     service: CasesService.queryNotes
                     , param: {
-                        parentType: Util.Constant.OBJTYPE_CASE_FILE,
+                        parentType: Helper.ObjectTypes.CASE_FILE,
                         parentId: $scope.currentId
                     }
                     , result: notes
@@ -56,7 +56,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             $scope.gridApi.pagination.seek(lastPage);
             var newRow = {};
             newRow.parentId = $scope.currentId;
-            newRow.parentType = Util.Constant.OBJTYPE_CASE_FILE;
+            newRow.parentType = Helper.ObjectTypes.CASE_FILE;
             newRow.created = Util.getCurrentDay();
             newRow.creator = $scope.userId;
             $scope.gridOptions.data.push(newRow);

@@ -24,12 +24,12 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
                 $scope.caseInfo = data;
 
                 var cacheCaseTime = new Store.CacheFifo(Helper.CacheNames.CASE_TIME_SHEETS);
-                var cacheKey = Util.Constant.OBJTYPE_CASE_FILE + "." + $scope.caseInfo.id;
+                var cacheKey = Helper.ObjectTypes.CASE_FILE + "." + $scope.caseInfo.id;
                 var timesheets = cacheCaseTime.get(cacheKey);
                 Util.serviceCall({
                     service: CasesService.queryTimesheets
                     , param: {
-                        objectType: Util.Constant.OBJTYPE_CASE_FILE,
+                        objectType: Helper.ObjectTypes.CASE_FILE,
                         objectId: $scope.caseInfo.id
                     }
                     , result: timesheets
@@ -60,7 +60,7 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();
-            Helper.Grid.showObject($scope, Util.Constant.OBJTYPE_TIMESHEET, Util.goodMapValue(rowEntity, "id", 0));
+            Helper.Grid.showObject($scope, Helper.ObjectTypes.TIMESHEET, Util.goodMapValue(rowEntity, "id", 0));
         };
 
     }
