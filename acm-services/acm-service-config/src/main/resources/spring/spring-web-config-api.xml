@@ -95,6 +95,10 @@
                     <property name="properties" ref="reportPluginProperties" />
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="acm-reports-server-config" />
+                    <property name="properties" ref="reportServerConfigurationProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
                     <property name="configName" value="reportToGroupsMap" />
                     <property name="properties" ref="reportToGroupsMapProperties" />
                 </bean>
