@@ -1,8 +1,10 @@
 'use strict';
 
-angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'CasesService', 'LookupService',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, CasesService, LookupService) {
-        var deferParticipantData = new Store.Variable("deferCaseParticipantData");    // used to hold grid data before grid config is ready
+angular.module('complaints').controller('Complaints.ParticipantsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'ComplaintsService', 'LookupService',
+    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, ComplaintsService, LookupService) {
+        var z = 1;
+        return;
+        var deferParticipantData = new Store.Variable("deferComplaintParticipantData");    // used to hold grid data before grid config is ready
 
         var promiseConfig = Helper.requestComponentConfig($scope, "participants", function (config) {
             Helper.Grid.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
@@ -65,9 +67,9 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                 }
 
 
-                var caseInfo = deferParticipantData.get();
-                if (caseInfo) {
-                    updateGridData(caseInfo);
+                var complaintInfo = deferParticipantData.get();
+                if (complaintInfo) {
+                    updateGridData(complaintInfo);
                     deferParticipantData.set(null);
                 }
             });
@@ -163,12 +165,12 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                     }
                 });
                 $scope.gridOptions.data = participants;
-                $scope.caseInfo = data;
+                $scope.complaintInfo = data;
                 Helper.Grid.hidePagingControlsIfAllDataShown($scope, participants.length);
             });
         };
-        $scope.$on('case-retrieved', function (e, data) {
-            if (Validator.validateCaseFile(data)) {
+        $scope.$on('complaint-retrieved', function (e, data) {
+            if (Validator.validateComplaint(data)) {
                 if (data.id == $stateParams.id) {
                     updateGridData(data);
                 } else {                      // condition when data comes before state is routed and config is not set
@@ -185,20 +187,20 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.data.length);
         };
         $scope.updateRow = function (rowEntity) {
-            var caseInfo = Util.omitNg($scope.caseInfo);
+            var complaintInfo = Util.omitNg($scope.complaintInfo);
             Util.serviceCall({
-                service: CasesService.save
-                , data: caseInfo
+                service: ComplaintsService.save
+                , data: complaintInfo
                 , onSuccess: function (data) {
-                    if (Validator.validateCaseFile(data)) {
+                    if (Validator.validateComplaint(data)) {
                         return data;
                     }
                 }
             }).then(
-                function (caseSaved) {
+                function (complaintSaved) {
                     //if participant is newly added, fill incomplete values with the latest
                     if (Util.isEmpty(rowEntity.id)) {
-                        var participants = Util.goodMapValue(caseSaved, "participants", []);
+                        var participants = Util.goodMapValue(complaintSaved, "participants", []);
                         var participantAdded = _.find(participants, {
                             participantType: rowEntity.participantType,
                             participantLdapId: rowEntity.participantLdapId
@@ -207,56 +209,25 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                             rowEntity = _.merge(rowEntity, participantAdded);
                         }
                     }
-                    return caseSaved;
+                    return complaintSaved;
                 }
             );
-            //CasesService.save({}, caseInfo
-            //    , function (caseSaved) {
-            //        if (Validator.validateCaseFile(caseSaved)) {
-            //            //if participant is newly added, fill incomplete values with the latest
-            //            if (Util.isEmpty(rowEntity.id)) {
-            //                var participants = Util.goodMapValue(caseSaved, "participants", []);
-            //                var participantAdded = _.find(participants, {
-            //                    participantType: rowEntity.participantType,
-            //                    participantLdapId: rowEntity.participantLdapId
-            //                });
-            //                if (participantAdded) {
-            //                    rowEntity = _.merge(rowEntity, participantAdded);
-            //                }
-            //            }
-            //        }
-            //    }
-            //    , function (errorData) {
-            //        var z = 2;
-            //    }
-            //);
         };
         $scope.deleteRow = function (rowEntity) {
             Helper.Grid.deleteRow($scope, rowEntity);
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row
-                var caseInfo = Util.omitNg($scope.caseInfo);
+                var complaintInfo = Util.omitNg($scope.complaintInfo);
                 Util.serviceCall({
-                    service: CasesService.save
-                    , data: caseInfo
+                    service: ComplaintsService.save
+                    , data: complaintInfo
                     , onSuccess: function (data) {
-                        if (Validator.validateCaseFile(data)) {
+                        if (Validator.validateComplaint(data)) {
                             return data;
                         }
                     }
                 });
-                //CasesService.save({}, caseInfo
-                //    , function (caseSaved) {
-                //        if (Validator.validateCaseFile(caseSaved)) {
-                //            var z = 1;
-                //        }
-                //        var z = 1;
-                //    }
-                //    , function (errorData) {
-                //        var z = 2;
-                //    }
-                //);
             }
 
         };
