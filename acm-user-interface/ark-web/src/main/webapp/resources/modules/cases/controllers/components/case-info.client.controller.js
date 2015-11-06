@@ -53,7 +53,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
                 var options = [];
                 _.each(users, function (user) {
                     var userInfo = JSON.parse(user);
-                    options.push({value: userInfo.object_id_s, text: userInfo.object_id_s});
+                    options.push({object_id_s: userInfo.object_id_s, name: userInfo.name});
                 });
                 $scope.assignableUsers = options;
                 return users;
