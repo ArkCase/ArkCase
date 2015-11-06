@@ -17,7 +17,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                     //
                     // Fix participant names selection
                     //
-                    if (Util.Constant.LOOKUP_PARTICIPANT_TYPES === colDef.lookup) {
+                    if (Helper.Lookups.PARTICIPANT_TYPES === colDef.lookup) {
                         if ("*" === newValue) {
                             rowEntity.acm$_participantNames = [
                                 {id: "*", name: "*"}
@@ -46,7 +46,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                 //$scope.gridOptions.enableCellEdit = true;
                 //$scope.gridOptions.enableCellEditOnFocus = true;
                 for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                    if (Util.Constant.LOOKUP_PARTICIPANT_TYPES == $scope.config.columnDefs[i].lookup) {
+                    if (Helper.Lookups.PARTICIPANT_TYPES == $scope.config.columnDefs[i].lookup) {
                         $scope.gridOptions.columnDefs[i].enableCellEdit = true;
                         $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                         $scope.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
@@ -55,7 +55,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                         $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
-                    } else if (Util.Constant.LOOKUP_PARTICIPANT_NAMES == $scope.config.columnDefs[i].lookup) {
+                    } else if (Helper.Lookups.PARTICIPANT_NAMES == $scope.config.columnDefs[i].lookup) {
                         $scope.gridOptions.columnDefs[i].enableCellEdit = true;
                         $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                         $scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";

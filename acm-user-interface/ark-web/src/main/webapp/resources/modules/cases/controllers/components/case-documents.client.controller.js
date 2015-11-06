@@ -33,7 +33,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         var formTypes = cacheFormTypes.get();
         var promiseFormTypes = Util.serviceCall({
             service: LookupService.getPlainforms
-            , param: {objType: Util.Constant.OBJTYPE_CASE_FILE}
+            , param: {objType: Helper.ObjectTypes.CASE_FILE}
             , result: formTypes
             , onSuccess: function (data) {
                 if (Validator.validatePlainForms(data)) {
@@ -62,13 +62,13 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
         $scope.treeArgs = {};
 
-        $scope.objectType = Util.Constant.OBJTYPE_CASE_FILE;
+        $scope.objectType = Helper.ObjectTypes.CASE_FILE;
         $scope.objectId = $stateParams.id;
         $scope.containerId = 0;
         $scope.$on('case-retrieved', function (e, data) {
             if (Validator.validateCaseFile(data)) {
                 $scope.caseInfo = data;
-                //$scope.objectType = Util.Constant.OBJTYPE_CASE_FILE;
+                //$scope.objectType = Helper.ObjectTypes.CASE_FILE;
                 //$scope.objectId = Util.goodValue(data.id, 0);
             }
         });
