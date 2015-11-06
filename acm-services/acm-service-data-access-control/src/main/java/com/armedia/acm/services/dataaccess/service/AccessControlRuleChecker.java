@@ -1,13 +1,13 @@
 package com.armedia.acm.services.dataaccess.service;
 
-import com.armedia.acm.services.dataaccess.model.AccessControlList;
+import com.armedia.acm.services.dataaccess.model.AccessControlRules;
 import org.springframework.security.core.Authentication;
 
 /**
  * Check if particular user is granted access to a given object.
  * Created by Petar Ilin <petar.ilin@armedia.com> on 05.11.2015.
  */
-public interface AccessControlService
+public interface AccessControlRuleChecker
 {
     /**
      * Check if particular user is granted access to a given object.
@@ -24,7 +24,7 @@ public interface AccessControlService
     /**
      * Getter method.
      *
-     * @return configured ACL
+     * @return configured AC rules
      */
-    AccessControlList getAccessControlList();
+    AccessControlRules getAccessControlRules();
 }

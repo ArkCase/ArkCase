@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Access Control List entry.
+ * Access Control rule entry.
  * Created by Petar Ilin <petar.ilin@armedia.com> on 05.11.2015.
  */
-public class AccessControlEntry
+public class AccessControlRule
 {
     private String actionName;
 
@@ -17,7 +17,9 @@ public class AccessControlEntry
 
     private Map<String, String> objectProperties;
 
-    private List<String> userRoles;
+    private List<String> userRolesAll;
+
+    private List<String> userRolesAny;
 
     public String getActionName()
     {
@@ -59,13 +61,23 @@ public class AccessControlEntry
         this.objectProperties = objectProperties;
     }
 
-    public List<String> getUserRoles()
+    public List<String> getUserRolesAll()
     {
-        return userRoles;
+        return userRolesAll;
     }
 
-    public void setUserRoles(List<String> userRoles)
+    public void setUserRolesAll(List<String> userRolesAll)
     {
-        this.userRoles = userRoles;
+        this.userRolesAll = userRolesAll;
+    }
+
+    public List<String> getUserRolesAny()
+    {
+        return userRolesAny;
+    }
+
+    public void setUserRolesAny(List<String> userRolesAny)
+    {
+        this.userRolesAny = userRolesAny;
     }
 }

@@ -1,7 +1,7 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
 import com.armedia.acm.services.dataaccess.model.DataAccessControlConstants;
-import com.armedia.acm.services.dataaccess.service.AccessControlService;
+import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -40,7 +40,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;
     private AcmParticipantDao participantDao;
-    private AccessControlService accessControlService;
+    private AccessControlRuleChecker accessControlRuleChecker;
 
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission)
@@ -73,8 +73,8 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
 
         boolean hasRead = checkForReadAccess(authentication, id, targetType);
 
-        // break here and return true if any of ACL rules match (see SBI-956)
-        if (accessControlService.isAccessGranted(authentication, id, targetType, permission))
+        // break here and return true if any of AC rules match (see SBI-956)
+        if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, permission))
         {
             return true;
         }
@@ -182,13 +182,13 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
         this.participantDao = participantDao;
     }
 
-    public AccessControlService getAccessControlService()
+    public AccessControlRuleChecker getAccessControlRuleChecker()
     {
-        return accessControlService;
+        return accessControlRuleChecker;
     }
 
-    public void setAccessControlService(AccessControlService accessControlService)
+    public void setAccessControlRuleChecker(AccessControlRuleChecker accessControlRuleChecker)
     {
-        this.accessControlService = accessControlService;
+        this.accessControlRuleChecker = accessControlRuleChecker;
     }
 }

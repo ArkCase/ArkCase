@@ -4,9 +4,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 
-    <bean id="accessControlListControllerAPI"
-          class="com.armedia.acm.services.dataaccess.web.api.AccessControlListAPIController">
-        <property name="accessControlService" ref="accessControlService"/>
+    <bean id="accessControlRulesAPIController"
+          class="com.armedia.acm.services.dataaccess.web.api.AccessControlRulesAPIController">
+        <property name="accessControlRuleChecker" ref="accessControlRuleChecker"/>
     </bean>
 
 </beans>
