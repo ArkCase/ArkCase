@@ -935,12 +935,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             if (selectedIdsList.length > 0)
                                 selectedIdsList = selectedIdsList.substring(0, selectedIdsList.length - 1);
 
-                            var url = "proxy/arkcase/plugin/document/" + node.data.objectId +
-                                "?documentName=" + node.data.name +
-                                "&parentObjectId=" + node.parent.data.containerObjectId +
-                                "&parentObjectType=" + node.parent.data.containerObjectType +
-                                "&selectedIds=" + selectedIdsList;
-                            window.open(url);
+                            // Opens the snowbound viewer and loads the selected document(s) into it
+                            var baseUrl = window.location.href.split('!')[0];
+                            var urlArgs = node.data.objectId + "/" + node.parent.data.containerObjectId + "/" +
+                                node.parent.data.containerObjectType + "/" + node.data.name + "/" + selectedIdsList;
+                            window.open(baseUrl + '!/viewer/' + urlArgs);
                             break;
                         case "edit":
                             break;
