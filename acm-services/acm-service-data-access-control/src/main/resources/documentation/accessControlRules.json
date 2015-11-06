@@ -1,5 +1,5 @@
 {
-  "accessControlEntryList": [
+  "accessControlRuleList": [
     {
       "actionName": "actionName1",
       "objectType": "objectType1",
@@ -8,10 +8,13 @@
         "key1": "value1",
         "key2": "value2"
       },
-      "userRoles": [
+      "userRolesAll": [
         "ADMIN",
-        "GUEST",
         "DBA"
+      ],
+      "userRolesAny": [
+        "PATIENT",
+        "SHIPPER"
       ]
     },
     {
@@ -22,10 +25,14 @@
         "key1": "value1",
         "key2": "value2"
       },
-      "userRoles": [
+      "userRolesAll": [
         "ADMIN",
         "GUEST",
         "DBA"
+      ],
+      "userRolesAny": [
+        "PATIENT",
+        "SHIPPER"
       ]
     }
   ]

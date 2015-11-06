@@ -53,7 +53,7 @@
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="searchResults" ref="searchResults"/>
         <property name="participantDao" ref="acmParticipantDao"/>
-        <property name="accessControlService" ref="accessControlService"/>
+        <property name="accessControlRuleChecker" ref="accessControlRuleChecker"/>
     </bean>
 
     <bean id="acmDataAccessBatchUpdater"
@@ -83,13 +83,14 @@
         </property>
     </bean>
 
-    <bean id="aclConfigurationFile" class="java.io.File">
-        <constructor-arg value="${user.home}/.acm/accessControlList.json"/>
+    <bean id="rulesConfigurationFile" class="java.io.File">
+        <constructor-arg value="${user.home}/.acm/accessControlRules.json"/>
     </bean>
 
-    <bean id="accessControlService" class="com.armedia.acm.services.dataaccess.service.impl.AccessControlServiceImpl"
+    <bean id="accessControlRuleChecker"
+          class="com.armedia.acm.services.dataaccess.service.impl.AccessControlRuleCheckerImpl"
           init-method="postConstruct">
-        <property name="configurationFile" ref="aclConfigurationFile"/>
+        <property name="configurationFile" ref="rulesConfigurationFile"/>
     </bean>
 
 </beans>

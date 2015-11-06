@@ -1,7 +1,7 @@
 package com.armedia.acm.services.dataaccess.web.api;
 
-import com.armedia.acm.services.dataaccess.model.AccessControlList;
-import com.armedia.acm.services.dataaccess.service.AccessControlService;
+import com.armedia.acm.services.dataaccess.model.AccessControlRules;
+import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Created by Petar Ilin <petar.ilin@armedia.com> on 05.11.2015.
  */
 @Controller
-@RequestMapping({"/api/v1/service/dataaccess/acl", "/api/latest/service/dataaccess/acl"})
-public class AccessControlListAPIController
+@RequestMapping({"/api/v1/service/dataaccess/rules", "/api/latest/service/dataaccess/rules"})
+public class AccessControlRulesAPIController
 {
     /**
      * Access Control Service reference.
      */
-    AccessControlService accessControlService;
+    AccessControlRuleChecker accessControlRuleChecker;
 
     /**
      * Logger instance.
@@ -30,26 +30,26 @@ public class AccessControlListAPIController
     private Logger log = LoggerFactory.getLogger(getClass());
 
     /**
-     * Retrieve ACL configuraion
+     * Retrieve AC rules configuration
      *
      * @param authentication authentication token
-     * @return ACL configuration
+     * @return AC rules configuration
      */
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AccessControlList getConfiguration(Authentication authentication)
+    public AccessControlRules getConfiguration(Authentication authentication)
     {
-        log.debug("User [{}] is requesting the ACL", authentication.getName());
-        return accessControlService.getAccessControlList();
+        log.debug("User [{}] is requesting the AC rules", authentication.getName());
+        return accessControlRuleChecker.getAccessControlRules();
     }
 
-    public AccessControlService getAccessControlService()
+    public AccessControlRuleChecker getAccessControlRuleChecker()
     {
-        return accessControlService;
+        return accessControlRuleChecker;
     }
 
-    public void setAccessControlService(AccessControlService accessControlService)
+    public void setAccessControlRuleChecker(AccessControlRuleChecker accessControlRuleChecker)
     {
-        this.accessControlService = accessControlService;
+        this.accessControlRuleChecker = accessControlRuleChecker;
     }
 }
