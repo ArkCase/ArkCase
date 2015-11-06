@@ -29,8 +29,7 @@
                 {
                     "name": "name",
                     "displayName": "search.comp.grid.columns.name",
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<div ng-click='grid.appScope.rowClick(row)' style='cursor:pointer;'  class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>"
+                    "headerCellFilter": "translate"
                 },
                 {
                     "name": "object_type_s",
