@@ -20,25 +20,25 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
             //
             // Constants are moving to HelperService. Do not add new constant here
             //
-            Constant: {
-                OBJTYPE_CASE_FILE: "CASE_FILE"
-                , OBJTYPE_COMPLAINT: "COMPLAINT"
-                , OBJTYPE_TASK: "TASK"
-                , OBJTYPE_TIMESHEET: "TIMESHEET"
-                , OBJTYPE_COSTSHEET: "COSTSHEET"
-                , OBJTYPE_FILE: "FILE"
-
-                , LOOKUP_USER_FULL_NAMES: "userFullNames"
-                , LOOKUP_PERSON_TYPES: "personTypes"
-                , LOOKUP_PARTICIPANT_TYPES: "participantTypes"
-                , LOOKUP_PARTICIPANT_NAMES: "participantNames"
-                , LOOKUP_TASK_OUTCOMES: "taskOutcomes"
-                , LOOKUP_CONTACT_METHODS_TYPES: "contactMethodTypes"
-                , LOOKUP_ORGANIZATION_TYPES: "organizationTypes"
-                , LOOKUP_ADDRESS_TYPES: "addressTypes"
-                , LOOKUP_ALIAS_TYPES: "aliasTypes"
-                , LOOKUP_SECURITY_TAG_TYPES: "securityTagTypes"
-            }
+            //Constant: {
+            //    OBJTYPE_CASE_FILE: "CASE_FILE"
+            //    , OBJTYPE_COMPLAINT: "COMPLAINT"
+            //    , OBJTYPE_TASK: "TASK"
+            //    , OBJTYPE_TIMESHEET: "TIMESHEET"
+            //    , OBJTYPE_COSTSHEET: "COSTSHEET"
+            //    , OBJTYPE_FILE: "FILE"
+            //
+            //    , LOOKUP_USER_FULL_NAMES: "userFullNames"
+            //    , LOOKUP_PERSON_TYPES: "personTypes"
+            //    , LOOKUP_PARTICIPANT_TYPES: "participantTypes"
+            //    , LOOKUP_PARTICIPANT_NAMES: "participantNames"
+            //    , LOOKUP_TASK_OUTCOMES: "taskOutcomes"
+            //    , LOOKUP_CONTACT_METHODS_TYPES: "contactMethodTypes"
+            //    , LOOKUP_ORGANIZATION_TYPES: "organizationTypes"
+            //    , LOOKUP_ADDRESS_TYPES: "addressTypes"
+            //    , LOOKUP_ALIAS_TYPES: "aliasTypes"
+            //    , LOOKUP_SECURITY_TAG_TYPES: "securityTagTypes"
+            //}
 
             /**
              * @ngdoc method
@@ -51,7 +51,7 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
              * @description
              * This function check if 'val' is empty. Returns it only it is not empty. Else 'replacement' is used.
              */
-            , goodValue: function (val, replacement) {
+            goodValue: function (val, replacement) {
                 var replacedWith = (undefined === replacement) ? "" : replacement;
                 return this.isEmpty(val) ? replacedWith : val;
             }

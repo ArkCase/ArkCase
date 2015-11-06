@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', '$stateParams', '$q', '$window', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
+angular.module('complaints').controller('Cases.CorrespondenceController', ['$scope', '$stateParams', '$q', '$window', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
     function ($scope, $stateParams, $q, $window, Store, Util, Validator, Helper, LookupService, CasesService) {
+        var z = 1;
+        return;
         $scope.$emit('req-component-config', 'correspondence');
         $scope.$on('component-config', function (e, componentId, config) {
             if (componentId == 'correspondence') {
@@ -57,21 +59,21 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             }
         );
 
-        $scope.$on('case-retrieved', function (e, data) {
+        $scope.$on('complaint-retrieved', function (e, data) {
             if (Validator.validateCaseFile(data)) {
-                $scope.caseInfo = data;
+                $scope.omplaintInfo = data;
             }
         });
 
         $scope.currentId = $stateParams.id;
         $scope.retrieveGridData = function () {
             var cacheCorrespondenceData = new Store.CacheFifo(Helper.CacheNames.CASE_CORRESPONDENCE_DATA);
-            var cacheKey = Helper.ObjectTypes.CASE_FILE + "." + $scope.currentId;
+            var cacheKey = Helper.ObjectTypes.COMPLAINT + "." + $scope.currentId;
             var correspondenceData = cacheCorrespondenceData.get(cacheKey);
             var promiseCorrespondence = Util.serviceCall({
                 service: CasesService.queryCorrespondence
                 , param: Helper.Grid.withPagingParams($scope, {
-                    parentType: Helper.ObjectTypes.CASE_FILE,
+                    parentType: Helper.ObjectTypes.COMPLAINT,
                     parentId: $scope.currentId
                 })
                 , onSuccess: function (data) {
@@ -105,13 +107,13 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         };
 
         $scope.addNew = function () {
-            var caseId = Util.goodValue($scope.caseInfo.id, 0);
-            var folderId = Util.goodMapValue($scope.caseInfo, "container.folder.cmisFolderId", "");
+            var omplaintId = Util.goodValue($scope.omplaintInfo.id, 0);
+            var folderId = Util.goodMapValue($scope.omplaintInfo, "container.folder.cmisFolderId", "");
             var template = $scope.correspondenceForm.value;
             var promiseCreateCorrespondence = Util.serviceCall({
                 service: CasesService.createCorrespondence
                 , param: {
-                    parentType: Helper.ObjectTypes.CASE_FILE,
+                    parentType: Helper.ObjectTypes.COMPLAINT,
                     parentId: $scope.currentId,
                     folderId: folderId,
                     template: template

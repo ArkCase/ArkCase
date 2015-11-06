@@ -1,8 +1,10 @@
 'use strict';
 
-angular.module('cases').controller('Cases.TasksController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, LookupService, CasesService) {
-		$scope.$emit('req-component-config', 'tasks');
+angular.module('complaints').controller('Complaints.TasksController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'ComplaintsService',
+    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, LookupService, ComplaintsService) {
+        var z = 1;
+        return;
+        $scope.$emit('req-component-config', 'tasks');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("tasks" == componentId) {
                 Helper.Grid.setColumnDefs($scope, config);
@@ -39,7 +41,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
             var cacheKey = $scope.currentId;
             var myTasks = cacheMyTasks.get(cacheKey);
             Util.serviceCall({
-                service: CasesService.queryMyTasks
+                service: ComplaintsService.queryMyTasks
                 , param: {user: userId}
                 , result: myTasks
                 , onSuccess: function (data) {
@@ -79,7 +81,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
 
         $scope.currentId = $stateParams.id;
         $scope.retrieveGridData = function () {
-            CasesService.queryTasks(Helper.Grid.withPagingParams($scope, {
+            ComplaintsService.queryTasks(Helper.Grid.withPagingParams($scope, {
                 id: $scope.currentId
             }), function (data) {
                 if (Validator.validateSolrData(data)) {
@@ -126,7 +128,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
 
         var completeTask = function (rowEntity) {
             return Util.serviceCall({
-                service: CasesService.completeTask
+                service: ComplaintsService.completeTask
                 , param: {taskId: rowEntity.id}
                 , data: {}
             }).then(
@@ -136,19 +138,10 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                     return successData;
                 }
             );
-
-            //CasesService.completeTask({taskId: rowEntity.id}, {}
-            //    , function (successData) {
-            //        rowEntity.acm$_taskActionDone = true;
-            //        rowEntity.status_s = "COMPLETE";
-            //    }
-            //    , function (errorData) {
-            //    }
-            //);
         };
         var deleteTask = function (rowEntity) {
             return Util.serviceCall({
-                service: CasesService.deleteTask
+                service: ComplaintsService.deleteTask
                 , param: {taskId: rowEntity.id}
                 , data: {}
             }).then(
@@ -164,25 +157,11 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                     return successData;
                 }
             );
-            //CasesService.deleteTask({taskId: rowEntity.id}, {}
-            //    , function (successData) {
-            //        rowEntity.acm$_taskActionDone = true;
-            //        var tasks = Util.goodArray($scope.gridOptions.data);
-            //        for (var i = 0; i < tasks.length; i++) {
-            //            if (tasks[i].id == rowEntity.id) {
-            //                tasks.splice(i, 1);
-            //                break;
-            //            }
-            //        }
-            //    }
-            //    , function (errorData) {
-            //    }
-            //);
         };
         var completeTaskWithOutcome = function (rowEntity) {
             var task = Util.omitNg(rowEntity);
             return Util.serviceCall({
-                service: CasesService.completeTaskWithOutcome
+                service: ComplaintsService.completeTaskWithOutcome
                 , data: task
             }).then(
                 function (successData) {
@@ -191,14 +170,6 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                     return successData;
                 }
             );
-            //CasesService.completeTaskWithOutcome({}, task
-            //    , function (successData) {
-            //        rowEntity.acm$_taskActionDone = true;
-            //        rowEntity.status_s = "COMPLETE";
-            //    }
-            //    , function (errorData) {
-            //    }
-            //);
         };
         $scope.action = function (rowEntity) {
             console.log("act, rowEntity.id=" + rowEntity.id + ", action=" + rowEntity.acm$_taskOutcome.id);
@@ -215,5 +186,5 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
             Helper.Grid.showObject($scope, Helper.ObjectTypes.TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
         };
 
-	}
+    }
 ]);
