@@ -1,0 +1,18 @@
+{
+  "audit": {
+    "title": "Audit",
+    "navigation": {
+      "label": {
+        "dateFrom": "From",
+        "dateTo": "To"
+      },
+      "placeholder": {
+        "selectAudit": "ALL",
+        "inputId": "#"
+      },
+      "button": {
+        "generateAuditReport.btn": "Generate Audit Report"
+      }
+    }
+  }
+}
