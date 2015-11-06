@@ -712,6 +712,18 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
+        , validateComplaintsConfig: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if ('complaints' != Util.goodValue(data.id)) {
+                return false;
+            }
+            if (!Util.isArray(data.components)) {
+                return false;
+            }
+            return true;
+        }
         , validatePriorities: function (data) {
             if (!Util.isArray(data)) {
                 return false;
