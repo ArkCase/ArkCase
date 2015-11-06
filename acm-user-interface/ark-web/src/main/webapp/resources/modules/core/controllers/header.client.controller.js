@@ -10,6 +10,7 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         $scope.config=null;
         $scope.start='';
         $scope.count='';
+        $scope.inputQuery = '';
         $scope.$on('component-config', applyConfig);
         function applyConfig(e, componentId, config) {
             if (componentId == 'header') {
@@ -27,24 +28,19 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         $scope.$on('$stateChangeSuccess', function () {
             $scope.isCollapsed = false;
         });
+
         $scope.search = function () {
-            $state.go('search');
-            callSearchService();
+            $state.go('quick-search', {
+                query: $scope.inputQuery
+            });
         };
+
         $scope.keyDown = function (event) {
             if (event.keyCode == 13) {
-                $state.go('search');
-                callSearchService();
+                $state.go('quick-search', {
+                    query: $scope.inputQuery
+                });
             }
         };
-        function callSearchService() {
-            /*SearchService.queryFacetedSearch({
-                input: $scope.inputQuery + '*',
-                start: 0,
-                n: 10},
-            function (data) {
-                ResultService.passData(data, $scope.inputQuery + '*');
-            });*/
-        }
     }
 ]);
