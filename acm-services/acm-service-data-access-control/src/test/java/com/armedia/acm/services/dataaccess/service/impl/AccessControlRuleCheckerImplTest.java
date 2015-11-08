@@ -2,10 +2,15 @@ package com.armedia.acm.services.dataaccess.service.impl;
 
 import com.armedia.acm.services.dataaccess.model.AccessControlRule;
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
+import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 import org.easymock.EasyMock;
+import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,29 +25,30 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by Petar Ilin <petar.ilin@armedia.com> on 06.11.2015.
  */
+@RunWith(EasyMockRunner.class)
 public class AccessControlRuleCheckerImplTest extends EasyMockSupport
 {
     /**
      * Access Control rule checker.
      */
-    private AccessControlRuleCheckerImpl accessControlRuleChecker;
+    @TestSubject
+    private AccessControlRuleChecker accessControlRuleChecker = new AccessControlRuleCheckerImpl();
 
     /**
      * Access Control rules mock.
      */
+    @Mock
     private AccessControlRules accessControlRulesMock;
 
     /**
      * Authentication token mock.
      */
+    @Mock
     private Authentication authenticationMock;
 
     @Before
     public void setUp()
     {
-        accessControlRulesMock = createMock(AccessControlRules.class);
-        authenticationMock = createMock(Authentication.class);
-        accessControlRuleChecker = new AccessControlRuleCheckerImpl();
         accessControlRuleChecker.setAccessControlRules(accessControlRulesMock);
     }
 
