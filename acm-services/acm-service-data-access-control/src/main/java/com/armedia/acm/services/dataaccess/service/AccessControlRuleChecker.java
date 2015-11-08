@@ -15,10 +15,10 @@ public interface AccessControlRuleChecker
      * @param authentication authentication token
      * @param targetId       the identifier for the object instance
      * @param targetType     target type
-     * @param permission     permission object
+     * @param permission     required permission
      * @return true if user is allowed to access this object, false otherwise
      */
-    boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, Object permission);
+    boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, String permission);
 
 
     /**
@@ -27,4 +27,11 @@ public interface AccessControlRuleChecker
      * @return configured AC rules
      */
     AccessControlRules getAccessControlRules();
+
+    /**
+     * Setter method.
+     *
+     * @param accessControlRules AC rules
+     */
+    void setAccessControlRules(AccessControlRules accessControlRules);
 }

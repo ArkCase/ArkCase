@@ -74,7 +74,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
         boolean hasRead = checkForReadAccess(authentication, id, targetType);
 
         // break here and return true if any of AC rules match (see SBI-956)
-        if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, permission))
+        if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, (String) permission))
         {
             return true;
         }
