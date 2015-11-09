@@ -1,17 +1,3 @@
-<div ng-controller="SearchController" >
-    <div class="module-content">
-        <div class="left-sidebar">
-            <div class="module-header">
-                <h3>Search</h3>
-            </div>
-            <div class="scroll-body" ng-include="'modules/search/views/components/search-facets.client.view.html'">
-            </div>
-        </div>
-        <div class="content-body">
-            <div class="module-header">
-                <div ng-include="'modules/search/views/components/search-input.client.view.html'"></div>
-            </div>
-            <div class="well-sm" ng-include="'modules/search/views/components/search-results.client.view.html'"></div>
-        </div>
-    </div>
+<div ng-controller="SearchController">
+	<div ng-include="'modules/search/views/components/faceted-search.client.view.html'"/>
 </div>
