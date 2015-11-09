@@ -8,17 +8,48 @@
  *
  * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/resource/cases.client.service.js services/resource/cases.client.service.js}
 
- * CasesService includes group of REST calls related to Cases module. Functions are implemented using $resoruce.
+ * CasesService includes group of REST calls related to Cases module. Functions are implemented using $resource.
  */
 angular.module('services').factory('CasesService', ['$resource',
     function ($resource) {
         return $resource('proxy/arkcase/api/latest/plugin', {}, {
+            /**
+             * @ngdoc method
+             * @name get
+             * @methodOf services.service:CasesService
+             *
+             * @description
+             * Query case data
+             *
+             * @param {Object} params Map of input parameter.
+             * @param {Number} params.id  Case ID
+             * @param {Function} onSuccess (Optional)Callback function of success query.
+             * @param {Function} onError (Optional) Callback function when fail.
+             *
+             * @returns {Object} Object returned by $resource
+             */
             get: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/latest/plugin/casefile/byId/:id',
                 cache: false,
                 isArray: false
             }
+
+            /**
+             * @ngdoc method
+             * @name queryCases
+             * @methodOf services.service:CasesService
+             *
+             * @description
+             * Save case data
+             *
+             * @param {Object} params Map of input parameter.
+             * @param {Number} params.id  Case ID
+             * @param {Function} onSuccess (Optional)Callback function of success query.
+             * @param {Function} onError (Optional) Callback function when fail.
+             *
+             * @returns {Object} Object returned by $resource
+             */
             , save: {
                 method: 'POST',
                 url: 'proxy/arkcase/api/latest/plugin/casefile',
@@ -34,10 +65,10 @@ angular.module('services').factory('CasesService', ['$resource',
              * Query list of cases from SOLR.
              *
              * @param {Object} params Map of input parameter.
-             * @param {Number} params.start  zero based index of result starts from
-             * @param {Number} params.n max number of list to return
-             * @param {String} params.sort  sort value. Allowed choice is based on backend specification
-             * @param {String} params.filters  filter value. Allowed choice is based on backend specification
+             * @param {Number} params.start  Zero based index of result starts from
+             * @param {Number} params.n max Number of list to return
+             * @param {String} params.sort  Sort value. Allowed choice is based on backend specification
+             * @param {String} params.filters  Filter value. Allowed choice is based on backend specification
              * @param {Function} onSuccess (Optional)Callback function of success query.
              * @param {Function} onError (Optional) Callback function when fail.
              *

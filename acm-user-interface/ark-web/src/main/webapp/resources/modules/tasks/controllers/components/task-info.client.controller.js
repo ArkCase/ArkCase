@@ -1,8 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'TasksService', 'TasksModelsService',
-    function ($scope, $stateParams, Store, Util, Validator, Helper, LookupService, TasksService, TasksModelsService) {
-        return;
+angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'TasksService', 'CallLookupService', 'CallTasksService', 'TasksModelsService',
+    function ($scope, $stateParams, Store, Util, Validator, Helper, LookupService, TasksService, CallLookupService, CallTasksService, TasksModelsService) {
         $scope.$emit('req-component-config', 'info');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("info" == componentId) {
@@ -11,21 +10,18 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         });
 
 
-        // Obtains the dropdown menu selection options via REST calls to ArkTask
-        $scope.priorities = [];
-        var cachePriorities = new Store.SessionData(Helper.SessionCacheNames.PRIORITIES);
-        var priorities = cachePriorities.get();
-        Util.serviceCall({
-            service: LookupService.getPriorities
-            , result: priorities
-            , onSuccess: function (data) {
-                if (Validator.validatePriorities(data)) {
-                    priorities = data;
-                    cachePriorities.set(priorities);
-                    return priorities;
-                }
+        CallLookupService.getUsers().then(
+            function (users) {
+                var options = [];
+                _.each(users, function (user) {
+                    options.push({object_id_s: user.object_id_s, name: user.name});
+                });
+                $scope.assignableUsers = options;
+                return users;
             }
-        }).then(
+        );
+
+        CallLookupService.getPriorities().then(
             function (priorities) {
                 var options = [];
                 _.each(priorities, function (priority) {
@@ -35,33 +31,49 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                 return priorities;
             }
         );
-        var z = 1;
+
+
+        $scope.updateTitle = function () {
+            var taskInfo = Util.omitNg($scope.taskInfo);
+            CallTasksService.saveTaskInfo(taskInfo).then(
+                function (taskInfo) {
+                    //update tree node tittle
+                    return taskInfo;
+                }
+                , function (error) {
+                    //set error to x-editable title
+                    //update tree node tittle
+                    return error;
+                }
+            );
+        };
+        $scope.updatePercentage = function () {
+            var taskInfo = Util.omitNg($scope.taskInfo);
+            console.log("updatePercentage");
+        };
+        $scope.updateAssignee = function () {
+            var taskInfo = Util.omitNg($scope.taskInfo);
+            console.log("updateAssignee");
+            //TasksModelsService.setAssignee($scope.taskInfo, $scope.assignee);
+            //saveTask();
+        };
+        $scope.updatePriority = function () {
+            var taskInfo = Util.omitNg($scope.taskInfo);
+            console.log("updatePriority");
+            //saveTask();
+        };
+        $scope.updateStartDate = function () {
+            var taskInfo = Util.omitNg($scope.taskInfo);
+            console.log("updateStartDate");
+            //saveTask();
+        };
+        $scope.updateDueDate = function () {
+            var taskInfo = Util.omitNg($scope.taskInfo);
+            console.log("updateDueDate");
+            //saveTask();
+        };
         return;
 
-        $scope.assignableUsers = [];
-        var cacheUsers = new Store.SessionData(Helper.SessionCacheNames.USERS);
-        var users = cacheUsers.get();
-        Util.serviceCall({
-            service: LookupService.getUsers
-            , result: users
-            , onSuccess: function (data) {
-                if (Validator.validateUsers(data)) {
-                    users = data;
-                    cacheUsers.set(users);
-                    return users;
-                }
-            }
-        }).then(
-            function (users) {
-                var options = [];
-                _.each(users, function (user) {
-                    var userInfo = JSON.parse(user);
-                    options.push({value: userInfo.object_id_s, text: userInfo.object_id_s});
-                });
-                $scope.assignableUsers = options;
-                return users;
-            }
-        );
 
         $scope.owningGroups = [];
         var cacheGroups = new Store.SessionData(Helper.SessionCacheNames.GROUPS);
@@ -161,24 +173,8 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
 
         // Updates the ArkTask database when the user changes a task attribute
         // in a task top bar menu item and clicks the save check button
-        $scope.updateTitle = function () {
-            saveTask();
-        };
         $scope.updateOwningGroup = function () {
             TasksModelsService.setGroup($scope.taskInfo, $scope.owningGroup);
-            saveTask();
-        };
-        $scope.updatePriority = function () {
-            saveTask();
-        };
-        $scope.updateTaskType = function () {
-            saveTask();
-        };
-        $scope.updateAssignee = function () {
-            TasksModelsService.setAssignee($scope.taskInfo, $scope.assignee);
-            saveTask();
-        };
-        $scope.updateDueDate = function () {
             saveTask();
         };
 
