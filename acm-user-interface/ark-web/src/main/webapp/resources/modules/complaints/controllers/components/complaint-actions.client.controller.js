@@ -1,5 +1,14 @@
 'use strict';
 
+/**
+ * @ngdoc controller
+ * @name complaints.controller:Complaints.ActionsController
+ *
+ * @description
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/complaints/controllers/components/complaint-actions.client.controller.js modules/complaints/controllers/components/complaint-actions.client.controller.js}
+ *
+ * The Complaints module actions controller
+ */
 angular.module('complaints').controller('Complaints.ActionsController', ['$scope', 'ConfigService', 'ComplaintsService', 'UtilService', 'ValidationService',
     function ($scope, ConfigService, ComplaintsService, Util, Validator) {
         var z = 1;
@@ -20,7 +29,7 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
         /**
          * @ngdoc method
          * @name loadNewComplaintFrevvoForm
-         * @methodOf complaints.Complaints.ActionsController
+         * @methodOf complaints.controller:Complaints.ActionsController
          *
          * @description
          * Displays the create new complaint Frevvo form for the user
@@ -32,7 +41,7 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
         /**
          * @ngdoc method
          * @name loadChangeComplaintStatusFrevvoForm
-         * @methodOf complaints.Complaints.ActionsController
+         * @methodOf complaints.controller:Complaints.ActionsController
          *
          * @param {Object} complaintInfo contains the metadata for the existing complaint which will be edited
          *

@@ -19,6 +19,7 @@
     "status.button": "Change Case Status",
     "reinvestigate.button": "Reinvestigate",
     "subscribe.button": "Subscribe",
+    "unsubscribe.button": "Unsubscribe",
     "merge.button": "Merge",
     "split.button": "Split"
   },
