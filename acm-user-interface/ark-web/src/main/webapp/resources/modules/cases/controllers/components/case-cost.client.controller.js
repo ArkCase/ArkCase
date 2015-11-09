@@ -24,12 +24,12 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
                 $scope.caseInfo = data;
 
                 var cacheCaseCost = new Store.CacheFifo(Helper.CacheNames.CASE_COST_SHEETS);
-                var cacheKey = Util.Constant.OBJTYPE_CASE_FILE + "." + $scope.caseInfo.id;
+                var cacheKey = Helper.ObjectTypes.CASE_FILE + "." + $scope.caseInfo.id;
                 var costsheets = cacheCaseCost.get(cacheKey);
                 Util.serviceCall({
                     service: CasesService.queryCostsheets
                     , param: {
-                        objectType: Util.Constant.OBJTYPE_CASE_FILE,
+                        objectType: Helper.ObjectTypes.CASE_FILE,
                         objectId: $scope.caseInfo.id
                     }
                     , result: costsheets
@@ -60,7 +60,7 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();
-            Helper.Grid.showObject($scope, Util.Constant.OBJTYPE_COSTSHEET, Util.goodMapValue(rowEntity, "id", 0));
+            Helper.Grid.showObject($scope, Helper.ObjectTypes.COSTSHEET, Util.goodMapValue(rowEntity, "id", 0));
         };
     }
 ]);

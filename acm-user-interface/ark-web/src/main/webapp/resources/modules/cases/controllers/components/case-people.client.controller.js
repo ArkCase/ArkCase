@@ -194,7 +194,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             promisePersonTypes.then(function (data) {
                 $scope.gridOptions.enableRowSelection = false;
                 for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                    if (Util.Constant.LOOKUP_PERSON_TYPES == $scope.config.columnDefs[i].lookup) {
+                    if (Helper.Lookups.PERSON_TYPES == $scope.config.columnDefs[i].lookup) {
                         $scope.gridOptions.columnDefs[i].enableCellEdit = true;
                         $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                         $scope.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
@@ -216,7 +216,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
                 $q.all([promiseContactMethodTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.contactMethods.columnDefs.length; i++) {
-                        if (Util.Constant.LOOKUP_CONTACT_METHODS_TYPES == $scope.config.contactMethods.columnDefs[i].lookup) {
+                        if (Helper.Lookups.CONTACT_METHODS_TYPES == $scope.config.contactMethods.columnDefs[i].lookup) {
                             $scope.contactMethods.gridOptions.columnDefs[i].enableCellEdit = true;
                             $scope.contactMethods.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.contactMethods.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
@@ -225,7 +225,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                             $scope.contactMethods.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
-                        } else if (Util.Constant.LOOKUP_USER_FULL_NAMES == $scope.config.contactMethods.columnDefs[i].lookup) {
+                        } else if (Helper.Lookups.USER_FULL_NAMES == $scope.config.contactMethods.columnDefs[i].lookup) {
                             $scope.contactMethods.gridOptions.columnDefs[i].enableCellEdit = false;
                             $scope.contactMethods.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.contactMethods.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
@@ -250,7 +250,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
                 $q.all([promiseOrganizationTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.organizations.columnDefs.length; i++) {
-                        if (Util.Constant.LOOKUP_ORGANIZATION_TYPES == $scope.config.organizations.columnDefs[i].lookup) {
+                        if (Helper.Lookups.ORGANIZATION_TYPES == $scope.config.organizations.columnDefs[i].lookup) {
                             $scope.organizations.gridOptions.columnDefs[i].enableCellEdit = true;
                             $scope.organizations.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.organizations.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
@@ -259,7 +259,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                             $scope.organizations.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
-                        } else if (Util.Constant.LOOKUP_USER_FULL_NAMES == $scope.config.organizations.columnDefs[i].lookup) {
+                        } else if (Helper.Lookups.USER_FULL_NAMES == $scope.config.organizations.columnDefs[i].lookup) {
                             $scope.organizations.gridOptions.columnDefs[i].enableCellEdit = false;
                             $scope.organizations.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.organizations.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
@@ -281,7 +281,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
                 $q.all([promiseAddressTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.addresses.columnDefs.length; i++) {
-                        if (Util.Constant.LOOKUP_ADDRESS_TYPES == $scope.config.addresses.columnDefs[i].lookup) {
+                        if (Helper.Lookups.ADDRESS_TYPES == $scope.config.addresses.columnDefs[i].lookup) {
                             $scope.addresses.gridOptions.columnDefs[i].enableCellEdit = true;
                             $scope.addresses.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.addresses.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
@@ -290,7 +290,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                             $scope.addresses.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
-                        } else if (Util.Constant.LOOKUP_USER_FULL_NAMES == $scope.config.addresses.columnDefs[i].lookup) {
+                        } else if (Helper.Lookups.USER_FULL_NAMES == $scope.config.addresses.columnDefs[i].lookup) {
                             $scope.addresses.gridOptions.columnDefs[i].enableCellEdit = false;
                             $scope.addresses.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.addresses.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
@@ -312,7 +312,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
                 $q.all([promiseAliasTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.aliases.columnDefs.length; i++) {
-                        if (Util.Constant.LOOKUP_ALIAS_TYPES == $scope.config.aliases.columnDefs[i].lookup) {
+                        if (Helper.Lookups.ALIAS_TYPES == $scope.config.aliases.columnDefs[i].lookup) {
                             $scope.aliases.gridOptions.columnDefs[i].enableCellEdit = true;
                             $scope.aliases.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.aliases.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
@@ -321,7 +321,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                             $scope.aliases.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
-                        } else if (Util.Constant.LOOKUP_USER_FULL_NAMES == $scope.config.aliases.columnDefs[i].lookup) {
+                        } else if (Helper.Lookups.USER_FULL_NAMES == $scope.config.aliases.columnDefs[i].lookup) {
                             $scope.aliases.gridOptions.columnDefs[i].enableCellEdit = false;
                             $scope.aliases.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.aliases.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
@@ -343,7 +343,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
                 $q.all([promiseSecurityTagTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.securityTags.columnDefs.length; i++) {
-                        if (Util.Constant.LOOKUP_SECURITY_TAG_TYPES == $scope.config.securityTags.columnDefs[i].lookup) {
+                        if (Helper.Lookups.SECURITY_TAG_TYPES == $scope.config.securityTags.columnDefs[i].lookup) {
                             $scope.securityTags.gridOptions.columnDefs[i].enableCellEdit = true;
                             $scope.securityTags.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.securityTags.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
@@ -352,7 +352,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                             $scope.securityTags.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
-                        } else if (Util.Constant.LOOKUP_USER_FULL_NAMES == $scope.config.securityTags.columnDefs[i].lookup) {
+                        } else if (Helper.Lookups.USER_FULL_NAMES == $scope.config.securityTags.columnDefs[i].lookup) {
                             $scope.securityTags.gridOptions.columnDefs[i].enableCellEdit = false;
                             $scope.securityTags.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.securityTags.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
@@ -510,7 +510,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             if (Util.isEmpty(rowEntity.id)) {
                 var pa = newPersonAssociation();
                 pa.parentId = $scope.caseInfo.id;
-                pa.parentType = Util.Constant.OBJTYPE_CASE_FILE;
+                pa.parentType = Helper.ObjectTypes.CASE_FILE;
                 pa.person.className = Util.goodValue($scope.config.className); //"com.armedia.acm.plugins.person.model.Person";
                 pa.person.givenName = givenName;
                 pa.person.familyName = familyName;
