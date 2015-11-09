@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService', 'CasesModelsService',
-    function ($scope, $stateParams, Store, Util, Validator, Helper, LookupService, CasesService, CasesModelsService) {
+angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CallCasesService', 'CasesService', 'CasesModelsService',
+    function ($scope, $stateParams, Store, Util, Validator, Helper, LookupService, CallCasesService, CasesService, CasesModelsService) {
         $scope.$emit('req-component-config', 'info');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("info" == componentId) {
@@ -116,18 +116,16 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
         $scope.assignee = null;
         $scope.owningGroup = null;
         $scope.$on('case-retrieved', function(e, data){
-            if (Validator.validateCaseFile(data)) {
-                $scope.caseInfo = data;
-                $scope.assignee = CasesModelsService.getAssignee(data);
-                $scope.owningGroup = CasesModelsService.getGroup(data);
-            }
+            $scope.caseInfo = data;
+            $scope.assignee = CasesModelsService.getAssignee(data);
+            $scope.owningGroup = CasesModelsService.getGroup(data);
         });
 
         /**
          * Persists the updated casefile metadata to the ArkCase database
          */
         function saveCase() {
-            if (Validator.validateCaseFile($scope.caseInfo)) {
+            if (CallCasesService.validateCaseFile($scope.caseInfo)) {
                 var caseInfo = Util.omitNg($scope.caseInfo);
                 Util.serviceCall({
                     service: CasesService.save

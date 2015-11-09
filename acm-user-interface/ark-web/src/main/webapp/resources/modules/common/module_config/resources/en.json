@@ -1,5 +1,6 @@
 {
   "common": {
+    "select.option.none": "(Select One)"
   },
   "common.directive.docTree": {
     "btnRefresh": "Refresh",
@@ -39,6 +40,8 @@
     "btnNext.title": " more records...",
     "btnNext.toolTip": "Load more records",
     "edtQuery.placeHolder": "Search",
-    "btnQuery.text": "Go!"
+    "btnQuery.text": "Go!",
+    "errorNode.title": "(Error)",
+    "errorNode.toolTip": "(Error)"
   }
 }
