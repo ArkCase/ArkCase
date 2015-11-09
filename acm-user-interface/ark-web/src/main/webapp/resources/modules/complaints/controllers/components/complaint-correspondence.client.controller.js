@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('Cases.CorrespondenceController', ['$scope', '$stateParams', '$q', '$window', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
-    function ($scope, $stateParams, $q, $window, Store, Util, Validator, Helper, LookupService, CasesService) {
+angular.module('complaints').controller('Complaints.CorrespondenceController', ['$scope', '$stateParams', '$q', '$window', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'ComplaintsService',
+    function ($scope, $stateParams, $q, $window, $translate, Store, Util, Validator, Helper, LookupService, ComplaintsService) {
         var z = 1;
         return;
         $scope.$emit('req-component-config', 'correspondence');
@@ -39,16 +39,19 @@ angular.module('complaints').controller('Cases.CorrespondenceController', ['$sco
         );
 
 
-        $scope.correspondenceForms = [{"value": "noop", "name": "(Select One)"}];
-        $scope.correspondenceForm = {"value": "noop", "name": "(Select One)"};
-        var cacheCorrespondenceForms = new Store.SessionData(Helper.SessionCacheNames.CASE_CORRESPONDENCE_FORMS);
+        $scope.correspondenceForms = [{"value": "noop", "name": $translate.instant("common.select.option.none")}];
+        $scope.correspondenceForm = {"value": "noop", "name": $translate.instant("common.select.option.none")};
+        var cacheCorrespondenceForms = new Store.SessionData(Helper.SessionCacheNames.COMPLAINT_CORRESPONDENCE_FORMS);
         var correspondenceForms = cacheCorrespondenceForms.get();
         var promiseCorrespondenceForms = Util.serviceCall({
             service: LookupService.getCorrespondenceForms
             , result: correspondenceForms
             , onSuccess: function (data) {
                 correspondenceForms = Util.omitNg(Util.goodArray(data));
-                correspondenceForms.unshift({"value": "noop", "name": "(Select One)"});
+                correspondenceForms.unshift({
+                    "value": "noop",
+                    "name": $translate.instant("common.select.option.none")
+                });
                 cacheCorrespondenceForms.set(correspondenceForms);
                 return correspondenceForms;
             }
@@ -60,18 +63,18 @@ angular.module('complaints').controller('Cases.CorrespondenceController', ['$sco
         );
 
         $scope.$on('complaint-retrieved', function (e, data) {
-            if (Validator.validateCaseFile(data)) {
-                $scope.omplaintInfo = data;
+            if (Validator.validateComplaintFile(data)) {
+                $scope.complaintInfo = data;
             }
         });
 
         $scope.currentId = $stateParams.id;
         $scope.retrieveGridData = function () {
-            var cacheCorrespondenceData = new Store.CacheFifo(Helper.CacheNames.CASE_CORRESPONDENCE_DATA);
+            var cacheCorrespondenceData = new Store.CacheFifo(Helper.CacheNames.COMPLAINT_CORRESPONDENCE_DATA);
             var cacheKey = Helper.ObjectTypes.COMPLAINT + "." + $scope.currentId;
             var correspondenceData = cacheCorrespondenceData.get(cacheKey);
             var promiseCorrespondence = Util.serviceCall({
-                service: CasesService.queryCorrespondence
+                service: ComplaintsService.queryCorrespondence
                 , param: Helper.Grid.withPagingParams($scope, {
                     parentType: Helper.ObjectTypes.COMPLAINT,
                     parentId: $scope.currentId
@@ -107,11 +110,11 @@ angular.module('complaints').controller('Cases.CorrespondenceController', ['$sco
         };
 
         $scope.addNew = function () {
-            var omplaintId = Util.goodValue($scope.omplaintInfo.id, 0);
-            var folderId = Util.goodMapValue($scope.omplaintInfo, "container.folder.cmisFolderId", "");
+            var complaintId = Util.goodValue($scope.complaintInfo.id, 0);
+            var folderId = Util.goodMapValue($scope.complaintInfo, "container.folder.cmisFolderId", "");
             var template = $scope.correspondenceForm.value;
             var promiseCreateCorrespondence = Util.serviceCall({
-                service: CasesService.createCorrespondence
+                service: ComplaintsService.createCorrespondence
                 , param: {
                     parentType: Helper.ObjectTypes.COMPLAINT,
                     parentId: $scope.currentId,
