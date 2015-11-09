@@ -14,7 +14,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                     for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                         if ("taskId" == $scope.config.columnDefs[i].name) {
                             $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.object_id_s}}</a>";
-                        } else if (Util.Constant.LOOKUP_TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
+                        } else if (Helper.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
                             $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
                                 + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
                                 + ' ng-model="row.entity.acm$_taskOutcome">'
@@ -212,7 +212,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
         }
         $scope.showUrl = function (event, rowEntity) {
             event.preventDefault();
-            Helper.Grid.showObject($scope, Util.Constant.OBJTYPE_TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
+            Helper.Grid.showObject($scope, Helper.ObjectTypes.TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
         };
 
 	}

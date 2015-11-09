@@ -38,8 +38,8 @@ angular.module('services').factory('CasesService', ['$resource',
              * @param {Number} params.n max number of list to return
              * @param {String} params.sort  sort value. Allowed choice is based on backend specification
              * @param {String} params.filters  filter value. Allowed choice is based on backend specification
-             * @param {Function} onSuccess Callback function of success query.
-             * @param {Function} onError Callback function when fail.
+             * @param {Function} onSuccess (Optional)Callback function of success query.
+             * @param {Function} onError (Optional) Callback function when fail.
              *
              * @returns {Object} Object returned by $resource
              */
@@ -152,7 +152,6 @@ angular.module('services').factory('CasesService', ['$resource',
                 cache: false,
                 isArray: true
             }
-
         });
     }
 ]);

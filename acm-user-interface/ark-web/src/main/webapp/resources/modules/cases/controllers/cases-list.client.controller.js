@@ -44,7 +44,7 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
                         _.forEach(docs, function (doc) {
                             treeData.docs.push({
                                 nodeId: Util.goodValue(doc.object_id_s, 0)
-                                , nodeType: Util.Constant.OBJTYPE_CASE_FILE
+                                , nodeType: Helper.ObjectTypes.CASE_FILE
                                 , nodeTitle: Util.goodValue(doc.title_parseable)
                                 , nodeToolTip: Util.goodValue(doc.title_parseable)
                             });
