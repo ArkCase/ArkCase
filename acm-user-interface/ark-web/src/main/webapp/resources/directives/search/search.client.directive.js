@@ -11,9 +11,9 @@
  *
  * The "Search" directive triggers the faceted search functionality
  *
- * @param {String} header Label for the header of the module (comes from resource file)
- * @param {String} search Label for the search button (comes from resource file)
- * @param {String} searchPlaceholder Label for the input placeholder (comes from resource file)
+ * @param {String} header Label for the header of the module (for e.g. it can come from a resource file)
+ * @param {String} searchBtn Label for the search button (for e.g. it can come from a resource file)
+ * @param {String} searchPlaceholder Label for the input placeholder (for e.g. it can come from a resource file)
  * @param {String} searchQuery Item to be searched for
  * @param {String} filter Filter required to send to the faceted search by default (e.g. for client : "\"Object Type\":CASE_FILE")
  * @param {expression} config Configuration for search provided by the parent scope (required to render the UI-grid)
