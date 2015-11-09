@@ -49,6 +49,22 @@ angular.module('services').factory('CallComplaintsService', ['$resource', 'Store
                 , COMPLAINT_COST_SHEETS: "ComplaintCostSheets"
                 , COMPLAINT_TIME_SHEETS: "ComplaintTimeSheets"
             }
+
+            /**
+             * @ngdoc method
+             * @name queryComplaintsTreeData
+             * @methodOf services.service:CallComplaintsService
+             *
+             * @description
+             * Query list of complaints from SOLR, pack result for Object Tree.
+             *
+             * @param {Number} start  Zero based index of result starts from
+             * @param {Number} n max Number of list to return
+             * @param {String} sort  Sort value. Allowed choice is based on backend specification
+             * @param {String} filters  Filter value. Allowed choice is based on backend specification
+             *
+             * @returns {Object} Promise
+             */
             , queryComplaintsTreeData: function (start, n, sort, filters) {
                 var cacheComplaintList = new Store.CacheFifo(this.CacheNames.COMPLAINT_LIST);
                 var cacheKey = start + "." + n + "." + sort + "." + filters;
@@ -81,6 +97,19 @@ angular.module('services').factory('CallComplaintsService', ['$resource', 'Store
                     }
                 });
             }
+
+            /**
+             * @ngdoc method
+             * @name getComplaintInfo
+             * @methodOf services.service:CallComplaintsService
+             *
+             * @description
+             * Query complaint data
+             *
+             * @param {Number} id  Complaint ID
+             *
+             * @returns {Object} Promise
+             */
             , getComplaintInfo: function (id) {
                 var cacheComplaintInfo = new Store.CacheFifo(this.CacheNames.COMPLAINT_INFO);
                 var complaintInfo = cacheComplaintInfo.get(id);
@@ -89,18 +118,61 @@ angular.module('services').factory('CallComplaintsService', ['$resource', 'Store
                     , param: {id: id}
                     , result: complaintInfo
                     , onSuccess: function (data) {
-                        if (ServiceCall.validateComplaint(data)) {
+                        if (ServiceCall.validateComplaintInfo(data)) {
                             cacheComplaintInfo.put(id, data);
                             return data;
                         }
                     }
                 });
             }
-            , validateComplaint: function (data) {
+
+            /**
+             * @ngdoc method
+             * @name saveComplaintInfo
+             * @methodOf services.service:CallComplaintsService
+             *
+             * @description
+             * Save complaint data
+             *
+             * @param {Object} complaintInfo  Complaint data
+             *
+             * @returns {Object} Promise
+             */
+            , saveComplaintInfo: function (complaintInfo) {
+                if (!ServiceCall.validateComplaintInfo(complaintInfo)) {
+                    return Util.errorPromise($translate.instant("common.service.error.invalidData"));
+                }
+                return Util.serviceCall({
+                    service: ComplaintsService.save
+                    , data: complaintInfo
+                    , onSuccess: function (data) {
+                        if (ServiceCall.validateComplaintInfo(data)) {
+                            return data;
+                        }
+                    }
+                });
+            }
+
+            /**
+             * @ngdoc method
+             * @name validateComplaintInfo
+             * @methodOf services.service:CallComplaintsService
+             *
+             * @description
+             * Validate complaint data
+             *
+             * @param {Object} data  Data to be validated
+             *
+             * @returns {Boolean} Return true if data is valid
+             */
+            , validateComplaintInfo: function (data) {
                 if (Util.isEmpty(data)) {
                     return false;
                 }
-                if (Util.isEmpty(data.complaintId) || Util.isEmpty(data.complaintNumber)) {
+                if (0 >= Util.goodValue(data.complaintId, 0)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.complaintNumber)) {
                     return false;
                 }
                 if (!Util.isArray(data.childObjects)) {

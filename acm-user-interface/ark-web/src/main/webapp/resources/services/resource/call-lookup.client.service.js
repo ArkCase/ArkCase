@@ -2,23 +2,25 @@
 
 /**
  * @ngdoc service
- * @name services.service:CallTasksService
+ * @name services.service:CallLookupService
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/resource/call-tasks.client.service.js services/resource/call-tasks.client.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/resource/call-lookup.client.service.js services/resource/call-lookup.client.service.js}
 
- * CallTasksService contains wrapper functions of TasksService to support default error handling, data validation and data cache.
+ * CallLookupService contains wrapper functions of LookupService to support default error handling, data validation and data cache.
  */
-angular.module('services').factory('CallTasksService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'TasksService', 'ConstantService',
-    function ($resource, $translate, Store, Util, Validator, TasksService, Constant) {
+angular.module('services').factory('CallLookupService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'LookupService', 'ConstantService',
+    function ($resource, $translate, Store, Util, Validator, LookupService, Constant) {
         var ServiceCall = {
             SessionCacheNames: {
                 USER_INFO: "AcmUserInfo"
-                , USER_FULL_NAMES: "AcmUserFullNames"
                 , USERS: "AcmUsers"
-                , GROUPS: "AcmGroups"
                 , PRIORITIES: "AcmPriorities"
+
+
+                , USER_FULL_NAMES: "AcmUserFullNames"
+                , GROUPS: "AcmGroups"
                 , OBJECT_TYPES: "AcmObjectTypes"
                 , FILE_TYPES: "AcmFileTypes"
                 , FORM_TYPES: "AcmFormTypes"
@@ -32,71 +34,36 @@ angular.module('services').factory('CallTasksService', ['$resource', '$translate
                 , ALIAS_TYPES: "AcmAliasTypes"
                 , SECURITY_TAG_TYPES: "AcmSecurityTagTypes"
 
-                , TASK_CONFIG: "AcmTaskConfig"
-                , TASK_TYPES: "AcmTaskTypes"
-                , TASK_CORRESPONDENCE_FORMS: "AcmTaskCorrespondenceForms"
-
             }
-            , CacheNames: {
-                TASK_LIST: "TaskList"
-                , TASK_INFO: "TaskInfo"
+            , CacheNames: {}
 
-                , MY_TASKS: "MyTasks"
 
-                , TASK_HISTORY_DATA: "TaskHistoryData"
-                , TASK_NOTES: "TaskNotes"
-            }
+
 
             /**
              * @ngdoc method
-             * @name queryTasksTreeData
-             * @methodOf services.service:CallTasksService
+             * @name getUsers
+             * @methodOf services.service:CallLookupService
              *
              * @description
-             * Query list of tasks from SOLR, pack result for Object Tree.
+             * Query list of users
              *
-             * @param {Number} start  Zero based index of result starts from
-             * @param {Number} n max Number of list to return
-             * @param {String} sort  Sort value. Allowed choice is based on backend specification
-             * @param {String} filters  Filter value. Allowed choice is based on backend specification
-             *
-             * @returns {Object} Promise
+             * @returns {Object} An array returned by $resource
              */
-            , queryTasksTreeData: function (start, n, sort, filters) {
-                var cacheTaskList = new Store.CacheFifo(this.CacheNames.TASK_LIST);
-                var cacheKey = start + "." + n + "." + sort + "." + filters;
-                var treeData = cacheTaskList.get(cacheKey);
-
-                var param = {};
-                param.start = start;
-                param.n = n;
-                param.sort = sort;
-                param.filters = filters;
+            , getUsers: function () {
+                var cacheUsers = new Store.SessionData(this.SessionCacheNames.USERS);
+                var users = cacheUsers.get();
                 return Util.serviceCall({
-                    service: TasksService.queryTasks
-                    , param: param
-                    , result: treeData
+                    service: LookupService.getUsers
+                    , result: users
                     , onSuccess: function (data) {
-                        if (Validator.validateSolrData(data)) {
-                            treeData = {docs: [], total: data.response.numFound};
-                            var docs = data.response.docs;
-                            _.forEach(docs, function (doc) {
-                                var nodeType = (Util.goodValue(doc.adhocTask_b, false)) ? Constant.ObjectTypes.ADHOC_TASK : Constant.ObjectTypes.TASK;
-
-                                //jwu: for testing
-                                if (doc.object_id_s == 9601) {
-                                    nodeType = Constant.ObjectTypes.ADHOC_TASK;
-                                }
-
-                                treeData.docs.push({
-                                    nodeId: Util.goodValue(doc.object_id_s, 0)
-                                    , nodeType: nodeType
-                                    , nodeTitle: Util.goodValue(doc.title_parseable)
-                                    , nodeToolTip: Util.goodValue(doc.title_parseable)
-                                });
+                        if (ServiceCall.validateUsersRaw(data)) {
+                            users = [];
+                            _.each(data, function (item) {
+                                users.push(Util.goodJsonObj(item));
                             });
-                            cacheTaskList.put(cacheKey, treeData);
-                            return treeData;
+                            cacheUsers.set(users);
+                            return users;
                         }
                     }
                 });
@@ -104,91 +71,65 @@ angular.module('services').factory('CallTasksService', ['$resource', '$translate
 
             /**
              * @ngdoc method
-             * @name getTaskInfo
-             * @methodOf services.service:CallTasksService
+             * @name validateUsersRaw
+             * @methodOf services.service:CallLookupService
              *
              * @description
-             * Query task data
-             *
-             * @param {Number} id  Task ID
-             *
-             * @returns {Object} Promise
-             */
-            , getTaskInfo: function (id) {
-                var cacheTaskInfo = new Store.CacheFifo(this.CacheNames.TASK_INFO);
-                var taskInfo = cacheTaskInfo.get(id);
-                return Util.serviceCall({
-                    service: TasksService.get
-                    , param: {id: id}
-                    , result: taskInfo
-                    , onSuccess: function (data) {
-                        if (ServiceCall.validateTaskInfo(data)) {
-                            cacheTaskInfo.put(id, data);
-                            return data;
-                        }
-                    }
-                });
-            }
-
-            /**
-             * @ngdoc method
-             * @name saveTaskInfo
-             * @methodOf services.service:CallTasksService
-             *
-             * @description
-             * Save task data
-             *
-             * @param {Object} taskInfo  Task data
-             *
-             * @returns {Object} Promise
-             */
-            , saveTaskInfo: function (taskInfo) {
-                if (!ServiceCall.validateTaskInfo(taskInfo)) {
-                    return Util.errorPromise($translate.instant("common.service.error.invalidData"));
-                }
-                return Util.serviceCall({
-                    service: TasksService.save
-                    , param: {id: taskInfo.taskId}
-                    , data: taskInfo
-                    , onSuccess: function (data) {
-                        if (ServiceCall.validateTaskInfo(data)) {
-                            return data;
-                        }
-                    }
-                });
-            }
-
-            /**
-             * @ngdoc method
-             * @name validateTaskInfo
-             * @methodOf services.service:CallTasksService
-             *
-             * @description
-             * Validate task data
+             * Validate user list data in with each entry as stringify'ed JSON.
              *
              * @param {Object} data  Data to be validated
              *
              * @returns {Boolean} Return true if data is valid
              */
-            , validateTaskInfo: function (data) {
-                if (Util.isEmpty(data)) {
+            , validateUsersRaw: function (data) {
+                if (!Util.isArray(data)) {
                     return false;
                 }
-                if (0 >= Util.goodValue(data.taskId, 0)) {
+                return true;
+            }
+
+
+            /**
+             * @ngdoc method
+             * @name getPriorities
+             * @methodOf services.service:CallLookupService
+             *
+             * @description
+             * Query list of priorities
+             *
+             * @returns {Object} An array returned by $resource
+             */
+            , getPriorities: function () {
+                var cachePriorities = new Store.SessionData(this.SessionCacheNames.PRIORITIES);
+                var priorities = cachePriorities.get();
+                return Util.serviceCall({
+                    service: LookupService.getPriorities
+                    , result: priorities
+                    , onSuccess: function (data) {
+                        if (ServiceCall.validatePriorities(data)) {
+                            cachePriorities.set(data);
+                            return data;
+                        }
+                    }
+                });
+            }
+
+            /**
+             * @ngdoc method
+             * @name validatePriorities
+             * @methodOf services.service:CallLookupService
+             *
+             * @description
+             * Validate list of priorities data
+             *
+             * @param {Object} data  Data to be validated
+             *
+             * @returns {Boolean} Return true if data is valid
+             */
+            , validatePriorities: function (data) {
+                if (!Util.isArray(data)) {
                     return false;
                 }
-//            if (Util.isEmpty(data.id) || Util.isEmpty(data.caseNumber)) {
-//             return false;
-//             }
-//             if (!Util.isArray(data.childObjects)) {
-//             return false;
-//             }
-//             if (!Util.isArray(data.participants)) {
-//             return false;
-//             }
-//             if (!Util.isArray(data.personAssociations)) {
-//             return false;
-//             }
                 return true;
             }
 
