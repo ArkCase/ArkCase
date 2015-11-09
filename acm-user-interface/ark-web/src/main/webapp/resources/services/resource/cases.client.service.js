@@ -183,7 +183,6 @@ angular.module('services').factory('CasesService', ['$resource',
                 cache: false,
                 isArray: true
             }
-
         });
     }
 ]);

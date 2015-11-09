@@ -1,8 +1,8 @@
 {
-  "search": {
-    "title": "Search",
+  "tags": {
+    "title": "Tags",
     "search.btn": "Search",
-    "search.placeholder": "Type in to search",
+    "search.placeholder": "Search for tags",
     "comp":{
       "grid": {
         "columns": {
