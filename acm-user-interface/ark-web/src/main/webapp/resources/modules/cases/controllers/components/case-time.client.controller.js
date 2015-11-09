@@ -48,6 +48,7 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
                     }
                 }).then(
                     function (timesheets) {
+                        $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = timesheets;
                         $scope.gridOptions.totalItems = Util.goodValue(timesheets.length, 0);
                         Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
