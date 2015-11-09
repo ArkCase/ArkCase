@@ -5,6 +5,8 @@
     "progressLoading": "Loading case file ",
     "progressError": "Failed to load case file"
   },
+  "cases.tree": {
+  },
   "cases.comp.info": {
     "caseId": "Case id:",
     "caseNumber": "Case Number:",

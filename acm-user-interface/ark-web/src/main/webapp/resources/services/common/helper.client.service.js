@@ -18,6 +18,7 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                 CASE_FILE: "CASE_FILE"
                 , COMPLAINT: "COMPLAINT"
                 , TASK: "TASK"
+                , ADHOC_TASK: "ADHOC"
                 , TIMESHEET: "TIMESHEET"
                 , COSTSHEET: "COSTSHEET"
                 , FILE: "FILE"
@@ -53,13 +54,17 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                 , ALIAS_TYPES: "AcmAliasTypes"
                 , SECURITY_TAG_TYPES: "AcmSecurityTagTypes"
 
-                , CASES_CONFIG: "AcmCasesConfig"
+                , CASE_CONFIG: "AcmCaseConfig"
                 , CASE_TYPES: "AcmCaseTypes"
                 , CASE_CORRESPONDENCE_FORMS: "AcmCaseCorrespondenceForms"
 
-                , COMPLAINTS_CONFIG: "AcmComplaintsConfig"
+                , COMPLAINT_CONFIG: "AcmComplaintConfig"
                 , COMPLAINT_TYPES: "AcmComplaintTypes"
                 , COMPLAINT_CORRESPONDENCE_FORMS: "AcmComplaintCorrespondenceForms"
+
+                , TASK_CONFIG: "AcmTaskConfig"
+                , TASK_TYPES: "AcmTaskTypes"
+                , TASK_CORRESPONDENCE_FORMS: "AcmTaskCorrespondenceForms"
 
             }
             , CacheNames: {
@@ -79,6 +84,11 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                 , COMPLAINT_NOTES: "ComplaintNotes"
                 , COMPLAINT_COST_SHEETS: "ComplaintCostSheets"
                 , COMPLAINT_TIME_SHEETS: "ComplaintTimeSheets"
+
+                , TASK_LIST: "TaskList"
+                , TASK_INFO: "TaskInfo"
+                , TASK_HISTORY_DATA: "TaskHistoryData"
+                , TASK_NOTES: "TaskNotes"
             }
 
             /**

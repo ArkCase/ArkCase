@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.TasksController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'ComplaintsService',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, LookupService, ComplaintsService) {
+angular.module('complaints').controller('Complaints.TasksController', ['$scope', '$stateParams', '$q', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'ComplaintsService',
+    function ($scope, $stateParams, $q, $translate, Store, Util, Validator, Helper, LookupService, ComplaintsService) {
         var z = 1;
         return;
         $scope.$emit('req-component-config', 'tasks');
@@ -93,8 +93,14 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
 
                         for (var i = 0; i < tasks.length; i++) {
                             var task = tasks[i];
-                            task.acm$_taskOutcomes = [{id: "noop", value: "(Select One)"}];
-                            task.acm$_taskOutcome = {id: "noop", value: "(Select One)"};
+                            task.acm$_taskOutcomes = [{
+                                id: "noop",
+                                value: $translate.instant("common.select.option.none")
+                            }];
+                            task.acm$_taskOutcome = {
+                                id: "noop",
+                                value: $translate.instant("common.select.option.none")
+                            };
                             task.acm$_taskActionDone = true;
 
                             var found = _.find($scope.myTasks, {taskId: tasks[i].id});

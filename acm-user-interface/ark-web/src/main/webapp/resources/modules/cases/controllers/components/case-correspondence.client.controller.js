@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', '$stateParams', '$q', '$window', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
-    function ($scope, $stateParams, $q, $window, Store, Util, Validator, Helper, LookupService, CasesService) {
+angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', '$stateParams', '$q', '$window', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
+    function ($scope, $stateParams, $q, $window, $translate, Store, Util, Validator, Helper, LookupService, CasesService) {
         $scope.$emit('req-component-config', 'correspondence');
         $scope.$on('component-config', function (e, componentId, config) {
             if (componentId == 'correspondence') {
@@ -37,8 +37,8 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         );
 
 
-        $scope.correspondenceForms = [{"value": "noop", "name": "(Select One)"}];
-        $scope.correspondenceForm = {"value": "noop", "name": "(Select One)"};
+        $scope.correspondenceForms = [{"value": "noop", "name": $translate.instant("common.select.option.none")}];
+        $scope.correspondenceForm = {"value": "noop", "name": $translate.instant("common.select.option.none")};
         var cacheCorrespondenceForms = new Store.SessionData(Helper.SessionCacheNames.CASE_CORRESPONDENCE_FORMS);
         var correspondenceForms = cacheCorrespondenceForms.get();
         var promiseCorrespondenceForms = Util.serviceCall({
@@ -46,7 +46,10 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             , result: correspondenceForms
             , onSuccess: function (data) {
                 correspondenceForms = Util.omitNg(Util.goodArray(data));
-                correspondenceForms.unshift({"value": "noop", "name": "(Select One)"});
+                correspondenceForms.unshift({
+                    "value": "noop",
+                    "name": $translate.instant("common.select.option.none")
+                });
                 cacheCorrespondenceForms.set(correspondenceForms);
                 return correspondenceForms;
             }
@@ -85,6 +88,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
 
             $q.all([promiseCorrespondence, promiseUsers]).then(function (data) {
                 var correspondenceData = data[0];
+                $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = correspondenceData.children;
                 $scope.gridOptions.totalItems = Util.goodValue(correspondenceData.totalChildren, 0);
                 Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);

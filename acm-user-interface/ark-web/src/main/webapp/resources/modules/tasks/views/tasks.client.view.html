@@ -1,0 +1,34 @@
+<div ng-controller="TasksController">
+    <div class="module-content">
+        <div class="left-sidebar">
+            <div class="module-header">
+                <h3>{{'tasks.title' | translate}}</h3>
+            </div>
+
+            <div class="scroll-body" slimscroll="{height: '800px'}"
+                 ng-include="'modules/tasks/views/tasks-list.client.view.html'">
+            </div>
+        </div>
+
+        <section class="content-body" ng-show="taskInfo">
+            <div class="module-header">
+                <div ng-include="'modules/tasks/views/components/task-parentinfo.client.view.html'"></div>
+            </div>
+            <div class="clearfix well-sm">
+                <div ng-include="'modules/tasks/views/components/task-actions.client.view.html'"></div>
+            </div>
+            <div class="module-header">
+                <div ng-include="'modules/tasks/views/components/task-info.client.view.html'"></div>
+            </div>
+
+
+            <div class="well-sm">
+                <div data-ui-view></div>
+            </div>
+        </section>
+
+        <section class="content-body" ng-hide="taskInfo">
+            <div>{{progressMsg}}</div>
+        </section>
+    </div>
+</div>
