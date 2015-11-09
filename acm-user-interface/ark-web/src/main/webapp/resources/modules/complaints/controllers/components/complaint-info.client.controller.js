@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService', 'CasesModelsService',
-    function ($scope, $stateParams, Store, Util, Validator, Helper, LookupService, CasesService, CasesModelsService) {
+//angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'ComplaintsService', 'ComplaintsModelsService',
+//    function ($scope, $stateParams, Store, Util, Validator, Helper, LookupService, ComplaintsService, ComplaintsModelsService) {
+angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'ComplaintsService',
+    function ($scope, $stateParams, Store, Util, Validator, Helper, LookupService, ComplaintsService) {
         $scope.$emit('req-component-config', 'info');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("info" == componentId) {
@@ -34,7 +36,8 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
                 return priorities;
             }
         );
-
+        var z = 1;
+        return;
         $scope.assignableUsers = [];
         var cacheUsers = new Store.SessionData(Helper.SessionCacheNames.USERS);
         var users = cacheUsers.get();
@@ -53,7 +56,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
                 var options = [];
                 _.each(users, function (user) {
                     var userInfo = JSON.parse(user);
-                    options.push({object_id_s: userInfo.object_id_s, name: userInfo.name});
+                    options.push({value: userInfo.object_id_s, text: userInfo.object_id_s});
                 });
                 $scope.assignableUsers = options;
                 return users;
@@ -84,60 +87,60 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        $scope.caseTypes = [];
-        var cacheCaseTypes = new Store.SessionData(Helper.SessionCacheNames.CASE_TYPES);
-        var caseTypes = cacheCaseTypes.get();
+        $scope.complaintTypes = [];
+        var cacheComplaintTypes = new Store.SessionData(Helper.SessionCacheNames.CASE_TYPES);
+        var complaintTypes = cacheComplaintTypes.get();
         Util.serviceCall({
-            service: LookupService.getCaseTypes
-            , result: caseTypes
+            service: LookupService.getComplaintTypes
+            , result: complaintTypes
             , onSuccess: function (data) {
-                if (Validator.validateCaseTypes(data)) {
-                    caseTypes = data;
-                    cacheCaseTypes.set(caseTypes);
-                    return caseTypes;
+                if (Validator.validateComplaintTypes(data)) {
+                    complaintTypes = data;
+                    cacheComplaintTypes.set(complaintTypes);
+                    return complaintTypes;
                 }
             }
         }).then(
-            function (caseTypes) {
+            function (complaintTypes) {
                 var options = [];
-                _.forEach(caseTypes, function (item) {
+                _.forEach(complaintTypes, function (item) {
                     options.push({value: item, text: item});
                 });
-                $scope.caseTypes = options;
-                return caseTypes;
+                $scope.complaintTypes = options;
+                return complaintTypes;
             }
         );
 
-        $scope.caseSolr = null;
-        $scope.caseInfo = null;
-        $scope.$on('case-selected', function onSelectedCase(e, selectedCase) {
-            $scope.caseSolr = selectedCase;
+        $scope.complaintSolr = null;
+        $scope.complaintInfo = null;
+        $scope.$on('complaint-selected', function onSelectedComplaint(e, selectedComplaint) {
+            $scope.complaintSolr = selectedComplaint;
         });
         $scope.assignee = null;
         $scope.owningGroup = null;
-        $scope.$on('case-retrieved', function(e, data){
-            if (Validator.validateCaseFile(data)) {
-                $scope.caseInfo = data;
-                $scope.assignee = CasesModelsService.getAssignee(data);
-                $scope.owningGroup = CasesModelsService.getGroup(data);
+        $scope.$on('complaint-retrieved', function (e, data) {
+            if (Validator.validateComplaint(data)) {
+                $scope.complaintInfo = data;
+                $scope.assignee = ComplaintsModelsService.getAssignee(data);
+                $scope.owningGroup = ComplaintsModelsService.getGroup(data);
             }
         });
 
         /**
-         * Persists the updated casefile metadata to the ArkCase database
+         * Persists the updated complaintfile metadata to the ArkComplaint databomplaint
          */
-        function saveCase() {
-            if (Validator.validateCaseFile($scope.caseInfo)) {
-                var caseInfo = Util.omitNg($scope.caseInfo);
+        function saveComplaint() {
+            if (Validator.validateComplaint($scope.complaintInfo)) {
+                var complaintInfo = Util.omitNg($scope.complaintInfo);
                 Util.serviceCall({
-                    service: CasesService.save
-                    , data: caseInfo
+                    service: ComplaintsService.save
+                    , data: complaintInfo
                     , onSuccess: function (data) {
                         return data;
                     }
                 }).then(
                     function (successData) {
-                        //notify "case saved successfully" ?
+                        //notify "complaint saved successfully" ?
                     }
                     , function (errorData) {
                         //handle error
@@ -145,38 +148,38 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
                 );
             }
 
-            //var caseInfo = Util.omitNg($scope.caseInfo);
-            //CasesService.save({}, caseInfo
+            //var complaintInfo = Util.omitNg($scope.complaintInfo);
+            //ComplaintsService.save({}, complaintInfo
             //    ,function(successData) {
-            //        $log.debug("case saved successfully");
+            //        $log.debug("complaint saved successfully");
             //    }
             //    ,function(errorData) {
-            //        $log.error("case save failed");
+            //        $log.error("complaint save failed");
             //    }
             //);
         }
 
-        // Updates the ArkCase database when the user changes a case attribute
-        // in a case top bar menu item and clicks the save check button
-        $scope.updateTitle = function() {
-            saveCase();
+        // Updates the ArkComplaint databomplaint when the user changes a complaint attribute
+        // in a complaint top bar menu item and clicks the save check button
+        $scope.updateTitle = function () {
+            saveComplaint();
         };
-        $scope.updateOwningGroup = function() {
-            CasesModelsService.setGroup($scope.caseInfo, $scope.owningGroup);
-            saveCase();
+        $scope.updateOwningGroup = function () {
+            ComplaintsModelsService.setGroup($scope.complaintInfo, $scope.owningGroup);
+            saveComplaint();
         };
-        $scope.updatePriority = function() {
-            saveCase();
+        $scope.updatePriority = function () {
+            saveComplaint();
         };
-        $scope.updateCaseType = function() {
-            saveCase();
+        $scope.updateComplaintType = function () {
+            saveComplaint();
         };
-        $scope.updateAssignee = function() {
-            CasesModelsService.setAssignee($scope.caseInfo, $scope.assignee);
-            saveCase();
+        $scope.updateAssignee = function () {
+            ComplaintsModelsService.setAssignee($scope.complaintInfo, $scope.assignee);
+            saveComplaint();
         };
-        $scope.updateDueDate = function() {
-            saveCase();
+        $scope.updateDueDate = function () {
+            saveComplaint();
         };
 
     }

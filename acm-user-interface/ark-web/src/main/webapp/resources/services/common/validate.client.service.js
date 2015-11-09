@@ -790,7 +790,26 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
+        , validateComplaint: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.complaintId) || Util.isEmpty(data.complaintNumber)) {
+                return false;
+            }
+            if (!Util.isArray(data.childObjects)) {
+                return false;
+            }
+            if (!Util.isArray(data.participants)) {
+                return false;
+            }
+            if (!Util.isArray(data.personAssociations)) {
+                return false;
+            }
 
+
+            return true;
+        }
 
 
     }}
