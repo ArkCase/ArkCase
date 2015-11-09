@@ -1,17 +1,17 @@
 'use strict';
 
-angular.module('cases').controller('CasesListController', ['$scope', '$state', '$stateParams', 'UtilService', 'ValidationService', 'StoreService', 'HelperService', 'CasesService', 'ConfigService', 'CasesModelsService',
-    function ($scope, $state, $stateParams, Util, Validator, Store, Helper, CasesService, ConfigService, CasesModelsService) {
-        var cacheCasesConfig = new Store.SessionData(Helper.SessionCacheNames.CASES_CONFIG);
-        var config = cacheCasesConfig.get();
+angular.module('complaints').controller('ComplaintsListController', ['$scope', '$state', '$stateParams', 'UtilService', 'ValidationService', 'StoreService', 'HelperService', 'ComplaintsService', 'ConfigService',
+    function ($scope, $state, $stateParams, Util, Validator, Store, Helper, ComplaintsService, ConfigService) {
+        var cacheComplaintsConfig = new Store.SessionData(Helper.SessionCacheNames.COMPLAINTS_CONFIG);
+        var config = cacheComplaintsConfig.get();
         var promiseGetModule = Util.serviceCall({
             service: ConfigService.getModule
-            , param: {moduleId: 'cases'}
+            , param: {moduleId: 'complaints'}
             , result: config
             , onSuccess: function (data) {
-                if (Validator.validateCasesConfig(data)) {
+                if (Validator.validateComplaintsConfig(data)) {
                     config = data;
-                    cacheCasesConfig.set(config);
+                    cacheComplaintsConfig.set(config);
                     return config;
                 }
             }
@@ -23,10 +23,10 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
             }
         );
 
-        var cacheCaseList = new Store.CacheFifo(Helper.CacheNames.CASE_LIST);
+        var cacheComplaintList = new Store.CacheFifo(Helper.CacheNames.COMPLAINT_LIST);
         $scope.onLoad = function (start, n, sort, filters) {
             var cacheKey = start + "." + n + "." + sort + "." + filters;
-            var treeData = cacheCaseList.get(cacheKey);
+            var treeData = cacheComplaintList.get(cacheKey);
 
             var param = {};
             param.start = start;
@@ -34,7 +34,7 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
             param.sort = sort;
             param.filters = filters;
             return Util.serviceCall({
-                service: CasesService.queryCases
+                service: ComplaintsService.queryComplaints
                 , param: param
                 , result: treeData
                 , onSuccess: function (data) {
@@ -44,12 +44,12 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
                         _.forEach(docs, function (doc) {
                             treeData.docs.push({
                                 nodeId: Util.goodValue(doc.object_id_s, 0)
-                                , nodeType: Helper.ObjectTypes.CASE_FILE
+                                , nodeType: Helper.ObjectTypes.COMPLAINT
                                 , nodeTitle: Util.goodValue(doc.title_parseable)
                                 , nodeToolTip: Util.goodValue(doc.title_parseable)
                             });
                         });
-                        cacheCaseList.put(cacheKey, treeData);
+                        cacheComplaintList.put(cacheKey, treeData);
                         return treeData;
                     }
                 }
@@ -61,13 +61,13 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
             );
         };
 
-        $scope.onSelect = function (selectedCase) {
-            $scope.$emit('req-select-case', selectedCase);
-            var components = Util.goodArray(selectedCase.components);
+        $scope.onSelect = function (selectedComplaint) {
+            $scope.$emit('req-select-complaint', selectedComplaint);
+            var components = Util.goodArray(selectedComplaint.components);
             var componentType = (1 == components.length) ? components[0] : "main";
-            $state.go('cases.' + componentType, {
-                id: selectedCase.nodeId
-            });
+            //$state.go('complaints.' + componentType, {
+            //    id: selectedComplaint.nodeId
+            //});
         };
     }
 ]);

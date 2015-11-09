@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.NotesController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService', 'Authentication',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, LookupService, CasesService, Authentication) {
+angular.module('complaints').controller('Complaints.NotesController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'ComplaintsService', 'Authentication',
+    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, LookupService, ComplaintsService, Authentication) {
+        var z = 1;
+        return;
         $scope.$emit('req-component-config', 'notes');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("notes" == componentId) {
@@ -24,20 +26,20 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
         $scope.currentId = $stateParams.id;
         $scope.retrieveGridData = function () {
             if ($scope.currentId) {
-                var cacheCaseNotes = new Store.CacheFifo(Helper.CacheNames.CASE_NOTES);
+                var cacheComplaintNotes = new Store.CacheFifo(Helper.CacheNames.CASE_NOTES);
                 var cacheKey = $scope.currentId;
-                var notes = cacheCaseNotes.get(cacheKey);
+                var notes = cacheComplaintNotes.get(cacheKey);
                 var promiseQueryNotes = Util.serviceCall({
-                    service: CasesService.queryNotes
+                    service: ComplaintsService.queryNotes
                     , param: {
-                        parentType: Helper.ObjectTypes.CASE_FILE,
+                        parentType: Helper.ObjectTypes.COMPLAINT,
                         parentId: $scope.currentId
                     }
                     , result: notes
                     , onSuccess: function (data) {
                         if (Validator.validateNotes(data)) {
                             notes = data;
-                            cacheCaseNotes.put(cacheKey, notes);
+                            cacheComplaintNotes.put(cacheKey, notes);
                             return notes;
                         }
                     }
@@ -56,7 +58,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             $scope.gridApi.pagination.seek(lastPage);
             var newRow = {};
             newRow.parentId = $scope.currentId;
-            newRow.parentType = Helper.ObjectTypes.CASE_FILE;
+            newRow.parentType = Helper.ObjectTypes.COMPLAINT;
             newRow.created = Util.getCurrentDay();
             newRow.creator = $scope.userId;
             $scope.gridOptions.data.push(newRow);
@@ -66,7 +68,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
         $scope.updateRow = function (rowEntity) {
             var note = Util.omitNg(rowEntity);
             Util.serviceCall({
-                service: CasesService.saveNote
+                service: ComplaintsService.saveNote
                 , data: note
                 , onSuccess: function (data) {
                     if (Validator.validateNote(data)) {
@@ -81,18 +83,6 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
                     }
                 }
             );
-            //CasesService.saveNote({}, note
-            //    , function (successData) {
-            //        if (Validator.validateNote(successData)) {
-            //            if (Util.isEmpty(rowEntity.id)) {
-            //                var noteAdded = successData;
-            //                rowEntity.id = noteAdded.id;
-            //            }
-            //        }
-            //    }
-            //    , function (errorData) {
-            //    }
-            //);
         }
         $scope.deleteRow = function (rowEntity) {
             Helper.Grid.deleteRow($scope, rowEntity);
@@ -100,7 +90,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
                 Util.serviceCall({
-                    service: CasesService.deleteNote
+                    service: ComplaintsService.deleteNote
                     , param: {noteId: id}
                     , data: {}
                     , onSuccess: function (data) {
@@ -109,14 +99,6 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
                         }
                     }
                 });
-                //CasesService.deleteNote({noteId: id}
-                //    , function (successData) {
-                //        if (Validator.validateDeletedNote(successData)) {
-                //        }
-                //    }
-                //    , function (errorData) {
-                //    }
-                //);
             }
 
         };

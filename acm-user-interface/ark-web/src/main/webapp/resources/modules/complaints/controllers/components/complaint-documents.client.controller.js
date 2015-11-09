@@ -1,8 +1,10 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ValidationService', 'StoreService', 'HelperService', 'LookupService',
+angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ValidationService', 'StoreService', 'HelperService', 'LookupService',
     function ($scope, $stateParams, $modal, Util, Validator, Store, Helper, LookupService) {
-		$scope.$emit('req-component-config', 'documents');
+        var z = 1;
+        return;
+        $scope.$emit('req-component-config', 'documents');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('documents' == componentId) {
                 $scope.config = config;
@@ -33,7 +35,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         var formTypes = cacheFormTypes.get();
         var promiseFormTypes = Util.serviceCall({
             service: LookupService.getPlainforms
-            , param: {objType: Helper.ObjectTypes.CASE_FILE}
+            , param: {objType: Helper.ObjectTypes.COMPLAINT}
             , result: formTypes
             , onSuccess: function (data) {
                 if (Validator.validatePlainForms(data)) {
@@ -62,12 +64,12 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
         $scope.treeArgs = {};
 
-        $scope.objectType = Helper.ObjectTypes.CASE_FILE;
+        $scope.objectType = Helper.ObjectTypes.COMPLAINT;
         $scope.objectId = $stateParams.id;
         $scope.containerId = 0;
-        $scope.$on('case-retrieved', function (e, data) {
-            if (Validator.validateCaseFile(data)) {
-                $scope.caseInfo = data;
+        $scope.$on('complaint-retrieved', function (e, data) {
+            if (Validator.validateComplaint(data)) {
+                $scope.complaintInfo = data;
                 //$scope.objectType = Helper.ObjectTypes.CASE_FILE;
                 //$scope.objectId = Util.goodValue(data.id, 0);
             }
@@ -80,8 +82,8 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             return value;
         };
         $scope.uploadForm = function (type, folderId, onCloseForm) {
-            if ($scope.caseInfo) {
-                //CaseFile.View.Documents.getFileTypeByType(type);
+            if ($scope.complaintInfo) {
+                //Complaint.View.Documents.getFileTypeByType(type);
                 var fileType = _.find($scope.fileTypes, {type: type});
                 if (Validator.validatePlainForm(fileType)) {
                     var data = "_data=(";
@@ -95,8 +97,8 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                         if (!Util.isEmpty(urlParameters[i].defaultValue)) {
                             value = silentReplace(urlParameters[i].defaultValue, "'", "_0027_");
                         } else if (!Util.isEmpty(urlParameters[i].keyValue)) {
-                            if (!Util.isEmpty($scope.caseInfo[urlParameters[i].keyValue])) {
-                                value = silentReplace($scope.caseInfo[urlParameters[i].keyValue], "'", "_0027_");
+                            if (!Util.isEmpty($scope.complaintInfo[urlParameters[i].keyValue])) {
+                                value = silentReplace($scope.complaintInfo[urlParameters[i].keyValue], "'", "_0027_");
                             }
                         }
                         value = encodeURIComponent(value);
@@ -110,5 +112,5 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                 }
             }
         }
-	}
+    }
 ]);
