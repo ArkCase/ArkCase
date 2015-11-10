@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'HelperService', 'CallLookupService',
-    function ($scope, $stateParams, $modal, Util, Helper, CallLookupService) {
+angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ConstantService', 'CallLookupService',
+    function ($scope, $stateParams, $modal, Util, Constant, CallLookupService) {
 		$scope.$emit('req-component-config', 'documents');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('documents' == componentId) {
@@ -25,13 +25,11 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         );
 
 
-        $scope.objectType = Helper.ObjectTypes.CASE_FILE;
+        $scope.objectType = Constant.ObjectTypes.CASE_FILE;
         $scope.objectId = $stateParams.id;
         //$scope.containerId = 0;
         $scope.$on('case-retrieved', function (e, data) {
             $scope.caseInfo = data;
-            //$scope.objectType = Helper.ObjectTypes.CASE_FILE;
-            //$scope.objectId = Util.goodValue(data.id, 0);
         });
 
         var silentReplace = function (value, replace, replacement) {

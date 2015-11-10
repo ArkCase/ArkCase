@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'HelperService', 'CallLookupService',
-    function ($scope, $stateParams, $modal, Util, Helper, CallLookupService) {
+angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ConstantService', 'CallLookupService',
+    function ($scope, $stateParams, $modal, Util, Constant, CallLookupService) {
         $scope.$emit('req-component-config', 'attachments');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('attachments' == componentId) {
@@ -19,7 +19,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         );
 
 
-        $scope.objectType = Helper.ObjectTypes.TASK;
+        $scope.objectType = Constant.ObjectTypes.TASK;
         $scope.objectId = $stateParams.id;
         $scope.$on('task-retrieved', function (e, data) {
             $scope.taskInfo = data;
