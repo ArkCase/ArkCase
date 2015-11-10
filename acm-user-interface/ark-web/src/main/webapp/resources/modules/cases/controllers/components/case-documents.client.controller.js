@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ValidationService', 'StoreService', 'HelperService', 'LookupService',
-    function ($scope, $stateParams, $modal, Util, Validator, Store, Helper, LookupService) {
+angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'HelperService', 'CallLookupService',
+    function ($scope, $stateParams, $modal, Util, Helper, CallLookupService) {
 		$scope.$emit('req-component-config', 'documents');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('documents' == componentId) {
@@ -9,19 +9,14 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             }
         });
 
-        var cacheFileTypes = new Store.SessionData(Helper.SessionCacheNames.FILE_TYPES);
-        var fileTypes = cacheFileTypes.get();
-        var promiseFileTypes = Util.serviceCall({
-            service: LookupService.getFileTypes
-            , result: fileTypes
-            , onSuccess: function (data) {
-                if (Validator.validateFileTypes(data)) {
-                    fileTypes = data;
-                    cacheFileTypes.set(fileTypes);
-                    return fileTypes;
-                }
+        CallLookupService.getFormTypes().then(
+            function (formTypes) {
+                $scope.fileTypes = $scope.fileTypes || [];
+                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));
+                return formTypes;
             }
-        }).then(
+        );
+        CallLookupService.getFileTypes().then(
             function (fileTypes) {
                 $scope.fileTypes = $scope.fileTypes || [];
                 $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
@@ -29,48 +24,14 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             }
         );
 
-        var cacheFormTypes = new Store.SessionData(Helper.SessionCacheNames.FORM_TYPES);
-        var formTypes = cacheFormTypes.get();
-        var promiseFormTypes = Util.serviceCall({
-            service: LookupService.getPlainforms
-            , param: {objType: Helper.ObjectTypes.CASE_FILE}
-            , result: formTypes
-            , onSuccess: function (data) {
-                if (Validator.validatePlainForms(data)) {
-                    var plainForms = data;
-                    formTypes = [];
-                    _.each(plainForms, function (plainForm) {
-                        var formType = {};
-                        formType.type = plainForm.key;
-                        formType.label = Util.goodValue(plainForm.name);
-                        formType.url = Util.goodValue(plainForm.url);
-                        formType.urlParameters = Util.goodArray(plainForm.urlParameters);
-                        formType.form = true;
-                        formTypes.unshift(formType);
-                    });
-                    cacheFormTypes.set(formTypes);
-                    return formTypes;
-                }
-            }
-        }).then(
-            function (formTypes) {
-                $scope.fileTypes = $scope.fileTypes || [];
-                $scope.fileTypes = formTypes.concat(Util.goodArray($scope.fileTypes));
-                return formTypes;
-            }
-        );
-
-        $scope.treeArgs = {};
 
         $scope.objectType = Helper.ObjectTypes.CASE_FILE;
         $scope.objectId = $stateParams.id;
-        $scope.containerId = 0;
+        //$scope.containerId = 0;
         $scope.$on('case-retrieved', function (e, data) {
-            if (Validator.validateCaseFile(data)) {
-                $scope.caseInfo = data;
-                //$scope.objectType = Helper.ObjectTypes.CASE_FILE;
-                //$scope.objectId = Util.goodValue(data.id, 0);
-            }
+            $scope.caseInfo = data;
+            //$scope.objectType = Helper.ObjectTypes.CASE_FILE;
+            //$scope.objectId = Util.goodValue(data.id, 0);
         });
 
         var silentReplace = function (value, replace, replacement) {
@@ -83,7 +44,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             if ($scope.caseInfo) {
                 //CaseFile.View.Documents.getFileTypeByType(type);
                 var fileType = _.find($scope.fileTypes, {type: type});
-                if (Validator.validatePlainForm(fileType)) {
+                if (CallLookupService.validatePlainForm(fileType)) {
                     var data = "_data=(";
 
                     var url = fileType.url;

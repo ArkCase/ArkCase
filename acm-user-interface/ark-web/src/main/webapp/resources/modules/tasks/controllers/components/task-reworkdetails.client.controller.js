@@ -1,8 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ReworkDetailsController', ['$scope', '$stateParams', 'UtilService', 'ValidationService', 'TasksService',
-    function ($scope, $stateParams, Util, Validator, TasksService) {
-        return;
+angular.module('tasks').controller('Tasks.ReworkDetailsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallTasksService', 'MessageService',
+    function ($scope, $stateParams, $translate, Util, CallTasksService, MessageService) {
         $scope.$emit('req-component-config', 'reworkdetails');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('reworkdetails' == componentId) {
@@ -11,9 +10,7 @@ angular.module('tasks').controller('Tasks.ReworkDetailsController', ['$scope', '
         });
 
         $scope.$on('task-retrieved', function (e, data) {
-            if (Validator.validateTask(data)) {
-                $scope.taskInfo = data;
-            }
+            $scope.taskInfo = data;
         });
 
 
@@ -28,10 +25,12 @@ angular.module('tasks').controller('Tasks.ReworkDetailsController', ['$scope', '
         $scope.saveDetails = function () {
             //$scope.editor.destroy();
             var taskInfo = Util.omitNg($scope.taskInfo);
-            Util.serviceCall({
-                service: TasksService.save
-                , data: taskInfo
-            });
+            CallTasksService.saveTaskInfo(taskInfo).then(
+                function (taskInfo) {
+                    MessageService.info($translate.instant("tasks.comp.details.informSaved"));
+                    return taskInfo;
+                }
+            );
         };
     }
 ]);
