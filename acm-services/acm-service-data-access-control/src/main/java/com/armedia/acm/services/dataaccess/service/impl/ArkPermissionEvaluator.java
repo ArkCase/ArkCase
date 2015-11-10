@@ -71,7 +71,12 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
                     targetType + "'");
         }
 
-        boolean hasRead = checkForReadAccess(authentication, id, targetType);
+        if (!checkForReadAccess(authentication, id, targetType))
+        {
+            // no access since they can't read it
+            log.warn("No read access, returning false");
+            return false;
+        }
 
         // break here and return true if any of AC rules match (see SBI-956)
         if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, (String) permission))
@@ -79,7 +84,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
             return true;
         }
 
-        return evaluateAccess(authentication, id, targetType, (String) permission, hasRead);
+        return evaluateAccess(authentication, id, targetType, (String) permission);
     }
 
     @Override
@@ -89,21 +94,13 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
         throw new UnsupportedOperationException("Checking permissions on an object reference is not supported");
     }
 
-    private boolean evaluateAccess(Authentication authentication, Long objectId, String objectType, String permission,
-                                   boolean hasReadAccess)
+    private boolean evaluateAccess(Authentication authentication, Long objectId, String objectType, String permission)
     {
-        if (!hasReadAccess)
-        {
-            // no access since they can't read it
-            log.trace("No read access, returning false");
-            return hasReadAccess;
-        }
-
         if (DataAccessControlConstants.ACCESS_LEVEL_READ.equals(permission))
         {
             // they want read, and we already know whether they can read, so we're done
             log.trace("Read access requested - returning read access level");
-            return hasReadAccess;
+            return true;
         }
 
         boolean hasAccessDirectlyOrViaDefaultUser = getParticipantDao().hasObjectAccess(
