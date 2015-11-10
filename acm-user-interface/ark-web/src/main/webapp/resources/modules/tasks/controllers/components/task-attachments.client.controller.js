@@ -1,8 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ValidationService', 'StoreService', 'HelperService', 'LookupService',
-    function ($scope, $stateParams, $modal, Util, Validator, Store, Helper, LookupService) {
-        return;
+angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'HelperService', 'CallLookupService',
+    function ($scope, $stateParams, $modal, Util, Helper, CallLookupService) {
         $scope.$emit('req-component-config', 'attachments');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('attachments' == componentId) {
@@ -10,19 +9,8 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             }
         });
 
-        var cacheFileTypes = new Store.SessionData(Helper.SessionCacheNames.FILE_TYPES);
-        var fileTypes = cacheFileTypes.get();
-        var promiseFileTypes = Util.serviceCall({
-            service: LookupService.getFileTypes
-            , result: fileTypes
-            , onSuccess: function (data) {
-                if (Validator.validateFileTypes(data)) {
-                    fileTypes = data;
-                    cacheFileTypes.set(fileTypes);
-                    return fileTypes;
-                }
-            }
-        }).then(
+
+        CallLookupService.getFileTypes().then(
             function (fileTypes) {
                 $scope.fileTypes = $scope.fileTypes || [];
                 $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
@@ -30,86 +18,12 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             }
         );
 
-        var cacheFormTypes = new Store.SessionData(Helper.SessionCacheNames.FORM_TYPES);
-        var formTypes = cacheFormTypes.get();
-        var promiseFormTypes = Util.serviceCall({
-            service: LookupService.getPlainforms
-            , param: {objType: Helper.ObjectTypes.CASE_FILE}
-            , result: formTypes
-            , onSuccess: function (data) {
-                if (Validator.validatePlainForms(data)) {
-                    var plainForms = data;
-                    formTypes = [];
-                    _.each(plainForms, function (plainForm) {
-                        var formType = {};
-                        formType.type = plainForm.key;
-                        formType.label = Util.goodValue(plainForm.name);
-                        formType.url = Util.goodValue(plainForm.url);
-                        formType.urlParameters = Util.goodArray(plainForm.urlParameters);
-                        formType.form = true;
-                        formTypes.unshift(formType);
-                    });
-                    cacheFormTypes.set(formTypes);
-                    return formTypes;
-                }
-            }
-        }).then(
-            function (formTypes) {
-                $scope.fileTypes = $scope.fileTypes || [];
-                $scope.fileTypes = formTypes.concat(Util.goodArray($scope.fileTypes));
-                return formTypes;
-            }
-        );
 
-        $scope.treeArgs = {};
-
-        $scope.objectType = Helper.ObjectTypes.CASE_FILE;
+        $scope.objectType = Helper.ObjectTypes.TASK;
         $scope.objectId = $stateParams.id;
-        $scope.containerId = 0;
         $scope.$on('task-retrieved', function (e, data) {
-            if (Validator.validateTask(data)) {
-                $scope.taskInfo = data;
-                //$scope.objectType = Helper.ObjectTypes.CASE_FILE;
-                //$scope.objectId = Util.goodValue(data.id, 0);
-            }
+            $scope.taskInfo = data;
         });
 
-        var silentReplace = function (value, replace, replacement) {
-            if (!Util.isEmpty(value) && value.replace) {
-                value = value.replace(replace, replacement);
-            }
-            return value;
-        };
-        $scope.uploadForm = function (type, folderId, onCloseForm) {
-            if ($scope.taskInfo) {
-                //Task.View.Documents.getFileTypeByType(type);
-                var fileType = _.find($scope.fileTypes, {type: type});
-                if (Validator.validatePlainForm(fileType)) {
-                    var data = "_data=(";
-
-                    var url = fileType.url;
-                    var urlParameters = fileType.urlParameters;
-                    var parametersAsString = '';
-                    for (var i = 0; i < urlParameters.length; i++) {
-                        var key = urlParameters[i].name;
-                        var value = '';
-                        if (!Util.isEmpty(urlParameters[i].defaultValue)) {
-                            value = silentReplace(urlParameters[i].defaultValue, "'", "_0027_");
-                        } else if (!Util.isEmpty(urlParameters[i].keyValue)) {
-                            if (!Util.isEmpty($scope.taskInfo[urlParameters[i].keyValue])) {
-                                value = silentReplace($scope.taskInfo[urlParameters[i].keyValue], "'", "_0027_");
-                            }
-                        }
-                        value = encodeURIComponent(value);
-                        parametersAsString += key + ":'" + Util.goodValue(value) + "',";
-                    }
-                    parametersAsString += "folderId:'" + folderId + "',";
-                    data += parametersAsString;
-
-                    url = url.replace("_data=(", data);
-                    return url;
-                }
-            }
-        }
     }
 ]);

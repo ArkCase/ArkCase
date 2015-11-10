@@ -15,6 +15,9 @@
  * @param {Expression} treeData Data structure used to render the top level tree nodes of the current page
  * @param {Function} onSelect Callback function in response to selected tree item.
  * @param {Function} onLoad Callback function to load list of objects.
+ * @param {Object} treeControl Tree API functions exposed to user. Following is the list:
+ * @param {Function} treeControl.setTitle Set title of a tree node
+ * @param {Function} treeControl.select Select a tree node with specified key
  *
  * @example
  <example>
