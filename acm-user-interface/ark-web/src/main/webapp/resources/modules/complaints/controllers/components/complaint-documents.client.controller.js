@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'HelperService', 'CallLookupService',
-    function ($scope, $stateParams, $modal, Util, Helper, CallLookupService) {
+angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ConstantService', 'CallLookupService',
+    function ($scope, $stateParams, $modal, Util, Constant, CallLookupService) {
         var z = 1;
         return;
         $scope.$emit('req-component-config', 'documents');
@@ -28,7 +28,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         );
 
 
-        $scope.objectType = Helper.ObjectTypes.COMPLAINT;
+        $scope.objectType = Constant.ObjectTypes.COMPLAINT;
         $scope.objectId = $stateParams.id;
         //$scope.containerId = 0;
         $scope.$on('complaint-retrieved', function (e, data) {
