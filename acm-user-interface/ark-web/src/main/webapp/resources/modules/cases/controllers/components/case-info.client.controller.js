@@ -147,7 +147,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
          * Persists the updated casefile metadata to the ArkCase database
          */
         function saveCase() {
-            if (CallCasesService.validateCaseFile($scope.caseInfo)) {
+            if (CallCasesService.validateCaseInfo($scope.caseInfo)) {
                 var caseInfo = Util.omitNg($scope.caseInfo);
                 Util.serviceCall({
                     service: CasesService.save
