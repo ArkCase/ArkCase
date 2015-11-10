@@ -1,0 +1,36 @@
+<div ng-controller="Tasks.ActionsController">
+    <div class="col-xs-4">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox"> {{'tasks.comp.actions.restrict' | translate}}
+            </label>
+        </div>
+    </div>
+
+    <div class="pull-right">
+        <div class="btn-group">
+            <button class="btn btn-sm btn-default" ng-click="loadNewTaskFrevvoForm()"><i
+                    class="fa fa-edit"></i> {{'tasks.comp.actions.new.button' | translate}}
+            </button>
+            <button class="btn btn-sm btn-default"><i class="fa fa-edit"></i> {{'tasks.comp.actions.edit.button' |
+                translate}}
+            </button>
+            <button class="btn btn-sm btn-default" ng-click="loadChangeTaskStatusFrevvoForm(taskInfo)"><i
+                    class="fa fa-edit"></i> {{'tasks.comp.actions.status.button' | translate}}
+            </button>
+            <button class="btn btn-sm btn-default"><i class="fa fa-reply"></i>
+                {{'tasks.comp.actions.reinvestigate.button' | translate}}
+            </button>
+            <button class="btn btn-sm btn-default"><i class="fa fa-bullhorn"></i>
+                {{'tasks.comp.actions.subscribe.button'
+                | translate}}
+            </button>
+            <button class="btn btn-sm btn-default"><i class="fa fa-random"></i> {{'tasks.comp.actions.merge.button' |
+                translate}}
+            </button>
+            <button class="btn btn-sm btn-default"><i class="fa fa-code-fork"></i> {{'tasks.comp.actions.split.button' |
+                translate}}
+            </button>
+        </div>
+    </div>
+</div>

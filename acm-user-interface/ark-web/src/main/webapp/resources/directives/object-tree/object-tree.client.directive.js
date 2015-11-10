@@ -137,12 +137,55 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
     function ($q, $translate, Util, Validator, Store) {
         var Tree = {
             create: function (treeArgs) {
-                Tree.Info.create({name: "cases"});
+                Tree.Info.create({name: "ObjectTree"});
 
                 var treeArgsToUse = this._getDefaultTreeArgs();
                 _.merge(treeArgsToUse, treeArgs);
                 Tree.jqDivTree.fancytree(treeArgsToUse);
                 Tree.tree = Tree.jqDivTree.fancytree('getTree');
+            }
+            , select: function (arg) {
+                var treeInfo = Tree.Info.getTreeInfo();
+                var pageStart = Util.goodValue(arg.pageStart, treeInfo.start);
+                var nodeType = arg.nodeType;
+                var nodeId = arg.nodeId;
+                var subKey = arg.subKey;
+
+                var key = Tree.Key.getKeyByObjWithPage(treeInfo.start, nodeType, nodeId);
+                if (!Util.isEmpty(subKey)) {
+                    key += Tree.Key.KEY_SEPARATOR;
+                    key += subKey;
+                }
+                treeInfo.key = key;
+                //Tree.refreshTree(key);
+
+            }, setTitle: function (nodeType, nodeId, title, toolTip) {
+                console.log("tree setTitle");
+            }
+
+            , refreshTree: function (key) {
+                var a1 = this;
+                var a2 = Tree;
+                this.tree.reload().done(function () {
+                    if (!Util.isEmpty(key)) {
+                        var parts = key.split(Tree.Key.KEY_SEPARATOR);
+                        if (parts && 1 < parts.length) {
+                            var parentKey = parts[0];
+                            //exclude page ID, so start from 1; expand parents only, not include self, so length-1
+                            for (var i = 1; i < parts.length - 1; i++) {
+                                parentKey += Tree.Key.KEY_SEPARATOR + parts[i];
+                                var node = Tree.tree.getNodeByKey(parentKey);
+                                if (node) {
+                                    if (!node.isExpanded()) {
+                                        node.setExpanded(true);
+                                    }
+                                }
+                            }
+                        }
+
+                        Tree.tree.activateKey(key);
+                    }
+                });
             }
 
             , _previousKey: null
@@ -174,6 +217,14 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 this._nodeId = nodeId;
             }
 
+            , reset: function () {
+                this._previousKey = null;
+                this._activeKey = null;
+                this._nodeType = null;
+                this._nodeId = 0;
+
+                Tree.Info.reset();
+            }
             , fixNodeIcon: function (node) {
                 var key = node.key;
                 var nodeType = Tree.Key.getNodeTypeByKey(key);
@@ -243,7 +294,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                             treeInfo.start = 0;
                         }
                     }
-                    Tree.onLoad()(treeInfo.start, treeInfo.n, "sort-date-asc", "my-created-cases");
+                    Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter);
 
                 } else if (Tree.Key.getKeyNextPage() == node.key) {
                     Tree.setNodeId(0);
@@ -255,7 +306,8 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     } else if ((treeInfo.total - treeInfo.n) > treeInfo.start) {
                         treeInfo.start += treeInfo.n;
                     }
-                    Tree.onLoad()(treeInfo.start, treeInfo.n, "sort-date-asc", "my-created-cases");
+                    //Tree.onLoad()(treeInfo.start, treeInfo.n, "sort-date-asc", "my-created-cases");
+                    Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter);
 
                 } else {
                     var activeKey = Tree.getActiveKey();
@@ -490,20 +542,32 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     this.setName(args.name);
                     this.readTreeInfo();
                 }
-
                 , DEFAULT_PAGE_SIZE: 32
                 , _treeInfo: {
                     name: null
-                    , start: 0
-                    , n: 32
-                    , total: -1
-                    , sorter: ""
-                    , filter: ""
-                    , q: null
-                    , searchQuery: null
-                    , key: null
-                    , nodeId: 0
-                    , nodeType: null
+                    //, start: 0
+                    //, n: 32
+                    //, total: -1
+                    //, sorter: ""
+                    //, filter: ""
+                    //, q: null
+                    //, searchQuery: null
+                    //, key: null
+                    //, nodeId: 0
+                    //, nodeType: null
+                }
+                , reset: function () {
+                    this._treeInfo.name = null;
+                    this._treeInfo.start = 0;
+                    this._treeInfo.n = this.DEFAULT_PAGE_SIZE;
+                    this._treeInfo.total = -1;
+                    this._treeInfo.sorter = "";
+                    this._treeInfo.filter = "";
+                    this._treeInfo.q = null;
+                    this._treeInfo.searchQuery = null;
+                    this._treeInfo.key = null;
+                    this._treeInfo.nodeId = 0;
+                    this._treeInfo.nodeType = null;
                 }
                 , getTreeInfo: function () {
                     return this._treeInfo;
@@ -543,7 +607,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     return true;
                 }
                 , readTreeInfo: function () {
-                    this._initTreeInfo = new Store.SessionData("AcmCaseTreeInfo");
+                    this._initTreeInfo = new Store.SessionData("AcmObjectTreeInfo");
 
                     var ti = this.getTreeInfo();
                     var tiInit = this._initTreeInfo.get();
@@ -684,23 +748,29 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 , treeData: '='
                 , onLoad: '&'
                 , onSelect: '&'
+                , treeControl: '='
             }
 
             , link: function (scope, element, attrs) {
                 Filter.jqUlFilter = $(element).find(".treeFilter");
                 Sorter.jqUlSorter = $(element).find(".treeSorter");
 
+                Tree.reset();
                 Tree.scope = scope;
                 Tree.jqDivTree = $(element).find(".tree");
-                Tree.treeConfig = scope.treeConfig;
-                Tree.treeData = scope.treeData;
                 Tree.onLoad = scope.onLoad;
                 Tree.onSelect = scope.onSelect;
+                Tree.treeConfig = null; //scope.treeConfig;
+                Tree.treeData = null;   //scope.treeData;
+                scope.treeControl = {
+                    setTitle: Tree.setTitle
+                    , select: Tree.select
+                };
 
                 Tree.create();
 
                 var treeInfo = Tree.Info.getTreeInfo();
-                Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter);
+                //Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter);
 
                 scope.$watchGroup(['treeConfig', 'treeData'], function (newValues, oldValues, scope) {
                     var treeConfig = newValues[0];
@@ -726,7 +796,15 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                         }
                     }
                     if (isNewData && treeConfig && Util.goodMapValue(treeData, "docs", false)) {
-                        Tree.tree.reload(Tree.getSource());
+                        Tree.tree.reload(Tree.getSource()).done(function () {
+                            if (0 < treeData.docs.length) {
+                                var treeInfo = Tree.Info.getTreeInfo();
+                                if (!Util.isEmpty(treeInfo.key)) {
+                                    Tree.tree.activateKey(treeInfo.key);
+                                }
+                            }
+                        });
+
                     }
                 });
             }
