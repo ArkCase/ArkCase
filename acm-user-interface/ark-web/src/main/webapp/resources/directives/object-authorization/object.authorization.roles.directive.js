@@ -9,7 +9,7 @@
  *
  ** {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/directives/object-authorization/object.authorization.roles.directive.js directives/object-authorization/object.authorization.roles.directive.js}
  *
- * The object authorization roles directive is used for listing some objects and change their roles to be authorized or unauthorized.
+ * The object authorization roles directive is used for listing objects and change their roles to be authorized or unauthorized.
  *
  * @param {string} data objects data for the left panel.
  * @param {string} onObjectSelected callback function name when object is selected. It's used to fill the roles in the other two lists. callback function should look like this: function (selectedObject, authorized, notAuthorized).
