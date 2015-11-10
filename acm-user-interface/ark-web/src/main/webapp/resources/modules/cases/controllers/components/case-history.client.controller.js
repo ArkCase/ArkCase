@@ -14,7 +14,6 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
             }
         });
 
-
         var promiseUsers = Helper.Grid.getUsers($scope);
 
         $scope.currentId = $stateParams.id;
@@ -22,7 +21,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
         $scope.retrieveGridData = function () {
             if ($scope.currentId) {
                 var cacheCaseHistoryData = new Store.CacheFifo(Helper.CacheNames.CASE_HISTORY_DATA);
-                var cacheKey = Util.Constant.OBJTYPE_CASE_FILE + "." + $scope.currentId;
+                var cacheKey = Helper.ObjectTypes.CASE_FILE + "." + $scope.currentId;
                 var historyData = cacheCaseHistoryData.get(cacheKey);
                 var promiseQueryAudit = Util.serviceCall({
                     service: CasesService.queryAudit
@@ -41,6 +40,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
 
                 $q.all([promiseQueryAudit, promiseUsers]).then(function (data) {
                     var historyData = data[0];
+                    $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = historyData.resultPage;
                     $scope.gridOptions.totalItems = historyData.totalCount;
                     Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);

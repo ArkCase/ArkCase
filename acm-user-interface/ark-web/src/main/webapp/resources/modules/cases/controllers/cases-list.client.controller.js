@@ -1,64 +1,134 @@
 'use strict';
 
-angular.module('cases').controller('CasesListController', ['$scope', '$state', '$stateParams', 'UtilService', 'ValidationService', 'StoreService', 'HelperService', 'CasesService', 'ConfigService', 'CasesModelsService',
-    function ($scope, $state, $stateParams, Util, Validator, Store, Helper, CasesService, ConfigService, CasesModelsService) {
-        var cacheCasesConfig = new Store.SessionData(Helper.SessionCacheNames.CASES_CONFIG);
-        var config = cacheCasesConfig.get();
-        var promiseGetModule = Util.serviceCall({
-            service: ConfigService.getModule
-            , param: {moduleId: 'cases'}
-            , result: config
-            , onSuccess: function (data) {
-                if (Validator.validateCasesConfig(data)) {
-                    config = data;
-                    cacheCasesConfig.set(config);
-                    return config;
-                }
-            }
-        }).then(
-            function (config) {
-                $scope.treeConfig = config.tree;
-                $scope.componentsConfig = config.components;
-                return config;
-            }
-        );
+angular.module('cases').controller('CasesListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'CallCasesService', 'CallConfigService',
+    function ($scope, $state, $stateParams, $translate, Util, Constant, CallCasesService, CallConfigService) {
+        CallConfigService.getModuleConfig("cases").then(function (config) {
+            $scope.treeConfig = config.tree;
+            $scope.componentsConfig = config.components;
+            return config;
+        });
 
-        var cacheCaseList = new Store.CacheFifo(Helper.CacheNames.CASE_LIST);
+
+        var firstLoad = true;
         $scope.onLoad = function (start, n, sort, filters) {
-            var cacheKey = start + "." + n + "." + sort + "." + filters;
-            var treeData = cacheCaseList.get(cacheKey);
+            if (firstLoad && $stateParams.id) {
+                $scope.treeData = null;
+            }
 
-            var param = {};
-            param.start = start;
-            param.n = n;
-            param.sort = sort;
-            param.filters = filters;
-            return Util.serviceCall({
-                service: CasesService.queryCases
-                , param: param
-                , result: treeData
-                , onSuccess: function (data) {
-                    if (Validator.validateSolrData(data)) {
-                        treeData = {docs: [], total: data.response.numFound};
-                        var docs = data.response.docs;
-                        _.forEach(docs, function (doc) {
-                            treeData.docs.push({
-                                nodeId: Util.goodValue(doc.object_id_s, 0)
-                                , nodeType: Util.Constant.OBJTYPE_CASE_FILE
-                                , nodeTitle: Util.goodValue(doc.title_parseable)
-                                , nodeToolTip: Util.goodValue(doc.title_parseable)
-                            });
-                        });
-                        cacheCaseList.put(cacheKey, treeData);
-                        return treeData;
-                    }
-                }
-            }).then(
+            CallCasesService.queryCasesTreeData(start, n, sort, filters).then(
                 function (treeData) {
+                    if (firstLoad) {
+                        if ($stateParams.id) {
+                            if ($scope.treeData) {            //It must be set by CallCasesService.getCaseInfo(), only 1 items in docs[] is expected
+                                //for debug
+                                //if (1 != $scope.treeData.docs.length) {
+                                //    console.log("Error!!! only 1 items in docs[] is expected");
+                                //}
+
+                                var found = _.find(treeData.docs, {nodeId: $scope.treeData.docs[0].nodeId});
+                                if (!found) {
+                                    var clone = _.clone(treeData.docs);
+                                    clone.unshift($scope.treeData.docs[0]);
+                                    treeData.docs = clone;
+                                }
+                                firstLoad = false;
+                            }
+
+
+                        } else {
+                            if (0 < treeData.docs.length) {
+                                var selectNode = treeData.docs[0];
+                                $scope.treeControl.select({
+                                    pageStart: start
+                                    , nodeType: selectNode.nodeType
+                                    , nodeId: selectNode.nodeId
+                                });
+                            }
+                            firstLoad = false;
+                        }
+                    }
+
                     $scope.treeData = treeData;
                     return treeData;
                 }
             );
+
+            if (firstLoad && $stateParams.id) {
+                CallCasesService.getCaseInfo($stateParams.id).then(
+                    function (caseInfo) {
+                        $scope.treeControl.select({
+                            pageStart: start
+                            , nodeType: Constant.ObjectTypes.CASE_FILE
+                            , nodeId: caseInfo.id
+                        });
+
+                        var treeData = {docs: [], total: 0};
+                        if ($scope.treeData) {            //It must be set by CallCasesService.queryCasesTreeData()
+                            var found = _.find($scope.treeData.docs, {nodeId: caseInfo.id});
+                            if (!found) {
+                                treeData.docs = _.clone($scope.treeData.docs);
+                                treeData.total = $scope.treeData.total;
+                                treeData.docs.unshift({
+                                    nodeId: Util.goodValue(caseInfo.id, 0)
+                                    , nodeType: Constant.ObjectTypes.CASE_FILE
+                                    , nodeTitle: Util.goodValue(caseInfo.title)
+                                    , nodeToolTip: Util.goodValue(caseInfo.title)
+                                });
+                            }
+                            firstLoad = false;
+
+                        } else {
+                            treeData.total = 1;
+                            treeData.docs.unshift({
+                                nodeId: Util.goodValue(caseInfo.id, 0)
+                                , nodeType: Constant.ObjectTypes.CASE_FILE
+                                , nodeTitle: Util.goodValue(caseInfo.title)
+                                , nodeToolTip: Util.goodValue(caseInfo.title)
+                            });
+                        }
+
+                        $scope.treeData = treeData;
+                        return caseInfo;
+                    }
+                    , function (errorData) {
+                        $scope.treeControl.select({
+                            pageStart: start
+                            , nodeType: Constant.ObjectTypes.CASE_FILE
+                            , nodeId: $stateParams.id
+                        });
+
+
+                        var treeData = {docs: [], total: 0};
+                        if ($scope.treeData) {            //It must be set by CallCasesService.queryCasesTreeData()
+                            var found = _.find($scope.treeData.docs, {nodeId: $stateParams.id});
+                            if (!found) {
+                                treeData.docs = _.clone($scope.treeData.docs);
+                                treeData.total = $scope.treeData.total;
+                                treeData.docs.unshift({
+                                    nodeId: $stateParams.id
+                                    , nodeType: Constant.ObjectTypes.CASE_FILE
+                                    , nodeTitle: $translate.instant("common.directive.objectTree.errorNode.title")
+                                    , nodeToolTip: $translate.instant("common.directive.objectTree.errorNode.toolTip")
+                                });
+                            }
+                            firstLoad = false;
+
+                        } else {
+                            treeData.total = 1;
+                            treeData.docs.unshift({
+                                nodeId: $stateParams.id
+                                , nodeType: Constant.ObjectTypes.CASE_FILE
+                                , nodeTitle: $translate.instant("common.directive.objectTree.errorNode.title")
+                                , nodeToolTip: $translate.instant("common.directive.objectTree.errorNode.toolTip")
+                            });
+                        }
+
+                        $scope.treeData = treeData;
+                        return errorData;
+                    }
+                );
+            }
+
         };
 
         $scope.onSelect = function (selectedCase) {

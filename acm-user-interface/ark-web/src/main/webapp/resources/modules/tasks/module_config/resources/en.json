@@ -1,0 +1,88 @@
+{
+  "tasks": {
+    "title": "Tasks",
+    "progressNoTask": "[ No task data ]",
+    "progressLoading": "Loading task ",
+    "progressError": "Failed to load task"
+  },
+  "tasks.comp.info": {
+    "taskId": "Task id:",
+    "taskNumber": "Task Number:",
+    "courtRoomName": "Court Room Name:"
+  },
+  "tasks.comp.parentinfo": {
+    "taskId": "Task id:",
+    "taskNumber": "Task Number:",
+    "courtRoomName": "Court Room Name:"
+  },
+  "tasks.comp.actions": {
+    "restrict": "Restrict?",
+    "new.button": "New",
+    "edit.button": "Edit",
+    "status.button": "Change Task Status",
+    "reinvestigate.button": "Reinvestigate",
+    "subscribe.button": "Subscribe",
+    "merge.button": "Merge",
+    "split.button": "Split"
+  },
+  "tasks.comp.details": {
+    "title": "Task Details"
+  },
+  "tasks.comp.reworkdetails": {
+    "title": "Rework Details"
+  },
+  "tasks.comp.attachments": {
+    "title": "Attachments"
+  },
+  "tasks.comp.notes": {
+    "title": "Notes",
+    "table.columns": {
+      "note": "Note",
+      "created": "Created",
+      "creator": "Author"
+    }
+  },
+  "tasks.comp.rejcomments": {
+    "title": "Reject Comments",
+    "table.columns": {
+      "note": "Note",
+      "created": "Created",
+      "creator": "Author"
+    }
+  },
+  "tasks.comp.workflow": {
+    "title": "Workflow Overview",
+    "table.columns": {
+      "note": "Note",
+      "created": "Created",
+      "creator": "Author"
+    }
+  },
+  "tasks.comp.esignatures": {
+    "title": "eSignatures",
+    "table.columns": {
+      "note": "Note",
+      "created": "Created",
+      "creator": "Author"
+    }
+  },
+  "tasks.comp.docsreview": {
+    "title": "Documents Under Review",
+    "table.columns": {
+      "targetName": "Number",
+      "targetTitle": "Title",
+      "modified": "Modified",
+      "targetType": "Reference Type",
+      "status": "Status"
+    }
+  },
+  "tasks.comp.history": {
+    "title": "History",
+    "table.columns": {
+      "eventType": "Event Name",
+      "eventDate": "Date",
+      "userId": "User"
+    }
+  }
+}
+
