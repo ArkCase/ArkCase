@@ -10,8 +10,8 @@
 
  * CallTasksService contains wrapper functions of TasksService to support default error handling, data validation and data cache.
  */
-angular.module('services').factory('CallTasksService', ['$resource', 'StoreService', 'UtilService', 'ValidationService', 'TasksService', 'ConstantService',
-    function ($resource, Store, Util, Validator, TasksService, Constant) {
+angular.module('services').factory('CallTasksService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'TasksService', 'ConstantService',
+    function ($resource, $translate, Store, Util, Validator, TasksService, Constant) {
         var ServiceCall = {
             SessionCacheNames: {
                 USER_INFO: "AcmUserInfo"
@@ -46,6 +46,22 @@ angular.module('services').factory('CallTasksService', ['$resource', 'StoreServi
                 , TASK_HISTORY_DATA: "TaskHistoryData"
                 , TASK_NOTES: "TaskNotes"
             }
+
+            /**
+             * @ngdoc method
+             * @name queryTasksTreeData
+             * @methodOf services.service:CallTasksService
+             *
+             * @description
+             * Query list of tasks from SOLR, pack result for Object Tree.
+             *
+             * @param {Number} start  Zero based index of result starts from
+             * @param {Number} n max Number of list to return
+             * @param {String} sort  Sort value. Allowed choice is based on backend specification
+             * @param {String} filters  Filter value. Allowed choice is based on backend specification
+             *
+             * @returns {Object} Promise
+             */
             , queryTasksTreeData: function (start, n, sort, filters) {
                 var cacheTaskList = new Store.CacheFifo(this.CacheNames.TASK_LIST);
                 var cacheKey = start + "." + n + "." + sort + "." + filters;
@@ -85,6 +101,19 @@ angular.module('services').factory('CallTasksService', ['$resource', 'StoreServi
                     }
                 });
             }
+
+            /**
+             * @ngdoc method
+             * @name getTaskInfo
+             * @methodOf services.service:CallTasksService
+             *
+             * @description
+             * Query task data
+             *
+             * @param {Number} id  Task ID
+             *
+             * @returns {Object} Promise
+             */
             , getTaskInfo: function (id) {
                 var cacheTaskInfo = new Store.CacheFifo(this.CacheNames.TASK_INFO);
                 var taskInfo = cacheTaskInfo.get(id);
@@ -93,18 +122,59 @@ angular.module('services').factory('CallTasksService', ['$resource', 'StoreServi
                     , param: {id: id}
                     , result: taskInfo
                     , onSuccess: function (data) {
-                        if (ServiceCall.validateTask(data)) {
+                        if (ServiceCall.validateTaskInfo(data)) {
                             cacheTaskInfo.put(id, data);
                             return data;
                         }
                     }
                 });
             }
-            , validateTask: function (data) {
+
+            /**
+             * @ngdoc method
+             * @name saveTaskInfo
+             * @methodOf services.service:CallTasksService
+             *
+             * @description
+             * Save task data
+             *
+             * @param {Object} taskInfo  Task data
+             *
+             * @returns {Object} Promise
+             */
+            , saveTaskInfo: function (taskInfo) {
+                if (!ServiceCall.validateTaskInfo(taskInfo)) {
+                    return Util.errorPromise($translate.instant("common.service.error.invalidData"));
+                }
+                return Util.serviceCall({
+                    service: TasksService.save
+                    , param: {id: taskInfo.taskId}
+                    , data: taskInfo
+                    , onSuccess: function (data) {
+                        if (ServiceCall.validateTaskInfo(data)) {
+                            return data;
+                        }
+                    }
+                });
+            }
+
+            /**
+             * @ngdoc method
+             * @name validateTaskInfo
+             * @methodOf services.service:CallTasksService
+             *
+             * @description
+             * Validate task data
+             *
+             * @param {Object} data  Data to be validated
+             *
+             * @returns {Boolean} Return true if data is valid
+             */
+            , validateTaskInfo: function (data) {
                 if (Util.isEmpty(data)) {
                     return false;
                 }
-                if (Util.isEmpty(data.taskId)) {
+                if (0 >= Util.goodValue(data.taskId, 0)) {
                     return false;
                 }
 //            if (Util.isEmpty(data.id) || Util.isEmpty(data.caseNumber)) {
