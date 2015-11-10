@@ -12,14 +12,9 @@
  */
 angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
     function ($rootScope, Util) {
-
-        var storeMap;
-        if (!$rootScope._storeMap) {
-            $rootScope._storeMap = {};
-        }
-        storeMap = $rootScope._storeMap;
-
         var Store = {
+            rootMap: $rootScope._james
+
             /**
              * @ngdoc service
              * @name StoreService.Variable
@@ -47,10 +42,11 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              * var v2 = new Variable("MyData", "first");    //initialize value to "first"
              */
-            Variable: function (name, initValue) {
+            , Variable: function (name, initValue) {
                 this.name = name;
+                $rootScope._storeVariableMap = $rootScope._storeVariableMap || {};
                 if (undefined != initValue) {
-                    storeMap[name] = initValue;
+                    $rootScope._storeVariableMap[name] = initValue;
                 }
             }
 
@@ -145,12 +141,20 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
                 if ("string" == typeof arg) {
                     arg = {name: arg};
                 }
-                this.maxSize = Util.goodMapValue(arg, "maxSize", this.DEFAULT_MAX_CACHE_SIZE);
-                this.reset();
-
                 this.name = Util.goodMapValue(arg, "name", "Cache" + Math.floor((Math.random() * 1000000000)));
-                this.expiration = Util.goodMapValue(arg, "expiration", this.DEFAULT_EXPIRATION);   //arg.expiration in milliseconds; -1 if never expired
-                this._evict(this.name, this.expiration);
+
+                $rootScope._storeCacheMap = $rootScope._storeCacheMap || {};
+                if (!$rootScope._storeCacheMap[this.name]) {
+                    $rootScope._storeCacheMap[this.name] = {};
+
+                    var thisCache = this._getThis();
+                    thisCache.name = this.name;
+                    thisCache.maxSize = Util.goodMapValue(arg, "maxSize", this.DEFAULT_MAX_CACHE_SIZE);
+                    thisCache.expiration = Util.goodMapValue(arg, "expiration", this.DEFAULT_EXPIRATION);   //arg.expiration in milliseconds; -1 if never expired
+
+                    this.reset();
+                    this._evict(thisCache.name, thisCache.expiration);
+                }
             }
         };
         Store.Variable.prototype = {
@@ -169,7 +173,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              * var data = dataVar.get();                         // returns "first"
              */
             get: function () {
-                return storeMap[this.name];
+                return $rootScope._storeVariableMap[this.name];
             }
 
             /**
@@ -189,7 +193,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              * dataVar.set("last");                              // now it contains value "last"
              */
             , set: function (value) {
-                storeMap[this.name] = value;
+                $rootScope._storeVariableMap[this.name] = value;
             }
         };
 
@@ -315,6 +319,9 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             DEFAULT_MAX_CACHE_SIZE: 8
             , DEFAULT_EXPIRATION: 7200000           //2 hours = 2 * 3600 * 1000 milliseconds
 
+            , _getThis: function () {
+                return $rootScope._storeCacheMap[this.name];
+            }
 
             /**
              * @ngdoc method
@@ -350,9 +357,10 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              */
             , get: function (key) {
-                for (var i = 0; i < this.size; i++) {
-                    if (this.keys[i] == key) {
-                        return this.cache[key];
+                var thisCache = this._getThis();
+                for (var i = 0; i < thisCache.size; i++) {
+                    if (thisCache.keys[i] == key) {
+                        return thisCache.cache[key];
                     }
                 }
                 return null;
@@ -393,9 +401,10 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              */
             , put: function (key, item) {
+                var thisCache = this._getThis();
                 var putAt = -1;
-                for (var i = 0; i < this.size; i++) {
-                    if (this.keys[i] == key) {
+                for (var i = 0; i < thisCache.size; i++) {
+                    if (thisCache.keys[i] == key) {
                         putAt = i;
                         break;
                     }
@@ -406,21 +415,23 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
                     this._advanceToNext();
                 }
 
-                this.cache[key] = item;
-                this.timeStamp[key] = new Date().getTime();
-                this.keys[putAt] = key;
+                thisCache.cache[key] = item;
+
+                thisCache.timeStamp[key] = new Date().getTime();
+                thisCache.keys[putAt] = key;
             }
             , _getNext: function () {
                 return this._getNextN(0);
             }
             //Use n to keep track number of recursive call to _getNextN(), so that it will not exceed maxSize and into an infinite loop
             , _getNextN: function (n) {
-                var next = this.next;
-                if (!this.isLock(this.keys[next])) {
+                var thisCache = this._getThis();
+                var next = thisCache.next;
+                if (!this.isLock(thisCache.keys[next])) {
                     return next;
                 }
 
-                if (n > this.maxSize) {     //when n == maxSize, _getNextN() is called maxSize times, pick the first one to avoid infinite loop
+                if (n > thisCache.maxSize) {     //when n == maxSize, _getNextN() is called maxSize times, pick the first one to avoid infinite loop
                     return next;
                 }
 
@@ -429,8 +440,9 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
 
             }
             , _advanceToNext: function () {
-                this.next = (this.next + 1) % this.maxSize;
-                this.size = (this.maxSize > this.size) ? (this.size + 1) : this.maxSize;
+                var thisCache = this._getThis();
+                thisCache.next = (thisCache.next + 1) % thisCache.maxSize;
+                thisCache.size = (thisCache.maxSize > thisCache.size) ? (thisCache.size + 1) : thisCache.maxSize;
             }
 
             /**
@@ -445,9 +457,10 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              */
             , remove: function (key) {
+                var thisCache = this._getThis();
                 var delAt = -1;
-                for (var i = 0; i < this.size; i++) {
-                    if (this.keys[i] == key) {
+                for (var i = 0; i < thisCache.size; i++) {
+                    if (thisCache.keys[i] == key) {
                         delAt = i;
                         break;
                     }
@@ -455,33 +468,35 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
 
                 if (0 <= delAt) {
                     var newKeys = [];
-                    for (var i = 0; i < this.maxSize; i++) {
+                    for (var i = 0; i < thisCache.maxSize; i++) {
                         newKeys.push(null);
                     }
 
-                    if (this.size == this.maxSize) {
+                    if (thisCache.size == thisCache.maxSize) {
                         var n = 0;
-                        for (var i = 0; i < this.size; i++) {
+                        for (var i = 0; i < thisCache.size; i++) {
                             if (i != delAt) {
-                                newKeys[n] = this.keys[(this.next + i + this.maxSize) % this.maxSize];
+                                newKeys[n] = thisCache.keys[(thisCache.next + i + thisCache.maxSize) % thisCache.maxSize];
                                 n++;
                             }
                         }
                     } else {
                         var n = 0;
-                        for (var i = 0; i < this.size; i++) {
+                        for (var i = 0; i < thisCache.size; i++) {
                             if (i != delAt) {
-                                newKeys[n] = this.keys[i];
+                                newKeys[n] = thisCache.keys[i];
                                 n++;
                             }
                         }
                     }
-                    this.size--;
-                    this.next = this.size;
+                    thisCache.size--;
+                    thisCache.next = thisCache.size;
 
-                    this.keys = newKeys;
-                    delete this.cache[key];
-                    delete this.timeStamp[key];
+                    thisCache.keys = newKeys;
+
+                    delete thisCache.cache[key];
+
+                    delete thisCache.timeStamp[key];
                 } //end if (0 <= delAt) {
             }
 
@@ -495,15 +510,18 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              */
             , reset: function () {
-                this.next = 0;
-                this.size = 0;
-                this.cache = {};
-                this.timeStamp = {};
-                this.keys = [];
-                for (var i = 0; i < this.maxSize; i++) {
-                    this.keys.push(null);
+                var thisCache = this._getThis();
+
+                thisCache.next = 0;
+                thisCache.size = 0;
+                thisCache.cache = {};
+
+                thisCache.timeStamp = {};
+                thisCache.keys = [];
+                for (var i = 0; i < thisCache.maxSize; i++) {
+                    thisCache.keys.push(null);
                 }
-                this.locks = [];
+                thisCache.locks = [];
             }
             , _evict: function (name, expiration) {
                 //fixme: need a timer
@@ -541,7 +559,8 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              */
             , lock: function (key) {
-                this.locks.push(key);
+                var thisCache = this._getThis();
+                thisCache.locks.push(key);
             }
 
             /**
@@ -556,9 +575,10 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              */
             , unlock: function (key) {
-                for (var i = 0; i < this.locks.length; i++) {
-                    if (this.locks[i] == key) {
-                        this.locks.splice(i, 1);
+                var thisCache = this._getThis();
+                for (var i = 0; i < thisCache.locks.length; i++) {
+                    if (thisCache.locks[i] == key) {
+                        thisCache.locks.splice(i, 1);
                         return;
                     }
                 }
@@ -576,8 +596,9 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              */
             , isLock: function (key) {
-                for (var i = 0; i < this.locks.length; i++) {
-                    if (this.locks[i] == key) {
+                var thisCache = this._getThis();
+                for (var i = 0; i < thisCache.locks.length; i++) {
+                    if (thisCache.locks[i] == key) {
                         return true;
                     }
                 }
@@ -594,7 +615,8 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              */
             , getMaxSize: function () {
-                return this.maxSize;
+                var thisCache = this._getThis();
+                return thisCache.maxSize;
             }
 
             /**
@@ -609,7 +631,8 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              */
             , setMaxSize: function (maxSize) {
-                this.maxSize = maxSize;
+                var thisCache = this._getThis();
+                thisCache.maxSize = maxSize;
             }
 
             /**
@@ -622,7 +645,8 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              */
             , getExpiration: function () {
-                return this.expiration;
+                var thisCache = this._getThis();
+                return thisCache.expiration;
             }
 
             /**
@@ -637,7 +661,8 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              */
             , setExpiration: function (expiration) {
-                this.expiration = expiration;
+                var thisCache = this._getThis();
+                thisCache.expiration = expiration;
             }
         };
 

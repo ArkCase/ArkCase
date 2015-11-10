@@ -1,0 +1,71 @@
+{
+    "id": "tags",
+    "title": "Tags",
+    "menus": [
+        
+        {
+            "menuId": "leftnav",
+            "menuItemURL": "tags",
+            "menuItemTitle": "Tags",
+            "iconClass": "fa fa-tags",
+            "position": 100
+        }
+        
+    ],
+    "components": [
+        {
+            "id": "tagsFacetedSearch",
+            "title": "Tags Faceted Search",
+            "enabled": "true",
+            "type": "grid",
+            "enableFiltering": false,
+            "columnDefs": [
+                {
+                    "name": "object_id_s",
+                    "displayName": "tags.comp.grid.columns.id",
+                    "headerCellFilter": "translate",
+                    "visible": false
+                },
+                {
+                    "name": "name",
+                    "displayName": "tags.comp.grid.columns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "tags.comp.grid.columns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title_parseable",
+                    "displayName": "tags.comp.grid.columns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "parent",
+                    "displayName": "tags.comp.grid.columns.parent",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "assignee_full_name_lcs",
+                    "displayName": "tags.comp.grid.columns.assignee",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modified_date_tdt",
+                    "displayName": "tags.comp.grid.columns.modified",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0,
+            "filter": "\"Object Type\": DOCUMENT"
+        }
+   ]
+}

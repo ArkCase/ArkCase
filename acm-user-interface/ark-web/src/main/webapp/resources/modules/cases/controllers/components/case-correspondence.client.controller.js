@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', '$stateParams', '$q', '$window', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
-    function ($scope, $stateParams, $q, $window, Store, Util, Validator, Helper, LookupService, CasesService) {
+angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', '$stateParams', '$q', '$window', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
+    function ($scope, $stateParams, $q, $window, $translate, Store, Util, Validator, Helper, LookupService, CasesService) {
         $scope.$emit('req-component-config', 'correspondence');
         $scope.$on('component-config', function (e, componentId, config) {
             if (componentId == 'correspondence') {
@@ -37,8 +37,8 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         );
 
 
-        $scope.correspondenceForms = [{"value": "noop", "name": "(Select One)"}];
-        $scope.correspondenceForm = {"value": "noop", "name": "(Select One)"};
+        $scope.correspondenceForms = [{"value": "noop", "name": $translate.instant("common.select.option.none")}];
+        $scope.correspondenceForm = {"value": "noop", "name": $translate.instant("common.select.option.none")};
         var cacheCorrespondenceForms = new Store.SessionData(Helper.SessionCacheNames.CASE_CORRESPONDENCE_FORMS);
         var correspondenceForms = cacheCorrespondenceForms.get();
         var promiseCorrespondenceForms = Util.serviceCall({
@@ -46,7 +46,10 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             , result: correspondenceForms
             , onSuccess: function (data) {
                 correspondenceForms = Util.omitNg(Util.goodArray(data));
-                correspondenceForms.unshift({"value": "noop", "name": "(Select One)"});
+                correspondenceForms.unshift({
+                    "value": "noop",
+                    "name": $translate.instant("common.select.option.none")
+                });
                 cacheCorrespondenceForms.set(correspondenceForms);
                 return correspondenceForms;
             }
@@ -66,12 +69,12 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         $scope.currentId = $stateParams.id;
         $scope.retrieveGridData = function () {
             var cacheCorrespondenceData = new Store.CacheFifo(Helper.CacheNames.CASE_CORRESPONDENCE_DATA);
-            var cacheKey = Util.Constant.OBJTYPE_CASE_FILE + "." + $scope.currentId;
+            var cacheKey = Helper.ObjectTypes.CASE_FILE + "." + $scope.currentId;
             var correspondenceData = cacheCorrespondenceData.get(cacheKey);
             var promiseCorrespondence = Util.serviceCall({
                 service: CasesService.queryCorrespondence
                 , param: Helper.Grid.withPagingParams($scope, {
-                    parentType: Util.Constant.OBJTYPE_CASE_FILE,
+                    parentType: Helper.ObjectTypes.CASE_FILE,
                     parentId: $scope.currentId
                 })
                 , onSuccess: function (data) {
@@ -85,6 +88,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
 
             $q.all([promiseCorrespondence, promiseUsers]).then(function (data) {
                 var correspondenceData = data[0];
+                $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = correspondenceData.children;
                 $scope.gridOptions.totalItems = Util.goodValue(correspondenceData.totalChildren, 0);
                 Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
@@ -94,7 +98,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();
             promiseObjectTypes.then(function (data) {
-                var found = _.find($scope.objectTypes, {type: Util.Constant.OBJTYPE_FILE});
+                var found = _.find($scope.objectTypes, {type: Helper.ObjectTypes.FILE});
                 if (found) {
                     var url = Util.goodValue(found.url);
                     var id = Util.goodMapValue(rowEntity, "objectId");
@@ -111,7 +115,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             var promiseCreateCorrespondence = Util.serviceCall({
                 service: CasesService.createCorrespondence
                 , param: {
-                    parentType: Util.Constant.OBJTYPE_CASE_FILE,
+                    parentType: Helper.ObjectTypes.CASE_FILE,
                     parentId: $scope.currentId,
                     folderId: folderId,
                     template: template

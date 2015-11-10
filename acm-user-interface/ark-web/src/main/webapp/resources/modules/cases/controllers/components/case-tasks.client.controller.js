@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.TasksController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, LookupService, CasesService) {
+angular.module('cases').controller('Cases.TasksController', ['$scope', '$stateParams', '$q', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
+    function ($scope, $stateParams, $q, $translate, Store, Util, Validator, Helper, LookupService, CasesService) {
 		$scope.$emit('req-component-config', 'tasks');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("tasks" == componentId) {
@@ -14,7 +14,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                     for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                         if ("taskId" == $scope.config.columnDefs[i].name) {
                             $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.object_id_s}}</a>";
-                        } else if (Util.Constant.LOOKUP_TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
+                        } else if (Helper.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
                             $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
                                 + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
                                 + ' ng-model="row.entity.acm$_taskOutcome">'
@@ -85,14 +85,21 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                 if (Validator.validateSolrData(data)) {
                     $q.all([promiseUsers, promiseMyTasks]).then(function () {
                         var tasks = data.response.docs;
+                        $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = tasks;
                         $scope.gridOptions.totalItems = data.response.numFound;
                         Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
 
                         for (var i = 0; i < tasks.length; i++) {
                             var task = tasks[i];
-                            task.acm$_taskOutcomes = [{id: "noop", value: "(Select One)"}];
-                            task.acm$_taskOutcome = {id: "noop", value: "(Select One)"};
+                            task.acm$_taskOutcomes = [{
+                                id: "noop",
+                                value: $translate.instant("common.select.option.none")
+                            }];
+                            task.acm$_taskOutcome = {
+                                id: "noop",
+                                value: $translate.instant("common.select.option.none")
+                            };
                             task.acm$_taskActionDone = true;
 
                             var found = _.find($scope.myTasks, {taskId: tasks[i].id});
@@ -212,7 +219,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
         }
         $scope.showUrl = function (event, rowEntity) {
             event.preventDefault();
-            Helper.Grid.showObject($scope, Util.Constant.OBJTYPE_TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
+            Helper.Grid.showObject($scope, Helper.ObjectTypes.TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
         };
 
 	}
