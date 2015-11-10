@@ -52,7 +52,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
          * Displays the create new case Frevvo form for the user
          */
         $scope.loadNewCaseFrevvoForm = function () {
-            $state.go('wizard');
+            $state.go('newcase');
         };
 
         /**
