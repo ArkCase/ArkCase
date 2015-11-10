@@ -1,0 +1,63 @@
+<div ng-controller="Tasks.ParentInfoController">
+    <div class="clearfix">
+        <div class="row">
+            <div class="col-xs-6">
+                <h4><a href="#" editable-text="taskInfo.title" onaftersave="updateTitle()">{{taskInfo.title || "Unknown"
+                    }}</a> ({{taskInfo.status}})</h4></div>
+            <div class="col-xs-6  text-right">
+                <h4>{{taskInfo.taskNumber}}</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <a href="#" editable-select="taskInfo.taskType" onaftersave="updateTaskType()"
+                       e-ng-options="c.value as c.text for c in taskTypes">{{taskInfo.taskType ||
+                        'Unknown'}}</a>
+                </div>
+                <small class="text-muted">Task Type</small>
+            </div>
+            <!--<b>Priority: </b><a href="#" editable-select="taskInfo.priority" e-ng-options="p as p for p in priorities">{{ taskInfo.priority  || 'Unknown'}}</a>-->
+            <!--<select ng-model="myselect" ng-options="o as o for o in myoptions"></select>-->
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">{{taskInfo.created | date: "MM/dd/yyyy"}}</div>
+                <small class="text-muted">Created Date</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <a href="#" editable-select="taskInfo.priority" onaftersave="updatePriority()"
+                       e-ng-options="p.value as p.text for p in priorities">{{ taskInfo.priority ||
+                        'Unknown'}}</a>
+                </div>
+                <small class="text-muted">Priority</small>
+            </div>
+            <!--<b>Due Date: </b><a href="#" editable-bsdate="taskInfo.dueDate" e-datepicker-popup="MM/dd/yyyy">{{ taskInfo.dueDate | date: "MM/dd/yyyy" || 'Unknown' }}</a>-->
+            <!--<div class="clearfix">-->
+            <!--<div class="col-md-4"><b>{{'tasks.comp.info.courtRoomName' | translate}}</b> {{taskInfo.courtroomName}}</div>-->
+            <!--</div>-->
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <a href="#" editable-select="assignee" onaftersave="updateAssignee()"
+                       e-ng-options="a.value as a.text for a in assignableUsers">{{assignee || 'Unknown'}}</a>
+                </div>
+                <small class="text-muted">Assigned To</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <a href="#" editable-select="owningGroup" onaftersave="updateOwningGroup()"
+                       e-ng-options="o.value as o.text for o in owningGroups"> {{owningGroup || 'Unknown'}}</a>
+                </div>
+                <small class="text-muted">Owning Group</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <a href="#" editable-date="taskInfo.dueDate" onaftersave="updateDueDate()">{{ taskInfo.dueDate |
+                        date: "MM/dd/yyyy" || 'Unknown' }}</a>
+                </div>
+                <small class="text-muted">Due Date</small>
+            </div>
+        </div>
+    </div>
+</div>
