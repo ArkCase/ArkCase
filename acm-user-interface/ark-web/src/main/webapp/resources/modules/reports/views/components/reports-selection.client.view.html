@@ -1,35 +1,19 @@
 <div ng-controller="Reports.SelectionController" ng-cloak>
-    <div class="well panel">
-        <div class="panel-body">
-            <label for="selectReport"> {{'reports.navigation.label.select-report'| translate}} </label>
-            <select name="priority" class="form-control" id="selectReport">
-                <option> {{'reports.navigation.placeholder.select-report'| translate}}</option>
-                <option> {{'reports.navigation.reportDropdown.turnaround'| translate}}</option>
-                <option> {{'reports.navigation.reportDropdown.requester'| translate}}</option>
-                <option> {{'reports.navigation.reportDropdown.pending'| translate}}</option>
-                <option> {{'reports.navigation.reportDropdown.associate'| translate}}</option>
-                <option> {{'reports.navigation.reportDropdown.origination'| translate}}</option>
-                <option> {{'reports.navigation.reportDropdown.transfers'| translate}}</option>
-                <option> {{'reports.navigation.reportDropdown.exceptions'| translate}}</option>
-            </select>
-            <label for="selectCaseState">{{'reports.navigation.label.select-state'| translate}}
-            </label>
-            <select name="cStatus" class="form-control" id="selectCaseState">
-                <option value="Select State"> {{'reports.navigation.placeholder.select-state'| translate}}</option>
-                <option value="DRAFT">DRAFT</option>
-                <option value="IN APPROVAL">IN APPROVAL</option>
-                <option value="CLOSED">CLOSED</option>
-                <option value="INACTIVE">INACTIVE</option>
-                <option value="ACTIVE">ACTIVE</option>
-            </select>
 
-            <div ng-include="'modules/reports/views/components/reports-datepickers.client.view.html'"></div>
-
-            <div>
-                <button class="btn btn-sm btn-default left-block" type="button" id="generateReport">
-                    {{'reports.navigation.button.generate-report'| translate}}
-                </button>
-            </div>
-        </div>
+    <div class="form-group">
+        <label class="control-label">{{'reports.label.selectReport'| translate}}
+            <select ng-model="reportsData.reportSelected" ng-options="option.id as option.name for option in availableReports" class="form-control input-sm">
+                <option value="">{{'reports.placeholder.selectReport'| translate}}</option>
+            </select>
+        </label>
     </div>
+
+    <div class="form-group" ng-if="reportsData.reportSelected != config.resetReportSelectValue">
+        <label class="control-label">{{'reports.label.selectState'| translate}}
+            <select ng-model="reportsData.caseStateSelected" ng-options="option.id as option.name for option in config.caseStates" class="form-control input-sm">
+                <option value="">{{'reports.placeholder.selectState'| translate}}</option>
+            </select>
+        </label>
+    </div>
+
 </div>
