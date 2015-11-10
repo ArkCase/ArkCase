@@ -10,8 +10,8 @@
 
  * CallCasesService contains wrapper functions of CasesService to support default error handling, data validation and data cache.
  */
-angular.module('services').factory('CallCasesService', ['$resource', 'StoreService', 'UtilService', 'ValidationService', 'CasesService', 'ConstantService',
-    function ($resource, Store, Util, Validator, CasesService, Constant) {
+angular.module('services').factory('CallCasesService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'CasesService', 'ConstantService',
+    function ($resource, $translate, Store, Util, Validator, CasesService, Constant) {
         var ServiceCall = {
             SessionCacheNames: {
                 USER_INFO: "AcmUserInfo"
@@ -36,13 +36,13 @@ angular.module('services').factory('CallCasesService', ['$resource', 'StoreServi
                 , CASE_TYPES: "AcmCaseTypes"
                 , CASE_CORRESPONDENCE_FORMS: "AcmCaseCorrespondenceForms"
 
-                , COMPLAINT_CONFIG: "AcmComplaintConfig"
-                , COMPLAINT_TYPES: "AcmComplaintTypes"
-                , COMPLAINT_CORRESPONDENCE_FORMS: "AcmComplaintCorrespondenceForms"
-
-                , TASK_CONFIG: "AcmTaskConfig"
-                , TASK_TYPES: "AcmTaskTypes"
-                , TASK_CORRESPONDENCE_FORMS: "AcmTaskCorrespondenceForms"
+                //, COMPLAINT_CONFIG: "AcmComplaintConfig"
+                //, COMPLAINT_TYPES: "AcmComplaintTypes"
+                //, COMPLAINT_CORRESPONDENCE_FORMS: "AcmComplaintCorrespondenceForms"
+                //
+                //, TASK_CONFIG: "AcmTaskConfig"
+                //, TASK_TYPES: "AcmTaskTypes"
+                //, TASK_CORRESPONDENCE_FORMS: "AcmTaskCorrespondenceForms"
 
             }
             , CacheNames: {
@@ -56,19 +56,35 @@ angular.module('services').factory('CallCasesService', ['$resource', 'StoreServi
                 , CASE_COST_SHEETS: "CaseCostSheets"
                 , CASE_TIME_SHEETS: "CaseTimeSheets"
 
-                , COMPLAINT_LIST: "ComplaintList"
-                , COMPLAINT_INFO: "ComplaintInfo"
-                , COMPLAINT_HISTORY_DATA: "ComplaintHistoryData"
-                , COMPLAINT_CORRESPONDENCE_DATA: "ComplaintCorrespondenceData"
-                , COMPLAINT_NOTES: "ComplaintNotes"
-                , COMPLAINT_COST_SHEETS: "ComplaintCostSheets"
-                , COMPLAINT_TIME_SHEETS: "ComplaintTimeSheets"
-
-                , TASK_LIST: "TaskList"
-                , TASK_INFO: "TaskInfo"
-                , TASK_HISTORY_DATA: "TaskHistoryData"
-                , TASK_NOTES: "TaskNotes"
+                //, COMPLAINT_LIST: "ComplaintList"
+                //, COMPLAINT_INFO: "ComplaintInfo"
+                //, COMPLAINT_HISTORY_DATA: "ComplaintHistoryData"
+                //, COMPLAINT_CORRESPONDENCE_DATA: "ComplaintCorrespondenceData"
+                //, COMPLAINT_NOTES: "ComplaintNotes"
+                //, COMPLAINT_COST_SHEETS: "ComplaintCostSheets"
+                //, COMPLAINT_TIME_SHEETS: "ComplaintTimeSheets"
+                //
+                //, TASK_LIST: "TaskList"
+                //, TASK_INFO: "TaskInfo"
+                //, TASK_HISTORY_DATA: "TaskHistoryData"
+                //, TASK_NOTES: "TaskNotes"
             }
+
+            /**
+             * @ngdoc method
+             * @name queryCasesTreeData
+             * @methodOf services.service:CallCasesService
+             *
+             * @description
+             * Query list of cases from SOLR, pack result for Object Tree.
+             *
+             * @param {Number} start  Zero based index of result starts from
+             * @param {Number} n max Number of list to return
+             * @param {String} sort  Sort value. Allowed choice is based on backend specification
+             * @param {String} filters  Filter value. Allowed choice is based on backend specification
+             *
+             * @returns {Object} Promise
+             */
             , queryCasesTreeData: function (start, n, sort, filters) {
                 var cacheCaseList = new Store.CacheFifo(this.CacheNames.CASE_LIST);
                 var cacheKey = start + "." + n + "." + sort + "." + filters;
@@ -101,6 +117,19 @@ angular.module('services').factory('CallCasesService', ['$resource', 'StoreServi
                     }
                 });
             }
+
+            /**
+             * @ngdoc method
+             * @name getCaseInfo
+             * @methodOf services.service:CallCasesService
+             *
+             * @description
+             * Query case data
+             *
+             * @param {Number} id  CaseFile ID
+             *
+             * @returns {Object} Promise
+             */
             , getCaseInfo: function (id) {
                 var cacheCaseInfo = new Store.CacheFifo(this.CacheNames.CASE_INFO);
                 var caseInfo = cacheCaseInfo.get(id);
@@ -109,18 +138,58 @@ angular.module('services').factory('CallCasesService', ['$resource', 'StoreServi
                     , param: {id: id}
                     , result: caseInfo
                     , onSuccess: function (data) {
-                        if (ServiceCall.validateCaseFile(data)) {
+                        if (ServiceCall.validateCaseInfo(data)) {
                             cacheCaseInfo.put(id, data);
                             return data;
                         }
                     }
                 });
             }
-            , validateCaseFile: function (data) {
+
+            /**
+             * @ngdoc method
+             * @name saveCaseInfo
+             * @methodOf services.service:CallCasesService
+             *
+             * @description
+             * Save case data
+             *
+             * @param {Object} caseInfo  CaseFile data
+             *
+             * @returns {Object} Promise
+             */
+            , saveCaseInfo: function (caseInfo) {
+                if (!ServiceCall.validateCaseInfo(caseInfo)) {
+                    return Util.errorPromise($translate.instant("common.service.error.invalidData"));
+                }
+                return Util.serviceCall({
+                    service: CasesService.save
+                    , data: caseInfo
+                    , onSuccess: function (data) {
+                        if (ServiceCall.validateCaseInfo(data)) {
+                            return data;
+                        }
+                    }
+                });
+            }
+
+            /**
+             * @ngdoc method
+             * @name validateCaseInfo
+             * @methodOf services.service:CallCasesService
+             *
+             * @description
+             * Validate case data
+             *
+             * @param {Object} data  Data to be validated
+             *
+             * @returns {Boolean} Return true if data is valid
+             */
+            , validateCaseInfo: function (data) {
                 if (Util.isEmpty(data)) {
                     return false;
                 }
-                if (0 >= Util.goodValue(data.id), 0) {
+                if (0 >= Util.goodValue(data.id, 0)) {
                     return false;
                 }
                 if (Util.isEmpty(data.caseNumber)) {
@@ -143,6 +212,7 @@ angular.module('services').factory('CallCasesService', ['$resource', 'StoreServi
                 }
                 return true;
             }
+
 
         };
 

@@ -8,20 +8,51 @@
  *
  * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/resource/tasks.client.service.js services/resource/tasks.client.service.js}
 
- * TasksService includes group of REST calls related to Tasks module. Functions are implemented using $resoruce.
+ * TasksService includes group of REST calls related to Tasks module. Functions are implemented using $resource.
  */
 angular.module('services').factory('TasksService', ['$resource',
     function ($resource) {
         return $resource('proxy/arkcase/api/latest/plugin', {}, {
+            /**
+             * @ngdoc method
+             * @name get
+             * @methodOf services.service:TasksService
+             *
+             * @description
+             * Query task data
+             *
+             * @param {Object} params Map of input parameter.
+             * @param {Number} params.id  Task ID
+             * @param {Function} onSuccess (Optional)Callback function of success query.
+             * @param {Function} onError (Optional) Callback function when fail.
+             *
+             * @returns {Object} Object returned by $resource
+             */
             get: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/latest/plugin/task/byId/:id',
                 cache: false,
                 isArray: false
             }
+
+            /**
+             * @ngdoc method
+             * @name save
+             * @methodOf services.service:TasksService
+             *
+             * @description
+             * Save task data
+             *
+             * @param {Object} params Map of input parameter.
+             * @param {Number} params.id  Task ID
+             * @param {Function} onSuccess (Optional)Callback function of success query.
+             * @param {Function} onError (Optional) Callback function when fail.
+             *
+             * @returns {Object} Object returned by $resource
+             */
             , save: {
                 method: 'POST',
-                url: 'proxy/arkcase/api/latest/plugin/task',
+                url: 'proxy/arkcase/api/latest/plugin/task/save/:id',
                 cache: false
             }
 

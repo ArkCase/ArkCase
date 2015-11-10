@@ -7,8 +7,12 @@
   },
   "tasks.comp.info": {
     "taskId": "Task id:",
-    "taskNumber": "Task Number:",
-    "courtRoomName": "Court Room Name:"
+    "percentage.label": "% of Completion",
+    "assignee.label": "Assignee",
+    "Priority.label": "Priority",
+    "startDate.label": "Start Date",
+    "dueDate.label": "Due Date",
+    "state.label": "State"
   },
   "tasks.comp.parentinfo": {
     "taskId": "Task id:",
@@ -16,20 +20,21 @@
     "courtRoomName": "Court Room Name:"
   },
   "tasks.comp.actions": {
-    "restrict": "Restrict?",
-    "new.button": "New",
-    "edit.button": "Edit",
-    "status.button": "Change Task Status",
-    "reinvestigate.button": "Reinvestigate",
+    "eSignature.button": "Sign",
     "subscribe.button": "Subscribe",
-    "merge.button": "Merge",
-    "split.button": "Split"
+    "reject.button": "Reject",
+    "delete.button": "Delete",
+    "complete.button": "Complete",
+    "approve.button": "Approve Document",
+    "rework.button": "Send for Rework"
   },
   "tasks.comp.details": {
-    "title": "Task Details"
+    "title": "Task Details",
+    "informSaved": "Task details saved"
   },
   "tasks.comp.reworkdetails": {
-    "title": "Rework Details"
+    "title": "Rework Details",
+    "informSaved": "Rework details saved"
   },
   "tasks.comp.attachments": {
     "title": "Attachments"
