@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('Cases.HistoryController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, LookupService, CasesService) {
+angular.module('complaints').controller('Complaints.HistoryController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'ComplaintsService',
+    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, LookupService, ComplaintsService) {
         var z = 1;
         return;
         $scope.$emit('req-component-config', 'history');
@@ -23,18 +23,18 @@ angular.module('complaints').controller('Cases.HistoryController', ['$scope', '$
 
         $scope.retrieveGridData = function () {
             if ($scope.currentId) {
-                var cacheCaseHistoryData = new Store.CacheFifo(Helper.CacheNames.CASE_HISTORY_DATA);
+                var cacheComplaintHistoryData = new Store.CacheFifo(Helper.CacheNames.COMPLAINT_HISTORY_DATA);
                 var cacheKey = Helper.ObjectTypes.COMPLAINT + "." + $scope.currentId;
-                var historyData = cacheCaseHistoryData.get(cacheKey);
+                var historyData = cacheComplaintHistoryData.get(cacheKey);
                 var promiseQueryAudit = Util.serviceCall({
-                    service: CasesService.queryAudit
+                    service: ComplaintsService.queryAudit
                     , param: Helper.Grid.withPagingParams($scope, {
                         id: $scope.currentId
                     })
                     , onSuccess: function (data) {
                         if (Validator.validateHistory(data)) {
                             historyData = data;
-                            cacheCaseHistoryData.put(cacheKey, historyData);
+                            cacheComplaintHistoryData.put(cacheKey, historyData);
                             return historyData;
 
                         }

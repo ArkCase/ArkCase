@@ -14,7 +14,6 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
             }
         });
 
-
         var promiseUsers = Helper.Grid.getUsers($scope);
 
         $scope.currentId = $stateParams.id;
@@ -41,6 +40,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
 
                 $q.all([promiseQueryAudit, promiseUsers]).then(function (data) {
                     var historyData = data[0];
+                    $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = historyData.resultPage;
                     $scope.gridOptions.totalItems = historyData.totalCount;
                     Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
