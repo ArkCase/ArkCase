@@ -1,8 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'TasksService',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, LookupService, TasksService) {
-        return;
+angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$stateParams', '$q', 'UtilService', 'HelperService', 'ConstantService', 'CallObjectsService',
+    function ($scope, $stateParams, $q, Util, Helper, Constant, CallObjectsService) {
         $scope.$emit('req-component-config', 'history');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('history' == componentId) {
@@ -22,28 +21,18 @@ angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$state
 
         $scope.retrieveGridData = function () {
             if ($scope.currentId) {
-                var cacheTaskHistoryData = new Store.CacheFifo(Helper.CacheNames.CASE_HISTORY_DATA);
-                var cacheKey = Helper.ObjectTypes.CASE_FILE + "." + $scope.currentId;
-                var historyData = cacheTaskHistoryData.get(cacheKey);
-                var promiseQueryAudit = Util.serviceCall({
-                    service: TasksService.queryAudit
-                    , param: Helper.Grid.withPagingParams($scope, {
-                        id: $scope.currentId
-                    })
-                    , onSuccess: function (data) {
-                        if (Validator.validateHistory(data)) {
-                            historyData = data;
-                            cacheTaskHistoryData.put(cacheKey, historyData);
-                            return historyData;
-
-                        }
-                    }
-                });
+                var promiseQueryAudit = CallObjectsService.queryAudit(Constant.ObjectTypes.TASK
+                    , $scope.currentId
+                    , Util.goodValue($scope.start, 0)
+                    , Util.goodValue($scope.pageSize, 10)
+                    , Util.goodMapValue($scope.sort, "by")
+                    , Util.goodMapValue($scope.sort, "dir")
+                );
 
                 $q.all([promiseQueryAudit, promiseUsers]).then(function (data) {
-                    var historyData = data[0];
-                    $scope.gridOptions.data = historyData.resultPage;
-                    $scope.gridOptions.totalItems = historyData.totalCount;
+                    var auditData = data[0];
+                    $scope.gridOptions.data = auditData.resultPage;
+                    $scope.gridOptions.totalItems = auditData.totalCount;
                     Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
                 });
             }

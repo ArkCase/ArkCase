@@ -2,6 +2,12 @@
 
 angular.module('cases').controller('CasesListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'CallCasesService', 'CallConfigService',
     function ($scope, $state, $stateParams, $translate, Util, Constant, CallCasesService, CallConfigService) {
+
+        /////////////////////
+
+
+        ////////////////////
+
         CallConfigService.getModuleConfig("cases").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;

@@ -17,7 +17,13 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', 'StoreServ
             $scope.components = moduleConfig.components;
         });
 
-        var componentsStore = new Store.Variable("componentsStore");
+
+        $scope.$on('task-retrieved', function (e, data) {
+            $scope.taskInfo = data;
+        });
+
+
+        var componentsStore = new Store.Variable("TaskComponentsStore");
         $scope.$on('task-selected', function onSelectedTask(e, selectedTask) {
             componentsStore.set(selectedTask.components);
         });

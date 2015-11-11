@@ -11,12 +11,13 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$wi
         });
 
         $scope.$on('case-retrieved', function (e, data) {
-            if (Validator.validateCaseFile(data)) {
-                $scope.caseInfo = Util.goodValue(data, {references: []});
-                $scope.gridOptions = $scope.gridOptions || {};
-                $scope.gridOptions.data = $scope.caseInfo.references;
-                Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.caseInfo.references.length);
-            }
+            //if (Validator.validateCaseFile(data)) {
+            //$scope.caseInfo = Util.goodValue(data, {references: []});
+            $scope.caseInfo = data;
+            $scope.gridOptions = $scope.gridOptions || {};
+            $scope.gridOptions.data = $scope.caseInfo.references;
+            Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.caseInfo.references.length);
+            //}
         });
 
         $scope.onClickObjLink = function (event, rowEntity) {
