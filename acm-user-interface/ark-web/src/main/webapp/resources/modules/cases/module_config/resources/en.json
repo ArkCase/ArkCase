@@ -5,6 +5,8 @@
     "progressLoading": "Loading case file ",
     "progressError": "Failed to load case file"
   },
+  "cases.tree": {
+  },
   "cases.comp.info": {
     "caseId": "Case id:",
     "caseNumber": "Case Number:",
@@ -17,14 +19,13 @@
     "status.button": "Change Case Status",
     "reinvestigate.button": "Reinvestigate",
     "subscribe.button": "Subscribe",
+    "unsubscribe.button": "Unsubscribe",
     "merge.button": "Merge",
     "split.button": "Split"
   },
   "cases.comp.details": {
     "title": "Details",
-    "msg": {
-      "noDetails": "No Details ____no longer used; to be deleted____"
-    }
+    "informSaved": "Case details saved"
   },
   "cases.comp.documents": {
     "title": "Documents"

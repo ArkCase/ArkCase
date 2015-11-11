@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.DetailsController', ['$scope', '$stateParams', 'UtilService', 'ValidationService', 'ComplaintsService',
-    function ($scope, $stateParams, Util, Validator, ComplaintsService) {
+angular.module('complaints').controller('Complaints.DetailsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallComplaintsService', 'MessageService',
+    function ($scope, $stateParams, $translate, Util, CallComplaintsService, MessageService) {
         var z = 1;
         return;
         $scope.$emit('req-component-config', 'details');
@@ -12,9 +12,7 @@ angular.module('complaints').controller('Complaints.DetailsController', ['$scope
         });
 
         $scope.$on('complaint-retrieved', function (e, data) {
-            if (Validator.validateComplaint(data)) {
-                $scope.complaintInfo = data;
-            }
+            $scope.complaintInfo = data;
         });
 
 
@@ -25,10 +23,12 @@ angular.module('complaints').controller('Complaints.DetailsController', ['$scope
 
         $scope.saveDetails = function () {
             var complaintInfo = Util.omitNg($scope.complaintInfo);
-            Util.serviceCall({
-                service: ComplaintsService.save
-                , data: complaintInfo
-            });
+            CallComplaintsService.saveComplaintInfo(complaintInfo).then(
+                function (complaintInfo) {
+                    MessageService.info($translate.instant("complaints.comp.details.informSaved"));
+                    return complaintInfo;
+                }
+            );
         };
     }
 ]);

@@ -48,6 +48,7 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
                     }
                 }).then(
                     function (costsheets) {
+                        $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = costsheets;
                         $scope.gridOptions.totalItems = Util.goodValue(costsheets.length, 0);
                         Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);

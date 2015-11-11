@@ -21,9 +21,13 @@
             <button class="btn btn-sm btn-default"><i class="fa fa-reply"></i>
                 {{'cases.comp.actions.reinvestigate.button' | translate}}
             </button>
-            <button class="btn btn-sm btn-default"><i class="fa fa-bullhorn"></i>
-                {{'cases.comp.actions.subscribe.button'
-                | translate}}
+            <button class="btn btn-sm btn-default" ng-if="isSubscribed" ng-click="unsubscribeCase(caseInfo)"><i
+                    class="fa fa-bullhorn"></i>
+                {{'cases.comp.actions.unsubscribe.button' | translate}}
+            </button>
+            <button class="btn btn-sm btn-default" ng-if="!isSubscribed" ng-click="subscribeCase(caseInfo)"><i
+                    class="fa fa-bullhorn"></i>
+                {{'cases.comp.actions.subscribe.button' | translate}}
             </button>
             <button class="btn btn-sm btn-default"><i class="fa fa-random"></i> {{'cases.comp.actions.merge.button' |
                 translate}}

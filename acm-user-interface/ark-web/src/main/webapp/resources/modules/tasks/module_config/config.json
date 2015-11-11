@@ -1,0 +1,491 @@
+{
+  "id": "tasks",
+  "title": "Tasks",
+  "menus": [
+    {
+      "menuId": "leftnav",
+      "menuItemURL": "tasks",
+      "menuItemTitle": "Tasks",
+      "iconClass": "fa fa-check-circle",
+      "position": 40
+    }
+  ],
+  "tree": {
+    "pageSize": 32,
+    "filters": [
+      {
+        "desc": "Tasks for Me",
+        "name": "my-tasks",
+        "value": "fq=assignee_s:${user}",
+        "default": true
+      },
+      {
+        "desc": "All Open Tasks",
+        "name": "opened-tasks",
+        "value": "fq=status_s:OPEN"
+      },
+      {
+        "desc": "All Completed Tasks",
+        "name": "completed-tasks",
+        "value": "fq=status_s:COMPLETE"
+      },
+      {
+        "desc": "All Tasks Due Today",
+        "name": "tasks-due-today",
+        "value": "fq=due_tdt:[NOW/DAY TO NOW/DAY%2B1DAY] AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED"
+      },
+      {
+        "desc": "All Tasks Due Today for Me",
+        "name": "my-tasks-due-today",
+        "value": "fq=due_tdt:[NOW/DAY TO NOW/DAY%2B1DAY] AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND assignee_s:${user}"
+      },
+      {
+        "desc": "All Tasks Overdue",
+        "name": "tasks-overdue",
+        "value": "fq=due_tdt:[* TO NOW/DAY] AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED"
+      },
+      {
+        "desc": "All Tasks Overdue for Me",
+        "name": "my-tasks-overdue",
+        "value": "fq=due_tdt:[* TO NOW/DAY] AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND assignee_s:${user}"
+      },
+      {
+        "desc": "(No Filter)",
+        "name": "",
+        "value": ""
+      }
+    ],
+    "sorters": [
+      {
+        "desc": "Sort Create Date Asc",
+        "name": "sort-date-asc",
+        "value": "create_tdt ASC"
+      },
+      {
+        "desc": "Sort Create Date Desc",
+        "name": "sort-date-desc",
+        "value": "create_tdt DESC"
+      },
+      {
+        "desc": "Sort Case Name Asc",
+        "name": "sort-by-name-asc",
+        "value": "name ASC"
+      },
+      {
+        "desc": "Sort Case Name Desc",
+        "name": "sort-by-name-desc",
+        "value": "name DESC"
+      },
+      {
+        "desc": "(No Sort)",
+        "name": "",
+        "value": "",
+        "default": true
+      }
+    ],
+    "nodeTypes": [
+      {
+        "type": "prev",
+        "icon": "fa fa-arrow-up"
+      },
+      {
+        "type": "next",
+        "icon": "fa fa-arrow-down"
+      },
+      {
+        "type": "p/TASK",
+        "icon": "fa fa-check-circle",
+        "components": [
+          "details",
+          "reworkdetails",
+          "docsreview",
+          "attachments",
+          "notes",
+          "workflow",
+          "history",
+          "esignatures"
+        ]
+      },
+      {
+        "type": "p/TASK/det",
+        "label": "Details",
+        "components": [
+          "details"
+        ]
+      },
+      {
+        "type": "p/TASK/rewk",
+        "label": "Rework Details",
+        "components": [
+          "reworkdetails"
+        ]
+      },
+      {
+        "type": "p/TASK/docrev",
+        "label": "Documents Under Review",
+        "components": [
+          "docsreview"
+        ]
+      },
+      {
+        "type": "p/TASK/att",
+        "label": "Attachments",
+        "components": [
+          "attachments"
+        ]
+      },
+      {
+        "type": "p/TASK/note",
+        "label": "Notes",
+        "components": [
+          "notes"
+        ]
+      },
+      {
+        "type": "p/TASK/wkfl",
+        "label": "Workflow Overview",
+        "components": [
+          "workflow"
+        ]
+      },
+      {
+        "type": "p/TASK/his",
+        "label": "History",
+        "components": [
+          "history"
+        ]
+      },
+      {
+        "type": "p/TASK/sig",
+        "label": "eSignatures",
+        "components": [
+          "esignatures"
+        ]
+      },
+      {
+        "type": "p/ADHOC",
+        "icon": "fa fa-check-circle",
+        "components": [
+          "details",
+          "rejcomments",
+          "attachments",
+          "notes",
+          "workflow",
+          "history",
+          "esignatures"
+        ]
+      },
+      {
+        "type": "p/ADHOC/det",
+        "label": "Details",
+        "components": [
+          "details"
+        ]
+      },
+      {
+        "type": "p/ADHOC/rej",
+        "label": "Reject Comments",
+        "components": [
+          "rejcomments"
+        ]
+      },
+      {
+        "type": "p/ADHOC/att",
+        "label": "Attachments",
+        "components": [
+          "attachments"
+        ]
+      },
+      {
+        "type": "p/ADHOC/note",
+        "label": "Notes",
+        "components": [
+          "notes"
+        ]
+      },
+      {
+        "type": "p/ADHOC/wkfl",
+        "label": "Workflow Overview",
+        "components": [
+          "workflow"
+        ]
+      },
+      {
+        "type": "p/ADHOC/his",
+        "label": "History",
+        "components": [
+          "history"
+        ]
+      },
+      {
+        "type": "p/ADHOC/sig",
+        "label": "eSignatures",
+        "components": [
+          "esignatures"
+        ]
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "info",
+      "title": "Info",
+      "enabled": false,
+      "type": "empty",
+      "editable": false
+    },
+    {
+      "id": "parentinfo",
+      "title": "Parent Info",
+      "enabled": false,
+      "type": "empty",
+      "editable": false
+    },
+    {
+      "id": "actions",
+      "title": "Actions",
+      "enabled": false,
+      "type": "empty",
+      "editable": false
+    },
+    {
+      "id": "details",
+      "title": "Details",
+      "enabled": true,
+      "type": "empty"
+    },
+    {
+      "id": "reworkdetails",
+      "title": "Rework Details",
+      "enabled": true,
+      "type": "empty"
+    },
+    {
+      "id": "docsreview",
+      "title": "Documents Under Review",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "targetName",
+          "displayName": "tasks.comp.docsreview.table.columns.targetName",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetName}}</a>"
+        },
+        {
+          "name": "targetTitle",
+          "displayName": "tasks.comp.docsreview.table.columns.targetTitle",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
+        },
+        {
+          "name": "modified",
+          "displayName": "tasks.comp.docsreview.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'medium'}}</div>"
+        },
+        {
+          "name": "targetType",
+          "displayName": "tasks.comp.docsreview.table.columns.targetType",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "status",
+          "displayName": "tasks.comp.docsreview.table.columns.status",
+          "headerCellFilter": "translate"
+        }
+      ]
+    },
+    {
+      "id": "rejcomments",
+      "title": "Reject Comments",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 2,
+      "columnDefs": [
+        {
+          "name": "note",
+          "displayName": "tasks.comp.rejcomments.table.columns.note",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "created",
+          "displayName": "tasks.comp.rejcomments.table.columns.created",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+          "enableCellEdit": false
+        },
+        {
+          "name": "creator",
+          "displayName": "tasks.comp.rejcomments.table.columns.creator",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "lookup": "userFullNames"
+        }
+      ]
+    },
+    {
+      "id": "attachments",
+      "title": "Attachments",
+      "enabled": true,
+      "type": "empty"
+    },
+    {
+      "id": "notes",
+      "title": "Notes",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 2,
+      "columnDefs": [
+        {
+          "name": "note",
+          "displayName": "tasks.comp.notes.table.columns.note",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "created",
+          "displayName": "tasks.comp.notes.table.columns.created",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+          "enableCellEdit": false
+        },
+        {
+          "name": "creator",
+          "displayName": "tasks.comp.notes.table.columns.creator",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "lookup": "userFullNames"
+        }
+      ]
+    },
+    {
+      "id": "workflow",
+      "title": "Workflow Overview",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 2,
+      "columnDefs": [
+        {
+          "name": "note",
+          "displayName": "tasks.comp.workflow.table.columns.note",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "created",
+          "displayName": "tasks.comp.workflow.table.columns.created",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+          "enableCellEdit": false
+        },
+        {
+          "name": "creator",
+          "displayName": "tasks.comp.workflow.table.columns.creator",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "lookup": "userFullNames"
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "title": "History",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "eventType",
+          "displayName": "tasks.comp.history.table.columns.eventType",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "eventDate",
+          "displayName": "tasks.comp.history.table.columns.eventDate",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.eventDate | date : 'medium'}}</div>"
+        },
+        {
+          "name": "userId",
+          "displayName": "tasks.comp.history.table.columns.userId",
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
+        }
+      ]
+    },
+    {
+      "id": "esignatures",
+      "title": "eSignatures",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 2,
+      "columnDefs": [
+        {
+          "name": "note",
+          "displayName": "tasks.comp.esignatures.table.columns.note",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "created",
+          "displayName": "tasks.comp.esignatures.table.columns.created",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+          "enableCellEdit": false
+        },
+        {
+          "name": "creator",
+          "displayName": "tasks.comp.esignatures.table.columns.creator",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "lookup": "userFullNames"
+        }
+      ]
+    }
+  ]
+}

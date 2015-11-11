@@ -1,0 +1,26 @@
+[
+  {
+    "value": "GeneralRelease.docx",
+    "name": "General Release"
+  },
+  {
+    "value": "MedicalRelease.docx",
+    "name": "Medical Release"
+  },
+  {
+    "value": "ClearanceGranted.docx",
+    "name": "Clearance Granted"
+  },
+  {
+    "value": "ClearanceDenied.docx",
+    "name": "Clearance Denied"
+  },
+  {
+    "value": "NoticeofInvestigation.docx",
+    "name": "Notice of Investigation"
+  },
+  {
+    "value": "InterviewRequest.docx",
+    "name": "Interview Request"
+  }
+]
