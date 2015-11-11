@@ -32,55 +32,6 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        //// Obtains the dropdown menu selection options via REST calls to ArkCase
-        //$scope.priorities = [];
-        //var cachePriorities = new Store.SessionData(Helper.SessionCacheNames.PRIORITIES);
-        //var priorities = cachePriorities.get();
-        //Util.serviceCall({
-        //    service: LookupService.getPriorities
-        //    , result: priorities
-        //    , onSuccess: function (data) {
-        //        if (Validator.validatePriorities(data)) {
-        //            priorities = data;
-        //            cachePriorities.set(priorities);
-        //            return priorities;
-        //        }
-        //    }
-        //}).then(
-        //    function (priorities) {
-        //        var options = [];
-        //        _.each(priorities, function (priority) {
-        //            options.push({value: priority, text: priority});
-        //        });
-        //        $scope.priorities = options;
-        //        return priorities;
-        //    }
-        //);
-        //
-        //$scope.assignableUsers = [];
-        //var cacheUsers = new Store.SessionData(Helper.SessionCacheNames.USERS);
-        //var users = cacheUsers.get();
-        //Util.serviceCall({
-        //    service: LookupService.getUsers
-        //    , result: users
-        //    , onSuccess: function (data) {
-        //        if (Validator.validateUsers(data)) {
-        //            users = data;
-        //            cacheUsers.set(users);
-        //            return users;
-        //        }
-        //    }
-        //}).then(
-        //    function (users) {
-        //        var options = [];
-        //        _.each(users, function (user) {
-        //            var userInfo = JSON.parse(user);
-        //            options.push({object_id_s: userInfo.object_id_s, name: userInfo.name});
-        //        });
-        //        $scope.assignableUsers = options;
-        //        return users;
-        //    }
-        //);
 
         $scope.owningGroups = [];
         var cacheGroups = new Store.SessionData(Helper.SessionCacheNames.GROUPS);
@@ -164,16 +115,6 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
                     }
                 );
             }
-
-            //var caseInfo = Util.omitNg($scope.caseInfo);
-            //CasesService.save({}, caseInfo
-            //    ,function(successData) {
-            //        $log.debug("case saved successfully");
-            //    }
-            //    ,function(errorData) {
-            //        $log.error("case save failed");
-            //    }
-            //);
         }
 
         // Updates the ArkCase database when the user changes a case attribute
