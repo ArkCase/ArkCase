@@ -1,0 +1,28 @@
+{
+  "admin": {
+    "title": "Admin",
+    "security.title": "Security",
+    "security.functional-access-control": "Functional Access Control",
+    "security.ldap-config": "LDAP Configuration",
+    "security.organizational-hierarchy": "Organizational Hierarchy",
+    "security.select-privileges": "Create Role/Select Privileges",
+    "security.module-config": "Module Configuration",
+    "dashboard.title": "Dashboard",
+    "dashboard.config": "Dashboard Configuration",
+    "reports.title": "Reports",
+    "reports.config": "Reports Configuration",
+    "forms.title": "Forms",
+    "forms.config": "Form Configuration",
+    "workflows.title": "Workflows",
+    "workflows.config": "Workflow Configuration",
+    "form-workflows.title": "Form/Workflow Link",
+    "form-workflows.link": "Link Forms/Workflows",
+    "labels.title": "Application Labels",
+    "labels.config": "Label Configuration",
+    "branding.title": "Branding",
+    "branding.logo": "Logo",
+    "branding.custom-css": "Custom CSS",
+    "correspondence-management.title": "Correspondence Management",
+    "correspondence-management.templates": "Correspondence Templates"
+  }
+}
