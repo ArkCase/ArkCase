@@ -71,7 +71,9 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
                     targetType + "'");
         }
 
-        if (!checkForReadAccess(authentication, id, targetType))
+        String solrDocument = getSolrDocument(authentication, id, targetType);
+
+        if (solrDocument == null || !checkForReadAccess(solrDocument))
         {
             // no access since they can't read it
             log.warn("No read access, returning false");
@@ -79,7 +81,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
         }
 
         // break here and return true if any of AC rules match (see SBI-956)
-        if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, (String) permission))
+        if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, (String) permission, solrDocument))
         {
             return true;
         }
@@ -120,7 +122,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
         return hasAccessViaGroup;
     }
 
-    private boolean checkForReadAccess(Authentication authentication, Long objectId, String objectType)
+    private String getSolrDocument(Authentication authentication, Long objectId, String objectType)
     {
         String solrId = objectId + "-" + objectType;
 
@@ -131,22 +133,18 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
             // if the Solr search returns the object, the user has read access to it... eventually we will extend
             // this evaluator to consider additional access levels, but for now we will grant any access so long as
             // the user can read the object.
-            String solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
-                    query, 0, 1, "id asc");
-
-            if (log.isTraceEnabled())
-            {
-                log.trace("Response from SOLR: " + solrResponse);
-            }
-
-            int numFound = getSearchResults().getNumFound(solrResponse);
-
-            return numFound > 0;
+            return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, 0, 1, "id asc");
         } catch (MuleException e)
         {
-            log.error("Could not check for object access - denying access");
-            return false;
+            log.error("Unable to retrieve Solr document for object with id [{}] of type [{}]", objectId, objectType, e);
+            return null;
         }
+    }
+
+    private boolean checkForReadAccess(String solrResponse)
+    {
+        int numFound = getSearchResults().getNumFound(solrResponse);
+        return numFound > 0;
     }
 
     public ExecuteSolrQuery getExecuteSolrQuery()

@@ -15,7 +15,7 @@ public class AccessControlRule
 
     private String objectSubType;
 
-    private Map<String, String> objectProperties;
+    private Map<String, Object> objectProperties;
 
     private List<String> userRolesAll;
 
@@ -51,12 +51,12 @@ public class AccessControlRule
         this.objectSubType = objectSubType;
     }
 
-    public Map<String, String> getObjectProperties()
+    public Map<String, Object> getObjectProperties()
     {
         return objectProperties;
     }
 
-    public void setObjectProperties(Map<String, String> objectProperties)
+    public void setObjectProperties(Map<String, Object> objectProperties)
     {
         this.objectProperties = objectProperties;
     }

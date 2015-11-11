@@ -1,38 +1,70 @@
 {
+  "propertiesMapping": {
+    "object_id_s": "objectId",
+    "object_type_s": "objectType",
+    "object_sub_type_s": "objectSubType",
+    "client_id_s": "clientId",
+    "queue_name_s": "queueName"
+  },
   "accessControlRuleList": [
     {
-      "actionName": "actionName1",
-      "objectType": "objectType1",
-      "objectSubType": "objectSubType1",
+      "actionName": "completeTask",
+      "objectType": "CASE_FILE",
+      "objectSubType": "ORDER",
       "objectProperties": {
-        "key1": "value1",
-        "key2": "value2"
+        "queueName": "Transcribe"
       },
-      "userRolesAll": [
-        "ADMIN",
-        "DBA"
-      ],
       "userRolesAny": [
-        "PATIENT",
-        "SHIPPER"
+        "IT Help Desk - Transcribe",
+        "Administrator - Transcribe"
+      ],
+      "userRolesAll": [
+        "Bactes Access All Clients"
       ]
     },
     {
-      "actionName": "actionName2",
-      "objectType": "objectType2",
-      "objectSubType": "objectSubType2",
+      "actionName": "completeTask",
+      "objectType": "CASE_FILE",
+      "objectSubType": "ORDER",
       "objectProperties": {
-        "key1": "value1",
-        "key2": "value2"
+        "queueName": "Transcribe"
       },
-      "userRolesAll": [
-        "ADMIN",
-        "GUEST",
-        "DBA"
-      ],
       "userRolesAny": [
-        "PATIENT",
-        "SHIPPER"
+        "IT Help Desk - Transcribe",
+        "Administrator - Transcribe"
+      ],
+      "userRolesAll": [
+        "Bactes Access Client ID #clientId#"
+      ]
+    },
+    {
+      "actionName": "completeTask",
+      "objectType": "CASE_FILE",
+      "objectSubType": "ORDER",
+      "objectProperties": {
+        "queueName": "Fulfill"
+      },
+      "userRolesAny": [
+        "IT Help Desk - Fulfill",
+        "Administrator - Fulfill"
+      ],
+      "userRolesAll": [
+        "Bactes Access All Clients"
+      ]
+    },
+    {
+      "actionName": "completeTask",
+      "objectType": "CASE_FILE",
+      "objectSubType": "ORDER",
+      "objectProperties": {
+        "queueName": "Fulfill"
+      },
+      "userRolesAny": [
+        "IT Help Desk - Fulfill",
+        "Administrator - Fulfill"
+      ],
+      "userRolesAll": [
+        "Bactes Access Client ID #clientId#"
       ]
     }
   ]
