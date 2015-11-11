@@ -10,8 +10,8 @@
 
  * CallCasesService contains wrapper functions of CasesService to support default error handling, data validation and data cache.
  */
-angular.module('services').factory('CallCasesService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'CasesService', 'ConstantService',
-    function ($resource, $translate, Store, Util, Validator, CasesService, Constant) {
+angular.module('services').factory('CallCasesService', ['$translate', 'StoreService', 'UtilService', 'ValidationService', 'CasesService', 'ConstantService',
+    function ($translate, Store, Util, Validator, CasesService, Constant) {
         var ServiceCall = {
             SessionCacheNames: {
                 USER_INFO: "AcmUserInfo"
@@ -48,11 +48,11 @@ angular.module('services').factory('CallCasesService', ['$resource', '$translate
             , CacheNames: {
                 CASE_LIST: "CaseList"
                 , CASE_INFO: "CaseInfo"
+                , CASE_NOTES: "CaseNotes"
 
                 , MY_TASKS: "MyTasks"
                 , CASE_HISTORY_DATA: "CaseHistoryData"
                 , CASE_CORRESPONDENCE_DATA: "CaseCorrespondenceData"
-                , CASE_NOTES: "CaseNotes"
                 , CASE_COST_SHEETS: "CaseCostSheets"
                 , CASE_TIME_SHEETS: "CaseTimeSheets"
 
@@ -212,7 +212,6 @@ angular.module('services').factory('CallCasesService', ['$resource', '$translate
                 }
                 return true;
             }
-
 
         };
 

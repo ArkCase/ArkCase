@@ -1,7 +1,72 @@
 'use strict';
 
-angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', 'UtilService', 'ValidationService', 'StoreService', 'LookupService', 'EcmService',
-    function ($q, $translate, $modal, Util, Validator, Store, Lookup, Ecm) {
+/**
+ * @ngdoc directive
+ * @name global.directive:docTree
+ * @restrict E
+ *
+ * @description
+ *
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/directives/doc-tree/doc-tree.client.directive.js directives/doc-tree/doc-tree.client.directive.js}
+ *
+ * The docTree directive renders a FancyTree to browse ArkCase objects with support of paging, filter and sort
+ *
+ * @param {String} objectType Object type of document container
+ * @param {Number} objectId Object ID of document container
+ * @param {Function} uploadForm (Optional)Function used to upload Frevvo form
+ * @param {Object} treeControl Tree API functions exposed to user. Following is the list:
+ * @param {Function} treeControl.refreshTree Refresh the tree
+ *
+ * @example
+ <example>
+ <file name="index.html">
+ <doc-tree object-type="objectType" object-id="objectId" tree-control="treeControl" file-types="fileTypes"
+ upload-form="uploadForm">
+ </doc-tree>
+ </file>
+ <file name="app.js">
+ angular.module('ngAppDemo', []).controller('ngAppDemoController', function($scope, $log) {
+    $scope.objectType = "CASE_FILE";
+    $scope.objectId = 123;
+    $scope.uploadForm = function() {
+        $log.info("Upload form");
+    };
+    $scope.fileTypes = [
+      {
+        "type": "mr",
+        "label": "Medical Release"
+      },
+      {
+        "type": "gr",
+        "label": "General Release"
+      },
+      {
+        "type": "ev",
+        "label": "eDelivery"
+      },
+      {
+        "type": "sig",
+        "label": "SF86 Signature"
+      },
+      {
+        "type": "noi",
+        "label": "Notice of Investigation"
+      },
+      {
+        "type": "wir",
+        "label": "Witness Interview Request"
+      },
+      {
+        "type": "Other",
+        "label": "Other"
+      }
+    ];
+});
+ </file>
+ </example>
+ */
+angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', 'UtilService', 'ValidationService', 'StoreService', 'EcmService',
+    function ($q, $translate, $modal, Util, Validator, Store, Ecm) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
 
@@ -237,9 +302,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 };
             } //end _getDefaultTreeArgs
 
-            , create: function (treeArgs) {
+            //, create: function (treeArgs) {
+            , create: function () {
                 var treeArgsToUse = this._getDefaultTreeArgs();
-                _.merge(treeArgsToUse, treeArgs);
+                //_.merge(treeArgsToUse, treeArgs);
 
                 DocTree.jqTree.fancytree(treeArgsToUse)
                     .on("command", DocTree.Command.onCommand)
@@ -3734,7 +3800,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             //+ '</table>'
             , templateUrl: "directives/doc-tree/doc-tree.client.view.html"
             , scope: {
-                treeArgs: '='
+                treeControl: '='
                 , objectType: '='
                 , objectId: '='
                 , fileTypes: '='
@@ -3747,10 +3813,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.jqTree = $(element).find("table");
                 DocTree.setObjType(scope.objectType);
                 DocTree.setObjId(scope.objectId);
-                DocTree.doUploadForm = (scope.uploadForm) ? scope.uploadForm() : (function () {
+                DocTree.doUploadForm = (scope.uploadForm) ? scope.uploadForm()
+                    : (function () {
                 }); //if not defined, do nothing
 
-                DocTree.create(scope.treeArgs);
+                scope.treeControl = {
+                    refreshTree: DocTree.refreshTree
+                };
+
+
+                DocTree.create();
                 DocTree.makeDownloadDocForm(DocTree.jqTree);
                 DocTree.makeUploadDocForm(DocTree.jqTree);
 

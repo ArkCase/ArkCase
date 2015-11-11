@@ -69,8 +69,8 @@ angular.module('services').factory('CasesService', ['$resource',
              * @param {Number} params.n max Number of list to return
              * @param {String} params.sort  Sort value. Allowed choice is based on backend specification
              * @param {String} params.filters  Filter value. Allowed choice is based on backend specification
-             * @param {Function} onSuccess (Optional)Callback function of success query.
-             * @param {Function} onError (Optional) Callback function when fail.
+             * @param {Function} onSuccess (Optional)Callback function of success query
+             * @param {Function} onError (Optional) Callback function when fail
              *
              * @returns {Object} Object returned by $resource
              */
@@ -141,18 +141,68 @@ angular.module('services').factory('CasesService', ['$resource',
                 cache: false
             }
 
+            /**
+             * @ngdoc method
+             * @name queryNotes
+             * @methodOf services.service:CasesService
+             *
+             * @description
+             * Query list of notes for an object.
+             *
+             * @param {Object} params Map of input parameter
+             * @param {String} params.parentType  Object type
+             * @param {String} params.parentId  Object ID
+             * @param {Function} onSuccess (Optional)Callback function of success query
+             * @param {Function} onError (Optional) Callback function when fail
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            //* @param {Number} params.start Zero based start number of record
+            //* @param {Number} params.count Max Number of list to return
+            //* @param {String} params.sort  Sort value, with format 'sortBy sortDir', sortDir can be 'asc' or 'desc'
             , queryNotes: {
                 method: 'GET',
-                //url: 'proxy/arkcase/api/latest/plugin/note/:parentType/:parentId?start=:startWith&n=:count&s=:sort',
+                //url: 'proxy/arkcase/api/latest/plugin/note/:parentType/:parentId?start=:start&n=:count&s=:sort',
                 url: 'proxy/arkcase/api/latest/plugin/note/:parentType/:parentId',
                 cache: false,
                 isArray: true
             }
+
+            /**
+             * @ngdoc method
+             * @name saveNote
+             * @methodOf services.service:CasesService
+             *
+             * @description
+             * Create a new note or update an existing note
+             *
+             * @param {Object} data Task data
+             * @param {Function} onSuccess (Optional)Callback function of success query
+             * @param {Function} onError (Optional) Callback function when fail
+             *
+             * @returns {Object} Object returned by $resource
+             */
             , saveNote: {
                 method: 'POST',
                 url: 'proxy/arkcase/api/latest/plugin/note/',
                 cache: false
             }
+
+            /**
+             * @ngdoc method
+             * @name deleteNote
+             * @methodOf services.service:CasesService
+             *
+             * @description
+             * Create a new note or update an existing note
+             *
+             * @param {Object} params Map of input parameter
+             * @param {String} params.id  Note ID
+             * @param {Function} onSuccess (Optional)Callback function of success query
+             * @param {Function} onError (Optional) Callback function when fail
+             *
+             * @returns {Object} Object returned by $resource
+             */
             , deleteNote: {
                 method: 'DELETE',
                 url: 'proxy/arkcase/api/latest/plugin/note/:noteId',
