@@ -46,5 +46,12 @@
     "btnQuery.text": "Go!",
     "errorNode.title": "(Error)",
     "errorNode.toolTip": "(Error)"
+  },
+  "common.directive.objectAuthorizationRoles": {
+    "choose": "Choose",
+    "not_authorized": "Not Authorized",
+    "tooltip.move_right": "Move Right",
+    "tooltip.move_left": "Move Left",
+    "authorized": "Authorized"
   }
 }
