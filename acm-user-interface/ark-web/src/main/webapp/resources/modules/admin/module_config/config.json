@@ -18,23 +18,23 @@
       "folder": "true",
       "children": [
         {
-          "title": "admin.security.functional_access_control",
+          "title": "admin.security.functional-access-control",
           "templateName": "security.functional_access_control"
         },
         {
-          "title": "admin.security.ldap_config",
+          "title": "admin.security.ldap-config",
           "templateName": "security.ldap_config"
         },
         {
-          "title": "admin.security.organizational_hierarchy",
+          "title": "admin.security.organizational-hierarchy",
           "templateName": "security.organizational_hierarchy"
         },
         {
-          "title": "admin.security.select_privileges",
+          "title": "admin.security.select-privileges",
           "templateName": "security.select_privileges"
         },
         {
-          "title": "admin.security.module_config",
+          "title": "admin.security.module-config",
           "templateName": "security.module_config"
         }
       ]
@@ -80,11 +80,11 @@
       ]
     },
     {
-      "title": "admin.form_workflows.title",
+      "title": "admin.form-workflows.title",
       "folder": "true",
       "children": [
         {
-          "title": "admin.form_workflows.link",
+          "title": "admin.form-workflows.link",
           "templateName": "form_workflows.link"
         }
       ]
@@ -108,17 +108,17 @@
           "templateName": "branding.logo"
         },
         {
-          "title": "admin.branding.custom_css",
+          "title": "admin.branding.custom-css",
           "templateName": "branding.custom_css"
         }
       ]
     },
     {
-      "title": "admin.correspondence_management.title",
+      "title": "admin.correspondence-management.title",
       "folder": "true",
       "children": [
         {
-          "title": "admin.correspondence_management.templates",
+          "title": "admin.correspondence-management.templates",
           "templateName": "correspondence_management.templates"
         }
       ]

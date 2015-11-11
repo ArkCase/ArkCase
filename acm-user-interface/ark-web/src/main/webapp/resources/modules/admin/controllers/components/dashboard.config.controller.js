@@ -3,7 +3,7 @@
  */
 
 angular.module('admin')
-    .controller('Admin.DashboardConfigCtrl', ['$scope',
+    .controller('Admin.DashboardConfigController', ['$scope',
         function ($scope) {
 
         }]);
