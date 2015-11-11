@@ -11,23 +11,25 @@
  *
  * The object authorization roles directive is used for listing objects and change their roles to be authorized or unauthorized.
  *
- * @param {string} data objects data for the left panel.
- * @param {string} onObjectSelected callback function name when object is selected. It's used to fill the roles in the other two lists. callback function should look like this: function (selectedObject, authorized, notAuthorized).
- * @param {string} onAuthRoleChange callback function name when role(s) are changed. Callback function should look like this: function (selectedObject, authorized, notAuthorized).
+ * @param {array} data objects data for the left panel.
+ * @param {function} onObjectSelected callback function when object is selected. It's used to fill the roles in the other two lists. callback function should look like this: function (selectedObject, authorized, notAuthorized).
+ * @param {function} onAuthRoleChange callback function when role(s) are changed. Callback function should look like this: function (selectedObject, authorized, notAuthorized).
  * @param {string} objectDisplayName name of the field which we want to display in the list.
  * @param {string} roleDisplayName name of the field which we want to display in the list.
  *
  * @scope
  *
  * @example
- <example>
+ <example module="ngAppDemo">
  <file name="index.html">
+ <div ng-controller="ngAppDemoController">
  <object-authorization-roles data="widgets" object-display-name="name" on-object-selected="onObjSelect" role-display-name="name"
  on-auth-role-change="onAuthRoleSelected"/>
+ </div>
  </file>
  <file name="app.js">
  angular.module('ngAppDemo', [])
- .controller('DashboardConfigCtrl', function ($scope) {
+ .controller('ngAppDemoController', function ($scope) {
          $scope.widgets = [{name:"widget Name1", widgetName:"widgetName1"}, {name:"widget Name2", widgetName:"widgetName2"}];
          $scope.widgetsMap = [];
         angular.forEach($scope.widgets, function (widget) {
