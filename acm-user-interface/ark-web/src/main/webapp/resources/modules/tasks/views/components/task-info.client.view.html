@@ -2,26 +2,30 @@
     <div class="clearfix">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a href="#" editable-text="taskInfo.title" onaftersave="updateTitle()">{{taskInfo.title || "Unknown"
-                    }}</a> ({{taskInfo.status}})</h4></div>
-            <div class="col-xs-6  text-right">
-                <h4>{{taskInfo.taskNumber}}</h4>
+                <h4><a href="#" editable-text="taskInfo.title" onaftersave="updateTitle()">{{taskInfo.title ||
+                    "Unknown"}}</a></h4>
             </div>
+
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-select="taskInfo.taskType" onaftersave="updateTaskType()"
-                       e-ng-options="c.value as c.text for c in taskTypes">{{taskInfo.taskType ||
-                        'Unknown'}}</a>
+                    <a href="#" editable-text="taskInfo.percentComplete" onaftersave="updatePercentage()">
+                        {{taskInfo.percentComplete || 'Unknown'}}</a>
                 </div>
-                <small class="text-muted">Task Type</small>
+                <small class="text-muted">"% of Completion"</small>
             </div>
-            <!--<b>Priority: </b><a href="#" editable-select="taskInfo.priority" e-ng-options="p as p for p in priorities">{{ taskInfo.priority  || 'Unknown'}}</a>-->
-            <!--<select ng-model="myselect" ng-options="o as o for o in myoptions"></select>-->
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{taskInfo.created | date: "MM/dd/yyyy"}}</div>
-                <small class="text-muted">Created Date</small>
+                <div class="h4 font-bold">
+                    <a href="#" editable-select="assignee" onaftersave="updateAssignee()"
+                       e-ng-options="a.object_id_s as a.name for a in assignableUsers">{{assignee || 'Unknown'}}</a>
+
+                    <!--<a href="#" editable-select="assignee" onaftersave="updateAssignee()"-->
+                    <!--e-ng-options="a.object_id_s as a.name for a in assignableUsers">{{assignee |-->
+                    <!--mapKeyValue: assignableUsers:'object_id_s':'name' || 'Unknown'}}</a>-->
+
+                </div>
+                <small class="text-muted">Assignee</small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
@@ -31,25 +35,13 @@
                 </div>
                 <small class="text-muted">Priority</small>
             </div>
-            <!--<b>Due Date: </b><a href="#" editable-bsdate="taskInfo.dueDate" e-datepicker-popup="MM/dd/yyyy">{{ taskInfo.dueDate | date: "MM/dd/yyyy" || 'Unknown' }}</a>-->
-            <!--<div class="clearfix">-->
-            <!--<div class="col-md-4"><b>{{'tasks.comp.info.courtRoomName' | translate}}</b> {{taskInfo.courtroomName}}</div>-->
-            <!--</div>-->
-        </div>
-        <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-select="assignee" onaftersave="updateAssignee()"
-                       e-ng-options="a.value as a.text for a in assignableUsers">{{assignee || 'Unknown'}}</a>
+                    <a href="#" editable-date="taskInfo.taskStartDate" onaftersave="updateStartDate()">{{
+                        taskInfo.dueDate |
+                        date: "MM/dd/yyyy" || 'Unknown' }}</a>
                 </div>
-                <small class="text-muted">Assigned To</small>
-            </div>
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
-                    <a href="#" editable-select="owningGroup" onaftersave="updateOwningGroup()"
-                       e-ng-options="o.value as o.text for o in owningGroups"> {{owningGroup || 'Unknown'}}</a>
-                </div>
-                <small class="text-muted">Owning Group</small>
+                <small class="text-muted">Start Date</small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
@@ -58,6 +50,20 @@
                 </div>
                 <small class="text-muted">Due Date</small>
             </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">{{taskInfo.status || 'Unknown'}}</div>
+                <small class="text-muted">State</small>
+            </div>
+
         </div>
+        <!--<div class="row">-->
+        <!--<div class="col-xs-12 col-md-4">-->
+        <!--<div class="h4 font-bold">-->
+        <!--<a href="#" editable-select="owningGroup" onaftersave="updateOwningGroup()"-->
+        <!--e-ng-options="o.value as o.text for o in owningGroups"> {{owningGroup || 'Unknown'}}</a>-->
+        <!--</div>-->
+        <!--<small class="text-muted">Owning Group</small>-->
+        <!--</div>-->
+        <!--</div>-->
     </div>
 </div>

@@ -21,7 +21,8 @@
     "split.button": "Split"
   },
   "complaints.comp.details": {
-    "title": "Details"
+    "title": "Details",
+    "informSaved": "Complaint details saved"
   },
   "complaints.comp.documents": {
     "title": "Documents"

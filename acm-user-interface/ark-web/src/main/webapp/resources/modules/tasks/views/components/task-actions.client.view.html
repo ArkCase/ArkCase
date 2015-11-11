@@ -1,36 +1,36 @@
 <div ng-controller="Tasks.ActionsController">
     <div class="col-xs-4">
-        <div class="checkbox">
-            <label>
-                <input type="checkbox"> {{'tasks.comp.actions.restrict' | translate}}
-            </label>
-        </div>
+        <!--<div>-->
+        <!--&lt;!&ndash; move title to info component &ndash;&gt;-->
+        <!--</div>-->
     </div>
 
     <div class="pull-right">
         <div class="btn-group">
-            <button class="btn btn-sm btn-default" ng-click="loadNewTaskFrevvoForm()"><i
-                    class="fa fa-edit"></i> {{'tasks.comp.actions.new.button' | translate}}
+            <button class="btn btn-sm btn-default" ng-click="sign()"><i class="fa fa-certificate"></i>
+                {{'tasks.comp.actions.eSignature.button' | translate}}
             </button>
-            <button class="btn btn-sm btn-default"><i class="fa fa-edit"></i> {{'tasks.comp.actions.edit.button' |
-                translate}}
+            <button class="btn btn-sm btn-default" ng-click="subscribe()"><i class="fa fa-bullhorn"></i>
+                {{'tasks.comp.actions.subscribe.button' | translate}}
             </button>
-            <button class="btn btn-sm btn-default" ng-click="loadChangeTaskStatusFrevvoForm(taskInfo)"><i
-                    class="fa fa-edit"></i> {{'tasks.comp.actions.status.button' | translate}}
+            <button class="btn btn-sm btn-default" ng-click="reject()"><i class="fa fa-hand-stop-o"></i>
+                {{'tasks.comp.actions.reject.button' | translate}}
             </button>
-            <button class="btn btn-sm btn-default"><i class="fa fa-reply"></i>
-                {{'tasks.comp.actions.reinvestigate.button' | translate}}
+            <button class="btn btn-sm btn-default" ng-click="delete()"><i class="fa fa-times"></i>
+                {{'tasks.comp.actions.delete.button' | translate}}
             </button>
-            <button class="btn btn-sm btn-default"><i class="fa fa-bullhorn"></i>
-                {{'tasks.comp.actions.subscribe.button'
-                | translate}}
+            <button class="btn btn-sm btn-default" ng-click="complete()"><i class="fa fa-check"></i>
+                {{'tasks.comp.actions.complete.button' | translate}}
             </button>
-            <button class="btn btn-sm btn-default"><i class="fa fa-random"></i> {{'tasks.comp.actions.merge.button' |
-                translate}}
+            <button class="btn btn-sm btn-default" ng-click="approve()"><i class="fa fa-thumbs-o-up"></i>
+                {{'tasks.comp.actions.approve.button' | translate}}
             </button>
-            <button class="btn btn-sm btn-default"><i class="fa fa-code-fork"></i> {{'tasks.comp.actions.split.button' |
-                translate}}
+            <button class="btn btn-sm btn-default" ng-click="rework()"><i class="fa fa-reply"></i>
+                {{'tasks.comp.actions.rework.button' | translate}}
             </button>
+
         </div>
     </div>
 </div>
+
+

@@ -6,7 +6,7 @@
                     <div class="clearfix">
                         <div class="col-xs-2 b-r">
                             <div class="h4 font-bold">
-                                <p>{{ecmFile.creator || 'Unknown'}}</p>
+                                <p>{{ecmFile.creator | mapKeyValue: userList:'object_id_s':'name' || 'Unknown'}}</p>
                             </div>
                             <small class="text-muted">Owner</small>
                         </div>
@@ -18,7 +18,7 @@
                         </div>
                         <div class="col-xs-3 b-r">
                             <div class="h4 font-bold">
-                                <p>{{ecmFile.creator || 'Unknown'}}</p>
+                                <p>{{assignee | mapKeyValue: userList:'object_id_s':'name' || 'Unknown'}}</p>
                             </div>
                             <small class="text-muted">Assigned To</small>
                         </div>
