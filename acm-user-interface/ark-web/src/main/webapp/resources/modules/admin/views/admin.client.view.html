@@ -1,0 +1,18 @@
+<section ng-controller="AdminController">
+    <div class="module-content">
+        <div class="left-sidebar">
+            <div class="module-header">
+                <h3>{{'admin.title' | translate}}</h3>
+            </div>
+
+            <div class="scroll-body" slimscroll="{height: '800px'}"
+                 ng-include="'modules/admin/views/components/configurations-tree.client.view.html'">
+            </div>
+        </div>
+        <section class="content-body">
+            <div class="well-sm">
+                <div data-ui-view></div>
+            </div>
+        </section>
+    </div>
+</section>
