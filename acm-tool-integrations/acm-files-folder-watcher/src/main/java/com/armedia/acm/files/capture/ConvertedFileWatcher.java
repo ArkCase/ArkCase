@@ -17,6 +17,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -128,7 +129,7 @@ public class ConvertedFileWatcher implements FileListener, ApplicationEventPubli
     {
 
         URL fileUrl = fileChangeEvent.getFile().getURL();
-        return new File(fileUrl.toURI());
+        return new File(new URI(fileUrl.toString().replace(" ", "%20")));
     }
 
     private String getFileExtension(FileChangeEvent fileChangeEvent) throws Exception
