@@ -1,11 +1,11 @@
 'use strict';
 
-//
-//jwu: no longer needed. Please see StoreService.CacheFifo
-//
 
-//angular.module('services').factory('CacheService', function($cacheFactory) {
-//    return $cacheFactory('cache', {
-//        capacity: 8
-//    });
-//});
+//needed for extension projects as of now
+//can refactor later
+
+angular.module('services').factory('CacheService', function($cacheFactory) {
+    return $cacheFactory('cache', {
+        capacity: 8
+    });
+});
