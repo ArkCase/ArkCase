@@ -70,7 +70,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      */
     public boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, String permission, String solrDocument)
     {
-        if (accessControlRules.getAccessControlRuleList() == null)
+        if (accessControlRules == null || accessControlRules.getAccessControlRuleList() == null)
         {
             log.warn("Missing access control rules configuration");
             return false;
@@ -245,11 +245,12 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     {
         Pattern pattern = Pattern.compile("#(.*?)#");
         Matcher matcher = pattern.matcher(userRole);
-        if (matcher.find())
+        while (matcher.find())
         {
             String propertyName = matcher.group(1);
             String propertyValue = (String) targetObjectProperties.get(propertyName);
-            userRole = matcher.replaceAll(propertyValue);
+            userRole = matcher.replaceFirst(propertyValue);
+            matcher = pattern.matcher(userRole);
         }
         return userRole;
     }
