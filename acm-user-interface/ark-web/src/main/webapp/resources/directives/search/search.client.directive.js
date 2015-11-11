@@ -141,8 +141,8 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 scope.onClickObjLink = function (event, rowEntity) {
                     event.preventDefault();
                     promiseObjectTypes.then(function (data) {
-                        var found = _.find(scope.objectTypes, {type: rowEntity.object_type_s});
-                        if (found) {
+                        var found = _.find(scope.objectTypes, {type: rowEntity.object_sub_type_s ? rowEntity.object_sub_type_s : rowEntity.object_type_s});
+                        if (found && found.url) {
                             var url = Util.goodValue(found.url);
                             var id = Util.goodMapValue(rowEntity, "object_id_s");
                             url = url.replace(":id", id);
@@ -171,7 +171,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             enableFiltering: config.enableFiltering,
                             multiSelect: false,
                             noUnselect: false,
-                            useExternalPagination: false,
+                            useExternalPagination: true,
                             paginationPageSizes: config.paginationPageSizes,
                             paginationPageSize: config.paginationPageSize,
                             columnDefs: config.columnDefs,
