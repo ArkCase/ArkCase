@@ -12,6 +12,12 @@
     "url": "#!/cases/:id/main"
   },
   {
+    "type": "ORDER",
+    "description": "Case File Sub-type : Order",
+    "iconName": "i i-folder",
+    "url": "#!/order-info/:id"
+  },
+  {
     "type": "TASK",
     "description": "Task",
     "iconName": "i i-checkmark",
