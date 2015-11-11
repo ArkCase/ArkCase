@@ -68,7 +68,7 @@ angular.module('services').factory('ComplaintsService', ['$resource',
 			 * @param {Object} params Map of input parameter.
 			 * @param {Number} params.start  zero based index of result starts from
 			 * @param {Number} params.n max number of list to return
-			 * @param {String} params.sort  sort value. Allowed choice is bomplaintd on backend specification
+			 * @param {String} params.sort  sort value. Allowed choice is based on backend specification
 			 * @param {String} params.filters  filter value. Allowed choice is based on backend specification
 			 * @param {Function} onSuccess (Optional)Callback function of success query.
 			 * @param {Function} onError (Optional)Callback function when fail.
