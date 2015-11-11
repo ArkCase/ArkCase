@@ -52,7 +52,7 @@ module.exports.getGlobbedFiles = function (globPatterns, removeRoot) {
  * Get the modules JavaScript files
  */
 module.exports.getJavaScriptAssets = function () {
-    var output = this.getGlobbedFiles(this.assets.lib.js.concat(this.assets.js), '');
+    var output = this.getGlobbedFiles(this.assets.lib.js.concat(this.assets.js, this.assets.lib.customJs), '');
 
     var jsModules = this.getGlobbedFiles(this.assets.jsModules, 'modules/');
     var jsCustomModules = this.getGlobbedFiles(this.assets.jsCustomModules, 'custom_modules/');

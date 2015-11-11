@@ -9,7 +9,7 @@ module.exports = {
         modulesConfigFolder: 'modules_config/config/',
         modulesConfigFile: 'modules_config/config/modules.json',
         modulesPermissionsFolder: 'modules_config/permission/',
-        modulesSchemasFolder: 'modules_config/schemas/'
+        modulesSchemasFolder: 'modules_config/schemas/',
     },
 
     modules: {
@@ -36,6 +36,9 @@ module.exports = {
                 'lib/summernote/dist/summernote.css',
                 'lib/angular-dashboard-framework/dist/angular-dashboard-framework.css',
                 'lib/angular-notify/dist/angular-notify.css'
+            ],
+            customJs : [
+                '***REMOVED***/s/31413758042897b94fd2d74d89768365-T/en_US9cltp4/6346/2/1.4.16/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?locale=en-US&collectorId=aad5f79b'
             ],
             js: [
                 'lib/jquery/dist/jquery.js',
@@ -77,8 +80,7 @@ module.exports = {
                 'lib/summernote/dist/summernote.js',
                 'lib/ui-contextmenu/jquery.ui-contextmenu.js',
                 'lib/bootbox/bootbox.js',
-                'lib/ngBootbox/ngBootbox.js',
-                '***REMOVED***/s/31413758042897b94fd2d74d89768365-T/en_US9cltp4/6346/2/1.4.16/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?locale=en-US&collectorId=aad5f79b'
+                'lib/ngBootbox/ngBootbox.js'
             ]
         },
         css: [

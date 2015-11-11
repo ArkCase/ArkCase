@@ -9,6 +9,13 @@ var nunjucks = require('nunjucks'),
 
 module.exports = function (grunt) {
     var config = require('./config/env/all');
+    try{
+        var customConfig = require('./config/env/customConfig');
+        _.merge(config, customConfig);
+    }
+    catch(ex){
+        console.log('Custom config does not exist..continuing..');
+    }
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
