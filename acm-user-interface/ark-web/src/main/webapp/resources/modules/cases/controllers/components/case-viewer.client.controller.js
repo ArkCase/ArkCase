@@ -9,8 +9,8 @@
  *
  * The Viewer Controller
  */
-angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService',
-    function($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, SnowboundService, Authentication, EcmService) {
+angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService',  'CasesModelsService', 'CallCasesService',
+    function($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, SnowboundService, Authentication, EcmService, CasesModelsService, CallCasesService) {
         $scope.$emit('req-component-config', 'viewer');
 
         $scope.acmTicket = '';
@@ -21,6 +21,9 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
         $scope.ecmFileEvents = [];
         $scope.ecmFileNotes = [];
         $scope.ecmFileParticipants = [];
+        $scope.userList = [];
+        $scope.caseInfo = {};
+        $scope.assignee = '';
 
         // Methods
         $scope.openSnowboundViewer = openSnowboundViewer;
@@ -52,6 +55,9 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
         // Obtains the currently logged in user
         var userInfo = Authentication.queryUserInfo({});
 
+        // Obtains a list of all users in ArkCase
+        var totalUserInfo = LookupService.getUsers({});
+
         // Retrieves the properties from the ecmFileService.properties file (including Snowbound configuration)
         var ecmFileConfig = LookupService.getConfig({name: 'ecmFileService'});
 
@@ -61,16 +67,30 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
         var ecmFileNotes = EcmService.getFileNotes({fileId: $stateParams['id']});
         var ecmFileParticipants = EcmService.getFileParticipants({fileId: $stateParams['id']});
 
-        $q.all([ticketInfo, userInfo.$promise, ecmFileConfig.$promise, ecmFileInfo.$promise,
-                ecmFileEvents.$promise, ecmFileNotes.$promise, ecmFileParticipants.$promise])
+        $q.all([ticketInfo, userInfo.$promise, totalUserInfo.$promise, ecmFileConfig.$promise,
+                ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileNotes.$promise, ecmFileParticipants.$promise])
             .then(function(data) {
                 $scope.acmTicket = data[0].data;
                 $scope.userId = data[1].userId;
-                $scope.ecmFileProperties = data[2];
-                $scope.ecmFile = data[3];
-                $scope.ecmFileEvents = data[4];
-                $scope.ecmFileNotes = data[5];
-                $scope.ecmFileParticipants = data[6];
+
+                var userListJSONStrings = data[2];
+                $scope.userList = [];
+                _.forEach(userListJSONStrings, function(value) {
+                    $scope.userList.push(JSON.parse(value));
+                });
+
+                $scope.ecmFileProperties = data[3];
+                $scope.ecmFile = data[4];
+                $scope.ecmFileEvents = data[5];
+                $scope.ecmFileNotes = data[6];
+                $scope.ecmFileParticipants = data[7];
+
+                // Obtains the case file metadata which contains the assignee information
+                CallCasesService.getCaseInfo($scope.ecmFile.container.containerObjectId)
+                    .then(function (data) {
+                        $scope.caseInfo = data;
+                        $scope.assignee = CasesModelsService.getAssignee(data);
+                    });
 
                 // Opens the selected document in the snowbound viewer
                 openSnowboundViewer();
