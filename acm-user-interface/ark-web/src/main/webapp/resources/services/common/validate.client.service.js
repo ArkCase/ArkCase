@@ -181,42 +181,6 @@ angular.module('services').factory('ValidationService', ["UtilService",
             return true;
         }
 
-        , validateNotes: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            for (var i = 0; i < data.length; i++) {
-                if (!this.validateNote(data[i])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        , validateNote: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.id)) {
-                return false;
-            }
-            if (Util.isEmpty(data.parentId)) {
-                return false;
-            }
-            return true;
-        }
-        , validateDeletedNote: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.deletedNoteId)) {
-                return false;
-            }
-            return true;
-        }
-
         , validateCorrespondences: function (data) {
             if (Util.isEmpty(data)) {
                 return false;
@@ -641,38 +605,38 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
-        , validateFileTypes: function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validatePlainForms: function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            for (var i = 0; i < data.length; i++) {
-                if (!this.validatePlainForm(data[i])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        , validatePlainForm: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.key) && Util.isEmpty(data.type)) {  //different attribute name. service data use "key"; menu item use "type"
-                return false;
-            }
-            if (Util.isEmpty(data.url)) {
-                return false;
-            }
-            if (!Util.isArray(data.urlParameters)) {
-                return false;
-            }
-            return true;
-        }
+        //, validateFileTypes: function (data) {
+        //    if (!Util.isArray(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validatePlainForms: function (data) {
+        //    if (!Util.isArray(data)) {
+        //        return false;
+        //    }
+        //    for (var i = 0; i < data.length; i++) {
+        //        if (!this.validatePlainForm(data[i])) {
+        //            return false;
+        //        }
+        //    }
+        //    return true;
+        //}
+        //, validatePlainForm: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.key) && Util.isEmpty(data.type)) {  //different attribute name. service data use "key"; menu item use "type"
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.url)) {
+        //        return false;
+        //    }
+        //    if (!Util.isArray(data.urlParameters)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
         , validateCasesConfig: function (data) {
             if (Util.isEmpty(data)) {
                 return false;
@@ -709,12 +673,12 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
-        , validatePriorities: function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        }
+        //, validatePriorities: function (data) {
+        //    if (!Util.isArray(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
         , validateMyTasks: function (data) {
             if (!Util.isArray(data)) {
                 return false;

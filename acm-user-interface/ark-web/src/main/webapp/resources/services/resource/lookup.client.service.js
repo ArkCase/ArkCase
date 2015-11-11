@@ -116,13 +116,35 @@ angular.module('services').factory('LookupService', ['$resource',
                 , cache: true
                 , isArray: true
             }
+
+            /**
+             * @ngdoc method
+             * @name getFileTypes
+             * @methodOf services.service:LookupService
+             *
+             * @description
+             * Query list of file types
+             *
+             * @returns {Object} An array returned by $resource
+             */
             , getFileTypes: {
                 url: "modules_config/config/modules/cases/resources/fileTypes.json"
                 , method: "GET"
                 , cache: true
                 , isArray: true
             }
-            , getPlainforms: {
+
+            /**
+             * @ngdoc method
+             * @name getFormTypes
+             * @methodOf services.service:LookupService
+             *
+             * @description
+             * Query list of form types
+             *
+             * @returns {Object} An array returned by $resource
+             */
+            , getFormTypes: {
                 url: "proxy/arkcase/api/latest/plugin/admin/plainforms/:objType"
                 , method: "GET"
                 , cache: true
