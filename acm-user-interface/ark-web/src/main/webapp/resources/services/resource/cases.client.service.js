@@ -108,12 +108,6 @@ angular.module('services').factory('CasesService', ['$resource',
                 cache: false
             }
 
-            , queryAudit: {
-                method: 'GET',
-                url: 'proxy/arkcase/api/latest/plugin/audit/CASE_FILE/:id?start=:startWith&n=:count&s=:sort',
-                cache: false
-            }
-
             , queryTasks: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/latest/plugin/search/children?parentType=CASE_FILE&childType=TASK&parentId=:id&start=:startWith&n=:count&s=:sort',
