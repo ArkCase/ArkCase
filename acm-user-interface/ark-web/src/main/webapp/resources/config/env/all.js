@@ -9,7 +9,7 @@ module.exports = {
         modulesConfigFolder: 'modules_config/config/',
         modulesConfigFile: 'modules_config/config/modules.json',
         modulesPermissionsFolder: 'modules_config/permission/',
-        modulesSchemasFolder: 'modules_config/schemas/',
+        modulesSchemasFolder: 'modules_config/schemas/'
     },
 
     modules: {
