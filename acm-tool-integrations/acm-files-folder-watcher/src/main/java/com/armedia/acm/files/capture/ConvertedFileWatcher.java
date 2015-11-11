@@ -128,7 +128,7 @@ public class ConvertedFileWatcher implements FileListener, ApplicationEventPubli
     {
 
         URL fileUrl = fileChangeEvent.getFile().getURL();
-        return new File(fileUrl.toURI());
+        return new File(fileUrl.toString());
     }
 
     private String getFileExtension(FileChangeEvent fileChangeEvent) throws Exception
