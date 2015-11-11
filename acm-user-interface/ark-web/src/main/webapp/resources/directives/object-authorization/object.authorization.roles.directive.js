@@ -16,6 +16,7 @@
  * @param {function} onAuthRoleChange callback function when role(s) are changed. Callback function should look like this: function (selectedObject, authorized, notAuthorized).
  * @param {string} objectDisplayName name of the field which we want to display in the list.
  * @param {string} roleDisplayName name of the field which we want to display in the list.
+ * @param {string} objectTitle value for the title Choose {{objectTitle}} in selecting objects.
  *
  * @scope
  *
@@ -58,8 +59,8 @@
  </file>
  </example>
  */
-angular.module('directives').directive('objectAuthorizationRoles', [
-    function () {
+angular.module('directives').directive('objectAuthorizationRoles', ['$translate',
+    function ($translate) {
         return {
             restrict: 'E',
             scope: {
@@ -67,7 +68,8 @@ angular.module('directives').directive('objectAuthorizationRoles', [
                 onObjectSelected: "=",
                 onAuthRoleChange: "=",
                 objectDisplayName: "@",
-                roleDisplayName: "@"
+                roleDisplayName: "@",
+                objectTitle: "@"
             },
             templateUrl: 'directives/object-authorization/object.authorization.roles.html',
             link: function (scope) {
