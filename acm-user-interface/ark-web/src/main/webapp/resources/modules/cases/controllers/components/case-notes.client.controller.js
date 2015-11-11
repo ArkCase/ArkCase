@@ -44,6 +44,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
                 });
                 $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
                     var notes = data[0];
+                    $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = notes;
                     $scope.gridOptions.totalItems = notes.length;
                     Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);

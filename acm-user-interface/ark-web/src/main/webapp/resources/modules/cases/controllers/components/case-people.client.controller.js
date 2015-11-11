@@ -393,6 +393,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
         var updateGridData = function (data) {
             $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, promiseConfig]).then(function () {
                 $scope.caseInfo = data;
+                $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.caseInfo.personAssociations;
                 Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.caseInfo.personAssociations.length);
 

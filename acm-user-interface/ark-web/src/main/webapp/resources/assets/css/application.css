@@ -1,5 +1,4 @@
-/* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css
-	http://10.21.4.149/arkcase/assets/css/application.css */
+/* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
 
 /* Typography */
 
@@ -251,28 +250,21 @@ iframe {
 
 /* Search Facets */
 
-.left-sidebar ul.list-unstyled h6 {
-    font-size: 14px;
-}
 
 .left-sidebar ul.list-unstyled li div {
-    margin: 15px;
-    margin-bottom: 0px;
-    margin-top: 0px;
+    margin:0px;
 }
 
-.left-sidebar ul.list-unstyled li ul.list-unstyled li {
-    margin-left: 15px;
-    margin-right: 15px;
+.left-sidebar ul.list-unstyled li {
+	margin: 10px;
+}
+
+.left-sidebar ul.list-unstyled li ul li{
+	margin: 0px;
 }
 
 .left-sidebar ul.list-unstyled li ul.list-unstyled li label {
     width: 100%;
-    margin-right: 5px;
-}
-
-.left-sidebar ul.list-unstyled li ul.list-unstyled li label input {
-    margin-right: 5px;
 }
 
 /* User Profile */
@@ -338,6 +330,8 @@ iframe {
     position: relative;
     left: -10px;
     padding-right: 5px;
+    margin-left: 7px;
+    margin-right: 2px;
 }
 
 .module-header div.input-group input {

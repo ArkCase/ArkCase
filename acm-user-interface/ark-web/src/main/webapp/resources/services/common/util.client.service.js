@@ -311,6 +311,23 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                 return d.promise;
             }
 
+
+            /**
+             * @ngdoc method
+             * @name errorPromise
+             * @methodOf services.service:UtilService
+             *
+             * @param {Object} err Error message or object
+             *
+             * @description
+             * It returns a promise that is reject right away
+             */
+            , errorPromise: function (err) {
+                var d = $q.defer();
+                d.reject(err);
+                return d.promise;
+            }
+
             ,forEachStripNg: function(data, callback) {
                 _.forEach(data, function(v, k) {
                     if (_.isString(k) && !k.startsWith("$")) {

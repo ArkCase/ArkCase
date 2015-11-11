@@ -5,13 +5,13 @@
  * @name cases.controller:Cases.WizardController
  *
  * @description
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/components/case-wizard.client.controller.js modules/cases/controllers/components/case-wizard.client.controller.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/components/case-newcase.client.controller.js modules/cases/controllers/components/case-newcase.client.controller.js}
  *
  * The Wizard Controller
  */
 angular.module('cases').controller('Cases.WizardController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'FrevvoFormService',
     function($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, FrevvoFormService) {
-        $scope.$emit('req-component-config', 'wizard');
+        $scope.$emit('req-component-config', 'newcase');
 
         $scope.acmTicket = '';
         $scope.acmFormsProperties = {};
@@ -54,7 +54,7 @@ angular.module('cases').controller('Cases.WizardController', ['$scope', '$stateP
         $scope.config = null;
         $scope.$on('component-config', applyConfig);
         function applyConfig(e, componentId, config) {
-            if (componentId == 'wizard') {
+            if (componentId == 'newcase') {
                 $scope.config = config;
             }
         }

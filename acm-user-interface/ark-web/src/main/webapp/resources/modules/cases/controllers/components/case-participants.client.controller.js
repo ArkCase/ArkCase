@@ -162,6 +162,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                         participant.acm$_participantNames = $scope.participantUsers;
                     }
                 });
+                $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = participants;
                 $scope.caseInfo = data;
                 Helper.Grid.hidePagingControlsIfAllDataShown($scope, participants.length);

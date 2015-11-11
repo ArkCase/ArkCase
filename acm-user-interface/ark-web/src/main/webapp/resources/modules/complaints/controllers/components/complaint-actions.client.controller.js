@@ -18,11 +18,6 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
         });
 
         /**
-         * @ngdoc method
-         * @name loadNewComplaintFrevvoForm
-         * @methodOf complaints.Complaints.ActionsController
-         *
-         * @description
          * Displays the create new complaint Frevvo form for the user
          */
         $scope.loadNewComplaintFrevvoForm = function () {
@@ -30,13 +25,6 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
         };
 
         /**
-         * @ngdoc method
-         * @name loadChangeComplaintStatusFrevvoForm
-         * @methodOf complaints.Complaints.ActionsController
-         *
-         * @param {Object} complaintInfo contains the metadata for the existing complaint which will be edited
-         *
-         * @description
          * Displays the change complaint status Frevvo form for the user
          */
         $scope.loadChangeComplaintStatusFrevvoForm = function (complaintInfo) {

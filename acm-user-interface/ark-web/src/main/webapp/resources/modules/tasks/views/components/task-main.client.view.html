@@ -1,0 +1,7 @@
+<div ng-controller="Tasks.MainController">
+    <div ng-repeat="component in components">
+        <!--<div ng-if="component.enabled"-->
+        <div ng-if="shallInclude(component)"
+             ng-include="'modules/tasks/views/components/task-'+ component.id  +'.client.view.html'"></div>
+    </div>
+</div>
