@@ -3,8 +3,6 @@
 //Menu service used for managing  menus
 angular.module('core').service('Menus', ['$q', 'PermissionsService',
     function ($q, PermissionsService) {
-        var permissions = PermissionsService.queryPermissions();
-
         // Define a set of default roles
         this.defaultRoles = ['*'];
 
@@ -84,23 +82,7 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
             // Validate that the menu exists
             this.validateMenuExistance(menuId);
             var context = this;
-            //$q.resolve(permissions.$promise).then(function(){
-            //    if (permissions[menuItemURL] && permissions[menuItemURL].enabled) {
-            //        // Push new menu item
-            //        context.menus[menuId].items.push({
-            //            title: menuItemTitle,
-            //            link: menuItemURL,
-            //            menuItemType: menuItemType || 'item',
-            //            menuItemClass: menuItemType,
-            //            uiRoute: menuItemUIRoute || ('/' + menuItemURL),
-            //            isPublic: ((isPublic === null || typeof isPublic === 'undefined') ? context.menus[menuId].isPublic : isPublic),
-            //            roles: ((roles === null || typeof roles === 'undefined') ? context.menus[menuId].roles : roles),
-            //            position: position || 0,
-            //            items: [],
-            //            shouldRender: shouldRender
-            //        });
-            //    }
-            //});
+
             // Push new menu item
             context.menus[menuId].items.push({
                 title: menuItemTitle,
