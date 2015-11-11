@@ -3,25 +3,25 @@
     "type": "COMPLAINT",
     "description": "Complaint",
     "iconName": "i i-notice",
-    "url": "home.html#!/complaints/:id/main"
+    "url": "#!/complaints/:id/main"
   },
   {
     "type": "CASE_FILE",
     "description": "Case File",
     "iconName": "i i-folder",
-    "url": "/home.html#!/cases/:id/main"
+    "url": "#!/cases/:id/main"
   },
   {
     "type": "TASK",
     "description": "Task",
     "iconName": "i i-checkmark",
-    "url": "/home.html#!/tasks/:id/main"
+    "url": "#!/tasks/:id/main"
   },
   {
     "type": "DOCUMENT",
     "description": "Document",
     "iconName": "",
-    "url": "/home.html#!/documents/:id/main"
+    "url": "#!/documents/:id/main"
   },
   {
     "type": "FILE",
@@ -93,12 +93,12 @@
     "type": "TIMESHEET",
     "description": "Timesheet",
     "iconName": "i i-alarm",
-    "url": "/home.html#!/timesheets/:id/main"
+    "url": "#!/timesheets/:id/main"
   },
   {
     "type": "COSTSHEET",
     "description": "Costsheet",
     "iconName": "fa fa-money",
-    "url": "/home.html#!/costsheets/:id/main"
+    "url": "#!/costsheets/:id/main"
   }
 ]
