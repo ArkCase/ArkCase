@@ -16,9 +16,10 @@ public interface AccessControlRuleChecker
      * @param targetId       the identifier for the object instance
      * @param targetType     target type
      * @param permission     required permission
+     * @param solrDocument   Solr data stored for this object
      * @return true if user is allowed to access this object, false otherwise
      */
-    boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, String permission);
+    boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, String permission, String solrDocument);
 
 
     /**
