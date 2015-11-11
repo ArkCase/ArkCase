@@ -2,6 +2,9 @@
   "common": {
     "select.option.none": "(Select One)"
   },
+  "common.service": {
+    "error.invalidData": "Invalid data"
+  },
   "common.directive.docTree": {
     "btnRefresh": "Refresh",
     "waitUploading": "Uploading...",
