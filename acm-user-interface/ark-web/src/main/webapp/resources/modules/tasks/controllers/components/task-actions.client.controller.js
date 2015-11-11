@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', 'ConfigService', 'TasksService', 'UtilService', 'ValidationService',
-    function ($scope, $state, ConfigService, TasksService, Util, Validator) {
+angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', 'UtilService', 'CallTasksService',
+    function ($scope, $state, Util, CallTasksService) {
         $scope.$emit('req-component-config', 'actions');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('actions' == componentId) {
@@ -10,21 +10,30 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         });
 
         $scope.$on('task-retrieved', function (e, data) {
-            if (Validator.validateTask(data)) {
-                $scope.taskInfo = data;
-            }
+            $scope.taskInfo = data;
         });
 
-        // Displays the create new task Frevvo form for the user
-        $scope.loadNewTaskFrevvoForm = function () {
-            $state.go('wizard');
+        $scope.sign = function () {
+            console.log('sign');
+        };
+        $scope.subscribe = function () {
+            console.log('subscribe');
+        };
+        $scope.reject = function () {
+            console.log('reject');
+        };
+        $scope.delete = function () {
+            console.log('delete');
+        };
+        $scope.complete = function () {
+            console.log('complete');
+        };
+        $scope.approve = function () {
+            console.log('approve');
+        };
+        $scope.rework = function () {
+            console.log('rework');
         };
 
-        // Displays the change task status Frevvo form for the user
-        $scope.loadChangeTaskStatusFrevvoForm = function (taskInfo) {
-            if (taskInfo && taskInfo.id && taskInfo.taskNumber && taskInfo.status) {
-                $state.go('status', {id: taskInfo.id, taskNumber: taskInfo.taskNumber, status: taskInfo.status});
-            }
-        };
     }
 ]);

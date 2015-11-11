@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DetailsController', ['$scope', '$stateParams', 'UtilService', 'ValidationService', 'CasesService',
-	function($scope, $stateParams, Util, Validator, CasesService) {
+angular.module('cases').controller('Cases.DetailsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallCasesService', 'MessageService',
+    function ($scope, $stateParams, $translate, Util, CallCasesService, MessageService) {
 		$scope.$emit('req-component-config', 'details');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('details' == componentId) {
@@ -25,10 +25,16 @@ angular.module('cases').controller('Cases.DetailsController', ['$scope', '$state
         $scope.saveDetails = function() {
             //$scope.editor.destroy();
 			var caseInfo = Util.omitNg($scope.caseInfo);
-            Util.serviceCall({
-                service: CasesService.save
-                , data: caseInfo
-            });
+            CallCasesService.saveCaseInfo(caseInfo).then(
+                function (caseInfo) {
+                    MessageService.info($translate.instant("cases.comp.details.informSaved"));
+                    return caseInfo;
+                }
+            );
+            //Util.serviceCall({
+            //    service: CasesService.save
+            //    , data: caseInfo
+            //});
         };
 
 

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('tasks').controller('Cases.WizardController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'FrevvoFormService',
+angular.module('tasks').controller('Tasks.WizardController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'FrevvoFormService',
     function ($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, FrevvoFormService) {
         return;
         $scope.$emit('req-component-config', 'wizard');

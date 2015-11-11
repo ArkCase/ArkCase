@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CallCasesService', 'CasesService', 'CasesModelsService',
-    function ($scope, $stateParams, Store, Util, Validator, Helper, LookupService, CallCasesService, CasesService, CasesModelsService) {
+angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'CallLookupService', 'CallCasesService', 'LookupService', 'CasesService', 'CasesModelsService',
+    function ($scope, $stateParams, Store, Util, Validator, Helper, CallLookupService, CallCasesService, LookupService, CasesService, CasesModelsService) {
         $scope.$emit('req-component-config', 'info');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("info" == componentId) {
@@ -10,21 +10,18 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
         });
 
 
-        // Obtains the dropdown menu selection options via REST calls to ArkCase
-        $scope.priorities = [];
-        var cachePriorities = new Store.SessionData(Helper.SessionCacheNames.PRIORITIES);
-        var priorities = cachePriorities.get();
-        Util.serviceCall({
-            service: LookupService.getPriorities
-            , result: priorities
-            , onSuccess: function (data) {
-                if (Validator.validatePriorities(data)) {
-                    priorities = data;
-                    cachePriorities.set(priorities);
-                    return priorities;
-                }
+        CallLookupService.getUsers().then(
+            function (users) {
+                var options = [];
+                _.each(users, function (user) {
+                    options.push({object_id_s: user.object_id_s, name: user.name});
+                });
+                $scope.assignableUsers = options;
+                return users;
             }
-        }).then(
+        );
+
+        CallLookupService.getPriorities().then(
             function (priorities) {
                 var options = [];
                 _.each(priorities, function (priority) {
@@ -35,30 +32,55 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        $scope.assignableUsers = [];
-        var cacheUsers = new Store.SessionData(Helper.SessionCacheNames.USERS);
-        var users = cacheUsers.get();
-        Util.serviceCall({
-            service: LookupService.getUsers
-            , result: users
-            , onSuccess: function (data) {
-                if (Validator.validateUsers(data)) {
-                    users = data;
-                    cacheUsers.set(users);
-                    return users;
-                }
-            }
-        }).then(
-            function (users) {
-                var options = [];
-                _.each(users, function (user) {
-                    var userInfo = JSON.parse(user);
-                    options.push({object_id_s: userInfo.object_id_s, name: userInfo.name});
-                });
-                $scope.assignableUsers = options;
-                return users;
-            }
-        );
+        //// Obtains the dropdown menu selection options via REST calls to ArkCase
+        //$scope.priorities = [];
+        //var cachePriorities = new Store.SessionData(Helper.SessionCacheNames.PRIORITIES);
+        //var priorities = cachePriorities.get();
+        //Util.serviceCall({
+        //    service: LookupService.getPriorities
+        //    , result: priorities
+        //    , onSuccess: function (data) {
+        //        if (Validator.validatePriorities(data)) {
+        //            priorities = data;
+        //            cachePriorities.set(priorities);
+        //            return priorities;
+        //        }
+        //    }
+        //}).then(
+        //    function (priorities) {
+        //        var options = [];
+        //        _.each(priorities, function (priority) {
+        //            options.push({value: priority, text: priority});
+        //        });
+        //        $scope.priorities = options;
+        //        return priorities;
+        //    }
+        //);
+        //
+        //$scope.assignableUsers = [];
+        //var cacheUsers = new Store.SessionData(Helper.SessionCacheNames.USERS);
+        //var users = cacheUsers.get();
+        //Util.serviceCall({
+        //    service: LookupService.getUsers
+        //    , result: users
+        //    , onSuccess: function (data) {
+        //        if (Validator.validateUsers(data)) {
+        //            users = data;
+        //            cacheUsers.set(users);
+        //            return users;
+        //        }
+        //    }
+        //}).then(
+        //    function (users) {
+        //        var options = [];
+        //        _.each(users, function (user) {
+        //            var userInfo = JSON.parse(user);
+        //            options.push({object_id_s: userInfo.object_id_s, name: userInfo.name});
+        //        });
+        //        $scope.assignableUsers = options;
+        //        return users;
+        //    }
+        //);
 
         $scope.owningGroups = [];
         var cacheGroups = new Store.SessionData(Helper.SessionCacheNames.GROUPS);
