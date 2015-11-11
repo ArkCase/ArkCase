@@ -95,6 +95,14 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
                 log.debug("Non matching target type [{} != {}], ignoring", accessControlRule.getObjectType(), targetType);
                 continue;
             }
+            // check if target sub type matches
+            // FIXME: unsafe - "object_sub_type_s" to "objectSubType" mapping has to be defined in accessControlRules.json
+            String targetSubType = (String) targetObjectProperties.get("objectSubType");
+            if (targetSubType == null || !targetSubType.equals(accessControlRule.getObjectSubType()))
+            {
+                log.debug("Non matching target sub type [{} != {}], ignoring", accessControlRule.getObjectSubType(), targetSubType);
+                continue;
+            }
             // check if "ALL" roles match
             if (!checkRolesAll(accessControlRule.getUserRolesAll(), authentication.getAuthorities(), targetObjectProperties))
             {
