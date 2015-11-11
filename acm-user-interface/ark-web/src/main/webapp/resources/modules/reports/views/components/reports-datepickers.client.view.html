@@ -1,19 +1,28 @@
 <div ng-controller="Reports.DatepickersController" ng-cloak>
 
-    <section id="datepickerSection">
-
-        <label> {{'reports.navigation.label.date-from' | translate}} </label>
-
+    <label>{{'reports.label.dateFrom' | translate}}
         <div>
-            <input type="date" class="form-control" datepicker-popup ng-model="startDate" is-open="opened.openedStart"/>
+            <input
+                type="date"
+                ng-model="reportsData.startDate"
+                class="form-control"
+                datepicker-popup
+                value="{{reportsData.startDate}}"
+                is-open="opened.openedStart"
+            />
         </div>
-
-        <label>{{'reports.navigation.label.date-to' | translate}}</label>
-
+    </label>
+    <label>{{'reports.label.dateTo' | translate}}
         <div>
-            <input type="date" class="form-control" datepicker-popup ng-model="endDate" is-open="opened.openedEnd"/>
+            <input
+                type="date"
+                ng-model="reportsData.endDate"
+                class="form-control"
+                datepicker-popup
+                value="{{reportsData.endDate}}"
+                is-open="opened.openedEnd"
+            />
         </div>
-
-    </section>
+    </label>
 
 </div>

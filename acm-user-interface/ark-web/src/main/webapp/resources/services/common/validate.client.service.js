@@ -95,33 +95,6 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
-        ,validateCaseFile: function(data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (0 >= Util.goodValue(data.id), 0) {
-                return false;
-            }
-            if (Util.isEmpty(data.caseNumber)) {
-                return false;
-            }
-            if (!Util.isArray(data.childObjects)) {
-                return false;
-            }
-            if (!Util.isArray(data.milestones)) {
-                return false;
-            }
-            if (!Util.isArray(data.participants)) {
-                return false;
-            }
-            if (!Util.isArray(data.personAssociations)) {
-                return false;
-            }
-            if (!Util.isArray(data.references)) {
-                return false;
-            }
-            return true;
-        }
         ,validatePersonAssociations: function(data) {
             if (Util.isEmpty(data)) {
                 return false;
@@ -724,6 +697,18 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
+        , validateTasksConfig: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if ('tasks' != Util.goodValue(data.id)) {
+                return false;
+            }
+            if (!Util.isArray(data.components)) {
+                return false;
+            }
+            return true;
+        }
         , validatePriorities: function (data) {
             if (!Util.isArray(data)) {
                 return false;
@@ -790,6 +775,33 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
+        , validateCaseFile: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (0 >= Util.goodValue(data.id), 0) {
+                return false;
+            }
+            if (Util.isEmpty(data.caseNumber)) {
+                return false;
+            }
+            if (!Util.isArray(data.childObjects)) {
+                return false;
+            }
+            if (!Util.isArray(data.milestones)) {
+                return false;
+            }
+            if (!Util.isArray(data.participants)) {
+                return false;
+            }
+            if (!Util.isArray(data.personAssociations)) {
+                return false;
+            }
+            if (!Util.isArray(data.references)) {
+                return false;
+            }
+            return true;
+        }
         , validateComplaint: function (data) {
             if (Util.isEmpty(data)) {
                 return false;
@@ -806,11 +818,29 @@ angular.module('services').factory('ValidationService', ["UtilService",
             if (!Util.isArray(data.personAssociations)) {
                 return false;
             }
-
-
             return true;
         }
-
+        , validateTask: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.taskId)) {
+                return false;
+            }
+//            if (Util.isEmpty(data.id) || Util.isEmpty(data.caseNumber)) {
+//             return false;
+//             }
+//             if (!Util.isArray(data.childObjects)) {
+//             return false;
+//             }
+//             if (!Util.isArray(data.participants)) {
+//             return false;
+//             }
+//             if (!Util.isArray(data.personAssociations)) {
+//             return false;
+//             }
+            return true;
+        }
 
     }}
 ]);

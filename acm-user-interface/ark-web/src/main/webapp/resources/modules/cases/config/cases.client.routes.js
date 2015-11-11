@@ -40,9 +40,9 @@ angular.module('cases').config(['$stateProvider', '$urlRouterProvider',
                 templateUrl: 'modules/cases/views/components/case-status.client.view.html'
             })
 
-            .state('wizard', {
-                url: '/wizard',
-                templateUrl: 'modules/cases/views/components/case-wizard.client.view.html'
+            .state('newcase', {
+                url: '/newcase',
+                templateUrl: 'modules/cases/views/components/case-newcase.client.view.html'
             })
 
             .state('cases.calendar', {
