@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -56,6 +57,11 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
      */
     private String solrDocument;
 
+    /**
+     * Solr to objectProperties name mapping.
+     */
+    private Map<String, String> propertiesMapping;
+
     @Before
     public void setUp() throws Exception
     {
@@ -64,6 +70,9 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         URI uri = getClass().getClassLoader().getResource("solrDocument.json").toURI();
         byte[] encoded = Files.readAllBytes(Paths.get(uri));
         solrDocument = new String(encoded, StandardCharsets.UTF_8);
+        // initialize property mappings
+        propertiesMapping = new HashMap<String, String>();
+        propertiesMapping.put("object_sub_type_s", "objectSubType");
     }
 
     @Test
@@ -84,7 +93,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
     {
         // mock the behavior
         EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(new ArrayList<AccessControlRule>()).anyTimes();
-        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(new HashMap<String, String>());
+        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(propertiesMapping);
         EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
         replayAll();
 
@@ -103,7 +112,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
 
         // mock the behavior
         EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(Arrays.asList(accessControlRule)).anyTimes();
-        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(new HashMap<String, String>());
+        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(propertiesMapping);
         EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
         replayAll();
 
@@ -122,7 +131,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
 
         // mock the behavior
         EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(Arrays.asList(accessControlRule)).anyTimes();
-        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(new HashMap<String, String>());
+        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(propertiesMapping);
         EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
         replayAll();
 
@@ -146,7 +155,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         Collection grantedAuthorities = Arrays.asList(grantedAuthority1, grantedAuthority2, grantedAuthority3);
         // mock the behavior
         EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(Arrays.asList(accessControlRule)).anyTimes();
-        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(new HashMap<String, String>());
+        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(propertiesMapping);
         EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
         EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
         replayAll();
@@ -171,7 +180,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         Collection grantedAuthorities = Arrays.asList(grantedAuthority1, grantedAuthority2, grantedAuthority3);
         // mock the behavior
         EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(Arrays.asList(accessControlRule)).anyTimes();
-        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(new HashMap<String, String>());
+        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(propertiesMapping);
         EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
         EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
         replayAll();
@@ -195,7 +204,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         Collection grantedAuthorities = Arrays.asList(grantedAuthority1, grantedAuthority2, grantedAuthority3);
         // mock the behavior
         EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(Arrays.asList(accessControlRule)).anyTimes();
-        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(new HashMap<String, String>());
+        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(propertiesMapping);
         EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
         EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
         replayAll();
@@ -220,7 +229,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         Collection grantedAuthorities = Arrays.asList(grantedAuthority1, grantedAuthority2, grantedAuthority3);
         // mock the behavior
         EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(Arrays.asList(accessControlRule)).anyTimes();
-        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(new HashMap<String, String>());
+        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(propertiesMapping);
         EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
         EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
         replayAll();
@@ -245,7 +254,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         Collection grantedAuthorities = Arrays.asList(grantedAuthority1, grantedAuthority2, grantedAuthority3);
         // mock the behavior
         EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(Arrays.asList(accessControlRule)).anyTimes();
-        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(new HashMap<String, String>());
+        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(propertiesMapping);
         EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
         EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
         replayAll();
@@ -269,7 +278,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         Collection grantedAuthorities = Arrays.asList(grantedAuthority1, grantedAuthority2, grantedAuthority3);
         // mock the behavior
         EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(Arrays.asList(accessControlRule)).anyTimes();
-        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(new HashMap<String, String>());
+        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(propertiesMapping);
         EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
         EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
         replayAll();
