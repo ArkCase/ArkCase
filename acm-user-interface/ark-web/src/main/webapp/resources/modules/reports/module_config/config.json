@@ -7,7 +7,7 @@
       "menuItemURL": "reports",
       "menuItemTitle": "Reports",
       "iconClass": "fa fa-bar-chart",
-      "position": 100
+      "position": 40
     }
   ],
   "components": [
