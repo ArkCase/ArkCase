@@ -127,7 +127,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
         });
 
         /**
-         * Persists the updated complaintfile metadata to the ArkComplaint databomplaint
+         * Persists the updated complaint metadata to the ArkComplaint data
          */
         function saveComplaint() {
             if (Validator.validateComplaint($scope.complaintInfo)) {
@@ -159,7 +159,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             //);
         }
 
-        // Updates the ArkComplaint databomplaint when the user changes a complaint attribute
+        // Updates the ArkComplaint data when the user changes a complaint attribute
         // in a complaint top bar menu item and clicks the save check button
         $scope.updateTitle = function () {
             saveComplaint();
