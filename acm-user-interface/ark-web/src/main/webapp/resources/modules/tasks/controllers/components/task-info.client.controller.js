@@ -33,6 +33,11 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         );
 
 
+        $scope.$on('task-retrieved', function (e, data) {
+            $scope.taskInfo = data;
+        });
+
+
         $scope.updateTitle = function () {
             saveTask();
         };
