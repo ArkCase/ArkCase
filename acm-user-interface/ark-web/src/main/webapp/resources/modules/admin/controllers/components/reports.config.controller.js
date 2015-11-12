@@ -59,7 +59,6 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
             //get authorized user groups for selected report and save all reports user groups
             $scope.reportsUserGroups[selectedObject.key] = [];
             angular.forEach(authorized, function (element) {
-                console.log(element);
                 $scope.reportsUserGroups[selectedObject.key].push(element.key);
             });
             reportsConfigService.saveReportsUserGroups($scope.reportsUserGroups);
