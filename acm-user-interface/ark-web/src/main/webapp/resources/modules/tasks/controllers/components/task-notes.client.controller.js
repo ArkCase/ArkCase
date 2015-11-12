@@ -58,7 +58,7 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
                     }
                 }
             );
-        }
+        };
         $scope.deleteRow = function (rowEntity) {
             Helper.Grid.deleteRow($scope, rowEntity);
 
