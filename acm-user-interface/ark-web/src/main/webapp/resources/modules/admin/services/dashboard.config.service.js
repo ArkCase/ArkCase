@@ -3,6 +3,16 @@
  */
 
 'use strict';
+/**
+ * @ngdoc service
+ * @name admin.service:Admin.DashboardConfigService
+ *
+ * @description
+ *
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/dashboard.config.service.js modules/admin/services/dashboard.config.service.js}
+ *
+ * The Admin.DashboardConfigService provides Dashboard Config REST calls functionality
+ */
 angular.module('admin').service('Admin.DashboardConfigService', function ($http) {
     return ({
         getRolesByWidgets: getRolesByWidgets,
