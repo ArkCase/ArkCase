@@ -84,7 +84,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
      * @param {object} reportsUserGroups ReportsUserGroups map to send to the server
      */
     function saveReportsUserGroups(reportsUserGroups) {
-        $http({
+        return $http({
             method: "POST",
             url: "proxy/arkcase/api/latest/plugin/report/reporttogroupsmap",
             data: angular.toJson(reportsUserGroups),
@@ -105,7 +105,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
      * @param {object} reports reports objects send to the server
      */
     function saveReports(reports) {
-        $http({
+        return $http({
             method: "POST",
             url: "proxy/arkcase/api/latest/plugin/report/save",
             data: angular.toJson(reports),
