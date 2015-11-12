@@ -78,7 +78,7 @@ angular.module('directives').directive('objectAuthorizationRoles', ['$translate'
                         scope.selectedObject = scope.data[0];
                         scope.selectObject();
                     }
-                });
+                }, true);
 
                 //initial setup
                 scope.selectedNotAuthorized = "";
