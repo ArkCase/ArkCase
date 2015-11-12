@@ -1,0 +1,176 @@
+{
+    "id": "time-tracking",
+    "title": "Time tracking",
+    "menus": [
+        
+        {
+            "menuId": "leftnav",
+            "menuItemURL": "time-tracking",
+            "menuItemTitle": "Time tracking",
+            "iconClass": "fa fa-clock-o",
+            "position": 100
+        }
+        
+    ],
+    "frevvoDateFormat": "YYYY-MM-DD",
+    "tree": {
+        "pageSize": 32,
+        "sorters": [
+            {
+                "desc": "Sort Date Ascending",
+                "name": "create_tdt ASC",
+                "default": true
+            },
+            {
+                "desc": "Sort Date Decending",
+                "name": "create_tdt DESC"
+            },
+            {
+                "desc": "Sort Timesheet ID Ascending",
+                "name": "id ASC"
+            },
+            {
+                "desc": "Sort Timesheet ID Decending",
+                "name": "id DESC"
+            },
+            {
+                "desc": "Sort By Timesheet Name",
+                "name": "name DESC"
+            }
+        ],
+        "nodeTypes": [
+            {
+                "type": "prev",
+                "icon": "fa fa-arrow-up"
+            },
+            {
+                "type": "next",
+                "icon": "fa fa-arrow-down"
+            },
+            {
+                "type": "p/TIMESHEET",
+                "icon": "fa fa-clock-o",
+                "components": [
+                    "details",
+                    "person",
+                    "timesSummary"
+                ]
+            },
+            {
+                "type": "p/TIMESHEET/detail",
+                "label": "Details",
+                "components": [
+                    "details"
+                ]
+            },
+            {
+                "type": "p/TIMESHEET/person",
+                "label": "Person",
+                "components": [
+                    "person"
+                ]
+            },
+            {
+                "type": "p/TIMESHEET/timeSummary",
+                "label": "Hours Summary",
+                "components": [
+                    "timesSummary"
+                ]
+            }
+        ]
+    },
+    "components": [
+        {
+            "id": "info",
+            "title": "Info",
+            "enabled": false,
+            "type": "empty",
+            "editable": false
+        },
+        {
+            "id": "actions",
+            "title": "Actions",
+            "enabled": false,
+            "type": "empty",
+            "editable": false
+        },
+        {
+            "id": "details",
+            "title": "Details",
+            "enabled": true,
+            "type": "empty"
+        },
+        {
+            "id": "person",
+            "title": "Person",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                2,
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 2,
+            "columnDefs": [
+                {
+                    "name": "fullName",
+                    "displayName": "timeTracking.comp.people.table.columns.fullName",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "userId",
+                    "displayName": "timeTracking.comp.people.table.columns.userId",
+                    "headerCellFilter": "translate"
+                }
+            ]
+        },
+        {
+            "id": "time-summary",
+            "title": "Time Summary",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                2,
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 2,
+            "columnDefs": [
+                {
+                    "name": "code",
+                    "displayName": "timeTracking.comp.timesSummary.table.columns.code",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjectType($event, row.entity)'>{{row.entity.code}}</a>"
+                },
+                {
+                    "name": "type",
+                    "displayName": "timeTracking.comp.timesSummary.table.columns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "value",
+                    "displayName": "timeTracking.comp.timesSummary.table.columns.value",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "date",
+                    "displayName": "timeTracking.comp.timesSummary.table.columns.date",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.date | date : 'MM/dd/yyyy'}}</div>"
+                },
+                {
+                    "name": "modified",
+                    "displayName": "timeTracking.comp.timesSummary.table.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.modified | date : 'MM/dd/yyyy'}}</div>"
+                }
+            ]
+        }
+   ]
+}
