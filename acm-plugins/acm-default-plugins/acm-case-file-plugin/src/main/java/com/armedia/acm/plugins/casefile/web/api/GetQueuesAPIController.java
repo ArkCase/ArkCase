@@ -22,8 +22,20 @@ public class GetQueuesAPIController
 
     private AcmQueueService acmQueueService;
 
+
+    // FIXME: this method should return only the queues the user is allowed to see
+    // TODO: rename method
+    // FIXME: no order id available
+//    @PreAuthorize("hasPermission(#orderId, 'CASE_FILE', 'viewBillingQueueInQueueMenu') or " +
+//            "hasPermission(#orderId, 'CASE_FILE', 'viewDistributionQueueInQueueMenu') or " +
+//            "hasPermission(#orderId, 'CASE_FILE', 'viewFulfillQueueInQueueMenu') or " +
+//            "hasPermission(#orderId, 'CASE_FILE', 'viewPendingResolutionQueueInQueueMenu') or " +
+//            "hasPermission(#orderId, 'CASE_FILE', 'viewQualityControlQueueInQueueMenu') or " +
+//            "hasPermission(#orderId, 'CASE_FILE', 'viewTranscribeQueueInQueueMenu')")
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<AcmQueue> findCaseById(Authentication auth
+    public
+    @ResponseBody
+    List<AcmQueue> findCaseById(Authentication auth
     ) throws AcmObjectNotFoundException
     {
         return acmQueueService.listAllQueues();
