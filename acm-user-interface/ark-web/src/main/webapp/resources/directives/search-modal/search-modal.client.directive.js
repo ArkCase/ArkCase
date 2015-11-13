@@ -32,7 +32,7 @@ angular.module('directives').directive('searchModal', ['SearchService', 'Search.
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
                 scope.queryExistingItems = function (){
-                    var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*",scope.filter,scope.pageSize,scope.start);
+                    var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*",scope.filters,scope.pageSize,scope.start);
                     if(query){
                         SearchService.queryFilteredSearch({
                                 query: query
@@ -60,13 +60,21 @@ angular.module('directives').directive('searchModal', ['SearchService', 'Search.
 
                 scope.selectFacet = function (checked, facet, field){
                     if(checked){
-                        scope.filter += '%26fq="' + facet + '":' + field;
+                        if(scope.filters){
+                            scope.filters += '&fq="' + facet + '":' + field;
+                        }
+                        else{
+                            scope.filters += 'fq="' + facet + '":' + field;
+                        }
                         scope.queryExistingItems();
                     }else{
-                        if(scope.filter.indexOf('%26fq="' + facet + '":' + field) > -1){
-                            scope.filter = scope.filter.split('%26fq="' + facet + '":' + field).join('');
-                            scope.queryExistingItems();
+                        if(scope.filters.indexOf('&fq="' + facet + '":' + field) > -1){
+                            scope.filters = scope.filters.split('&fq="' + facet + '":' + field).join('');
                         }
+                        else if(scope.filters.indexOf('fq="' + facet + '":' + field) > -1){
+                            scope.filters='';
+                        }
+                        scope.queryExistingItems();
                     }
                 }
 
@@ -114,6 +122,11 @@ angular.module('directives').directive('searchModal', ['SearchService', 'Search.
                                 scope.pageSize = pageSize;
                                 scope.queryExistingItems();
                             });
+                        }
+                    }
+                    if(scope.gridOptions){
+                        if(scope.filter){
+                            scope.filters = 'fq=' + scope.filter;
                         }
                     }
                 }

@@ -5,7 +5,7 @@
 'use strict';
 /**
  * @ngdoc service
- * @name admin.service:Admin.DashboardConfigService
+ * @name admin.services:Admin.DashboardConfigService
  *
  * @description
  *
