@@ -14,9 +14,9 @@ angular.module('admin').config(['$stateProvider',
                     }]
                 }
             }).state('admin.view-node', {
-                url: '/admin/view-node/:nodeName',
+                url: '/view-node/:nodeName',
                 templateUrl: function ($stateParams) {
-                    return '/modules/admin/views/components/' + $stateParams.nodeName + '.view.html';
+                    return 'modules/admin/views/components/' + $stateParams.nodeName + '.view.html';
                 }
             });
     }

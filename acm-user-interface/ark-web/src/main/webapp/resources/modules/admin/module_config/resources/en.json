@@ -9,6 +9,7 @@
     "security.module-config": "Module Configuration",
     "dashboard.title": "Dashboard",
     "dashboard.config": "Dashboard Configuration",
+    "dashboard.widgets": "Widgets",
     "reports.title": "Reports",
     "reports.config": "Reports Configuration",
     "forms.title": "Forms",
