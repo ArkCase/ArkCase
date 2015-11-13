@@ -60,13 +60,21 @@ angular.module('directives').directive('searchModal', ['SearchService', 'Search.
 
                 scope.selectFacet = function (checked, facet, field){
                     if(checked){
-                        scope.filter += '%26fq="' + facet + '":' + field;
+                        if(scope.filter){
+                            scope.filter += '&fq="' + facet + '":' + field;
+                        }
+                        else{
+                            scope.filter += 'fq="' + facet + '":' + field;
+                        }
                         scope.queryExistingItems();
                     }else{
-                        if(scope.filter.indexOf('%26fq="' + facet + '":' + field) > -1){
-                            scope.filter = scope.filter.split('%26fq="' + facet + '":' + field).join('');
-                            scope.queryExistingItems();
+                        if(scope.filter.indexOf('&fq="' + facet + '":' + field) > -1){
+                            scope.filter = scope.filter.split('&fq="' + facet + '":' + field).join('');
                         }
+                        else if(scope.filter.indexOf('fq="' + facet + '":' + field) > -1){
+                            scope.filter='';
+                        }
+                        scope.queryExistingItems();
                     }
                 }
 
