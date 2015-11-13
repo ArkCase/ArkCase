@@ -16,8 +16,21 @@
   },
   "tasks.comp.parentinfo": {
     "taskId": "Task id:",
-    "taskNumber": "Task Number:",
-    "courtRoomName": "Court Room Name:"
+    "case": {
+      "subjectType.label": "Subject Type",
+      "incidentDate.label": "Incident Date",
+      "priority.label": "Priority",
+      "assignee.label": "Assigned To",
+      "owningGroup.label": "Owning Group"
+    },
+    "complaint": {
+      "subjectType.label": "Subject Type",
+      "incidentDate.label": "Incident Date",
+      "priority.label": "Priority",
+      "assignee.label": "Assigned To",
+      "owningGroup.label": "Owning Group"
+    },
+    "_xxx_courtRoomName": "Court Room Name:"
   },
   "tasks.comp.actions": {
     "eSignature.button": "Sign",

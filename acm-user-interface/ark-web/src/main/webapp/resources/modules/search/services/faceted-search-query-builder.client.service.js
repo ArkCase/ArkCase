@@ -28,7 +28,7 @@ angular.module('search').factory('Search.QueryBuilderService', [
              * @returns {HttpPromise} Future info about cancel status
              */
             buildFacetedSearchQuery: function (input, filters, n, start) {
-                return (filters ? (input + "&filters=fq=" + filters + "&n=" + n + "&start=" + start) : (input + "&n=" + n + "&start=" + start));
+                return (filters ? (input + "&filters=" + filters + "&n=" + n + "&start=" + start) : (input + "&n=" + n + "&start=" + start));
             }
         }
     }
