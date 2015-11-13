@@ -3,6 +3,7 @@
     "title": "Admin",
     "security.title": "Security",
     "security.functional-access-control": "Functional Access Control",
+    "security.functional-access-control.application-role": "Application Role",
     "security.ldap-config": "LDAP Configuration",
     "security.organizational-hierarchy": "Organizational Hierarchy",
     "security.select-privileges": "Create Role/Select Privileges",
