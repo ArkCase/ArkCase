@@ -770,37 +770,20 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     , select: Tree.select
                 };
 
-                console.log("jwudebug:directive 1111, b4 tree create");
                 Tree.create();
-                console.log("jwudebug:directive 2222, af tree create");
 
                 var treeInfo = Tree.Info.getTreeInfo();
                 //Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter);
 
                 scope.$watchGroup(['treeConfig', 'treeData'], function (newValues, oldValues, scope) {
-
-                    console.log("jwudebug:directive:watch 3333, enter");
                     var treeConfig = newValues[0];
                     var treeData = newValues[1];
                     var isNewConfig = (treeConfig != Tree.treeConfig);
                     var isNewData = (treeData != Tree.treeData);
                     Tree.treeConfig = treeConfig;
                     Tree.treeData = treeData;
-                    console.log("jwudebug:directive:watch 3334a, isNewConfig=" + isNewConfig);
-                    console.log("jwudebug:directive:watch 3334b, isNewData=" + isNewData);
-                    console.log("jwudebug:directive:watch 3334c, is treeConfig null?=" + (Util.isEmpty(treeConfig)));
-                    console.log("jwudebug:directive:watch 3334d, is treeData null?=" + Util.isEmpty(treeData));
-                    if (!Util.isEmpty(treeData)) {
-                        console.log("jwudebug:directive:watch 3334e, is treeData.docs null?=" + Util.isEmpty(treeData.docs));
-                        if (Util.isArray(treeData.docs)) {
-                            console.log("jwudebug:directive:watch 3334f, treeData.docs.length=" + treeData.docs.length);
-                            if (0 < treeData.docs.length) {
-                                console.log("jwudebug:directive:watch 3334g, treeData.docs[0].nodeId=" + treeData.docs[0].nodeId);
-                            }
-                        }
-                    }
+
                     if (isNewConfig && treeConfig) {
-                        console.log("jwudebug:directive:watch 4401, enter config");
                         var treeInfo = Tree.Info.getTreeInfo();
                         var oldPageSize = treeInfo.pageSize;
                         var oldFilter = treeInfo.filter;
@@ -812,29 +795,20 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                         Filter.buildFilter(filters);
                         Sorter.buildSorter(sorters);
 
-                        console.log("jwudebug:directive:watch 4444a, set config, (oldsize, newsize)=(" + oldPageSize + ", " + treeInfo.pageSize + ")");
-                        console.log("jwudebug:directive:watch 4444b, set config, (oldfilter, newfilter)=(" + oldFilter + ", " + treeInfo.filter + ")");
-                        console.log("jwudebug:directive:watch 4444c, set config, (oldsorter, newsorter)=(" + oldSorter + ", " + treeInfo.sorter + ")");
                         if (oldPageSize != treeInfo.pageSize || !Util.compare(oldFilter, treeInfo.filter) || !Util.compare(oldSorter, treeInfo.sorter)) {
-                            console.log("jwudebug:directive:watch 5555, b4 onLoad");
                             Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter);
-                            console.log("jwudebug:directive:watch 6666, af onLoad");
                         }
                     }
+
                     if (isNewData && treeConfig && Util.goodMapValue(treeData, "docs", false)) {
-                        console.log("jwudebug:directive:watch 7777, b4 reload");
                         Tree.tree.reload(Tree.getSource()).done(function () {
-                            console.log("jwudebug:directive:watch 8801a, done reload, key=" + Util.goodValue(Tree.Info.getTreeInfo().key));
-                            console.log("jwudebug:directive:watch 8801b, done reload, treeData.docs.length=" + treeData.docs.length);
                             if (0 < treeData.docs.length) {
                                 var treeInfo = Tree.Info.getTreeInfo();
                                 if (!Util.isEmpty(treeInfo.key)) {
-                                    console.log("jwudebug:directive:watch 8802, done b4 activateKey, key=" + treeInfo.key);
                                     Tree.tree.activateKey(treeInfo.key);
                                 }
                             }
                         });
-                        console.log("jwudebug:directive:watch 9999, af reload");
 
                     }
                 });

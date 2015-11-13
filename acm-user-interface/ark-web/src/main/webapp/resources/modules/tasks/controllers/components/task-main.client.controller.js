@@ -41,12 +41,6 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', 'StoreServ
             return false;
         };
 
-        $scope.$on('send-data-for-frevvo', function (e, data) {
-            $scope.getData = data;
-            console.log($scope.getData);
-            $scope.getData.startDate = moment($scope.getData.startDate).format($scope.config.frevvoDateFormat);
-        });
-
     }
 ])
 ;
