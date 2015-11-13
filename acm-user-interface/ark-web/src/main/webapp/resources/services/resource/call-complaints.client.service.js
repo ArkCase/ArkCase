@@ -10,8 +10,8 @@
 
  * CallComplaintsService contains wrapper functions of ComplaintsService to support default error handling, data validation and data cache.
  */
-angular.module('services').factory('CallComplaintsService', ['$resource', 'StoreService', 'UtilService', 'ValidationService', 'ComplaintsService', 'ConstantService',
-    function ($resource, Store, Util, Validator, ComplaintsService, Constant) {
+angular.module('services').factory('CallComplaintsService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'ComplaintsService', 'ConstantService',
+    function ($resource, $translate, Store, Util, Validator, ComplaintsService, Constant) {
         var ServiceCall = {
             SessionCacheNames: {
                 USER_INFO: "AcmUserInfo"

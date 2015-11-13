@@ -74,6 +74,8 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
                                     , nodeTitle: Util.goodValue(caseInfo.title)
                                     , nodeToolTip: Util.goodValue(caseInfo.title)
                                 });
+                            } else {
+                                treeData = $scope.treeData; //use what is there already
                             }
                             firstLoad = false;
 
@@ -110,6 +112,8 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
                                     , nodeTitle: $translate.instant("common.directive.objectTree.errorNode.title")
                                     , nodeToolTip: $translate.instant("common.directive.objectTree.errorNode.toolTip")
                                 });
+                            } else {
+                                treeData = $scope.treeData; //use what is there already
                             }
                             firstLoad = false;
 
