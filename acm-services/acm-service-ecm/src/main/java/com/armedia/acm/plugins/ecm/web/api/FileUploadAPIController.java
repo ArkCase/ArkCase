@@ -2,7 +2,11 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.model.*;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.search.service.ObjectMapperFactory;
@@ -14,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +46,7 @@ public class FileUploadAPIController
 
     private final String uploadFileType = "attachment";
 
+    @PreAuthorize("hasPermission(#parentObjectId, 'CASE_FILE', 'uploadOrReplaceFile')")
     @RequestMapping(
             value = "/upload",
             method = RequestMethod.POST,
@@ -56,11 +62,12 @@ public class FileUploadAPIController
             Authentication authentication,
             HttpSession session) throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException
     {
-        String folderCmisId = getCmisId(parentObjectType,parentObjectId,folderId);
+        String folderCmisId = getCmisId(parentObjectType, parentObjectId, folderId);
         List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, folderCmisId, request, session);
         return uploaded;
     }
 
+    @PreAuthorize("hasPermission(#parentObjectId, 'CASE_FILE', 'uploadOrReplaceFile')")
     @RequestMapping(
             value = "/upload",
             method = RequestMethod.POST,
@@ -70,7 +77,7 @@ public class FileUploadAPIController
     public String uploadFileForBrowsersWithoutFileUploadViaXHR(
             @RequestParam("parentObjectType") String parentObjectType,
             @RequestParam("parentObjectId") Long parentObjectId,
-            @RequestParam(value = "folderId", required = false ) Long folderId,
+            @RequestParam(value = "folderId", required = false) Long folderId,
             @RequestParam(value = "fileType", required = false, defaultValue = uploadFileType) String fileType,
             MultipartHttpServletRequest request,
             HttpServletResponse response,
@@ -79,7 +86,7 @@ public class FileUploadAPIController
     {
         String responseMimeType = MediaType.TEXT_PLAIN_VALUE;
         response.setContentType(responseMimeType);
-        String folderCmisId = getCmisId(parentObjectType,parentObjectId,folderId);
+        String folderCmisId = getCmisId(parentObjectType, parentObjectId, folderId);
         List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, folderCmisId, request, session);
 
         ObjectMapper om = new ObjectMapperFactory().createObjectMapper();
@@ -106,17 +113,17 @@ public class FileUploadAPIController
 
         List<EcmFile> uploadedFiles = new ArrayList<>();
 
-        if ( attachments != null )
+        if (attachments != null)
         {
-            for ( Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet() )
+            for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet())
             {
                 final List<MultipartFile> attachmentsList = entry.getValue();
 
-                if (attachmentsList != null && !attachmentsList.isEmpty() )
+                if (attachmentsList != null && !attachmentsList.isEmpty())
                 {
                     for (final MultipartFile attachment : attachmentsList)
                     {
-                            AcmMultipartFile f = new AcmMultipartFile(
+                        AcmMultipartFile f = new AcmMultipartFile(
                                 attachment.getName(),
                                 attachment.getOriginalFilename(),
                                 attachment.getContentType(),
@@ -150,7 +157,7 @@ public class FileUploadAPIController
             @PathVariable("ecmFileId") String ecmFileId,
             Authentication authentication)
     {
-        if ( log.isInfoEnabled() )
+        if (log.isInfoEnabled())
         {
             log.info("The user '" + authentication.getName() + "' deleted file: '" + ecmFileId + "'");
         }
@@ -172,18 +179,22 @@ public class FileUploadAPIController
 
     }
 
-    private String getCmisId(String parentObjectType, Long parentObjectId, Long folderId) throws AcmUserActionFailedException, AcmCreateObjectFailedException {
+    private String getCmisId(String parentObjectType, Long parentObjectId, Long folderId) throws AcmUserActionFailedException, AcmCreateObjectFailedException
+    {
         AcmFolder folder;
         String folderCmisId;
-        if( folderId!=null ){
+        if (folderId != null)
+        {
             folder = getAcmFolderService().findById(folderId);
-            if (folder == null) {
+            if (folder == null)
+            {
                 throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPLOAD_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null, "Destination Folder not found", null);
             }
             folderCmisId = folder.getCmisFolderId();
-        } else {
+        } else
+        {
             AcmContainer container = getEcmFileService().getOrCreateContainer(parentObjectType, parentObjectId);
-            if ( container.getFolder() == null )
+            if (container.getFolder() == null)
             {
                 // not really possible since the cm_folder_id is not nullable.  But we'll account for it anyway
                 throw new IllegalStateException("Container '" + container.getId() + "' does not have a folder!");
@@ -192,11 +203,14 @@ public class FileUploadAPIController
         }
         return folderCmisId;
     }
-    public AcmFolderService getAcmFolderService() {
+
+    public AcmFolderService getAcmFolderService()
+    {
         return acmFolderService;
     }
 
-    public void setAcmFolderService(AcmFolderService acmFolderService) {
+    public void setAcmFolderService(AcmFolderService acmFolderService)
+    {
         this.acmFolderService = acmFolderService;
     }
 

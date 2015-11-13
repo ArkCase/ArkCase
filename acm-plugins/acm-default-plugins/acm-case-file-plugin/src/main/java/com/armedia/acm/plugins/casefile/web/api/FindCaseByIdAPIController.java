@@ -5,10 +5,10 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.persistence.PersistenceException;
 
 @Controller
-@RequestMapping( { "/api/v1/plugin/casefile", "/api/latest/plugin/casefile"})
+@RequestMapping({"/api/v1/plugin/casefile", "/api/latest/plugin/casefile"})
 public class FindCaseByIdAPIController
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -27,10 +27,11 @@ public class FindCaseByIdAPIController
     private CaseFileDao caseFileDao;
     private ChangeCaseStatusDao changeCaseStatusDao;
 
+    @PreAuthorize("hasPermission(#id, 'CASE_FILE', 'viewOrderDetailsPage')")
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/byId/{id}",
-            produces = { MediaType.APPLICATION_JSON_VALUE })
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public CaseFile findCaseById(
             @PathVariable(value = "id") Long id,
@@ -41,17 +42,16 @@ public class FindCaseByIdAPIController
         {
             CaseFile retval = getCaseFileDao().find(id);
 
-            if ( retval == null )
+            if (retval == null)
             {
                 throw new PersistenceException("No such case file with id '" + id + "'");
             }
-            
+
             ChangeCaseStatus changeCaseStatus = getChangeCaseStatusDao().findByCaseId(retval.getId());
             retval.setChangeCaseStatus(changeCaseStatus);
 
             return retval;
-        }
-        catch (PersistenceException e)
+        } catch (PersistenceException e)
         {
             throw new AcmObjectNotFoundException("Case File", id, e.getMessage(), e);
         }
@@ -67,11 +67,13 @@ public class FindCaseByIdAPIController
         this.caseFileDao = caseFileDao;
     }
 
-	public ChangeCaseStatusDao getChangeCaseStatusDao() {
-		return changeCaseStatusDao;
-	}
+    public ChangeCaseStatusDao getChangeCaseStatusDao()
+    {
+        return changeCaseStatusDao;
+    }
 
-	public void setChangeCaseStatusDao(ChangeCaseStatusDao changeCaseStatusDao) {
-		this.changeCaseStatusDao = changeCaseStatusDao;
-	}
+    public void setChangeCaseStatusDao(ChangeCaseStatusDao changeCaseStatusDao)
+    {
+        this.changeCaseStatusDao = changeCaseStatusDao;
+    }
 }
