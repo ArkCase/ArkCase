@@ -1,5 +1,14 @@
 'use strict';
 
+///**
+// * @ngdoc controller
+// * @name time-tracking.controller:TimeTrackingController
+// *
+// * @description
+// * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/time-tracking/controllers/time-tracking.client.controller.js modules/time-tracking/controllers/time-tracking.client.controller.js}
+// *
+// * The Time Tracking module main controller
+// */
 angular.module('time-tracking').controller('TimeTrackingController', ['$scope', '$stateParams', '$translate', 'CallConfigService', 'TimeTrackingService', 'CallTimeTrackingService', 'ValidationService', 'UtilService',
 	function($scope, $stateParams, $translate, CallConfigService, TimeTrackingService, CallTimeTrackingService, Validator, Util) {
 		var promiseGetModuleConfig = CallConfigService.getModuleConfig("time-tracking").then(function (config) {

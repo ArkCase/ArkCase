@@ -27,7 +27,7 @@ angular.module('time-tracking').controller('TimeTracking.NewTimesheetController'
                 $scope.acmTicket = data[0].data;
                 $scope.acmFormsProperties = data[1];
 
-                // Opens the new case Frevvo form for the user
+                // Opens the new timesheet Frevvo form for the user
                 openCreateCaseFrevvoForm();
             });
 
