@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'CallLookupService', 'CallCasesService', 'LookupService', 'CasesService', 'CasesModelsService',
-    function ($scope, $stateParams, Store, Util, Validator, Helper, CallLookupService, CallCasesService, LookupService, CasesService, CasesModelsService) {
+angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'CallLookupService', 'CallCasesService', 'LookupService', 'CasesService', 'ObjectsModelsService',
+    function ($scope, $stateParams, Store, Util, Validator, Helper, CallLookupService, CallCasesService, LookupService, CasesService, ObjectsModelsService) {
         $scope.$emit('req-component-config', 'info');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("info" == componentId) {
@@ -90,8 +90,8 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
         $scope.owningGroup = null;
         $scope.$on('case-retrieved', function(e, data){
             $scope.caseInfo = data;
-            $scope.assignee = CasesModelsService.getAssignee(data);
-            $scope.owningGroup = CasesModelsService.getGroup(data);
+            $scope.assignee = ObjectsModelsService.getAssignee(data);
+            $scope.owningGroup = ObjectsModelsService.getGroup(data);
         });
 
         /**
@@ -123,7 +123,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             saveCase();
         };
         $scope.updateOwningGroup = function() {
-            CasesModelsService.setGroup($scope.caseInfo, $scope.owningGroup);
+            ObjectsModelsService.setGroup($scope.caseInfo, $scope.owningGroup);
             saveCase();
         };
         $scope.updatePriority = function() {
@@ -133,7 +133,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             saveCase();
         };
         $scope.updateAssignee = function() {
-            CasesModelsService.setAssignee($scope.caseInfo, $scope.assignee);
+            ObjectsModelsService.setAssignee($scope.caseInfo, $scope.assignee);
             saveCase();
         };
         $scope.updateDueDate = function() {
