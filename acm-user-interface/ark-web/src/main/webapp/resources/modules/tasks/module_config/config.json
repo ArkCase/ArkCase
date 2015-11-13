@@ -16,8 +16,7 @@
       {
         "desc": "Tasks for Me",
         "name": "my-tasks",
-        "value": "fq=assignee_s:${user}",
-        "default": true
+        "value": "fq=assignee_s:${user}"
       },
       {
         "desc": "All Open Tasks",
@@ -52,14 +51,16 @@
       {
         "desc": "(No Filter)",
         "name": "",
-        "value": ""
+        "value": "",
+        "default": true
       }
     ],
     "sorters": [
       {
         "desc": "Sort Create Date Asc",
         "name": "sort-date-asc",
-        "value": "create_tdt ASC"
+        "value": "create_tdt ASC",
+        "default": true
       },
       {
         "desc": "Sort Create Date Desc",
@@ -79,8 +80,7 @@
       {
         "desc": "(No Sort)",
         "name": "",
-        "value": "",
-        "default": true
+        "value": ""
       }
     ],
     "nodeTypes": [
@@ -275,27 +275,29 @@
       "paginationPageSize": 5,
       "columnDefs": [
         {
-          "name": "targetName",
-          "displayName": "tasks.comp.docsreview.table.columns.targetName",
+          "name": "fileId",
+          "displayName": "tasks.comp.docsreview.table.columns.fileId",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetName}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.fileId}}</a>"
         },
         {
-          "name": "targetTitle",
-          "displayName": "tasks.comp.docsreview.table.columns.targetTitle",
+          "name": "fileName",
+          "displayName": "tasks.comp.docsreview.table.columns.fileName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.fileName}}</a>"
         },
         {
-          "name": "modified",
-          "displayName": "tasks.comp.docsreview.table.columns.modified",
+          "name": "created",
+          "displayName": "tasks.comp.docsreview.table.columns.created",
           "headerCellFilter": "translate",
           "cellTemplate": "<div>{{ row.entity.modified | date : 'medium'}}</div>"
         },
         {
-          "name": "targetType",
-          "displayName": "tasks.comp.docsreview.table.columns.targetType",
-          "headerCellFilter": "translate"
+          "name": "creator",
+          "displayName": "tasks.comp.docsreview.table.columns.creator",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "lookup": "userFullNames"
         },
         {
           "name": "status",
@@ -311,13 +313,12 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "note",
@@ -353,13 +354,12 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "note",
@@ -389,32 +389,43 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
-          "name": "note",
-          "displayName": "tasks.comp.workflow.table.columns.note",
+          "name": "participant",
+          "displayName": "tasks.comp.workflow.table.columns.participant",
           "headerCellFilter": "translate"
         },
         {
-          "name": "created",
-          "displayName": "tasks.comp.workflow.table.columns.created",
+          "name": "role",
+          "displayName": "tasks.comp.workflow.table.columns.role",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "status",
+          "displayName": "tasks.comp.workflow.table.columns.status",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "startDateTime",
+          "field": "startDate",
+          "displayName": "tasks.comp.workflow.table.columns.startDateTime",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+          "cellTemplate": "<div>{{ row.entity.startDate | date : 'medium'}}</div>",
           "enableCellEdit": false
         },
         {
-          "name": "creator",
-          "displayName": "tasks.comp.workflow.table.columns.creator",
+          "name": "endDateTime",
+          "field": "endDate",
+          "displayName": "tasks.comp.workflow.table.columns.endDateTime",
           "headerCellFilter": "translate",
-          "enableCellEdit": false,
-          "lookup": "userFullNames"
+          "cellTemplate": "<div>{{ row.entity.endDate | date : 'medium'}}</div>",
+          "enableCellEdit": false
         }
       ]
     },
@@ -458,29 +469,23 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
-          "name": "note",
-          "displayName": "tasks.comp.esignatures.table.columns.note",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "created",
-          "displayName": "tasks.comp.esignatures.table.columns.created",
+          "name": "signedDate",
+          "displayName": "tasks.comp.esignatures.table.columns.signedDate",
           "headerCellFilter": "translate",
           "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
           "enableCellEdit": false
         },
         {
-          "name": "creator",
-          "displayName": "tasks.comp.esignatures.table.columns.creator",
+          "name": "signedBy",
+          "displayName": "tasks.comp.esignatures.table.columns.signedBy",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "lookup": "userFullNames"

@@ -14,37 +14,11 @@ angular.module('services').factory('CallTasksService', ['$resource', '$translate
     function ($resource, $translate, Store, Util, Validator, TasksService, Constant) {
         var ServiceCall = {
             SessionCacheNames: {
-                USER_INFO: "AcmUserInfo"
-                , USER_FULL_NAMES: "AcmUserFullNames"
-                , USERS: "AcmUsers"
-                , GROUPS: "AcmGroups"
-                , PRIORITIES: "AcmPriorities"
-                , OBJECT_TYPES: "AcmObjectTypes"
-                , FILE_TYPES: "AcmFileTypes"
-                , FORM_TYPES: "AcmFormTypes"
-                , PARTICIPANT_TYPES: "AcmParticipantTypes"
-                , PARTICIPANT_USERS: "AcmParticipantUsers"
-                , PARTICIPANT_GROUPS: "AcmParticipantGroups"
-                , PERSON_TYPES: "AcmPersonTypes"
-                , CONTACT_METHOD_TYPES: "AcmContactMethodTypes"
-                , ORGANIZATION_TYPES: "AcmOrganizationTypes"
-                , ADDRESS_TYPES: "AcmAddressTypes"
-                , ALIAS_TYPES: "AcmAliasTypes"
-                , SECURITY_TAG_TYPES: "AcmSecurityTagTypes"
-
-                , TASK_CONFIG: "AcmTaskConfig"
-                , TASK_TYPES: "AcmTaskTypes"
-                , TASK_CORRESPONDENCE_FORMS: "AcmTaskCorrespondenceForms"
-
             }
             , CacheNames: {
                 TASK_LIST: "TaskList"
                 , TASK_INFO: "TaskInfo"
-
-                , MY_TASKS: "MyTasks"
-
-                , TASK_HISTORY_DATA: "TaskHistoryData"
-                , TASK_NOTES: "TaskNotes"
+                , TASK_HISTORY: "TaskHistory"
             }
 
             /**
@@ -189,6 +163,60 @@ angular.module('services').factory('CallTasksService', ['$resource', '$translate
 //             if (!Util.isArray(data.personAssociations)) {
 //             return false;
 //             }
+                return true;
+            }
+
+            /**
+             * @ngdoc method
+             * @name queryTaskHistory
+             * @methodOf services.service:CallTasksService
+             *
+             * @param {Object} taskInfo Task data
+             *
+             * @description
+             * Query task history
+             *
+             * @param {Number} id  Task ID
+             *
+             * @returns {Object} Promise
+             */
+            , queryTaskHistory: function (taskInfo) {
+                var cacheTaskHistory = new Store.CacheFifo(this.CacheNames.TASK_HISTORY);
+                var taskHistory = cacheTaskHistory.get(taskInfo.taskId);
+                var adhoc = Util.isEmpty(taskInfo.businessProcessId);
+                var queryId = (adhoc) ? taskInfo.taskId : taskInfo.businessProcessId;
+                return Util.serviceCall({
+                    service: TasksService.queryTaskHistory
+                    , param: {
+                        queryId: queryId
+                        , adhoc: adhoc
+                    }
+                    , result: taskHistory
+                    , onSuccess: function (data) {
+                        if (ServiceCall.validateTaskHistory(data)) {
+                            cacheTaskHistory.put(taskInfo.taskId, data);
+                            return data;
+                        }
+                    }
+                });
+            }
+
+            /**
+             * @ngdoc method
+             * @name validateTaskHistory
+             * @methodOf services.service:CallTasksService
+             *
+             * @description
+             * Validate task history
+             *
+             * @param {Object} data  Data to be validated
+             *
+             * @returns {Boolean} Return true if data is valid
+             */
+            , validateTaskHistory: function (data) {
+                if (!Util.isArray(data)) {
+                    return false;
+                }
                 return true;
             }
 

@@ -226,13 +226,12 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "entity",
@@ -263,13 +262,12 @@
         "title": "Contact Methods",
         "enableFiltering": true,
         "paginationPageSizes": [
-          2,
           5,
           10,
           20,
           50
         ],
-        "paginationPageSize": 2,
+        "paginationPageSize": 5,
         "columnDefs": [
           {
             "name": "type",
@@ -469,13 +467,12 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "participantType",
@@ -498,13 +495,12 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "note",
@@ -714,13 +710,12 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "name",

@@ -10,18 +10,18 @@
 
  * CallCasesService contains wrapper functions of CasesService to support default error handling, data validation and data cache.
  */
-angular.module('services').factory('CallCasesService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'CasesService', 'ConstantService',
-    function ($resource, $translate, Store, Util, Validator, CasesService, Constant) {
+angular.module('services').factory('CallCasesService', ['$translate', 'StoreService', 'UtilService', 'ValidationService', 'CasesService', 'ConstantService',
+    function ($translate, Store, Util, Validator, CasesService, Constant) {
         var ServiceCall = {
             SessionCacheNames: {
                 USER_INFO: "AcmUserInfo"
                 , USER_FULL_NAMES: "AcmUserFullNames"
                 , USERS: "AcmUsers"
                 , GROUPS: "AcmGroups"
-                , PRIORITIES: "AcmPriorities"
+                //, PRIORITIES: "AcmPriorities"
                 , OBJECT_TYPES: "AcmObjectTypes"
-                , FILE_TYPES: "AcmFileTypes"
-                , FORM_TYPES: "AcmFormTypes"
+                //, FILE_TYPES: "AcmFileTypes"
+                //, FORM_TYPES: "AcmFormTypes"
                 , PARTICIPANT_TYPES: "AcmParticipantTypes"
                 , PARTICIPANT_USERS: "AcmParticipantUsers"
                 , PARTICIPANT_GROUPS: "AcmParticipantGroups"
@@ -32,7 +32,7 @@ angular.module('services').factory('CallCasesService', ['$resource', '$translate
                 , ALIAS_TYPES: "AcmAliasTypes"
                 , SECURITY_TAG_TYPES: "AcmSecurityTagTypes"
 
-                , CASE_CONFIG: "AcmCaseConfig"
+                //, CASE_CONFIG: "AcmCaseConfig"
                 , CASE_TYPES: "AcmCaseTypes"
                 , CASE_CORRESPONDENCE_FORMS: "AcmCaseCorrespondenceForms"
 
@@ -50,12 +50,11 @@ angular.module('services').factory('CallCasesService', ['$resource', '$translate
                 , CASE_INFO: "CaseInfo"
 
                 , MY_TASKS: "MyTasks"
-                , CASE_HISTORY_DATA: "CaseHistoryData"
                 , CASE_CORRESPONDENCE_DATA: "CaseCorrespondenceData"
-                , CASE_NOTES: "CaseNotes"
                 , CASE_COST_SHEETS: "CaseCostSheets"
                 , CASE_TIME_SHEETS: "CaseTimeSheets"
 
+                //, CASE_HISTORY_DATA: "CaseHistoryData"
                 //, COMPLAINT_LIST: "ComplaintList"
                 //, COMPLAINT_INFO: "ComplaintInfo"
                 //, COMPLAINT_HISTORY_DATA: "ComplaintHistoryData"
@@ -212,7 +211,6 @@ angular.module('services').factory('CallCasesService', ['$resource', '$translate
                 }
                 return true;
             }
-
 
         };
 

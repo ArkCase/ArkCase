@@ -13,11 +13,9 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
         });
 
         $scope.$on('complaint-retrieved', function (e, data) {
-            if (Validator.validateComplaint(data)) {
-                $scope.complaintInfo = Util.goodValue(data, {references: []});
-                $scope.gridOptions.data = $scope.complaintInfo.references;
-                Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.complaintInfo.references.length);
-            }
+            $scope.complaintInfo = data;
+            $scope.gridOptions.data = $scope.complaintInfo.references;
+            Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.complaintInfo.references.length);
         });
 
         $scope.onClickObjLink = function (event, rowEntity) {

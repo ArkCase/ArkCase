@@ -6,9 +6,9 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/common/helper.client.service.js services/common/helper.client.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/common/constant.client.service.js services/common/constant.client.service.js}
  *
- * This service package contains various commonly used miscellaneous help functions.
+ * This service package contains constants
  */
 
 angular.module('services').factory('ConstantService', [
