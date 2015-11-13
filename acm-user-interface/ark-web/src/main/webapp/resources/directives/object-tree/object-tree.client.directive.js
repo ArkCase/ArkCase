@@ -782,6 +782,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     var isNewData = (treeData != Tree.treeData);
                     Tree.treeConfig = treeConfig;
                     Tree.treeData = treeData;
+
                     if (isNewConfig && treeConfig) {
                         var treeInfo = Tree.Info.getTreeInfo();
                         var oldPageSize = treeInfo.pageSize;
@@ -798,6 +799,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                             Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter);
                         }
                     }
+
                     if (isNewData && treeConfig && Util.goodMapValue(treeData, "docs", false)) {
                         Tree.tree.reload(Tree.getSource()).done(function () {
                             if (0 < treeData.docs.length) {
