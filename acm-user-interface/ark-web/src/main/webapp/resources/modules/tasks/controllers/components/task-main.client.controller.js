@@ -23,13 +23,14 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', 'StoreServ
         });
 
 
-        var componentsStore = new Store.Variable("TaskComponentsStore");
         $scope.$on('task-selected', function onSelectedTask(e, selectedTask) {
-            componentsStore.set(selectedTask.components);
+            //var componentsStore = new Store.Variable("TaskComponentsStore");
+            //componentsStore.set(selectedTask.components);
         });
 
         $scope.shallInclude = function (component) {
             if (component.enabled) {
+                var componentsStore = new Store.Variable("TaskComponentsStore");
                 var componentsToShow = Util.goodValue(componentsStore.get(), []);
                 for (var i = 0; i < componentsToShow.length; i++) {
                     if (componentsToShow[i] == component.id) {
@@ -39,6 +40,13 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', 'StoreServ
             }
             return false;
         };
+
+        $scope.$on('send-data-for-frevvo', function (e, data) {
+            $scope.getData = data;
+            console.log($scope.getData);
+            $scope.getData.startDate = moment($scope.getData.startDate).format($scope.config.frevvoDateFormat);
+        });
+
     }
 ])
 ;

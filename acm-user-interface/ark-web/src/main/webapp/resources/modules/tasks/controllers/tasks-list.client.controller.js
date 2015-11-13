@@ -69,6 +69,7 @@ angular.module('tasks').controller('TasksListController', ['$scope', '$state', '
             if (firstLoad && $stateParams.id) {
                 CallTasksService.getTaskInfo($stateParams.id).then(
                     function (taskInfo) {
+                        console.log("jwuxdebug:list.getTaskInfo 1002, select taskInfo.taskId=" + taskInfo.taskId);
                         $scope.treeControl.select({
                             pageStart: start
                             , nodeType: Constant.ObjectTypes.TASK
@@ -88,6 +89,8 @@ angular.module('tasks').controller('TasksListController', ['$scope', '$state', '
                                     , nodeTitle: Util.goodValue(taskInfo.title)
                                     , nodeToolTip: Util.goodValue(taskInfo.title)
                                 });
+                            } else {
+                                treeData = $scope.treeData; //use what is there already
                             }
                             firstLoad = false;
 
@@ -125,6 +128,8 @@ angular.module('tasks').controller('TasksListController', ['$scope', '$state', '
                                     , nodeTitle: $translate.instant("common.directive.objectTree.errorNode.title")
                                     , nodeToolTip: $translate.instant("common.directive.objectTree.errorNode.toolTip")
                                 });
+                            } else {
+                                treeData = $scope.treeData; //use what is there already
                             }
                             firstLoad = false;
 
@@ -143,7 +148,6 @@ angular.module('tasks').controller('TasksListController', ['$scope', '$state', '
                     }
                 );
             }
-
         };
 
         $scope.onSelect = function (selectedTask) {
@@ -154,5 +158,6 @@ angular.module('tasks').controller('TasksListController', ['$scope', '$state', '
                 id: selectedTask.nodeId
             });
         };
+
     }
 ]);

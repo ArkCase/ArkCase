@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallConfigService', 'CallTasksService',
-    function ($scope, $stateParams, $translate, Util, CallConfigService, CallTasksService) {
+angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$translate', 'StoreService', 'UtilService', 'CallConfigService', 'CallTasksService',
+    function ($scope, $stateParams, $translate, Store, Util, CallConfigService, CallTasksService) {
         var promiseGetModuleConfig = CallConfigService.getModuleConfig("tasks").then(function (config) {
             $scope.config = config;
             return config;
@@ -16,6 +16,8 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 
         $scope.progressMsg = $translate.instant("tasks.progressNoTask");
         $scope.$on('req-select-task', function (e, selectedTask) {
+            var componentsStore = new Store.Variable("TaskComponentsStore");
+            componentsStore.set(selectedTask.components);
             $scope.$broadcast('task-selected', selectedTask);
 
             var id = Util.goodMapValue(selectedTask, "nodeId", null);
