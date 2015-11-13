@@ -16,10 +16,10 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
             }
 
             //for test
-            if (1148 == $scope.taskInfo.taskId) {
-                $scope.taskInfo.parentObjectType = "COMPLAINT";
-                $scope.taskInfo.parentObjectId = 123;
-            }
+            //if (1148 == $scope.taskInfo.taskId) {
+            //    $scope.taskInfo.parentObjectType = "COMPLAINT";
+            //    $scope.taskInfo.parentObjectId = 123;
+            //}
 
 
             if (Constant.ObjectTypes.CASE_FILE == $scope.taskInfo.parentObjectType) {

@@ -69,7 +69,6 @@ angular.module('tasks').controller('TasksListController', ['$scope', '$state', '
             if (firstLoad && $stateParams.id) {
                 CallTasksService.getTaskInfo($stateParams.id).then(
                     function (taskInfo) {
-                        console.log("jwuxdebug:list.getTaskInfo 1002, select taskInfo.taskId=" + taskInfo.taskId);
                         $scope.treeControl.select({
                             pageStart: start
                             , nodeType: Constant.ObjectTypes.TASK
