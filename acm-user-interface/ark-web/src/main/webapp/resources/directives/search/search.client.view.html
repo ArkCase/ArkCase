@@ -32,10 +32,11 @@
                 <div class="panel-title">Results</div>
             </div>
             <div ui-grid="gridOptions"
+                 ng-if="gridOptions.data.length"
+                 adjust-table-height="gridOptions.data.length"
                  ui-grid-resize-columns
                  ui-grid-pagination
                  ui-grid-selection
-                 adjust-table-height="gridOptions.data.length"
                  ui-grid-auto-resize
                  class="grid">
             </div>

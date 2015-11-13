@@ -17,13 +17,20 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', 'StoreServ
             $scope.components = moduleConfig.components;
         });
 
-        var componentsStore = new Store.Variable("componentsStore");
+
+        $scope.$on('task-retrieved', function (e, data) {
+            $scope.taskInfo = data;
+        });
+
+
         $scope.$on('task-selected', function onSelectedTask(e, selectedTask) {
-            componentsStore.set(selectedTask.components);
+            //var componentsStore = new Store.Variable("TaskComponentsStore");
+            //componentsStore.set(selectedTask.components);
         });
 
         $scope.shallInclude = function (component) {
             if (component.enabled) {
+                var componentsStore = new Store.Variable("TaskComponentsStore");
                 var componentsToShow = Util.goodValue(componentsStore.get(), []);
                 for (var i = 0; i < componentsToShow.length; i++) {
                     if (componentsToShow[i] == component.id) {
@@ -33,6 +40,7 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', 'StoreServ
             }
             return false;
         };
+
     }
 ])
 ;
