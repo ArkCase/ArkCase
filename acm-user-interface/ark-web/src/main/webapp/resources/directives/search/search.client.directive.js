@@ -58,8 +58,8 @@
      </file>
  </example>
  */
-angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q',
-    function (SearchService, SearchQueryBuilder, $q) {
+angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService','HelperService', 'LookupService', 'StoreService', '$window',
+    function (SearchService, SearchQueryBuilder, $q, Util, Helper, LookupService, Store, $window) {
         return {
             restrict: 'E',              //match only element name
             scope: {
@@ -77,7 +77,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 scope.selectedItem = null;
                 scope.queryExistingItems = function (){
                     if(scope.pageSize >=0 && scope.start >=0){
-                        var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*",scope.filter,scope.pageSize,scope.start);
+                        var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*",scope.filters,scope.pageSize,scope.start);
                         if(query){
                             SearchService.queryFilteredSearch({
                                     query: query
@@ -108,15 +108,56 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                 scope.selectFacet = function (checked, facet, field){
                     if(checked){
-                        scope.filter += '%26fq="' + facet + '":' + field;
+                        if(scope.filters){
+                            scope.filters += '&fq="' + facet + '":' + field;
+                        }
+                        else{
+                            scope.filters += 'fq="' + facet + '":' + field;
+                        }
                         scope.queryExistingItems();
                     }else{
-                        if(scope.filter.indexOf('%26fq="' + facet + '":' + field) > -1){
-                            scope.filter = scope.filter.split('%26fq="' + facet + '":' + field).join('');
-                            scope.queryExistingItems();
+                        if(scope.filters.indexOf('&fq="' + facet + '":' + field) > -1){
+                            scope.filters = scope.filters.split('&fq="' + facet + '":' + field).join('');
                         }
+                        else if(scope.filters.indexOf('fq="' + facet + '":' + field) > -1){
+                            scope.filters='';
+                        }
+                        scope.queryExistingItems();
                     }
                 }
+
+                var cacheObjectTypes = new Store.SessionData(Helper.SessionCacheNames.OBJECT_TYPES);
+                var objectTypes = cacheObjectTypes.get();
+                var promiseObjectTypes = Util.serviceCall({
+                    service: LookupService.getObjectTypes
+                    , result: objectTypes
+                    , onSuccess: function (data) {
+                        objectTypes = [];
+                        _.forEach(data, function (item) {
+                            objectTypes.push(item);
+                        });
+                        cacheObjectTypes.set(objectTypes);
+                        return objectTypes;
+                    }
+                }).then(
+                    function (objectTypes) {
+                        scope.objectTypes = objectTypes;
+                        return objectTypes;
+                    }
+                );
+
+                scope.onClickObjLink = function (event, rowEntity) {
+                    event.preventDefault();
+                    promiseObjectTypes.then(function (data) {
+                        var found = _.find(scope.objectTypes, {type: rowEntity.object_sub_type_s ? rowEntity.object_sub_type_s : rowEntity.object_type_s});
+                        if (found && found.url) {
+                            var url = Util.goodValue(found.url);
+                            var id = Util.goodMapValue(rowEntity, "object_id_s");
+                            url = url.replace(":id", id);
+                            $window.location.href = url;
+                        }
+                    });
+                };
 
                 scope.keyDown = function (event) {
                     if (event.keyCode == 13 && scope.searchQuery) {
@@ -158,6 +199,9 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             }
                         }
                         if(scope.gridOptions){
+                            if(scope.filter){
+                                scope.filters = 'fq=' + scope.filter;
+                            }
                             scope.queryExistingItems();
                         }
                     }, true);

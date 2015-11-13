@@ -1,0 +1,71 @@
+{
+  "propertiesMapping": {
+    "object_id_s": "objectId",
+    "object_type_s": "objectType",
+    "object_sub_type_s": "objectSubType",
+    "client_id_s": "clientId",
+    "queue_name_s": "queueName"
+  },
+  "accessControlRuleList": [
+    {
+      "actionName": "completeTask",
+      "objectType": "CASE_FILE",
+      "objectSubType": "ORDER",
+      "objectProperties": {
+        "queueName": "Transcribe"
+      },
+      "userRolesAny": [
+        "IT Help Desk - Transcribe",
+        "Administrator - Transcribe"
+      ],
+      "userRolesAll": [
+        "Bactes Access All Clients"
+      ]
+    },
+    {
+      "actionName": "completeTask",
+      "objectType": "CASE_FILE",
+      "objectSubType": "ORDER",
+      "objectProperties": {
+        "queueName": "Transcribe"
+      },
+      "userRolesAny": [
+        "IT Help Desk - Transcribe",
+        "Administrator - Transcribe"
+      ],
+      "userRolesAll": [
+        "Bactes Access Client ID #clientId#"
+      ]
+    },
+    {
+      "actionName": "completeTask",
+      "objectType": "CASE_FILE",
+      "objectSubType": "ORDER",
+      "objectProperties": {
+        "queueName": "Fulfill"
+      },
+      "userRolesAny": [
+        "IT Help Desk - Fulfill",
+        "Administrator - Fulfill"
+      ],
+      "userRolesAll": [
+        "Bactes Access All Clients"
+      ]
+    },
+    {
+      "actionName": "completeTask",
+      "objectType": "CASE_FILE",
+      "objectSubType": "ORDER",
+      "objectProperties": {
+        "queueName": "Fulfill"
+      },
+      "userRolesAny": [
+        "IT Help Desk - Fulfill",
+        "Administrator - Fulfill"
+      ],
+      "userRolesAll": [
+        "Bactes Access Client ID #clientId#"
+      ]
+    }
+  ]
+}

@@ -16,8 +16,21 @@
   },
   "tasks.comp.parentinfo": {
     "taskId": "Task id:",
-    "taskNumber": "Task Number:",
-    "courtRoomName": "Court Room Name:"
+    "case": {
+      "subjectType.label": "Subject Type",
+      "incidentDate.label": "Incident Date",
+      "priority.label": "Priority",
+      "assignee.label": "Assigned To",
+      "owningGroup.label": "Owning Group"
+    },
+    "complaint": {
+      "subjectType.label": "Subject Type",
+      "incidentDate.label": "Incident Date",
+      "priority.label": "Priority",
+      "assignee.label": "Assigned To",
+      "owningGroup.label": "Owning Group"
+    },
+    "_xxx_courtRoomName": "Court Room Name:"
   },
   "tasks.comp.actions": {
     "eSignature.button": "Sign",
@@ -50,7 +63,7 @@
   "tasks.comp.rejcomments": {
     "title": "Reject Comments",
     "table.columns": {
-      "note": "Note",
+      "note": "Comment",
       "created": "Created",
       "creator": "Author"
     }
@@ -58,26 +71,27 @@
   "tasks.comp.workflow": {
     "title": "Workflow Overview",
     "table.columns": {
-      "note": "Note",
-      "created": "Created",
-      "creator": "Author"
+      "participant": "Participant",
+      "role": "Role",
+      "status": "Status",
+      "startDateTime": "Start",
+      "endDateTime": "End"
     }
   },
   "tasks.comp.esignatures": {
     "title": "eSignatures",
     "table.columns": {
-      "note": "Note",
-      "created": "Created",
-      "creator": "Author"
+      "signedDate": "Date",
+      "signedBy": "Signed By"
     }
   },
   "tasks.comp.docsreview": {
     "title": "Documents Under Review",
     "table.columns": {
-      "targetName": "Number",
-      "targetTitle": "Title",
-      "modified": "Modified",
-      "targetType": "Reference Type",
+      "fileId": "ID",
+      "fileName": "Title",
+      "created": "Created",
+      "creator": "Author",
       "status": "Status"
     }
   },

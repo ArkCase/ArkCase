@@ -1,0 +1,61 @@
+{
+  "responseHeader": {
+    "status": 0,
+    "QTime": 0,
+    "params": {
+      "q": "id:364-CASE_FILE",
+      "indent": "true",
+      "wt": "json",
+      "_": "1447256929213"
+    }
+  },
+  "response": {
+    "numFound": 1,
+    "start": 0,
+    "docs": [
+      {
+        "id": "364-CASE_FILE",
+        "object_id_s": "364",
+        "object_type_s": "CASE_FILE",
+        "object_sub_type_s": "ORDER",
+        "name": "20151110_364",
+        "create_date_tdt": "2015-11-10T08:34:29Z",
+        "creator_lcs": "ann-acm",
+        "modified_date_tdt": "2015-11-10T13:05:05Z",
+        "modifier_lcs": "albert-acm",
+        "public_doc_b": true,
+        "protected_object_b": true,
+        "title_parseable": "20151110_364",
+        "dueDate_tdt": "2016-05-08T07:34:28Z",
+        "priority_lcs": "Normal",
+        "assignee_id_lcs": "ann-acm",
+        "assignee_first_name_lcs": "Ann",
+        "assignee_last_name_lcs": "Administrator",
+        "assignee_full_name_lcs": "Ann Administrator",
+        "status_lcs": "Quality Control",
+        "adhocTask_b": false,
+        "state_lcs": "AL",
+        "hidden_b": false,
+        "city_lcs": "a",
+        "client_modified_tdt": "2015-11-10T09:36:00Z",
+        "priority_s": "Normal",
+        "queue_name_s": "QC Order",
+        "page_count_l": 0,
+        "client_id_s": "329",
+        "billable_b": false,
+        "patient_name_s": "Petar Ilin",
+        "order_id_s": "364",
+        "client_name_s": "u",
+        "country_lcs": "USA",
+        "delivery_method_s": "CD",
+        "request_type_s": "billing",
+        "queue_id_s": "3",
+        "address_lcs": "a",
+        "requester_type_s": "requesterType",
+        "requester_name_s": "Company",
+        "zip_code_s": "a",
+        "_version_": 1517459360083607600
+      }
+    ]
+  }
+}

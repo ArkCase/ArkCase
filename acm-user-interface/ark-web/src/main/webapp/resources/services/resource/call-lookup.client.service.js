@@ -17,13 +17,13 @@ angular.module('services').factory('CallLookupService', ['$resource', '$translat
                 USER_INFO: "AcmUserInfo"
                 , USERS: "AcmUsers"
                 , PRIORITIES: "AcmPriorities"
+                , FILE_TYPES: "AcmFileTypes"
+                , FORM_TYPES: "AcmFormTypes"
 
 
                 , USER_FULL_NAMES: "AcmUserFullNames"
                 , GROUPS: "AcmGroups"
                 , OBJECT_TYPES: "AcmObjectTypes"
-                , FILE_TYPES: "AcmFileTypes"
-                , FORM_TYPES: "AcmFormTypes"
                 , PARTICIPANT_TYPES: "AcmParticipantTypes"
                 , PARTICIPANT_USERS: "AcmParticipantUsers"
                 , PARTICIPANT_GROUPS: "AcmParticipantGroups"
@@ -128,6 +128,140 @@ angular.module('services').factory('CallLookupService', ['$resource', '$translat
              */
             , validatePriorities: function (data) {
                 if (!Util.isArray(data)) {
+                    return false;
+                }
+                return true;
+            }
+
+
+            /**
+             * @ngdoc method
+             * @name getFileTypes
+             * @methodOf services.service:CallLookupService
+             *
+             * @description
+             * Query list of file types
+             *
+             * @returns {Object} An array returned by $resource
+             */
+            , getFileTypes: function () {
+                var cacheFileTypes = new Store.SessionData(this.SessionCacheNames.FILE_TYPES);
+                var fileTypes = cacheFileTypes.get();
+                return Util.serviceCall({
+                    service: LookupService.getFileTypes
+                    , result: fileTypes
+                    , onSuccess: function (data) {
+                        if (ServiceCall.validateFileTypes(data)) {
+                            cacheFileTypes.set(data);
+                            return data;
+                        }
+                    }
+                });
+            }
+
+            /**
+             * @ngdoc method
+             * @name validateFileTypes
+             * @methodOf services.service:CallLookupService
+             *
+             * @description
+             * Validate list of file types data
+             *
+             * @param {Object} data  Data to be validated
+             *
+             * @returns {Boolean} Return true if data is valid
+             */
+            , validateFileTypes: function (data) {
+                if (!Util.isArray(data)) {
+                    return false;
+                }
+                return true;
+            }
+
+
+            /**
+             * @ngdoc method
+             * @name getFormTypes
+             * @methodOf services.service:CallLookupService
+             *
+             * @description
+             * Query list of plain form types
+             *
+             * @returns {Object} An array returned by $resource
+             */
+            , getFormTypes: function () {
+                var cacheFormTypes = new Store.SessionData(this.SessionCacheNames.FORM_TYPES);
+                var formTypes = cacheFormTypes.get();
+                return Util.serviceCall({
+                    service: LookupService.getFormTypes
+                    , result: formTypes
+                    , onSuccess: function (data) {
+                        if (ServiceCall.validatePlainForms(data)) {
+                            var plainForms = data;
+                            formTypes = [];
+                            _.each(plainForms, function (plainForm) {
+                                var formType = {};
+                                formType.type = plainForm.key;
+                                formType.label = Util.goodValue(plainForm.name);
+                                formType.url = Util.goodValue(plainForm.url);
+                                formType.urlParameters = Util.goodArray(plainForm.urlParameters);
+                                formType.form = true;
+                                formTypes.unshift(formType);
+                            });
+                            cacheFormTypes.set(formTypes);
+                            return formTypes;
+                        }
+                    }
+                });
+            }
+
+            /**
+             * @ngdoc method
+             * @name validatePlainForms
+             * @methodOf services.service:CallLookupService
+             *
+             * @description
+             * Validate list of plain forms data
+             *
+             * @param {Object} data  Data to be validated
+             *
+             * @returns {Boolean} Return true if data is valid
+             */
+            , validatePlainForms: function (data) {
+                if (!Util.isArray(data)) {
+                    return false;
+                }
+                for (var i = 0; i < data.length; i++) {
+                    if (!this.validatePlainForm(data[i])) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            /**
+             * @ngdoc method
+             * @name validatePlainForm
+             * @methodOf services.service:CallLookupService
+             *
+             * @description
+             * Validate a plain forms data
+             *
+             * @param {Object} data  Data to be validated
+             *
+             * @returns {Boolean} Return true if data is valid
+             */
+            , validatePlainForm: function (data) {
+                if (Util.isEmpty(data)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.key) && Util.isEmpty(data.type)) {  //different attribute name. service data use "key"; menu item use "type"
+                    return false;
+                }
+                if (Util.isEmpty(data.url)) {
+                    return false;
+                }
+                if (!Util.isArray(data.urlParameters)) {
                     return false;
                 }
                 return true;

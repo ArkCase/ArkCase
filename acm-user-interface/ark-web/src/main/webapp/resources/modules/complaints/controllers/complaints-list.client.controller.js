@@ -69,6 +69,8 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
                                     , nodeTitle: Util.goodValue(complaintInfo.title)
                                     , nodeToolTip: Util.goodValue(complaintInfo.title)
                                 });
+                            } else {
+                                treeData = $scope.treeData; //use what is there already
                             }
                             firstLoad = false;
 
@@ -105,6 +107,8 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
                                     , nodeTitle: $translate.instant("common.directive.objectTree.errorNode.title")
                                     , nodeToolTip: $translate.instant("common.directive.objectTree.errorNode.toolTip")
                                 });
+                            } else {
+                                treeData = $scope.treeData; //use what is there already
                             }
                             firstLoad = false;
 

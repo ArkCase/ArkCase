@@ -1,0 +1,127 @@
+{
+  "id": "admin",
+  "title": "Admin",
+  "menus": [
+    {
+      "menuId": "leftnav",
+      "menuItemURL": "admin",
+      "menuItemTitle": "Admin",
+      "iconClass": "glyphicon glyphicon-asterisk",
+      "position": 100
+    }
+  ],
+  "components": [
+  ],
+  "adminTree": [
+    {
+      "title": "admin.security.title",
+      "folder": "true",
+      "children": [
+        {
+          "title": "admin.security.functional-access-control",
+          "templateName": "security.functional_access_control"
+        },
+        {
+          "title": "admin.security.ldap-config",
+          "templateName": "security.ldap_config"
+        },
+        {
+          "title": "admin.security.organizational-hierarchy",
+          "templateName": "security.organizational_hierarchy"
+        },
+        {
+          "title": "admin.security.select-privileges",
+          "templateName": "security.select_privileges"
+        },
+        {
+          "title": "admin.security.module-config",
+          "templateName": "security.module_config"
+        }
+      ]
+    },
+    {
+      "title": "admin.dashboard.title",
+      "folder": "true",
+      "children": [
+        {
+          "title": "admin.dashboard.config",
+          "templateName": "dashboard.config"
+        }
+      ]
+    },
+    {
+      "title": "admin.reports.title",
+      "folder": "true",
+      "children": [
+        {
+          "title": "admin.reports.config",
+          "templateName": "reports.config"
+        }
+      ]
+    },
+    {
+      "title": "admin.forms.title",
+      "folder": "true",
+      "children": [
+        {
+          "title": "admin.forms.config",
+          "templateName": "forms.config"
+        }
+      ]
+    },
+    {
+      "title": "admin.workflows.title",
+      "folder": "true",
+      "children": [
+        {
+          "title": "admin.workflows.config",
+          "templateName": "workflows.config"
+        }
+      ]
+    },
+    {
+      "title": "admin.form-workflows.title",
+      "folder": "true",
+      "children": [
+        {
+          "title": "admin.form-workflows.link",
+          "templateName": "form_workflows.link"
+        }
+      ]
+    },
+    {
+      "title": "admin.labels.title",
+      "folder": "true",
+      "children": [
+        {
+          "title": "admin.labels.config",
+          "templateName": "labels.config"
+        }
+      ]
+    },
+    {
+      "title": "admin.branding.title",
+      "folder": "true",
+      "children": [
+        {
+          "title": "admin.branding.logo",
+          "templateName": "branding.logo"
+        },
+        {
+          "title": "admin.branding.custom-css",
+          "templateName": "branding.custom_css"
+        }
+      ]
+    },
+    {
+      "title": "admin.correspondence-management.title",
+      "folder": "true",
+      "children": [
+        {
+          "title": "admin.correspondence-management.templates",
+          "templateName": "correspondence_management.templates"
+        }
+      ]
+    }
+  ]
+}

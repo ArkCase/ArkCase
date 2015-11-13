@@ -1,9 +1,7 @@
 'use strict';
 
-//angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'ComplaintsService', 'ComplaintsModelsService',
-//    function ($scope, $stateParams, Store, Util, Validator, Helper, LookupService, ComplaintsService, ComplaintsModelsService) {
-angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'ComplaintsService',
-    function ($scope, $stateParams, Store, Util, Validator, Helper, LookupService, ComplaintsService) {
+angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'ComplaintsService', 'ObjectsModelsService',
+    function ($scope, $stateParams, Store, Util, Validator, Helper, LookupService, ComplaintsService, ObjectsModelsService) {
         $scope.$emit('req-component-config', 'info');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("info" == componentId) {
@@ -121,13 +119,13 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
         $scope.$on('complaint-retrieved', function (e, data) {
             if (Validator.validateComplaint(data)) {
                 $scope.complaintInfo = data;
-                $scope.assignee = ComplaintsModelsService.getAssignee(data);
-                $scope.owningGroup = ComplaintsModelsService.getGroup(data);
+                $scope.assignee = ObjectsModelsService.getAssignee(data);
+                $scope.owningGroup = ObjectsModelsService.getGroup(data);
             }
         });
 
         /**
-         * Persists the updated complaintfile metadata to the ArkComplaint databomplaint
+         * Persists the updated complaint metadata to the ArkComplaint data
          */
         function saveComplaint() {
             if (Validator.validateComplaint($scope.complaintInfo)) {
@@ -159,13 +157,13 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             //);
         }
 
-        // Updates the ArkComplaint databomplaint when the user changes a complaint attribute
+        // Updates the ArkComplaint data when the user changes a complaint attribute
         // in a complaint top bar menu item and clicks the save check button
         $scope.updateTitle = function () {
             saveComplaint();
         };
         $scope.updateOwningGroup = function () {
-            ComplaintsModelsService.setGroup($scope.complaintInfo, $scope.owningGroup);
+            ObjectsModelsService.setGroup($scope.complaintInfo, $scope.owningGroup);
             saveComplaint();
         };
         $scope.updatePriority = function () {
@@ -175,7 +173,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             saveComplaint();
         };
         $scope.updateAssignee = function () {
-            ComplaintsModelsService.setAssignee($scope.complaintInfo, $scope.assignee);
+            ObjectsModelsService.setAssignee($scope.complaintInfo, $scope.assignee);
             saveComplaint();
         };
         $scope.updateDueDate = function () {
