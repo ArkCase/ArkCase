@@ -1,8 +1,7 @@
 <div ng-controller="Admin.DashboardConfigController">
-    <div class="header">
-        <h3>
-            {{'admin.dashboard.config' | translate}}
-        </h3>
-    </div>
-    Not yet implemented
+    <panel-view header="{{'admin.dashboard.title' | translate}}" collapsible="false">
+        <object-authorization-roles data="widgets" object-display-name="name" on-object-selected="onObjSelect"
+                                    role-display-name="name"
+                                    on-auth-role-change="onAuthRoleSelected" object-title="{{admin.dashboard.widgets | translate}}"/>
+    </panel-view>
 </div>
