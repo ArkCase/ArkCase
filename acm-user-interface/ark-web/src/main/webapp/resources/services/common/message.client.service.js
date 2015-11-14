@@ -89,7 +89,9 @@ angular.module('services').factory('MessageService', ['$injector', '$translate',
                 if (response && response.config) {
                     var msg = '';
                     if (response.status == 503) {
-                        msg = $translate.instant('common.service.messageService.authorizationError');
+                        // TODO find way to preload common resources
+                        //msg = $translate.instant('common.service.messageService.authorizationError');
+                        msg = 'You are not authorized to take this action';
                     } else {
                         // TODO: Use templates for different types of errors
                         msg = [

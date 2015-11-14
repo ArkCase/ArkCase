@@ -16,7 +16,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 //            urlTemplate: '/api/config/resources/{part}/{lang}'
         });
 
-        $translatePartialLoaderProvider.addPart('common');
+        //$translatePartialLoaderProvider.addPart('common');
 
         $translateProvider.preferredLanguage('en');
 
