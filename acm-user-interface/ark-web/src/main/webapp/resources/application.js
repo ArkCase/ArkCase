@@ -4,8 +4,8 @@
 var app = angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfiguration.applicationModuleVendorDependencies);
 
 // Setting HTML5 Location Mode
-angular.module(ApplicationConfiguration.applicationModuleName).config(['$locationProvider', '$translateProvider', '$httpProvider',
-    function ($locationProvider, $translateProvider, $httpProvider) {
+angular.module(ApplicationConfiguration.applicationModuleName).config(['$locationProvider', '$translateProvider', '$translatePartialLoaderProvider', '$httpProvider',
+    function ($locationProvider, $translateProvider, $translatePartialLoaderProvider, $httpProvider) {
         $locationProvider.hashPrefix('!');
 
         $httpProvider.interceptors.push(httpInterceptor);
@@ -15,6 +15,8 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
             urlTemplate: 'modules_config/config/modules/{part}/resources/{lang}.json'
 //            urlTemplate: '/api/config/resources/{part}/{lang}'
         });
+
+        //$translatePartialLoaderProvider.addPart('common');
 
         $translateProvider.preferredLanguage('en');
 
@@ -35,6 +37,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
         }
     }
 ]);
+
 
 //Then define the init function for starting up the application
 angular.element(document).ready(function () {
