@@ -12,8 +12,8 @@
  */
 
 // Authentication service for user variables
-angular.module('services').factory('MessageService', ['$injector',
-    function ($injector) {
+angular.module('services').factory('MessageService', ['$injector', '$translate',
+    function ($injector, $translate) {
         var notify = null;
         var ConfigService = null;
         var config = null;
@@ -87,16 +87,18 @@ angular.module('services').factory('MessageService', ['$injector',
             httpError: function (response) {
                 var notifyOptions = {};
                 if (response && response.config) {
-
-                    // TODO add 503 error (permissions) message
-
-                    // TODO: Use templates for different types of errors
-                    var msg = [
-                        'ERROR: ',
-                        response.config.url,
-                        ' ',
-                        response.status
-                    ].join('');
+                    var msg = '';
+                    if (response.status == 503) {
+                        msg = $translate.instant('common.messageService.authorizationError');
+                    } else {
+                        // TODO: Use templates for different types of errors
+                        msg = [
+                            'ERROR: ',
+                            response.config.url,
+                            ' ',
+                            response.status
+                        ].join('');
+                    }
 
                     showNotifyMessage(msg);
                 }
