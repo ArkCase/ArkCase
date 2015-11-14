@@ -89,7 +89,7 @@ angular.module('services').factory('MessageService', ['$injector', '$translate',
                 if (response && response.config) {
                     var msg = '';
                     if (response.status == 503) {
-                        msg = $translate.instant('common.messageService.authorizationError');
+                        msg = $translate.instant('common.service.messageService.authorizationError');
                     } else {
                         // TODO: Use templates for different types of errors
                         msg = [
