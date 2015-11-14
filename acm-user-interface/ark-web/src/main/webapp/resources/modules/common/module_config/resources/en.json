@@ -5,6 +5,11 @@
   "common.service": {
     "error.invalidData": "Invalid data"
   },
+
+  "common.service.messageService": {
+    "authorizationError": "You are not authorized to take this action"
+  },
+
   "common.directive.docTree": {
     "btnRefresh": "Refresh",
     "waitUploading": "Uploading...",
