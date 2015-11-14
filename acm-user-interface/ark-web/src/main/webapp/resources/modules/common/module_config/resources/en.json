@@ -6,7 +6,7 @@
     "error.invalidData": "Invalid data"
   },
 
-  "common.messageService": {
+  "common.service.messageService": {
     "authorizationError": "You are not authorized to take this action"
   },
 
