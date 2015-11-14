@@ -19,7 +19,7 @@
  * @example
  <example>
  <file name="index.html">
- <button permission="cases.createCase"  permission.disableAction="disable" ng-click="createCase()">Create Case</button>
+ <button permission="createCase"  permission-properties="orderInfo" permission-action="disable" ng-click="createCase()">Create Case</button>
  </file>
  <file name="app.js">
  angular.module('ngAppDemo', []).controller('ngAppDemoController', function($scope, $log) {
@@ -30,8 +30,8 @@
  </file>
  </example>
  */
-angular.module('directives').directive('permission', ['$q', 'MessageService', 'PermissionsService',
-    function ($q, MessageService, PermissionsService) {
+angular.module('directives').directive('permission', ['$q', 'PermissionsService',
+    function ($q, PermissionsService) {
         return {
             priority: 100,
             restrict: 'A',
@@ -101,7 +101,6 @@ angular.module('directives').directive('permission', ['$q', 'MessageService', 'P
             if (e.data.element.attr('permission-disabled') ==='true') {
                 e.stopImmediatePropagation();
                 e.preventDefault();
-                MessageService.info('You are not authorized to take the action ' + e.data.actionName);
             }
         }
     }

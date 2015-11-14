@@ -1,31 +1,51 @@
 'use strict';
 
-
-angular.module('services').factory('PermissionsService', ['$q', '$http', '$log', 'Authentication',
-    function ($q, $http, $log, Authentication) {
+/**
+ * @ngdoc service
+ * @name services.service:PermissionsService
+ *
+ * @description
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/auth/permissions.client.service.js services/auth/permissions.client.service.js}
+ *
+ * The Permissions service. Performs checking user permissions for action depends on user roles, and objectProperties, like orderInfo, queueInfo
+ */
+angular.module('services').factory('PermissionsService', ['$q', '$http', '$log','$interpolate',  'Authentication', 'Profile.UserInfoService',
+    function ($q, $http, $log, $interpolate, Authentication, UserInfoService) {
         // Iniital rules loading
         var rules = queryRules();
-        var userInfo = Authentication.queryUserInfo();
+        var userProfile = UserInfoService.getUserInfo();
 
         return {
+            /**
+             * @ngdoc method
+             * @name getActionPermission
+             * @methodOf services.service:PermissionsService
+             *
+             * @param {String} actionName Name of action, for example 'printOrderUI'
+             * @param {Object} objectProperties Object representing current state of application, like orderInfo, queueInfo
+             *
+             * @returns {Promise} Future result of permission : true (enabled) or false (disabled)
+             * @description
+             * Retrieves a new acm authentication ticket for the currently logged in user
+             */
             getActionPermission: function (actionName, objectProperties) {
                 if (!actionName) {
                     $log.error('Permission Action name is undefined');
                     return $q.resolve(null);
                 }
 
-                if (rules && rules.accessControlRuleList && userInfo && userInfo.$resolved) {
+                if (rules && rules.data && rules.data.accessControlRuleList && userProfile && userProfile.$resolved) {
                     return $q.resolve(processAction(actionName, objectProperties));
                 } else {
                     var deferred = $q.defer();
                     var rulesPromise = queryRules();
-                    var userInfoPromise = Authentication.queryUserInfo();
+                    var userProfilePromise = UserInfoService.getUserInfo();
 
-                    $q.all([rules, userInfo])
+                    $q.all([rules, userProfilePromise])
                         .then(
                             function success(result) {
-                                rules = result[0].data;
-                                userInfo = result[1];
+                                rules = result[0];
+                                userProfile = result[1];
                                 var permissionResult = processAction(actionName, objectProperties)
                                 deferred.resolve(permissionResult);
                             },
@@ -47,17 +67,34 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
          */
         function processAction(actionName, objectProperties) {
             var isEnabled = true;
-            var actions = _.filter(rules.accessControlRuleList, {actionName: actionName});
+            var actions = _.filter(rules.data.accessControlRuleList, {actionName: actionName});
             // If actions found
             if (actions.length > 0) {
                 // Process all found actions objects
                 _.forEach(actions, function (action) {
-                    // TODO Check roles
-
-
                     isEnabled = true;
+
+                    // Check ALL authorities
+                    if (isEnabled && userProfile.groups && action.userRolesAll) {
+                        _.forEach(action.userRolesAll, function (role) {
+                            var processedRole = processRole(role, objectProperties);
+                            isEnabled = (_.indexOf(userProfile.groups, processedRole) != -1);
+                            return isEnabled
+                        });
+                    }
+
+                    // Check ANY authorities
+                    if (isEnabled && userProfile.groups && action.userRolesAny) {
+                        var anyEnabled = false;
+                        _.forEach(action.userRolesAny, function (role) {
+                            var processedRole = processRole(role, objectProperties);
+                            anyEnabled = anyEnabled || (_.indexOf(userProfile.groups, processedRole) != -1);
+                        });
+                        isEnabled = anyEnabled;
+                    }
+
                     // Check objectProperties
-                    if (action.objectProperties) {
+                    if (isEnabled && action.objectProperties) {
                         _.forEach(action.objectProperties, function (value, key) {
                             isEnabled = isEnabled && (_.get(objectProperties, key) === value );
                             // exit from loop if properties are not equal
@@ -65,7 +102,9 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                         });
                     }
                     // Return if action object passed
-                    return !isEnabled;
+                    if (isEnabled) {
+                        return false;
+                    }
                 });
             } else {
                 $log.error('Action ' + actionName + ' was not found in rules list');
@@ -81,9 +120,20 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
         function queryRules() {
             return $http({
                 method: 'GET',
-                url: 'test-data/rules.json',
+                url: 'proxy/arkcase/api/v1/service/dataaccess/rules',
                 cache: true
             });
+        }
+
+        /**
+         * Inerpolate ROLE name if required
+         * @param role
+         * @param objectProperties
+         * @returns {*}
+         */
+        function processRole(role, objectProperties) {
+            var exp  = $interpolate(role);
+            return exp(objectProperties);
         }
     }
 ]);

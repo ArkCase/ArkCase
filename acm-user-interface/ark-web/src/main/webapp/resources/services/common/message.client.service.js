@@ -88,6 +88,8 @@ angular.module('services').factory('MessageService', ['$injector',
                 var notifyOptions = {};
                 if (response && response.config) {
 
+                    // TODO add 503 error (permissions) message
+
                     // TODO: Use templates for different types of errors
                     var msg = [
                         'ERROR: ',
