@@ -27,7 +27,7 @@ public class FindCaseByIdAPIController
     private CaseFileDao caseFileDao;
     private ChangeCaseStatusDao changeCaseStatusDao;
 
-    @PreAuthorize("hasPermission(#id, 'CASE_FILE', 'viewOrderDetailsPage')")
+    @PreAuthorize("hasPermission(#id, 'CASE_FILE', 'viewCaseDetailsPage')")
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/byId/{id}",

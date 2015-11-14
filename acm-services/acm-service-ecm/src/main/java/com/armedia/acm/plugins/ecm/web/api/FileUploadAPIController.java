@@ -46,7 +46,7 @@ public class FileUploadAPIController
 
     private final String uploadFileType = "attachment";
 
-    @PreAuthorize("hasPermission(#parentObjectId, 'CASE_FILE', 'uploadOrReplaceFile')")
+    @PreAuthorize("hasPermission(#parentObjectId, #parentObjectType, 'uploadOrReplaceFile')")
     @RequestMapping(
             value = "/upload",
             method = RequestMethod.POST,
@@ -67,7 +67,7 @@ public class FileUploadAPIController
         return uploaded;
     }
 
-    @PreAuthorize("hasPermission(#parentObjectId, 'CASE_FILE', 'uploadOrReplaceFile')")
+    @PreAuthorize("hasPermission(#parentObjectId, #parentObjectType, 'uploadOrReplaceFile')")
     @RequestMapping(
             value = "/upload",
             method = RequestMethod.POST,

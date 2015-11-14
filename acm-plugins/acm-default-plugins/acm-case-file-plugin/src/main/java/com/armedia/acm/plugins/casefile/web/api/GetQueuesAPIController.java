@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.casefile.service.AcmQueueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,19 +24,11 @@ public class GetQueuesAPIController
     private AcmQueueService acmQueueService;
 
 
-    // FIXME: this method should return only the queues the user is allowed to see
-    // TODO: rename method
-    // FIXME: no order id available
-//    @PreAuthorize("hasPermission(#orderId, 'CASE_FILE', 'viewBillingQueueInQueueMenu') or " +
-//            "hasPermission(#orderId, 'CASE_FILE', 'viewDistributionQueueInQueueMenu') or " +
-//            "hasPermission(#orderId, 'CASE_FILE', 'viewFulfillQueueInQueueMenu') or " +
-//            "hasPermission(#orderId, 'CASE_FILE', 'viewPendingResolutionQueueInQueueMenu') or " +
-//            "hasPermission(#orderId, 'CASE_FILE', 'viewQualityControlQueueInQueueMenu') or " +
-//            "hasPermission(#orderId, 'CASE_FILE', 'viewTranscribeQueueInQueueMenu')")
+    @PostFilter("hasPermission(filterObject.id, 'QUEUE', 'viewQueueInQueueMenu')")
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public
     @ResponseBody
-    List<AcmQueue> findCaseById(Authentication auth
+    List<AcmQueue> getQueues(Authentication auth
     ) throws AcmObjectNotFoundException
     {
         return acmQueueService.listAllQueues();
