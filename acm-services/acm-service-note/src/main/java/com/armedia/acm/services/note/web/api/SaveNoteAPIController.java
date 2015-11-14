@@ -30,7 +30,7 @@ public class SaveNoteAPIController
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#note.parentId, 'CASE_FILE', 'addComment')")
+    @PreAuthorize("hasPermission(#note.parentId, #note.parentType, 'addComment')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Note addNote(

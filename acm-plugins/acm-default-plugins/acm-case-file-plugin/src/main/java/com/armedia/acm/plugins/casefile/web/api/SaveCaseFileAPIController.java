@@ -27,7 +27,7 @@ public class SaveCaseFileAPIController
     private SaveCaseService saveCaseService;
 
 
-    @PreAuthorize("hasPermission(#in.id, 'CASE_FILE', 'saveOrder')")
+    @PreAuthorize("hasPermission(#in.id, 'CASE_FILE', 'saveCase')")
     @RequestMapping(method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE})
     @ResponseBody
     public CaseFile createCaseFile(
