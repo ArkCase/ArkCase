@@ -9,8 +9,8 @@
  *
  * The Viewer Controller
  */
-angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService',  'CasesModelsService', 'CallCasesService',
-    function($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, SnowboundService, Authentication, EcmService, CasesModelsService, CallCasesService) {
+angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'ObjectsModelsService', 'CallCasesService',
+    function($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, SnowboundService, Authentication, EcmService, ObjectsModelsService, CallCasesService) {
         $scope.$emit('req-component-config', 'viewer');
 
         $scope.acmTicket = '';
@@ -89,7 +89,7 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
                 CallCasesService.getCaseInfo($scope.ecmFile.container.containerObjectId)
                     .then(function (data) {
                         $scope.caseInfo = data;
-                        $scope.assignee = CasesModelsService.getAssignee(data);
+                        $scope.assignee = ObjectsModelsService.getAssignee(data);
                     });
 
                 // Opens the selected document in the snowbound viewer
