@@ -238,7 +238,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     }
 
     /**
-     * Replace placeholders in user role (marked as #placeholder#)
+     * Replace placeholders in user role (marked as {{placeholder}})
      *
      * @param userRole               user role string, as defined in access control rules
      * @param targetObjectProperties target object properties (retrieved from Solr)
