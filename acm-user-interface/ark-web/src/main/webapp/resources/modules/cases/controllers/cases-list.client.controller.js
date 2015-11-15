@@ -68,7 +68,7 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
 
                         var treeData = {docs: [], total: 0};
                         if ($scope.treeData) {            //It must be set by CallCasesService.queryCasesTreeData()
-                            var found = _.find($scope.treeData.docs, {nodeId: caseInfo.id});
+                            var found = _.find($scope.treeData.docs, {nodeId: $stateParams.id});
                             if (!found) {
                                 treeData.docs = _.clone($scope.treeData.docs);
                                 treeData.total = $scope.treeData.total;

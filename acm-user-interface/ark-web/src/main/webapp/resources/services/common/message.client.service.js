@@ -12,8 +12,8 @@
  */
 
 // Authentication service for user variables
-angular.module('services').factory('MessageService', ['$injector',
-    function ($injector) {
+angular.module('services').factory('MessageService', ['$injector', '$translate',
+    function ($injector, $translate) {
         var notify = null;
         var ConfigService = null;
         var config = null;
@@ -87,14 +87,20 @@ angular.module('services').factory('MessageService', ['$injector',
             httpError: function (response) {
                 var notifyOptions = {};
                 if (response && response.config) {
-
-                    // TODO: Use templates for different types of errors
-                    var msg = [
-                        'ERROR: ',
-                        response.config.url,
-                        ' ',
-                        response.status
-                    ].join('');
+                    var msg = '';
+                    if (response.status == 503) {
+                        // TODO find way to preload common resources
+                        //msg = $translate.instant('common.service.messageService.authorizationError');
+                        msg = 'You are not authorized to take this action';
+                    } else {
+                        // TODO: Use templates for different types of errors
+                        msg = [
+                            'ERROR: ',
+                            response.config.url,
+                            ' ',
+                            response.status
+                        ].join('');
+                    }
 
                     showNotifyMessage(msg);
                 }
