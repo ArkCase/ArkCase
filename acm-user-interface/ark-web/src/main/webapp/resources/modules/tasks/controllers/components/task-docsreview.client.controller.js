@@ -15,7 +15,7 @@ angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
 
         var promiseUsers = Helper.Grid.getUsers($scope);
 
-        $scope.$on('task-retrieved', function (e, data) {
+        $scope.$on('task-updated', function (e, data) {
             $scope.taskInfo = data;
             $q.all([promiseUsers]).then(function (data) {
                 var arr = (data.documentUnderReview) ? [data.documentUnderReview] : [];
