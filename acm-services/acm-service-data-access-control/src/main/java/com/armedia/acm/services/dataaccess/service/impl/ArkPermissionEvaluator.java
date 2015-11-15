@@ -13,6 +13,7 @@ import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Determine whether a user is authorized to take an action for a specific object.
@@ -51,9 +52,9 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
             return false;
         }
 
-        if (!Long.class.isAssignableFrom(targetId.getClass()))
+        if (!Long.class.isAssignableFrom(targetId.getClass()) && !List.class.isAssignableFrom(targetId.getClass()))
         {
-            log.error("The id type '" + targetId.getClass().getName() + "' is not a Long - denying access");
+            log.error("The id type '" + targetId.getClass().getName() + "' is not a List - denying access");
             return false;
         }
 
@@ -63,8 +64,36 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
             return false;
         }
 
-        Long id = (Long) targetId;
+        // checking access to a single object
+        if (Long.class.isAssignableFrom(targetId.getClass()))
+        {
+            return checkAccessForSingleObject(authentication, (Long) targetId, targetType, permission);
+        }
 
+        // checking access to list of objects
+        List<Long> ids = (List<Long>) targetId;
+        for (Long id : ids)
+        {
+            // if access is denied for any of the objects in list, then deny access for entire list
+            if (!checkAccessForSingleObject(authentication, id, targetType, permission))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Check user access for object with particular id.
+     *
+     * @param authentication authentication token
+     * @param id             object identifier
+     * @param targetType     object type
+     * @param permission     requested permission (actionName)
+     * @return true if granted, false otherwise
+     */
+    private boolean checkAccessForSingleObject(Authentication authentication, Long id, String targetType, Object permission)
+    {
         if (log.isTraceEnabled())
         {
             log.trace("Checking " + permission + " for " + authentication.getName() + " on object of type '" +
