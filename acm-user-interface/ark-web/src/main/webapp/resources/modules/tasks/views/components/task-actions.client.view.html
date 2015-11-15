@@ -7,27 +7,30 @@
 
     <div class="pull-right">
         <div class="btn-group">
-            <button class="btn btn-sm btn-default" ng-click="sign()"><i class="fa fa-certificate"></i>
+            <button class="btn btn-sm btn-default" ng-click="sign()" ng-show="showBtnESignature"><i
+                    class="fa fa-certificate"></i>
                 {{'tasks.comp.actions.eSignature.button' | translate}}
             </button>
             <button class="btn btn-sm btn-default" ng-click="subscribe()"><i class="fa fa-bullhorn"></i>
                 {{'tasks.comp.actions.subscribe.button' | translate}}
             </button>
-            <button class="btn btn-sm btn-default" ng-click="reject()"><i class="fa fa-hand-stop-o"></i>
-                {{'tasks.comp.actions.reject.button' | translate}}
-            </button>
-            <button class="btn btn-sm btn-default" ng-click="delete()"><i class="fa fa-times"></i>
+            <button class="btn btn-sm btn-default" ng-click="delete()" ng-show="showBtnDelete"><i
+                    class="fa fa-times"></i>
                 {{'tasks.comp.actions.delete.button' | translate}}
             </button>
-            <button class="btn btn-sm btn-default" ng-click="complete()"><i class="fa fa-check"></i>
+            <button class="btn btn-sm btn-default" ng-click="complete()" ng-show="showBtnComplete"><i
+                    class="fa fa-check"></i>
                 {{'tasks.comp.actions.complete.button' | translate}}
             </button>
-            <button class="btn btn-sm btn-default" ng-click="approve()"><i class="fa fa-thumbs-o-up"></i>
-                {{'tasks.comp.actions.approve.button' | translate}}
+            <button class="btn btn-sm btn-default" ng-click="reject()" ng-show="showBtnReject"><i
+                    class="fa fa-hand-stop-o"></i>
+                {{'tasks.comp.actions.reject.button' | translate}}
             </button>
-            <button class="btn btn-sm btn-default" ng-click="rework()"><i class="fa fa-reply"></i>
-                {{'tasks.comp.actions.rework.button' | translate}}
+            <button class="btn btn-sm btn-default" ng-click="onClickOutcome(outcome.name)"
+                    ng-repeat="outcome in taskInfo.availableOutcomes" ng-show="showBtnOutcomes">
+                {{outcome.description}}
             </button>
+
 
         </div>
     </div>
