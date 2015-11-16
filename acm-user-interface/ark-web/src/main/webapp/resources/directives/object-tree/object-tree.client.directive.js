@@ -11,13 +11,13 @@
  *
  * The objectTree directive renders a FancyTree to browse ArkCase objects with support of paging, filter and sort
  *
- * @param {Expression} treeConfig Configuration for tree
- * @param {Expression} treeData Data structure used to render the top level tree nodes of the current page
- * @param {Function} onSelect Callback function in response to selected tree item.
- * @param {Function} onLoad Callback function to load list of objects.
- * @param {Object} treeControl Tree API functions exposed to user. Following is the list:
- * @param {Function} treeControl.setTitle Set title of a tree node
- * @param {Function} treeControl.select Select a tree node with specified key
+ * @param {Expression} tree-config Configuration for tree
+ * @param {Expression} tree-data Data structure used to render the top level tree nodes of the current page
+ * @param {Function} on-select Callback function in response to selected tree item.
+ * @param {Function} on-load Callback function to load list of objects.
+ * @param {Object} tree-control Tree API functions exposed to user. Following is the list:
+ * @param {Function} tree-control.setTitle Set title of a tree node
+ * @param {Function} tree-control.select Select a tree node with specified key
  *
  * @example
  <example>
@@ -782,6 +782,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     var isNewData = (treeData != Tree.treeData);
                     Tree.treeConfig = treeConfig;
                     Tree.treeData = treeData;
+
                     if (isNewConfig && treeConfig) {
                         var treeInfo = Tree.Info.getTreeInfo();
                         var oldPageSize = treeInfo.pageSize;
@@ -798,6 +799,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                             Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter);
                         }
                     }
+
                     if (isNewData && treeConfig && Util.goodMapValue(treeData, "docs", false)) {
                         Tree.tree.reload(Tree.getSource()).done(function () {
                             if (0 < treeData.docs.length) {

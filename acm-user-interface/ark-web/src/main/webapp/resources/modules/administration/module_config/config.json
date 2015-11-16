@@ -7,7 +7,7 @@
             "menuItemURL": "administration",
             "menuItemTitle": "Administration",
             "iconClass": "fa fa-wrench",
-            "position": 40
+            "position": 100
         }
     ],
     "components": [

@@ -113,7 +113,7 @@
                 20,
                 50
             ],
-            "paginationPageSize": 2,
+            "paginationPageSize": 5,
             "columnDefs": [
                 {
                     "name": "fullName",
@@ -140,7 +140,7 @@
                 20,
                 50
             ],
-            "paginationPageSize": 2,
+            "paginationPageSize": 5,
             "columnDefs": [
                 {
                     "name": "code",

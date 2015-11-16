@@ -81,6 +81,30 @@ angular.module('services').factory('TasksService', ['$resource',
                 isArray: false
             }
 
+            /**
+             * @ngdoc method
+             * @name queryTaskHistory
+             * @methodOf services.service:TasksService
+             *
+             * @description
+             * Query list of tasks from SOLR.
+             *
+             * @param {Object} params Map of input parameter.
+             * @param {Number} params.queryId  Task ID for none ADHOC task; business process ID for ADHOC task
+             * @param {Boolean} params.adhoc True if ADHOC task
+             * @param {Function} onSuccess (Optional)Callback function of success query.
+             * @param {Function} onError (Optional) Callback function when fail.
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            , queryTaskHistory: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/latest/plugin/task/history/:queryId/:adhoc',
+                cache: false,
+                isArray: true
+            }
+
+
             , queryContacts: {
                 url: 'proxy/arkcase/api/latest/plugin/task/byId/:id',
                 cache: false,
