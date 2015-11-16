@@ -171,7 +171,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      */
     private boolean checkRolesAll(List<String> userRolesAll, Collection<? extends GrantedAuthority> grantedAuthorities, Map<String, Object> targetObjectProperties)
     {
-        if (userRolesAll == null)
+        if (userRolesAll == null || userRolesAll.isEmpty())
         {
             // no user roles requested
             return true;
@@ -212,7 +212,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      */
     private boolean checkRolesAny(List<String> userRolesAny, Collection<? extends GrantedAuthority> grantedAuthorities, Map<String, Object> targetObjectProperties)
     {
-        if (userRolesAny == null)
+        if (userRolesAny == null || userRolesAny.isEmpty())
         {
             // no user roles requested
             return true;
@@ -252,6 +252,10 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
         {
             String propertyName = matcher.group(1);
             String propertyValue = (String) targetObjectProperties.get(propertyName);
+            if (propertyValue == null)
+            {
+                continue;
+            }
             userRole = matcher.replaceFirst(propertyValue);
             matcher = pattern.matcher(userRole);
         }
@@ -268,7 +272,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      */
     private boolean evaluate(Map<String, Object> requiredProperties, Authentication authentication, Map<String, Object> targetObjectProperties)
     {
-        if (requiredProperties == null)
+        if (requiredProperties == null || requiredProperties.isEmpty())
         {
             // no required properties
             return true;

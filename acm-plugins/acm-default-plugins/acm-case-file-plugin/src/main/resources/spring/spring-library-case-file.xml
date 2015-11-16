@@ -61,6 +61,10 @@
         <property name="ruleSpreadsheetFilename" value="drools-split-case-file-rules.xlsx"/>
     </bean>
 
+    <!-- pre-save handlers -->
+    <bean id="caseFileSetCreatorHandler"
+          class="com.armedia.acm.plugins.casefile.pipeline.presave.CaseFileSetCreatorHandler"/>
+
     <!-- post-save handlers -->
     <bean id="caseFileRulesHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileRulesHandler">
         <property name="saveRule" ref="saveCaseFileBusinessRule"/>
@@ -87,7 +91,7 @@
     <bean id="caseFilePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
-                <!-- empty list, no pre-save handlers -->
+                <ref bean="caseFileSetCreatorHandler"/>
             </list>
         </property>
         <property name="postSaveHandlers">
