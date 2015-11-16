@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$stateParams', '$q', 'UtilService', 'ConstantService', 'HelperService', 'Object.NoteService', 'CallAuthentication',
-    function ($scope, $stateParams, $q, Util, Constant, Helper, ObjectNoteService, CallAuthentication) {
+angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$stateParams', '$q', 'UtilService', 'ConstantService', 'HelperService', 'Object.NoteService', 'Authentication',
+    function ($scope, $stateParams, $q, Util, Constant, Helper, ObjectNoteService, Authentication) {
         $scope.$emit('req-component-config', 'notes');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("notes" == componentId) {
@@ -17,7 +17,7 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
 
         var promiseUsers = Helper.Grid.getUsers($scope);
 
-        CallAuthentication.queryUserInfo().then(
+        Authentication.queryUserInfoNew().then(
             function (userInfo) {
                 $scope.userId = userInfo.userId;
                 return userInfo;

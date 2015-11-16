@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.NotesController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'ConstantService', 'HelperService', 'Object.NoteService', 'CallAuthentication',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Constant, Helper, ObjectNoteService, CallAuthentication) {
+angular.module('cases').controller('Cases.NotesController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'ConstantService', 'HelperService', 'Object.NoteService', 'Authentication',
+    function ($scope, $stateParams, $q, Store, Util, Validator, Constant, Helper, ObjectNoteService, Authentication) {
         $scope.$emit('req-component-config', 'notes');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("notes" == componentId) {
@@ -17,7 +17,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
 
         var promiseUsers = Helper.Grid.getUsers($scope);
 
-        CallAuthentication.queryUserInfo().then(
+        Authentication.queryUserInfoNew().then(
             function (userInfo) {
                 $scope.userId = userInfo.userId;
                 return userInfo;

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.NotesController', ['$scope', '$stateParams', '$q', 'UtilService', 'ConstantService', 'HelperService', 'Object.NoteService', 'CallAuthentication',
-    function ($scope, $stateParams, $q, Util, Constant, Helper, ObjectNoteService, CallAuthentication) {
+angular.module('complaints').controller('Complaints.NotesController', ['$scope', '$stateParams', '$q', 'UtilService', 'ConstantService', 'HelperService', 'Object.NoteService', 'Authentication',
+    function ($scope, $stateParams, $q, Util, Constant, Helper, ObjectNoteService, Authentication) {
         var z = 1;
         return;
         $scope.$emit('req-component-config', 'notes');
@@ -20,7 +20,7 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
         var promiseUsers = Helper.Grid.getUsers($scope);
 
 
-        CallAuthentication.queryUserInfo().then(
+        Authentication.queryUserInfoNew().then(
             function (userInfo) {
                 $scope.userId = userInfo.userId;
                 return userInfo;

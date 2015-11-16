@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$modal', 'UtilService', 'CallAuthentication', 'Task.InfoService', 'Task.WorkflowService',
-    function ($scope, $state, $modal, Util, CallAuthentication, TaskInfoService, TaskWorkflowService) {
+angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$modal', 'UtilService', 'Authentication', 'Task.InfoService', 'Task.WorkflowService',
+    function ($scope, $state, $modal, Util, Authentication, TaskInfoService, TaskWorkflowService) {
         $scope.$emit('req-component-config', 'actions');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('actions' == componentId) {
@@ -9,7 +9,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             }
         });
 
-        CallAuthentication.queryUserInfo().then(
+        Authentication.queryUserInfoNew().then(
             function (userInfo) {
                 $scope.userId = userInfo.userId;
                 return userInfo;

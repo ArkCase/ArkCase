@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.TasksController', ['$scope', '$stateParams', '$q', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'ConstantService', 'LookupService', 'CasesService', 'Object.TaskService', 'CallAuthentication',
-    function ($scope, $stateParams, $q, $translate, Store, Util, Validator, Helper, Constant, LookupService, CasesService, ObjectTaskService, CallAuthentication) {
+angular.module('cases').controller('Cases.TasksController', ['$scope', '$stateParams', '$q', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'ConstantService', 'LookupService', 'CasesService', 'Object.TaskService', 'Authentication',
+    function ($scope, $stateParams, $q, $translate, Store, Util, Validator, Helper, Constant, LookupService, CasesService, ObjectTaskService, Authentication) {
 		$scope.$emit('req-component-config', 'tasks');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("tasks" == componentId) {
@@ -32,7 +32,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
         var promiseUsers = Helper.Grid.getUsers($scope);
 
         var promiseMyTasks; // = $q.defer();
-        CallAuthentication.queryUserInfo().then(
+        Authentication.queryUserInfoNew().then(
             function (userInfo) {
                 $scope.userId = userInfo.userId;
                 promiseMyTasks = ObjectTaskService.queryMyTasks($scope.userId);
