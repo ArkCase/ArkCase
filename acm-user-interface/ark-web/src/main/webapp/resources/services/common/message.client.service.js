@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name services.MessageService
+ * @name services.service:MessageService
 
  * @description
  * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/common/message.client.service.js services/common/message.client.service.js}
@@ -12,8 +12,8 @@
  */
 
 // Authentication service for user variables
-angular.module('services').factory('MessageService', ['$injector',
-    function ($injector) {
+angular.module('services').factory('MessageService', ['$injector', '$translate',
+    function ($injector, $translate) {
         var notify = null;
         var ConfigService = null;
         var config = null;
@@ -63,7 +63,7 @@ angular.module('services').factory('MessageService', ['$injector',
             /**
              * @ngdoc method
              * @name error
-             * @methodOf services.MessageService
+             * @methodOf services.service:MessageService
              *
              * @param {String} message Displayed error message
              *
@@ -77,7 +77,7 @@ angular.module('services').factory('MessageService', ['$injector',
             /**
              * @ngdoc method
              * @name httpError
-             * @methodOf services.MessageService
+             * @methodOf services.service:MessageService
              *
              * @param {HttpResponse} httpResponse Http resposne
              *
@@ -87,14 +87,20 @@ angular.module('services').factory('MessageService', ['$injector',
             httpError: function (response) {
                 var notifyOptions = {};
                 if (response && response.config) {
-
-                    // TODO: Use templates for different types of errors
-                    var msg = [
-                        'ERROR: ',
-                        response.config.url,
-                        ' ',
-                        response.status
-                    ].join('');
+                    var msg = '';
+                    if (response.status == 503) {
+                        // TODO find way to preload common resources
+                        //msg = $translate.instant('common.service.messageService.authorizationError');
+                        msg = 'You are not authorized to take this action';
+                    } else {
+                        // TODO: Use templates for different types of errors
+                        msg = [
+                            'ERROR: ',
+                            response.config.url,
+                            ' ',
+                            response.status
+                        ].join('');
+                    }
 
                     showNotifyMessage(msg);
                 }
@@ -103,7 +109,7 @@ angular.module('services').factory('MessageService', ['$injector',
             /**
              * @ngdoc method
              * @name info
-             * @methodOf services.MessageService
+             * @methodOf services.service:MessageService
              *
              * @param {String} message Displayed info message
              *

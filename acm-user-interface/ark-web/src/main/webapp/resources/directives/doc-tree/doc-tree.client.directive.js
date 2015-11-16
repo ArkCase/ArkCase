@@ -1,7 +1,73 @@
 'use strict';
 
-angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', 'UtilService', 'ValidationService', 'StoreService', 'LookupService', 'EcmService',
-    function ($q, $translate, $modal, Util, Validator, Store, Lookup, Ecm) {
+/**
+ * @ngdoc directive
+ * @name global.directive:docTree
+ * @restrict E
+ *
+ * @description
+ *
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/directives/doc-tree/doc-tree.client.directive.js directives/doc-tree/doc-tree.client.directive.js}
+ *
+ * The docTree directive renders a FancyTree to browse ArkCase objects with support of paging, filter and sort
+ *
+ * @param {String} object-type Object type of document container
+ * @param {Number} object-id Object ID of document container
+ * @param {Number} file-types List of file types and form types the tree can upload
+ * @param {Function} upload-form (Optional)Function used to upload Frevvo form
+ * @param {Object} treeControl Tree API functions exposed to user. Following is the list:
+ * @param {Function} treeControl.refreshTree Refresh the tree
+ *
+ * @example
+ <example>
+ <file name="index.html">
+ <doc-tree object-type="objectType" object-id="objectId" tree-control="treeControl" file-types="fileTypes"
+ upload-form="uploadForm">
+ </doc-tree>
+ </file>
+ <file name="app.js">
+ angular.module('ngAppDemo', []).controller('ngAppDemoController', function($scope, $log) {
+    $scope.objectType = "CASE_FILE";
+    $scope.objectId = 123;
+    $scope.uploadForm = function() {
+        $log.info("Upload form");
+    };
+    $scope.fileTypes = [
+      {
+        "type": "mr",
+        "label": "Medical Release"
+      },
+      {
+        "type": "gr",
+        "label": "General Release"
+      },
+      {
+        "type": "ev",
+        "label": "eDelivery"
+      },
+      {
+        "type": "sig",
+        "label": "SF86 Signature"
+      },
+      {
+        "type": "noi",
+        "label": "Notice of Investigation"
+      },
+      {
+        "type": "wir",
+        "label": "Witness Interview Request"
+      },
+      {
+        "type": "Other",
+        "label": "Other"
+      }
+    ];
+});
+ </file>
+ </example>
+ */
+angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', 'UtilService', 'ValidationService', 'StoreService', 'EcmService',
+    function ($q, $translate, $modal, Util, Validator, Store, Ecm) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
 
@@ -237,9 +303,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 };
             } //end _getDefaultTreeArgs
 
-            , createDocTree: function (treeArgs) {
+            //, create: function (treeArgs) {
+            , create: function () {
                 var treeArgsToUse = this._getDefaultTreeArgs();
-                _.merge(treeArgsToUse, treeArgs);
+                //_.merge(treeArgsToUse, treeArgs);
 
                 DocTree.jqTree.fancytree(treeArgsToUse)
                     .on("command", DocTree.Command.onCommand)
@@ -935,12 +1002,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             if (selectedIdsList.length > 0)
                                 selectedIdsList = selectedIdsList.substring(0, selectedIdsList.length - 1);
 
-                            var url = "proxy/arkcase/plugin/document/" + node.data.objectId +
-                                "?documentName=" + node.data.name +
-                                "&parentObjectId=" + node.parent.data.containerObjectId +
-                                "&parentObjectType=" + node.parent.data.containerObjectType +
-                                "&selectedIds=" + selectedIdsList;
-                            window.open(url);
+                            // Opens the snowbound viewer and loads the selected document(s) into it
+                            var baseUrl = window.location.href.split('!')[0];
+                            var urlArgs = node.data.objectId + "/" + node.parent.data.containerObjectId + "/" +
+                                node.parent.data.containerObjectType + "/" + node.data.name + "/" + selectedIdsList;
+                            window.open(baseUrl + '!/viewer/' + urlArgs);
                             break;
                         case "edit":
                             break;
@@ -3735,10 +3801,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             //+ '</table>'
             , templateUrl: "directives/doc-tree/doc-tree.client.view.html"
             , scope: {
-                objectType: '='
+                treeControl: '='
+                , objectType: '='
                 , objectId: '='
                 , fileTypes: '='
-                , treeArgs: '='
                 , uploadForm: '&'
             },
 
@@ -3748,10 +3814,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.jqTree = $(element).find("table");
                 DocTree.setObjType(scope.objectType);
                 DocTree.setObjId(scope.objectId);
-                DocTree.doUploadForm = (scope.uploadForm) ? scope.uploadForm() : (function () {
+                DocTree.doUploadForm = (scope.uploadForm) ? scope.uploadForm()
+                    : (function () {
                 }); //if not defined, do nothing
 
-                DocTree.createDocTree(scope.treeArgs);
+                scope.treeControl = {
+                    refreshTree: DocTree.refreshTree
+                };
+
+
+                DocTree.create();
                 DocTree.makeDownloadDocForm(DocTree.jqTree);
                 DocTree.makeUploadDocForm(DocTree.jqTree);
 

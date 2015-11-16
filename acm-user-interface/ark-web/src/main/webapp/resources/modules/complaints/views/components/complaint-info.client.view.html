@@ -1,0 +1,65 @@
+<div ng-controller="Complaints.InfoController">
+    <div class="clearfix">
+        <div class="row">
+            <div class="col-xs-6">
+                <h4><a href="#" editable-text="complaintInfo.title" onaftersave="updateTitle()">{{complaintInfo.title ||
+                    "Unknown"
+                    }}</a> ({{complaintInfo.status}})</h4></div>
+            <div class="col-xs-6  text-right">
+                <h4>{{complaintInfo.complaintNumber}}</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <a href="#" editable-select="complaintInfo.complaintType" onaftersave="updateComplaintType()"
+                       e-ng-options="c.value as c.text for c in complaintTypes">{{complaintInfo.complaintType ||
+                        'Unknown'}}</a>
+                </div>
+                <small class="text-muted">Complaint Type</small>
+            </div>
+            <!--<b>Priority: </b><a href="#" editable-select="complaintInfo.priority" e-ng-options="p as p for p in priorities">{{ complaintInfo.priority  || 'Unknown'}}</a>-->
+            <!--<select ng-model="myselect" ng-options="o as o for o in myoptions"></select>-->
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">{{complaintInfo.created | date: "MM/dd/yyyy"}}</div>
+                <small class="text-muted">Created Date</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <a href="#" editable-select="complaintInfo.priority" onaftersave="updatePriority()"
+                       e-ng-options="p.value as p.text for p in priorities">{{ complaintInfo.priority ||
+                        'Unknown'}}</a>
+                </div>
+                <small class="text-muted">Priority</small>
+            </div>
+            <!--<b>Due Date: </b><a href="#" editable-bsdate="complaintInfo.dueDate" e-datepicker-popup="MM/dd/yyyy">{{ complaintInfo.dueDate | date: "MM/dd/yyyy" || 'Unknown' }}</a>-->
+            <!--<div class="clearfix">-->
+            <!--<div class="col-md-4"><b>{{'complaints.comp.info.courtRoomName' | translate}}</b> {{complaintInfo.courtroomName}}</div>-->
+            <!--</div>-->
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <a href="#" editable-select="assignee" onaftersave="updateAssignee()"
+                       e-ng-options="a.value as a.text for a in assignableUsers">{{assignee || 'Unknown'}}</a>
+                </div>
+                <small class="text-muted">Assigned To</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <a href="#" editable-select="owningGroup" onaftersave="updateOwningGroup()"
+                       e-ng-options="o.value as o.text for o in owningGroups"> {{owningGroup || 'Unknown'}}</a>
+                </div>
+                <small class="text-muted">Owning Group</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <a href="#" editable-date="complaintInfo.dueDate" onaftersave="updateDueDate()">{{
+                        complaintInfo.dueDate |
+                        date: "MM/dd/yyyy" || 'Unknown' }}</a>
+                </div>
+                <small class="text-muted">Due Date</small>
+            </div>
+        </div>
+    </div>
+</div>

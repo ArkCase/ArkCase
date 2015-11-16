@@ -1,3 +1,5 @@
 <div ng-controller="CasesListController" ng-cloak>
-    <tree-view tree-data="casesData" on-select="onSelect"></tree-view>
+    <object-tree tree-config="treeConfig" tree-data="treeData" on-load="onLoad" on-select="onSelect"
+                 tree-control="treeControl">
+    </object-tree>
 </div>

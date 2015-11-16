@@ -1,0 +1,36 @@
+{
+    "id": "audit",
+    "title": "Audit",
+    "menus": [
+        
+        {
+            "menuId": "leftnav",
+            "menuItemURL": "audit",
+            "menuItemTitle": "Audit",
+            "iconClass": "fa fa-bolt",
+            "position": 70
+        }
+        
+    ],
+    "dateFormat": "MM-DD-YYYY",
+    "pentahoDateFormat": "MM/DD/YYYY",
+    "components": [
+        {
+            "id": "auditselection",
+            "title": "Audit",
+            "enabled": true,
+            "auditDropdown": [
+                {"id": "", "name": "ALL"},
+                {"id": "CASE", "name": "Case Files"},
+                {"id": "COMPLAINT", "name": "Complaints"},
+                {"id": "TASK", "name": "Tasks"},
+                {"id": "FILE", "name": "Files"}
+            ]
+        },
+        {
+            "id": "datepickers",
+            "title": "Audits",
+            "enabled": true
+        }
+   ]
+}

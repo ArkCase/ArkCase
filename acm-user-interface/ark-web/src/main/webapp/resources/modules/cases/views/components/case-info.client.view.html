@@ -40,7 +40,8 @@
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="#" editable-select="assignee" onaftersave="updateAssignee()"
-                       e-ng-options="a.value as a.text for a in assignableUsers">{{assignee || 'Unknown'}}</a>
+                       e-ng-options="user.object_id_s as user.name for user in assignableUsers">{{assignee |
+                        mapKeyValue: assignableUsers:'object_id_s':'name' || 'Unknown'}}</a>
                 </div>
                 <small class="text-muted">Assigned To</small>
             </div>

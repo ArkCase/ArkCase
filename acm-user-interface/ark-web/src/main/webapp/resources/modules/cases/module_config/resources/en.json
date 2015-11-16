@@ -1,74 +1,34 @@
 {
   "cases": {
     "title": "Cases",
-    "restrict": "Restrict?",
-    "new.button": "New",
-    "edit.button": "Edit",
-    "status.button": "Change Case Status",
-    "reinvestigate.button": "Reinvestigate",
-    "subscribe.button": "Subscribe",
-    "merge.button": "Merge",
-    "split.button": "Split",
-    "noCase": "[ No Case Data ]"
+    "progressNoCase": "[ No case file data ]",
+    "progressLoading": "Loading case file ",
+    "progressError": "Failed to load case file"
   },
-  "cases.comp.calendar": {
-    "title": "Calendar"
-  },
-  "cases.comp.correspondence": {
-    "title": "Correspondence",
-    "table.columns": {
-      "name": "Title",
-      "created": "Created",
-      "creator": "Creator"
-    }
-  },
-  "cases.comp.cost": {
-    "title": "Cost",
-    "table.columns": {
-      "name": "Form Name",
-      "user": "User",
-      "tally": "Total Cost",
-      "modified": "Modified Date",
-      "status": "Status"
-    },
-    "formNamePrefix": "Costsheet"
-  },
-  "cases.comp.details": {
-    "title": "Details",
-    "msg": {
-      "noDetails": "No Details ____no longer used; to be deleted____"
-    }
-  },
-  "cases.comp.documents": {
-    "title": "Documents"
-  },
-  "cases.comp.history": {
-    "title": "History",
-    "table.columns": {
-      "eventType": "Event Name",
-      "eventDate": "Date",
-      "userId": "User"
-    }
+  "cases.tree": {
   },
   "cases.comp.info": {
     "caseId": "Case id:",
     "caseNumber": "Case Number:",
     "courtRoomName": "Court Room Name:"
   },
-  "cases.comp.notes": {
-    "title": "Notes",
-    "table.columns": {
-      "note": "Note",
-      "created": "Created",
-      "creator": "Author"
-    }
+  "cases.comp.actions": {
+    "restrict": "Restrict?",
+    "new.button": "New",
+    "edit.button": "Edit",
+    "status.button": "Change Case Status",
+    "reinvestigate.button": "Reinvestigate",
+    "subscribe.button": "Subscribe",
+    "unsubscribe.button": "Unsubscribe",
+    "merge.button": "Merge",
+    "split.button": "Split"
   },
-  "cases.comp.participants": {
-    "title": "Participants",
-    "table.columns": {
-      "type": "Type",
-      "name": "Name"
-    }
+  "cases.comp.details": {
+    "title": "Details",
+    "informSaved": "Case details saved"
+  },
+  "cases.comp.documents": {
+    "title": "Documents"
   },
   "cases.comp.people": {
     "title": "People",
@@ -128,14 +88,19 @@
       }
     }
   },
-  "cases.comp.references": {
-    "title": "References",
+  "cases.comp.participants": {
+    "title": "Participants",
     "table.columns": {
-      "targetName": "Number",
-      "targetTitle": "Title",
-      "modified": "Modified",
-      "targetType": "Reference Type",
-      "status": "Status"
+      "type": "Type",
+      "name": "Name"
+    }
+  },
+  "cases.comp.notes": {
+    "title": "Notes",
+    "table.columns": {
+      "note": "Note",
+      "created": "Created",
+      "creator": "Author"
     }
   },
   "cases.comp.tasks": {
@@ -151,6 +116,32 @@
       "action": "Action"
     }
   },
+  "cases.comp.references": {
+    "title": "References",
+    "table.columns": {
+      "targetName": "Number",
+      "targetTitle": "Title",
+      "modified": "Modified",
+      "targetType": "Reference Type",
+      "status": "Status"
+    }
+  },
+  "cases.comp.history": {
+    "title": "History",
+    "table.columns": {
+      "eventType": "Event Name",
+      "eventDate": "Date",
+      "userId": "User"
+    }
+  },
+  "cases.comp.correspondence": {
+    "title": "Correspondence",
+    "table.columns": {
+      "name": "Title",
+      "created": "Created",
+      "creator": "Creator"
+    }
+  },
   "cases.comp.time": {
     "title": "Time",
     "table.columns": {
@@ -161,5 +152,19 @@
       "status": "Status"
     },
     "formNamePrefix": "Timesheet"
+  },
+  "cases.comp.cost": {
+    "title": "Cost",
+    "table.columns": {
+      "name": "Form Name",
+      "user": "User",
+      "tally": "Total Cost",
+      "modified": "Modified Date",
+      "status": "Status"
+    },
+    "formNamePrefix": "Costsheet"
+  },
+  "cases.comp.calendar": {
+    "title": "Calendar"
   }
 }

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('directives').directive('searchModal', ['SearchService',
-    function (SearchService) {
+angular.module('directives').directive('searchModal', ['SearchService', 'Search.QueryBuilderService',
+    function (SearchService, SearchQueryBuilder) {
         return {
             restrict: 'E',              //match only element name
             scope: {
@@ -32,17 +32,17 @@ angular.module('directives').directive('searchModal', ['SearchService',
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
                 scope.queryExistingItems = function (){
-                    SearchService.queryFilteredSearch({
-                            input: scope.searchQuery + "*",
-                            start: scope.start,
-                            n: scope.pageSize,
-                            filters: scope.filter
-                        },
-                        function (data) {
-                            updateFacets(data.facet_counts.facet_fields);
-                            scope.gridOptions.data = data.response.docs;
-                            scope.gridOptions.totalItems = data.response.numFound;
-                        });
+                    var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*",scope.filters,scope.pageSize,scope.start);
+                    if(query){
+                        SearchService.queryFilteredSearch({
+                                query: query
+                            },
+                            function (data) {
+                                updateFacets(data.facet_counts.facet_fields);
+                                scope.gridOptions.data = data.response.docs;
+                                scope.gridOptions.totalItems = data.response.numFound;
+                            });
+                    }
                 };
 
                 function updateFacets(facets){
@@ -60,13 +60,21 @@ angular.module('directives').directive('searchModal', ['SearchService',
 
                 scope.selectFacet = function (checked, facet, field){
                     if(checked){
-                        scope.filter += '%26fq="' + facet + '":' + field;
+                        if(scope.filters){
+                            scope.filters += '&fq="' + facet + '":' + field;
+                        }
+                        else{
+                            scope.filters += 'fq="' + facet + '":' + field;
+                        }
                         scope.queryExistingItems();
                     }else{
-                        if(scope.filter.indexOf('%26fq="' + facet + '":' + field) > -1){
-                            scope.filter = scope.filter.split('%26fq="' + facet + '":' + field).join('');
-                            scope.queryExistingItems();
+                        if(scope.filters.indexOf('&fq="' + facet + '":' + field) > -1){
+                            scope.filters = scope.filters.split('&fq="' + facet + '":' + field).join('');
                         }
+                        else if(scope.filters.indexOf('fq="' + facet + '":' + field) > -1){
+                            scope.filters='';
+                        }
+                        scope.queryExistingItems();
                     }
                 }
 
@@ -114,6 +122,11 @@ angular.module('directives').directive('searchModal', ['SearchService',
                                 scope.pageSize = pageSize;
                                 scope.queryExistingItems();
                             });
+                        }
+                    }
+                    if(scope.gridOptions){
+                        if(scope.filter){
+                            scope.filters = 'fq=' + scope.filter;
                         }
                     }
                 }

@@ -9,14 +9,18 @@ import com.armedia.acm.services.note.service.NoteEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping({ "/api/v1/plugin/note", "/api/latest/plugin/note" })
+@RequestMapping({"/api/v1/plugin/note", "/api/latest/plugin/note"})
 public class SaveNoteAPIController
 {
 
@@ -26,6 +30,7 @@ public class SaveNoteAPIController
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    @PreAuthorize("hasPermission(#note.parentId, #note.parentType, 'addComment')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Note addNote(
@@ -34,17 +39,18 @@ public class SaveNoteAPIController
             HttpSession httpSession
     ) throws AcmUserActionFailedException
     {
-        if ( log.isInfoEnabled() )
+        if (log.isInfoEnabled())
         {
 
-            if(note != null){
+            if (note != null)
+            {
                 log.info("Note ID : " + note.getId());
             }
         }
 
         try
         {
-            if(note == null)
+            if (note == null)
             {
                 throw new AcmNoteException("Could not save note, missing parent type and ID");
             }
@@ -63,8 +69,7 @@ public class SaveNoteAPIController
             publishNoteEvent(httpSession, savedNote, true);
 
             return savedNote;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             // gen up a fake task so we can audit the failure
             Note fakeNote = new Note();
@@ -93,19 +98,24 @@ public class SaveNoteAPIController
         getNoteEventPublisher().publishNoteEvent(event);
     }
 
-    public NoteEventPublisher getNoteEventPublisher() {
+    public NoteEventPublisher getNoteEventPublisher()
+    {
         return noteEventPublisher;
     }
 
     public void setNoteEventPublisher(
-            NoteEventPublisher noteEventPublisher) {
+            NoteEventPublisher noteEventPublisher)
+    {
         this.noteEventPublisher = noteEventPublisher;
     }
-    public NoteDao getNoteDao() {
+
+    public NoteDao getNoteDao()
+    {
         return noteDao;
     }
 
-    public void setNoteDao(NoteDao noteDao) {
+    public void setNoteDao(NoteDao noteDao)
+    {
         this.noteDao = noteDao;
     }
 

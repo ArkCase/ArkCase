@@ -10,10 +10,198 @@
       "position": 40
     }
   ],
+  "tree": {
+    "pageSize": 32,
+    "filters": [
+      {
+        "desc": "All Open Cases",
+        "name": "all-open-cases",
+        "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED",
+        "default": true
+      },
+      {
+        "desc": "All I've Created",
+        "name": "my-created-cases",
+        "value": "fq=author_s:${user}"
+      },
+      {
+        "desc": "All I'm Assigned",
+        "name": "my-assigned-cases",
+        "value": "fq=assignee_s:${user}"
+      },
+      {
+        "desc": "All I'm Following",
+        "name": "my-following-cases",
+        "value": "fq={!join from=parent_object_id_s to=object_id_s}(owner_s:${user} AND object_type_s:SUBSCRIPTION)"
+      },
+      {
+        "desc": "All Closed",
+        "name": "all-closed-cases",
+        "value": "fq=status_s:CLOSED"
+      },
+      {
+        "desc": "(No Filter)",
+        "name": "",
+        "value": ""
+      }
+    ],
+    "sorters": [
+      {
+        "desc": "Sort Date Asc",
+        "name": "sort-date-asc",
+        "value": "create_tdt ASC"
+      },
+      {
+        "desc": "Sort Date Desc",
+        "name": "sort-date-desc",
+        "value": "create_tdt DESC"
+      },
+      {
+        "desc": "Sort Case ID Asc",
+        "name": "sort-case-id-asc",
+        "value": "object_id_s ASC"
+      },
+      {
+        "desc": "Sort Case ID Dece",
+        "name": "sort-case-id-desc",
+        "value": "object_id_s DESC"
+      },
+      {
+        "desc": "Sort By Case Name",
+        "name": "sort-by-name-asc",
+        "value": "name ASC"
+      },
+      {
+        "desc": "(No Sort)",
+        "name": "",
+        "value": "",
+        "default": true
+      }
+    ],
+    "nodeTypes": [
+      {
+        "type": "prev",
+        "icon": "fa fa-arrow-up"
+      },
+      {
+        "type": "next",
+        "icon": "fa fa-arrow-down"
+      },
+      {
+        "type": "p/CASE_FILE",
+        "icon": "fa fa-folder",
+        "components": [
+          "details",
+          "people",
+          "documents",
+          "participants",
+          "notes",
+          "tasks",
+          "references",
+          "history",
+          "correspondence",
+          "calendar",
+          "time",
+          "cost"
+        ]
+      },
+      {
+        "type": "p/CASE_FILE/det",
+        "label": "Details",
+        "components": [
+          "details"
+        ]
+      },
+      {
+        "type": "p/CASE_FILE/ppl",
+        "label": "People",
+        "components": [
+          "people"
+        ]
+      },
+      {
+        "type": "p/CASE_FILE/doc",
+        "label": "Documents",
+        "components": [
+          "documents"
+        ]
+      },
+      {
+        "type": "p/CASE_FILE/par",
+        "label": "Participants",
+        "components": [
+          "participants"
+        ]
+      },
+      {
+        "type": "p/CASE_FILE/note",
+        "label": "Notes",
+        "components": [
+          "notes"
+        ]
+      },
+      {
+        "type": "p/CASE_FILE/task",
+        "label": "Tasks",
+        "components": [
+          "tasks"
+        ]
+      },
+      {
+        "type": "p/CASE_FILE/ref",
+        "label": "References",
+        "components": [
+          "references"
+        ]
+      },
+      {
+        "type": "p/CASE_FILE/his",
+        "label": "History",
+        "components": [
+          "history"
+        ]
+      },
+      {
+        "type": "p/CASE_FILE/tpl",
+        "label": "Correspondence",
+        "components": [
+          "correspondence"
+        ]
+      },
+      {
+        "type": "p/CASE_FILE/calendar",
+        "label": "Calendar",
+        "components": [
+          "calendar"
+        ]
+      },
+      {
+        "type": "p/CASE_FILE/time",
+        "label": "Time",
+        "components": [
+          "time"
+        ]
+      },
+      {
+        "type": "p/CASE_FILE/cost",
+        "label": "Cost",
+        "components": [
+          "cost"
+        ]
+      }
+    ]
+  },
   "components": [
     {
       "id": "info",
       "title": "Info",
+      "enabled": false,
+      "type": "empty",
+      "editable": false
+    },
+    {
+      "id": "actions",
+      "title": "Actions",
       "enabled": false,
       "type": "empty",
       "editable": false
@@ -38,13 +226,12 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "entity",
@@ -75,13 +262,12 @@
         "title": "Contact Methods",
         "enableFiltering": true,
         "paginationPageSizes": [
-          2,
           5,
           10,
           20,
           50
         ],
-        "paginationPageSize": 2,
+        "paginationPageSize": 5,
         "columnDefs": [
           {
             "name": "type",
@@ -281,13 +467,12 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "participantType",
@@ -310,13 +495,12 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "note",
@@ -526,13 +710,12 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "name",

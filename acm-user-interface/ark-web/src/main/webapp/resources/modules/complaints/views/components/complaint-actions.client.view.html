@@ -1,0 +1,38 @@
+<div ng-controller="Complaints.ActionsController">
+    <div class="col-xs-4">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox"> {{'complaints.comp.actions.restrict' | translate}}
+            </label>
+        </div>
+    </div>
+
+    <div class="pull-right">
+        <div class="btn-group">
+            <button class="btn btn-sm btn-default" ng-click="loadNewComplaintFrevvoForm()"><i
+                    class="fa fa-edit"></i> {{'complaints.comp.actions.new.button' | translate}}
+            </button>
+            <button class="btn btn-sm btn-default"><i class="fa fa-edit"></i> {{'complaints.comp.actions.edit.button' |
+                translate}}
+            </button>
+            <button class="btn btn-sm btn-default" ng-click="loadChangeComplaintStatusFrevvoForm(complaintData)"><i
+                    class="fa fa-edit"></i> {{'complaints.comp.actions.status.button' | translate}}
+            </button>
+            <button class="btn btn-sm btn-default"><i class="fa fa-reply"></i>
+                {{'complaints.comp.actions.reinvestigate.button' | translate}}
+            </button>
+            <button class="btn btn-sm btn-default"><i class="fa fa-bullhorn"></i>
+                {{'complaints.comp.actions.subscribe.button'
+                | translate}}
+            </button>
+            <button class="btn btn-sm btn-default"><i class="fa fa-random"></i> {{'complaints.comp.actions.merge.button'
+                |
+                translate}}
+            </button>
+            <button class="btn btn-sm btn-default"><i class="fa fa-code-fork"></i>
+                {{'complaints.comp.actions.split.button' |
+                translate}}
+            </button>
+        </div>
+    </div>
+</div>

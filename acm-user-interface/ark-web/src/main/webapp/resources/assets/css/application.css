@@ -251,28 +251,21 @@ iframe {
 
 /* Search Facets */
 
-.left-sidebar ul.list-unstyled h6 {
-    font-size: 14px;
-}
 
 .left-sidebar ul.list-unstyled li div {
-    margin: 15px;
-    margin-bottom: 0px;
-    margin-top: 0px;
+    margin:0px;
 }
 
-.left-sidebar ul.list-unstyled li ul.list-unstyled li {
-    margin-left: 15px;
-    margin-right: 15px;
+.left-sidebar ul.list-unstyled li {
+	margin: 10px;
+}
+
+.left-sidebar ul.list-unstyled li ul li{
+	margin: 0px;
 }
 
 .left-sidebar ul.list-unstyled li ul.list-unstyled li label {
     width: 100%;
-    margin-right: 5px;
-}
-
-.left-sidebar ul.list-unstyled li ul.list-unstyled li label input {
-    margin-right: 5px;
 }
 
 /* User Profile */
@@ -338,6 +331,8 @@ iframe {
     position: relative;
     left: -10px;
     padding-right: 5px;
+    margin-left: 7px;
+    margin-right: 2px;
 }
 
 .module-header div.input-group input {
@@ -359,6 +354,28 @@ iframe {
     border: 0px;
     border-radius: 2px;
 }
+
+.module-content .left-sidebar header.header,
+.module-content .left-sidebar-sm header.header,
+.module-content .left-sidebar-lg header.header {
+    background-color: #ecedec;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+
+    border-bottom: 1px solid #e1e6ef;
+    width: 100%;
+    z-index: 1000;
+}
+
+.module-content .left-sidebar header.header .btn-group.select.pull-right {
+	position: relative;
+	top: -90px;
+	z-index: 20000;
+	
+}
+
 
 .module-content .left-sidebar header.header,
 .module-content .left-sidebar-sm header.header,
@@ -759,6 +776,11 @@ a.editable.editable-click.editable-hide {
     margin: 0px 0px 0px 2px !important;
 }
 
+.case-snowbound-iframe {
+    width: 100%;
+    height: 700px;
+}
+
 .case-frevvo-iframe {
     position: absolute;
     top: 0;
@@ -778,4 +800,9 @@ a.editable.editable-click.editable-hide {
 
 .module-content .left-sidebar-lg .ui-grid-pinned-container .ui-grid-header-canvas {
     height: auto !important;
+}
+
+/* Style of invalid fields */
+input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
+    border-color: #ff7373;
 }

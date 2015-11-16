@@ -1,91 +1,176 @@
 'use strict';
 
-angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateParams', '$q', '$translate', 'UtilService', 'ValidationService', 'CasesService', 'LookupService',
-    function ($scope, $stateParams, $q, $translate, Util, Validator, CasesService, LookupService) {
-        $scope.$emit('req-component-config', 'people');
+angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateParams', '$q', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'CasesService', 'LookupService',
+    function ($scope, $stateParams, $q, $translate, Store, Util, Validator, Helper, CasesService, LookupService) {
+        var deferPeopleData = new Store.Variable("deferCasePeopleData");    // used to hold grid data before grid config is ready
+
+        var promiseConfig = Helper.requestComponentConfig($scope, "people", function (config) {
+            configGridMain(config);
+            configGridContactMethod(config);
+            configGridOrganization(config);
+            configGridAddress(config);
+            configGridAlias(config);
+            configGridSecurityTag(config);
+
+            $q.all([promisePersonTypes, promiseUsers, promiseContactMethodTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes]).then(function (data) {
+                var caseInfo = deferPeopleData.get();
+                if (caseInfo) {
+                    updateGridData(caseInfo);
+                    deferPeopleData.set(null);
+                }
+            });
+        });
 
 
-        var promiseUsers = Util.AcmGrid.getUsers($scope);
+        var promiseUsers = Helper.Grid.getUsers($scope);
 
+        var cachePersonTypes = new Store.SessionData(Helper.SessionCacheNames.PERSON_TYPES);
+        var personTypes = cachePersonTypes.get();
         var promisePersonTypes = Util.serviceCall({
             service: LookupService.getPersonTypes
+            , result: personTypes
             , onSuccess: function (data) {
-                $scope.personTypes = [];
-                _.forEach(data, function (v, k) {
-                    $scope.personTypes.push({type: v, name: v});
-                });
-                return $scope.personTypes;
+                if (Validator.validatePersonTypes(data)) {
+                    personTypes = data;
+                    cachePersonTypes.set(personTypes);
+                    return personTypes;
+                }
             }
-        });
+        }).then(
+            function (personTypes) {
+                var options = [];
+                _.forEach(personTypes, function (v, k) {
+                    options.push({type: v, name: v});
+                });
+                $scope.personTypes = options;
+                return personTypes;
+            }
+        );
+
+
+        var cacheContactMethodTypes = new Store.SessionData(Helper.SessionCacheNames.CONTACT_METHOD_TYPES);
+        var contactMethodTypes = cachePersonTypes.get();
         var promiseContactMethodTypes = Util.serviceCall({
             service: LookupService.getContactMethodTypes
+            , result: contactMethodTypes
             , onSuccess: function (data) {
-                $scope.contactMethodTypes = [];
-                Util.forEachStripNg(data, function (v, k) {
-                    $scope.contactMethodTypes.push({type: k, name: v});
-                });
-                return $scope.contactMethodTypes;
+                if (Validator.validateContactMethodTypes(data)) {
+                    contactMethodTypes = data;
+                    cacheContactMethodTypes.set(contactMethodTypes);
+                    return contactMethodTypes;
+                }
             }
-        });
+        }).then(
+            function (contactMethodTypes) {
+                var options = [];
+                Util.forEachStripNg(contactMethodTypes, function (v, k) {
+                    options.push({type: k, name: v});
+                });
+                $scope.contactMethodTypes = options;
+                return contactMethodTypes;
+            }
+        );
+
+        var cacheOrganizationTypes = new Store.SessionData(Helper.SessionCacheNames.ORGANIZATION_TYPES);
+        var organizationTypes = cacheOrganizationTypes.get();
         var promiseOrganizationTypes = Util.serviceCall({
             service: LookupService.getOrganizationTypes
+            , result: organizationTypes
             , onSuccess: function (data) {
-                $scope.organizationTypes = [];
-                Util.forEachStripNg(data, function (v, k) {
-                    $scope.organizationTypes.push({type: k, name: v});
-                });
-                return $scope.organizationTypes;
+                if (Validator.validateOrganizationTypes(data)) {
+                    organizationTypes = data;
+                    cacheOrganizationTypes.set(organizationTypes);
+                    return organizationTypes;
+                }
             }
-        });
+        }).then(
+            function (organizationTypes) {
+                var options = [];
+                Util.forEachStripNg(organizationTypes, function (v, k) {
+                    options.push({type: k, name: v});
+                });
+                $scope.organizationTypes = options;
+                return organizationTypes;
+            }
+        );
+
+        var cacheAddressTypes = new Store.SessionData(Helper.SessionCacheNames.ADDRESS_TYPES);
+        var addressTypes = cacheAddressTypes.get();
         var promiseAddressTypes = Util.serviceCall({
             service: LookupService.getAddressTypes
+            , result: addressTypes
             , onSuccess: function (data) {
-                $scope.addressTypes = [];
-                Util.forEachStripNg(data, function (v, k) {
-                    $scope.addressTypes.push({type: k, name: v});
-                });
-                return $scope.addressTypes;
+                if (Validator.validateAddressTypes(data)) {
+                    addressTypes = data;
+                    cacheAddressTypes.set(addressTypes);
+                    return addressTypes;
+                }
             }
-        });
+        }).then(
+            function (addressTypes) {
+                var options = [];
+                Util.forEachStripNg(addressTypes, function (v, k) {
+                    options.push({type: k, name: v});
+                });
+                $scope.addressTypes = options;
+                return addressTypes;
+            }
+        );
+
+        var cacheAliasTypes = new Store.SessionData(Helper.SessionCacheNames.ALIAS_TYPES);
+        var aliasTypes = cacheAliasTypes.get();
         var promiseAliasTypes = Util.serviceCall({
             service: LookupService.getAliasTypes
+            , result: aliasTypes
             , onSuccess: function (data) {
-                $scope.aliasTypes = [];
-                Util.forEachStripNg(data, function (v, k) {
-                    $scope.aliasTypes.push({type: k, name: v});
-                });
-                return $scope.aliasTypes;
+                if (Validator.validateAliasTypes(data)) {
+                    aliasTypes = data;
+                    cacheAliasTypes.set(aliasTypes);
+                    return aliasTypes;
+                }
             }
-        });
+        }).then(
+            function (aliasTypes) {
+                var options = [];
+                Util.forEachStripNg(aliasTypes, function (v, k) {
+                    options.push({type: k, name: v});
+                });
+                $scope.aliasTypes = options;
+                return aliasTypes;
+            }
+        );
+
+        var cacheSecurityTagTypes = new Store.SessionData(Helper.SessionCacheNames.SECURITY_TAG_TYPES);
+        var securityTagTypes = cacheSecurityTagTypes.get();
         var promiseSecurityTagTypes = Util.serviceCall({
             service: LookupService.getSecurityTagTypes
+            , result: securityTagTypes
             , onSuccess: function (data) {
-                $scope.securityTagTypes = [];
-                Util.forEachStripNg(data, function (v, k) {
-                    $scope.securityTagTypes.push({type: k, name: v});
+                if (Validator.validateSecurityTagTypes(data)) {
+                    securityTagTypes = data;
+                    cacheSecurityTagTypes.set(securityTagTypes);
+                    return securityTagTypes;
+                }
+            }
+        }).then(
+            function (securityTagTypes) {
+                var options = [];
+                Util.forEachStripNg(securityTagTypes, function (v, k) {
+                    options.push({type: k, name: v});
                 });
-                return $scope.securityTagTypes;
+                $scope.securityTagTypes = options;
+                return securityTagTypes;
             }
-        });
+        );
 
 
-        $scope.$on('component-config', function (e, componentId, config) {
-            if (componentId == 'people' && Util.goodMapValue(config, "columnDefs[0]", false)) {
-                configGridMain(config);
-                configGridContactMethod(config);
-                configGridOrganization(config);
-                configGridAddress(config);
-                configGridAlias(config);
-                configGridSecurityTag(config);
-            }
-        });
 
         var configGridMain = function (config) {
             gridAddEntityButtons(config.columnDefs);
-            Util.AcmGrid.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
-            Util.AcmGrid.setColumnDefs($scope, config);
-            Util.AcmGrid.setBasicOptions($scope, config);
-            Util.AcmGrid.setInPlaceEditing($scope, config, $scope.updateRow,
+            Helper.Grid.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+            Helper.Grid.setColumnDefs($scope, config);
+            Helper.Grid.setBasicOptions($scope, config);
+            Helper.Grid.setInPlaceEditing($scope, config, $scope.updateRow,
                 function (rowEntity) {
                     return (!Util.isEmpty(rowEntity.personType)
                         && Util.goodMapValue(rowEntity, "person.givenName", false)
@@ -93,7 +178,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                     );
                 }
             );
-            Util.AcmGrid.addGridApiHandler($scope, function (gridApi) {
+            Helper.Grid.addGridApiHandler($scope, function (gridApi) {
                 gridApi.core.on.rowsRendered($scope, function () {
                     $scope.gridApi.grid.columns[0].hideColumn();
                 });
@@ -109,7 +194,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             promisePersonTypes.then(function (data) {
                 $scope.gridOptions.enableRowSelection = false;
                 for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                    if (Util.Constant.LOOKUP_PERSON_TYPES == $scope.config.columnDefs[i].lookup) {
+                    if (Helper.Lookups.PERSON_TYPES == $scope.config.columnDefs[i].lookup) {
                         $scope.gridOptions.columnDefs[i].enableCellEdit = true;
                         $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                         $scope.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
@@ -124,14 +209,14 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
         var configGridContactMethod = function (config) {
             if (Util.goodMapValue(config, "contactMethods.columnDefs[0]", false)) {
                 $scope.contactMethods = {};
-                Util.AcmGrid.addDeleteButton(config.contactMethods.columnDefs, "grid.appScope.deleteRowContactMethods(row.entity)");
-                Util.AcmGrid.setColumnDefs($scope.contactMethods, config.contactMethods);
-                Util.AcmGrid.setBasicOptions($scope.contactMethods, config.contactMethods);
+                Helper.Grid.addDeleteButton(config.contactMethods.columnDefs, "grid.appScope.deleteRowContactMethods(row.entity)");
+                Helper.Grid.setColumnDefs($scope.contactMethods, config.contactMethods);
+                Helper.Grid.setBasicOptions($scope.contactMethods, config.contactMethods);
                 $scope.contactMethods.gridOptions.appScopeProvider = $scope;
 
                 $q.all([promiseContactMethodTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.contactMethods.columnDefs.length; i++) {
-                        if (Util.Constant.LOOKUP_CONTACT_METHODS_TYPES == $scope.config.contactMethods.columnDefs[i].lookup) {
+                        if (Helper.Lookups.CONTACT_METHODS_TYPES == $scope.config.contactMethods.columnDefs[i].lookup) {
                             $scope.contactMethods.gridOptions.columnDefs[i].enableCellEdit = true;
                             $scope.contactMethods.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.contactMethods.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
@@ -140,7 +225,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                             $scope.contactMethods.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
-                        } else if (Util.Constant.LOOKUP_USER_FULL_NAMES == $scope.config.contactMethods.columnDefs[i].lookup) {
+                        } else if (Helper.Lookups.USER_FULL_NAMES == $scope.config.contactMethods.columnDefs[i].lookup) {
                             $scope.contactMethods.gridOptions.columnDefs[i].enableCellEdit = false;
                             $scope.contactMethods.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.contactMethods.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
@@ -158,14 +243,14 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
         var configGridOrganization = function (config) {
             if (Util.goodMapValue(config, "organizations.columnDefs[0]", false)) {
                 $scope.organizations = {};
-                Util.AcmGrid.addDeleteButton(config.organizations.columnDefs, "grid.appScope.deleteRowOrganizations(row.entity)");
-                Util.AcmGrid.setColumnDefs($scope.organizations, config.organizations);
-                Util.AcmGrid.setBasicOptions($scope.organizations, config.organizations);
+                Helper.Grid.addDeleteButton(config.organizations.columnDefs, "grid.appScope.deleteRowOrganizations(row.entity)");
+                Helper.Grid.setColumnDefs($scope.organizations, config.organizations);
+                Helper.Grid.setBasicOptions($scope.organizations, config.organizations);
                 $scope.organizations.gridOptions.appScopeProvider = $scope;
 
                 $q.all([promiseOrganizationTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.organizations.columnDefs.length; i++) {
-                        if (Util.Constant.LOOKUP_ORGANIZATION_TYPES == $scope.config.organizations.columnDefs[i].lookup) {
+                        if (Helper.Lookups.ORGANIZATION_TYPES == $scope.config.organizations.columnDefs[i].lookup) {
                             $scope.organizations.gridOptions.columnDefs[i].enableCellEdit = true;
                             $scope.organizations.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.organizations.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
@@ -174,7 +259,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                             $scope.organizations.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
-                        } else if (Util.Constant.LOOKUP_USER_FULL_NAMES == $scope.config.organizations.columnDefs[i].lookup) {
+                        } else if (Helper.Lookups.USER_FULL_NAMES == $scope.config.organizations.columnDefs[i].lookup) {
                             $scope.organizations.gridOptions.columnDefs[i].enableCellEdit = false;
                             $scope.organizations.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.organizations.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
@@ -189,14 +274,14 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
         var configGridAddress = function (config) {
             if (Util.goodMapValue(config, "addresses.columnDefs[0]", false)) {
                 $scope.addresses = {};
-                Util.AcmGrid.addDeleteButton(config.addresses.columnDefs, "grid.appScope.deleteRowAddresses(row.entity)");
-                Util.AcmGrid.setColumnDefs($scope.addresses, config.addresses);
-                Util.AcmGrid.setBasicOptions($scope.addresses, config.addresses);
+                Helper.Grid.addDeleteButton(config.addresses.columnDefs, "grid.appScope.deleteRowAddresses(row.entity)");
+                Helper.Grid.setColumnDefs($scope.addresses, config.addresses);
+                Helper.Grid.setBasicOptions($scope.addresses, config.addresses);
                 $scope.addresses.gridOptions.appScopeProvider = $scope;
 
                 $q.all([promiseAddressTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.addresses.columnDefs.length; i++) {
-                        if (Util.Constant.LOOKUP_ADDRESS_TYPES == $scope.config.addresses.columnDefs[i].lookup) {
+                        if (Helper.Lookups.ADDRESS_TYPES == $scope.config.addresses.columnDefs[i].lookup) {
                             $scope.addresses.gridOptions.columnDefs[i].enableCellEdit = true;
                             $scope.addresses.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.addresses.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
@@ -205,7 +290,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                             $scope.addresses.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
-                        } else if (Util.Constant.LOOKUP_USER_FULL_NAMES == $scope.config.addresses.columnDefs[i].lookup) {
+                        } else if (Helper.Lookups.USER_FULL_NAMES == $scope.config.addresses.columnDefs[i].lookup) {
                             $scope.addresses.gridOptions.columnDefs[i].enableCellEdit = false;
                             $scope.addresses.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.addresses.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
@@ -220,14 +305,14 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
         var configGridAlias = function (config) {
             if (Util.goodMapValue(config, "aliases.columnDefs[0]", false)) {
                 $scope.aliases = {};
-                Util.AcmGrid.addDeleteButton(config.aliases.columnDefs, "grid.appScope.deleteRowAliases(row.entity)");
-                Util.AcmGrid.setColumnDefs($scope.aliases, config.aliases);
-                Util.AcmGrid.setBasicOptions($scope.aliases, config.aliases);
+                Helper.Grid.addDeleteButton(config.aliases.columnDefs, "grid.appScope.deleteRowAliases(row.entity)");
+                Helper.Grid.setColumnDefs($scope.aliases, config.aliases);
+                Helper.Grid.setBasicOptions($scope.aliases, config.aliases);
                 $scope.aliases.gridOptions.appScopeProvider = $scope;
 
                 $q.all([promiseAliasTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.aliases.columnDefs.length; i++) {
-                        if (Util.Constant.LOOKUP_ALIAS_TYPES == $scope.config.aliases.columnDefs[i].lookup) {
+                        if (Helper.Lookups.ALIAS_TYPES == $scope.config.aliases.columnDefs[i].lookup) {
                             $scope.aliases.gridOptions.columnDefs[i].enableCellEdit = true;
                             $scope.aliases.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.aliases.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
@@ -236,7 +321,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                             $scope.aliases.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
-                        } else if (Util.Constant.LOOKUP_USER_FULL_NAMES == $scope.config.aliases.columnDefs[i].lookup) {
+                        } else if (Helper.Lookups.USER_FULL_NAMES == $scope.config.aliases.columnDefs[i].lookup) {
                             $scope.aliases.gridOptions.columnDefs[i].enableCellEdit = false;
                             $scope.aliases.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.aliases.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
@@ -251,14 +336,14 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
         var configGridSecurityTag = function (config) {
             if (Util.goodMapValue(config, "securityTags.columnDefs[0]", false)) {
                 $scope.securityTags = {};
-                Util.AcmGrid.addDeleteButton(config.securityTags.columnDefs, "grid.appScope.deleteRowSecurityTags(row.entity)");
-                Util.AcmGrid.setColumnDefs($scope.securityTags, config.securityTags);
-                Util.AcmGrid.setBasicOptions($scope.securityTags, config.securityTags);
+                Helper.Grid.addDeleteButton(config.securityTags.columnDefs, "grid.appScope.deleteRowSecurityTags(row.entity)");
+                Helper.Grid.setColumnDefs($scope.securityTags, config.securityTags);
+                Helper.Grid.setBasicOptions($scope.securityTags, config.securityTags);
                 $scope.securityTags.gridOptions.appScopeProvider = $scope;
 
                 $q.all([promiseSecurityTagTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.securityTags.columnDefs.length; i++) {
-                        if (Util.Constant.LOOKUP_SECURITY_TAG_TYPES == $scope.config.securityTags.columnDefs[i].lookup) {
+                        if (Helper.Lookups.SECURITY_TAG_TYPES == $scope.config.securityTags.columnDefs[i].lookup) {
                             $scope.securityTags.gridOptions.columnDefs[i].enableCellEdit = true;
                             $scope.securityTags.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.securityTags.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
@@ -267,7 +352,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                             $scope.securityTags.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
-                        } else if (Util.Constant.LOOKUP_USER_FULL_NAMES == $scope.config.securityTags.columnDefs[i].lookup) {
+                        } else if (Helper.Lookups.USER_FULL_NAMES == $scope.config.securityTags.columnDefs[i].lookup) {
                             $scope.securityTags.gridOptions.columnDefs[i].enableCellEdit = false;
                             $scope.securityTags.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                             $scope.securityTags.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
@@ -291,7 +376,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                     + "<a ng-click='grid.appScope.expand(\"securityTags\", row)' title='" + $translate.instant("cases.comp.people.securityTags.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-shield'></i></a>"
                 ;
             }
-        }
+        };
 
         $scope.expand = function (subGrid, row) {
             if ($scope.currentSubGrid == subGrid) {
@@ -303,102 +388,110 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                     $scope.gridApi.expandable.toggleRowExpansion(row.entity);
                 }
             }
-        }
+        };
 
+        var updateGridData = function (data) {
+            $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, promiseConfig]).then(function () {
+                $scope.caseInfo = data;
+                $scope.gridOptions = $scope.gridOptions || {};
+                $scope.gridOptions.data = $scope.caseInfo.personAssociations;
+                Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.caseInfo.personAssociations.length);
+
+                for (var i = 0; i < $scope.caseInfo.personAssociations.length; i++) {
+                    var personAssociation = $scope.caseInfo.personAssociations[i];
+                    personAssociation.acm$_contactMethods = {};
+                    personAssociation.acm$_contactMethods.gridOptions = Util.goodValue($scope.contactMethods.gridOptions, {
+                        columnDefs: [],
+                        data: []
+                    });
+                    personAssociation.acm$_contactMethods.gridOptions.onRegisterApi = function (gridApi) {
+                        personAssociation.acm$_contactMethods.gridApi = gridApi;
+                        gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
+                            if (newValue == oldValue) {
+                                return;
+                            }
+                            $scope.updateRowContactMethods(personAssociation, rowEntity);
+                        });
+                    };
+                    personAssociation.acm$_contactMethods.gridOptions.data = personAssociation.person.contactMethods;
+
+
+                    personAssociation.acm$_organizations = {};
+                    personAssociation.acm$_organizations.gridOptions = Util.goodValue($scope.organizations.gridOptions, {
+                        columnDefs: [],
+                        data: []
+                    });
+                    personAssociation.acm$_organizations.gridOptions.onRegisterApi = function (gridApi) {
+                        personAssociation.acm$_organizations.gridApi = gridApi;
+                        gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
+                            if (newValue == oldValue) {
+                                return;
+                            }
+                            $scope.updateRowOrganizations(personAssociation, rowEntity);
+                        });
+                    };
+                    personAssociation.acm$_organizations.gridOptions.data = personAssociation.person.organizations;
+
+
+                    personAssociation.acm$_addresses = {};
+                    personAssociation.acm$_addresses.gridOptions = Util.goodValue($scope.addresses.gridOptions, {
+                        columnDefs: [],
+                        data: []
+                    });
+                    personAssociation.acm$_addresses.gridOptions.onRegisterApi = function (gridApi) {
+                        personAssociation.acm$_addresses.gridApi = gridApi;
+                        gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
+                            if (newValue == oldValue) {
+                                return;
+                            }
+                            $scope.updateRowAddresses(personAssociation, rowEntity);
+                        });
+                    };
+                    personAssociation.acm$_addresses.gridOptions.data = personAssociation.person.addresses;
+
+
+                    personAssociation.acm$_aliases = {};
+                    personAssociation.acm$_aliases.gridOptions = Util.goodValue($scope.aliases.gridOptions, {
+                        columnDefs: [],
+                        data: []
+                    });
+                    personAssociation.acm$_aliases.gridOptions.onRegisterApi = function (gridApi) {
+                        personAssociation.acm$_aliases.gridApi = gridApi;
+                        gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
+                            if (newValue == oldValue) {
+                                return;
+                            }
+                            $scope.updateRowAliases(personAssociation, rowEntity);
+                        });
+                    };
+                    personAssociation.acm$_aliases.gridOptions.data = personAssociation.person.personAliases;
+
+
+                    personAssociation.acm$_securityTags = {};
+                    personAssociation.acm$_securityTags.gridOptions = Util.goodValue($scope.securityTags.gridOptions, {
+                        columnDefs: [],
+                        data: []
+                    });
+                    personAssociation.acm$_securityTags.gridOptions.onRegisterApi = function (gridApi) {
+                        personAssociation.acm$_securityTags.gridApi = gridApi;
+                        gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
+                            if (newValue == oldValue) {
+                                return;
+                            }
+                            $scope.updateRowSecurityTags(personAssociation, rowEntity);
+                        });
+                    };
+                    personAssociation.acm$_securityTags.gridOptions.data = personAssociation.person.securityTags;
+                }
+            }); //end $q            
+        };
         $scope.$on('case-retrieved', function (e, data) {
             if (Validator.validateCaseFile(data)) {
-                $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes]).then(function () {
-                    $scope.caseInfo = data;
-                    $scope.gridOptions.data = $scope.caseInfo.personAssociations;
-                    Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.caseInfo.personAssociations.length);
-
-                    for (var i = 0; i < $scope.caseInfo.personAssociations.length; i++) {
-                        var personAssociation = $scope.caseInfo.personAssociations[i];
-                        personAssociation.acm$_contactMethods = {};
-                        personAssociation.acm$_contactMethods.gridOptions = Util.goodValue($scope.contactMethods.gridOptions, {
-                            columnDefs: [],
-                            data: []
-                        });
-                        personAssociation.acm$_contactMethods.gridOptions.onRegisterApi = function (gridApi) {
-                            personAssociation.acm$_contactMethods.gridApi = gridApi;
-                            gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
-                                if (newValue == oldValue) {
-                                    return;
-                                }
-                                $scope.updateRowContactMethods(personAssociation, rowEntity);
-                            });
-                        }
-                        personAssociation.acm$_contactMethods.gridOptions.data = personAssociation.person.contactMethods;
-
-
-                        personAssociation.acm$_organizations = {};
-                        personAssociation.acm$_organizations.gridOptions = Util.goodValue($scope.organizations.gridOptions, {
-                            columnDefs: [],
-                            data: []
-                        });
-                        personAssociation.acm$_organizations.gridOptions.onRegisterApi = function (gridApi) {
-                            personAssociation.acm$_organizations.gridApi = gridApi;
-                            gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
-                                if (newValue == oldValue) {
-                                    return;
-                                }
-                                $scope.updateRowOrganizations(personAssociation, rowEntity);
-                            });
-                        }
-                        personAssociation.acm$_organizations.gridOptions.data = personAssociation.person.organizations;
-
-
-                        personAssociation.acm$_addresses = {};
-                        personAssociation.acm$_addresses.gridOptions = Util.goodValue($scope.addresses.gridOptions, {
-                            columnDefs: [],
-                            data: []
-                        });
-                        personAssociation.acm$_addresses.gridOptions.onRegisterApi = function (gridApi) {
-                            personAssociation.acm$_addresses.gridApi = gridApi;
-                            gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
-                                if (newValue == oldValue) {
-                                    return;
-                                }
-                                $scope.updateRowAddresses(personAssociation, rowEntity);
-                            });
-                        }
-                        personAssociation.acm$_addresses.gridOptions.data = personAssociation.person.addresses;
-
-
-                        personAssociation.acm$_aliases = {};
-                        personAssociation.acm$_aliases.gridOptions = Util.goodValue($scope.aliases.gridOptions, {
-                            columnDefs: [],
-                            data: []
-                        });
-                        personAssociation.acm$_aliases.gridOptions.onRegisterApi = function (gridApi) {
-                            personAssociation.acm$_aliases.gridApi = gridApi;
-                            gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
-                                if (newValue == oldValue) {
-                                    return;
-                                }
-                                $scope.updateRowAliases(personAssociation, rowEntity);
-                            });
-                        }
-                        personAssociation.acm$_aliases.gridOptions.data = personAssociation.person.personAliases;
-
-
-                        personAssociation.acm$_securityTags = {};
-                        personAssociation.acm$_securityTags.gridOptions = Util.goodValue($scope.securityTags.gridOptions, {
-                            columnDefs: [],
-                            data: []
-                        });
-                        personAssociation.acm$_securityTags.gridOptions.onRegisterApi = function (gridApi) {
-                            personAssociation.acm$_securityTags.gridApi = gridApi;
-                            gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
-                                if (newValue == oldValue) {
-                                    return;
-                                }
-                                $scope.updateRowSecurityTags(personAssociation, rowEntity);
-                            });
-                        }
-                        personAssociation.acm$_securityTags.gridOptions.data = personAssociation.person.securityTags;
-                    }
-                }); //end $q
+                if (data.id == $stateParams.id) {
+                    updateGridData(data);
+                } else {                      // condition when data comes before state is routed and config is not set
+                    deferPeopleData.set(data);
+                }
             }
         });
 
@@ -418,52 +511,100 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             if (Util.isEmpty(rowEntity.id)) {
                 var pa = newPersonAssociation();
                 pa.parentId = $scope.caseInfo.id;
-                pa.parentType = Util.Constant.OBJTYPE_CASE_FILE;
+                pa.parentType = Helper.ObjectTypes.CASE_FILE;
                 pa.person.className = Util.goodValue($scope.config.className); //"com.armedia.acm.plugins.person.model.Person";
                 pa.person.givenName = givenName;
                 pa.person.familyName = familyName;
-                CasesService.addPersonAssociation({}, pa
-                    , function (successData) {
-                        if (Validator.validatePersonAssociation(successData)) {
-                            var personAssociationAdded = successData;
-                            rowEntity = _.merge(rowEntity, personAssociationAdded);
+                Util.serviceCall({
+                    service: CasesService.addPersonAssociation
+                    , data: pa
+                    , onSuccess: function (data) {
+                        if (Validator.validatePersonAssociation(data)) {
+                            return data;
                         }
                     }
-                    , function (errorData) {
+                }).then(
+                    function (personAssociationAdded) {
+                        rowEntity = _.merge(rowEntity, personAssociationAdded);
+                        return personAssociationAdded;
                     }
                 );
+                //CasesService.addPersonAssociation({}, pa
+                //    , function (successData) {
+                //        if (Validator.validatePersonAssociation(successData)) {
+                //            var personAssociationAdded = successData;
+                //            rowEntity = _.merge(rowEntity, personAssociationAdded);
+                //        }
+                //    }
+                //    , function (errorData) {
+                //    }
+                //);
 
                 //
                 // update person association
                 //
             } else {
                 var caseInfo = Util.omitNg($scope.caseInfo);
-                CasesService.save({}, caseInfo
-                    , function (successData) {
-                        if (Validator.validateCaseFile(successData)) {
-                            var caseSaved = successData;
-                            console.log("updated People table");
+                Util.serviceCall({
+                    service: CasesService.save
+                    , data: caseInfo
+                    , onSuccess: function (data) {
+                        if (Validator.validateCaseFile(data)) {
+                            var caseSaved = data;
+                            return caseSaved;
                         }
                     }
-                    , function (errorData) {
+                }).then(
+                    function (caseSaved) {
+                        return caseSaved;
+                    }
+                    , function (error) {
+                        return error;
                     }
                 );
+                //CasesService.save({}, caseInfo
+                //    , function (successData) {
+                //        if (Validator.validateCaseFile(successData)) {
+                //            var caseSaved = successData;
+                //            console.log("updated People table");
+                //        }
+                //    }
+                //    , function (errorData) {
+                //    }
+                //);
             }
-        }
+        };
         $scope.deleteRow = function (rowEntity) {
-            Util.AcmGrid.deleteRow($scope, rowEntity);
+            Helper.Grid.deleteRow($scope, rowEntity);
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                CasesService.deletePersonAssociation({personAssociationId: id}
-                    , function (personAssociationDeleted) {
-                        if (Validator.validateDeletedPersonAssociation(personAssociationDeleted)) {
-                            console.log("deleted People row");
+                Util.serviceCall({
+                    service: CasesService.deletePersonAssociation
+                    , param: {personAssociationId: id}
+                    , data: {}
+                    , onSuccess: function (data) {
+                        if (Validator.validateDeletedPersonAssociation(data)) {
+                            return data;
                         }
                     }
-                    , function (errorData) {
+                }).then(
+                    function (personAssociationDeleted) {
+                        return personAssociationDeleted;
+                    }
+                    , function (error) {
+                        return error;
                     }
                 );
+                //CasesService.deletePersonAssociation({personAssociationId: id}
+                //    , function (personAssociationDeleted) {
+                //        if (Validator.validateDeletedPersonAssociation(personAssociationDeleted)) {
+                //            console.log("deleted People row");
+                //        }
+                //    }
+                //    , function (errorData) {
+                //    }
+                //);
             }
 
         };
@@ -478,49 +619,81 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 gridApi.pagination.seek(lastPage);
                 $scope.gridOptions.data[idx].acm$_contactMethods.gridOptions.data.push({});
             }
-        }
+        };
         $scope.updateRowContactMethods = function (personAssociation, rowEntity) {
             var caseInfo = Util.omitNg($scope.caseInfo);
-            CasesService.save({}, caseInfo
-                , function (caseSaved) {
-                    if (Validator.validateCaseFile(caseSaved)) {
-                        console.log("updated sub table");
-                        if (Util.isEmpty(rowEntity.id)) {
-                            var personAssociationsSaved = Util.goodMapValue(caseSaved, "personAssociations", []);
-                            var personAssociationSaved = _.find(personAssociationsSaved, {id: personAssociation.id});
-                            if (personAssociationSaved) {
-                                var contactMethodSaved = _.find(personAssociationSaved.person.contactMethods, {id: rowEntity.id});
-                                if (contactMethodSaved) {
-                                    rowEntity = _.merge(rowEntity, contactMethodSaved);
-                                }
+            Util.serviceCall({
+                service: CasesService.save
+                , data: caseInfo
+                , onSuccess: function (data) {
+                    if (Validator.validateCaseFile(data)) {
+                        return data;
+                    }
+                }
+            }).then(
+                function (caseSaved) {
+                    if (Util.isEmpty(rowEntity.id)) {
+                        var personAssociationsSaved = Util.goodMapValue(caseSaved, "personAssociations", []);
+                        var personAssociationSaved = _.find(personAssociationsSaved, {id: personAssociation.id});
+                        if (personAssociationSaved) {
+                            var contactMethodSaved = _.find(personAssociationSaved.person.contactMethods, {id: rowEntity.id});
+                            if (contactMethodSaved) {
+                                rowEntity = _.merge(rowEntity, contactMethodSaved);
                             }
                         }
                     }
-                }
-                , function (errorData) {
+                    return caseSaved;
                 }
             );
+            //CasesService.save({}, caseInfo
+            //    , function (caseSaved) {
+            //        if (Validator.validateCaseFile(caseSaved)) {
+            //            console.log("updated sub table");
+            //            if (Util.isEmpty(rowEntity.id)) {
+            //                var personAssociationsSaved = Util.goodMapValue(caseSaved, "personAssociations", []);
+            //                var personAssociationSaved = _.find(personAssociationsSaved, {id: personAssociation.id});
+            //                if (personAssociationSaved) {
+            //                    var contactMethodSaved = _.find(personAssociationSaved.person.contactMethods, {id: rowEntity.id});
+            //                    if (contactMethodSaved) {
+            //                        rowEntity = _.merge(rowEntity, contactMethodSaved);
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+            //    , function (errorData) {
+            //    }
+            //);
         };
         $scope.deleteRowContactMethods = function (rowEntity) {
-            Util.AcmGrid.deleteRow($scope.contactMethods, rowEntity);
+            Helper.Grid.deleteRow($scope.contactMethods, rowEntity);
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
                 var caseInfo = Util.omitNg($scope.caseInfo);
-                CasesService.save({}, caseInfo
-                    , function (caseSaved) {
-                        if (Validator.validateCaseFile(caseSaved)) {
-                            console.log("deleted sub table");
-                            var z = 1;
+                Util.serviceCall({
+                    service: CasesService.save
+                    , data: caseInfo
+                    , onSuccess: function (data) {
+                        if (Validator.validateCaseFile(data)) {
+                            return data;
                         }
-                        var z = 1;
                     }
-                    , function (errorData) {
-                        var z = 2;
-                    }
-                );
+                });
+                //CasesService.save({}, caseInfo
+                //    , function (caseSaved) {
+                //        if (Validator.validateCaseFile(caseSaved)) {
+                //            console.log("deleted sub table");
+                //            var z = 1;
+                //        }
+                //        var z = 1;
+                //    }
+                //    , function (errorData) {
+                //        var z = 2;
+                //    }
+                //);
             }
-        }
+        };
         $scope.addNewOrganizations = function (rowParent) {
             var idx = _.findIndex($scope.gridOptions.data, function (obj) {
                 return (obj == rowParent.entity);
@@ -531,29 +704,39 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 gridApi.pagination.seek(lastPage);
                 $scope.gridOptions.data[idx].acm$_organizations.gridOptions.data.push({});
             }
-        }
+        };
         $scope.updateRowOrganizations = function (personAssociation, rowEntity) {
         };
         $scope.deleteRowOrganizations = function (rowEntity) {
-            Util.AcmGrid.deleteRow($scope.organizations, rowEntity);
+            Helper.Grid.deleteRow($scope.organizations, rowEntity);
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
                 var caseInfo = Util.omitNg($scope.caseInfo);
-                CasesService.save({}, caseInfo
-                    , function (caseSaved) {
-                        if (Validator.validateCaseFile(caseSaved)) {
-                            console.log("deleted sub table");
-                            var z = 1;
+                Util.serviceCall({
+                    service: CasesService.save
+                    , data: caseInfo
+                    , onSuccess: function (data) {
+                        if (Validator.validateCaseFile(data)) {
+                            var caseSaved = data;
+                            return caseSaved;
                         }
-                        var z = 1;
                     }
-                    , function (errorData) {
-                        var z = 2;
-                    }
-                );
+                });
+                //CasesService.save({}, caseInfo
+                //    , function (caseSaved) {
+                //        if (Validator.validateCaseFile(caseSaved)) {
+                //            console.log("deleted sub table");
+                //            var z = 1;
+                //        }
+                //        var z = 1;
+                //    }
+                //    , function (errorData) {
+                //        var z = 2;
+                //    }
+                //);
             }
-        }
+        };
         $scope.addNewAddresses = function (rowParent) {
             var idx = _.findIndex($scope.gridOptions.data, function (obj) {
                 return (obj == rowParent.entity);
@@ -564,29 +747,38 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 gridApi.pagination.seek(lastPage);
                 $scope.gridOptions.data[idx].acm$_addresses.gridOptions.data.push({});
             }
-        }
+        };
         $scope.updateRowAddresses = function (personAssociation, rowEntity) {
         };
         $scope.deleteRowAddresses = function (rowEntity) {
-            Util.AcmGrid.deleteRow($scope.addresses, rowEntity);
+            Helper.Grid.deleteRow($scope.addresses, rowEntity);
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
                 var caseInfo = Util.omitNg($scope.caseInfo);
-                CasesService.save({}, caseInfo
-                    , function (caseSaved) {
+                Util.serviceCall({
+                    service: CasesService.save
+                    , data: caseInfo
+                    , onSuccess: function (caseSaved) {
                         if (Validator.validateCaseFile(caseSaved)) {
-                            console.log("deleted sub table");
-                            var z = 1;
+                            return caseSaved;
                         }
-                        var z = 1;
                     }
-                    , function (errorData) {
-                        var z = 2;
-                    }
-                );
+                });
+                //CasesService.save({}, caseInfo
+                //    , function (caseSaved) {
+                //        if (Validator.validateCaseFile(caseSaved)) {
+                //            console.log("deleted sub table");
+                //            var z = 1;
+                //        }
+                //        var z = 1;
+                //    }
+                //    , function (errorData) {
+                //        var z = 2;
+                //    }
+                //);
             }
-        }
+        };
         $scope.addNewAliases = function (rowParent) {
             var idx = _.findIndex($scope.gridOptions.data, function (obj) {
                 return (obj == rowParent.entity);
@@ -597,29 +789,38 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 gridApi.pagination.seek(lastPage);
                 $scope.gridOptions.data[idx].acm$_aliases.gridOptions.data.push({});
             }
-        }
+        };
         $scope.updateRowAliases = function (personAssociation, rowEntity) {
         };
         $scope.deleteRowAliases = function (rowEntity) {
-            Util.AcmGrid.deleteRow($scope.aliases, rowEntity);
+            Helper.Grid.deleteRow($scope.aliases, rowEntity);
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
                 var caseInfo = Util.omitNg($scope.caseInfo);
-                CasesService.save({}, caseInfo
-                    , function (caseSaved) {
+                Util.serviceCall({
+                    service: CasesService.save
+                    , data: caseInfo
+                    , onSuccess: function (caseSaved) {
                         if (Validator.validateCaseFile(caseSaved)) {
-                            console.log("deleted sub table");
-                            var z = 1;
+                            return caseSaved;
                         }
-                        var z = 1;
                     }
-                    , function (errorData) {
-                        var z = 2;
-                    }
-                );
+                });
+                //CasesService.save({}, caseInfo
+                //    , function (caseSaved) {
+                //        if (Validator.validateCaseFile(caseSaved)) {
+                //            console.log("deleted sub table");
+                //            var z = 1;
+                //        }
+                //        var z = 1;
+                //    }
+                //    , function (errorData) {
+                //        var z = 2;
+                //    }
+                //);
             }
-        }
+        };
         $scope.addNewSecurityTags = function (rowParent) {
             var idx = _.findIndex($scope.gridOptions.data, function (obj) {
                 return (obj == rowParent.entity);
@@ -631,11 +832,11 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 gridApi.pagination.seek(lastPage);
                 $scope.gridOptions.data[idx].acm$_securityTags.gridOptions.data.push({});
             }
-        }
+        };
         $scope.updateRowSecurityTags = function (personAssociation, rowEntity) {
         };
         $scope.deleteRowSecurityTags = function (rowEntity) {
-            Util.AcmGrid.deleteRow($scope.securityTags, rowEntity);
+            Helper.Grid.deleteRow($scope.securityTags, rowEntity);
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
@@ -643,7 +844,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 // save data to server
                 //
             }
-        }
+        };
 
 
         var newPersonAssociation = function () {

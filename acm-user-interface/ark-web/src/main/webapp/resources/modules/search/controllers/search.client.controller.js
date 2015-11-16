@@ -1,9 +1,12 @@
 'use strict';
 
-angular.module('search').controller('SearchController', ['$scope', '$stateParams', 'ConfigService', 'SearchService',
-	function ($scope, $stateParams, ConfigService, SearchService) {
+angular.module('search').controller('SearchController', ['$scope', 'ConfigService', '$stateParams',
+	function($scope, ConfigService, $stateParams) {
 		$scope.config = ConfigService.getModule({moduleId: 'search'});
 		$scope.$on('req-component-config', onConfigRequest);
+
+		$scope.searchQuery = $stateParams['query'] ? $stateParams['query'] : '';
+		$scope.$broadcast('search-query', $scope.searchQuery);
 
 		function onConfigRequest(e, componentId) {
 			$scope.config.$promise.then(function(config){

@@ -1,11 +1,11 @@
 package com.armedia.acm.plugins.objectlockplugin.web.api;
 
+import com.armedia.acm.service.objectlock.exception.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
 
@@ -40,14 +39,21 @@ public class AcmObjectLockAPIController
     }
 
     @RequestMapping(value = {"/api/v1/plugin/{objectType}/{objectId}/lock", "/api/latest/plugin/{objectType}/{objectId}/lock"}, method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.OK)
-    public void unlockObject(
+    @ResponseBody
+    public String unlockObject(
             @PathVariable(value = "objectType") String objectType,
             @PathVariable(value = "objectId") Long objectId
     ) throws MuleException, IOException
     {
-        //FIXME not sure if anyone can remove object lock or just owner, for now anyone can remove the lock
-        objectLockService.removeLock(objectId, objectType);
+        try
+        {
+            //FIXME not sure if anyone can remove object lock or just owner, for now anyone can remove the lock
+            objectLockService.removeLock(objectId, objectType);
+        } catch (AcmObjectLockException e)
+        {
+            return e.getMessage();
+        }
+        return "Successfully removed lock";
     }
 
     public void setObjectLockService(AcmObjectLockService objectLockService)

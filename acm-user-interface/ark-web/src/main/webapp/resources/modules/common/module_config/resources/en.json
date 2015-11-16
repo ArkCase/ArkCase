@@ -1,6 +1,15 @@
 {
   "common": {
+    "select.option.none": "(Select One)"
   },
+  "common.service": {
+    "error.invalidData": "Invalid data"
+  },
+
+  "common.service.messageService": {
+    "authorizationError": "You are not authorized to take this action"
+  },
+
   "common.directive.docTree": {
     "btnRefresh": "Refresh",
     "waitUploading": "Uploading...",
@@ -31,5 +40,23 @@
     "error": {
       "nodeTitle": "(Error)"
     }
+  },
+  "common.directive.objectTree": {
+    "btnPrev.title": " records above...",
+    "btnPrev.toolTip": "Review previous records",
+    "btnNext.titleUnknownSize": "More records...",
+    "btnNext.title": " more records...",
+    "btnNext.toolTip": "Load more records",
+    "edtQuery.placeHolder": "Search",
+    "btnQuery.text": "Go!",
+    "errorNode.title": "(Error)",
+    "errorNode.toolTip": "(Error)"
+  },
+  "common.directive.objectAuthorizationRoles": {
+    "choose": "Choose",
+    "not_authorized": "Not Authorized",
+    "tooltip.move_right": "Move Right",
+    "tooltip.move_left": "Move Left",
+    "authorized": "Authorized"
   }
 }

@@ -1,5 +1,18 @@
 {
   "subscriptions": {
-    "title": "Subscriptions"
+    "title": "Subscriptions",
+    "search.btn": "Search",
+    "search.placeholder": "Search for subscriptions",
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "ID",
+          "event": "Event",
+          "parentName": "Parent Name",
+          "parentType": "Parent Type",
+          "modified": "Modified"
+        }
+      }
+    }
   }
 }

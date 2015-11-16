@@ -6,7 +6,7 @@ angular.module('services').factory('ConfigService', ['$resource',
 		},{
 			getModule: {
 				method: 'GET',
-				cache: false,
+				cache: true,
 				url: 'modules_config/config/modules/:moduleId/config.json',
 				isArray: false
 			},

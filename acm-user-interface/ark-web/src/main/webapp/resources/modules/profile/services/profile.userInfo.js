@@ -11,7 +11,8 @@ angular.module('profile').service('Profile.UserInfoService', function ($http, $q
                 var user = userInfo.userId;
                 if(user){
                     var request = $http({
-                        method: "GET",
+                        method: 'GET',
+                        cache: true,
                         url: 'proxy/arkcase/api/latest/plugin/profile/get/' + user
                     }).then(
                         function successCallback(response) {
@@ -19,7 +20,7 @@ angular.module('profile').service('Profile.UserInfoService', function ($http, $q
                         },
                         function errorCallback(response) {
                             if (!angular.isObject(response.data) || !response.data.message) {
-                                deferred.reject("An unknown error occurred.");
+                                deferred.reject('An unknown error occurred.');
                             }
                             deferred.reject(response.data.message);
                         }
@@ -32,7 +33,7 @@ angular.module('profile').service('Profile.UserInfoService', function ($http, $q
     function updateUserInfo(data) {
         var deferred = $q.defer();
         $http({
-            method: "POST",
+            method: 'POST',
             processData: false,
             url: 'proxy/arkcase/api/latest/plugin/profile/userOrgInfo/set',
             data: data
@@ -42,7 +43,7 @@ angular.module('profile').service('Profile.UserInfoService', function ($http, $q
             },
             function errorCallback(response) {
                 if (!angular.isObject(response.data) || !response.data.message) {
-                    deferred.reject("An unknown error occurred.");
+                    deferred.reject('An unknown error occurred.');
                 }
                 deferred.reject(response.data.message);
             }
