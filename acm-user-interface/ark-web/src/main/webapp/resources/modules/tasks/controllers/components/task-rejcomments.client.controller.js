@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'ConstantService', 'Object.NoteService', 'CallAuthentication',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, Constant, ObjectNoteService, CallAuthentication) {
+angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'ConstantService', 'Object.NoteService', 'Authentication',
+    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, Constant, ObjectNoteService, Authentication) {
         $scope.$emit('req-component-config', 'rejcomments');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("rejcomments" == componentId) {
@@ -17,7 +17,7 @@ angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', 
 
         var promiseUsers = Helper.Grid.getUsers($scope);
 
-        CallAuthentication.queryUserInfo().then(
+        Authentication.queryUserInfoNew().then(
             function (userInfo) {
                 $scope.userId = userInfo.userId;
                 return userInfo;

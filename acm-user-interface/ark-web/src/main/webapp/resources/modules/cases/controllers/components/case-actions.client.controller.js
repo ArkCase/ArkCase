@@ -22,13 +22,14 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         $scope.isSubscribed = false;
 
         // Obtains the currently logged in user
-        var userInfo = Authentication.queryUserInfo({});
+        //var userInfo = Authentication.queryUserInfo({});
+        var userInfo = Authentication.queryUserInfoNew();
 
         $scope.$on('case-updated', function (e, data) {
             if (Validator.validateCaseFile(data)) {
                 $scope.caseInfo = data;
 
-                userInfo.$promise.then(function (data) {
+                userInfo.then(function (data) {
                     $scope.userId = data.userId;
 
                     // Obtains the existing subscriptions from ArkCase
