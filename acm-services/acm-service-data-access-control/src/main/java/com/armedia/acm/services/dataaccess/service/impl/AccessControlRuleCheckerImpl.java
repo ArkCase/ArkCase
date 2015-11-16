@@ -75,7 +75,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             log.warn("Missing access control rules configuration");
             return false;
         }
-        log.debug("Checking if [{}] is granted access to object of type [{}] with id [{}]", authentication.getName(), targetType, targetId);
+        log.debug("Checking if [{}] is granted executing [{}] on object of type [{}] with id [{}]", authentication.getName(), permission, targetType, targetId);
         boolean granted = false;
 
         Map<String, Object> targetObjectProperties = retrieveTargetObjectProperties(accessControlRules.getPropertiesMapping(), solrDocument);
@@ -122,13 +122,13 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             granted = evaluate(accessControlRule.getObjectProperties(), authentication, targetObjectProperties);
             if (granted)
             {
-                log.debug("[{}] is granted access to object of type [{}] with id [{}], matching rule [{}]", authentication.getName(), targetType, targetId, accessControlRule);
+                log.debug("[{}] is granted executing [{}] on object of type [{}] with id [{}], matching rule [{}]", authentication.getName(), permission, targetType, targetId, accessControlRule);
                 break;
             }
         }
         if (!granted)
         {
-            log.warn("[{}] is denied access to object of type [{}] with id [{}], no matching rule found", authentication.getName(), targetType, targetId);
+            log.warn("[{}] is denied executing [{}] on object of type [{}] with id [{}], no matching rule found", authentication.getName(), permission, targetType, targetId);
         }
         return granted;
     }
