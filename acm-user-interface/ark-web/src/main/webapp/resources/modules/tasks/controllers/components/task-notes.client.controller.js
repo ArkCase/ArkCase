@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$stateParams', '$q', 'UtilService', 'ConstantService', 'HelperService', 'CallObjectsService', 'CallAuthentication',
-    function ($scope, $stateParams, $q, Util, Constant, Helper, CallObjectsService, CallAuthentication) {
+angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$stateParams', '$q', 'UtilService', 'ConstantService', 'HelperService', 'Object.NoteService', 'CallAuthentication',
+    function ($scope, $stateParams, $q, Util, Constant, Helper, ObjectNoteService, CallAuthentication) {
         $scope.$emit('req-component-config', 'notes');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("notes" == componentId) {
@@ -27,7 +27,7 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
         $scope.currentId = $stateParams.id;
         $scope.retrieveGridData = function () {
             if ($scope.currentId) {
-                var promiseQueryNotes = CallObjectsService.queryNotes(Constant.ObjectTypes.TASK, $scope.currentId);
+                var promiseQueryNotes = ObjectNoteService.queryNotes(Constant.ObjectTypes.TASK, $scope.currentId);
                 $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions.data = notes;
@@ -42,7 +42,7 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
             $scope.gridApi.pagination.seek(lastPage);
             var newRow = {};
             newRow.parentId = $scope.currentId;
-            newRow.parentType = Helper.ObjectTypes.CASE_FILE;
+            newRow.parentType = Helper.ObjectTypes.TASK;
             newRow.created = Util.getCurrentDay();
             newRow.creator = $scope.userId;
             $scope.gridOptions.data.push(newRow);
@@ -51,7 +51,7 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
         };
         $scope.updateRow = function (rowEntity) {
             var note = Util.omitNg(rowEntity);
-            CallObjectsService.saveNote(note).then(
+            ObjectNoteService.saveNote(note).then(
                 function (noteAdded) {
                     if (Util.isEmpty(rowEntity.id)) {
                         rowEntity.id = noteAdded.id;
@@ -64,7 +64,7 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                CallObjectsService.deleteNote(id);
+                ObjectNoteService.deleteNote(id);
             }
         };
 

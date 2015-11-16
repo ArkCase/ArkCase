@@ -82,7 +82,7 @@ angular.module('tasks').config(['$stateProvider', '$urlRouterProvider',
 
             .state('tasks.esignatures', {
                 url: '/:id/esignatures',
-                templateUrl: 'modules/tasks/views/components/task-esignatures.client.view.html'
+                templateUrl: 'modules/tasks/views/components/task-signatures.client.view.html'
             })
     }
 ]);

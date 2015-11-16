@@ -10,13 +10,13 @@
  *
  * Task.InfoService provides functions for Task database data
  */
-angular.module('services').factory('Task.InfoService', ['$resource', '$translate', 'StoreService', 'UtilService',
-    function ($resource, $translate, Store, Util) {
+angular.module('services').factory('Task.InfoService', ['$resource', '$translate', 'StoreService', 'UtilService', 'Object.InfoService',
+    function ($resource, $translate, Store, Util, ObjectInfoService) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
             /**
-             * @ngdoc method
-             * @name get
-             * @methodOf services:Task.InfoService
+             * ngdoc method
+             * name get
+             * methodOf services:Task.InfoService
              *
              * @description
              * Query task data
@@ -28,12 +28,12 @@ angular.module('services').factory('Task.InfoService', ['$resource', '$translate
              *
              * @returns {Object} Object returned by $resource
              */
-            get: {
-                method: 'GET',
-                url: 'proxy/arkcase/api/latest/plugin/task/byId/:id',
-                cache: false,
-                isArray: false
-            }
+            //get: {
+            //    method: 'GET',
+            //    url: 'proxy/arkcase/api/latest/plugin/task/byId/:id',
+            //    cache: false,
+            //    isArray: false
+            //}
 
             /**
              * @ngdoc method
@@ -50,7 +50,7 @@ angular.module('services').factory('Task.InfoService', ['$resource', '$translate
              *
              * @returns {Object} Object returned by $resource
              */
-            , save: {
+            save: {
                 method: 'POST',
                 url: 'proxy/arkcase/api/latest/plugin/task/save/:id',
                 cache: false
@@ -97,8 +97,8 @@ angular.module('services').factory('Task.InfoService', ['$resource', '$translate
             var cacheTaskInfo = new Store.CacheFifo(Service.CacheNames.TASK_INFO);
             var taskInfo = cacheTaskInfo.get(id);
             return Util.serviceCall({
-                service: Service.get
-                , param: {id: id}
+                service: ObjectInfoService.get
+                , param: {type: "task", id: id}
                 , result: taskInfo
                 , onSuccess: function (data) {
                     if (Service.validateTaskInfo(data)) {
@@ -131,10 +131,26 @@ angular.module('services').factory('Task.InfoService', ['$resource', '$translate
                 , data: taskInfo
                 , onSuccess: function (data) {
                     if (Service.validateTaskInfo(data)) {
-                        return data;
+                        var taskInfo = data;
+                        var cacheTaskInfo = new Store.CacheFifo(Service.CacheNames.TASK_INFO);
+                        cacheTaskInfo.put(taskInfo.taskId, taskInfo);
+                        return taskInfo;
                     }
                 }
             });
+            //return Util.serviceCall({
+            //    service: ObjectInfoService.save
+            //    , param: {type: "TASK"}
+            //    , data: taskInfo
+            //    , onSuccess: function (data) {
+            //        if (Service.validateTaskInfo(data)) {
+            //            var taskInfo = data;
+            //            var cacheTaskInfo = new Store.CacheFifo(Service.CacheNames.TASK_INFO);
+            //            cacheTaskInfo.put(taskInfo.taskId, taskInfo);
+            //            return taskInfo;
+            //        }
+            //    }
+            //});
         };
 
         /**

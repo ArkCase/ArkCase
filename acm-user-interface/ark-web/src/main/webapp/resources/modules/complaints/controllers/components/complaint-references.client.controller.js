@@ -12,7 +12,7 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
             }
         });
 
-        $scope.$on('complaint-retrieved', function (e, data) {
+        $scope.$on('complaint-updated', function (e, data) {
             $scope.complaintInfo = data;
             $scope.gridOptions.data = $scope.complaintInfo.references;
             Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.complaintInfo.references.length);
