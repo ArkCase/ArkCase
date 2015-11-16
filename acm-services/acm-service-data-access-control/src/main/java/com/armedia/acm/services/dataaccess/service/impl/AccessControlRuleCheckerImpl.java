@@ -122,7 +122,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             granted = evaluate(accessControlRule.getObjectProperties(), authentication, targetObjectProperties);
             if (granted)
             {
-                log.debug("[{}] is granted access to object of type [{}] with id [{}], matching rule [{}]", authentication.getName(), targetType, targetId, accessControlRule);
+                log.debug("[{}] is granted executing [{}] on object of type [{}] with id [{}], matching rule [{}]", authentication.getName(), permission, targetType, targetId, accessControlRule);
                 break;
             }
         }
