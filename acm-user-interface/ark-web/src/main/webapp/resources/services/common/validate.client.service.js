@@ -145,41 +145,6 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
-        , validateHistory: function (data) {
-            if (!Util.isArray(data.resultPage)) {
-                return false;
-            }
-            for (var i = 0; i < data.resultPage.length; i++) {
-                if (!this.validateEvent(data.resultPage[i])) {
-                    return false;
-                }
-            }
-            if (Util.isEmpty(data.totalCount)) {
-                return false;
-            }
-            return true;
-        }
-        , validateEvent: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.eventDate)) {
-                return false;
-            }
-            if (Util.isEmpty(data.eventType)) {
-                return false;
-            }
-            if (Util.isEmpty(data.objectId)) {
-                return false;
-            }
-            if (Util.isEmpty(data.objectType)) {
-                return false;
-            }
-            if (Util.isEmpty(data.userId)) {
-                return false;
-            }
-            return true;
-        }
 
         , validateCorrespondences: function (data) {
             if (Util.isEmpty(data)) {
@@ -605,80 +570,6 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
-        //, validateFileTypes: function (data) {
-        //    if (!Util.isArray(data)) {
-        //        return false;
-        //    }
-        //    return true;
-        //}
-        //, validatePlainForms: function (data) {
-        //    if (!Util.isArray(data)) {
-        //        return false;
-        //    }
-        //    for (var i = 0; i < data.length; i++) {
-        //        if (!this.validatePlainForm(data[i])) {
-        //            return false;
-        //        }
-        //    }
-        //    return true;
-        //}
-        //, validatePlainForm: function (data) {
-        //    if (Util.isEmpty(data)) {
-        //        return false;
-        //    }
-        //    if (Util.isEmpty(data.key) && Util.isEmpty(data.type)) {  //different attribute name. service data use "key"; menu item use "type"
-        //        return false;
-        //    }
-        //    if (Util.isEmpty(data.url)) {
-        //        return false;
-        //    }
-        //    if (!Util.isArray(data.urlParameters)) {
-        //        return false;
-        //    }
-        //    return true;
-        //}
-        , validateCasesConfig: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if ('cases' != Util.goodValue(data.id)) {
-                return false;
-            }
-            if (!Util.isArray(data.components)) {
-                return false;
-            }
-            return true;
-        }
-        , validateComplaintsConfig: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if ('complaints' != Util.goodValue(data.id)) {
-                return false;
-            }
-            if (!Util.isArray(data.components)) {
-                return false;
-            }
-            return true;
-        }
-        , validateTasksConfig: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if ('tasks' != Util.goodValue(data.id)) {
-                return false;
-            }
-            if (!Util.isArray(data.components)) {
-                return false;
-            }
-            return true;
-        }
-        //, validatePriorities: function (data) {
-        //    if (!Util.isArray(data)) {
-        //        return false;
-        //    }
-        //    return true;
-        //}
         , validateMyTasks: function (data) {
             if (!Util.isArray(data)) {
                 return false;

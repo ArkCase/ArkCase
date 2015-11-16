@@ -1,7 +1,8 @@
 package com.armedia.acm.assignment;
 
+import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import org.drools.compiler.compiler.DroolsError;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.junit.Before;
@@ -18,8 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-import java.io.StringReader;
 
 import static org.junit.Assert.*;
 
@@ -48,9 +47,9 @@ public class AssignmentRulesIT
         dtconf.setInputType(DecisionTableInputType.XLS);
         kbuilder.add(ResourceFactory.newInputStreamResource(xls.getInputStream()), ResourceType.DTABLE, dtconf);
 
-        if ( kbuilder.hasErrors() )
+        if (kbuilder.hasErrors())
         {
-            for (KnowledgeBuilderError error : kbuilder.getErrors() )
+            for (KnowledgeBuilderError error : kbuilder.getErrors())
             {
                 log.error("Error building rules: " + error);
             }
@@ -89,6 +88,53 @@ public class AssignmentRulesIT
         workingMemory.execute(c);
         assertEquals(3, c.getParticipants().size());
 
+    }
+
+    @Test
+    public void caseFile_creatorHasReader() throws Exception
+    {
+        assertNotNull(workingMemory);
+
+        CaseFile cf = new CaseFile();
+        cf.setCreator("test-creator");
+
+        workingMemory.execute(cf);
+
+        for (AcmParticipant ap : cf.getParticipants())
+        {
+            System.out.println("id: " + ap.getParticipantLdapId());
+        }
+
+        assertEquals(1, cf.getParticipants().stream().
+                filter(ap -> ap.getParticipantLdapId().equals(cf.getCreator()) && ap.getParticipantType().equals("reader")).
+                count());
+    }
+
+    @Test
+    public void caseFile_doNotAddAnotherCreator() throws Exception
+    {
+        assertNotNull(workingMemory);
+
+        CaseFile cf = new CaseFile();
+        cf.setCreator("test-creator");
+
+        AcmParticipant creator = new AcmParticipant();
+        creator.setParticipantLdapId(cf.getCreator());
+        creator.setParticipantType("reader");
+        creator.setCreator(cf.getCreator());
+        cf.getParticipants().add(creator);
+
+        workingMemory.execute(cf);
+
+        for (AcmParticipant ap : cf.getParticipants())
+        {
+            System.out.println("id: " + ap.getParticipantLdapId());
+        }
+
+        // should still be 1
+        assertEquals(1, cf.getParticipants().stream().
+                filter(ap -> ap.getParticipantLdapId().equals(cf.getCreator()) && ap.getParticipantType().equals("reader")).
+                count());
     }
 
 

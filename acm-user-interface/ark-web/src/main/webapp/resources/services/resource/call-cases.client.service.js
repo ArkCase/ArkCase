@@ -18,10 +18,10 @@ angular.module('services').factory('CallCasesService', ['$translate', 'StoreServ
                 , USER_FULL_NAMES: "AcmUserFullNames"
                 , USERS: "AcmUsers"
                 , GROUPS: "AcmGroups"
-                , PRIORITIES: "AcmPriorities"
+                //, PRIORITIES: "AcmPriorities"
                 , OBJECT_TYPES: "AcmObjectTypes"
-                , FILE_TYPES: "AcmFileTypes"
-                , FORM_TYPES: "AcmFormTypes"
+                //, FILE_TYPES: "AcmFileTypes"
+                //, FORM_TYPES: "AcmFormTypes"
                 , PARTICIPANT_TYPES: "AcmParticipantTypes"
                 , PARTICIPANT_USERS: "AcmParticipantUsers"
                 , PARTICIPANT_GROUPS: "AcmParticipantGroups"
@@ -32,7 +32,7 @@ angular.module('services').factory('CallCasesService', ['$translate', 'StoreServ
                 , ALIAS_TYPES: "AcmAliasTypes"
                 , SECURITY_TAG_TYPES: "AcmSecurityTagTypes"
 
-                , CASE_CONFIG: "AcmCaseConfig"
+                //, CASE_CONFIG: "AcmCaseConfig"
                 , CASE_TYPES: "AcmCaseTypes"
                 , CASE_CORRESPONDENCE_FORMS: "AcmCaseCorrespondenceForms"
 
@@ -48,14 +48,13 @@ angular.module('services').factory('CallCasesService', ['$translate', 'StoreServ
             , CacheNames: {
                 CASE_LIST: "CaseList"
                 , CASE_INFO: "CaseInfo"
-                , CASE_NOTES: "CaseNotes"
 
                 , MY_TASKS: "MyTasks"
-                , CASE_HISTORY_DATA: "CaseHistoryData"
                 , CASE_CORRESPONDENCE_DATA: "CaseCorrespondenceData"
                 , CASE_COST_SHEETS: "CaseCostSheets"
                 , CASE_TIME_SHEETS: "CaseTimeSheets"
 
+                //, CASE_HISTORY_DATA: "CaseHistoryData"
                 //, COMPLAINT_LIST: "ComplaintList"
                 //, COMPLAINT_INFO: "ComplaintInfo"
                 //, COMPLAINT_HISTORY_DATA: "ComplaintHistoryData"

@@ -16,6 +16,31 @@ angular.module('services').factory('ObjectsService', ['$resource',
 
             /**
              * @ngdoc method
+             * @name queryAudit
+             * @methodOf services.service:ObjectsService
+             *
+             * @description
+             * Query audit history for an object.
+             *
+             * @param {Object} params Map of input parameter
+             * @param {String} params.objectType  Object type
+             * @param {Number} params.objectId  Object ID
+             * @param {Number} params.start Zero based start number of record
+             * @param {Number} params.n Max Number of list to return
+             * @param {String} params.sort  Sort value, with format 'sortBy sortDir', sortDir can be 'asc' or 'desc'
+             * @param {Function} onSuccess (Optional)Callback function of success query
+             * @param {Function} onError (Optional) Callback function when fail
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            queryAudit: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/latest/plugin/audit/:objectType/:objectId?start=:start&n=:n&s=:sort',
+                cache: false
+            }
+
+            /**
+             * @ngdoc method
              * @name queryNotes
              * @methodOf services.service:ObjectsService
              *
@@ -33,7 +58,7 @@ angular.module('services').factory('ObjectsService', ['$resource',
             //* @param {Number} params.start Zero based start number of record
             //* @param {Number} params.count Max Number of list to return
             //* @param {String} params.sort  Sort value, with format 'sortBy sortDir', sortDir can be 'asc' or 'desc'
-            queryNotes: {
+            , queryNotes: {
                 method: 'GET',
                 //url: 'proxy/arkcase/api/latest/plugin/note/:parentType/:parentId?start=:start&n=:count&s=:sort',
                 url: 'proxy/arkcase/api/latest/plugin/note/:parentType/:parentId',
@@ -80,6 +105,54 @@ angular.module('services').factory('ObjectsService', ['$resource',
                 method: 'DELETE',
                 url: 'proxy/arkcase/api/latest/plugin/note/:noteId',
                 cache: false
+            }
+
+
+            /**
+             * @ngdoc method
+             * @name queryNotesByType
+             * @methodOf services.service:ObjectsService
+             *
+             * @description
+             * Query list of notes by note type.
+             *
+             * @param {Object} params Map of input parameter
+             * @param {String} params.parentType  Object type
+             * @param {Number} params.parentId  Object ID
+             * @param {String} params.noteType  Note type
+             * @param {Function} onSuccess (Optional)Callback function of success query
+             * @param {Function} onError (Optional) Callback function when fail
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            , queryNotesByType: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/latest/plugin/note/:parentType/:parentId?type=:noteType',
+                cache: false,
+                isArray: true
+            }
+
+            /**
+             * @ngdoc method
+             * @name findSignatures
+             * @methodOf services.service:ObjectsService
+             *
+             * @description
+             * Find list of signatures for an object
+             *
+             * @param {Object} params Map of input parameter
+             * @param {String} params.objectType  Object type
+             * @param {Number} params.objectId  Object ID
+             * @param {Function} onSuccess (Optional)Callback function of success query
+             * @param {Function} onError (Optional) Callback function when fail
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            , findSignatures: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/latest/plugin/signature/find/:objectType/:objectId',
+                cache: false,
+                isArray: true
             }
 
         });

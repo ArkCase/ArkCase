@@ -11,9 +11,10 @@
  *
  * The docTree directive renders a FancyTree to browse ArkCase objects with support of paging, filter and sort
  *
- * @param {String} objectType Object type of document container
- * @param {Number} objectId Object ID of document container
- * @param {Function} uploadForm (Optional)Function used to upload Frevvo form
+ * @param {String} object-type Object type of document container
+ * @param {Number} object-id Object ID of document container
+ * @param {Number} file-types List of file types and form types the tree can upload
+ * @param {Function} upload-form (Optional)Function used to upload Frevvo form
  * @param {Object} treeControl Tree API functions exposed to user. Following is the list:
  * @param {Function} treeControl.refreshTree Refresh the tree
  *

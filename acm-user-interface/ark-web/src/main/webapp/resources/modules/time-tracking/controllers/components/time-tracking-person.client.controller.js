@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTracking.PersonController', ['$scope', 'UtilService', 'HelperService',
-    function ($scope, Util, Helper) {
+angular.module('time-tracking').controller('TimeTracking.PersonController', ['$scope', 'HelperService',
+    function ($scope, Helper) {
         $scope.$emit('req-component-config', 'person');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('person' == componentId) {

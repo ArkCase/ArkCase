@@ -25,7 +25,7 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
                                 //    console.log("Error!!! only 1 items in docs[] is expected");
                                 //}
 
-                                var found = _.find(treeData.docs, {nodeId: $scope.treeData.docs[0].nodeId});
+                                var found = _.find(treeData.docs, {nodeId: $stateParams.id});
                                 if (!found) {
                                     var clone = _.clone(treeData.docs);
                                     clone.unshift($scope.treeData.docs[0]);
@@ -64,7 +64,7 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
 
                         var treeData = {docs: [], total: 0};
                         if ($scope.treeData) {            //It must be set by CallCasesService.queryCasesTreeData()
-                            var found = _.find($scope.treeData.docs, {nodeId: caseInfo.id});
+                            var found = _.find($scope.treeData.docs, {nodeId: $stateParams.id});
                             if (!found) {
                                 treeData.docs = _.clone($scope.treeData.docs);
                                 treeData.total = $scope.treeData.total;
@@ -74,6 +74,8 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
                                     , nodeTitle: Util.goodValue(caseInfo.title)
                                     , nodeToolTip: Util.goodValue(caseInfo.title)
                                 });
+                            } else {
+                                treeData = $scope.treeData; //use what is there already
                             }
                             firstLoad = false;
 
@@ -110,6 +112,8 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
                                     , nodeTitle: $translate.instant("common.directive.objectTree.errorNode.title")
                                     , nodeToolTip: $translate.instant("common.directive.objectTree.errorNode.toolTip")
                                 });
+                            } else {
+                                treeData = $scope.treeData; //use what is there already
                             }
                             firstLoad = false;
 

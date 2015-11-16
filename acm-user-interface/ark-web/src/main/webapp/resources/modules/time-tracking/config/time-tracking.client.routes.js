@@ -32,7 +32,10 @@ angular.module('time-tracking').config(['$stateProvider',
 
 			.state('editTimesheet', {
 				url: '/edittimesheet',
-				templateUrl: 'modules/time-tracking/views/components/time-tracking-edit-timesheet.client.view.html'
+				templateUrl: 'modules/time-tracking/views/components/time-tracking-edit-timesheet.client.view.html',
+				params: {
+					period: null
+				}
 			})
 
 			.state('time-tracking.details', {

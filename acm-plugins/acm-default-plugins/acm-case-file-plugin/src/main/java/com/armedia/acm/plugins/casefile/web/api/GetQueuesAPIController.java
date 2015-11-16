@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.casefile.service.AcmQueueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +23,12 @@ public class GetQueuesAPIController
 
     private AcmQueueService acmQueueService;
 
+
+    @PostFilter("hasPermission(filterObject.id, 'QUEUE', 'viewQueueInQueueMenu')")
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<AcmQueue> findCaseById(Authentication auth
+    public
+    @ResponseBody
+    List<AcmQueue> getQueues(Authentication auth
     ) throws AcmObjectNotFoundException
     {
         return acmQueueService.listAllQueues();

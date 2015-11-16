@@ -13,6 +13,7 @@ angular.module('time-tracking').controller('TimeTracking.ActionsController', ['$
 
         $scope.$on('timesheet-retrieved', function(e, data) {
             $scope.timesheetInfo = data;
+            $scope.timesheetInfo.starDate = moment($scope.timesheetInfo.startDate).format($scope.config.frevvoDateFormat);
         });
 
         $scope.loadNewTimesheetFrevvoForm = function () {
@@ -20,8 +21,7 @@ angular.module('time-tracking').controller('TimeTracking.ActionsController', ['$
         };
 
         $scope.loadExistingTimesheetFrevvoForm = function () {
-            //$scope.$broadcast('send-data-for-frevvo', $scope.timesheetInfo);
-           // $state.go('editTimesheet');
+            $state.go('editTimesheet', { period : $scope.timesheetInfo.starDate});
         };
 
     }
