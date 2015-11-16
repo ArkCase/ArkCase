@@ -1,5 +1,18 @@
 'use strict';
 
+/**
+ * @ngdoc service
+ * @name services.service:ValidationService
+ *
+ * @description
+ *
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/common/validate.client.service.js services/common/validate.client.service.js}
+ *
+ * All external data (data from database, SOLR queries, configuration, etc.) need to be validated to ensure
+ * the robustness of the web application. ValidationService contains validation functions used through out the
+ * application. Each validation function has the same pattern: returns false for invalid data conditions one
+ * by one and return true at the end to indicate data is validated.
+ */
 angular.module('services').factory('ValidationService', ["UtilService",
     function (Util) {return {
 
@@ -82,33 +95,6 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
-        ,validateCaseFile: function(data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (0 >= Util.goodValue(data.id), 0) {
-                return false;
-            }
-            if (Util.isEmpty(data.caseNumber)) {
-                return false;
-            }
-            if (!Util.isArray(data.childObjects)) {
-                return false;
-            }
-            if (!Util.isArray(data.milestones)) {
-                return false;
-            }
-            if (!Util.isArray(data.participants)) {
-                return false;
-            }
-            if (!Util.isArray(data.personAssociations)) {
-                return false;
-            }
-            if (!Util.isArray(data.references)) {
-                return false;
-            }
-            return true;
-        }
         ,validatePersonAssociations: function(data) {
             if (Util.isEmpty(data)) {
                 return false;
@@ -155,77 +141,6 @@ angular.module('services').factory('ValidationService', ["UtilService",
                 return false;
             }
             if (Util.isEmpty(data.deletedPersonAssociationId)) {
-                return false;
-            }
-            return true;
-        }
-        , validateHistory: function (data) {
-            if (!Util.isArray(data.resultPage)) {
-                return false;
-            }
-            for (var i = 0; i < data.resultPage.length; i++) {
-                if (!this.validateEvent(data.resultPage[i])) {
-                    return false;
-                }
-            }
-            if (Util.isEmpty(data.totalCount)) {
-                return false;
-            }
-            return true;
-        }
-        , validateEvent: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.eventDate)) {
-                return false;
-            }
-            if (Util.isEmpty(data.eventType)) {
-                return false;
-            }
-            if (Util.isEmpty(data.objectId)) {
-                return false;
-            }
-            if (Util.isEmpty(data.objectType)) {
-                return false;
-            }
-            if (Util.isEmpty(data.userId)) {
-                return false;
-            }
-            return true;
-        }
-
-        , validateNotes: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            for (var i = 0; i < data.length; i++) {
-                if (!this.validateNote(data[i])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        , validateNote: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.id)) {
-                return false;
-            }
-            if (Util.isEmpty(data.parentId)) {
-                return false;
-            }
-            return true;
-        }
-        , validateDeletedNote: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.deletedNoteId)) {
                 return false;
             }
             return true;
@@ -655,37 +570,132 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
-        , validateFileTypes: function (data) {
+        , validateMyTasks: function (data) {
             if (!Util.isArray(data)) {
                 return false;
             }
             return true;
         }
-        , validatePlainForms: function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            for (var i = 0; i < data.length; i++) {
-                if (!this.validatePlainForm(data[i])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        , validatePlainForm: function (data) {
+        , validateParticipantTypes: function (data) {
             if (Util.isEmpty(data)) {
                 return false;
             }
-            if (Util.isEmpty(data.key) && Util.isEmpty(data.type)) {  //different attribute name. service data use "key"; menu item use "type"
-                return false;
-            }
-            if (Util.isEmpty(data.url)) {
-                return false;
-            }
-            if (!Util.isArray(data.urlParameters)) {
+            return true;
+        }
+        , validatePersonTypes: function (data) {
+            if (!Util.isArray(data)) {
                 return false;
             }
             return true;
         }
+        , validateContactMethodTypes: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        }
+        , validateOrganizationTypes: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        }
+        , validateAddressTypes: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        }
+        , validateAliasTypes: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        }
+        , validateSecurityTagTypes: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        }
+        , validateCaseTypes: function (data) {
+            if (!Util.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        , validateObjectTypes: function (data) {
+            if (!Util.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        , validateCaseFile: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (0 >= Util.goodValue(data.id), 0) {
+                return false;
+            }
+            if (Util.isEmpty(data.caseNumber)) {
+                return false;
+            }
+            if (!Util.isArray(data.childObjects)) {
+                return false;
+            }
+            if (!Util.isArray(data.milestones)) {
+                return false;
+            }
+            if (!Util.isArray(data.participants)) {
+                return false;
+            }
+            if (!Util.isArray(data.personAssociations)) {
+                return false;
+            }
+            if (!Util.isArray(data.references)) {
+                return false;
+            }
+            return true;
+        }
+        , validateComplaint: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.complaintId) || Util.isEmpty(data.complaintNumber)) {
+                return false;
+            }
+            if (!Util.isArray(data.childObjects)) {
+                return false;
+            }
+            if (!Util.isArray(data.participants)) {
+                return false;
+            }
+            if (!Util.isArray(data.personAssociations)) {
+                return false;
+            }
+            return true;
+        }
+        , validateTask: function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.taskId)) {
+                return false;
+            }
+//            if (Util.isEmpty(data.id) || Util.isEmpty(data.caseNumber)) {
+//             return false;
+//             }
+//             if (!Util.isArray(data.childObjects)) {
+//             return false;
+//             }
+//             if (!Util.isArray(data.participants)) {
+//             return false;
+//             }
+//             if (!Util.isArray(data.personAssociations)) {
+//             return false;
+//             }
+            return true;
+        }
+
     }}
 ]);

@@ -1,0 +1,107 @@
+{
+  "tasks": {
+    "title": "Tasks",
+    "progressNoTask": "[ No task data ]",
+    "progressLoading": "Loading task ",
+    "progressError": "Failed to load task"
+  },
+  "tasks.comp.info": {
+    "taskId": "Task id:",
+    "percentage.label": "% of Completion",
+    "assignee.label": "Assignee",
+    "Priority.label": "Priority",
+    "startDate.label": "Start Date",
+    "dueDate.label": "Due Date",
+    "state.label": "State"
+  },
+  "tasks.comp.parentinfo": {
+    "taskId": "Task id:",
+    "case": {
+      "subjectType.label": "Subject Type",
+      "incidentDate.label": "Incident Date",
+      "priority.label": "Priority",
+      "assignee.label": "Assigned To",
+      "owningGroup.label": "Owning Group"
+    },
+    "complaint": {
+      "subjectType.label": "Subject Type",
+      "incidentDate.label": "Incident Date",
+      "priority.label": "Priority",
+      "assignee.label": "Assigned To",
+      "owningGroup.label": "Owning Group"
+    },
+    "_xxx_courtRoomName": "Court Room Name:"
+  },
+  "tasks.comp.actions": {
+    "eSignature.button": "Sign",
+    "subscribe.button": "Subscribe",
+    "reject.button": "Reject",
+    "delete.button": "Delete",
+    "complete.button": "Complete",
+    "approve.button": "Approve Document",
+    "rework.button": "Send for Rework"
+  },
+  "tasks.comp.details": {
+    "title": "Task Details",
+    "informSaved": "Task details saved"
+  },
+  "tasks.comp.reworkdetails": {
+    "title": "Rework Details",
+    "informSaved": "Rework details saved"
+  },
+  "tasks.comp.attachments": {
+    "title": "Attachments"
+  },
+  "tasks.comp.notes": {
+    "title": "Notes",
+    "table.columns": {
+      "note": "Note",
+      "created": "Created",
+      "creator": "Author"
+    }
+  },
+  "tasks.comp.rejcomments": {
+    "title": "Reject Comments",
+    "table.columns": {
+      "note": "Comment",
+      "created": "Created",
+      "creator": "Author"
+    }
+  },
+  "tasks.comp.workflow": {
+    "title": "Workflow Overview",
+    "table.columns": {
+      "participant": "Participant",
+      "role": "Role",
+      "status": "Status",
+      "startDateTime": "Start",
+      "endDateTime": "End"
+    }
+  },
+  "tasks.comp.esignatures": {
+    "title": "eSignatures",
+    "table.columns": {
+      "signedDate": "Date",
+      "signedBy": "Signed By"
+    }
+  },
+  "tasks.comp.docsreview": {
+    "title": "Documents Under Review",
+    "table.columns": {
+      "fileId": "ID",
+      "fileName": "Title",
+      "created": "Created",
+      "creator": "Author",
+      "status": "Status"
+    }
+  },
+  "tasks.comp.history": {
+    "title": "History",
+    "table.columns": {
+      "eventType": "Event Name",
+      "eventDate": "Date",
+      "userId": "User"
+    }
+  }
+}
+

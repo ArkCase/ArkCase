@@ -5,7 +5,7 @@
         </div>
         <div class="scroll-body">
             <ul class="list-unstyled">
-                <li ng-repeat="facet in facets" ng-if="facet.fields.length && facet.name != 'object_type_s'"><strong>{{facet.name}}</strong>
+                <li ng-repeat="facet in facets" ng-if="facet.fields.length && facet.name != filterName"><strong>{{facet.name}}</strong>
                     <ul class="list-unstyled">
                         <li ng-repeat="field in facet.fields">
                             <div class="checkbox" ng-if="field.count > 0">
@@ -20,24 +20,27 @@
     <div class="content-body">
         <div class="module-header">
             <div class="input-group">
-                <input class="form-control input-md" ng-model="searchQuery" placeholder="{{searchPlaceholder}}">
+                <input class="form-control input-md" ng-keydown="keyDown($event)" ng-model="searchQuery" placeholder="{{searchPlaceholder}}">
                 <span class="input-group-btn">
-                    <button class="btn btn-sm btn-primary" type="button" ng-click="queryExistingItems()">{{searchBtn}}</button>
+                    <button class="btn btn-md btn-primary" type="button" ng-click="queryExistingItems()">{{searchBtn}}</button>
                 </span>
             </div>
         </div>
-        <div class="well-sm panel panel-success panel-grid">
+        <div class="well-sm">
+        <div class="panel panel-success panel-grid">
             <div class="panel-heading">
                 <div class="panel-title">Results</div>
             </div>
             <div ui-grid="gridOptions"
+                 ng-if="gridOptions.data.length"
+                 adjust-table-height="gridOptions.data.length"
                  ui-grid-resize-columns
                  ui-grid-pagination
                  ui-grid-selection
-                 adjust-table-height="gridOptions.data.length"
                  ui-grid-auto-resize
                  class="grid">
             </div>
+        </div>
         </div>
     </div>
 </div>

@@ -1,46 +1,64 @@
 'use strict';
 
-angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', '$stateParams', '$q', '$window', 'UtilService', 'ValidationService', 'LookupService', 'CasesService',
-    function ($scope, $stateParams, $q, $window, Util, Validator, LookupService, CasesService) {
+angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', '$stateParams', '$q', '$window', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
+    function ($scope, $stateParams, $q, $window, $translate, Store, Util, Validator, Helper, LookupService, CasesService) {
         $scope.$emit('req-component-config', 'correspondence');
-
-        var promiseUsers = Util.AcmGrid.getUsers($scope);
-
-        var promiseObjectTypes = Util.serviceCall({
-            service: LookupService.getObjectTypes
-            , onSuccess: function (data) {
-                $scope.objectTypes = [];
-                _.forEach(data, function (item) {
-                    $scope.objectTypes.push(item);
-                });
-                return $scope.objectTypes;
-            }
-        });
-
-
-        $scope.correspondenceForms = [{"value": "noop", "name": "(Select One)"}];
-        $scope.correspondenceForm = {"value": "noop", "name": "(Select One)"};
-        var promiseCorrespondenceForms = Util.serviceCall({
-            service: LookupService.getCorrespondenceForms
-            , onSuccess: function (data) {
-                $scope.correspondenceForms = Util.omitNg(Util.goodArray(data));
-                $scope.correspondenceForms.unshift({"value": "noop", "name": "(Select One)"});
-                return $scope.correspondenceForms;
-            }
-        });
-
-
         $scope.$on('component-config', function (e, componentId, config) {
             if (componentId == 'correspondence') {
-                Util.AcmGrid.setColumnDefs($scope, config);
-                Util.AcmGrid.setBasicOptions($scope, config);
-                Util.AcmGrid.setExternalPaging($scope, config, $scope.retrieveGridData);
-                Util.AcmGrid.setUserNameFilter($scope, promiseUsers);
+                Helper.Grid.setColumnDefs($scope, config);
+                Helper.Grid.setBasicOptions($scope, config);
+                Helper.Grid.setExternalPaging($scope, config, $scope.retrieveGridData);
+                Helper.Grid.setUserNameFilter($scope, promiseUsers);
 
                 $scope.retrieveGridData();
             }
         });
 
+        var promiseUsers = Helper.Grid.getUsers($scope);
+
+        var cacheObjectTypes = new Store.SessionData(Helper.SessionCacheNames.OBJECT_TYPES);
+        var objectTypes = cacheObjectTypes.get();
+        var promiseObjectTypes = Util.serviceCall({
+            service: LookupService.getObjectTypes
+            , result: objectTypes
+            , onSuccess: function (data) {
+                objectTypes = [];
+                _.forEach(data, function (item) {
+                    objectTypes.push(item);
+                });
+                cacheObjectTypes.set(objectTypes);
+                return objectTypes;
+            }
+        }).then(
+            function (objectTypes) {
+                $scope.objectTypes = objectTypes;
+                return objectTypes;
+            }
+        );
+
+
+        $scope.correspondenceForms = [{"value": "noop", "name": $translate.instant("common.select.option.none")}];
+        $scope.correspondenceForm = {"value": "noop", "name": $translate.instant("common.select.option.none")};
+        var cacheCorrespondenceForms = new Store.SessionData(Helper.SessionCacheNames.CASE_CORRESPONDENCE_FORMS);
+        var correspondenceForms = cacheCorrespondenceForms.get();
+        var promiseCorrespondenceForms = Util.serviceCall({
+            service: LookupService.getCorrespondenceForms
+            , result: correspondenceForms
+            , onSuccess: function (data) {
+                correspondenceForms = Util.omitNg(Util.goodArray(data));
+                correspondenceForms.unshift({
+                    "value": "noop",
+                    "name": $translate.instant("common.select.option.none")
+                });
+                cacheCorrespondenceForms.set(correspondenceForms);
+                return correspondenceForms;
+            }
+        }).then(
+            function (correspondenceForms) {
+                $scope.correspondenceForms = correspondenceForms;
+                return correspondenceForms;
+            }
+        );
 
         $scope.$on('case-retrieved', function (e, data) {
             if (Validator.validateCaseFile(data)) {
@@ -50,25 +68,37 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
 
         $scope.currentId = $stateParams.id;
         $scope.retrieveGridData = function () {
-            CasesService.queryCorrespondence(Util.AcmGrid.withPagingParams($scope, {
-                parentType: Util.Constant.OBJTYPE_CASE_FILE,
-                parentId: $scope.currentId
-            }), function (data) {
-                if (Validator.validateCorrespondences(data)) {
-                    $q.all([promiseUsers]).then(function () {
-                        var correspondences = data.children;
-                        $scope.gridOptions.data = correspondences;
-                        $scope.gridOptions.totalItems = Util.goodValue(data.totalChildren, 0);
-                        Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
-                    });
+            var cacheCorrespondenceData = new Store.CacheFifo(Helper.CacheNames.CASE_CORRESPONDENCE_DATA);
+            var cacheKey = Helper.ObjectTypes.CASE_FILE + "." + $scope.currentId;
+            var correspondenceData = cacheCorrespondenceData.get(cacheKey);
+            var promiseCorrespondence = Util.serviceCall({
+                service: CasesService.queryCorrespondence
+                , param: Helper.Grid.withPagingParams($scope, {
+                    parentType: Helper.ObjectTypes.CASE_FILE,
+                    parentId: $scope.currentId
+                })
+                , onSuccess: function (data) {
+                    if (Validator.validateCorrespondences(data)) {
+                        correspondenceData = data;
+                        cacheCorrespondenceData.put(cacheKey, correspondenceData);
+                        return correspondenceData;
+                    }
                 }
-            })
+            });
+
+            $q.all([promiseCorrespondence, promiseUsers]).then(function (data) {
+                var correspondenceData = data[0];
+                $scope.gridOptions = $scope.gridOptions || {};
+                $scope.gridOptions.data = correspondenceData.children;
+                $scope.gridOptions.totalItems = Util.goodValue(correspondenceData.totalChildren, 0);
+                Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
+            });
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();
             promiseObjectTypes.then(function (data) {
-                var found = _.find($scope.objectTypes, {type: Util.Constant.OBJTYPE_FILE});
+                var found = _.find($scope.objectTypes, {type: Helper.ObjectTypes.FILE});
                 if (found) {
                     var url = Util.goodValue(found.url);
                     var id = Util.goodMapValue(rowEntity, "objectId");
@@ -82,37 +112,38 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             var caseId = Util.goodValue($scope.caseInfo.id, 0);
             var folderId = Util.goodMapValue($scope.caseInfo, "container.folder.cmisFolderId", "");
             var template = $scope.correspondenceForm.value;
-            CasesService.createCorrespondence({
-                    parentType: Util.Constant.OBJTYPE_CASE_FILE,
+            var promiseCreateCorrespondence = Util.serviceCall({
+                service: CasesService.createCorrespondence
+                , param: {
+                    parentType: Helper.ObjectTypes.CASE_FILE,
                     parentId: $scope.currentId,
                     folderId: folderId,
                     template: template
                 }
-                , {}
-                , function (successData) {
-                    if (Validator.validateNewCorrespondence(successData)) {
-                        var newCorrespondence = successData;
-                        $q.all([promiseUsers]).then(function () {
-                            var correspondence = {};
-                            correspondence.objectId = Util.goodValue(newCorrespondence.fileId);
-                            correspondence.name = Util.goodValue(newCorrespondence.fileName);
-                            correspondence.creator = Util.goodValue(newCorrespondence.creator);
-                            correspondence.created = Util.goodValue(newCorrespondence.created);
-                            correspondence.objectType = "file";
-                            correspondence.category = "Correspondence";
-                            $scope.gridOptions.data.push(correspondence);
-                            $scope.gridOptions.totalItems++;
-                            Util.AcmGrid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
-
-                            //var lastPage = $scope.gridApi.pagination.getTotalPages();
-                            //$scope.gridApi.pagination.seek(lastPage);
-                        });
+                , data: {}
+                , onSuccess: function (data) {
+                    if (Validator.validateNewCorrespondence(data)) {
+                        var newCorrespondence = data;
+                        return newCorrespondence;
                     }
                 }
-                , function (errorData) {
-                    var z = 1;
-                }
-            );
+            });
+            $q.all([promiseCreateCorrespondence, promiseUsers]).then(function (data) {
+                var newCorrespondence = data[0];
+                var correspondence = {};
+                correspondence.objectId = Util.goodValue(newCorrespondence.fileId);
+                correspondence.name = Util.goodValue(newCorrespondence.fileName);
+                correspondence.creator = Util.goodValue(newCorrespondence.creator);
+                correspondence.created = Util.goodValue(newCorrespondence.created);
+                correspondence.objectType = "file";
+                correspondence.category = "Correspondence";
+                $scope.gridOptions.data.push(correspondence);
+                $scope.gridOptions.totalItems++;
+                Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
+
+                //var lastPage = $scope.gridApi.pagination.getTotalPages();
+                //$scope.gridApi.pagination.seek(lastPage);
+            });
         };
 
     }

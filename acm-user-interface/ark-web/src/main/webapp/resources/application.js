@@ -4,8 +4,8 @@
 var app = angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfiguration.applicationModuleVendorDependencies);
 
 // Setting HTML5 Location Mode
-angular.module(ApplicationConfiguration.applicationModuleName).config(['$locationProvider', '$translateProvider', '$httpProvider',
-    function ($locationProvider, $translateProvider, $httpProvider) {
+angular.module(ApplicationConfiguration.applicationModuleName).config(['$locationProvider', '$translateProvider', '$translatePartialLoaderProvider', '$httpProvider',
+    function ($locationProvider, $translateProvider, $translatePartialLoaderProvider, $httpProvider) {
         $locationProvider.hashPrefix('!');
 
         $httpProvider.interceptors.push(httpInterceptor);
@@ -16,12 +16,9 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 //            urlTemplate: '/api/config/resources/{part}/{lang}'
         });
 
-        $translateProvider.preferredLanguage('en');
-
-        //jwu: This works somewhat. It enables the common resource; but disables the other resources.
-        //     I addPart() at each individual modules where the common resource is needed
         //$translatePartialLoaderProvider.addPart('common');
 
+        $translateProvider.preferredLanguage('en');
 
         // Add HTTP error interceptor
         function httpInterceptor($q, MessageService) {
@@ -40,6 +37,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
         }
     }
 ]);
+
 
 //Then define the init function for starting up the application
 angular.element(document).ready(function () {

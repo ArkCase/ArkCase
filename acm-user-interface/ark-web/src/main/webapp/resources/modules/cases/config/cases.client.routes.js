@@ -20,19 +20,29 @@ angular.module('cases').config(['$stateProvider', '$urlRouterProvider',
                 }
             })
 
+            .state('cases.id', {
+                url: '/:id',
+                templateUrl: 'modules/cases/views/cases.client.view.html'
+            })
+
+            .state('cases.main', {
+                url: '/:id/main',
+                templateUrl: 'modules/cases/views/components/case-main.client.view.html'
+            })
+
+            .state('viewer', {
+                url: '/viewer/:id/:containerId/:containerType/:name/:selectedIds',
+                templateUrl: 'modules/cases/views/components/case-viewer.client.view.html'
+            })
+
             .state('status', {
                 url: '/status/:id/:caseNumber/:status',
                 templateUrl: 'modules/cases/views/components/case-status.client.view.html'
             })
 
-            .state('wizard', {
-                url: '/wizard',
-                templateUrl: 'modules/cases/views/components/case-wizard.client.view.html'
-            })
-
-            .state('cases.id', {
-                url: '/:id',
-                templateUrl: 'modules/cases/views/components/case-calendar.client.view.html'
+            .state('newcase', {
+                url: '/newcase',
+                templateUrl: 'modules/cases/views/components/case-newcase.client.view.html'
             })
 
             .state('cases.calendar', {
@@ -63,11 +73,6 @@ angular.module('cases').config(['$stateProvider', '$urlRouterProvider',
             .state('cases.history', {
                 url: '/:id/history',
                 templateUrl: 'modules/cases/views/components/case-history.client.view.html'
-            })
-
-            .state('cases.main', {
-                url: '/:id/main',
-                templateUrl: 'modules/cases/views/components/case-main.client.view.html'
             })
 
             .state('cases.notes', {

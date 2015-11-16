@@ -68,7 +68,24 @@ angular.module('services').factory('EcmService', ['$resource',
                 method: 'POST',
                 url: 'proxy/arkcase/api/latest/plugin/outlook/email/withattachments'
             }
-
+            , getFile: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/latest/service/ecm/file/:fileId'
+            }
+            , getFileEvents: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/latest/plugin/audit/FILE/:fileId'
+            }
+            , getFileNotes: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/latest/plugin/note/file/:fileId',
+                isArray: true
+            }
+            , getFileParticipants: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/v1/service/participant/FILE/:fileId',
+                isArray: true
+            }
         });
     }
 ]);

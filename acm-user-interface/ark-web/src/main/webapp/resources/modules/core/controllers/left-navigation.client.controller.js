@@ -4,7 +4,11 @@ angular.module('core').controller('LeftNavigationController', ['$scope', '$state
     function($scope, $state, Authentication, Menus) {
         $scope.$state = $state;
         $scope.authentication = Authentication;
-        $scope.isCollapsed = false;
+        $scope.isLeftMenuCollapsed = false;
         $scope.menu = Menus.getMenu('leftnav');
+
+        $scope.$watch('isLeftMenuCollapsed', function(){
+            $scope.$emit('isLeftMenuCollapsed', $scope.isLeftMenuCollapsed);
+        })
     }
 ]);

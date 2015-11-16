@@ -1,21 +1,16 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DetailsController', ['$scope', '$stateParams', 'UtilService', 'ValidationService', 'CasesService',
-	function($scope, $stateParams, Util, Validator, CasesService) {
+angular.module('cases').controller('Cases.DetailsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallCasesService', 'MessageService',
+    function ($scope, $stateParams, $translate, Util, CallCasesService, MessageService) {
 		$scope.$emit('req-component-config', 'details');
-
-		$scope.config = null;
-		$scope.$on('component-config', applyConfig);
-		function applyConfig(e, componentId, config) {
-			if (componentId == 'details') {
+        $scope.$on('component-config', function (e, componentId, config) {
+            if ('details' == componentId) {
 				$scope.config = config;
 			}
-		}
+        });
 
 		$scope.$on('case-retrieved', function(e, data) {
-			if (Validator.validateCaseFile(data)) {
-				$scope.caseInfo = data;
-			}
+			$scope.caseInfo = data;
 		});
 
 
@@ -30,12 +25,16 @@ angular.module('cases').controller('Cases.DetailsController', ['$scope', '$state
         $scope.saveDetails = function() {
             //$scope.editor.destroy();
 			var caseInfo = Util.omitNg($scope.caseInfo);
-            CasesService.save({}, caseInfo
-                ,function(successData) {
-                }
-                ,function(errorData) {
+            CallCasesService.saveCaseInfo(caseInfo).then(
+                function (caseInfo) {
+                    MessageService.info($translate.instant("cases.comp.details.informSaved"));
+                    return caseInfo;
                 }
             );
+            //Util.serviceCall({
+            //    service: CasesService.save
+            //    , data: caseInfo
+            //});
         };
 
 

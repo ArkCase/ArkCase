@@ -1,0 +1,167 @@
+{
+  "complaints": {
+    "title": "Complaints",
+    "progressNoComplaint": "[ No complaint data ]",
+    "progressLoading": "Loading complaint ",
+    "progressError": "Failed to load complaint "
+  },
+  "complaints.comp.info": {
+    "complaintId": "Complaint id:",
+    "complaintNumber": "Complaint Number:",
+    "courtRoomName": "Court Room Name:"
+  },
+  "complaints.comp.actions": {
+    "restrict": "Restrict?",
+    "new.button": "New",
+    "edit.button": "Edit",
+    "status.button": "Change Complaint Status",
+    "reinvestigate.button": "Reinvestigate",
+    "subscribe.button": "Subscribe",
+    "merge.button": "Merge",
+    "split.button": "Split"
+  },
+  "complaints.comp.details": {
+    "title": "Details",
+    "informSaved": "Complaint details saved"
+  },
+  "complaints.comp.documents": {
+    "title": "Documents"
+  },
+  "complaints.comp.people": {
+    "title": "People",
+    "table.columns": {
+      "entity": "Entity",
+      "type": "Type",
+      "firstName": "FirstName",
+      "lastName": "LastName"
+    },
+    "contactMethods": {
+      "title": "ContactMethods",
+      "table.columns": {
+        "type": "Type",
+        "value": "Value",
+        "created": "Date Added",
+        "creator": "Added By"
+      }
+    },
+    "organizations": {
+      "title": "Organizations",
+      "table.columns": {
+        "type": "Type",
+        "value": "Value",
+        "created": "Date Added",
+        "creator": "Added By"
+      }
+    },
+    "addresses": {
+      "title": "Addresses",
+      "table.columns": {
+        "type": "Type",
+        "streetAddress": "Address",
+        "city": "City",
+        "state": "State",
+        "zip": "Zip",
+        "country": "Country",
+        "created": "Date Added",
+        "creator": "Added By"
+      }
+    },
+    "aliases": {
+      "title": "Aliases",
+      "table.columns": {
+        "type": "Type",
+        "value": "Value",
+        "created": "Date Added",
+        "creator": "Added By"
+      }
+    },
+    "securityTags": {
+      "title": "Security Tags",
+      "table.columns": {
+        "type": "Type",
+        "value": "Value",
+        "created": "Date Added",
+        "creator": "Added By"
+      }
+    }
+  },
+  "complaints.comp.participants": {
+    "title": "Participants",
+    "table.columns": {
+      "type": "Type",
+      "name": "Name"
+    }
+  },
+  "complaints.comp.notes": {
+    "title": "Notes",
+    "table.columns": {
+      "note": "Note",
+      "created": "Created",
+      "creator": "Author"
+    }
+  },
+  "complaints.comp.tasks": {
+    "title": "Tasks",
+    "table.columns": {
+      "taskId": "ID",
+      "title": "Title",
+      "assignee": "Assignee",
+      "created": "Created",
+      "priority": "Priority",
+      "due": "Due",
+      "status": "Status",
+      "action": "Action"
+    }
+  },
+  "complaints.comp.references": {
+    "title": "References",
+    "table.columns": {
+      "targetName": "Number",
+      "targetTitle": "Title",
+      "modified": "Modified",
+      "targetType": "Reference Type",
+      "status": "Status"
+    }
+  },
+  "complaints.comp.history": {
+    "title": "History",
+    "table.columns": {
+      "eventType": "Event Name",
+      "eventDate": "Date",
+      "userId": "User"
+    }
+  },
+  "complaints.comp.correspondence": {
+    "title": "Correspondence",
+    "table.columns": {
+      "name": "Title",
+      "created": "Created",
+      "creator": "Creator"
+    }
+  },
+  "complaints.comp.time": {
+    "title": "Time",
+    "table.columns": {
+      "name": "Form Name",
+      "user": "User",
+      "tally": "Total Hours",
+      "modified": "Modified Date",
+      "status": "Status"
+    },
+    "formNamePrefix": "Timesheet"
+  },
+  "complaints.comp.cost": {
+    "title": "Cost",
+    "table.columns": {
+      "name": "Form Name",
+      "user": "User",
+      "tally": "Total Cost",
+      "modified": "Modified Date",
+      "status": "Status"
+    },
+    "formNamePrefix": "Costsheet"
+  },
+  "complaints.comp.calendar": {
+    "title": "Calendar"
+  }
+}

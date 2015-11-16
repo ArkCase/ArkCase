@@ -1,0 +1,74 @@
+<div ng-controller="Tasks.ParentInfoController">
+    <div class="clearfix" ng-show="'CASE_FILE' == taskInfo.parentObjectType">
+        <div class="row">
+            <div class="col-xs-6">
+                <h4><a href="#">{{parentCaseInfo.title || "Unknown"}}</a> ({{parentCaseInfo.status}})</h4></div>
+            <div class="col-xs-6  text-right">
+                <h4>{{parentCaseInfo.caseNumber}}</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">{{parentCaseInfo.caseType || 'Unknown'}}</div>
+                <small class="text-muted">{{"tasks.comp.parentinfo.case.subjectType.label" | translate}}</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">{{parentCaseInfo.created | date: "MM/dd/yyyy"}}</div>
+                <small class="text-muted">{{"tasks.comp.parentinfo.case.incidentDate.label" | translate}}</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">{{parentCaseInfo.priority || 'Unknown'}}</div>
+                <small class="text-muted">{{"tasks.comp.parentinfo.case.priority.label" | translate}}</small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <!--<div class="h4 font-bold">{{parentCaseInfo.creator || 'Unknown'}}</div>-->
+                <div class="h4 font-bold">{{assignee || 'Unknown'}}</div>
+                <small class="text-muted">{{"tasks.comp.parentinfo.case.assignee.label" | translate}}</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">{{owningGroup || 'Unknown'}}</div>
+                <small class="text-muted">{{"tasks.comp.parentinfo.case.owningGroup.label" | translate}}</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix" ng-show="'COMPLAINT' == taskInfo.parentObjectType">
+        <div class="row">
+            <div class="col-xs-6">
+                <h4><a href="#">{{parentComplaintInfo.complaintTitle || "Unknown"}}</a> ({{parentComplaintInfo.status}})
+                </h4>
+            </div>
+            <div class="col-xs-6  text-right">
+                <h4>{{parentComplaintInfo.complaintNumber}}</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">{{parentComplaintInfo.complaintType || 'Unknown'}}</div>
+                <small class="text-muted">{{"tasks.comp.parentinfo.complaint.subjectType.label" | translate}}</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <!--<div class="h4 font-bold">{{parentComplaintInfo.created | date: "MM/dd/yyyy"}}</div>-->
+                <div class="h4 font-bold">{{parentComplaintInfo.incidentDate | date: "MM/dd/yyyy"}}</div>
+                <small class="text-muted">{{"tasks.comp.parentinfo.complaint.incidentDate.label" | translate}}</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">{{parentComplaintInfo.priority || 'Unknown'}}</div>
+                <small class="text-muted">{{"tasks.comp.parentinfo.complaint.priority.label" | translate}}</small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <!--<div class="h4 font-bold">{{parentComplaintInfo.creator || 'Unknown'}}</div>-->
+                <div class="h4 font-bold">{{assignee || 'Unknown'}}</div>
+                <small class="text-muted">{{"tasks.comp.parentinfo.complaint.assignee.label" | translate}}</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">{{owningGroup || 'Unknown'}}</div>
+                <small class="text-muted">{{"tasks.comp.parentinfo.complaint.owningGroup.label" | translate}}</small>
+            </div>
+        </div>
+    </div>
+</div>

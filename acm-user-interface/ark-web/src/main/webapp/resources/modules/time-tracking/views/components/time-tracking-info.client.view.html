@@ -1,0 +1,14 @@
+<div ng-controller="TimeTracking.InfoController">
+    <div class="clearfix">
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    {{timesheetInfo.container.containerObjectTitle || 'Unknown' | uppercase}}
+                </div>
+                <small class="text-muted">
+                    Last Modified {{timesheetInfo.modified | date:'MM/dd/yyyy'}}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>

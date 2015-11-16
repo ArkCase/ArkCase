@@ -1,78 +1,65 @@
 'use strict';
 
-/**
- * @ngdoc controller
- * @name cases.controller:CasesController
- *
- * @description
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/cases.client.controller.js modules/cases/controllers/cases.client.controller.js}
- *
- * The Cases module main controller
- */
-angular.module('cases').controller('CasesController', ['$scope', '$state', '$stateParams', 'UtilService', 'ValidationService', 'ConfigService', 'CasesService',
-    function ($scope, $state, $stateParams, Util, Validator, ConfigService, CasesService) {
-        $scope.config = ConfigService.getModule({moduleId: 'cases'});
-        $scope.$on('req-component-config', onConfigRequest);
-        function onConfigRequest(e, componentId) {
-            $scope.config.$promise.then(function (config) {
+//
+//jwu: need ngdoc in controller ???
+//
+
+///**
+// * @ngdoc controller
+// * @name cases.controller:CasesController
+// *
+// * @description
+// * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/cases.client.controller.js modules/cases/controllers/cases.client.controller.js}
+// *
+// * The Cases module main controller
+// */
+angular.module('cases').controller('CasesController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallConfigService', 'CallCasesService',
+    function ($scope, $stateParams, $translate, Util, CallConfigService, CallCasesService) {
+        var promiseGetModuleConfig = CallConfigService.getModuleConfig("cases").then(function (config) {
+            $scope.config = config;
+            return config;
+        });
+        $scope.$on('req-component-config', function (e, componentId) {
+            promiseGetModuleConfig.then(function (config) {
                 var componentConfig = _.find(config.components, {id: componentId});
                 $scope.$broadcast('component-config', componentId, componentConfig);
             });
-        }
+        });
 
-        $scope.loadNewCaseFrevvoForm = loadNewCaseFrevvoForm;
-        $scope.loadChangeCaseStatusFrevvoForm = loadChangeCaseStatusFrevvoForm;
 
-        /**
-         * @ngdoc method
-         * @name loadNewCaseFrevvoForm
-         * @methodOf cases.controller:CasesController
-         *
-         * @description
-         * Displays the create new case Frevvo form for the user
-         */
-        function loadNewCaseFrevvoForm() {
-            $state.go('wizard');
-        }
 
-        /**
-         * @ngdoc method
-         * @name loadChangeCaseStatusFrevvoForm
-         * @methodOf cases.controller:CasesController
-         *
-         * @param {Object} caseData contains the metadata for the existing case which will be edited
-         *
-         * @description
-         * Displays the change case status Frevvo form for the user
-         */
-        function loadChangeCaseStatusFrevvoForm(caseData) {
-            if (caseData && caseData.id && caseData.caseNumber && caseData.status) {
-                $state.go('status', {id: caseData.id, caseNumber: caseData.caseNumber, status: caseData.status});
-            }
-        }
-
+        $scope.progressMsg = $translate.instant("cases.progressNoCase");
         $scope.$on('req-select-case', function (e, selectedCase) {
             $scope.$broadcast('case-selected', selectedCase);
 
-            var id = Util.goodMapValue(selectedCase, "id", null);
+            var id = Util.goodMapValue(selectedCase, "nodeId", null);
             loadCase(id);
         });
 
 
         var loadCase = function (id) {
             if (id) {
-                CasesService.get({
-                    id: id
-                }, function (data) {
-                    if (Validator.validateCaseFile(data)) {
-                        $scope.caseData = data;
-                        $scope.$broadcast('case-retrieved', data);
+                if ($scope.caseInfo && $scope.caseInfo.id != id) {
+                    $scope.caseInfo = null;
+                }
+                $scope.progressMsg = $translate.instant("cases.progressLoading") + " " + id + "...";
+
+                CallCasesService.getCaseInfo(id).then(
+                    function (caseInfo) {
+                        $scope.progressMsg = null;
+                        $scope.caseInfo = caseInfo;
+                        $scope.$broadcast('case-retrieved', caseInfo);
+                        return caseInfo;
                     }
-                });
+                    , function (error) {
+                        $scope.caseInfo = null;
+                        $scope.progressMsg = $translate.instant("cases.progressError") + " " + id;
+                        return error;
+                    }
+                );
             }
         };
 
-        var id = Util.goodMapValue($stateParams, "id", null);
-        loadCase(id);
-    }
+        loadCase($stateParams.id);
+	}
 ]);

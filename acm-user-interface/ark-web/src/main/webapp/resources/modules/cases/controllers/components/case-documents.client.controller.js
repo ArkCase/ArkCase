@@ -1,59 +1,35 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ValidationService', 'StoreService', 'LookupService',
-    function ($scope, $stateParams, $modal, Util, Validator, Store, LookupService) {
+angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ConstantService', 'CallLookupService',
+    function ($scope, $stateParams, $modal, Util, Constant, CallLookupService) {
 		$scope.$emit('req-component-config', 'documents');
-
-        $scope.config = null;
-        $scope.$on('component-config', applyConfig);
-		function applyConfig(e, componentId, config) {
-			if (componentId == 'documents') {
-				$scope.config = config;
-			}
-		}
-
-        var promiseFileTypes = Util.serviceCall({
-            service: LookupService.getFileTypes
-            , onSuccess: function (data) {
-                if (Validator.validateFileTypes(data)) {
-                    $scope.fileTypes = $scope.fileTypes || [];
-                    $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(data));
-                    return $scope.fileTypes;
-                }
-            }
-        });
-        var promiseFormTypes = Util.serviceCall({
-            service: LookupService.getPlainforms
-            , param: {objType: Util.Constant.OBJTYPE_CASE_FILE}
-            , onSuccess: function (data) {
-                if (Validator.validatePlainForms(data)) {
-                    var plainForms = data;
-                    $scope.fileTypes = $scope.fileTypes || [];
-                    for (var i = 0; i < plainForms.length; i++) {
-                        var fileType = {};
-                        fileType.type = plainForms[i].key;
-                        fileType.label = Util.goodValue(plainForms[i].name);
-                        fileType.url = Util.goodValue(plainForms[i].url);
-                        fileType.urlParameters = Util.goodArray(plainForms[i].urlParameters);
-                        fileType.form = true;
-                        $scope.fileTypes.unshift(fileType);
-                    }
-                    return $scope.fileTypes;
-                }
+        $scope.$on('component-config', function (e, componentId, config) {
+            if ('documents' == componentId) {
+                $scope.config = config;
             }
         });
 
-        $scope.treeArgs = {};
+        CallLookupService.getFormTypes().then(
+            function (formTypes) {
+                $scope.fileTypes = $scope.fileTypes || [];
+                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));
+                return formTypes;
+            }
+        );
+        CallLookupService.getFileTypes().then(
+            function (fileTypes) {
+                $scope.fileTypes = $scope.fileTypes || [];
+                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
+                return fileTypes;
+            }
+        );
 
-        $scope.objectType = Util.Constant.OBJTYPE_CASE_FILE;
+
+        $scope.objectType = Constant.ObjectTypes.CASE_FILE;
         $scope.objectId = $stateParams.id;
-        $scope.containerId = 0;
+        //$scope.containerId = 0;
         $scope.$on('case-retrieved', function (e, data) {
-            if (Validator.validateCaseFile(data)) {
-                $scope.caseInfo = data;
-                //$scope.objectType = Util.Constant.OBJTYPE_CASE_FILE;
-                //$scope.objectId = Util.goodValue(data.id, 0);
-            }
+            $scope.caseInfo = data;
         });
 
         var silentReplace = function (value, replace, replacement) {
@@ -66,7 +42,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             if ($scope.caseInfo) {
                 //CaseFile.View.Documents.getFileTypeByType(type);
                 var fileType = _.find($scope.fileTypes, {type: type});
-                if (Validator.validatePlainForm(fileType)) {
+                if (CallLookupService.validatePlainForm(fileType)) {
                     var data = "_data=(";
 
                     var url = fileType.url;

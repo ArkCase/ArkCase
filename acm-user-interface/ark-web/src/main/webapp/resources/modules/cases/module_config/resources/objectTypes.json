@@ -3,31 +3,37 @@
     "type": "COMPLAINT",
     "description": "Complaint",
     "iconName": "i i-notice",
-    "url": "home.html#!/complaints/:id/main"
+    "url": "#!/complaints/:id/main"
   },
   {
     "type": "CASE_FILE",
     "description": "Case File",
     "iconName": "i i-folder",
-    "url": "/home.html#!/cases/:id/main"
+    "url": "#!/cases/:id/main"
+  },
+  {
+    "type": "ORDER",
+    "description": "Case File Sub-type : Order",
+    "iconName": "i i-folder",
+    "url": "#!/order-info/:id"
   },
   {
     "type": "TASK",
     "description": "Task",
     "iconName": "i i-checkmark",
-    "url": "/home.html#!/tasks/:id/main"
+    "url": "#!/tasks/:id/main"
   },
   {
     "type": "DOCUMENT",
     "description": "Document",
     "iconName": "",
-    "url": "/home.html#!/documents/:id/main"
+    "url": "#!/documents/:id/main"
   },
   {
     "type": "FILE",
     "description": "File",
     "iconName": "",
-    "url": "/proxy/arkcase/api/latest/plugin/ecm/download?ecmFileId=:id"
+    "url": "proxy/arkcase/api/latest/plugin/ecm/download?ecmFileId=:id"
   },
   {
     "type": "PERSON",
@@ -93,12 +99,12 @@
     "type": "TIMESHEET",
     "description": "Timesheet",
     "iconName": "i i-alarm",
-    "url": "/home.html#!/timesheets/:id/main"
+    "url": "#!/timesheets/:id/main"
   },
   {
     "type": "COSTSHEET",
     "description": "Costsheet",
     "iconName": "fa fa-money",
-    "url": "/home.html#!/costsheets/:id/main"
+    "url": "#!/costsheets/:id/main"
   }
 ]

@@ -1,60 +1,120 @@
 'use strict';
 
-angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', '$log', 'ConfigService', 'CasesService', 'CasesModelsService', 'LookupService', 'UtilService', 'ValidationService',
-    function($scope, $stateParams, $log, ConfigService, CasesService, CasesModelsService, LookupService, Util, Validator) {
+angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'CallLookupService', 'CallCasesService', 'LookupService', 'CasesService', 'ObjectsModelsService',
+    function ($scope, $stateParams, Store, Util, Validator, Helper, CallLookupService, CallCasesService, LookupService, CasesService, ObjectsModelsService) {
         $scope.$emit('req-component-config', 'info');
-
-        // Dropdown list options
-        $scope.owningGroups = [];
-        $scope.assignableUsers = [];
-        $scope.caseTypes = [];
-        $scope.priorities = [];
-
-        $scope.config = null;
-        $scope.$on('component-config', applyConfig);
-        function applyConfig(e, componentId, config) {
-            if (componentId == 'info') {
+        $scope.$on('component-config', function (e, componentId, config) {
+            if ("info" == componentId) {
                 $scope.config = config;
             }
-        }
-
-        $scope.components = null;
-        ConfigService.getModule({moduleId: 'cases'}, function(moduleConfig){
-            $scope.components = moduleConfig.components;
         });
 
 
-        $scope.selectedCase = null;
+        CallLookupService.getUsers().then(
+            function (users) {
+                var options = [];
+                _.each(users, function (user) {
+                    options.push({object_id_s: user.object_id_s, name: user.name});
+                });
+                $scope.assignableUsers = options;
+                return users;
+            }
+        );
+
+        CallLookupService.getPriorities().then(
+            function (priorities) {
+                var options = [];
+                _.each(priorities, function (priority) {
+                    options.push({value: priority, text: priority});
+                });
+                $scope.priorities = options;
+                return priorities;
+            }
+        );
+
+
+        $scope.owningGroups = [];
+        var cacheGroups = new Store.SessionData(Helper.SessionCacheNames.GROUPS);
+        var groups = cacheGroups.get();
+        Util.serviceCall({
+            service: LookupService.getGroups
+            , result: groups
+            , onSuccess: function (data) {
+                if (Validator.validateSolrData(data)) {
+                    var groups = data.response.docs;
+                    cacheGroups.set(groups);
+                    return groups;
+                }
+            }
+        }).then(
+            function (groups) {
+                var options = [];
+                _.each(groups, function (item) {
+                    options.push({value: item.name, text: item.name});
+                });
+                $scope.owningGroups = options;
+                return groups;
+            }
+        );
+
+        $scope.caseTypes = [];
+        var cacheCaseTypes = new Store.SessionData(Helper.SessionCacheNames.CASE_TYPES);
+        var caseTypes = cacheCaseTypes.get();
+        Util.serviceCall({
+            service: LookupService.getCaseTypes
+            , result: caseTypes
+            , onSuccess: function (data) {
+                if (Validator.validateCaseTypes(data)) {
+                    caseTypes = data;
+                    cacheCaseTypes.set(caseTypes);
+                    return caseTypes;
+                }
+            }
+        }).then(
+            function (caseTypes) {
+                var options = [];
+                _.forEach(caseTypes, function (item) {
+                    options.push({value: item, text: item});
+                });
+                $scope.caseTypes = options;
+                return caseTypes;
+            }
+        );
+
+        $scope.caseSolr = null;
         $scope.caseInfo = null;
         $scope.$on('case-selected', function onSelectedCase(e, selectedCase) {
-            //if (!$scope.case || $scope.case.object_id_s != selectedCase.object_id_s) {
-            $scope.selectedCase = selectedCase;
-            //$scope.caseInfo = CasesService.get({id: selectedCase.object_id_s});
-            //}
+            $scope.caseSolr = selectedCase;
         });
         $scope.assignee = null;
         $scope.owningGroup = null;
         $scope.$on('case-retrieved', function(e, data){
-            if (Validator.validateCaseFile(data)) {
-                $scope.caseInfo = data;
-                $scope.assignee = CasesModelsService.getAssignee(data);
-                $scope.owningGroup = CasesModelsService.getGroup(data);
-            }
+            $scope.caseInfo = data;
+            $scope.assignee = ObjectsModelsService.getAssignee(data);
+            $scope.owningGroup = ObjectsModelsService.getGroup(data);
         });
 
         /**
          * Persists the updated casefile metadata to the ArkCase database
          */
         function saveCase() {
-            var caseInfo = Util.omitNg($scope.caseInfo);
-            CasesService.save({}, caseInfo
-                ,function(successData) {
-                    $log.debug("case saved successfully");
-                }
-                ,function(errorData) {
-                    $log.error("case save failed");
-                }
-            );
+            if (CallCasesService.validateCaseInfo($scope.caseInfo)) {
+                var caseInfo = Util.omitNg($scope.caseInfo);
+                Util.serviceCall({
+                    service: CasesService.save
+                    , data: caseInfo
+                    , onSuccess: function (data) {
+                        return data;
+                    }
+                }).then(
+                    function (successData) {
+                        //notify "case saved successfully" ?
+                    }
+                    , function (errorData) {
+                        //handle error
+                    }
+                );
+            }
         }
 
         // Updates the ArkCase database when the user changes a case attribute
@@ -63,7 +123,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             saveCase();
         };
         $scope.updateOwningGroup = function() {
-            CasesModelsService.setGroup($scope.caseInfo, $scope.owningGroup);
+            ObjectsModelsService.setGroup($scope.caseInfo, $scope.owningGroup);
             saveCase();
         };
         $scope.updatePriority = function() {
@@ -73,39 +133,12 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             saveCase();
         };
         $scope.updateAssignee = function() {
-            CasesModelsService.setAssignee($scope.caseInfo, $scope.assignee);
+            ObjectsModelsService.setAssignee($scope.caseInfo, $scope.assignee);
             saveCase();
         };
         $scope.updateDueDate = function() {
             saveCase();
         };
 
-        // Obtains the dropdown menu selection options via REST calls to ArkCase
-        LookupService.getPriorities({}, function(data) {
-            $scope.priorities = [];
-            _.forEach(data, function (item) {
-                $scope.priorities.push({value: item, text: item});
-            });
-        });
-        LookupService.getUsers({}, function(data) {
-            $scope.assignableUsers = [];
-            _.forEach(data, function(item) {
-                var userInfo = JSON.parse(item);
-                $scope.assignableUsers.push({value: userInfo.object_id_s, text: userInfo.object_id_s});
-            });
-        });
-        LookupService.getGroups({}, function(data) {
-            $scope.owningGroups = [];
-            var groups = data.response.docs;
-            _.forEach(groups, function(item) {
-                $scope.owningGroups.push({value: item.name, text: item.name});
-            });
-        });
-        LookupService.getCaseTypes({}, function(data) {
-            $scope.caseTypes = [];
-            _.forEach(data, function(item) {
-                $scope.caseTypes.push({value: item, text: item});
-            });
-        });
     }
 ]);
