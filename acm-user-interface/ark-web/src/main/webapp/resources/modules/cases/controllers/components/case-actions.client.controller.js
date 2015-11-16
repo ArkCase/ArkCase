@@ -24,7 +24,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         // Obtains the currently logged in user
         var userInfo = Authentication.queryUserInfo({});
 
-        $scope.$on('case-retrieved', function (e, data) {
+        $scope.$on('case-updated', function (e, data) {
             if (Validator.validateCaseFile(data)) {
                 $scope.caseInfo = data;
 

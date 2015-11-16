@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ESignaturesController', ['$scope', '$stateParams', '$q', 'UtilService', 'HelperService', 'ConstantService', 'CallObjectsService',
-    function ($scope, $stateParams, $q, Util, Helper, Constant, CallObjectsService) {
-        $scope.$emit('req-component-config', 'esignatures');
+angular.module('tasks').controller('Tasks.SignaturesController', ['$scope', '$stateParams', '$q', 'UtilService', 'HelperService', 'ConstantService', 'Object.SignatureService',
+    function ($scope, $stateParams, $q, Util, Helper, Constant, ObjectSignatureService) {
+        $scope.$emit('req-component-config', 'signatures');
         $scope.$on('component-config', function (e, componentId, config) {
-            if ('esignatures' == componentId) {
+            if ('signatures' == componentId) {
                 Helper.Grid.setColumnDefs($scope, config);
                 Helper.Grid.setBasicOptions($scope, config);
                 Helper.Grid.setUserNameFilter($scope, promiseUsers);
@@ -20,7 +20,7 @@ angular.module('tasks').controller('Tasks.ESignaturesController', ['$scope', '$s
 
         $scope.retrieveGridData = function () {
             if ($scope.currentId) {
-                var promiseQueryAudit = CallObjectsService.findSignatures(Constant.ObjectTypes.TASK, $scope.currentId);
+                var promiseQueryAudit = ObjectSignatureService.findSignatures(Constant.ObjectTypes.TASK, $scope.currentId);
 
                 $q.all([promiseQueryAudit, promiseUsers]).then(function (data) {
                     var signatures = data[0];

@@ -485,7 +485,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 }
             }); //end $q            
         };
-        $scope.$on('case-retrieved', function (e, data) {
+        $scope.$on('case-updated', function (e, data) {
             if (Validator.validateCaseFile(data)) {
                 if (data.id == $stateParams.id) {
                     updateGridData(data);

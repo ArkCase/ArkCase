@@ -79,7 +79,7 @@
       "endDateTime": "End"
     }
   },
-  "tasks.comp.esignatures": {
+  "tasks.comp.signatures": {
     "title": "eSignatures",
     "table.columns": {
       "signedDate": "Date",
