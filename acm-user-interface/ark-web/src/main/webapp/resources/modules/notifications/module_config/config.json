@@ -51,7 +51,8 @@
             ],
             "paginationPageSize": 10,
             "start": 0,
-            "filter": "\"Object Type\": NOTIFICATION"
+            "filter": "\"Object Type\": NOTIFICATION",
+            "filterName" : "Object Type"
         }
     ]
 }
