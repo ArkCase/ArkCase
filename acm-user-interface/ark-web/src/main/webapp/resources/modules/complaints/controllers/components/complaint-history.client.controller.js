@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.HistoryController', ['$scope', '$stateParams', '$q', 'UtilService', 'HelperService', 'ConstantService', 'CallObjectsService',
-    function ($scope, $stateParams, $q, Util, Helper, Constant, CallObjectsService) {
+angular.module('complaints').controller('Complaints.HistoryController', ['$scope', '$stateParams', '$q', 'UtilService', 'HelperService', 'ConstantService', 'Object.AuditService',
+    function ($scope, $stateParams, $q, Util, Helper, Constant, ObjectAuditService) {
         var z = 1;
         return;
         $scope.$emit('req-component-config', 'history');
@@ -23,7 +23,7 @@ angular.module('complaints').controller('Complaints.HistoryController', ['$scope
 
         $scope.retrieveGridData = function () {
             if ($scope.currentId) {
-                var promiseQueryAudit = CallObjectsService.queryAudit(Constant.ObjectTypes.COMPLAINT
+                var promiseQueryAudit = ObjectAuditService.queryAudit(Constant.ObjectTypes.COMPLAINT
                     , $scope.currentId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
