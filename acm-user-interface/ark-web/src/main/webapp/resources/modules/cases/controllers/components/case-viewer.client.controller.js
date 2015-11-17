@@ -53,7 +53,8 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
         var ticketInfo = TicketService.getArkCaseTicket();
 
         // Obtains the currently logged in user
-        var userInfo = Authentication.queryUserInfo({});
+        //var userInfo = Authentication.queryUserInfo({});
+        var userInfo = Authentication.queryUserInfoNew();
 
         // Obtains a list of all users in ArkCase
         var totalUserInfo = LookupService.getUsers({});
@@ -67,7 +68,7 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
         var ecmFileNotes = EcmService.getFileNotes({fileId: $stateParams['id']});
         var ecmFileParticipants = EcmService.getFileParticipants({fileId: $stateParams['id']});
 
-        $q.all([ticketInfo, userInfo.$promise, totalUserInfo.$promise, ecmFileConfig.$promise,
+        $q.all([ticketInfo, userInfo, totalUserInfo.$promise, ecmFileConfig.$promise,
                 ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileNotes.$promise, ecmFileParticipants.$promise])
             .then(function(data) {
                 $scope.acmTicket = data[0].data;

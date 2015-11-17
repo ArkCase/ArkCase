@@ -10,7 +10,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$wi
             }
         });
 
-        $scope.$on('case-retrieved', function (e, data) {
+        $scope.$on('case-updated', function (e, data) {
             //if (Validator.validateCaseFile(data)) {
             //$scope.caseInfo = Util.goodValue(data, {references: []});
             $scope.caseInfo = data;

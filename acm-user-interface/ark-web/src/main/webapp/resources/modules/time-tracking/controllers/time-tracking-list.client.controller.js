@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTrackingListController', ['$scope', '$state', '$stateParams', '$translate', 'ConfigService', 'UtilService', 'ConstantService', 'TimeTrackingService', 'CallTimeTrackingService', 'ValidationService', 'Profile.UserInfoService', 'HelperService', 'CallConfigService', 'CallAuthentication',
-    function($scope, $state, $stateParams, $translate, ConfigService, Util, Constant, TimeTrackingService, CallTimeTrackingService, Validator, UserInfoService, Helper, CallConfigService, CallAuthentication) {
+angular.module('time-tracking').controller('TimeTrackingListController', ['$scope', '$state', '$stateParams', '$translate', 'ConfigService', 'UtilService', 'ConstantService', 'TimeTrackingService', 'CallTimeTrackingService', 'ValidationService', 'Profile.UserInfoService', 'HelperService', 'CallConfigService', 'Authentication',
+    function ($scope, $state, $stateParams, $translate, ConfigService, Util, Constant, TimeTrackingService, CallTimeTrackingService, Validator, UserInfoService, Helper, CallConfigService, Authentication) {
         CallConfigService.getModuleConfig("time-tracking").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
@@ -13,8 +13,8 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
             if (firstLoad && $stateParams.id) {
                 $scope.treeData = null;
             }
-            CallAuthentication.queryUserInfo().then(function (data){
-                var userId = data.userId;
+            Authentication.queryUserInfoNew().then(function (userInfo) {
+                var userId = userInfo.userId;
                 CallTimeTrackingService.queryTimeTrackingTreeData(userId, start, n, sort).then(
                     function (treeData) {
                         if (firstLoad) {
@@ -48,6 +48,7 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
                         return treeData;
                     }
                 );
+                return userInfo;
             });
             if (firstLoad && $stateParams.id) {
                 CallTimeTrackingService.getTimeTrackingInfo($stateParams.id).then(
