@@ -761,15 +761,21 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     var $div = $("<div/>").addClass("btn-group");
                     var itemId = node.data.objectId;
                     if (itemId) {
-                        var url = "#";
-                        if (DocTree.isFileNode(node)) {
-                            url = "/home.html#!/documents/" + itemId + "/main";
-                        }
-                        var $a = $("<a/>")
-                            .attr("href", url)
-                            .text(itemId)
-                            .appendTo($div);
-                        //"<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.object_id_s}}</a>";
+                        //var url = "#";
+                        //if (DocTree.isFileNode(node)) {
+                        //    url = "/home.html#!/documents/" + itemId + "/main";
+                        //}
+                        //var $a = $("<a/>")
+                        //    .attr("href", url)
+                        //    .text(itemId)
+                        //    .appendTo($div);
+                        //??  //"<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.object_id_s}}</a>";
+
+
+                        //
+                        // Disable link for JSAP
+                        //
+                        $div.text(itemId);
                     }
                     return $div;
                 }

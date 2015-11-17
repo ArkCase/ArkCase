@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'CallLookupService', 'CallCasesService', 'LookupService', 'CasesService', 'ObjectsModelsService',
-    function ($scope, $stateParams, Store, Util, Validator, Helper, CallLookupService, CallCasesService, LookupService, CasesService, ObjectsModelsService) {
+angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'CallLookupService', 'Case.InfoService', 'LookupService', 'CasesService', 'ObjectsModelsService',
+    function ($scope, $stateParams, Store, Util, Validator, Helper, CallLookupService, CaseInfoService, LookupService, CasesService, ObjectsModelsService) {
         $scope.$emit('req-component-config', 'info');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("info" == componentId) {
@@ -88,7 +88,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
         });
         $scope.assignee = null;
         $scope.owningGroup = null;
-        $scope.$on('case-retrieved', function(e, data){
+        $scope.$on('case-updated', function (e, data) {
             $scope.caseInfo = data;
             $scope.assignee = ObjectsModelsService.getAssignee(data);
             $scope.owningGroup = ObjectsModelsService.getGroup(data);
@@ -98,24 +98,44 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
          * Persists the updated casefile metadata to the ArkCase database
          */
         function saveCase() {
-            if (CallCasesService.validateCaseInfo($scope.caseInfo)) {
-                var caseInfo = Util.omitNg($scope.caseInfo);
-                Util.serviceCall({
-                    service: CasesService.save
-                    , data: caseInfo
-                    , onSuccess: function (data) {
-                        return data;
+            var caseInfo = Util.omitNg($scope.caseInfo);
+            if (CaseInfoService.validateCaseInfo(caseInfo)) {
+                CaseInfoService.saveCaseInfo(caseInfo).then(
+                    function (caseInfo) {
+                        //update tree node tittle
+                        $scope.$emit("report-case-updated", caseInfo);
+                        return caseInfo;
                     }
-                }).then(
-                    function (successData) {
-                        //notify "case saved successfully" ?
-                    }
-                    , function (errorData) {
-                        //handle error
+                    , function (error) {
+                        //set error to x-editable title
+                        //update tree node tittle
+                        return error;
                     }
                 );
             }
         }
+
+        //function saveCase() {
+        //    if (CaseInfoService.validateCaseInfo($scope.caseInfo)) {
+        //        var caseInfo = Util.omitNg($scope.caseInfo);
+        //        Util.serviceCall({
+        //            service: CasesService.save
+        //            , data: caseInfo
+        //            , onSuccess: function (data) {
+        //                return data;
+        //            }
+        //        }).then(
+        //            function (successData) {
+        //                //notify "case saved successfully" ?
+        //            }
+        //            , function (errorData) {
+        //                //handle error
+        //            }
+        //        );
+        //    }
+        //}
+
+
 
         // Updates the ArkCase database when the user changes a case attribute
         // in a case top bar menu item and clicks the save check button
