@@ -18,7 +18,7 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', 'StoreServ
         });
 
 
-        $scope.$on('task-retrieved', function (e, data) {
+        $scope.$on('task-updated', function (e, data) {
             $scope.taskInfo = data;
         });
 
