@@ -28,7 +28,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         $scope.objectType = Constant.ObjectTypes.CASE_FILE;
         $scope.objectId = $stateParams.id;
         //$scope.containerId = 0;
-        $scope.$on('case-retrieved', function (e, data) {
+        $scope.$on('case-updated', function (e, data) {
             $scope.caseInfo = data;
         });
 

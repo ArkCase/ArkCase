@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('CasesListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'CallCasesService', 'CallConfigService',
-    function ($scope, $state, $stateParams, $translate, Util, Constant, CallCasesService, CallConfigService) {
+angular.module('cases').controller('CasesListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'Case.ListService', 'Case.InfoService', 'CallConfigService',
+    function ($scope, $state, $stateParams, $translate, Util, Constant, CaseListService, CaseInfoService, CallConfigService) {
         CallConfigService.getModuleConfig("cases").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
@@ -15,7 +15,7 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
                 $scope.treeData = null;
             }
 
-            CallCasesService.queryCasesTreeData(start, n, sort, filters).then(
+            CaseListService.queryCasesTreeData(start, n, sort, filters).then(
                 function (treeData) {
                     if (firstLoad) {
                         if ($stateParams.id) {
@@ -58,7 +58,7 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
             );
 
             if (firstLoad && $stateParams.id) {
-                CallCasesService.getCaseInfo($stateParams.id).then(
+                CaseInfoService.getCaseInfo($stateParams.id).then(
                     function (caseInfo) {
                         $scope.treeControl.select({
                             pageStart: start
