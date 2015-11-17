@@ -25,7 +25,11 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
                                 //    console.log("Error!!! only 1 items in docs[] is expected");
                                 //}
 
-                                var found = _.find(treeData.docs, {nodeId: $stateParams.id});
+                                //$stateParams.id and $scope.treeData.docs[0].nodeId are the same in this situation. Use the later seems more logical
+                                //console.log("$stateParams.id=" + $stateParams.id);
+                                //console.log("$scope.treeData.docs[0].nodeId=" + $scope.treeData.docs[0].nodeId);
+                                //var found = _.find(treeData.docs, {nodeId: $stateParams.id});
+                                var found = _.find(treeData.docs, {nodeId: $scope.treeData.docs[0].nodeId});
                                 if (!found) {
                                     var clone = _.clone(treeData.docs);
                                     clone.unshift($scope.treeData.docs[0]);

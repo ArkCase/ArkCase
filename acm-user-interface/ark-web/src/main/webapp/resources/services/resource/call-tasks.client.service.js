@@ -17,7 +17,7 @@ angular.module('services').factory('CallTasksService', ['$resource', '$translate
             }
             , CacheNames: {
                 TASK_LIST: "TaskList"
-                , TASK_INFO: "TaskInfo"
+                //, TASK_INFO: "TaskInfo"
                 , TASK_HISTORY: "TaskHistory"
             }
 
@@ -76,10 +76,13 @@ angular.module('services').factory('CallTasksService', ['$resource', '$translate
                 });
             }
 
+            //
+            // move to Taks.InfoService
+            //
             /**
-             * @ngdoc method
-             * @name getTaskInfo
-             * @methodOf services.service:CallTasksService
+             * ngdoc method
+             * name getTaskInfo
+             * methodOf services.service:CallTasksService
              *
              * @description
              * Query task data
@@ -88,26 +91,26 @@ angular.module('services').factory('CallTasksService', ['$resource', '$translate
              *
              * @returns {Object} Promise
              */
-            , getTaskInfo: function (id) {
-                var cacheTaskInfo = new Store.CacheFifo(this.CacheNames.TASK_INFO);
-                var taskInfo = cacheTaskInfo.get(id);
-                return Util.serviceCall({
-                    service: TasksService.get
-                    , param: {id: id}
-                    , result: taskInfo
-                    , onSuccess: function (data) {
-                        if (ServiceCall.validateTaskInfo(data)) {
-                            cacheTaskInfo.put(id, data);
-                            return data;
-                        }
-                    }
-                });
-            }
+            //, getTaskInfo: function (id) {
+            //    var cacheTaskInfo = new Store.CacheFifo(this.CacheNames.TASK_INFO);
+            //    var taskInfo = cacheTaskInfo.get(id);
+            //    return Util.serviceCall({
+            //        service: TasksService.get
+            //        , param: {id: id}
+            //        , result: taskInfo
+            //        , onSuccess: function (data) {
+            //            if (ServiceCall.validateTaskInfo(data)) {
+            //                cacheTaskInfo.put(id, data);
+            //                return data;
+            //            }
+            //        }
+            //    });
+            //}
 
             /**
-             * @ngdoc method
-             * @name saveTaskInfo
-             * @methodOf services.service:CallTasksService
+             * ngdoc method
+             * name saveTaskInfo
+             * methodOf services.service:CallTasksService
              *
              * @description
              * Save task data
@@ -116,26 +119,26 @@ angular.module('services').factory('CallTasksService', ['$resource', '$translate
              *
              * @returns {Object} Promise
              */
-            , saveTaskInfo: function (taskInfo) {
-                if (!ServiceCall.validateTaskInfo(taskInfo)) {
-                    return Util.errorPromise($translate.instant("common.service.error.invalidData"));
-                }
-                return Util.serviceCall({
-                    service: TasksService.save
-                    , param: {id: taskInfo.taskId}
-                    , data: taskInfo
-                    , onSuccess: function (data) {
-                        if (ServiceCall.validateTaskInfo(data)) {
-                            return data;
-                        }
-                    }
-                });
-            }
+            //, saveTaskInfo: function (taskInfo) {
+            //    if (!ServiceCall.validateTaskInfo(taskInfo)) {
+            //        return Util.errorPromise($translate.instant("common.service.error.invalidData"));
+            //    }
+            //    return Util.serviceCall({
+            //        service: TasksService.save
+            //        , param: {id: taskInfo.taskId}
+            //        , data: taskInfo
+            //        , onSuccess: function (data) {
+            //            if (ServiceCall.validateTaskInfo(data)) {
+            //                return data;
+            //            }
+            //        }
+            //    });
+            //}
 
             /**
-             * @ngdoc method
-             * @name validateTaskInfo
-             * @methodOf services.service:CallTasksService
+             * ngdoc method
+             * name validateTaskInfo
+             * methodOf services.service:CallTasksService
              *
              * @description
              * Validate task data
@@ -144,27 +147,27 @@ angular.module('services').factory('CallTasksService', ['$resource', '$translate
              *
              * @returns {Boolean} Return true if data is valid
              */
-            , validateTaskInfo: function (data) {
-                if (Util.isEmpty(data)) {
-                    return false;
-                }
-                if (0 >= Util.goodValue(data.taskId, 0)) {
-                    return false;
-                }
-//            if (Util.isEmpty(data.id) || Util.isEmpty(data.caseNumber)) {
-//             return false;
-//             }
-//             if (!Util.isArray(data.childObjects)) {
-//             return false;
-//             }
-//             if (!Util.isArray(data.participants)) {
-//             return false;
-//             }
-//             if (!Util.isArray(data.personAssociations)) {
-//             return false;
-//             }
-                return true;
-            }
+//            , validateTaskInfo: function (data) {
+//                if (Util.isEmpty(data)) {
+//                    return false;
+//                }
+//                if (0 >= Util.goodValue(data.taskId, 0)) {
+//                    return false;
+//                }
+////            if (Util.isEmpty(data.id) || Util.isEmpty(data.caseNumber)) {
+////             return false;
+////             }
+////             if (!Util.isArray(data.childObjects)) {
+////             return false;
+////             }
+////             if (!Util.isArray(data.participants)) {
+////             return false;
+////             }
+////             if (!Util.isArray(data.personAssociations)) {
+////             return false;
+////             }
+//                return true;
+//            }
 
             /**
              * @ngdoc method
