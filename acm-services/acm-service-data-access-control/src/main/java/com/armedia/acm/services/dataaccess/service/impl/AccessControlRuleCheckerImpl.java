@@ -75,7 +75,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             log.warn("Missing access control rules configuration");
             return false;
         }
-        log.debug("Checking if [{}] is granted access to object of type [{}] with id [{}]", authentication.getName(), targetType, targetId);
+        log.debug("Checking if [{}] is granted executing [{}] on object of type [{}] with id [{}]", authentication.getName(), permission, targetType, targetId);
         boolean granted = false;
 
         Map<String, Object> targetObjectProperties = retrieveTargetObjectProperties(accessControlRules.getPropertiesMapping(), solrDocument);
@@ -122,13 +122,13 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             granted = evaluate(accessControlRule.getObjectProperties(), authentication, targetObjectProperties);
             if (granted)
             {
-                log.debug("[{}] is granted access to object of type [{}] with id [{}], matching rule [{}]", authentication.getName(), targetType, targetId, accessControlRule);
+                log.debug("[{}] is granted executing [{}] on object of type [{}] with id [{}], matching rule [{}]", authentication.getName(), permission, targetType, targetId, accessControlRule);
                 break;
             }
         }
         if (!granted)
         {
-            log.warn("[{}] is denied access to object of type [{}] with id [{}], no matching rule found", authentication.getName(), targetType, targetId);
+            log.warn("[{}] is denied executing [{}] on object of type [{}] with id [{}], no matching rule found", authentication.getName(), permission, targetType, targetId);
         }
         return granted;
     }
@@ -171,7 +171,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      */
     private boolean checkRolesAll(List<String> userRolesAll, Collection<? extends GrantedAuthority> grantedAuthorities, Map<String, Object> targetObjectProperties)
     {
-        if (userRolesAll == null)
+        if (userRolesAll == null || userRolesAll.isEmpty())
         {
             // no user roles requested
             return true;
@@ -212,7 +212,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      */
     private boolean checkRolesAny(List<String> userRolesAny, Collection<? extends GrantedAuthority> grantedAuthorities, Map<String, Object> targetObjectProperties)
     {
-        if (userRolesAny == null)
+        if (userRolesAny == null || userRolesAny.isEmpty())
         {
             // no user roles requested
             return true;
@@ -252,6 +252,10 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
         {
             String propertyName = matcher.group(1);
             String propertyValue = (String) targetObjectProperties.get(propertyName);
+            if (propertyValue == null)
+            {
+                continue;
+            }
             userRole = matcher.replaceFirst(propertyValue);
             matcher = pattern.matcher(userRole);
         }
@@ -268,7 +272,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      */
     private boolean evaluate(Map<String, Object> requiredProperties, Authentication authentication, Map<String, Object> targetObjectProperties)
     {
-        if (requiredProperties == null)
+        if (requiredProperties == null || requiredProperties.isEmpty())
         {
             // no required properties
             return true;
