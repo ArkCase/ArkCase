@@ -13,8 +13,8 @@
 // *
 // * The Cases module main controller
 // */
-angular.module('cases').controller('CasesController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallConfigService', 'CallCasesService',
-    function ($scope, $stateParams, $translate, Util, CallConfigService, CallCasesService) {
+angular.module('cases').controller('CasesController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallConfigService', 'Case.InfoService',
+    function ($scope, $stateParams, $translate, Util, CallConfigService, CaseInfoService) {
         var promiseGetModuleConfig = CallConfigService.getModuleConfig("cases").then(function (config) {
             $scope.config = config;
             return config;
@@ -24,6 +24,10 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
                 var componentConfig = _.find(config.components, {id: componentId});
                 $scope.$broadcast('component-config', componentId, componentConfig);
             });
+        });
+        $scope.$on('report-case-updated', function (e, caseInfo) {
+            CaseInfoService.updateCaseInfo(caseInfo);
+            $scope.$broadcast('case-updated', caseInfo);
         });
 
 
@@ -44,11 +48,11 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
                 }
                 $scope.progressMsg = $translate.instant("cases.progressLoading") + " " + id + "...";
 
-                CallCasesService.getCaseInfo(id).then(
+                CaseInfoService.getCaseInfo(id).then(
                     function (caseInfo) {
                         $scope.progressMsg = null;
                         $scope.caseInfo = caseInfo;
-                        $scope.$broadcast('case-retrieved', caseInfo);
+                        $scope.$broadcast('case-updated', caseInfo);
                         return caseInfo;
                     }
                     , function (error) {

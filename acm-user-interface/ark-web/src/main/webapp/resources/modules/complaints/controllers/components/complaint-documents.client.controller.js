@@ -31,7 +31,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         $scope.objectType = Constant.ObjectTypes.COMPLAINT;
         $scope.objectId = $stateParams.id;
         //$scope.containerId = 0;
-        $scope.$on('complaint-retrieved', function (e, data) {
+        $scope.$on('complaint-updated', function (e, data) {
             $scope.complaintInfo = data;
         });
 

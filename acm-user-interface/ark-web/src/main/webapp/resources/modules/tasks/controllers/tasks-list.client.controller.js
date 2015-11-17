@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('TasksListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'CallTasksService', 'CallConfigService',
-    function ($scope, $state, $stateParams, $translate, Util, Constant, CallTasksService, CallConfigService) {
+angular.module('tasks').controller('TasksListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'Task.InfoService', 'Task.ListService', 'CallConfigService',
+    function ($scope, $state, $stateParams, $translate, Util, Constant, TaskInfoService, TaskListService, CallConfigService) {
         CallConfigService.getModuleConfig("tasks").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
@@ -25,16 +25,16 @@ angular.module('tasks').controller('TasksListController', ['$scope', '$state', '
                 $scope.treeData = null;
             }
 
-            CallTasksService.queryTasksTreeData(start, n, sort, filters).then(
+            TaskListService.queryTasksTreeData(start, n, sort, filters).then(
                 function (treeData) {
                     if (firstLoad) {
                         if ($stateParams.id) {
                             if ($scope.treeData) {            //It must be set by CallTasksService.getTaskInfo(), only 1 items in docs[] is expected
-                                var a1 = treeData.docs;
-                                var a2 = $scope.treeData.docs[0].nodeId;
-                                var a3 = _.find(a1, {nodeId: a2});
-                                var a5 = _.find(a1, {'nodeId': 9601});
-                                var a4 = _.where(a1, {nodeId: a2});
+                                //var a1 = treeData.docs;
+                                //var a2 = $scope.treeData.docs[0].nodeId;
+                                //var a3 = _.find(a1, {nodeId: a2});
+                                //var a5 = _.find(a1, {'nodeId': 9601});
+                                //var a4 = _.where(a1, {nodeId: a2});
 
 
                                 //var found = _.find(treeData.docs, {nodeId: $scope.treeData.docs[0].nodeId});  //what am I doing wrong? It just is not working
@@ -67,7 +67,7 @@ angular.module('tasks').controller('TasksListController', ['$scope', '$state', '
             );
 
             if (firstLoad && $stateParams.id) {
-                CallTasksService.getTaskInfo($stateParams.id).then(
+                TaskInfoService.getTaskInfo($stateParams.id).then(
                     function (taskInfo) {
                         $scope.treeControl.select({
                             pageStart: start

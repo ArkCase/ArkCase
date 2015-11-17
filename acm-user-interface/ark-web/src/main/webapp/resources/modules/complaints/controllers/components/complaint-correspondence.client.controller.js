@@ -62,7 +62,7 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
             }
         );
 
-        $scope.$on('complaint-retrieved', function (e, data) {
+        $scope.$on('complaint-updated', function (e, data) {
             if (Validator.validateComplaintFile(data)) {
                 $scope.complaintInfo = data;
             }
