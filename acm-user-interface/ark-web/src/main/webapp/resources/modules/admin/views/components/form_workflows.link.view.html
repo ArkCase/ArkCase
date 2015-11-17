@@ -1,8 +1,35 @@
 <div ng-controller="Admin.FormWorkflowsLinkController">
-    <div class="header">
-        <h3>
-            {{'admin.form-workflows.link' | translate}}
-        </h3>
-    </div>
-    Not yet implemented
+    <panel-view header="{{'admin.form-workflows.link' | translate}}" collapsible="false">
+        <div class="row">
+
+            <div class="pull-right">
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-default" ng-click="undoChanges()"><i
+                            class="fa fa-undo"/>
+                        {{'admin.form-workflows.link.undo' |
+                        translate}}
+                    </button>
+                    <button class="btn btn-sm btn-default" ng-click="saveChanges()"><i
+                            class="fa fa-save"/>
+                        {{'admin.form-workflows.link.saveChanges' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <hot-table
+                    hot-id="formWorkflowsLink"
+                    col-widths="columnsWidths"
+                    col-headers="true"
+                    row-headers="true"
+                    fill-handle="false"
+                    context-meny="false"
+                    manual-column-resize="true"
+                    datarows="tableValues"
+                    cells="cells"
+                    height="750"
+                    >
+            </hot-table>
+        </div>
+    </panel-view>
 </div>
