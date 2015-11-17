@@ -15,6 +15,7 @@
     "security.select-privileges.cancel": "Cancel",
     "security.select-privileges.name": "Name",
     "security.module-config": "Module Configuration",
+    "security.module-config.module": "Module",
     "dashboard.title": "Dashboard",
     "dashboard.config": "Dashboard Configuration",
     "dashboard.widgets": "Widgets",
