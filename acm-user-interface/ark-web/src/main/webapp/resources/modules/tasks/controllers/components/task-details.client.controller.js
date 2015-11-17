@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.DetailsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallTasksService', 'MessageService',
-    function ($scope, $stateParams, $translate, Util, CallTasksService, MessageService) {
+angular.module('tasks').controller('Tasks.DetailsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'Task.InfoService', 'MessageService',
+    function ($scope, $stateParams, $translate, Util, TaskInfoService, MessageService) {
         $scope.$emit('req-component-config', 'details');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('details' == componentId) {
@@ -9,7 +9,7 @@ angular.module('tasks').controller('Tasks.DetailsController', ['$scope', '$state
             }
         });
 
-        $scope.$on('task-retrieved', function (e, data) {
+        $scope.$on('task-updated', function (e, data) {
             $scope.taskInfo = data;
         });
 
@@ -25,8 +25,9 @@ angular.module('tasks').controller('Tasks.DetailsController', ['$scope', '$state
         $scope.saveDetails = function () {
             //$scope.editor.destroy();
             var taskInfo = Util.omitNg($scope.taskInfo);
-            CallTasksService.saveTaskInfo(taskInfo).then(
+            TaskInfoService.saveTaskInfo(taskInfo).then(
                 function (taskInfo) {
+                    $scope.$emit("report-task-updated", taskInfo);
                     MessageService.info($translate.instant("tasks.comp.details.informSaved"));
                     return taskInfo;
                 }

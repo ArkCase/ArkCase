@@ -103,7 +103,7 @@
           "notes",
           "workflow",
           "history",
-          "esignatures"
+          "signatures"
         ]
       },
       {
@@ -159,7 +159,7 @@
         "type": "p/TASK/sig",
         "label": "eSignatures",
         "components": [
-          "esignatures"
+          "signatures"
         ]
       },
       {
@@ -172,7 +172,7 @@
           "notes",
           "workflow",
           "history",
-          "esignatures"
+          "signatures"
         ]
       },
       {
@@ -221,7 +221,7 @@
         "type": "p/ADHOC/sig",
         "label": "eSignatures",
         "components": [
-          "esignatures"
+          "signatures"
         ]
       }
     ]
@@ -463,7 +463,7 @@
       ]
     },
     {
-      "id": "esignatures",
+      "id": "signatures",
       "title": "eSignatures",
       "enabled": true,
       "type": "grid",
@@ -478,14 +478,14 @@
       "columnDefs": [
         {
           "name": "signedDate",
-          "displayName": "tasks.comp.esignatures.table.columns.signedDate",
+          "displayName": "tasks.comp.signatures.table.columns.signedDate",
           "headerCellFilter": "translate",
           "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
           "enableCellEdit": false
         },
         {
           "name": "signedBy",
-          "displayName": "tasks.comp.esignatures.table.columns.signedBy",
+          "displayName": "tasks.comp.signatures.table.columns.signedBy",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "lookup": "userFullNames"

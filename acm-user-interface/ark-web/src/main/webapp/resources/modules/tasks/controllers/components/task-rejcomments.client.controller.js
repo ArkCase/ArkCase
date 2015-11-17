@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'ConstantService', 'CallObjectsService', 'CallAuthentication',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, Constant, CallObjectsService, CallAuthentication) {
+angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'ConstantService', 'Object.NoteService', 'Authentication',
+    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, Constant, ObjectNoteService, Authentication) {
         $scope.$emit('req-component-config', 'rejcomments');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("rejcomments" == componentId) {
@@ -17,7 +17,7 @@ angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', 
 
         var promiseUsers = Helper.Grid.getUsers($scope);
 
-        CallAuthentication.queryUserInfo().then(
+        Authentication.queryUserInfoNew().then(
             function (userInfo) {
                 $scope.userId = userInfo.userId;
                 return userInfo;
@@ -27,7 +27,7 @@ angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', 
         $scope.currentId = $stateParams.id;
         $scope.retrieveGridData = function () {
             if ($scope.currentId) {
-                var promiseQueryNotes = CallObjectsService.queryRejectComments(Constant.ObjectTypes.TASK, $scope.currentId);
+                var promiseQueryNotes = ObjectNoteService.queryRejectComments(Constant.ObjectTypes.TASK, $scope.currentId);
                 $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions.data = notes;
@@ -51,7 +51,7 @@ angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', 
         };
         $scope.updateRow = function (rowEntity) {
             var note = Util.omitNg(rowEntity);
-            CallObjectsService.saveNote(note).then(
+            ObjectNoteService.saveNote(note).then(
                 function (noteAdded) {
                     if (Util.isEmpty(rowEntity.id)) {
                         rowEntity.id = noteAdded.id;
@@ -64,7 +64,7 @@ angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', 
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                CallObjectsService.deleteNote(id);
+                ObjectNoteService.deleteNote(id);
             }
 
         };
