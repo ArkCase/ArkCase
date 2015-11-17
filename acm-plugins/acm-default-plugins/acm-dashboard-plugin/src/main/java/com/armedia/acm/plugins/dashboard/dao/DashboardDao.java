@@ -12,22 +12,19 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Metamodel;
-import javax.swing.text.html.parser.Entity;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by marst on 7/29/14.
  */
 
-public class DashboardDao extends AcmAbstractDao<Dashboard> {
+public class DashboardDao extends AcmAbstractDao<Dashboard>
+{
 
 
-    public Dashboard getDashboardConfigForUser(AcmUser user) throws AcmDashboardException, AcmObjectNotFoundException{
+    public Dashboard getDashboardConfigForUser(AcmUser user) throws AcmDashboardException, AcmObjectNotFoundException
+    {
         CriteriaBuilder builder = getEm().getCriteriaBuilder();
         CriteriaQuery<Dashboard> query = builder.createQuery(Dashboard.class);
         Root<Dashboard> d = query.from(Dashboard.class);
@@ -36,22 +33,24 @@ public class DashboardDao extends AcmAbstractDao<Dashboard> {
         TypedQuery<Dashboard> dbQuery = getEm().createQuery(query);
         List<Dashboard> results = null;
 
-            results = dbQuery.getResultList();
+        results = dbQuery.getResultList();
 
-            if( results.isEmpty()){
-                throw new AcmObjectNotFoundException("dashboard",null, "Object not found",null);
-            }
+        if (results.isEmpty())
+        {
+            throw new AcmObjectNotFoundException("dashboard", null, "Object not found", null);
+        }
 
         return results.get(0);
     }
 
     @Transactional
-    public int setDasboardConfigForUser(AcmUser user, DashboardDto newDashboardDto){
+    public int setDasboardConfigForUser(AcmUser user, DashboardDto newDashboardDto)
+    {
         Query updateStatusQuery = getEm().createQuery(
                 "UPDATE Dashboard " +
-                        "SET dashobardConfig = :dashobardConfig " +
+                        "SET dashboardConfig = :dashboardConfig " +
                         "WHERE dashboardOwner = :dashboardOwner");
-        updateStatusQuery.setParameter("dashobardConfig", newDashboardDto.getDashboardConfig());
+        updateStatusQuery.setParameter("dashboardConfig", newDashboardDto.getDashboardConfig());
         updateStatusQuery.setParameter("dashboardOwner", user);
 
         return updateStatusQuery.executeUpdate();
