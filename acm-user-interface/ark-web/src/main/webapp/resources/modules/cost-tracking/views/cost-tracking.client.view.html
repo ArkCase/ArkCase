@@ -1,3 +1,27 @@
-<section ng-controller="CostTrackingController" class="well-sm">
-	This is the <strong>Cost tracking</strong> module.
-</section>
+<div ng-controller="CostTrackingController">
+	<div class="module-content">
+		<div class="left-sidebar">
+			<div class="module-header">
+				<h3>{{'costTracking.title' | translate}}</h3>
+			</div>
+
+			<div class="scroll-body" slimscroll="{height: '800px'}"
+				 ng-include="'modules/cost-tracking/views/cost-tracking-list.client.view.html'">
+			</div>
+		</div>
+
+		<section class="content-body" ng-show="costsheetInfo">
+			<div class="clearfix well-sm">
+				<div ng-include="'modules/cost-tracking/views/components/cost-tracking-actions.client.view.html'"></div>
+			</div>
+
+			<div class="well-sm">
+				<div data-ui-view></div>
+			</div>
+		</section>
+
+		<section class="content-body" ng-hide="costsheetInfo">
+			<div>{{progressMsg}}</div>
+		</section>
+	</div>
+</div>
