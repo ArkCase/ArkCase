@@ -11,8 +11,12 @@ angular.module('dashboard.cases-by-queue', ['adf.provider'])
                 templateUrl: 'modules/dashboard/views/components/cases-by-queue.client.view.html'
             });
     })
-    .controller('Dashboard.CasesByQueueController', ['$scope', 'config', '$translate', 'Dashboard.DashboardService',
-        function ($scope, config, $translate, DashboardService) {
+    .controller('Dashboard.CasesByQueueController', ['$scope', 'config', '$state', '$translate', 'Dashboard.DashboardService',
+        function ($scope, config, $state, $translate, DashboardService) {
+            $scope.$on('component-config', applyConfig);
+            $scope.$emit('req-component-config', 'casesByQueue');
+
+            $scope.config = null;
             $scope.chartConfig = null;
 
             // Load Cases info and render chart
@@ -56,9 +60,30 @@ angular.module('dashboard.cases-by-queue', ['adf.provider'])
                             format: '{point.y}'
                         },
                         name: $translate.instant('dashboard.widgets.casesByQueue.title'),
-                        data: data
+                        data: data,
+                        cursor: 'pointer',
+                        point: {
+                            events: {
+                                click: onBarClick
+                            }
+                        }
                     }]
                 }
             });
+
+            function onBarClick(e) {
+                if ($scope.config.redirectSettings) {
+                    var redirectObj = $scope.config.redirectSettings[this.name];
+                    if (redirectObj) {
+                        $state.go(redirectObj.state, redirectObj.params)
+                    }
+                }
+            }
+
+            function applyConfig(e, componentId, config) {
+                if (componentId == 'casesByQueue') {
+                    $scope.config = config;
+                }
+            }
         }
     ]);

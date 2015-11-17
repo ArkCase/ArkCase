@@ -21,7 +21,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
 
         $scope.objectType = Constant.ObjectTypes.TASK;
         $scope.objectId = $stateParams.id;
-        $scope.$on('task-retrieved', function (e, data) {
+        $scope.$on('task-updated', function (e, data) {
             $scope.taskInfo = data;
         });
 

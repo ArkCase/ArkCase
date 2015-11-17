@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DetailsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallCasesService', 'MessageService',
-    function ($scope, $stateParams, $translate, Util, CallCasesService, MessageService) {
+angular.module('cases').controller('Cases.DetailsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'Case.InfoService', 'MessageService',
+    function ($scope, $stateParams, $translate, Util, CaseInfoService, MessageService) {
 		$scope.$emit('req-component-config', 'details');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('details' == componentId) {
@@ -9,7 +9,7 @@ angular.module('cases').controller('Cases.DetailsController', ['$scope', '$state
 			}
         });
 
-		$scope.$on('case-retrieved', function(e, data) {
+        $scope.$on('case-updated', function (e, data) {
 			$scope.caseInfo = data;
 		});
 
@@ -25,7 +25,7 @@ angular.module('cases').controller('Cases.DetailsController', ['$scope', '$state
         $scope.saveDetails = function() {
             //$scope.editor.destroy();
 			var caseInfo = Util.omitNg($scope.caseInfo);
-            CallCasesService.saveCaseInfo(caseInfo).then(
+            CaseInfoService.saveCaseInfo(caseInfo).then(
                 function (caseInfo) {
                     MessageService.info($translate.instant("cases.comp.details.informSaved"));
                     return caseInfo;

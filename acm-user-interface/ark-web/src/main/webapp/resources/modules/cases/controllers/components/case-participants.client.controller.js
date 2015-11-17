@@ -168,7 +168,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                 Helper.Grid.hidePagingControlsIfAllDataShown($scope, participants.length);
             });
         };
-        $scope.$on('case-retrieved', function (e, data) {
+        $scope.$on('case-updated', function (e, data) {
             if (Validator.validateCaseFile(data)) {
                 if (data.id == $stateParams.id) {
                     updateGridData(data);
