@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.DetailsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallComplaintsService', 'MessageService',
-    function ($scope, $stateParams, $translate, Util, CallComplaintsService, MessageService) {
+angular.module('complaints').controller('Complaints.DetailsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'Complaint.InfoService', 'MessageService',
+    function ($scope, $stateParams, $translate, Util, ComplaintInfoService, MessageService) {
         var z = 1;
         return;
         $scope.$emit('req-component-config', 'details');
@@ -11,7 +11,7 @@ angular.module('complaints').controller('Complaints.DetailsController', ['$scope
             }
         });
 
-        $scope.$on('complaint-retrieved', function (e, data) {
+        $scope.$on('complaint-updated', function (e, data) {
             $scope.complaintInfo = data;
         });
 
@@ -23,7 +23,7 @@ angular.module('complaints').controller('Complaints.DetailsController', ['$scope
 
         $scope.saveDetails = function () {
             var complaintInfo = Util.omitNg($scope.complaintInfo);
-            CallComplaintsService.saveComplaintInfo(complaintInfo).then(
+            ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                 function (complaintInfo) {
                     MessageService.info($translate.instant("complaints.comp.details.informSaved"));
                     return complaintInfo;

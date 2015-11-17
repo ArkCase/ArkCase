@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams', 'UtilService', 'ConstantService', 'CallCasesService', 'CallComplaintsService', 'ObjectsModelsService',
-    function ($scope, $stateParams, Util, Constant, CallCasesService, CallComplaintsService, ObjectsModelsService) {
+angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams', 'UtilService', 'ConstantService', 'Case.InfoService', 'Complaint.InfoService', 'ObjectsModelsService',
+    function ($scope, $stateParams, Util, Constant, CaseInfoService, ComplaintInfoService, ObjectsModelsService) {
         $scope.$emit('req-component-config', 'parentinfo');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("parentinfo" == componentId) {
@@ -23,7 +23,7 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
 
 
             if (Constant.ObjectTypes.CASE_FILE == $scope.taskInfo.parentObjectType) {
-                CallCasesService.getCaseInfo($scope.taskInfo.parentObjectId).then(
+                CaseInfoService.getCaseInfo($scope.taskInfo.parentObjectId).then(
                     function (caseInfo) {
                         $scope.parentCaseInfo = caseInfo;
                         $scope.owningGroup = ObjectsModelsService.getGroup(caseInfo);
@@ -32,7 +32,7 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
                     }
                 );
             } else if (Constant.ObjectTypes.COMPLAINT == $scope.taskInfo.parentObjectType) {
-                CallComplaintsService.getComplaintInfo($scope.taskInfo.parentObjectId).then(
+                ComplaintInfoService.getComplaintInfo($scope.taskInfo.parentObjectId).then(
                     function (complaintInfo) {
                         $scope.parentComplaintInfo = complaintInfo;
                         $scope.owningGroup = ObjectsModelsService.getGroup(complaintInfo);

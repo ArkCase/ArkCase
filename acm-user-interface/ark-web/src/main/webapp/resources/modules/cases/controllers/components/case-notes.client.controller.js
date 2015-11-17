@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.NotesController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'ConstantService', 'HelperService', 'CallObjectsService', 'CallAuthentication',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Constant, Helper, CallObjectsService, CallAuthentication) {
+angular.module('cases').controller('Cases.NotesController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'ConstantService', 'HelperService', 'Object.NoteService', 'Authentication',
+    function ($scope, $stateParams, $q, Store, Util, Validator, Constant, Helper, ObjectNoteService, Authentication) {
         $scope.$emit('req-component-config', 'notes');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("notes" == componentId) {
@@ -17,7 +17,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
 
         var promiseUsers = Helper.Grid.getUsers($scope);
 
-        CallAuthentication.queryUserInfo().then(
+        Authentication.queryUserInfoNew().then(
             function (userInfo) {
                 $scope.userId = userInfo.userId;
                 return userInfo;
@@ -27,7 +27,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
         $scope.currentId = $stateParams.id;
         $scope.retrieveGridData = function () {
             if ($scope.currentId) {
-                var promiseQueryNotes = CallObjectsService.queryNotes(Constant.ObjectTypes.CASE_FILE, $scope.currentId);
+                var promiseQueryNotes = ObjectNoteService.queryNotes(Constant.ObjectTypes.CASE_FILE, $scope.currentId);
 
                 //var cacheCaseNotes = new Store.CacheFifo(Helper.CacheNames.CASE_NOTES);
                 //var cacheKey = $scope.currentId;
@@ -72,7 +72,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
         };
         $scope.updateRow = function (rowEntity) {
             var note = Util.omitNg(rowEntity);
-            CallObjectsService.saveNote(note).then(
+            ObjectNoteService.saveNote(note).then(
                 function (noteAdded) {
                     if (Util.isEmpty(rowEntity.id)) {
                         rowEntity.id = noteAdded.id;
@@ -102,7 +102,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                CallObjectsService.deleteNote(id);
+                ObjectNoteService.deleteNote(id);
 
                 //Util.serviceCall({
                 //    service: CasesService.deleteNote
