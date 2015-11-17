@@ -7,7 +7,7 @@
       "menuItemURL": "admin",
       "menuItemTitle": "Admin",
       "iconClass": "glyphicon glyphicon-asterisk",
-      "position": 100
+      "position": 150
     }
   ],
   "components": [
