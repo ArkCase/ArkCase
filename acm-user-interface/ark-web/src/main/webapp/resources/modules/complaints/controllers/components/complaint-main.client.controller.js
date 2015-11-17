@@ -2,8 +2,6 @@
 
 angular.module('complaints').controller('Complaints.MainController', ['$scope', 'ConfigService',
     function ($scope, ConfigService) {
-        var z = 1;
-        return;
         $scope.$on('component-config', applyConfig);
         $scope.$emit('req-component-config', 'main');
         $scope.components = null;

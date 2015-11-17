@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('services').factory('ConfigService', ['$resource',
-	function($resource) {
-		return $resource('api/config/',{
+angular.module('services').factory('ConfigService', ['$resource', 'StoreService', 'UtilService',
+    function ($resource, Store, Util) {
+        var Service = $resource('api/config/', {
 		},{
 			getModule: {
 				method: 'GET',
@@ -24,5 +24,7 @@ angular.module('services').factory('ConfigService', ['$resource',
 				isArray: false
 			}
         });
+
+        return Service;
 	}
 ]);
