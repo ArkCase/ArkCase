@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('ComplaintsListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'CallComplaintsService', 'CallConfigService',
-    function ($scope, $state, $stateParams, $translate, Util, Constant, CallComplaintsService, CallConfigService) {
+angular.module('complaints').controller('ComplaintsListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'Complaint.ListService', 'Complaint.InfoService', 'CallConfigService',
+    function ($scope, $state, $stateParams, $translate, Util, Constant, ComplaintListService, ComplaintInfoService, CallConfigService) {
         CallConfigService.getModuleConfig("complaints").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
@@ -15,7 +15,7 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
                 $scope.treeData = null;
             }
 
-            CallComplaintsService.queryComplaintsTreeData(start, n, sort, filters).then(
+            ComplaintListService.queryComplaintsTreeData(start, n, sort, filters).then(
                 function (treeData) {
                     if (firstLoad) {
                         if ($stateParams.id) {
@@ -49,7 +49,7 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
             );
 
             if (firstLoad && $stateParams.id) {
-                CallComplaintsService.getComplaintInfo($stateParams.id).then(
+                ComplaintInfoService.getComplaintInfo($stateParams.id).then(
                     function (complaintInfo) {
                         $scope.treeControl.select({
                             pageStart: start

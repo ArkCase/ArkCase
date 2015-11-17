@@ -485,7 +485,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 }
             }); //end $q            
         };
-        $scope.$on('complaint-retrieved', function (e, data) {
+        $scope.$on('complaint-updated', function (e, data) {
             if (Validator.validateComplaint(data)) {
                 if (data.id == $stateParams.id) {
                     updateGridData(data);
