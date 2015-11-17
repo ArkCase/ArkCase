@@ -15,7 +15,7 @@ angular.module('tasks').controller('Tasks.WorkflowOverviewController', ['$scope'
 
         var promiseUsers = Helper.Grid.getUsers($scope);
 
-        $scope.$on('task-retrieved', function (e, data) {
+        $scope.$on('task-updated', function (e, data) {
             $scope.taskInfo = data;
         });
 

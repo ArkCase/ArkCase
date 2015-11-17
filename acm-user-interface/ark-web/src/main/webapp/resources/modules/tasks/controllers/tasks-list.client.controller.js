@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('TasksListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'CallTasksService', 'CallConfigService',
-    function ($scope, $state, $stateParams, $translate, Util, Constant, CallTasksService, CallConfigService) {
+angular.module('tasks').controller('TasksListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'Task.InfoService', 'CallTasksService', 'CallConfigService',
+    function ($scope, $state, $stateParams, $translate, Util, Constant, TaskInfoService, CallTasksService, CallConfigService) {
         CallConfigService.getModuleConfig("tasks").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
@@ -67,7 +67,7 @@ angular.module('tasks').controller('TasksListController', ['$scope', '$state', '
             );
 
             if (firstLoad && $stateParams.id) {
-                CallTasksService.getTaskInfo($stateParams.id).then(
+                TaskInfoService.getTaskInfo($stateParams.id).then(
                     function (taskInfo) {
                         $scope.treeControl.select({
                             pageStart: start
