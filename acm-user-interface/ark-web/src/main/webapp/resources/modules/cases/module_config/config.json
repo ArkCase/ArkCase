@@ -7,7 +7,7 @@
       "menuItemURL": "cases",
       "menuItemTitle": "Case Files",
       "iconClass": "fa fa-folder",
-      "position": 40
+      "position": 50
     }
   ],
   "tree": {
