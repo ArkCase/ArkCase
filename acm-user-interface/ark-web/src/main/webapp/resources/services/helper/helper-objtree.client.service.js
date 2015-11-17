@@ -13,6 +13,33 @@
 angular.module('services').factory('Helper.ObjectTreeService', ['$resource', '$translate', 'UtilService',
     function ($resource, $translate, Util) {
         var Service = {
+            /**
+             * @ngdoc service
+             * @name services:Helper.ObjectTreeService
+             *
+             * @description
+             *
+             * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/common/store.client.service.js services/common/store.client.service.js}
+             *
+             * Tree is used to help 'object-tree' directive.
+             */
+            /**
+             * @ngdoc method
+             * @name Tree Constructor
+             * @methodOf services:Helper.ObjectTreeService
+             *
+             * @param {Object} arg Map arguments
+             * @param {Object} arg.scope Angular $scope
+             * @param {number} arg.nodeId Node II of initial selected tree node. If null or zero, first tree node is selected
+             * @param {Object} arg.getNodeData Promise object of a function that query list of tree nodes.
+             * @param {Object} arg.getNodeData Promise object of a function that query data of a specified node
+             * @param {Function} arg.makeTreeNode Function to make tree node from object data
+             *
+             * @description
+             * Helper.ObjectTreeService.Tree is to help a typical usage of 'object-tree' directive.
+             * Assumption: 'object-tree' directive must set 'tree-data' with data model $scope.treeData and
+             * 'tree-control' with $scope.treeControl.
+             */
             Tree: function (arg) {
                 this.scope = arg.scope;
                 this.nodeId = arg.nodeId;
@@ -24,7 +51,20 @@ angular.module('services').factory('Helper.ObjectTreeService', ['$resource', '$t
         };
 
         Service.Tree.prototype = {
-            onLoad: function (start, n, sort, filters, arg) {
+            /**
+             * @ngdoc method
+             * @name onLoad
+             * @methodOf services:Helper.ObjectTreeService
+             *
+             * @param {Number} start Start index of tree data
+             * @param {Number} n Max number of tree data records
+             * @param {String} sort Sort parameter for tree data query
+             * @param {String} filters Filter parameter for tree data query
+             *
+             * @description
+             * A callback function to respond object tree events to load tree data of a given page
+             */
+            onLoad: function (start, n, sort, filters) {
                 var that = this;
                 if (that.firstLoad && that.nodeId) {
                     that.scope.treeData = null;
@@ -143,48 +183,6 @@ angular.module('services').factory('Helper.ObjectTreeService', ['$resource', '$t
             //    }
             //    return found;
             //}
-        };
-
-
-        /**
-         * @ngdoc method
-         * @name validateSolrData
-         * @methodOf services:Helper.ObjectTreeService
-         *
-         * @description
-         * Validate data of query from SOLR
-         *
-         * @param {Helper} data  Data to be validated
-         *
-         * @returns {Boolean} Return true if data is valid
-         */
-        Service.validateSolrData = function (data) {
-            if (!data) {
-                return false;
-            }
-            if (Util.isEmpty(data.responseHeader) || Util.isEmpty(data.response)) {
-                return false;
-            }
-            if (Util.isEmpty(data.responseHeader.status)) {
-                return false;
-            }
-//            if (0 != responseHeader.status) {
-//                return false;
-//            }
-            if (Util.isEmpty(data.responseHeader.params)) {
-                return false;
-            }
-            if (Util.isEmpty(data.responseHeader.params.q)) {
-                return false;
-            }
-
-            if (Util.isEmpty(data.response.numFound) || Util.isEmpty(data.response.start)) {
-                return false;
-            }
-            if (!Util.isArray(data.response.docs)) {
-                return false;
-            }
-            return true;
         };
 
         return Service;
