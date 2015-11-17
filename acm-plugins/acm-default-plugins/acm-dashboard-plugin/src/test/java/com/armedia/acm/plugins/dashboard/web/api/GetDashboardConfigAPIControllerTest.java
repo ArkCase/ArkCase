@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.dashboard.web.api;
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
@@ -27,20 +26,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import javax.persistence.PersistenceException;
-
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
-import static org.easymock.EasyMock.createMock;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Created by marst on 8/1/14.
@@ -51,7 +43,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "classpath:/spring/spring-web-acm-web.xml",
         "classpath:/spring/spring-library-dashboard-plugin-test.xml"
 })
-public class GetDashboardConfigAPIControllerTest extends EasyMockSupport {
+public class GetDashboardConfigAPIControllerTest extends EasyMockSupport
+{
 
     private MockMvc mockMvc;
     private MockHttpSession mockHttpSession;
@@ -104,15 +97,15 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport {
         returned.setUserId(userId);
         returned.setDashboardConfig(dashboardConfig);
 
-        Dashboard ret = new  Dashboard();
+        Dashboard ret = new Dashboard();
         ret.setDashboardOwner(user);
-        ret.setDashobardConfig(dashboardConfig);
+        ret.setDashboardConfig(dashboardConfig);
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
 
-        Map<String,Object> prop =  new HashMap<String, Object>();
-        prop.put("key","value");
+        Map<String, Object> prop = new HashMap<String, Object>();
+        prop.put("key", "value");
 
         expect(mockDashboardDao.getDashboardConfigForUser(user)).andReturn(ret);
         expect(mockUserDao.findByUserId(userId)).andReturn(user);

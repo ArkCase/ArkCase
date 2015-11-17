@@ -292,10 +292,10 @@ iframe {
     border-bottom: 1px solid #e1e6ef;
     border-left: 0px;
     border-right: 0px;
-    width: 100%;
     z-index: 1000;
     position: relative;
 }
+
 
 .module-header .btn-group {
     margin-right: 15px;
@@ -382,7 +382,6 @@ iframe {
     padding-left: 10px;
     padding-right: 500px;
     padding-bottom: 70px;
-    margin-top: 72px;
 }
 
 .module-content .content-body .well-sm {

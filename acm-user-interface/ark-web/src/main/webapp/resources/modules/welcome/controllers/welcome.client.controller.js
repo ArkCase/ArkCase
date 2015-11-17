@@ -1,17 +1,13 @@
 'use strict';
 
-angular.module('welcome').controller('WelcomeController', ['$scope', '$q', '$state', 'StoreService', 'HelperService', 'CallAuthentication', 'CallLookupService', 'CallConfigService', 'CallObjectsService', 'CallCasesService', 'CallComplaintsService', 'CallTasksService',
-    function ($scope, $q, $state, Store, Helper, CallAuthentication, CallLookupService, CallConfigService, CallObjectsService, CallCasesService, CallComplaintsService, CallTasksService) {
+angular.module('welcome').controller('WelcomeController', ['$scope', '$q', '$state', 'StoreService', 'HelperService', 'Authentication', 'CallLookupService', 'CallConfigService',
+    function ($scope, $q, $state, Store, Helper, Authentication, CallLookupService, CallConfigService) {
 
         var sessionCacheNamesList = [
-            CallAuthentication.SessionCacheNames
+            Authentication.SessionCacheNames
             , CallConfigService.SessionCacheNames
             , Helper.SessionCacheNames
             , CallLookupService.SessionCacheNames
-            , CallObjectsService.SessionCacheNames
-            , CallCasesService.SessionCacheNames
-            , CallComplaintsService.SessionCacheNames
-            , CallTasksService.SessionCacheNames
 
         ];
         for (var i = 0; i < sessionCacheNamesList.length; i++) {

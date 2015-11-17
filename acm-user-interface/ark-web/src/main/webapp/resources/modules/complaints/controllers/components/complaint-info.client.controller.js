@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'ComplaintsService', 'ObjectsModelsService',
-    function ($scope, $stateParams, Store, Util, Validator, Helper, LookupService, ComplaintsService, ObjectsModelsService) {
+angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'Complaint.InfoService', 'ObjectsModelsService',
+    function ($scope, $stateParams, Store, Util, Validator, Helper, LookupService, ComplaintInfoService, ObjectsModelsService) {
         $scope.$emit('req-component-config', 'info');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("info" == componentId) {
@@ -116,7 +116,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
         });
         $scope.assignee = null;
         $scope.owningGroup = null;
-        $scope.$on('complaint-retrieved', function (e, data) {
+        $scope.$on('complaint-updated', function (e, data) {
             if (Validator.validateComplaint(data)) {
                 $scope.complaintInfo = data;
                 $scope.assignee = ObjectsModelsService.getAssignee(data);
@@ -128,33 +128,21 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
          * Persists the updated complaint metadata to the ArkComplaint data
          */
         function saveComplaint() {
-            if (Validator.validateComplaint($scope.complaintInfo)) {
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
-                Util.serviceCall({
-                    service: ComplaintsService.save
-                    , data: complaintInfo
-                    , onSuccess: function (data) {
-                        return data;
+            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            if (ComplaintInfoService.validateComplaintInfo(complaintInfo)) {
+                ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
+                    function (complaintInfo) {
+                        //update tree node tittle
+                        $scope.$emit("report-complaint-updated", complaintInfo);
+                        return complaintInfo;
                     }
-                }).then(
-                    function (successData) {
-                        //notify "complaint saved successfully" ?
-                    }
-                    , function (errorData) {
-                        //handle error
+                    , function (error) {
+                        //set error to x-editable title
+                        //update tree node tittle
+                        return error;
                     }
                 );
             }
-
-            //var complaintInfo = Util.omitNg($scope.complaintInfo);
-            //ComplaintsService.save({}, complaintInfo
-            //    ,function(successData) {
-            //        $log.debug("complaint saved successfully");
-            //    }
-            //    ,function(errorData) {
-            //        $log.error("complaint save failed");
-            //    }
-            //);
         }
 
         // Updates the ArkComplaint data when the user changes a complaint attribute
