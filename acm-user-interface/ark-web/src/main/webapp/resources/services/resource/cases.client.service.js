@@ -28,12 +28,12 @@ angular.module('services').factory('CasesService', ['$resource',
              *
              * @returns {Object} Object returned by $resource
              */
-            //get: {
-            //    method: 'GET',
-            //    url: 'proxy/arkcase/api/latest/plugin/casefile/byId/:id',
-            //    cache: false,
-            //    isArray: false
-            //}
+            get: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/latest/plugin/casefile/byId/:id',
+                cache: false,
+                isArray: false
+            }
 
             /**
              * @ngdoc method
@@ -50,11 +50,11 @@ angular.module('services').factory('CasesService', ['$resource',
              *
              * @returns {Object} Object returned by $resource
              */
-            //, save: {
-            //    method: 'POST',
-            //    url: 'proxy/arkcase/api/latest/plugin/casefile',
-            //    cache: false
-            //}
+            , save: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/plugin/casefile',
+                cache: false
+            }
 
             /**
              * @ngdoc method
@@ -74,7 +74,7 @@ angular.module('services').factory('CasesService', ['$resource',
              *
              * @returns {Object} Object returned by $resource
              */
-            queryCases: {
+            , queryCases: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/latest/plugin/search/CASE_FILE?start=:start&n=:n&sort=:sort&filters=:filters',
                 cache: false,
@@ -119,21 +119,21 @@ angular.module('services').factory('CasesService', ['$resource',
                 cache: false,
                 isArray: true
             }
-            //, deleteTask: {
-            //    method: 'POST',
-            //    url: 'proxy/arkcase/api/latest/plugin/task/deleteTask/:taskId',
-            //    cache: false
-            //}
-            //, completeTask: {
-            //    method: 'POST',
-            //    url: 'proxy/arkcase/api/latest/plugin/task/completeTask/:taskId',
-            //    cache: false
-            //}
-            //, completeTaskWithOutcome: {
-            //    method: 'POST',
-            //    url: 'proxy/arkcase/api/latest/plugin/task/completeTask/',
-            //    cache: false
-            //}
+            , deleteTask: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/plugin/task/deleteTask/:taskId',
+                cache: false
+            }
+            , completeTask: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/plugin/task/completeTask/:taskId',
+                cache: false
+            }
+            , completeTaskWithOutcome: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/plugin/task/completeTask/',
+                cache: false
+            }
 
             /**
              * @ngdoc method
@@ -154,13 +154,13 @@ angular.module('services').factory('CasesService', ['$resource',
             //* @param {Number} params.start Zero based start number of record
             //* @param {Number} params.count Max Number of list to return
             //* @param {String} params.sort  Sort value, with format 'sortBy sortDir', sortDir can be 'asc' or 'desc'
-            //, queryNotes: {
-            //    method: 'GET',
-            //    //url: 'proxy/arkcase/api/latest/plugin/note/:parentType/:parentId?start=:start&n=:count&s=:sort',
-            //    url: 'proxy/arkcase/api/latest/plugin/note/:parentType/:parentId',
-            //    cache: false,
-            //    isArray: true
-            //}
+            , queryNotes: {
+                method: 'GET',
+                //url: 'proxy/arkcase/api/latest/plugin/note/:parentType/:parentId?start=:start&n=:count&s=:sort',
+                url: 'proxy/arkcase/api/latest/plugin/note/:parentType/:parentId',
+                cache: false,
+                isArray: true
+            }
 
             /**
              * @ngdoc method
@@ -176,11 +176,11 @@ angular.module('services').factory('CasesService', ['$resource',
              *
              * @returns {Object} Object returned by $resource
              */
-            //, saveNote: {
-            //    method: 'POST',
-            //    url: 'proxy/arkcase/api/latest/plugin/note/',
-            //    cache: false
-            //}
+            , saveNote: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/plugin/note/',
+                cache: false
+            }
 
             /**
              * @ngdoc method
@@ -197,11 +197,11 @@ angular.module('services').factory('CasesService', ['$resource',
              *
              * @returns {Object} Object returned by $resource
              */
-            //, deleteNote: {
-            //    method: 'DELETE',
-            //    url: 'proxy/arkcase/api/latest/plugin/note/:noteId',
-            //    cache: false
-            //}
+            , deleteNote: {
+                method: 'DELETE',
+                url: 'proxy/arkcase/api/latest/plugin/note/:noteId',
+                cache: false
+            }
 
             , queryCorrespondence: {
                 method: 'GET',
