@@ -9,7 +9,6 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         });
 
-
         CallLookupService.getUsers().then(
             function (users) {
                 var options = [];
