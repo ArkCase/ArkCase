@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name services:Task.HistoryService
+ * @name tasks.service:Task.HistoryService
  *
  * @description
  *
@@ -10,13 +10,13 @@
  *
  * Task.HistoryService provides functions for Task history
  */
-angular.module('services').factory('Task.HistoryService', ['$resource', '$translate', 'StoreService', 'UtilService',
+angular.module('tasks').factory('Task.HistoryService', ['$resource', '$translate', 'StoreService', 'UtilService',
     function ($resource, $translate, Store, Util) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
             /**
              * @ngdoc method
-             * @name queryTaskHistory
-             * @methodOf services:Task.HistoryService
+             * @name _queryTaskHistory
+             * @methodOf tasks.service:Task.HistoryService
              *
              * @description
              * Query list of task history.
@@ -47,7 +47,7 @@ angular.module('services').factory('Task.HistoryService', ['$resource', '$transl
         /**
          * @ngdoc method
          * @name queryTaskHistory
-         * @methodOf services.service:CallTasksService
+         * @methodOf tasks.service:Task.HistoryService
          *
          * @param {Object} taskInfo Task data
          *
@@ -82,7 +82,7 @@ angular.module('services').factory('Task.HistoryService', ['$resource', '$transl
         /**
          * @ngdoc method
          * @name validateTaskHistory
-         * @methodOf services.service:CallTasksService
+         * @methodOf tasks.service:Task.HistoryService
          *
          * @description
          * Validate task history
