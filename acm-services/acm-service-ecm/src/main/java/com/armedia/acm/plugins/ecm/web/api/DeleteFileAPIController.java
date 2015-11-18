@@ -24,57 +24,71 @@ import javax.servlet.http.HttpSession;
  */
 @Controller
 @RequestMapping({"/api/v1/service/ecm", "/api/latest/service/ecm"})
-public class DeleteFileAPIController {
+public class DeleteFileAPIController
+{
 
     private EcmFileService fileService;
     private FileEventPublisher fileEventPublisher;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/id/{fileId}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    // FIXME: no order id available
+    //@PreAuthorize("hasPermission(#orderid, 'CASE_FILE', 'uploadOrReplaceFile')")
+    @RequestMapping(value = "/id/{fileId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String deleteFile(
             @PathVariable("fileId") Long objectId,
             Authentication authentication,
             HttpSession session
-    ) throws AcmUserActionFailedException {
+    ) throws AcmUserActionFailedException
+    {
 
-        if(log.isInfoEnabled()) {
-            log.info("File with id: "+objectId+" will be deleted");
+        if (log.isInfoEnabled())
+        {
+            log.info("File with id: " + objectId + " will be deleted");
         }
         String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
         EcmFile source = getFileService().findById(objectId);
-        try {
+        try
+        {
             getFileService().deleteFile(objectId);
-            if(log.isInfoEnabled()) {
-                log.info("File with id: "+objectId+" successfully deleted");
+            if (log.isInfoEnabled())
+            {
+                log.info("File with id: " + objectId + " successfully deleted");
             }
-            getFileEventPublisher().publishFileDeletedEvent(source,authentication,ipAddress,true);
-            return prepareJsonReturnMsg( EcmFileConstants.SUCCESS_DELETE_MSG,objectId, source.getFileName() );
-        } catch ( AcmUserActionFailedException e ) {
-            if( log.isErrorEnabled() ){
+            getFileEventPublisher().publishFileDeletedEvent(source, authentication, ipAddress, true);
+            return prepareJsonReturnMsg(EcmFileConstants.SUCCESS_DELETE_MSG, objectId, source.getFileName());
+        } catch (AcmUserActionFailedException e)
+        {
+            if (log.isErrorEnabled())
+            {
                 log.error("Exception occurred while trying to delete file with id: " + objectId);
             }
-            getFileEventPublisher().publishFileDeletedEvent(source,authentication,ipAddress,false);
+            getFileEventPublisher().publishFileDeletedEvent(source, authentication, ipAddress, false);
             throw e;
-        } catch ( AcmObjectNotFoundException e ) {
-            if( log.isErrorEnabled() ){
+        } catch (AcmObjectNotFoundException e)
+        {
+            if (log.isErrorEnabled())
+            {
                 log.debug("File with id: " + objectId + " not found in the DB");
             }
-            return prepareJsonReturnMsg(EcmFileConstants.SUCCESS_DELETE_MSG,objectId);
+            return prepareJsonReturnMsg(EcmFileConstants.SUCCESS_DELETE_MSG, objectId);
         }
     }
 
-    private String prepareJsonReturnMsg(String msg, Long fileId, String fileName) {
+    private String prepareJsonReturnMsg(String msg, Long fileId, String fileName)
+    {
         JSONObject objectToReturnJSON = new JSONObject();
         objectToReturnJSON.put("deletedFileId", fileId);
-        objectToReturnJSON.put("name",fileName);
+        objectToReturnJSON.put("name", fileName);
         objectToReturnJSON.put("Message", msg);
         String objectToReturn;
         objectToReturn = objectToReturnJSON.toString();
         return objectToReturn;
     }
-    private String prepareJsonReturnMsg(String msg, Long fileId) {
+
+    private String prepareJsonReturnMsg(String msg, Long fileId)
+    {
         JSONObject objectToReturnJSON = new JSONObject();
         objectToReturnJSON.put("deletedFileId", fileId);
         objectToReturnJSON.put("Message", msg);
@@ -84,19 +98,23 @@ public class DeleteFileAPIController {
     }
 
 
-    public FileEventPublisher getFileEventPublisher() {
+    public FileEventPublisher getFileEventPublisher()
+    {
         return fileEventPublisher;
     }
 
-    public void setFileEventPublisher(FileEventPublisher fileEventPublisher) {
+    public void setFileEventPublisher(FileEventPublisher fileEventPublisher)
+    {
         this.fileEventPublisher = fileEventPublisher;
     }
 
-    public EcmFileService getFileService() {
+    public EcmFileService getFileService()
+    {
         return fileService;
     }
 
-    public void setFileService(EcmFileService fileService) {
+    public void setFileService(EcmFileService fileService)
+    {
         this.fileService = fileService;
     }
 }

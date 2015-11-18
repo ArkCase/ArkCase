@@ -1,0 +1,35 @@
+{
+  "timeTracking": {
+    "title": "Time tracking",
+    "progressNoTimesheet": "[ No timesheet is selected ]",
+    "progressLoading": "Loading timesheet ",
+    "progressError": "Failed to load timesheet"
+  },
+  "timeTracking.tree": {
+  },
+  "timeTracking.comp.actions": {
+    "new.button": "New Timesheet",
+    "edit.button": "Edit Timesheet"
+  },
+  "timeTracking.comp.details": {
+    "title": "Details",
+    "informSaved": "Timesheet details saved"
+  },
+  "timeTracking.comp.people": {
+    "title": "Person",
+    "table.columns": {
+      "fullName": "Full Name",
+      "userId": "Username"
+    }
+  },
+  "timeTracking.comp.timesSummary": {
+    "title": "Hours Summary",
+    "table.columns": {
+      "code": "Parent ID",
+      "type": "Parent Type",
+      "value": "Total Hours",
+      "date": "Date Charged",
+      "modified": "Modified Date"
+    }
+  }
+}

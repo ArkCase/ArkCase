@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.NotesController', ['$scope', '$stateParams', '$q', 'UtilService', 'ConstantService', 'HelperService', 'CallObjectsService', 'CallAuthentication',
-    function ($scope, $stateParams, $q, Util, Constant, Helper, CallObjectsService, CallAuthentication) {
+angular.module('complaints').controller('Complaints.NotesController', ['$scope', '$stateParams', '$q', 'UtilService', 'ConstantService', 'HelperService', 'Object.NoteService', 'Authentication',
+    function ($scope, $stateParams, $q, Util, Constant, Helper, ObjectNoteService, Authentication) {
         var z = 1;
         return;
         $scope.$emit('req-component-config', 'notes');
@@ -20,7 +20,7 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
         var promiseUsers = Helper.Grid.getUsers($scope);
 
 
-        CallAuthentication.queryUserInfo().then(
+        Authentication.queryUserInfoNew().then(
             function (userInfo) {
                 $scope.userId = userInfo.userId;
                 return userInfo;
@@ -30,7 +30,7 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
         $scope.currentId = $stateParams.id;
         $scope.retrieveGridData = function () {
             if ($scope.currentId) {
-                var promiseQueryNotes = CallObjectsService.queryNotes(Constant.ObjectTypes.COMPLAINT, $scope.currentId);
+                var promiseQueryNotes = ObjectNoteService.queryNotes(Constant.ObjectTypes.COMPLAINT, $scope.currentId);
                 $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions.data = notes;
@@ -54,7 +54,7 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
         };
         $scope.updateRow = function (rowEntity) {
             var note = Util.omitNg(rowEntity);
-            CallObjectsService.saveNote(note).then(
+            ObjectNoteService.saveNote(note).then(
                 function (noteAdded) {
                     if (Util.isEmpty(rowEntity.id)) {
                         rowEntity.id = noteAdded.id;
@@ -67,7 +67,7 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                CallObjectsService.deleteNote(id);
+                ObjectNoteService.deleteNote(id);
             }
         };
 

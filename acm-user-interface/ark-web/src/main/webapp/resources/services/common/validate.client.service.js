@@ -67,6 +67,8 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
+
+        //this funciton will refactor to Object.ListService.validateSolrData
         , validateSolrData: function (data) {
             if (!data) {
                 return false;
@@ -570,12 +572,12 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
-        , validateMyTasks: function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        }
+        //, validateMyTasks: function (data) {
+        //    if (!Util.isArray(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
         , validateParticipantTypes: function (data) {
             if (Util.isEmpty(data)) {
                 return false;

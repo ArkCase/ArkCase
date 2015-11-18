@@ -21,7 +21,7 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
         });
 
 
-        $scope.$on('complaint-retrieved', function (e, data) {
+        $scope.$on('complaint-updated', function (e, data) {
             if (Validator.validateComplaint(data)) {
                 $scope.complaintInfo = data;
 

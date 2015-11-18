@@ -1,8 +1,9 @@
 <div ng-controller="Admin.ModuleConfigController">
-    <div class="header">
-        <h3>
-            {{'admin.security.module-config' | translate}}
-        </h3>
-    </div>
-    Not yet implemented
+    <panel-view header="{{'admin.security.module-config' | translate}}" collapsible="false">
+        <object-authorization-roles data="appModules" object-display-name="name" on-object-selected="onObjSelect"
+                                    role-display-name="name"
+                                    on-auth-role-change="onAuthRoleSelected"
+                                    object-title="{{'admin.security.module-config.module' | translate}}"/>
+    </panel-view>
+</div>
 </div>

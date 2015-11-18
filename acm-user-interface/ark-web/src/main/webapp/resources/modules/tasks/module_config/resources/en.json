@@ -39,7 +39,8 @@
     "delete.button": "Delete",
     "complete.button": "Complete",
     "approve.button": "Approve Document",
-    "rework.button": "Send for Rework"
+    "rework.button": "Send for Rework",
+    "error.outcomeFieldMissing": "Cannot complete task because of missing required value"
   },
   "tasks.comp.details": {
     "title": "Task Details",
@@ -78,7 +79,7 @@
       "endDateTime": "End"
     }
   },
-  "tasks.comp.esignatures": {
+  "tasks.comp.signatures": {
     "title": "eSignatures",
     "table.columns": {
       "signedDate": "Date",

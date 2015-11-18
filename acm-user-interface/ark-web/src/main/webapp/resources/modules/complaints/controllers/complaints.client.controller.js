@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('ComplaintsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallConfigService', 'CallComplaintsService',
-    function ($scope, $stateParams, $translate, Util, CallConfigService, CallComplaintsService) {
+angular.module('complaints').controller('ComplaintsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallConfigService', 'Complaint.InfoService',
+    function ($scope, $stateParams, $translate, Util, CallConfigService, ComplaintInfoService) {
         var promiseGetModuleConfig = CallConfigService.getModuleConfig("complaints").then(function (config) {
             $scope.config = config;
             return config;
@@ -11,6 +11,10 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
                 var componentConfig = _.find(config.components, {id: componentId});
                 $scope.$broadcast('component-config', componentId, componentConfig);
             });
+        });
+        $scope.$on('report-complaint-updated', function (e, complaintInfo) {
+            ComplaintInfoService.updateTaskInfo(complaintInfo);
+            $scope.$broadcast('complaint-updated', complaintInfo);
         });
 
 
@@ -31,11 +35,11 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
                 }
                 $scope.progressMsg = $translate.instant("complaints.progressLoading") + " " + id + "...";
 
-                CallComplaintsService.getComplaintInfo(id).then(
+                ComplaintInfoService.getComplaintInfo(id).then(
                     function (complaintInfo) {
                         $scope.progressMsg = null;
                         $scope.complaintInfo = complaintInfo;
-                        $scope.$broadcast('complaint-retrieved', complaintInfo);
+                        $scope.$broadcast('complaint-updated', complaintInfo);
                         return complaintInfo;
                     }
                     , function (error) {
