@@ -25,7 +25,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
     /**
      * @ngdoc method
      * @name getAppRoles
-     * @methodOf admin.services:Admin.FunctionalAccessControlService
+     * @methodOf admin.service:Admin.FunctionalAccessControlService
      *
      * @description
      * Performs retrieving all application roles
@@ -42,7 +42,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
     /**
      * @ngdoc method
      * @name getUserGroups
-     * @methodOf admin.services:Admin.FunctionalAccessControlService
+     * @methodOf admin.service:Admin.FunctionalAccessControlService
      *
      * @description
      * Performs retrieving all user groups
@@ -59,7 +59,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
     /**
      * @ngdoc method
      * @name getAppUserToGroups
-     * @methodOf admin.services:Admin.FunctionalAccessControlService
+     * @methodOf admin.service:Admin.FunctionalAccessControlService
      *
      * @description
      * Performs retrieving all app roles with user groups mapped
@@ -76,7 +76,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
     /**
      * @ngdoc method
      * @name saveAppRolesToGroups
-     * @methodOf admin.services:Admin.FunctionalAccessControlService
+     * @methodOf admin.service:Admin.FunctionalAccessControlService
      *
      * @description
      * Performs saving application roles to groups
