@@ -1,9 +1,35 @@
 'use strict';
 
+/**
+ * @ngdoc service
+ * @name cost-tracking.service:CallCostTrackingService
+ *
+ * @description
+ *
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cost-tracking/services/call-cost-tracking.client.service.js modules/cost-tracking/services/call-cost-tracking.client.service.js}
+
+ * CallCostTrackingService contains functions of CostTracking service to support default error handling and data validation.
+ */
 angular.module('services').factory('CallCostTrackingService', ['$resource', '$translate', 'UtilService', 'ValidationService', 'CostTrackingService', 'ConstantService',
     function ($resource, $translate, Util, Validator, CostTrackingService, Constant) {
         var ServiceCall = {
 
+            /**
+             * @ngdoc method
+             * @name queryCostTrackingTreeData
+             * @methodOf cost-tracking.service:CallCostTrackingService
+             *
+             * @description
+             * Query list of costsheets from SOLR and pack result for Object Tree.
+             *
+             * @param {String} userId  String that contains logged user
+             * @param {Number} start  Zero based index of result starts from
+             * @param {Number} n max Number of list to return
+             * @param {String} sort  Sort value. Allowed choice is based on backend specification
+             *
+             *
+             * @returns {Object} Promise
+             */
             queryCostTrackingTreeData: function (userId, start, n, sort) {
                 var treeData = null;
 
@@ -34,6 +60,18 @@ angular.module('services').factory('CallCostTrackingService', ['$resource', '$tr
                 });
             }
 
+            /**
+             * @ngdoc method
+             * @name getCostTrackingInfo
+             * @methodOf cost-tracking.service:CallCostTrackingService
+             *
+             * @description
+             * Query costsheet data
+             *
+             * @param {Number} id  Costsheet ID
+             *
+             * @returns {Object} Promise
+             */
             , getCostTrackingInfo: function (id) {
                 return Util.serviceCall({
                     service: CostTrackingService.get
@@ -46,6 +84,18 @@ angular.module('services').factory('CallCostTrackingService', ['$resource', '$tr
                 });
             }
 
+            /**
+             * @ngdoc method
+             * @name saveCostsheetInfo
+             * @methodOf cost-tracking.service:CallCostTrackingService
+             *
+             * @description
+             * Save costsheet data
+             *
+             * @param {Object} costsheetInfo  Costsheet data
+             *
+             * @returns {Object} Promise
+             */
             , saveCostsheetInfo: function (costsheetInfo) {
                 if (!ServiceCall.validateCostsheet(costsheetInfo)) {
                     return Util.errorPromise($translate.instant("common.service.error.invalidData"));
@@ -61,6 +111,18 @@ angular.module('services').factory('CallCostTrackingService', ['$resource', '$tr
                 });
             }
 
+            /**
+             * @ngdoc method
+             * @name validateCostsheet
+             * @methodOf cost-tracking.service:CallCostTrackingService
+             *
+             * @description
+             * Validate costsheet
+             *
+             * @param {Object} data  Data to be validated
+             *
+             * @returns {Boolean} Return true if data is valid
+             */
             ,validateCostsheet: function(data) {
                 if (Util.isEmpty(data)) {
                     return false;
