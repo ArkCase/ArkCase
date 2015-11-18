@@ -8,7 +8,7 @@
             "menuItemURL": "subscriptions",
             "menuItemTitle": "Subscriptions",
             "iconClass": "fa fa-bullhorn",
-            "position": 60
+            "position": 100
         }
         
     ],
