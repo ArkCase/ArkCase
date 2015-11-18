@@ -1,0 +1,50 @@
+<form name="ldapConfigForm">
+    <div class="modal-header">
+        <h3 ng-hide="isEdit">{{'admin.security.ldapConfig.data.addNewDirectory' | translate}}</h3>
+
+        <h3 ng-show="isEdit">{{'admin.security.ldapConfig.data.editRecord' | translate}}</h3>
+    </div>
+
+    <div class="modal-body">
+        <div ng-hide="isEdit">{{'admin.security.ldapConfig.data.id' | translate}}</div>
+        <input type="text" ng-model="dir.id" ng-hide="isEdit" required ng-pattern="/^[a-zA-Z0-9]*$/">
+
+        <div>{{'admin.security.ldapConfig.data.name' | translate}}</div>
+        <input type="text" ng-model="dir.name" required>
+
+        <div>{{'admin.security.ldapConfig.data.ldapUrl' | translate}}</div>
+        <input type="text" ng-model="dir.ldapUrl">
+
+        <div>{{'admin.security.ldapConfig.data.base' | translate}}</div>
+        <input type="text" ng-model="dir.base">
+
+        <div>{{'admin.security.ldapConfig.data.directoryName' | translate}}</div>
+        <input type="text" ng-model="dir.directoryName">
+
+        <div>{{'admin.security.ldapConfig.data.authUserDn' | translate}}</div>
+        <input type="text" ng-model="dir.authUserDn">
+
+        <div>{{'admin.security.ldapConfig.data.authUserPassword' | translate}}</div>
+        <input type="text" ng-model="dir.authUserPassword">
+
+        <div>{{'admin.security.ldapConfig.data.userSearchBase' | translate}}</div>
+        <input type="text" ng-model="dir.userSearchBase">
+
+        <div>{{'admin.security.ldapConfig.data.groupSearchBase' | translate}}</div>
+        <input type="text" ng-model="dir.groupSearchBase">
+
+        <div>{{'admin.security.ldapConfig.data.groupSeachBaseOU' | translate}}</div>
+        <input type="text" ng-model="dir.groupSearchBaseOU">
+
+        <div>{{'admin.security.ldapConfig.data.userIdAttributeName' | translate}}</div>
+        <input type="text" ng-model="dir.userIdAttributeName">
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="cancel()">{{'admin.security.ldapConfig.dialog.cancel' | translate}}
+        </button>
+        <button class="btn btn-default" ng-click="ok()" ng-disabled="ldapConfigForm.$invalid">
+            {{'admin.security.ldapConfig.dialog.ok' | translate}}
+        </button>
+    </div>
+</form>
+
