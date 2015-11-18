@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('complaints').controller('ComplaintsListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'Complaint.ListService', 'Complaint.InfoService', 'CallConfigService', 'Helper.ObjectTreeService',
-    function ($scope, $state, $stateParams, $translate, Util, Constant, ComplaintListService, ComplaintInfoService, CallConfigService, HelperObjectTreeService) {
-        CallConfigService.getModuleConfig("complaints").then(function (config) {
+angular.module('complaints').controller('ComplaintsListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'Complaint.ListService', 'Complaint.InfoService', 'ConfigService', 'Helper.ObjectTreeService',
+    function ($scope, $state, $stateParams, $translate, Util, Constant, ComplaintListService, ComplaintInfoService, ConfigService, HelperObjectTreeService) {
+        ConfigService.getModuleConfig("complaints").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
             return config;
@@ -155,9 +155,9 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
             $scope.$emit('req-select-complaint', selectedComplaint);
             var components = Util.goodArray(selectedComplaint.components);
             var componentType = (1 == components.length) ? components[0] : "main";
-            //$state.go('complaints.' + componentType, {
-            //    id: selectedComplaint.nodeId
-            //});
+            $state.go('complaints.' + componentType, {
+                id: selectedComplaint.nodeId
+            });
         };
     }
 ]);

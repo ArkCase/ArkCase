@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('cases').controller('CasesController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallConfigService', 'Case.InfoService',
-    function ($scope, $stateParams, $translate, Util, CallConfigService, CaseInfoService) {
-        var promiseGetModuleConfig = CallConfigService.getModuleConfig("cases").then(function (config) {
+angular.module('cases').controller('CasesController', ['$scope', '$stateParams', '$translate', 'UtilService', 'ConfigService', 'Case.InfoService',
+    function ($scope, $stateParams, $translate, Util, ConfigService, CaseInfoService) {
+        var promiseGetModuleConfig = ConfigService.getModuleConfig("cases").then(function (config) {
             $scope.config = config;
             return config;
         });

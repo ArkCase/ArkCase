@@ -344,7 +344,7 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                     var objectTypes = cacheObjectTypes.get();
                     var promiseObjectTypes = Util.serviceCall({
                         service: LookupService.getObjectTypes
-                        , result: cacheObjectTypes
+                        , result: objectTypes
                         , onSuccess: function (data) {
                             if (Validator.validateObjectTypes(data)) {
                                 objectTypes = [];
