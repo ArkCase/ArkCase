@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name services:Task.InfoService
+ * @name tasks.service:Task.InfoService
  *
  * @description
  *
@@ -10,13 +10,13 @@
  *
  * Task.InfoService provides functions for Task database data
  */
-angular.module('services').factory('Task.InfoService', ['$resource', '$translate', 'StoreService', 'UtilService', 'Object.InfoService',
+angular.module('tasks').factory('Task.InfoService', ['$resource', '$translate', 'StoreService', 'UtilService', 'Object.InfoService',
     function ($resource, $translate, Store, Util, ObjectInfoService) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
             /**
              * ngdoc method
              * name get
-             * methodOf services:Task.InfoService
+             * methodOf tasks.service:Task.InfoService
              *
              * @description
              * Query task data
@@ -38,7 +38,7 @@ angular.module('services').factory('Task.InfoService', ['$resource', '$translate
             /**
              * @ngdoc method
              * @name save
-             * @methodOf services:Task.InfoService
+             * @methodOf tasks.service:Task.InfoService
              *
              * @description
              * Save task data
@@ -65,7 +65,7 @@ angular.module('services').factory('Task.InfoService', ['$resource', '$translate
         /**
          * @ngdoc method
          * @name updateTaskInfo
-         * @methodOf services:Task.InfoService
+         * @methodOf tasks.service:Task.InfoService
          *
          * @description
          * Update task data in local cache. No REST call to backend.
@@ -84,7 +84,7 @@ angular.module('services').factory('Task.InfoService', ['$resource', '$translate
         /**
          * @ngdoc method
          * @name getTaskInfo
-         * @methodOf services:Task.InfoService
+         * @methodOf tasks.service:Task.InfoService
          *
          * @description
          * Query task data
@@ -112,7 +112,7 @@ angular.module('services').factory('Task.InfoService', ['$resource', '$translate
         /**
          * @ngdoc method
          * @name saveTaskInfo
-         * @methodOf services:Task.InfoService
+         * @methodOf tasks.service:Task.InfoService
          *
          * @description
          * Save task data
@@ -156,7 +156,7 @@ angular.module('services').factory('Task.InfoService', ['$resource', '$translate
         /**
          * @ngdoc method
          * @name validateTaskInfo
-         * @methodOf services:Task.InfoService
+         * @methodOf tasks.service:Task.InfoService
          *
          * @description
          * Validate task data

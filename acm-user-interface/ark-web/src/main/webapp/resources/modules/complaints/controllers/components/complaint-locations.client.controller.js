@@ -1,8 +1,9 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.ParticipantsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'ComplaintsService', 'LookupService',
+angular.module('complaints').controller('Complaints.LocationsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'ComplaintsService', 'LookupService',
     function ($scope, $stateParams, $q, Store, Util, Validator, Helper, ComplaintsService, LookupService) {
         var z = 1;
+        $scope.gridOptions = {};
         return;
         var deferParticipantData = new Store.Variable("deferComplaintParticipantData");    // used to hold grid data before grid config is ready
 

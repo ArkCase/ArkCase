@@ -58,7 +58,7 @@ angular.module('services').factory('Authentication', ['$resource', 'StoreService
                     }
                 }
             });
-        }
+        };
 
         /**
          * @ngdoc method
@@ -92,7 +92,7 @@ angular.module('services').factory('Authentication', ['$resource', 'StoreService
                 return false;
             }
             return true;
-        }
+        };
         return Service;
     }
 ]);
