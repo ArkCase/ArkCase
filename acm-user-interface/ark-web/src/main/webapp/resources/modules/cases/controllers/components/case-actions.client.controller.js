@@ -1,11 +1,15 @@
 'use strict';
 
+//
+// No ngdoc in controllers. Only in services, directives, filters, or any other public modules
+//
+
 /**
- * @ngdoc controller
- * @name cases:Cases.ActionsController
+ * ngdoc controller
+ * name cases:Cases.ActionsController
  *
- * @description
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/components/case-actions.client.controller.js modules/cases/controllers/components/case-actions.client.controller.js}
+ * description
+ * {link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/components/case-actions.client.controller.js modules/cases/controllers/components/case-actions.client.controller.js}
  *
  * The Cases module actions controller
  */
@@ -45,9 +49,9 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         });
 
         /**
-         * @ngdoc method
-         * @name loadNewCaseFrevvoForm
-         * @methodOf cases:Cases.ActionsController
+         * ngdoc method
+         * name loadNewCaseFrevvoForm
+         * methodOf cases:Cases.ActionsController
          *
          * @description
          * Displays the create new case Frevvo form for the user
@@ -57,9 +61,9 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         /**
-         * @ngdoc method
-         * @name loadChangeCaseStatusFrevvoForm
-         * @methodOf cases:Cases.ActionsController
+         * ngdoc method
+         * name loadChangeCaseStatusFrevvoForm
+         * methodOf cases:Cases.ActionsController
          *
          * @description
          * Displays the change case status Frevvo form for the user
@@ -73,9 +77,9 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         /**
-         * @ngdoc method
-         * @name subscribeCase
-         * @methodOf cases:Cases.ActionsController
+         * ngdoc method
+         * name subscribeCase
+         * methodOf cases:Cases.ActionsController
          *
          * @description
          * Subscribes the currently logged in user to the given case
@@ -92,9 +96,9 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         /**
-         * @ngdoc method
-         * @name unsubscribeCase
-         * @methodOf cases:Cases.ActionsController
+         * ngdoc method
+         * name unsubscribeCase
+         * methodOf cases:Cases.ActionsController
          *
          * @description
          * Unsubscribes the currently logged in user from the given case

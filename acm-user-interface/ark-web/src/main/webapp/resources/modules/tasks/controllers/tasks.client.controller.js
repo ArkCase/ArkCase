@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$translate', 'StoreService', 'UtilService', 'CallConfigService', 'Task.InfoService',
-    function ($scope, $stateParams, $translate, Store, Util, CallConfigService, TaskInfoService) {
-        var promiseGetModuleConfig = CallConfigService.getModuleConfig("tasks").then(function (config) {
+angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$translate', 'StoreService', 'UtilService', 'ConfigService', 'Task.InfoService',
+    function ($scope, $stateParams, $translate, Store, Util, ConfigService, TaskInfoService) {
+        var promiseGetModuleConfig = ConfigService.getModuleConfig("tasks").then(function (config) {
             $scope.config = config;
             return config;
         });
