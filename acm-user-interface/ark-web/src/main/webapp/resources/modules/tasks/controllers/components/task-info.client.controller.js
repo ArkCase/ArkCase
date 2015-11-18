@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', 'UtilService', 'CallLookupService', 'Task.InfoService',
-    function ($scope, $stateParams, Util, CallLookupService, TaskInfoService) {
+angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', 'UtilService', 'LookupService', 'Object.LookupService', 'Task.InfoService',
+    function ($scope, $stateParams, Util, LookupService, ObjectLookupService, TaskInfoService) {
         $scope.$emit('req-component-config', 'info');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("info" == componentId) {
@@ -10,7 +10,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         });
 
 
-        CallLookupService.getUsers().then(
+        LookupService.getUsers().then(
             function (users) {
                 var options = [];
                 _.each(users, function (user) {
@@ -21,7 +21,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             }
         );
 
-        CallLookupService.getPriorities().then(
+        ObjectLookupService.getPriorities().then(
             function (priorities) {
                 var options = [];
                 _.each(priorities, function (priority) {
