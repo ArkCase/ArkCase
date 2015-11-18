@@ -1,8 +1,8 @@
 <div ng-controller="Admin.FunctionalAccessController">
-    <div class="header">
-        <h3>
-            {{'admin.security.functional-access-control' | translate}}
-        </h3>
-    </div>
-    Not yet implemented
+    <panel-view header="{{'admin.security.functional-access-control' | translate}}" collapsible="false">
+        <object-authorization-roles data="appRoles" object-display-name="name" on-object-selected="onObjSelect"
+                                    role-display-name="name"
+                                    on-auth-role-change="onAuthRoleSelected"
+                                    object-title="{{'admin.security.functional-access-control.application-role' | translate}}"/>
+    </panel-view>
 </div>

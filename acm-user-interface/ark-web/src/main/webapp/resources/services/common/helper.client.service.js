@@ -116,28 +116,28 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
             }
 
             /**
-             * @ngdoc method
-             * @name getUserInfo
-             * @methodOf services.service:HelperService
+             * ngdoc method
+             * name getUserInfo
+             * methodOf services.service:HelperService
              *
              * @description
              * Retrieves current login user info
              */
-            , getUserInfo: function () {
-                var cacheUserInfo = new Store.SessionData(Helper.SessionCacheNames.USER_INFO);
-                var userInfo = cacheUserInfo.get();
-                return Util.serviceCall({
-                    service: Authentication.queryUserInfo
-                    , result: userInfo
-                    , onSuccess: function (data) {
-                        if (Validator.validateUserInfo(data)) {
-                            userInfo = data;
-                            cacheUserInfo.set(userInfo);
-                            return userInfo;
-                        }
-                    }
-                });
-            }
+            //, getUserInfo: function () {
+            //    var cacheUserInfo = new Store.SessionData(Helper.SessionCacheNames.USER_INFO);
+            //    var userInfo = cacheUserInfo.get();
+            //    return Util.serviceCall({
+            //        service: Authentication.queryUserInfo
+            //        , result: userInfo
+            //        , onSuccess: function (data) {
+            //            if (Validator.validateUserInfo(data)) {
+            //                userInfo = data;
+            //                cacheUserInfo.set(userInfo);
+            //                return userInfo;
+            //            }
+            //        }
+            //    });
+            //}
 
             /**
              * @ngdoc service

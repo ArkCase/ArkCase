@@ -1,0 +1,16 @@
+<div ng-controller="TimeTracking.DetailsController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">{{'timeTracking.comp.details.title' | translate}}
+                <div class="pull-right">
+                    <span class=""><i class='fa fa-pencil' ng-click='editDetails()'></i></span>
+                    <span class=""><i class='fa fa-save' ng-click='saveDetails()'></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <summernote config="options" ng-model="timesheetInfo.details"></summernote>
+        </div>
+    </div>
+
+</div>

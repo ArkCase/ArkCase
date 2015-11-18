@@ -76,7 +76,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
                 scope.queryExistingItems = function (){
-                    if(scope.pageSize >=0 && scope.start >=0){
+                    if(scope.searchQuery && scope.pageSize >=0 && scope.start >=0){
                         var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*",scope.filters,scope.pageSize,scope.start);
                         if(query){
                             SearchService.queryFilteredSearch({
