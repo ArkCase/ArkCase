@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name services:Task.ListService
+ * @name tasks.service:Task.ListService
  *
  * @description
  *
@@ -10,7 +10,7 @@
  *
  * Task.ListService provides functions for Task database data
  */
-angular.module('services').factory('Task.ListService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ConstantService', 'Object.ListService',
+angular.module('tasks').factory('Task.ListService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ConstantService', 'Object.ListService',
     function ($resource, $translate, Store, Util, Constant, ObjectListService) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {});
 
@@ -22,7 +22,7 @@ angular.module('services').factory('Task.ListService', ['$resource', '$translate
         /**
          * @ngdoc method
          * @name queryTasksTreeData
-         * @methodOf services:Task.ListService
+         * @methodOf tasks.service:Task.ListService
          *
          * @description
          * Query list of tasks from SOLR, pack result for Object Tree.
@@ -73,13 +73,13 @@ angular.module('services').factory('Task.ListService', ['$resource', '$translate
                     }
                 }
             });
-        }
+        };
 
 
         /**
          * @ngdoc method
          * @name validateTaskList
-         * @methodOf services:Task.ListService
+         * @methodOf tasks.service:Task.ListService
          *
          * @description
          * Validate task list data
