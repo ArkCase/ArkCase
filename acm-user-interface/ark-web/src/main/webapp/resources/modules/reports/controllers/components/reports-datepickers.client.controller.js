@@ -8,7 +8,7 @@
  *
  * The Reports module's date pickers controller
  */
-angular.module('cases').controller('Reports.DatepickersController', ['$scope',
+angular.module('reports').controller('Reports.DatepickersController', ['$scope',
     function ($scope) {
         $scope.$on('component-config', applyConfig);
         $scope.$on('reports-data-retrieved',updateData);
