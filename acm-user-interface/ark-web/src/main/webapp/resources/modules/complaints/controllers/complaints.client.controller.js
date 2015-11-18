@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('complaints').controller('ComplaintsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallConfigService', 'Complaint.InfoService',
-    function ($scope, $stateParams, $translate, Util, CallConfigService, ComplaintInfoService) {
-        var promiseGetModuleConfig = CallConfigService.getModuleConfig("complaints").then(function (config) {
+angular.module('complaints').controller('ComplaintsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'ConfigService', 'Complaint.InfoService',
+    function ($scope, $stateParams, $translate, Util, ConfigService, ComplaintInfoService) {
+        var promiseGetModuleConfig = ConfigService.getModuleConfig("complaints").then(function (config) {
             $scope.config = config;
             return config;
         });

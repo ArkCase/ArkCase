@@ -3,6 +3,7 @@
 angular.module('complaints').controller('Complaints.NotesController', ['$scope', '$stateParams', '$q', 'UtilService', 'ConstantService', 'HelperService', 'Object.NoteService', 'Authentication',
     function ($scope, $stateParams, $q, Util, Constant, Helper, ObjectNoteService, Authentication) {
         var z = 1;
+        $scope.gridOptions = {};
         return;
         $scope.$emit('req-component-config', 'notes');
         $scope.$on('component-config', function (e, componentId, config) {

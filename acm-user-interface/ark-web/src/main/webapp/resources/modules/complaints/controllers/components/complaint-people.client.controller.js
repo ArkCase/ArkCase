@@ -3,6 +3,7 @@
 angular.module('complaints').controller('Complaints.PeopleController', ['$scope', '$stateParams', '$q', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'ComplaintsService', 'LookupService',
     function ($scope, $stateParams, $q, $translate, Store, Util, Validator, Helper, ComplaintsService, LookupService) {
         var z = 1;
+        $scope.gridOptions = {};
         return;
         var deferPeopleData = new Store.Variable("deferComplaintPeopleData");    // used to hold grid data before grid config is ready
 
