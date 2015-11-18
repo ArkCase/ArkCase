@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams', 'UtilService', 'ConstantService', 'Case.InfoService', 'Complaint.InfoService', 'ObjectsModelsService',
-    function ($scope, $stateParams, Util, Constant, CaseInfoService, ComplaintInfoService, ObjectsModelsService) {
+angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams', 'UtilService', 'ConstantService', 'Case.InfoService', 'Complaint.InfoService', 'Object.ModelService',
+    function ($scope, $stateParams, Util, Constant, CaseInfoService, ComplaintInfoService, ObjectModelService) {
         $scope.$emit('req-component-config', 'parentinfo');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("parentinfo" == componentId) {
@@ -26,8 +26,8 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
                 CaseInfoService.getCaseInfo($scope.taskInfo.parentObjectId).then(
                     function (caseInfo) {
                         $scope.parentCaseInfo = caseInfo;
-                        $scope.owningGroup = ObjectsModelsService.getGroup(caseInfo);
-                        $scope.assignee = ObjectsModelsService.getAssignee(caseInfo);
+                        $scope.owningGroup = ObjectModelService.getGroup(caseInfo);
+                        $scope.assignee = ObjectModelService.getAssignee(caseInfo);
                         return caseInfo;
                     }
                 );
@@ -35,8 +35,8 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
                 ComplaintInfoService.getComplaintInfo($scope.taskInfo.parentObjectId).then(
                     function (complaintInfo) {
                         $scope.parentComplaintInfo = complaintInfo;
-                        $scope.owningGroup = ObjectsModelsService.getGroup(complaintInfo);
-                        $scope.assignee = ObjectsModelsService.getAssignee(complaintInfo);
+                        $scope.owningGroup = ObjectModelService.getGroup(complaintInfo);
+                        $scope.assignee = ObjectModelService.getAssignee(complaintInfo);
                         return complaintInfo;
                     }
                 );
