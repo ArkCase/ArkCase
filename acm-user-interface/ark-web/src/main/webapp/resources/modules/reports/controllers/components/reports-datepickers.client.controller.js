@@ -25,11 +25,6 @@ angular.module('reports').controller('Reports.DatepickersController', ['$scope',
         $scope.opened.openedStart = false;
         $scope.opened.openedEnd = false;
 
-        $scope.open = function ($event, datepicker) {
-            $event.stopPropagation();
-            $scope.opened[datepicker] = true;
-        };
-
         function updateData(e, reportsData){
             $scope.reportsData = reportsData;
         }
