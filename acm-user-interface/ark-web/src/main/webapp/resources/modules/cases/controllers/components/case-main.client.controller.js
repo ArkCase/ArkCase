@@ -2,19 +2,20 @@
 
 angular.module('cases').controller('Cases.MainController', ['$scope', 'ConfigService',
 	function($scope, ConfigService) {
-		$scope.$on('component-config', applyConfig);
 		$scope.$emit('req-component-config', 'main');
-		$scope.components = null;
-		$scope.config = null;
-
-		function applyConfig(e, componentId, config) {
+		$scope.$on('component-config', function applyConfig(e, componentId, config) {
 			if (componentId == 'main') {
 				$scope.config = config;
 			}
-		}
-
-		ConfigService.getModule({moduleId: 'cases'}, function(moduleConfig){
-			$scope.components = moduleConfig.components;
 		});
+
+
+		ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
+			$scope.components = moduleConfig.components;
+			return moduleConfig;
+		});
+		//ConfigService.getModule({moduleId: 'cases'}, function(moduleConfig){
+		//	$scope.components = moduleConfig.components;
+		//});
 	}
 ]);

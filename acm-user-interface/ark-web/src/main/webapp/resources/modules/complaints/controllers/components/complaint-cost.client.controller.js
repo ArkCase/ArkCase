@@ -3,6 +3,7 @@
 angular.module('complaints').controller('Complaints.CostController', ['$scope', '$stateParams', '$q', '$window', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'ComplaintsService',
     function ($scope, $stateParams, $q, $window, $translate, Store, Util, Validator, Helper, LookupService, ComplaintsService) {
         var z = 1;
+        $scope.gridOptions = {};
         return;
         $scope.$emit('req-component-config', 'cost');
         $scope.$on('component-config', function (e, componentId, config) {
