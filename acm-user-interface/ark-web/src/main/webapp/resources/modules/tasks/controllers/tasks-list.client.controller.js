@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('tasks').controller('TasksListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'Task.InfoService', 'Task.ListService', 'CallConfigService', 'Helper.ObjectTreeService',
-    function ($scope, $state, $stateParams, $translate, Util, Constant, TaskInfoService, TaskListService, CallConfigService, HelperObjectTreeService) {
-        CallConfigService.getModuleConfig("tasks").then(function (config) {
+angular.module('tasks').controller('TasksListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'Task.InfoService', 'Task.ListService', 'ConfigService', 'Helper.ObjectTreeService',
+    function ($scope, $state, $stateParams, $translate, Util, Constant, TaskInfoService, TaskListService, ConfigService, HelperObjectTreeService) {
+        ConfigService.getModuleConfig("tasks").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
             return config;

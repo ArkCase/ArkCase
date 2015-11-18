@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate', 'ConfigService', 'UtilService', 'ConstantService', 'TimeTrackingService', 'CallTimeTrackingService', 'Profile.UserInfoService', 'HelperService', 'CallConfigService', 'Authentication', 'Helper.ObjectTreeService',
-    function ($scope, $state, $stateParams, $q, $translate, ConfigService, Util, Constant, TimeTrackingService, CallTimeTrackingService, UserInfoService, Helper, CallConfigService, Authentication, HelperObjectTreeService) {
-        CallConfigService.getModuleConfig("time-tracking").then(function (config) {
+angular.module('time-tracking').controller('TimeTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate', 'ConfigService', 'UtilService', 'ConstantService', 'TimeTrackingService', 'CallTimeTrackingService', 'Profile.UserInfoService', 'HelperService', 'Authentication', 'Helper.ObjectTreeService',
+    function ($scope, $state, $stateParams, $q, $translate, ConfigService, Util, Constant, TimeTrackingService, CallTimeTrackingService, UserInfoService, Helper, Authentication, HelperObjectTreeService) {
+        ConfigService.getModuleConfig("time-tracking").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
             return config;

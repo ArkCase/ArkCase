@@ -8,6 +8,8 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
                 $scope.config = config;
             }
         });
+        var z = 1;
+        return;
 
 
         // Obtains the dropdown menu selection options via REST calls to ArkCase
@@ -34,8 +36,6 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
                 return priorities;
             }
         );
-        var z = 1;
-        return;
         $scope.assignableUsers = [];
         var cacheUsers = new Store.SessionData(Helper.SessionCacheNames.USERS);
         var users = cacheUsers.get();
