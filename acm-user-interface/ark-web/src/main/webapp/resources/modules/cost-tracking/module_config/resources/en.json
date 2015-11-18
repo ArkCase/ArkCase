@@ -25,6 +25,7 @@
   "costTracking.comp.timesSummary": {
     "title": "Hours Summary",
     "table.columns": {
+      "parentId": "ID",
       "parentNumber": "Parent ID",
       "parentType": "Parent Type",
       "value": "Total Cost",

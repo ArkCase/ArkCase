@@ -14,9 +14,10 @@ angular.module('cost-tracking').controller('CostTracking.TimeSummaryController',
             $scope.costsheetInfo = data;
             var parentNumber = {parentNumber: $scope.costsheetInfo.parentNumber};
             var parentType = {parentType: $scope.costsheetInfo.parentType};
-            angular.extend($scope.costsheetInfo.costs[0], parentNumber);
-            angular.extend($scope.costsheetInfo.costs[0], parentType);
-            console.log($scope.costsheetInfo.costs);
+            var parentId = {parentId: $scope.costsheetInfo.parentId};
+            $scope.costsheetInfo.costs = $scope.costsheetInfo.costs.map(function (obj){
+               return angular.extend(obj, parentNumber, parentType, parentId);
+            });
             $scope.gridOptions = $scope.gridOptions || {};
             $scope.gridOptions.data = $scope.costsheetInfo.costs;
         });
@@ -25,7 +26,7 @@ angular.module('cost-tracking').controller('CostTracking.TimeSummaryController',
             event.preventDefault();
 
             var targetType = Util.goodMapValue(rowEntity, "parentType");
-            var targetId = Util.goodMapValue(rowEntity, "parentNumber");
+            var targetId = Util.goodMapValue(rowEntity, "parentId");
             Helper.Grid.showObject($scope, targetType, targetId);
         };
 
