@@ -15,7 +15,8 @@
       "id": "datepickers",
       "title": "Datepickers",
       "enabled": true,
-      "type": "empty"
+      "type": "empty",
+      "datepickerPopupFormat": "MM/dd/yyyy"
     },
     {
       "id": "reportselection",
