@@ -18,7 +18,6 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
         });
 
 
-
         $scope.progressMsg = $translate.instant("complaints.progressNoComplaint");
         $scope.$on('req-select-complaint', function (e, selectedComplaint) {
             $scope.$broadcast('complaint-selected', selectedComplaint);

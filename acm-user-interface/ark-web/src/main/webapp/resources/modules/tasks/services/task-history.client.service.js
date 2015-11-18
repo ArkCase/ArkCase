@@ -47,7 +47,7 @@ angular.module('services').factory('Task.HistoryService', ['$resource', '$transl
         /**
          * @ngdoc method
          * @name queryTaskHistory
-         * @methodOf services.service:CallTasksService
+         * @methodOf services:Task.HistoryService
          *
          * @param {Object} taskInfo Task data
          *
@@ -82,7 +82,7 @@ angular.module('services').factory('Task.HistoryService', ['$resource', '$transl
         /**
          * @ngdoc method
          * @name validateTaskHistory
-         * @methodOf services.service:CallTasksService
+         * @methodOf services:Task.HistoryService
          *
          * @description
          * Validate task history
