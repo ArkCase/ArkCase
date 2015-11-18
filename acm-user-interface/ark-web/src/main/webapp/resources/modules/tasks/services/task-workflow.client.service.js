@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name services:Task.WorkflowService
+ * @name tasks.service:Task.WorkflowService
  *
  * @description
  *
@@ -10,13 +10,13 @@
  *
  * Task.WorkflowService provides functions for Task workflow
  */
-angular.module('services').factory('Task.WorkflowService', ['$resource', '$translate', 'UtilService', 'Task.InfoService',
+angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translate', 'UtilService', 'Task.InfoService',
     function ($resource, $translate, Util, TaskInfoService) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
             /**
              * @ngdoc method
              * @name _completeTask
-             * @methodOf services:Task.WorkflowService
+             * @methodOf tasks.service:Task.WorkflowService
              *
              * @description
              * Make REST call for completeTask() function to complete a task.
@@ -37,7 +37,7 @@ angular.module('services').factory('Task.WorkflowService', ['$resource', '$trans
             /**
              * @ngdoc method
              * @name _completeTaskWithOutcome
-             * @methodOf services:Task.WorkflowService
+             * @methodOf tasks.service:Task.WorkflowService
              *
              * @description
              * Make REST call for completeTaskWithOutcome() function to complete a task.
@@ -56,7 +56,7 @@ angular.module('services').factory('Task.WorkflowService', ['$resource', '$trans
             /**
              * @ngdoc method
              * @name _deleteTask
-             * @methodOf services:Task.WorkflowService
+             * @methodOf tasks.service:Task.WorkflowService
              *
              * @description
              * Make REST call for deleteTask() function to delete a task.
@@ -79,7 +79,7 @@ angular.module('services').factory('Task.WorkflowService', ['$resource', '$trans
         /**
          * @ngdoc method
          * @name completeTask
-         * @methodOf services:Task.WorkflowService
+         * @methodOf tasks.service:Task.WorkflowService
          *
          * @description
          * Complete a task
@@ -107,7 +107,7 @@ angular.module('services').factory('Task.WorkflowService', ['$resource', '$trans
         /**
          * @ngdoc method
          * @name completeTaskWithOutcome
-         * @methodOf services:Task.WorkflowService
+         * @methodOf tasks.service:Task.WorkflowService
          *
          * @description
          * Complete a task with outcome.
@@ -147,7 +147,7 @@ angular.module('services').factory('Task.WorkflowService', ['$resource', '$trans
         /**
          * @ngdoc method
          * @name deleteTask
-         * @methodOf services:Task.WorkflowService
+         * @methodOf tasks.service:Task.WorkflowService
          *
          * @description
          * Delete a task
