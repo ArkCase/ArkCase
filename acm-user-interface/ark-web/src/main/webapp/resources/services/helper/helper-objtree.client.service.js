@@ -46,7 +46,7 @@ angular.module('services').factory('Helper.ObjectTreeService', ['$resource', '$t
                 this.getTreeData = arg.getTreeData;
                 this.getNodeData = arg.getNodeData;
                 this.makeTreeNode = arg.makeTreeNode;
-                this.firstLoad = false;
+                this.firstLoad = true;
             }
         };
 

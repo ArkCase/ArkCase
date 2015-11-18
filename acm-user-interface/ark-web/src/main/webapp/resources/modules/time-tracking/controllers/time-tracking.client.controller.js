@@ -9,9 +9,9 @@
 // *
 // * The Time Tracking module main controller
 // */
-angular.module('time-tracking').controller('TimeTrackingController', ['$scope', '$stateParams', '$translate', 'CallConfigService', 'TimeTrackingService', 'CallTimeTrackingService', 'ValidationService', 'UtilService',
-	function($scope, $stateParams, $translate, CallConfigService, TimeTrackingService, CallTimeTrackingService, Validator, Util) {
-		var promiseGetModuleConfig = CallConfigService.getModuleConfig("time-tracking").then(function (config) {
+angular.module('time-tracking').controller('TimeTrackingController', ['$scope', '$stateParams', '$translate', 'ConfigService', 'TimeTrackingService', 'CallTimeTrackingService', 'UtilService',
+	function ($scope, $stateParams, $translate, ConfigService, TimeTrackingService, CallTimeTrackingService, Util) {
+		var promiseGetModuleConfig = ConfigService.getModuleConfig("time-tracking").then(function (config) {
 			$scope.config = config;
 			return config;
 		});
