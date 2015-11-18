@@ -6,7 +6,7 @@
 
 /**
  * @ngdoc service
- * @name admin.service:Admin.ModuleConfigService
+ * @name admin.services:Admin.ModuleConfigService
  *
  * @description
  *

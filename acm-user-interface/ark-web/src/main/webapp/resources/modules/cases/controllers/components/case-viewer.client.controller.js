@@ -9,8 +9,8 @@
  *
  * The Viewer Controller
  */
-angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'ObjectsModelsService', 'CallCasesService',
-    function($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, SnowboundService, Authentication, EcmService, ObjectsModelsService, CallCasesService) {
+angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'ObjectsModelsService', 'Case.InfoService',
+    function ($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, SnowboundService, Authentication, EcmService, ObjectsModelsService, CaseInfoService) {
         $scope.$emit('req-component-config', 'viewer');
 
         $scope.acmTicket = '';
@@ -87,7 +87,7 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
                 $scope.ecmFileParticipants = data[7];
 
                 // Obtains the case file metadata which contains the assignee information
-                CallCasesService.getCaseInfo($scope.ecmFile.container.containerObjectId)
+                CaseInfoService.getCaseInfo($scope.ecmFile.container.containerObjectId)
                     .then(function (data) {
                         $scope.caseInfo = data;
                         $scope.assignee = ObjectsModelsService.getAssignee(data);

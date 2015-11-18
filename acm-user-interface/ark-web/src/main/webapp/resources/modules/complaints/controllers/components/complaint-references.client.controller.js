@@ -3,6 +3,7 @@
 angular.module('complaints').controller('Complaints.ReferencesController', ['$scope', '$window', 'UtilService', 'ValidationService', 'HelperService', 'LookupService',
     function ($scope, $window, Util, Validator, Helper, LookupService) {
         var z = 1;
+        $scope.gridOptions = {};
         return;
         $scope.$emit('req-component-config', 'references');
         $scope.$on('component-config', function (e, componentId, config) {

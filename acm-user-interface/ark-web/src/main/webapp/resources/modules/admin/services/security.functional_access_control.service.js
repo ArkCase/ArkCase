@@ -6,7 +6,7 @@
 
 /**
  * @ngdoc service
- * @name admin.service:Admin.FunctionalAccessControlService
+ * @name admin.services:Admin.FunctionalAccessControlService
  *
  * @description
  *
