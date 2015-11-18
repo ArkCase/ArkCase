@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('cases').controller('CasesListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'Case.ListService', 'Case.InfoService', 'CallConfigService', 'Helper.ObjectTreeService',
-    function ($scope, $state, $stateParams, $translate, Util, Constant, CaseListService, CaseInfoService, CallConfigService, HelperObjectTreeService) {
-        CallConfigService.getModuleConfig("cases").then(function (config) {
+angular.module('cases').controller('CasesListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'Case.ListService', 'Case.InfoService', 'ConfigService', 'Helper.ObjectTreeService',
+    function ($scope, $state, $stateParams, $translate, Util, Constant, CaseListService, CaseInfoService, ConfigService, HelperObjectTreeService) {
+        ConfigService.getModuleConfig("cases").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
             return config;

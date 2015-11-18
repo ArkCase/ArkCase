@@ -3,6 +3,7 @@
 angular.module('complaints').controller('Complaints.TasksController', ['$scope', '$stateParams', '$q', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'ComplaintsService',
     function ($scope, $stateParams, $q, $translate, Store, Util, Validator, Helper, LookupService, ComplaintsService) {
         var z = 1;
+        $scope.gridOptions = {};
         return;
         $scope.$emit('req-component-config', 'tasks');
         $scope.$on('component-config', function (e, componentId, config) {
