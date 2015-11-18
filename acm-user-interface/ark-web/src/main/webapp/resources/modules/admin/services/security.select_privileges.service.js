@@ -20,7 +20,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function ($http
         getAllPrivileges: getAllPrivileges,
         addRolePrivileges: addRolePrivileges,
         getRolePrivileges: getRolePrivileges,
-        upsertRole: upsertRole,
+        upsertRole: upsertRole
     });
 
     /**
