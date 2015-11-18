@@ -82,9 +82,9 @@ angular.module('admin').controller('Admin.SelectPrivilegesController', ['$scope'
                     $scope.inputValid = true;
                     $scope.roleName = value;
                     if (value == null) {
-                        $scope.saveBtnText = $translate.instant('admin.security.select-privileges.create-role');
+                        $scope.saveBtnText = $translate.instant('admin.security.selectPrivileges.createRole');
                     } else {
-                        $scope.saveBtnText = $translate.instant('admin.security.select-privileges.apply-changes');
+                        $scope.saveBtnText = $translate.instant('admin.security.selectPrivileges.applyChanges');
                     }
 
                     //watch the input to enable/disable ok button

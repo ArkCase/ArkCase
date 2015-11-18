@@ -1,21 +1,21 @@
 <div ng-controller="Admin.SelectPrivilegesController">
-    <panel-view header="{{'admin.security.select-privileges' | translate}}" collapsible="false">
+    <panel-view header="{{'admin.security.selectPrivileges' | translate}}" collapsible="false">
         <div class="pull-right">
             <div class="btn-group">
                 <button class="btn btn-sm btn-default" ng-click="editRole()" ng-disabled="editBtnDisabled"><i
                         class="fa fa-edit"/>
-                    {{'admin.security.select-privileges.edit-role' |
+                    {{'admin.security.selectPrivileges.editRole' |
                     translate}}
                 </button>
                 <button class="btn btn-sm btn-default" ng-click="newRole()"><i
                         class="fa fa-gears text"/>
-                    {{'admin.security.select-privileges.create-role' | translate}}
+                    {{'admin.security.selectPrivileges.createRole' | translate}}
                 </button>
             </div>
         </div>
         <object-authorization-roles data="appRoles" object-display-name="name" on-object-selected="onObjSelect"
                                     role-display-name="name"
                                     on-auth-role-change="onAuthRoleSelected"
-                                    object-title="{{'admin.security.select-privileges.application-role' | translate}}"/>
+                                    object-title="{{'admin.security.selectPrivileges.applicationRole' | translate}}"/>
     </panel-view>
 </div>
