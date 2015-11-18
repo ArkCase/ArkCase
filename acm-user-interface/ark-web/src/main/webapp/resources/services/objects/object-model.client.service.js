@@ -2,22 +2,22 @@
 
 /**
  * @ngdoc service
- * @name services.service:ObjectsModelsService
+ * @name services:Object.ModelService
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/models/objects-models.client.service.js services/models/objects-models.client.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/object-model.client.service.js services/object-model.client.service.js}
 
  * CallObjectsService contains wrapper functions of ObjectsService to support default error handling, data validation and data cache.
  */
-angular.module('services').factory('ObjectsModelsService', ['$q', '$resource', 'UtilService',
+angular.module('services').factory('Object.ModelService', ['$q', '$resource', 'UtilService',
     function ($q, $resource, Util) {
         return {
 
             /**
              * @ngdoc method
              * @name getAssignee
-             * @methodOf services.service:ObjectsModelsService
+             * @methodOf services:Object.ModelService
              *
              * @description
              * Search for assignee from object data
@@ -27,6 +27,9 @@ angular.module('services').factory('ObjectsModelsService', ['$q', '$resource', '
              * @returns {String} Assignee, or 'null' if not found
              */
             getAssignee: function (objectInfo) {
+                var find = _.find(objectInfo.participants, {participantType: "assignee"});
+                var a2 = _.result(find, "participantLdapId");
+
                 var assignee = null;
                 if (Util.isArray(objectInfo.participants)) {
                     for (var i = 0; i < objectInfo.participants.length; i++) {
@@ -43,7 +46,7 @@ angular.module('services').factory('ObjectsModelsService', ['$q', '$resource', '
             /**
              * @ngdoc method
              * @name setAssignee
-             * @methodOf services.service:ObjectsModelsService
+             * @methodOf services:Object.ModelService
              *
              * @description
              * Set a assignee to an object data
@@ -71,7 +74,7 @@ angular.module('services').factory('ObjectsModelsService', ['$q', '$resource', '
             /**
              * @ngdoc method
              * @name getGroup
-             * @methodOf services.service:ObjectsModelsService
+             * @methodOf services:Object.ModelService
              *
              * @description
              * Search for group from object data
@@ -97,7 +100,7 @@ angular.module('services').factory('ObjectsModelsService', ['$q', '$resource', '
             /**
              * @ngdoc method
              * @name setGroup
-             * @methodOf services.service:ObjectsModelsService
+             * @methodOf services:Object.ModelService
              *
              * @description
              * Set a group to an object data
