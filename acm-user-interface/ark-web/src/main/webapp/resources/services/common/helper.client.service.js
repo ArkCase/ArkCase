@@ -344,7 +344,7 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                     var objectTypes = cacheObjectTypes.get();
                     var promiseObjectTypes = Util.serviceCall({
                         service: LookupService.getObjectTypes
-                        , result: cacheObjectTypes
+                        , result: objectTypes
                         , onSuccess: function (data) {
                             if (Validator.validateObjectTypes(data)) {
                                 objectTypes = [];
@@ -383,34 +383,38 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                  * Get list of user full names
                  */
                 , getUsers: function (scope) {
-                    var cacheUserFullNames = new Store.SessionData(Helper.SessionCacheNames.USER_FULL_NAMES);
-                    var userFullNames = cacheUserFullNames.get();
-                    return Util.serviceCall({
-                        service: LookupService.getUsers
-                        , result: userFullNames
-                        , onSuccess: function (data) {
-                            if (Util.isArray(data)) {
-                                userFullNames = [];
-                                var arr = data;
-                                for (var i = 0; i < arr.length; i++) {
-                                    var obj = Util.goodJsonObj(arr[i]);
-                                    if (obj) {
-                                        var user = {};
-                                        user.id = Util.goodValue(obj.object_id_s);
-                                        user.name = Util.goodValue(obj.name);
-                                        userFullNames.push(user);
-                                    }
-                                }
-                                cacheUserFullNames.set(userFullNames);
-                                return userFullNames;
-                            }
-                        }
-                    }).then(
-                        function (userFullNames) {
-                            scope.userFullNames = userFullNames;
-                            return userFullNames;
-                        }
-                    );
+                    LookupService.getUserFullNames().then(function (userFullNames) {
+                        scope.userFullNames = userFullNames;
+                        return userFullNames;
+                    });
+                    //var cacheUserFullNames = new Store.SessionData(Helper.SessionCacheNames.USER_FULL_NAMES);
+                    //var userFullNames = cacheUserFullNames.get();
+                    //return Util.serviceCall({
+                    //    service: LookupService.getUsers
+                    //    , result: userFullNames
+                    //    , onSuccess: function (data) {
+                    //        if (Util.isArray(data)) {
+                    //            userFullNames = [];
+                    //            var arr = data;
+                    //            for (var i = 0; i < arr.length; i++) {
+                    //                var obj = Util.goodJsonObj(arr[i]);
+                    //                if (obj) {
+                    //                    var user = {};
+                    //                    user.id = Util.goodValue(obj.object_id_s);
+                    //                    user.name = Util.goodValue(obj.name);
+                    //                    userFullNames.push(user);
+                    //                }
+                    //            }
+                    //            cacheUserFullNames.set(userFullNames);
+                    //            return userFullNames;
+                    //        }
+                    //    }
+                    //}).then(
+                    //    function (userFullNames) {
+                    //        scope.userFullNames = userFullNames;
+                    //        return userFullNames;
+                    //    }
+                    //);
                 }
 
                 /**

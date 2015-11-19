@@ -7,7 +7,7 @@
       "menuItemURL": "tasks",
       "menuItemTitle": "Tasks",
       "iconClass": "fa fa-check-circle",
-      "position": 40
+      "position": 60
     }
   ],
   "tree": {

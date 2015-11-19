@@ -7,10 +7,84 @@
       "menuItemURL": "admin",
       "menuItemTitle": "Admin",
       "iconClass": "glyphicon glyphicon-asterisk",
-      "position": 100
+      "position": 150
     }
   ],
   "components": [
+    {
+      "id": "securityLdapConfig",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "authUserDn",
+          "displayName": "admin.security.ldapConfig.data.authUserDn",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "authUserPassword",
+          "displayName": "admin.security.ldapConfig.data.authUserPassword",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "base",
+          "displayName": "admin.security.ldapConfig.data.base",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "directoryName",
+          "displayName": "admin.security.ldapConfig.data.directoryName",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "groupSearchBase",
+          "displayName": "admin.security.ldapConfig.data.groupSearchBase",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "admin.security.ldapConfig.data.groupSearchBaseOU",
+          "displayName": "groupSearchBaseOU",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "id",
+          "displayName": "admin.security.ldapConfig.data.id",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "ldapUrl",
+          "displayName": "admin.security.ldapConfig.data.ldapUrl",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "name",
+          "displayName": "admin.security.ldapConfig.data.name",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "userIdAttributeName",
+          "displayName": "admin.security.ldapConfig.data.userIdAttributeName",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "userSearchBase",
+          "displayName": "admin.security.ldapConfig.data.userSearchBase",
+          "visible": false,
+          "headerCellFilter": "translate"
+        }
+      ]
+    }
   ],
   "adminTree": [
     {
@@ -18,23 +92,23 @@
       "folder": "true",
       "children": [
         {
-          "title": "admin.security.functional-access-control",
+          "title": "admin.security.functionalAccessControl",
           "templateName": "security.functional_access_control"
         },
         {
-          "title": "admin.security.ldap-config",
+          "title": "admin.security.ldapConfig",
           "templateName": "security.ldap_config"
         },
         {
-          "title": "admin.security.organizational-hierarchy",
+          "title": "admin.security.organizationalHierarchy",
           "templateName": "security.organizational_hierarchy"
         },
         {
-          "title": "admin.security.select-privileges",
+          "title": "admin.security.selectPrivileges",
           "templateName": "security.select_privileges"
         },
         {
-          "title": "admin.security.module-config",
+          "title": "admin.security.moduleConfig",
           "templateName": "security.module_config"
         }
       ]
@@ -80,11 +154,11 @@
       ]
     },
     {
-      "title": "admin.form-workflows.title",
+      "title": "admin.formWorkflows.title",
       "folder": "true",
       "children": [
         {
-          "title": "admin.form-workflows.link",
+          "title": "admin.formWorkflows.link",
           "templateName": "form_workflows.link"
         }
       ]
@@ -108,17 +182,17 @@
           "templateName": "branding.logo"
         },
         {
-          "title": "admin.branding.custom-css",
+          "title": "admin.branding.customCss",
           "templateName": "branding.custom_css"
         }
       ]
     },
     {
-      "title": "admin.correspondence-management.title",
+      "title": "admin.correspondenceManagement.title",
       "folder": "true",
       "children": [
         {
-          "title": "admin.correspondence-management.templates",
+          "title": "admin.correspondenceManagement.templates",
           "templateName": "correspondence_management.templates"
         }
       ]

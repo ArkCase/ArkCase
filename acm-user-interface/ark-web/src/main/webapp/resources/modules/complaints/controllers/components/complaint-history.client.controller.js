@@ -3,6 +3,7 @@
 angular.module('complaints').controller('Complaints.HistoryController', ['$scope', '$stateParams', '$q', 'UtilService', 'HelperService', 'ConstantService', 'Object.AuditService',
     function ($scope, $stateParams, $q, Util, Helper, Constant, ObjectAuditService) {
         var z = 1;
+        $scope.gridOptions = {};
         return;
         $scope.$emit('req-component-config', 'history');
         $scope.$on('component-config', function (e, componentId, config) {

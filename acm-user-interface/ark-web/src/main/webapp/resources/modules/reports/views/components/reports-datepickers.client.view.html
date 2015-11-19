@@ -2,26 +2,25 @@
 
     <label>{{'reports.label.dateFrom' | translate}}
         <div>
-            <input
-                type="date"
-                ng-model="reportsData.startDate"
-                class="form-control"
-                datepicker-popup
-                value="{{reportsData.startDate}}"
-                is-open="opened.openedStart"
-            />
+
+            <input type="text"
+                   class="form-control"
+                   datepicker-popup="{{config.datepickerPopupFormat}}"
+                   ng-model="reportsData.startDate"
+                   is-open="opened.openedStart"
+                   ng-click="opened.openedStart = !opened.openedStart"
+                   show-button-bar="false"/>
         </div>
     </label>
     <label>{{'reports.label.dateTo' | translate}}
         <div>
-            <input
-                type="date"
-                ng-model="reportsData.endDate"
-                class="form-control"
-                datepicker-popup
-                value="{{reportsData.endDate}}"
-                is-open="opened.openedEnd"
-            />
+            <input type="text"
+                   class="form-control"
+                   datepicker-popup="{{config.datepickerPopupFormat}}"
+                   ng-model="reportsData.endDate"
+                   is-open="opened.openedEnd"
+                   ng-click="opened.openedEnd = !opened.openedEnd"
+                   show-button-bar="false"/>
         </div>
     </label>
 

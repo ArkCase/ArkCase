@@ -7,7 +7,7 @@
       "menuItemURL": "reports",
       "menuItemTitle": "Reports",
       "iconClass": "fa fa-bar-chart",
-      "position": 40
+      "position": 80
     }
   ],
   "components": [
@@ -15,7 +15,8 @@
       "id": "datepickers",
       "title": "Datepickers",
       "enabled": true,
-      "type": "empty"
+      "type": "empty",
+      "datepickerPopupFormat": "MM/dd/yyyy"
     },
     {
       "id": "reportselection",
