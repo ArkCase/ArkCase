@@ -13,8 +13,8 @@
 
 //angular.module('services').factory('UtilService', ['$q', '$window', 'ngBootbox', 'LookupService',
 //    function ($q, $window, $ngBootbox, LookupService) {
-angular.module('services').factory('UtilService', ['$q', '$window', 'LookupService',
-    function ($q, $window, LookupService) {
+angular.module('services').factory('UtilService', ['$q', '$window',
+    function ($q, $window) {
         var Util = {
 
             //
