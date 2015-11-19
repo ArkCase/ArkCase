@@ -51,11 +51,5 @@ angular.module('audit').controller('Audit.DatepickersController', ['$scope', '$f
         $scope.opened = {};
         $scope.opened.openedStart = false;
         $scope.opened.openedEnd = false;
-
-        $scope.open = function ($event, datepicker) {
-            $event.stopPropagation();
-            $scope.opened[datepicker] = true;
-        };
-
     }
 ]);
