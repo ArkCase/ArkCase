@@ -6,7 +6,7 @@
 
 /**
  * @ngdoc service
- * @name admin.services:Admin.ReportsConfigService
+ * @name admin.service:Admin.ReportsConfigService
  *
  * @description
  *
@@ -25,7 +25,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name getReports
-     * @methodOf admin.services:Admin.ReportsConfigService
+     * @methodOf admin.service:Admin.ReportsConfigService
      *
      * @description
      * Performs retrieving all reports
@@ -42,7 +42,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name getUserGroups
-     * @methodOf admin.services:Admin.ReportsConfigService
+     * @methodOf admin.service:Admin.ReportsConfigService
      *
      * @description
      * Performs retrieving all user groups
@@ -59,7 +59,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name getReportsUserGroups
-     * @methodOf admin.services:Admin.ReportsConfigService
+     * @methodOf admin.service:Admin.ReportsConfigService
      *
      * @description
      * Performs retrieving all reports with user groups mapped
@@ -76,7 +76,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name saveReportsUserGroups
-     * @methodOf admin.services:Admin.DashboardConfigService
+     * @methodOf admin.service:Admin.DashboardConfigService
      *
      * @description
      * Performs saving reports with changed roles authorizations
@@ -97,7 +97,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name saveReports
-     * @methodOf admin.services:Admin.DashboardConfigService
+     * @methodOf admin.service:Admin.DashboardConfigService
      *
      * @description
      * Performs saving reports.
