@@ -1,7 +1,12 @@
 'use strict';
 
-angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'CallLookupService', 'Case.InfoService', 'LookupService', 'CasesService', 'ObjectsModelsService',
-    function ($scope, $stateParams, Store, Util, Validator, Helper, CallLookupService, CaseInfoService, LookupService, CasesService, ObjectsModelsService) {
+angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'UtilService'
+    , 'LookupService', 'Object.LookupService', 'Case.LookupService'
+    , 'Case.InfoService', 'Object.ModelService'
+    , function ($scope, $stateParams, Util
+        , LookupService, ObjectLookupService, CaseLookupService
+        , CaseInfoService, ObjectModelService) {
+
         $scope.$emit('req-component-config', 'info');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("info" == componentId) {
@@ -9,8 +14,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         });
 
-
-        CallLookupService.getUsers().then(
+        LookupService.getUsers().then(
             function (users) {
                 var options = [];
                 _.each(users, function (user) {
@@ -21,7 +25,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        CallLookupService.getPriorities().then(
+        ObjectLookupService.getPriorities().then(
             function (priorities) {
                 var options = [];
                 _.each(priorities, function (priority) {
@@ -32,21 +36,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-
-        $scope.owningGroups = [];
-        var cacheGroups = new Store.SessionData(Helper.SessionCacheNames.GROUPS);
-        var groups = cacheGroups.get();
-        Util.serviceCall({
-            service: LookupService.getGroups
-            , result: groups
-            , onSuccess: function (data) {
-                if (Validator.validateSolrData(data)) {
-                    var groups = data.response.docs;
-                    cacheGroups.set(groups);
-                    return groups;
-                }
-            }
-        }).then(
+        ObjectLookupService.getOwningGroups().then(
             function (groups) {
                 var options = [];
                 _.each(groups, function (item) {
@@ -57,20 +47,8 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        $scope.caseTypes = [];
-        var cacheCaseTypes = new Store.SessionData(Helper.SessionCacheNames.CASE_TYPES);
-        var caseTypes = cacheCaseTypes.get();
-        Util.serviceCall({
-            service: LookupService.getCaseTypes
-            , result: caseTypes
-            , onSuccess: function (data) {
-                if (Validator.validateCaseTypes(data)) {
-                    caseTypes = data;
-                    cacheCaseTypes.set(caseTypes);
-                    return caseTypes;
-                }
-            }
-        }).then(
+
+        CaseLookupService.getCaseTypes().then(
             function (caseTypes) {
                 var options = [];
                 _.forEach(caseTypes, function (item) {
@@ -81,6 +59,54 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
+        //$scope.owningGroups = [];
+        //var cacheGroups = new Store.SessionData(Helper.SessionCacheNames.GROUPS);
+        //var groups = cacheGroups.get();
+        //Util.serviceCall({
+        //    service: LookupService.getGroups
+        //    , result: groups
+        //    , onSuccess: function (data) {
+        //        if (Validator.validateSolrData(data)) {
+        //            var groups = data.response.docs;
+        //            cacheGroups.set(groups);
+        //            return groups;
+        //        }
+        //    }
+        //}).then(
+        //    function (groups) {
+        //        var options = [];
+        //        _.each(groups, function (item) {
+        //            options.push({value: item.name, text: item.name});
+        //        });
+        //        $scope.owningGroups = options;
+        //        return groups;
+        //    }
+        //);
+
+        //$scope.caseTypes = [];
+        //var cacheCaseTypes = new Store.SessionData(Helper.SessionCacheNames.CASE_TYPES);
+        //var caseTypes = cacheCaseTypes.get();
+        //Util.serviceCall({
+        //    service: LookupService.getCaseTypes
+        //    , result: caseTypes
+        //    , onSuccess: function (data) {
+        //        if (Validator.validateCaseTypes(data)) {
+        //            caseTypes = data;
+        //            cacheCaseTypes.set(caseTypes);
+        //            return caseTypes;
+        //        }
+        //    }
+        //}).then(
+        //    function (caseTypes) {
+        //        var options = [];
+        //        _.forEach(caseTypes, function (item) {
+        //            options.push({value: item, text: item});
+        //        });
+        //        $scope.caseTypes = options;
+        //        return caseTypes;
+        //    }
+        //);
+
         $scope.caseSolr = null;
         $scope.caseInfo = null;
         $scope.$on('case-selected', function onSelectedCase(e, selectedCase) {
@@ -90,8 +116,8 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
         $scope.owningGroup = null;
         $scope.$on('case-updated', function (e, data) {
             $scope.caseInfo = data;
-            $scope.assignee = ObjectsModelsService.getAssignee(data);
-            $scope.owningGroup = ObjectsModelsService.getGroup(data);
+            $scope.assignee = ObjectModelService.getAssignee(data);
+            $scope.owningGroup = ObjectModelService.getGroup(data);
         });
 
         /**
@@ -143,7 +169,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             saveCase();
         };
         $scope.updateOwningGroup = function() {
-            ObjectsModelsService.setGroup($scope.caseInfo, $scope.owningGroup);
+            ObjectModelService.setGroup($scope.caseInfo, $scope.owningGroup);
             saveCase();
         };
         $scope.updatePriority = function() {
@@ -153,7 +179,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             saveCase();
         };
         $scope.updateAssignee = function() {
-            ObjectsModelsService.setAssignee($scope.caseInfo, $scope.assignee);
+            ObjectModelService.setAssignee($scope.caseInfo, $scope.assignee);
             saveCase();
         };
         $scope.updateDueDate = function() {

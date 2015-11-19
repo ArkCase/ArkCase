@@ -2,9 +2,8 @@
     <div class="clearfix">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a href="#" editable-text="complaintInfo.title" onaftersave="updateTitle()">{{complaintInfo.title ||
-                    "Unknown"
-                    }}</a> ({{complaintInfo.status}})</h4></div>
+                <h4><a href="#" editable-text="complaintInfo.complaintTitle" onaftersave="updateTitle()">
+                    {{complaintInfo.complaintTitle || "Unknown" }}</a> ({{complaintInfo.status}})</h4></div>
             <div class="col-xs-6  text-right">
                 <h4>{{complaintInfo.complaintNumber}}</h4>
             </div>
@@ -41,7 +40,8 @@
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="#" editable-select="assignee" onaftersave="updateAssignee()"
-                       e-ng-options="a.value as a.text for a in assignableUsers">{{assignee || 'Unknown'}}</a>
+                       e-ng-options="a.object_id_s as a.name for a in assignableUsers">{{assignee |
+                        mapKeyValue: assignableUsers:'object_id_s':'name' || 'Unknown'}}</a>
                 </div>
                 <small class="text-muted">Assigned To</small>
             </div>

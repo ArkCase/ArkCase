@@ -79,7 +79,7 @@ angular.module('services').factory('Complaint.InfoService', ['$resource', '$tran
                 var cacheComplaintInfo = new Store.CacheFifo(Service.CacheNames.COMPLAINT_INFO);
                 cacheComplaintInfo.put(complaintInfo.id, complaintInfo);
             }
-        }
+        };
 
         /**
          * @ngdoc method
