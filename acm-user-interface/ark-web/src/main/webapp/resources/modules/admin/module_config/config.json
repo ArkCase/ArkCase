@@ -6,7 +6,7 @@
       "menuId": "leftnav",
       "menuItemURL": "admin",
       "menuItemTitle": "Admin",
-      "iconClass": "glyphicon glyphicon-asterisk",
+      "iconClass": "fa fa-wrench",
       "position": 150
     }
   ],
