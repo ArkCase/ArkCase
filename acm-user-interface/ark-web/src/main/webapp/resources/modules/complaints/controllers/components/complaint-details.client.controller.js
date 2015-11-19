@@ -2,8 +2,6 @@
 
 angular.module('complaints').controller('Complaints.DetailsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'Complaint.InfoService', 'MessageService',
     function ($scope, $stateParams, $translate, Util, ComplaintInfoService, MessageService) {
-        var z = 1;
-        return;
         $scope.$emit('req-component-config', 'details');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('details' == componentId) {
