@@ -1,17 +1,171 @@
 {
-    "id": "cost-tracking",
-    "title": "Cost tracking",
-    "menus": [
-        
-        {
-            "menuId": "leftnav",
-            "menuItemURL": "cost-tracking",
-            "menuItemTitle": "Cost tracking",
-            "iconClass": "glyphicon glyphicon-asterisk",
-            "position": 120
-        }
-        
+  "id": "cost-tracking",
+  "title": "Cost tracking",
+  "menus": [
+    {
+      "menuId": "leftnav",
+      "menuItemURL": "cost-tracking",
+      "menuItemTitle": "Cost tracking",
+      "iconClass": "fa fa-money",
+      "position": 120
+    }
+  ],
+  "tree": {
+    "pageSize": 32,
+    "sorters": [
+      {
+        "desc": "Sort Date Ascending",
+        "name": "create_tdt ASC",
+        "default": true
+      },
+      {
+        "desc": "Sort Date Decending",
+        "name": "create_tdt DESC"
+      },
+      {
+        "desc": "Sort Costsheet ID Ascending",
+        "name": "id ASC"
+      },
+      {
+        "desc": "Sort Costsheet ID Decending",
+        "name": "id DESC"
+      },
+      {
+        "desc": "Sort By Costsheet Name",
+        "name": "name DESC"
+      }
     ],
-    "components": [
-   ]
+    "nodeTypes": [
+      {
+        "type": "prev",
+        "icon": "fa fa-arrow-up"
+      },
+      {
+        "type": "next",
+        "icon": "fa fa-arrow-down"
+      },
+      {
+        "type": "p/COSTSHEET",
+        "icon": "fa fa-money",
+        "components": [
+          "details",
+          "person",
+          "costSummary"
+        ]
+      },
+      {
+        "type": "p/COSTSHEET/detail",
+        "label": "Detail",
+        "components": [
+          "details"
+        ]
+      },
+      {
+        "type": "p/COSTSHEET/person",
+        "label": "Person",
+        "components": [
+          "person"
+        ]
+      },
+      {
+        "type": "p/COSTSHEET/costSummary",
+        "label": "Expenses",
+        "components": [
+          "costSummary"
+        ]
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "actions",
+      "title": "Actions",
+      "enabled": false,
+      "type": "empty",
+      "editable": false
+    },
+    {
+      "id": "details",
+      "title": "Details",
+      "enabled": true,
+      "type": "empty"
+    },
+    {
+      "id": "person",
+      "title": "Person",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "fullName",
+          "displayName": "costTracking.comp.people.table.columns.fullName",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "userId",
+          "displayName": "costTracking.comp.people.table.columns.userId",
+          "headerCellFilter": "translate"
+        }
+      ]
+    },
+    {
+      "id": "time-summary",
+      "title": "Time Summary",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        2,
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "parentId",
+          "displayName": "costTracking.comp.timesSummary.table.columns.parentId",
+          "headerCellFilter": "translate",
+          "visible": false
+        },
+        {
+          "name": "parentNumber",
+          "displayName": "costTracking.comp.timesSummary.table.columns.parentNumber",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjectType($event, row.entity)'>{{row.entity.parentNumber}}</a>"
+        },
+        {
+          "name": "parentType",
+          "displayName": "costTracking.comp.timesSummary.table.columns.parentType",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "value",
+          "displayName": "costTracking.comp.timesSummary.table.columns.value",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title",
+          "displayName": "costTracking.comp.timesSummary.table.columns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "description",
+          "displayName": "costTracking.comp.timesSummary.table.columns.description",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ row.entity.description || 'N/A' }}</div>"
+        }
+      ]
+    }
+  ]
 }
