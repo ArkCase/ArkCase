@@ -273,7 +273,7 @@ public class MergeCaseFileServiceIT extends EasyMock
         CaseFile sourceCase = caseFileDao.find(sourceId);
         CaseFile targetCase = caseFileDao.find(targetId);
 
-        assertEquals(3, targetCase.getParticipants().size());
+        assertEquals(5, targetCase.getParticipants().size());
 
         AcmParticipant foundAssignee = null;
         for (AcmParticipant ap : targetCase.getParticipants())
@@ -336,7 +336,7 @@ public class MergeCaseFileServiceIT extends EasyMock
         assertNotNull(sourceId);
         assertNotNull(targetId);
 
-        assertEquals(3, targetSaved.getParticipants().size());
+        assertEquals(5, targetSaved.getParticipants().size());
 
         AcmParticipant foundAssignee = null;
         for (AcmParticipant ap : targetSaved.getParticipants())
@@ -360,7 +360,7 @@ public class MergeCaseFileServiceIT extends EasyMock
         CaseFile sourceCase = caseFileDao.find(sourceId);
         CaseFile targetCase = caseFileDao.find(targetId);
 
-        assertEquals(4, targetCase.getParticipants().size());
+        assertEquals(6, targetCase.getParticipants().size());
 
         foundAssignee = null;
         for (AcmParticipant ap : targetCase.getParticipants())

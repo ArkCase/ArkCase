@@ -3,11 +3,7 @@
     "title": "Administration",
     "menus": [
         {
-            "menuId": "leftnav",
-            "menuItemURL": "administration",
-            "menuItemTitle": "Administration",
-            "iconClass": "fa fa-wrench",
-            "position": 100
+
         }
     ],
     "components": [
