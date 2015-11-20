@@ -9,7 +9,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/security.ldap.config.service.js modules/admin/services/security.ldap.config.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/security.ldap.config.client.service.js modules/admin/services/security.ldap.config.client.service.js}
  *
  * The Admin.LdapConfigService provides LDAP Config REST calls functionality
  */
@@ -23,7 +23,7 @@ angular.module('admin').service('Admin.LdapConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name retrieveDirectories
-     * @methodOf admin.services:Admin.LdapConfigService
+     * @methodOf admin.service:Admin.LdapConfigService
      *
      * @description
      * Performs retrieving all directories in ldap configuration
@@ -39,7 +39,7 @@ angular.module('admin').service('Admin.LdapConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name createDirectory
-     * @methodOf admin.services:Admin.LdapConfigService
+     * @methodOf admin.service:Admin.LdapConfigService
      *
      * @description
      * Create new directory in ldap configuration
@@ -62,7 +62,7 @@ angular.module('admin').service('Admin.LdapConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name deleteDirectory
-     * @methodOf admin.services:Admin.LdapConfigService
+     * @methodOf admin.service:Admin.LdapConfigService
      *
      * @description
      * Delete directory in ldap configuration
@@ -82,7 +82,7 @@ angular.module('admin').service('Admin.LdapConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name updateDirectory
-     * @methodOf admin.services:Admin.LdapConfigService
+     * @methodOf admin.service:Admin.LdapConfigService
      *
      * @description
      * Updates directory in ldap configuration

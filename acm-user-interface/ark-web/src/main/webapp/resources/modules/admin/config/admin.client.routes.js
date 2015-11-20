@@ -16,7 +16,7 @@ angular.module('admin').config(['$stateProvider',
             }).state('admin.view-node', {
                 url: '/view-node/:nodeName',
                 templateUrl: function ($stateParams) {
-                    return 'modules/admin/views/components/' + $stateParams.nodeName + '.view.html';
+                    return 'modules/admin/views/components/' + $stateParams.nodeName + '.client.view.html';
                 }
             });
     }

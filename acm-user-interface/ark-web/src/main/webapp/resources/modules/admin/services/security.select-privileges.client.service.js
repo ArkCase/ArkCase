@@ -10,7 +10,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/security.select_privileges.service.js modules/admin/services/security.select_privileges.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/security.select-privileges.client.service.js modules/admin/services/security.select-privileges.client.service.js}
  *
  * The Admin.SelectPrivilegesService provides Create Role/Select privileges REST calls functionality
  */

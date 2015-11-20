@@ -10,7 +10,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/security.module_config.service.js modules/admin/services/security.module_config.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/security.module-config.client.service.js modules/admin/services/security.module-config.client.service.js}
  *
  * The Admin.ModuleConfigService provides Modules config REST calls functionality
  */
