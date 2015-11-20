@@ -8,6 +8,13 @@
       "menuItemTitle": "Tasks",
       "iconClass": "fa fa-check-circle",
       "position": 60
+    },
+    {
+      "menuId": "topbar",
+      "menuItemURL": "tasks.wizard",
+      "menuItemTitle": "Task",
+      "iconClass": "fa fa-check-circle",
+      "position": 30
     }
   ],
   "tree": {
