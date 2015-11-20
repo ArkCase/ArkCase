@@ -11,8 +11,8 @@
  * This service package contains various commonly used miscellaneous help functions.
  */
 
-angular.module('services').factory('HelperService', ['$q', '$window', 'StoreService', 'UtilService', 'ValidationService', 'LookupService', 'Authentication',
-    function ($q, $window, Store, Util, Validator, LookupService, Authentication) {
+angular.module('services').factory('HelperService', ['$q', '$window', 'UtilService', 'LookupService', 'Object.LookupService',
+    function ($q, $window, Util, LookupService, ObjectLookupService) {
         var Helper = {
             ObjectTypes: {
                 CASE_FILE: "CASE_FILE"
@@ -340,28 +340,33 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                  * Go to a page that show the specified ArkCase Object (Case, Complaint, Document, etc.)
                  */
                 , showObject: function (scope, objType, objId) {
-                    var cacheObjectTypes = new Store.SessionData(Helper.SessionCacheNames.OBJECT_TYPES);
-                    var objectTypes = cacheObjectTypes.get();
-                    var promiseObjectTypes = Util.serviceCall({
-                        service: LookupService.getObjectTypes
-                        , result: objectTypes
-                        , onSuccess: function (data) {
-                            if (Validator.validateObjectTypes(data)) {
-                                objectTypes = [];
-                                _.forEach(data, function (item) {
-                                    objectTypes.push(item);
-                                });
-                                cacheObjectTypes.set(objectTypes);
-                                return objectTypes;
-                            }
-                        }
-                    }).then(
+                    //var cacheObjectTypes = new Store.SessionData(Helper.SessionCacheNames.OBJECT_TYPES);
+                    //var objectTypes = cacheObjectTypes.get();
+                    //var promiseObjectTypes = Util.serviceCall({
+                    //    service: LookupService.getObjectTypes
+                    //    , result: objectTypes
+                    //    , onSuccess: function (data) {
+                    //        if (Validator.validateObjectTypes(data)) {
+                    //            objectTypes = [];
+                    //            _.forEach(data, function (item) {
+                    //                objectTypes.push(item);
+                    //            });
+                    //            cacheObjectTypes.set(objectTypes);
+                    //            return objectTypes;
+                    //        }
+                    //    }
+                    //}).then(
+                    //    function (objectTypes) {
+                    //        scope.objectTypes = objectTypes;
+                    //        return objectTypes;
+                    //    }
+                    //);
+                    var promiseObjectTypes = ObjectLookupService.getObjectTypes().then(
                         function (objectTypes) {
                             scope.objectTypes = objectTypes;
                             return objectTypes;
                         }
                     );
-
                     promiseObjectTypes.then(function (data) {
                         var found = _.find(scope.objectTypes, {type: objType});
                         if (found) {
@@ -383,7 +388,7 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                  * Get list of user full names
                  */
                 , getUsers: function (scope) {
-                    LookupService.getUserFullNames().then(function (userFullNames) {
+                    return LookupService.getUserFullNames().then(function (userFullNames) {
                         scope.userFullNames = userFullNames;
                         return userFullNames;
                     });
