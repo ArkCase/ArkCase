@@ -8,6 +8,13 @@
       "menuItemTitle": "Case Files",
       "iconClass": "fa fa-folder",
       "position": 50
+    },
+    {
+      "menuId": "topbar",
+      "menuItemURL": "newcase",
+      "menuItemTitle": "Case File",
+      "iconClass": "fa fa-folder",
+      "position": 20
     }
   ],
   "tree": {
