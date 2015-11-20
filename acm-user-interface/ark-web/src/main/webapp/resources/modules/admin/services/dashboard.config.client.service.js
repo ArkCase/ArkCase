@@ -5,11 +5,11 @@
 'use strict';
 /**
  * @ngdoc service
- * @name admin.services:Admin.DashboardConfigService
+ * @name admin.service:Admin.DashboardConfigService
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/dashboard.config.service.js modules/admin/services/dashboard.config.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/dashboard.config.client.service.js modules/admin/services/dashboard.config.client.service.js}
  *
  * The Admin.DashboardConfigService provides Dashboard Config REST calls functionality
  */
@@ -21,7 +21,7 @@ angular.module('admin').service('Admin.DashboardConfigService', function ($http)
     /**
      * @ngdoc method
      * @name getRolesByWidgets
-     * @methodOf admin.services:Admin.DashboardConfigService
+     * @methodOf admin.service:Admin.DashboardConfigService
      *
      * @description
      * Performs retrieving all widgets with defined roles authorization for dashboard
@@ -38,7 +38,7 @@ angular.module('admin').service('Admin.DashboardConfigService', function ($http)
     /**
      * @ngdoc method
      * @name getRolesByWidgets
-     * @methodOf admin.services:Admin.DashboardConfigService
+     * @methodOf admin.service:Admin.DashboardConfigService
      *
      * @description
      * Performs saving widget with changed roles authorizations

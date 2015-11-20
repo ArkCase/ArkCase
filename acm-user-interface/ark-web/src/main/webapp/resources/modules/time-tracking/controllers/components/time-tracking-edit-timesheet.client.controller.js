@@ -47,12 +47,3 @@ angular.module('time-tracking').controller('TimeTracking.EditTimesheetController
 
     }
 ]);
-        $scope.config = null;
-        $scope.$on('component-config', applyConfig);
-        function applyConfig(e, componentId, config) {
-            if (componentId == 'edittimesheet') {
-                $scope.config = config;
-            }
-        }
-    }
-]);
