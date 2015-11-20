@@ -6,11 +6,11 @@
 
 /**
  * @ngdoc service
- * @name admin.services:Admin.ReportsConfigService
+ * @name admin.service:Admin.ReportsConfigService
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/reports.config.service.js modules/admin/services/reports.config.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/reports.config.client.service.js modules/admin/services/reports.config.client.service.js}
  *
  * The Admin.ReportsConfigService provides Reports Config REST calls functionality
  */
@@ -25,7 +25,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name getReports
-     * @methodOf admin.services:Admin.ReportsConfigService
+     * @methodOf admin.service:Admin.ReportsConfigService
      *
      * @description
      * Performs retrieving all reports
@@ -42,7 +42,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name getUserGroups
-     * @methodOf admin.services:Admin.ReportsConfigService
+     * @methodOf admin.service:Admin.ReportsConfigService
      *
      * @description
      * Performs retrieving all user groups
@@ -59,7 +59,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name getReportsUserGroups
-     * @methodOf admin.services:Admin.ReportsConfigService
+     * @methodOf admin.service:Admin.ReportsConfigService
      *
      * @description
      * Performs retrieving all reports with user groups mapped
@@ -76,7 +76,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name saveReportsUserGroups
-     * @methodOf admin.services:Admin.DashboardConfigService
+     * @methodOf admin.service:Admin.DashboardConfigService
      *
      * @description
      * Performs saving reports with changed roles authorizations
@@ -97,7 +97,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name saveReports
-     * @methodOf admin.services:Admin.DashboardConfigService
+     * @methodOf admin.service:Admin.DashboardConfigService
      *
      * @description
      * Performs saving reports.

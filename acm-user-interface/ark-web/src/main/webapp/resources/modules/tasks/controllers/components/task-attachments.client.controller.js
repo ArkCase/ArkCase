@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ConstantService', 'CallLookupService',
-    function ($scope, $stateParams, $modal, Util, Constant, CallLookupService) {
+angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ConstantService', 'Object.LookupService',
+    function ($scope, $stateParams, $modal, Util, Constant, ObjectLookupService) {
         $scope.$emit('req-component-config', 'attachments');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('attachments' == componentId) {
@@ -10,7 +10,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         });
 
 
-        CallLookupService.getFileTypes().then(
+        ObjectLookupService.getFileTypes().then(
             function (fileTypes) {
                 $scope.fileTypes = $scope.fileTypes || [];
                 $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));

@@ -8,6 +8,13 @@
       "menuItemTitle": "Complaints",
       "iconClass": "fa fa-exclamation-triangle",
       "position": 40
+    },
+    {
+      "menuId": "topbar",
+      "menuItemURL": "complaints",
+      "menuItemTitle": "New Complaint",
+      "iconClass": "fa fa-exclamation-triangle",
+      "position": 20
     }
   ],
   "tree": {

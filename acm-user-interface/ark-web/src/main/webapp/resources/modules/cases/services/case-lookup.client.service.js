@@ -8,7 +8,7 @@
  *
  * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/services/case-lookup.client.service.js modules/cases/services/case-lookup.client.service.js}
  *
- * Case.LookupService provides functions for Case database data
+ * Case.LookupService provides functions for Case lookup data
  */
 angular.module('services').factory('Case.LookupService', ['$resource', '$translate', 'StoreService', 'UtilService', 'Object.LookupService',
     function ($resource, $translate, Store, Util, ObjectLookupService) {
@@ -19,7 +19,7 @@ angular.module('services').factory('Case.LookupService', ['$resource', '$transla
              * methodOf services:Case.LookupService
              *
              * @description
-             * Query case data
+             * Query list of case types
              *
              * @returns {Object} Object returned by $resource
              */

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'CasesService', 'LookupService',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, CasesService, LookupService) {
+angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'Case.InfoService', 'LookupService', 'Object.LookupService',
+    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, CaseInfoService, LookupService, ObjectLookupService) {
         var deferParticipantData = new Store.Variable("deferCaseParticipantData");    // used to hold grid data before grid config is ready
 
         var promiseConfig = Helper.requestComponentConfig($scope, "participants", function (config) {
@@ -123,25 +123,31 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             }
         );
 
-        var cacheParticipantGroups = new Store.SessionData(Helper.SessionCacheNames.PARTICIPANT_GROUPS);
-        var participantGroups = cacheParticipantGroups.get();
-        var promiseGroups = Util.serviceCall({
-            service: LookupService.getGroups
-            , result: participantGroups
-            , onSuccess: function (data) {
-                if (Validator.validateSolrData(data)) {
-                    participantGroups = [];
-                    _.each(data.response.docs, function (doc) {
-                        var group = {};
-                        group.id = Util.goodValue(doc.object_id_s, 0);
-                        group.name = Util.goodValue(doc.name);
-                        participantGroups.push(group);
-                    });
-                    cacheParticipantGroups.set(participantGroups);
-                    return participantGroups;
-                }
-            }
-        }).then(
+        //var cacheParticipantGroups = new Store.SessionData(Helper.SessionCacheNames.PARTICIPANT_GROUPS);
+        //var participantGroups = cacheParticipantGroups.get();
+        //var promiseGroups = Util.serviceCall({
+        //    service: LookupService.getGroups
+        //    , result: participantGroups
+        //    , onSuccess: function (data) {
+        //        if (Validator.validateSolrData(data)) {
+        //            participantGroups = [];
+        //            _.each(data.response.docs, function (doc) {
+        //                var group = {};
+        //                group.id = Util.goodValue(doc.object_id_s, 0);
+        //                group.name = Util.goodValue(doc.name);
+        //                participantGroups.push(group);
+        //            });
+        //            cacheParticipantGroups.set(participantGroups);
+        //            return participantGroups;
+        //        }
+        //    }
+        //}).then(
+        //    function (participantGroups) {
+        //        $scope.participantGroups = participantGroups;
+        //        return participantGroups;
+        //    }
+        //);
+        var promiseGroups = ObjectLookupService.getOwningGroups().then(
             function (participantGroups) {
                 $scope.participantGroups = participantGroups;
                 return participantGroups;
@@ -187,15 +193,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
         };
         $scope.updateRow = function (rowEntity) {
             var caseInfo = Util.omitNg($scope.caseInfo);
-            Util.serviceCall({
-                service: CasesService.save
-                , data: caseInfo
-                , onSuccess: function (data) {
-                    if (Validator.validateCaseFile(data)) {
-                        return data;
-                    }
-                }
-            }).then(
+            CaseInfoService.saveCaseInfo(caseInfo).then(
                 function (caseSaved) {
                     //if participant is newly added, fill incomplete values with the latest
                     if (Util.isEmpty(rowEntity.id)) {
@@ -211,24 +209,29 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                     return caseSaved;
                 }
             );
-            //CasesService.save({}, caseInfo
-            //    , function (caseSaved) {
-            //        if (Validator.validateCaseFile(caseSaved)) {
-            //            //if participant is newly added, fill incomplete values with the latest
-            //            if (Util.isEmpty(rowEntity.id)) {
-            //                var participants = Util.goodMapValue(caseSaved, "participants", []);
-            //                var participantAdded = _.find(participants, {
-            //                    participantType: rowEntity.participantType,
-            //                    participantLdapId: rowEntity.participantLdapId
-            //                });
-            //                if (participantAdded) {
-            //                    rowEntity = _.merge(rowEntity, participantAdded);
-            //                }
-            //            }
+
+            //Util.serviceCall({
+            //    service: CasesService.save
+            //    , data: caseInfo
+            //    , onSuccess: function (data) {
+            //        if (Validator.validateCaseFile(data)) {
+            //            return data;
             //        }
             //    }
-            //    , function (errorData) {
-            //        var z = 2;
+            //}).then(
+            //    function (caseSaved) {
+            //        //if participant is newly added, fill incomplete values with the latest
+            //        if (Util.isEmpty(rowEntity.id)) {
+            //            var participants = Util.goodMapValue(caseSaved, "participants", []);
+            //            var participantAdded = _.find(participants, {
+            //                participantType: rowEntity.participantType,
+            //                participantLdapId: rowEntity.participantLdapId
+            //            });
+            //            if (participantAdded) {
+            //                rowEntity = _.merge(rowEntity, participantAdded);
+            //            }
+            //        }
+            //        return caseSaved;
             //    }
             //);
         };
@@ -238,26 +241,16 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row
                 var caseInfo = Util.omitNg($scope.caseInfo);
-                Util.serviceCall({
-                    service: CasesService.save
-                    , data: caseInfo
-                    , onSuccess: function (data) {
-                        if (Validator.validateCaseFile(data)) {
-                            return data;
-                        }
-                    }
-                });
-                //CasesService.save({}, caseInfo
-                //    , function (caseSaved) {
-                //        if (Validator.validateCaseFile(caseSaved)) {
-                //            var z = 1;
+                CaseInfoService.saveCaseInfo(caseInfo);
+                //Util.serviceCall({
+                //    service: CasesService.save
+                //    , data: caseInfo
+                //    , onSuccess: function (data) {
+                //        if (Validator.validateCaseFile(data)) {
+                //            return data;
                 //        }
-                //        var z = 1;
                 //    }
-                //    , function (errorData) {
-                //        var z = 2;
-                //    }
-                //);
+                //});
             }
 
         };
