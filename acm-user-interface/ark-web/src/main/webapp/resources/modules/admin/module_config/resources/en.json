@@ -74,7 +74,12 @@
     "labels.config": "Label Configuration",
     "branding.title": "Branding",
     "branding.logo": "Logo",
-    "branding.customCss": "Custom CSS",
+    "branding": {
+      "customCss": "Custom CSS",
+      "customCss.save.success": "Custom CSS updated. Refresh browser page to see result.",
+      "customCss.save.error": "Error saving Custom CSS.",
+      "customCss.save": "Save"
+    },
     "correspondenceManagement.title": "Correspondence Management",
     "correspondenceManagement.templates": "Correspondence Templates"
   }

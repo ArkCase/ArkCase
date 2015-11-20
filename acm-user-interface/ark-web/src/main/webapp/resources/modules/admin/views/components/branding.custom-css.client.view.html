@@ -1,8 +1,27 @@
 <div ng-controller="Admin.BrandingCustomCssController">
-    <div class="header">
-        <h3>
-            {{'admin.branding.customCss' | translate}}
-        </h3>
-    </div>
-    Not yet implemented
+    <panel-view header="{{'admin.branding.customCss' | translate}}" collapsible="false">
+        <div class="row">
+            <div class="pull-right">
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-default" ng-click="saveCssData()" ng-disabled="saveBtnDisabled"><i
+                            class="fa fa-edit"/>
+                        {{'admin.branding.customCss.save' |
+                        translate}}
+                    </button>
+                    <br/>
+                    <br/>
+                </div>
+            </div>
+        </div>
+        <div class="???">
+            <div ui-ace="{
+              useWrapMode : true,
+              showGutter: true,
+              theme:'chrome',
+              mode: 'css',
+              onLoad: aceLoaded,
+              onChange: dataChanged}">
+            </div>
+        </div>
+    </panel-view>
 </div>
