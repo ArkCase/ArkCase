@@ -77,7 +77,7 @@ angular.module('admin').controller('Admin.SelectPrivilegesController', ['$scope'
         $scope.showModal = function (value) {
             var modalInstance = $modal.open({
                 animation: true,
-                templateUrl: 'modules/admin/views/components/security.select_privileges.create-edit.dialog.html',
+                templateUrl: 'modules/admin/views/components/security.select-privileges.create-edit.dialog.html',
                 controller: function ($scope, $modalInstance) {
                     $scope.inputValid = true;
                     $scope.roleName = value;

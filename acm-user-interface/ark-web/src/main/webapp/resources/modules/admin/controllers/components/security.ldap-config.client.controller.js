@@ -59,7 +59,7 @@ angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Adm
 
             var modalInstance = $modal.open({
                 scope: modalScope,
-                templateUrl: 'modules/admin/views/components/security.ldap_config.popup.html',
+                templateUrl: 'modules/admin/views/components/security.ldap-config.popup.html',
                 backdrop: 'static',
                 controller: function ($scope, $modalInstance) {
                     $scope.ok = function () {

@@ -93,23 +93,23 @@
       "children": [
         {
           "title": "admin.security.functionalAccessControl",
-          "templateName": "security.functional_access_control"
+          "templateName": "security.functional-access-control"
         },
         {
           "title": "admin.security.ldapConfig",
-          "templateName": "security.ldap_config"
+          "templateName": "security.ldap-config"
         },
         {
           "title": "admin.security.organizationalHierarchy",
-          "templateName": "security.organizational_hierarchy"
+          "templateName": "security.organizational-hierarchy"
         },
         {
           "title": "admin.security.selectPrivileges",
-          "templateName": "security.select_privileges"
+          "templateName": "security.select-privileges"
         },
         {
           "title": "admin.security.moduleConfig",
-          "templateName": "security.module_config"
+          "templateName": "security.module-config"
         }
       ]
     },
@@ -159,7 +159,7 @@
       "children": [
         {
           "title": "admin.formWorkflows.link",
-          "templateName": "form_workflows.link"
+          "templateName": "form-workflows.link"
         }
       ]
     },
@@ -183,7 +183,7 @@
         },
         {
           "title": "admin.branding.customCss",
-          "templateName": "branding.custom_css"
+          "templateName": "branding.custom-css"
         }
       ]
     },
@@ -193,7 +193,7 @@
       "children": [
         {
           "title": "admin.correspondenceManagement.templates",
-          "templateName": "correspondence_management.templates"
+          "templateName": "correspondence-management.templates"
         }
       ]
     }
