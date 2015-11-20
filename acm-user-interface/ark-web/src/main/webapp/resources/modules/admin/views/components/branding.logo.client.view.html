@@ -1,8 +1,40 @@
-<div ng-controller="Admin.BrandingLogoController">
-    <div class="header">
-        <h3>
-            {{'admin.branding.logo' | translate}}
-        </h3>
+<panel-view header="{{'admin.branding.logo' | translate}}" collapsible="false">
+    <div ng-controller="Admin.BrandingLogoController">
+        <div class="row">
+            <section class="bg-info">
+                <div class="row m-b-lg ">
+                    <div class="col-lg-6">
+                        <h3>Header</h3>
+                        <img id="imgCustomHeaderLogo" src="proxy/arkcase/branding/headerlogo.png"/>
+                    </div>
+                    <div class="col-lg-6 text-center">
+                        <button name="headerLogo" ng-disabled="uploadingInProgress" ngf-select
+                                data-ng-model="selectedHeaderFile"
+                                class="btn btn-sm btn-default">{{'admin.branding.logo.chooseHeader.btn' | translate}}
+                        </button>
+                        <div ng-bind="selectedHeaderFile.name"></div>
+                    </div>
+                </div>
+                <div class="row m-b-lg ">
+                    <div class="col-lg-6">
+                        <h3>Login Page</h3>
+                        <img id="imgCustomLoginLogo" src="proxy/arkcase/branding/loginlogo.png"/>
+                    </div>
+                    <div class="col-lg-6 text-center">
+                        <button name="loginLogo" accept="image/png" ng-disabled="uploadingInProgress"
+                                ng-model="selectedLoginFile" ngf-select
+                                class="btn btn-sm btn-default">{{'admin.branding.logo.chooseLogin.btn' | translate}}
+                        </button>
+                        <div>{{selectedLoginFile.name}}</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="row">
+            <button class="btn btn-sm btn-default" ng-click="saveFiles()"><i
+                    class="fa fa-gears text"/>
+                {{'admin.branding.logo.saveFiles' | translate}}
+            </button>
+        </div>
     </div>
-    Not yet implemented
-</div>
+</panel-view>
