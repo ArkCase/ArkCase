@@ -9,7 +9,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/dashboard.config.service.js modules/admin/services/dashboard.config.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/dashboard.config.client.service.js modules/admin/services/dashboard.config.client.service.js}
  *
  * The Admin.DashboardConfigService provides Dashboard Config REST calls functionality
  */
