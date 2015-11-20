@@ -8,9 +8,9 @@
                         <img id="imgCustomHeaderLogo" src="proxy/arkcase/branding/headerlogo.png"/>
                     </div>
                     <div class="col-lg-6 text-center">
-                        <button name="headerLogo" ng-disabled="uploadingInProgress" ngf-select
+                        <button name="headerLogo" accept="image/png" ng-disabled="uploadingInProgress" ngf-select
                                 data-ng-model="selectedHeaderFile"
-                                class="btn btn-sm btn-default">{{'admin.branding.logo.chooseHeader.btn' | translate}}
+                                class="btn btn-sm btn-default">{{'admin.branding.logo.btn.chooseHeader' | translate}}
                         </button>
                         <div ng-bind="selectedHeaderFile.name"></div>
                     </div>
@@ -23,7 +23,7 @@
                     <div class="col-lg-6 text-center">
                         <button name="loginLogo" accept="image/png" ng-disabled="uploadingInProgress"
                                 ng-model="selectedLoginFile" ngf-select
-                                class="btn btn-sm btn-default">{{'admin.branding.logo.chooseLogin.btn' | translate}}
+                                class="btn btn-sm btn-default">{{'admin.branding.logo.btn.chooseLogin' | translate}}
                         </button>
                         <div>{{selectedLoginFile.name}}</div>
                     </div>
@@ -31,9 +31,10 @@
             </section>
         </div>
         <div class="row">
+            <br/>
             <button class="btn btn-sm btn-default" ng-click="saveFiles()"><i
-                    class="fa fa-gears text"/>
-                {{'admin.branding.logo.saveFiles' | translate}}
+                    class="fa fa-save text"/>
+                {{'admin.branding.logo.btn.saveFiles' | translate}}
             </button>
         </div>
     </div>
