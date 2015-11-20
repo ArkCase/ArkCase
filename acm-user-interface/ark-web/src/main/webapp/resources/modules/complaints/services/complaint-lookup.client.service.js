@@ -19,7 +19,7 @@ angular.module('services').factory('Complaint.LookupService', ['$resource', '$tr
              * methodOf services:Complaint.LookupService
              *
              * @description
-             * Query complaint data
+             * Query list of complaint types
              *
              * @returns {Object} Object returned by $resource
              */
