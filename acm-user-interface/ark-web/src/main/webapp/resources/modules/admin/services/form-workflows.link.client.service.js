@@ -6,11 +6,11 @@
 
 /**
  * @ngdoc service
- * @name admin.services:Admin.FormWorkflowsLinkService
+ * @name admin.service:Admin.FormWorkflowsLinkService
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/form_workflows.link.service.js modules/admin/services/form_workflows.link.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/form-workflows.link.client.service.js modules/admin/services/form-workflows.link.client.service.js}
  *
  * The Admin.ReportsConfigService provides Form workflows link calls functionality
  */
@@ -22,7 +22,7 @@ angular.module('admin').service('Admin.FormWorkflowsLinkService', function ($htt
     /**
      * @ngdoc method
      * @name getReports
-     * @methodOf admin.services:Admin.FormWorkflowsLinkService
+     * @methodOf admin.service:Admin.FormWorkflowsLinkService
      *
      * @description
      * Performs retrieving all data
@@ -39,7 +39,7 @@ angular.module('admin').service('Admin.FormWorkflowsLinkService', function ($htt
     /**
      * @ngdoc method
      * @name saveData
-     * @methodOf admin.services:Admin.FormWorkflowsLinkService
+     * @methodOf admin.service:Admin.FormWorkflowsLinkService
      *
      * @description
      * Performs saving form workflow links.

@@ -6,11 +6,11 @@
 
 /**
  * @ngdoc service
- * @name admin.services:Admin.SelectPrivilegesService
+ * @name admin.service:Admin.SelectPrivilegesService
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/security.select_privileges.service.js modules/admin/services/security.select_privileges.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/security.select-privileges.client.service.js modules/admin/services/security.select-privileges.client.service.js}
  *
  * The Admin.SelectPrivilegesService provides Create Role/Select privileges REST calls functionality
  */
@@ -26,7 +26,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function ($http
     /**
      * @ngdoc method
      * @name getAppRoles
-     * @methodOf admin.services:Admin.SelectPrivilegesService
+     * @methodOf admin.service:Admin.SelectPrivilegesService
      *
      * @description
      * Performs retrieving all application roles
@@ -43,7 +43,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function ($http
     /**
      * @ngdoc method
      * @name getAllPrivileges
-     * @methodOf admin.services:Admin.SelectPrivilegesService
+     * @methodOf admin.service:Admin.SelectPrivilegesService
      *
      * @description
      * Performs retrieving all privileges
@@ -60,7 +60,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function ($http
     /**
      * @ngdoc method
      * @name addRolePrivileges
-     * @methodOf admin.services:Admin.SelectPrivilegesService
+     * @methodOf admin.service:Admin.SelectPrivilegesService
      *
      * @description
      * Performs adding privileges to role
@@ -87,7 +87,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function ($http
     /**
      * @ngdoc method
      * @name getRolePrivileges
-     * @methodOf admin.services:Admin.SelectPrivilegesService
+     * @methodOf admin.service:Admin.SelectPrivilegesService
      *
      * @description
      * Performs retrieving all app privileges for provided role
@@ -107,7 +107,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function ($http
     /**
      * @ngdoc method
      * @name upsertRole
-     * @methodOf admin.services:Admin.SelectPrivilegesService
+     * @methodOf admin.service:Admin.SelectPrivilegesService
      *
      * @description
      * Performs upserting role. If old name is not used than inserting is performed, else we update role name into new name.
