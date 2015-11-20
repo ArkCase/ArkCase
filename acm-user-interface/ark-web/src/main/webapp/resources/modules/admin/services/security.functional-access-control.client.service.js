@@ -10,7 +10,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/security.functional_access_control.service.js modules/admin/services/security.functional_access_control.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/security.functional-access-control.client.service.js modules/admin/services/security.functional-access-control.client.service.js}
  *
  * The Admin.FunctionalAccessControlService provides Functional Access Control REST calls functionality
  */

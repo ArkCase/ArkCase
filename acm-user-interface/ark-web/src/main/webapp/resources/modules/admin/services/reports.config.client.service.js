@@ -10,7 +10,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/reports.config.service.js modules/admin/services/reports.config.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/reports.config.client.service.js modules/admin/services/reports.config.client.service.js}
  *
  * The Admin.ReportsConfigService provides Reports Config REST calls functionality
  */
