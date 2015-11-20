@@ -29,7 +29,8 @@ var ApplicationConfiguration = (function() {
         'xeditable',
         'summernote',
         'ngBootbox',
-        'ngHandsontable'
+        'ngHandsontable',
+        'ui.ace'
     ];
 
     // Add a new vertical module
