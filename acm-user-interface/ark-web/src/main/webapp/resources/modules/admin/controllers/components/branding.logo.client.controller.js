@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('admin').controller('Admin.BrandingLogoController', ['$scope', 'Admin.BrandingLogoService',
-    function ($scope, brandingLogoService) {
+angular.module('admin').controller('Admin.BrandingLogoController', ['$scope', 'Admin.BrandingLogoService', '$translate', 'MessageService',
+    function ($scope, brandingLogoService, $translate, messageService) {
         $scope.uploadingInProgress = false;
         $scope.loadingProgress = 0;
         $scope.selectedHeaderFile = null;

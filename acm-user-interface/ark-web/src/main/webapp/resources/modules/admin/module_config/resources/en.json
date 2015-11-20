@@ -74,6 +74,15 @@
     "labels.config": "Label Configuration",
     "branding.title": "Branding",
     "branding.logo": "Logo",
+    "branding.logo.messages": {
+      "upload.success": "Custom logo files updated. Refresh browser page to see result.",
+      "upload.error": "Error uploading custom logo files."
+    },
+    "branding.logo.btn": {
+      "chooseHeader": "Choose Header logo",
+      "chooseLogin": "Choose Login logo",
+      "saveFiles": "Save"
+    },
     "branding": {
       "customCss": "Custom CSS",
       "customCss.save.success": "Custom CSS updated. Refresh browser page to see result.",
