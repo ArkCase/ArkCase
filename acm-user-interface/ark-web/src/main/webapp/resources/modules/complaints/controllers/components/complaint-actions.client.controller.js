@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.ActionsController', ['$scope', 'ConfigService', 'ComplaintsService', 'UtilService', 'ValidationService',
-    function ($scope, ConfigService, ComplaintsService, Util, Validator) {
+angular.module('complaints').controller('Complaints.ActionsController', ['$scope', 'ConfigService', 'Complaint.InfoService', 'UtilService', 'ValidationService',
+    function ($scope, ConfigService, ComplaintInfoService, Util, Validator) {
         var z = 1;
         return;
         $scope.$emit('req-component-config', 'actions');
