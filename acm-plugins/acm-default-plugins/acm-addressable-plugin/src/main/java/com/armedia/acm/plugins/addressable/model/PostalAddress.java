@@ -1,13 +1,20 @@
 package com.armedia.acm.plugins.addressable.model;
 
 import com.armedia.acm.data.AcmEntity;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -48,11 +55,11 @@ public class PostalAddress implements Serializable, AcmEntity
     private String modifier;
 
     @Column(name = "cm_address_status")
-    private String status;
+    private String status = "ACTIVE";
 
     @Column(name = "cm_address_type")
     private String type;
-    
+
     @Transient
     private List<String> types;
 
@@ -73,16 +80,6 @@ public class PostalAddress implements Serializable, AcmEntity
 
     @Column(name = "cm_country")
     private String country;
-
-    @PrePersist
-    protected void beforeInsert()
-    {
-        log.trace("In before insert on PostalAddress");
-        if ( getStatus() == null || getStatus().trim().isEmpty() )
-        {
-            setStatus("ACTIVE");
-        }
-    }
 
     @XmlTransient
     public Long getId()
@@ -168,18 +165,20 @@ public class PostalAddress implements Serializable, AcmEntity
     {
         this.type = type;
     }
-    
+
     @XmlTransient
-	public List<String> getTypes() {
-		return types;
-	}
+    public List<String> getTypes()
+    {
+        return types;
+    }
 
-	public void setTypes(List<String> types) {
-		this.types = types;
-	}
+    public void setTypes(List<String> types)
+    {
+        this.types = types;
+    }
 
-	@XmlTransient
-	public String getStreetAddress()
+    @XmlTransient
+    public String getStreetAddress()
     {
         return streetAddress;
     }
@@ -243,8 +242,9 @@ public class PostalAddress implements Serializable, AcmEntity
     {
         this.country = country;
     }
-    
-    public PostalAddress returnBase() {
-    	return this;
+
+    public PostalAddress returnBase()
+    {
+        return this;
     }
 }
