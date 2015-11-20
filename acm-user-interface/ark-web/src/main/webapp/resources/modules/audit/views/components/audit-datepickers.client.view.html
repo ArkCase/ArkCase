@@ -1,26 +1,30 @@
 <div ng-controller="Audit.DatepickersController">
-    <section id="datepickerSection">
-        <label>{{'audit.navigation.label.dateFrom' | translate}}</label>
+    <label>{{'audit.navigation.label.dateFrom' | translate}}
         <div>
             <input
-                    type="date"
+                    type="text"
                     ng-model="dateFrom"
                     class="form-control"
-                    datepicker-popup
+                    datepicker-popup="{{config.datepickerPopupFormat}}"
                     value="{{dateFrom}}"
                     is-open="opened.openedStart"
+                    ng-click="opened.openedStart =! opened.openedStart"
+                    show-button-bar="false"
                     />
         </div>
-        <label>{{'audit.navigation.label.dateTo' | translate}} </label>
+    </label>
+    <label>{{'audit.navigation.label.dateTo' | translate}}
         <div>
             <input
-                    type="date"
+                    type="text"
                     ng-model="dateTo"
                     class="form-control"
-                    datepicker-popup
+                    datepicker-popup="{{config.datepickerPopupFormat}}"
                     value="{{dateTo}}"
                     is-open="opened.openedEnd"
+                    ng-click="opened.openedEnd =! opened.openedEnd"
+                    show-button-bar="false"
                     />
         </div>
-    </section>
+    </label>
 </div>
