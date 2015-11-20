@@ -6,11 +6,11 @@
 
 /**
  * @ngdoc service
- * @name admin.services:Admin.ModuleConfigService
+ * @name admin.service:Admin.ModuleConfigService
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/security.module_config.service.js modules/admin/services/security.module_config.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/security.module-config.client.service.js modules/admin/services/security.module-config.client.service.js}
  *
  * The Admin.ModuleConfigService provides Modules config REST calls functionality
  */
@@ -25,7 +25,7 @@ angular.module('admin').service('Admin.ModulesConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name getAppModules
-     * @methodOf admin.services:Admin.ModuleConfigService
+     * @methodOf admin.service:Admin.ModuleConfigService
      *
      * @description
      * Performs retrieving all application modules
@@ -43,7 +43,7 @@ angular.module('admin').service('Admin.ModulesConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name getRolesForModulePrivilege
-     * @methodOf admin.services:Admin.ModuleConfigService
+     * @methodOf admin.service:Admin.ModuleConfigService
      *
      * @description
      * Performs retrieving roles for provided module privilege
@@ -62,7 +62,7 @@ angular.module('admin').service('Admin.ModulesConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name addRolesToModule
-     * @methodOf admin.services:Admin.ModuleConfigService
+     * @methodOf admin.service:Admin.ModuleConfigService
      *
      * @description
      * Performs adding roles to module
@@ -87,7 +87,7 @@ angular.module('admin').service('Admin.ModulesConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name removeRolesFromModule
-     * @methodOf admin.services:Admin.ModuleConfigService
+     * @methodOf admin.service:Admin.ModuleConfigService
      *
      * @description
      * Performs removing roles to module

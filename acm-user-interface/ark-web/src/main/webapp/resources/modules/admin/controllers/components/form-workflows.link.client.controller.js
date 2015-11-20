@@ -6,7 +6,6 @@ angular.module('admin').controller('Admin.FormWorkflowsLinkController', ['$scope
         $scope.data = {};
         $scope.columnsWidths = [];
 
-
         //retrieve all data
         formWorkflowsLinkService.getFormWorkflowsData().then(function (payload) {
             $scope.data = payload.data;
