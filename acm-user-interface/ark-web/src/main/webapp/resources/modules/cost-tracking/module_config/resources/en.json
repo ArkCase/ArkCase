@@ -1,5 +1,36 @@
 {
   "costTracking": {
-    "title": "Cost tracking"
+    "title": "Cost tracking",
+    "progressNoCostsheet": "[ No costsheet is selected ]",
+    "progressLoading": "Loading costsheet ",
+    "progressError": "Failed to load costsheet"
+  },
+  "costTracking.tree": {
+  },
+  "costTracking.comp.actions": {
+    "new.button": "New Costsheet",
+    "edit.button": "Edit Costsheet"
+  },
+  "costTracking.comp.details": {
+    "title": "Details",
+    "informSaved": "Costsheet details saved"
+  },
+  "costTracking.comp.people": {
+    "title": "Person",
+    "table.columns": {
+      "fullName": "Full Name",
+      "userId": "Username"
+    }
+  },
+  "costTracking.comp.timesSummary": {
+    "title": "Hours Summary",
+    "table.columns": {
+      "parentId": "ID",
+      "parentNumber": "Parent ID",
+      "parentType": "Parent Type",
+      "value": "Total Cost",
+      "title": "Title",
+      "description": "Description"
+    }
   }
 }
