@@ -3,8 +3,8 @@
         <div class="row">
             <div class="pull-right">
                 <select ng-model="selectedTarget"
-                        ng-options="option.id as option.name for option in tableConfig.formsConfig.formsDropdown">
-                    <option value="">{{'Select Target'}}</option>
+                        ng-options="option.id as option.name for option in formsDropdownOptions">
+                    <option value="">{{'admin.forms.defaultValue' | translate}}</option>
                 </select>
 
                 <div class="btn-group">

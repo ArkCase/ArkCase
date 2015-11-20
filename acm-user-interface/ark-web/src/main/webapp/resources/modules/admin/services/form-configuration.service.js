@@ -1,17 +1,13 @@
-/**
- * Created by nebojsha on 11/15/2015.
- */
-
 'use strict';
 /**
  * @ngdoc service
- * @name admin.service:Admin.LdapConfigService
+ * @name admin.service:Admin.FormConfigService
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/security.ldap.config.service.js modules/admin/services/security.ldap.config.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/form-configuration.service.js modules/admin/services/form-configuration.service.js}
  *
- * The Admin.LdapConfigService provides LDAP Config REST calls functionality
+ * The Admin.FormConfigService provides Plain Forms Config REST calls functionality
  */
 angular.module('admin').service('Admin.FormConfigService', function ($http) {
     return ({
@@ -19,6 +15,16 @@ angular.module('admin').service('Admin.FormConfigService', function ($http) {
         deletePlainForm: deletePlainForm
     });
 
+    /**
+     * @ngdoc method
+     * @name retrievePlainForms
+     * @methodOf admin.service:Admin.FormConfigService
+     *
+     * @description
+     * Performs retrieving all data
+     *
+     * @returns {HttpPromise} Future info about plain forms
+     */
     function retrievePlainForms() {
         return $http({
             method: "GET",
@@ -26,6 +32,19 @@ angular.module('admin').service('Admin.FormConfigService', function ($http) {
         });
     }
 
+    /**
+     * @ngdoc method
+     * @name deletePlainForm
+     * @methodOf admin.service:Admin.FormConfigService
+     *
+     * @description
+     * Delete  plain form by key and target
+     *
+     * @param {object} key key name to be deleted
+     * @param {object} target target type to be deleted
+     *
+     * @returns {HttpPromise} Future info about http delete
+     */
     function deletePlainForm(key, target) {
         var url = 'proxy/arkcase/api/latest/plugin/admin/plainforms/' + key + "/" + target;
         return $http({
