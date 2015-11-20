@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.LocationsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'ComplaintsService', 'LookupService',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, ComplaintsService, LookupService) {
+angular.module('complaints').controller('Complaints.LocationsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'Complaint.InfoService', 'LookupService',
+    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, ComplaintInfoService, LookupService) {
         var z = 1;
         $scope.gridOptions = {};
         return;
