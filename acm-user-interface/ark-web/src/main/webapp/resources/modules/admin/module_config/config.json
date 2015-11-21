@@ -84,6 +84,53 @@
           "headerCellFilter": "translate"
         }
       ]
+    },
+    {
+      "id": "correspondenceManagementTemplates",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "id",
+          "displayName": "admin.correspondenceManagement.templates.grid.id",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "name",
+          "displayName": "admin.correspondenceManagement.templates.grid.title",
+          "visible": true,
+          "cellTemplate": "<a target='_blank' ng-href='{{row.entity.fullPath}}'>{{ row.entity.name}}</a>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "path",
+          "displayName": "admin.correspondenceManagement.templates.grid.path",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "created",
+          "displayName": "admin.correspondenceManagement.templates.grid.created",
+          "visible": true,
+          "cellTemplate": "<div>{{ row.entity.created | date : 'mediumDate'}}</div>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified",
+          "displayName": "admin.correspondenceManagement.templates.grid.modified",
+          "visible": true,
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'mediumDate'}}</div>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "creator",
+          "displayName": "admin.correspondenceManagement.templates.grid.creator",
+          "visible": true,
+          "headerCellFilter": "translate"
+        }
+      ]
     }
   ],
   "adminTree": [

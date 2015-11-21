@@ -1,8 +1,23 @@
 <div ng-controller="Admin.CorrespondenceManagementTemplatesController">
-    <div class="header">
-        <h3>
-            {{'admin.correspondenceManagement.templates' | translate}}
-        </h3>
-    </div>
-    Not yet implemented
+    <panel-view header="{{'admin.correspondenceManagement.templates' | translate}}" collapsible="false">
+        <div class="row">
+            <div class="pull-right">
+                <div class="btn-group">
+                    <button ngf-select ngf-change="upload($files)" ngf-multiple="multiple">
+                        <i class="glyphicon glyphicon-plus-sign"></i>{{'admin.correspondenceManagement.templates.addNewTemplate'
+                        |
+                        translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div ui-grid="gridOptions"
+                 ui-grid-resize-columns
+                 adjust-table-height="gridOptions.data.length"
+                 ui-grid-auto-resize
+                 class="grid">
+            </div>
+        </div>
+    </panel-view>
 </div>
