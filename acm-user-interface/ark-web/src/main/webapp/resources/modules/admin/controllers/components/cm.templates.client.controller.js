@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').controller('Admin.CorrespondenceManagementTemplatesController', ['$scope', 'Admin.CorrespondenceManagementTemplatesService',
+angular.module('admin').controller('Admin.CMTemplatesController', ['$scope', 'Admin.CMTemplatesService',
     function ($scope, correspondenceService) {
 
         $scope.gridOptions = {
@@ -27,6 +27,15 @@ angular.module('admin').controller('Admin.CorrespondenceManagementTemplatesContr
             });
         }
 
+        function upload(files) {
+            $scope.selectedFiles = files;
+            correspondenceService.uploadTemplate(files).then(
+                function (result) {
+                    ReloadGrid();
+                }
+            );
+        }
+        
         //get config and init grid settings
         $scope.config.$promise.then(function (config) {
             var componentConfig = _.find(config.components, {id: 'correspondenceManagementTemplates'});
@@ -36,14 +45,6 @@ angular.module('admin').controller('Admin.CorrespondenceManagementTemplatesContr
 
             $scope.upload = upload;
 
-            function upload(files) {
-                $scope.selectedFiles = files;
-                correspondenceService.uploadTemplate(files).then(
-                    function (result) {
-                        ReloadGrid();
-                    }
-                );
-            }
             ReloadGrid();
         });
     }

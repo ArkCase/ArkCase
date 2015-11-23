@@ -6,15 +6,15 @@
 
 /**
  * @ngdoc service
- * @name admin.service:Admin.CorrespondenceManagementTemplatesService
+ * @name admin.service:Admin.CMTemplatesService
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/correspondence-management.templates.client.service.js modules/admin/services/correspondence-management.templates.client.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/cm.templates.client.service.js modules/admin/services/cm.templates.client.service.js}
  *
  * The Admin.DashboardConfigService provides correspondence Management calls functionality
  */
-angular.module('admin').service('Admin.CorrespondenceManagementTemplatesService', ['$http', 'Upload',
+angular.module('admin').service('Admin.CMTemplatesService', ['$http', 'Upload',
     function ($http, Upload) {
         return ({
             retrieveTemplatesList: retrieveTemplatesList,
@@ -26,7 +26,7 @@ angular.module('admin').service('Admin.CorrespondenceManagementTemplatesService'
         /**
          * @ngdoc method
          * @name retrieveTemplatesList
-         * @methodOf admin.service:Admin.CorrespondenceManagementTemplatesService
+         * @methodOf admin.service:Admin.CMTemplatesService
          *
          * @description
          * Performs retrieving correspondence management templates.
@@ -43,7 +43,7 @@ angular.module('admin').service('Admin.CorrespondenceManagementTemplatesService'
         /**
          * @ngdoc method
          * @name fullDownloadPath
-         * @methodOf admin.service:Admin.CorrespondenceManagementTemplatesService
+         * @methodOf admin.service:Admin.CMTemplatesService
          *
          * @description
          * Performs get full path for download
@@ -59,7 +59,7 @@ angular.module('admin').service('Admin.CorrespondenceManagementTemplatesService'
         /**
          * @ngdoc method
          * @name uploadTemplate
-         * @methodOf admin.service:Admin.CorrespondenceManagementTemplatesService
+         * @methodOf admin.service:Admin.CMTemplatesService
          *
          * @description
          * Uploads correspondence management template

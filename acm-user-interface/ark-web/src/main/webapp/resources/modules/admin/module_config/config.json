@@ -240,7 +240,7 @@
       "children": [
         {
           "title": "admin.correspondenceManagement.templates",
-          "templateName": "correspondence-management.templates"
+          "templateName": "cm.templates"
         }
       ]
     }
