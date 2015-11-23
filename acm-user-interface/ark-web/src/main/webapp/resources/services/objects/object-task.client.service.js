@@ -79,7 +79,8 @@ angular.module('services').factory('Object.TaskService', ['$resource', 'StoreSer
          * @param {Number} params.parentId  Object ID
          * @param {Number} params.start Zero based start number of record
          * @param {Number} params.n Max Number of list to return
-         * @param {String} params.sort  Sort value, with format 'sortBy sortDir', sortDir can be 'asc' or 'desc'
+         * @param {String} sortBy  (Optional)Sort property
+         * @param {String} sortDir  (Optional)Sort direction. Value can be 'asc' or 'desc'
          *
          * @returns {Object} Promise
          */
