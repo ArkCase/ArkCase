@@ -74,11 +74,10 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'St
          * @description
          * Query child tasks for an object.
          *
-         * @param {Object} params Map of input parameter
-         * @param {String} params.objectType  Object type
-         * @param {Number} params.parentId  Object ID
-         * @param {Number} params.start Zero based start number of record
-         * @param {Number} params.n Max Number of list to return
+         * @param {String} parentType  Object type
+         * @param {Number} parentId  Object ID
+         * @param {Number} start Zero based start number of record
+         * @param {Number} n Max Number of list to return
          * @param {String} sortBy  (Optional)Sort property
          * @param {String} sortDir  (Optional)Sort direction. Value can be 'asc' or 'desc'
          *
