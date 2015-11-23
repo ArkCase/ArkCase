@@ -47,10 +47,10 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         $scope.retrieveGridData = function () {
             var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(Constant.ObjectTypes.CASE_FILE
                 , $scope.currentId
-                , $scope.start
-                , $scope.pageSize
-                , $scope.sort.by
-                , $scope.sort.dir
+                , Util.goodValue($scope.start, 0)
+                , Util.goodValue($scope.pageSize, 10)
+                , Util.goodValue($scope.sort.by)
+                , Util.goodValue($scope.sort.dir)
             );
 
             //var cacheCorrespondenceData = new Store.CacheFifo(Helper.CacheNames.CASE_CORRESPONDENCE_DATA);
