@@ -10,8 +10,8 @@
 
  * LookupService contains functions to lookup data (typically static data).
  */
-angular.module('services').factory('LookupService', ['$resource', 'StoreService', 'UtilService',
-    function ($resource, Store, Util) {
+angular.module('services').factory('LookupService', ['$resource', 'StoreService', 'UtilService', 'Object.ListService'
+    , function ($resource, Store, Util, ObjectListService) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
 
             getConfig: {
@@ -33,7 +33,7 @@ angular.module('services').factory('LookupService', ['$resource', 'StoreService'
              * @description
              * Query list of users
              *
-             * @returns {Object} An array returned by $resource
+             * @returns {Object} An object returned by $resource
              */
             , _getUsers: {
                 url: "proxy/arkcase/api/latest/plugin/search/advanced/USER/all"
@@ -41,7 +41,18 @@ angular.module('services').factory('LookupService', ['$resource', 'StoreService'
                 , cache: true
                 , isArray: true
             }
-            , getUsersBasic: {
+
+            /**
+             * @ngdoc method
+             * @name _getUsersBasic
+             * @methodOf services.service:LookupService
+             *
+             * @description
+             * Query users from SOLR
+             *
+             * @returns {Object} An object returned by $resource
+             */
+            , _getUsersBasic: {
                 url: "proxy/arkcase/api/latest/plugin/search/USER?n=1000&s=name asc"
                 , method: "GET"
                 , cache: true
@@ -109,7 +120,6 @@ angular.module('services').factory('LookupService', ['$resource', 'StoreService'
                 , method: "GET"
                 , cache: true
             }
-
             , getObjectTypes: {
                 url: "modules_config/config/modules/cases/resources/objectTypes.json"
                 , method: "GET"
@@ -150,13 +160,13 @@ angular.module('services').factory('LookupService', ['$resource', 'StoreService'
             //    , cache: true
             //    , isArray: true
             //}
-
-            , getCorrespondenceForms: {
-                url: "modules_config/config/modules/cases/resources/correspondenceForms.json"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-            }
+            //
+            //, getCorrespondenceForms: {
+            //    url: "modules_config/config/modules/cases/resources/correspondenceForms.json"
+            //    , method: "GET"
+            //    , cache: true
+            //    , isArray: true
+            //}
 
 
         });
@@ -164,6 +174,7 @@ angular.module('services').factory('LookupService', ['$resource', 'StoreService'
 
         Service.SessionCacheNames = {
             USERS: "AcmUsers"
+            , USERS_BASIC: "AcmUsersBasic"
             , USER_FULL_NAMES: "AcmUserFullNames"
         };
         Service.CacheNames = {};
@@ -177,7 +188,7 @@ angular.module('services').factory('LookupService', ['$resource', 'StoreService'
          * @description
          * Query list of users
          *
-         * @returns {Object} An array returned by $resource
+         * @returns {Object} Promise
          */
         Service.getUsers = function () {
             var cacheUsers = new Store.SessionData(Service.SessionCacheNames.USERS);
@@ -206,7 +217,7 @@ angular.module('services').factory('LookupService', ['$resource', 'StoreService'
          * @description
          * Query list of user full names
          *
-         * @returns {Object} An array returned by $resource
+         * @returns {Object} Promise
          */
         Service.getUserFullNames = function () {
             var cacheUserFullNames = new Store.SessionData(Service.SessionCacheNames.USER_FULL_NAMES);
@@ -248,6 +259,59 @@ angular.module('services').factory('LookupService', ['$resource', 'StoreService'
          */
         Service.validateUsersRaw = function (data) {
             if (!Util.isArray(data)) {
+                return false;
+            }
+            return true;
+        };
+
+
+        /**
+         * @ngdoc method
+         * @name getUsersBasic
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Query list of users
+         *
+         * @returns {Object} Promise
+         */
+        Service.getUsersBasic = function () {
+            var cacheUsers = new Store.SessionData(Service.SessionCacheNames.USERS_BASIC);
+            var users = cacheUsers.get();
+            return Util.serviceCall({
+                service: Service._getUsersBasic
+                , result: users
+                , onSuccess: function (data) {
+                    if (Service.validateUsersBasic(data)) {
+                        users = [];
+                        _.each(data.response.docs, function (doc) {
+                            var user = {};
+                            user.id = Util.goodValue(doc.object_id_s, 0);
+                            user.name = Util.goodValue(doc.name);
+                            users.push(user);
+
+                        });
+                        cacheUsers.set(users);
+                        return users;
+                    }
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name validateUsersBasic
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Validate users data
+         *
+         * @param {Object} data  Data to be validated
+         *
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validateUsersBasic = function (data) {
+            if (!ObjectListService.validateSolrData(data)) {
                 return false;
             }
             return true;
