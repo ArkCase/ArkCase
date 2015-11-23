@@ -26,8 +26,6 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             }
         );
 
-        var z = 1;
-        return;
 
         $scope.objectType = Constant.ObjectTypes.COMPLAINT;
         $scope.objectId = $stateParams.id;

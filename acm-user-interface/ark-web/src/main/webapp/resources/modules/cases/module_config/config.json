@@ -12,9 +12,10 @@
     {
       "menuId": "topbar",
       "menuItemURL": "newcase",
-      "menuItemTitle": "New Case",
+      "__todo_change_to_menuItemURL": "cases.wizard",
+      "menuItemTitle": "Case File",
       "iconClass": "fa fa-folder",
-      "position": 10
+      "position": 20
     }
   ],
   "tree": {
