@@ -1,8 +1,10 @@
 'use strict';
 
-angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateParams', '$q', '$translate', 'StoreService'
-    , 'UtilService', 'HelperService', 'Case.InfoService', 'Object.PersonService', 'LookupService', 'Object.LookupService'
-    , function ($scope, $stateParams, $q, $translate, Store, Util, Helper, CaseInfoService, ObjectPersonService, LookupService, ObjectLookupService) {
+angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateParams', '$q', '$translate'
+    , 'StoreService', 'UtilService', 'ConstantService', 'HelperService', 'Case.InfoService', 'Object.PersonService'
+    , 'LookupService', 'Object.LookupService'
+    , function ($scope, $stateParams, $q, $translate, Store, Util, Constant, Helper, CaseInfoService
+        , ObjectPersonService, LookupService, ObjectLookupService) {
 
         var promiseConfig = Helper.requestComponentConfig($scope, "people", function (config) {
             configGridMain(config);
@@ -436,7 +438,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             if (Util.isEmpty(rowEntity.id)) {
                 var pa = newPersonAssociation();
                 pa.parentId = $scope.caseInfo.id;
-                pa.parentType = Helper.ObjectTypes.CASE_FILE;
+                pa.parentType = Constant.ObjectTypes.CASE_FILE;
                 pa.person.className = Util.goodValue($scope.config.className); //"com.armedia.acm.plugins.person.model.Person";
                 pa.person.givenName = givenName;
                 pa.person.familyName = familyName;

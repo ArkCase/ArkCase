@@ -11,7 +11,7 @@ angular.module('time-tracking').controller('TimeTracking.ActionsController', ['$
 
         $scope.timesheetInfo = null;
 
-        $scope.$on('timesheet-retrieved', function(e, data) {
+        $scope.$on('timesheet-updated', function (e, data) {
             $scope.timesheetInfo = data;
             $scope.timesheetInfo.starDate = moment($scope.timesheetInfo.startDate).format($scope.config.frevvoDateFormat);
         });
