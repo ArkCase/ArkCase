@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Random;
 
@@ -75,7 +76,7 @@ public class PdfServiceImpl implements PdfService
         try
         {
             // Base URI is where the FOP engine will be resolving URIs against
-            URI baseURI = xslFile.getParentFile().toURI();
+            URI baseURI = new URI(xslFile.getParentFile().toString().replace(" ", "%20"));
             log.debug("Using [{}] as FOP base URI", baseURI);
             FopFactory fopFactory = FopFactory.newInstance(baseURI);
             FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
@@ -105,7 +106,7 @@ public class PdfServiceImpl implements PdfService
                     os.close();
                 }
             }
-        } catch (FOPException | TransformerException | IOException e)
+        } catch (FOPException | TransformerException | IOException | URISyntaxException e)
         {
             log.error("Unable to generate PDF document", e);
             throw new PdfServiceException(e);
