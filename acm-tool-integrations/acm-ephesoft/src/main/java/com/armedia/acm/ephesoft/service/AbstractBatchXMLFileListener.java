@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,7 +79,8 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
                 moveDocumentsToFolder(workingDocuments, getCompletedFolder());
 
                 LOG.debug("Moving files to completed directory - END");
-            } else
+            }
+            else
             {
                 moveFileToFolder(xmlBatch, getErrorFolder());
                 moveDocumentsToFolder(documents, getErrorFolder());
@@ -90,7 +90,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
 
     /**
      * This method will return dynamic entity that is created for given XML file and XSD schema.
-     * <p/>
+     * <p>
      * The XML file is the XML representation of the batch file that Ephesoft will send to this system.
      *
      * @param xmlBatch
@@ -131,7 +131,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
      *
      * @param documents - documents with their attachments
      */
-    public abstract void processBatch(Map<String, DocumentObject> documents);
+    public abstract void processBatch( Map<String, DocumentObject> documents);
 
     /**
      * Check if entity is attachment or object for processing
@@ -145,7 +145,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
      * Return attachments only these who will pass the filer. For different integrations, the way how we are taking
      * attachments is different. If no filter needed, just return provided list of attachments
      *
-     * @param docObject   - document object where attachments should be attached
+     * @param docObject - document object where attachments should be attached
      * @param attachments - attachments that should be attached to the object
      * @return - list of document objects
      */
@@ -154,11 +154,11 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
     /**
      * Save all documents as attachments related to given object
      *
-     * @param cmisFolderId       - cmis folder id
-     * @param objectId           - object id
-     * @param objectType         - type of the object
-     * @param docObject          - document object where the file is
-     * @param objectFileType     - the type of the file that representing the object itself
+     * @param cmisFolderId - cmis folder id
+     * @param objectId - object id
+     * @param objectType - type of the object
+     * @param docObject - document object where the file is
+     * @param objectFileType - the type of the file that representing the object itself
      * @param attachmentFileType - the type of the file that representing attachment for given object
      */
     public void saveAttachments(String cmisFolderId, Long objectId, String objectType, DocumentObject docObject, String objectFileType, String attachmentFileType)
@@ -183,10 +183,10 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
      * Save document as attachment for given order
      *
      * @param cmisFolderId - cmis folder id
-     * @param objectId     - object id
-     * @param objectType   - type of the object
-     * @param docObject    - document object where the file is
-     * @param fileType     - type of the file
+     * @param objectId - object id
+     * @param objectType - type of the object
+     * @param docObject - document object where the file is
+     * @param fileType - type of the file
      */
     public void saveAttachment(String cmisFolderId, Long objectId, String objectType, DocumentObject docObject, String fileType)
     {
@@ -223,7 +223,8 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
 
             // Upload file
             getEcmFileService().upload(file.getOriginalFilename(), fileType, file, auth, cmisFolderId, objectType, objectId);
-        } catch (Exception e)
+        }
+        catch(Exception e)
         {
             LOG.error("Cannot save attachment. Reason: {}", e.getMessage(), e);
         }
@@ -253,7 +254,8 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
                     documents.put(doc.getId(), doc);
                 }
             });
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Cannot take documents for given batch file. Reason: {}", e.getMessage(), e);
         }
@@ -264,7 +266,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
     /**
      * Add attachments to the object
      *
-     * @param docObject   - the object where attachments should be attached
+     * @param docObject - the object where attachments should be attached
      * @param attachments - attachments that should be attached to the object
      */
     public void addAttachments(DocumentObject docObject, List<DocumentObject> attachments)
@@ -288,7 +290,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
     /**
      * Move file to given folder
      *
-     * @param file   - the file that should be moved
+     * @param file - the file that should be moved
      * @param folder - the folder where file should be moved
      * @return - moved file
      */
@@ -300,7 +302,8 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
             FileUtils.moveFile(file, movedFile);
 
             return movedFile;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             // Sometime this is normal scenario - when one file is added as attachment in multiple objects
             LOG.warn("Cannot move file to directory. Maybe already moved. Reason: {}", e.getMessage());
@@ -324,9 +327,10 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
 
         try
         {
-            File parentFolder = new File(new URI(folder.toString().replace(" ", "%20")));
+            File parentFolder = new File(folder.getURL().toURI());
             movingFile = new File(parentFolder, file.getName());
-        } catch (URISyntaxException e)
+        }
+        catch (URISyntaxException | FileSystemException e)
         {
             LOG.warn("Cannot prepare the file for moving. Reason: {}", e.getMessage());
         }
@@ -422,7 +426,8 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
                 {
                     LOG.debug("All requested documents are loaded!");
                     break;
-                } else
+                }
+                else
                 {
                     LOG.warn("Found " + loadedDocumentsCount + " documents from total documents " + expectedDocumentsCount);
                     LOG.debug("Attempt: " + (i + 1) + " from total attempts " + getLoadingDocumentsSeconds());
@@ -431,7 +436,8 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
                 try
                 {
                     Thread.sleep(1000);
-                } catch (InterruptedException ie)
+                }
+                catch (InterruptedException ie)
                 {
                     LOG.error("Error while thread sleep: " + ie.getMessage(), ie);
                 }
@@ -453,7 +459,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
         try
         {
             String id = element.<String>get(FileConstants.XML_BATCH_IDENTIFIER_KEY);
-            File watchFolder = new File(new URI(getWatchFolder().toString().replace(" ", "%20")));
+            File watchFolder = new File(getWatchFolder().getURL().toURI());
             String ephesoftFileName = element.<String>get(FileConstants.XML_BATCH_MULTI_PAGE_PDF_FILE_KEY);
             LOG.debug("File name from Ephesoft (may contain Ephesoft server path info): {}", ephesoftFileName);
             String winSeparator = "\\";
@@ -479,10 +485,12 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
             }
 
             doc = new DocumentObject(id, document, null, element);
-        } catch (FileSystemException | URISyntaxException e)
+        }
+        catch (FileSystemException | URISyntaxException e)
         {
             LOG.error("Cannot take document. Reason: {}", e.getMessage(), e);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             LOG.error("Cannot take document. Reason: {}", e.getMessage(), e);
         }

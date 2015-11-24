@@ -32,7 +32,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
 
             /**
              * @ngdoc method
-             * @name _getOwningGroups
+             * @name _getGroups
              * @methodOf services:Object.LookupService
              *
              * @description
@@ -40,7 +40,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
              *
              * @returns {Object} Data returned by $resource
              */
-            , _getOwningGroups: {
+            , _getGroups: {
                 url: "proxy/arkcase/api/latest/service/functionalaccess/groups/acm-complaint-approve?n=1000&s=name asc"
                 , method: "GET"
                 , cache: true
@@ -308,7 +308,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
 
         /**
          * @ngdoc method
-         * @name getOwningGroups
+         * @name getGroups
          * @methodOf services:Object.LookupService
          *
          * @description
@@ -316,14 +316,14 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          *
          * @returns {Object} An array returned by $resource
          */
-        Service.getOwningGroups = function () {
+        Service.getGroups = function () {
             var cacheGroups = new Store.SessionData(Service.SessionCacheNames.OWNING_GROUPS);
             var groups = cacheGroups.get();
             return Util.serviceCall({
-                service: Service._getOwningGroups
+                service: Service._getGroups
                 , result: groups
                 , onSuccess: function (data) {
-                    if (Service.validateOwningGroups(data)) {
+                    if (Service.validateGroups(data)) {
                         groups = data.response.docs;
                         cacheGroups.set(groups);
                         return groups;
@@ -334,7 +334,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
 
         /**
          * @ngdoc method
-         * @name validateOwningGroups
+         * @name validateGroups
          * @methodOf services:Object.LookupService
          *
          * @description
@@ -344,7 +344,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          *
          * @returns {Boolean} Return true if data is valid
          */
-        Service.validateOwningGroups = function (data) {
+        Service.validateGroups = function (data) {
             if (!ObjectListService.validateSolrData(data)) {
                 return false;
             }
