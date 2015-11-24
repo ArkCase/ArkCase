@@ -19,7 +19,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         $scope.$on('task-updated', function (e, data) {
             $scope.taskInfo = data;
 
-            $scope.showBtnESignature = false;
+            $scope.showBtnSignature = false;
             $scope.showBtnDelete = false;
             $scope.showBtnComplete = false;
             $scope.showBtnReject = false;
@@ -28,21 +28,21 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                 if (Util.compare($scope.userId, $scope.taskInfo.assignee)) {
                     if ($scope.taskInfo.adhocTask) {
                         if (!Util.goodValue($scope.taskInfo.completed, false)) {
-                            $scope.showBtnESignature = true;
+                            $scope.showBtnSignature = true;
                             $scope.showBtnDelete = true;
                             $scope.showBtnComplete = true;
                         }
 
                         if (!Util.isEmpty($scope.taskInfo.owner) && !Util.isEmpty($scope.taskInfo.assignee)) {
                             if (($scope.taskInfo.owner != $scope.taskInfo.assignee)) {
-                                $scope.showBtnESignature = true;
+                                $scope.showBtnSignature = true;
                                 $scope.showBtnReject = true;
                             }
                         }
 
                     } else {
                         if (!Util.goodValue($scope.taskInfo.completed, false)) {
-                            $scope.showBtnESignature = true;
+                            $scope.showBtnSignature = true;
                             $scope.showBtnOutcomes = true;
                         }
                     }
@@ -87,9 +87,10 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             }
         };
         $scope.complete = function () {
-            var taskInfo = Util.omitNg($scope.taskInfo);
-            if (TaskInfoService.validateTaskInfo(taskInfo)) {
-                TaskWorkflowService.completeTask(taskInfo).then(
+            //var taskInfo = Util.omitNg($scope.taskInfo);
+            //if (TaskInfoService.validateTaskInfo(taskInfo)) {
+            if (Util.goodMapValue($scope.taskInfo, "taskId", false)) {
+                TaskWorkflowService.completeTask($scope.taskInfo.taskId).then(
                     function (taskInfo) {
                         $scope.$emit("report-task-updated", taskInfo);
                         return taskInfo;
