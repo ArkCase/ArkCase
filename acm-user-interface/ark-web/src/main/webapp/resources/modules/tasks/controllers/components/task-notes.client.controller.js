@@ -42,7 +42,7 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
             $scope.gridApi.pagination.seek(lastPage);
             var newRow = {};
             newRow.parentId = $scope.currentId;
-            newRow.parentType = Helper.ObjectTypes.TASK;
+            newRow.parentType = Constant.ObjectTypes.TASK;
             newRow.created = Util.getCurrentDay();
             newRow.creator = $scope.userId;
             $scope.gridOptions.data.push(newRow);

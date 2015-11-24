@@ -127,7 +127,7 @@ angular.module('services').factory('Complaint.InfoService', ['$resource', '$tran
             }
             return Util.serviceCall({
                 service: ObjectInfoService.save
-                , param: {type: "COMPLAINT"}
+                , param: {type: "complaint"}
                 , data: complaintInfo
                 , onSuccess: function (data) {
                     if (Service.validateComplaintInfo(data)) {
@@ -169,6 +169,77 @@ angular.module('services').factory('Complaint.InfoService', ['$resource', '$tran
                 return false;
             }
             if (!Util.isArray(data.personAssociations)) {
+                return false;
+            }
+            return true;
+        };
+
+        /**
+         * @ngdoc method
+         * @name validateReferenceRecord
+         * @methodOf services:Complaint.InfoService
+         *
+         * @description
+         * Validate complaint reference data
+         *
+         * @param {Object} data  Data to be validated
+         *
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validateReferenceRecord = function (data) {
+            if (Util.isEmpty(data.associationType)) {
+                return false;
+            }
+            if ("REFERENCE" != data.associationType) {
+                return false;
+            }
+            if (Util.isEmpty(data.targetId)) {
+                return false;
+            }
+            if (Util.isEmpty(data.targetName)) {
+                return false;
+            }
+            if (Util.isEmpty(data.created)) {
+                return false;
+            }
+            if (Util.isEmpty(data.creator)) {
+                return false;
+            }
+            if (Util.isEmpty(data.status)) {
+                return false;
+            }
+            return true;
+        };
+
+        /**
+         * @ngdoc method
+         * @name validateReferenceRecord
+         * @methodOf services:Complaint.InfoService
+         *
+         * @description
+         * Validate complaint reference data
+         *
+         * @param {Object} data  Data to be validated
+         *
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validateLocation = function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.streetAddress)) {
+                return false;
+            }
+            if (Util.isEmpty(data.type)) {
+                return false;
+            }
+            if (Util.isEmpty(data.city)) {
+                return false;
+            }
+            if (Util.isEmpty(data.state)) {
+                return false;
+            }
+            if (Util.isEmpty(data.zip)) {
                 return false;
             }
             return true;

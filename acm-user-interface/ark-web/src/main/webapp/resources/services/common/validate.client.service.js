@@ -578,60 +578,60 @@ angular.module('services').factory('ValidationService', ["UtilService",
         //    }
         //    return true;
         //}
-        , validateParticipantTypes: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validatePersonTypes: function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validateContactMethodTypes: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validateOrganizationTypes: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validateAddressTypes: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validateAliasTypes: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validateSecurityTagTypes: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validateCaseTypes: function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validateObjectTypes: function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        }
+        //, validateParticipantTypes: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validatePersonTypes: function (data) {
+        //    if (!Util.isArray(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateContactMethodTypes: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateOrganizationTypes: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateAddressTypes: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateAliasTypes: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateSecurityTagTypes: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateCaseTypes: function (data) {
+        //    if (!Util.isArray(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateObjectTypes: function (data) {
+        //    if (!Util.isArray(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
         , validateCaseFile: function (data) {
             if (Util.isEmpty(data)) {
                 return false;
@@ -659,31 +659,31 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
-        , validateComplaint: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.complaintId) || Util.isEmpty(data.complaintNumber)) {
-                return false;
-            }
-            if (!Util.isArray(data.childObjects)) {
-                return false;
-            }
-            if (!Util.isArray(data.participants)) {
-                return false;
-            }
-            if (!Util.isArray(data.personAssociations)) {
-                return false;
-            }
-            return true;
-        }
-        , validateTask: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.taskId)) {
-                return false;
-            }
+        //, validateComplaint: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.complaintId) || Util.isEmpty(data.complaintNumber)) {
+        //        return false;
+        //    }
+        //    if (!Util.isArray(data.childObjects)) {
+        //        return false;
+        //    }
+        //    if (!Util.isArray(data.participants)) {
+        //        return false;
+        //    }
+        //    if (!Util.isArray(data.personAssociations)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateTask: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.taskId)) {
+        //        return false;
+        //    }
 //            if (Util.isEmpty(data.id) || Util.isEmpty(data.caseNumber)) {
 //             return false;
 //             }
@@ -696,8 +696,8 @@ angular.module('services').factory('ValidationService', ["UtilService",
 //             if (!Util.isArray(data.personAssociations)) {
 //             return false;
 //             }
-            return true;
-        }
+//            return true;
+//        }
 
     }}
 ]);
