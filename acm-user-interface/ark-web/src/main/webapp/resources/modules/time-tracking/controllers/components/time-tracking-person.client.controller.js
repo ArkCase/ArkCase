@@ -10,7 +10,7 @@ angular.module('time-tracking').controller('TimeTracking.PersonController', ['$s
             }
         });
 
-        $scope.$on('timesheet-retrieved', function(e, data) {
+        $scope.$on('timesheet-updated', function (e, data) {
             $scope.timesheetInfo = data;
 
             $scope.gridOptions = $scope.gridOptions || {};

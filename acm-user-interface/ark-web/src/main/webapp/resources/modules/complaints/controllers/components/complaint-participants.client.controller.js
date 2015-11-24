@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.ParticipantsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'HelperService', 'Complaint.InfoService', 'LookupService', 'Object.LookupService',
-    function ($scope, $stateParams, $q, Store, Util, Helper, ComplaintInfoService, LookupService, ObjectLookupService) {
+angular.module('complaints').controller('Complaints.ParticipantsController', ['$scope', '$stateParams', '$q'
+    , 'StoreService', 'UtilService', 'HelperService', 'Complaint.InfoService', 'LookupService', 'Object.LookupService'
+    , function ($scope, $stateParams, $q, Store, Util, Helper, ComplaintInfoService, LookupService, ObjectLookupService) {
 
         var promiseConfig = Helper.requestComponentConfig($scope, "participants", function (config) {
             Helper.Grid.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");

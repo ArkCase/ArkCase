@@ -10,8 +10,8 @@
 
  * Object.TaskService includes functions for object relate to task.
  */
-angular.module('services').factory('Object.TaskService', ['$resource', 'StoreService', 'UtilService', 'Object.ListService',
-    function ($resource, Store, Util, ObjectListService) {
+angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'StoreService', 'UtilService', 'Object.ListService', 'Authentication'
+    , function ($resource, $q, Store, Util, ObjectListService, Authentication) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
             /**
              * @ngdoc method
@@ -151,7 +151,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', 'StoreSer
             var myTasks = cacheMyTasks.get(cacheKey);
 
             return Util.serviceCall({
-                service: Service._queryChildTasks
+                service: Service._queryMyTasks
                 , param: {
                     user: userId
                 }
@@ -197,6 +197,41 @@ angular.module('services').factory('Object.TaskService', ['$resource', 'StoreSer
                 return false;
             }
             return true;
+        };
+
+
+        /**
+         * @ngdoc method
+         * @name queryCurrentUserTasks
+         * @methodOf services:Object.TaskService
+         *
+         * @description
+         * Query list of tasks for current login user.
+         *
+         * @returns {Object} Promise
+         */
+        Service.queryCurrentUserTasks = function () {
+            var dfd = $q.defer();
+            Authentication.queryUserInfoNew().then(
+                function (userInfo) {
+                    Service.queryMyTasks(userInfo.userId).then(
+                        function (myTasks) {
+                            dfd.resolve(myTasks);
+                            return myTasks;
+                        }
+                        , function (error) {
+                            dfd.reject(error);
+                            return error;
+                        }
+                    );
+                    return userInfo;
+                }
+                , function (error) {
+                    dfd.reject(error);
+                    return error;
+                }
+            );
+            return dfd.promise;
         };
 
         return Service;

@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.PeopleController', ['$scope', '$stateParams', '$q', '$translate', 'StoreService'
-    , 'UtilService', 'HelperService', 'Complaint.InfoService', 'Object.PersonService', 'LookupService', 'Object.LookupService'
-    , function ($scope, $stateParams, $q, $translate, Store, Util, Helper, ComplaintInfoService, ObjectPersonService, LookupService, ObjectLookupService) {
+    , 'UtilService', 'ConstantService', 'HelperService', 'Complaint.InfoService', 'Object.PersonService', 'LookupService', 'Object.LookupService'
+    , function ($scope, $stateParams, $q, $translate, Store, Util, Constant, Helper, ComplaintInfoService, ObjectPersonService, LookupService, ObjectLookupService) {
+
         var promiseConfig = Helper.requestComponentConfig($scope, "people", function (config) {
             configGridMain(config);
             configGridContactMethod(config);
@@ -435,7 +436,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             if (Util.isEmpty(rowEntity.id)) {
                 var pa = newPersonAssociation();
                 pa.parentId = $scope.complaintInfo.id;
-                pa.parentType = Helper.ObjectTypes.COMPLAINT;
+                pa.parentType = Constant.ObjectTypes.COMPLAINT;
                 pa.person.className = Util.goodValue($scope.config.className); //"com.armedia.acm.plugins.person.model.Person";
                 pa.person.givenName = givenName;
                 pa.person.familyName = familyName;
