@@ -1,19 +1,20 @@
 <div ng-controller="Reports.SelectionController" ng-cloak>
 
     <div class="form-group">
-        <label class="control-label">{{'reports.label.selectReport'| translate}}
-            <select ng-model="reportsData.reportSelected" ng-options="option.id as option.name for option in availableReports" class="form-control input-sm">
-                <option value="">{{'reports.placeholder.selectReport'| translate}}</option>
+        <label class="control-label">{{'reports.selectReport.label'| translate}}
+            <select ng-model="reportsData.reportSelected"
+                    ng-options="option.id as option.name for option in availableReports" class="form-control input-sm">
+                <option value="">{{'reports.selectReport.placeholder'| translate}}</option>
             </select>
         </label>
     </div>
 
     <div class="form-group" ng-if="reportsData.reportSelected != config.resetReportSelectValue">
-        <label class="control-label">{{'reports.label.selectState'| translate}}
-            <select ng-model="reportsData.caseStateSelected" ng-options="option.id as option.name for option in config.caseStates" class="form-control input-sm">
-                <option value="">{{'reports.placeholder.selectState'| translate}}</option>
+        <label class="control-label">{{'reports.selectState.label'| translate}}
+            <select ng-model="reportsData.caseStateSelected"
+                    ng-options="option.id as option.name for option in config.caseStates" class="form-control input-sm">
+                <option value="">{{'reports.selectState.placeholder'| translate}}</option>
             </select>
         </label>
     </div>
-
 </div>

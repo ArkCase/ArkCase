@@ -11,7 +11,7 @@
  */
 
 angular.module('reports').controller('ReportsController', ['$scope', 'ConfigService', 'LookupService', 'Reports.BuildUrl', '$q', 'Reports.Data',
-    function ($scope, ConfigService,LookupService, BuildUrl, $q, Data) {
+    function ($scope, ConfigService, LookupService, BuildUrl, $q, Data) {
 
         $scope.config = ConfigService.getModule({moduleId: 'reports'});
         $scope.$on('req-component-config', onConfigRequest);
@@ -34,22 +34,24 @@ angular.module('reports').controller('ReportsController', ['$scope', 'ConfigServ
         var reports = LookupService.getConfig({name: 'acm-reports'});
 
         $q.all([reportsConfig.$promise, reports.$promise])
-            .then(function(data) {
+            .then(function (data) {
                 $scope.reportsConfig = data[0].toJSON();
                 $scope.reports = data[1].toJSON();
                 $scope.reportsHost = $scope.reportsConfig['PENTAHO_SERVER_URL'];
                 $scope.reportsPort = $scope.reportsConfig['PENTAHO_SERVER_PORT'];
                 $scope.$broadcast('available-reports', $scope.reports);
-                $scope.$broadcast('reports-data-retrieved',$scope.data);
+                $scope.$broadcast('reports-data-retrieved', $scope.data);
             });
 
-        $scope.generateReport = function(){
-            $scope.reportUrl = BuildUrl.getUrl($scope.reportsHost, $scope.reportsPort,
-                               $scope.reports[$scope.data.reportSelected],
-                               $scope.data.caseStateSelected,
-                               moment($scope.data.startDate).format($scope.config.dateFormat),
-                               moment($scope.data.endDate).format($scope.config.dateFormat),
-                               $scope.config.pentahoDateFormat);
+        $scope.generateReport = function () {
+            $scope.reportUrl = BuildUrl.getUrl(
+                $scope.reportsHost,
+                $scope.reportsPort,
+                $scope.reports[$scope.data.reportSelected],
+                $scope.data.caseStateSelected,
+                moment($scope.data.startDate).format($scope.config.dateFormat),
+                moment($scope.data.endDate).format($scope.config.dateFormat),
+                $scope.config.pentahoDateFormat);
         }
     }
 ]);
