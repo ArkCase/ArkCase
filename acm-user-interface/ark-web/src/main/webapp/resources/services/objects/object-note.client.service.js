@@ -171,11 +171,11 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'StoreSer
                 , data: noteInfo
                 , onSuccess: function (data) {
                     if (Service.validateNote(data)) {
-                        var noteInfo = data;
+                        noteInfo = data;
                         var cacheKey = Util.goodValue(noteInfo.parentType) + "." + Util.goodValue(noteInfo.parentId, 0);
                         var cacheNotes = new Store.CacheFifo(Service.CacheNames.NOTES);
                         cacheNotes.put(cacheKey, noteInfo);
-                        return noteInfo;
+                        return data;
                     }
                 }
             });
