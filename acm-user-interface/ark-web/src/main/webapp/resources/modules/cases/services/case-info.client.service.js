@@ -84,7 +84,7 @@ angular.module('services').factory('Case.InfoService', ['$resource', '$translate
             }
             return Util.serviceCall({
                 service: ObjectInfoService.save
-                , param: {type: "CASE_INFO"}
+                , param: {type: "casefile"}
                 , data: caseInfo
                 , onSuccess: function (data) {
                     if (Service.validateCaseInfo(data)) {
