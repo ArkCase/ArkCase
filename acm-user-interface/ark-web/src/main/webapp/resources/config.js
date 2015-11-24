@@ -16,7 +16,6 @@ var ApplicationConfiguration = (function() {
         'ui.router',
         'ui.bootstrap',
         'pascalprecht.translate',
-        'schemaForm',
         'angularMoment',
         //'ui.utils',
         'ui.grid',
