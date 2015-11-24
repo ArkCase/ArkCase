@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.NotesController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'ConstantService', 'HelperService', 'Object.NoteService', 'Authentication',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Constant, Helper, ObjectNoteService, Authentication) {
+angular.module('cases').controller('Cases.NotesController', ['$scope', '$stateParams', '$q'
+    , 'UtilService', 'ConstantService', 'HelperService', 'Object.NoteService', 'Authentication'
+    , function ($scope, $stateParams, $q, Util, Constant, Helper, ObjectNoteService, Authentication) {
+
         $scope.$emit('req-component-config', 'notes');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("notes" == componentId) {
@@ -63,7 +65,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             $scope.gridApi.pagination.seek(lastPage);
             var newRow = {};
             newRow.parentId = $scope.currentId;
-            newRow.parentType = Helper.ObjectTypes.CASE_FILE;
+            newRow.parentType = Constant.ObjectTypes.CASE_FILE;
             newRow.created = Util.getCurrentDay();
             newRow.creator = $scope.userId;
             $scope.gridOptions.data.push(newRow);

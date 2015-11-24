@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$window', 'UtilService', 'ValidationService', 'HelperService', 'LookupService',
-    function ($scope, $window, Util, Validator, Helper, LookupService) {
+angular.module('cases').controller('Cases.ReferencesController', ['$scope', 'UtilService', 'HelperService'
+    , function ($scope, Util, Helper) {
+
 		$scope.$emit('req-component-config', 'references');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("references" == componentId) {
@@ -11,13 +12,10 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$wi
         });
 
         $scope.$on('case-updated', function (e, data) {
-            //if (Validator.validateCaseFile(data)) {
-            //$scope.caseInfo = Util.goodValue(data, {references: []});
             $scope.caseInfo = data;
             $scope.gridOptions = $scope.gridOptions || {};
             $scope.gridOptions.data = $scope.caseInfo.references;
             Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.caseInfo.references.length);
-            //}
         });
 
         $scope.onClickObjLink = function (event, rowEntity) {
