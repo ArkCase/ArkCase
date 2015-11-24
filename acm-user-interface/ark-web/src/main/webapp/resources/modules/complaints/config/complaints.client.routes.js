@@ -30,13 +30,8 @@ angular.module('complaints').config(['$stateProvider', '$urlRouterProvider',
                 templateUrl: 'modules/complaints/views/components/complaint-main.client.view.html'
             })
 
-            .state('complaints.viewer', {
-                url: '/:id/viewer/:containerId/:containerType/:name/:selectedIds',
-                templateUrl: 'modules/complaints/views/components/complaint-viewer.client.view.html'
-            })
-
             .state('complaints.status', {
-                url: '/:id/status/:complaintNumber/:status',
+                url: '/status/:id/:complaintNumber/:status',
                 templateUrl: 'modules/complaints/views/components/complaint-status.client.view.html'
             })
 

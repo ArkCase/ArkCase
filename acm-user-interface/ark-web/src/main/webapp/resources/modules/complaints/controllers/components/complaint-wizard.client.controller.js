@@ -2,6 +2,8 @@
 
 angular.module('complaints').controller('Complaints.WizardController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'FrevvoFormService',
     function ($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, FrevvoFormService) {
+        var z = 1;
+        return;
         $scope.$emit('req-component-config', 'wizard');
 
         $scope.acmTicket = '';

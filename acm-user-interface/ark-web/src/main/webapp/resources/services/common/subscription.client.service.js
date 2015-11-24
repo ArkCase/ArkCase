@@ -13,8 +13,6 @@
 angular.module('services').factory('SubscriptionService', [ '$http',
     function ($http) {
 
-        console.log("SubscriptionService is phasing out. Please use OBject.SubscriptionService");
-
         return {
 
             /**

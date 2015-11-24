@@ -30,19 +30,19 @@ angular.module('cases').config(['$stateProvider', '$urlRouterProvider',
                 templateUrl: 'modules/cases/views/components/case-main.client.view.html'
             })
 
-            .state('cases.viewer', {
-                url: '/:id/viewer/:containerId/:containerType/:name/:selectedIds',
+            .state('viewer', {
+                url: '/viewer/:id/:containerId/:containerType/:name/:selectedIds',
                 templateUrl: 'modules/cases/views/components/case-viewer.client.view.html'
             })
 
-            .state('cases.status', {
-                url: '/:id/status/:caseNumber/:status',
+            .state('status', {
+                url: '/status/:id/:caseNumber/:status',
                 templateUrl: 'modules/cases/views/components/case-status.client.view.html'
             })
 
-            .state('cases.wizard', {
-                url: '/wizard',
-                templateUrl: 'modules/cases/views/components/case-wizard.client.view.html'
+            .state('newcase', {
+                url: '/newcase',
+                templateUrl: 'modules/cases/views/components/case-newcase.client.view.html'
             })
 
             .state('cases.calendar', {
