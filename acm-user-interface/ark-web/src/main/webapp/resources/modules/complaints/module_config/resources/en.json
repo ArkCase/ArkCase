@@ -92,6 +92,16 @@
       "name": "Name"
     }
   },
+  "complaints.comp.locations": {
+    "title": "Locations",
+    "table.columns": {
+      "address": "Address",
+      "type": "Type",
+      "city": "City",
+      "state": "State",
+      "zip": "Zip"
+    }
+  },
   "complaints.comp.notes": {
     "title": "Notes",
     "table.columns": {

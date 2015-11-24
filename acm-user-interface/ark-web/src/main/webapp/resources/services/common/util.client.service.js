@@ -276,7 +276,7 @@ angular.module('services').factory('UtilService', ['$q', '$window',
                             if (arg.onInvalid) {
                                 rc = arg.onInvalid(successData);
                             } else {
-                                rc = "Validation failure";
+                                rc = Util.goodMapValue(successData, "error", "Validation failure");
                             }
                             callbacks.onError(rc);
                         } else {
@@ -295,7 +295,7 @@ angular.module('services').factory('UtilService', ['$q', '$window',
                     d.reject(rc);
 
                     //todo: show error in UI
-                    console.log("serviceCall error:" + rc);
+                    console.log("service call error:" + rc);
                     return rc;
                 };
 
