@@ -8,7 +8,7 @@
         </label>
     </div>
 
-    <div class="form-group" ng-if="reportsData.reportSelected != config.resetReportSelectValue">
+    <div class="form-group" ng-if="config.resetCaseStateValues.indexOf(reportsData.reportSelected) == -1">
         <label class="control-label">{{'reports.label.selectState'| translate}}
             <select ng-model="reportsData.caseStateSelected" ng-options="option.id as option.name for option in config.caseStates" class="form-control input-sm">
                 <option value="">{{'reports.placeholder.selectState'| translate}}</option>
