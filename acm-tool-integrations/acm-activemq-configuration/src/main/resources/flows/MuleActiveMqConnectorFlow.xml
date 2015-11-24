@@ -20,6 +20,6 @@
             validateConnections="true"
             doc:name="Active MQ"
             connectionFactory-ref="jmsConnectionFactory"
-            maxRedelivery="10"/>
-
+            maxRedelivery="10"
+            disableTemporaryReplyToDestinations="true"/>
 </mule>
