@@ -43,7 +43,7 @@ angular.module('cost-tracking').controller('CostTrackingController', ['$scope', 
 					function (costsheetInfo) {
 						$scope.progressMsg = null;
 						$scope.costsheetInfo = costsheetInfo;
-						$scope.$broadcast('costsheet-retrieved', costsheetInfo);
+						$scope.$broadcast('costsheet-updated', costsheetInfo);
 						return costsheetInfo;
 					}
 					, function (errorData) {
