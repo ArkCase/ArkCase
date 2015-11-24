@@ -47,10 +47,10 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
         $scope.retrieveGridData = function () {
             var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(Constant.ObjectTypes.COMPLAINT
                 , $scope.currentId
-                , $scope.start
-                , $scope.pageSize
-                , $scope.sort.by
-                , $scope.sort.dir
+                , Util.goodValue($scope.start, 0)
+                , Util.goodValue($scope.pageSize, 10)
+                , Util.goodValue($scope.sort.by)
+                , Util.goodValue($scope.sort.dir)
             );
 
             $q.all([promiseCorrespondence, promiseUsers]).then(function (data) {
