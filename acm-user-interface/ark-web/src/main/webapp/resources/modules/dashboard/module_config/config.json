@@ -10,13 +10,26 @@
       "position": 0
     }
   ],
-
   "components": [
+    {
+      "id": "news",
+      "title": "News Widget",
+      "url": "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&callback=JSON_CALLBACK&q="
+    },
+    {
+      "id": "weather",
+      "title": "Weather Widget",
+      "APPID": "672e193bbf022bdc749986f7be4c0364"
+    },
     {
       "id": "myCases",
       "title": "My Cases Widget",
       "enableFiltering": false,
-      "paginationPageSizes": [25, 50, 75],
+      "paginationPageSizes": [
+        25,
+        50,
+        75
+      ],
       "paginationPageSize": 25,
       "columnDefs": [
         {
@@ -47,13 +60,16 @@
           "width": 70
         }
       ]
-
     },
     {
       "id": "myTasks",
       "title": "My Tasks Widget",
       "enableFiltering": false,
-      "paginationPageSizes": [25, 50, 75],
+      "paginationPageSizes": [
+        25,
+        50,
+        75
+      ],
       "paginationPageSize": 25,
       "columnDefs": [
         {
@@ -93,7 +109,6 @@
         }
       ]
     },
-
     {
       "id": "casesByQueue",
       "title": "Cases By Queue",

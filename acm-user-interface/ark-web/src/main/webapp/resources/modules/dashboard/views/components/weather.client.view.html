@@ -1,0 +1,12 @@
+<div class="text-center">
+    <div class="alert alert-info" ng-if="!weather">
+        <p style="text-align:center;">{{'dashboard.widgets.weather.label.insert-location-in-configuration' |
+            translate}}</p>
+    </div>
+    <div class="weather" ng-if="weather">
+        <h4>{{weather.location.city}} ({{weather.location.country}})</h4>
+        <weather-icon cloudiness="{{ weather.clouds }}"></weather-icon>
+        <h3>{{'dashboard.widgets.weather.label.current' | translate}} {{ weather.temp.current | temp:2 }}</h3>
+        min: {{ weather.temp.min | temp:2 }}, max: {{ weather.temp.max | temp:2 }}
+    </div>
+</div>
