@@ -145,7 +145,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             TaskWorkflowService.completeTask(rowEntity.id).then(
                 function (taskInfo) {
                     rowEntity.acm$_taskActionDone = true;
-                    rowEntity.status_s = "COMPLETE";
+                    rowEntity.status_s = TaskWorkflowService.WorkflowStatus.COMPLETE;
                     return taskInfo;
                 }
             );
@@ -200,7 +200,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             TaskWorkflowService.completeTaskWithOutcome(task, outcome).then(
                 function (successData) {
                     rowEntity.acm$_taskActionDone = true;
-                    rowEntity.status_s = "COMPLETE";
+                    rowEntity.status_s = TaskWorkflowService.WorkflowStatus.COMPLETE;
                     return successData;
                 }
             );
