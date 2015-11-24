@@ -1,10 +1,9 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.HistoryController', ['$scope', '$stateParams', '$q', 'UtilService', 'HelperService', 'ConstantService', 'Object.AuditService',
-    function ($scope, $stateParams, $q, Util, Helper, Constant, ObjectAuditService) {
-        var z = 1;
-        $scope.gridOptions = {};
-        return;
+angular.module('complaints').controller('Complaints.HistoryController', ['$scope', '$stateParams', '$q'
+    , 'UtilService', 'HelperService', 'ConstantService', 'Object.AuditService'
+    , function ($scope, $stateParams, $q, Util, Helper, Constant, ObjectAuditService) {
+
         $scope.$emit('req-component-config', 'history');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('history' == componentId) {
@@ -34,6 +33,7 @@ angular.module('complaints').controller('Complaints.HistoryController', ['$scope
 
                 $q.all([promiseQueryAudit, promiseUsers]).then(function (data) {
                     var auditData = data[0];
+                    $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = auditData.resultPage;
                     $scope.gridOptions.totalItems = auditData.totalCount;
                     Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
