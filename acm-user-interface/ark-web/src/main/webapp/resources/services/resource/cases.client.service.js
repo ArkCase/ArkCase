@@ -97,28 +97,28 @@ angular.module('services').factory('CasesService', ['$resource',
                     return results;
                 }
             }
-            , addPersonAssociation: {
-                method: 'POST',
-                url: 'proxy/arkcase/api/latest/plugin/personAssociation',
-                cache: false
-            }
-            , deletePersonAssociation: {
-                method: 'DELETE',
-                url: 'proxy/arkcase/api/latest/plugin/personAssociation/delete/:personAssociationId',
-                cache: false
-            }
+            //, addPersonAssociation: {
+            //    method: 'POST',
+            //    url: 'proxy/arkcase/api/latest/plugin/personAssociation',
+            //    cache: false
+            //}
+            //, deletePersonAssociation: {
+            //    method: 'DELETE',
+            //    url: 'proxy/arkcase/api/latest/plugin/personAssociation/delete/:personAssociationId',
+            //    cache: false
+            //}
 
             //, queryTasks: {
             //    method: 'GET',
             //    url: 'proxy/arkcase/api/latest/plugin/search/children?parentType=CASE_FILE&childType=TASK&parentId=:id&start=:startWith&n=:count&s=:sort',
             //    cache: false
             //}
-            , queryMyTasks: {
-                method: 'GET',
-                url: 'proxy/arkcase/api/latest/plugin/task/forUser/:user',
-                cache: false,
-                isArray: true
-            }
+            //, queryMyTasks: {
+            //    method: 'GET',
+            //    url: 'proxy/arkcase/api/latest/plugin/task/forUser/:user',
+            //    cache: false,
+            //    isArray: true
+            //}
             //, deleteTask: {
             //    method: 'POST',
             //    url: 'proxy/arkcase/api/latest/plugin/task/deleteTask/:taskId',
@@ -203,23 +203,23 @@ angular.module('services').factory('CasesService', ['$resource',
             //    cache: false
             //}
 
-            , queryCorrespondence: {
-                method: 'GET',
-                url: 'proxy/arkcase/api/latest/service/ecm/bycategory/:parentType/:parentId?category=Correspondence&start=:startWith&n=:count&s=:sort',
-                cache: false
-            }
-            , createCorrespondence: {
-                method: 'POST',
-                url: 'proxy/arkcase/api/latest/service/correspondence?templateName=:template&parentObjectType=:parentType&parentObjectId=:parentId&targetCmisFolderId=:folderId',
-                cache: false
-            }
-            , queryTimesheets: {
-                method: 'GET',
-                //url: 'proxy/arkcase/api/v1/service/timesheet/objectId/:objectId/objectType/:objectType?start=:startWith&n=:count&s=:sort',
-                url: 'proxy/arkcase/api/v1/service/timesheet/objectId/:objectId/objectType/:objectType',
-                cache: false,
-                isArray: true
-            }
+            //, queryCorrespondence: {
+            //    method: 'GET',
+            //    url: 'proxy/arkcase/api/latest/service/ecm/bycategory/:parentType/:parentId?category=Correspondence&start=:startWith&n=:count&s=:sort',
+            //    cache: false
+            //}
+            //, createCorrespondence: {
+            //    method: 'POST',
+            //    url: 'proxy/arkcase/api/latest/service/correspondence?templateName=:template&parentObjectType=:parentType&parentObjectId=:parentId&targetCmisFolderId=:folderId',
+            //    cache: false
+            //}
+            //, queryTimesheets: {
+            //    method: 'GET',
+            //    //url: 'proxy/arkcase/api/v1/service/timesheet/objectId/:objectId/objectType/:objectType?start=:startWith&n=:count&s=:sort',
+            //    url: 'proxy/arkcase/api/v1/service/timesheet/objectId/:objectId/objectType/:objectType',
+            //    cache: false,
+            //    isArray: true
+            //}
             , queryCostsheets: {
                 method: 'GET',
                 //url: 'proxy/arkcase/api/v1/service/costsheet/objectId/:objectId/objectType/:objectType?start=:startWith&n=:count&s=:sort',
