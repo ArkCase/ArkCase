@@ -13,8 +13,8 @@
  *
  * The Cases module actions controller
  */
-angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state', '$q', 'ConfigService', 'CasesService', 'UtilService', 'ValidationService', 'Authentication', 'SubscriptionService',
-    function ($scope, $state, $q, ConfigService, CasesService, Util, Validator, Authentication, SubscriptionService) {
+angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state', '$q', 'ConfigService', 'CasesService', 'UtilService', 'Authentication', 'SubscriptionService',
+    function ($scope, $state, $q, ConfigService, CasesService, Util, Authentication, SubscriptionService) {
         $scope.$emit('req-component-config', 'actions');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('actions' == componentId) {
@@ -30,22 +30,20 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         var userInfo = Authentication.queryUserInfoNew();
 
         $scope.$on('case-updated', function (e, data) {
-            if (Validator.validateCaseFile(data)) {
-                $scope.caseInfo = data;
+            $scope.caseInfo = data;
 
-                userInfo.then(function (data) {
-                    $scope.userId = data.userId;
+            userInfo.then(function (data) {
+                $scope.userId = data.userId;
 
-                    // Obtains the existing subscriptions from ArkCase
-                    SubscriptionService.getSubscribers({userId: $scope.userId, objectId: $scope.caseInfo.id})
-                        .then(function (data) {
-                            var subscriptionArray = data.data;
+                // Obtains the existing subscriptions from ArkCase
+                SubscriptionService.getSubscribers({userId: $scope.userId, objectId: $scope.caseInfo.id})
+                    .then(function (data) {
+                        var subscriptionArray = data.data;
 
-                            // Is the currently logged in user subscribed to this case file already?
-                            $scope.isSubscribed = SubscriptionService.isSubscribed($scope.userId, $scope.caseInfo, subscriptionArray);
-                        });
-                })
-            }
+                        // Is the currently logged in user subscribed to this case file already?
+                        $scope.isSubscribed = SubscriptionService.isSubscribed($scope.userId, $scope.caseInfo, subscriptionArray);
+                    });
+            })
         });
 
         /**

@@ -1,11 +1,8 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.PeopleController', ['$scope', '$stateParams', '$q', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'Complaint.InfoService', 'LookupService',
-    function ($scope, $stateParams, $q, $translate, Store, Util, Validator, Helper, ComplaintInfoService, LookupService) {
-        var z = 1;
-        $scope.gridOptions = {};
-        return;
-        var deferPeopleData = new Store.Variable("deferComplaintPeopleData");    // used to hold grid data before grid config is ready
+angular.module('complaints').controller('Complaints.PeopleController', ['$scope', '$stateParams', '$q', '$translate', 'StoreService'
+    , 'UtilService', 'ConstantService', 'HelperService', 'Complaint.InfoService', 'Object.PersonService', 'LookupService', 'Object.LookupService'
+    , function ($scope, $stateParams, $q, $translate, Store, Util, Constant, Helper, ComplaintInfoService, ObjectPersonService, LookupService, ObjectLookupService) {
 
         var promiseConfig = Helper.requestComponentConfig($scope, "people", function (config) {
             configGridMain(config);
@@ -16,6 +13,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             configGridSecurityTag(config);
 
             $q.all([promisePersonTypes, promiseUsers, promiseContactMethodTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes]).then(function (data) {
+                var deferPeopleData = new Store.Variable("deferComplaintPeopleData");    // used to hold grid data before grid config is ready
                 var complaintInfo = deferPeopleData.get();
                 if (complaintInfo) {
                     updateGridData(complaintInfo);
@@ -27,19 +25,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
         var promiseUsers = Helper.Grid.getUsers($scope);
 
-        var cachePersonTypes = new Store.SessionData(Helper.SessionCacheNames.PERSON_TYPES);
-        var personTypes = cachePersonTypes.get();
-        var promisePersonTypes = Util.serviceCall({
-            service: LookupService.getPersonTypes
-            , result: personTypes
-            , onSuccess: function (data) {
-                if (Validator.validatePersonTypes(data)) {
-                    personTypes = data;
-                    cachePersonTypes.set(personTypes);
-                    return personTypes;
-                }
-            }
-        }).then(
+        var promisePersonTypes = ObjectLookupService.getPersonTypes().then(
             function (personTypes) {
                 var options = [];
                 _.forEach(personTypes, function (v, k) {
@@ -50,20 +36,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         );
 
-
-        var cacheContactMethodTypes = new Store.SessionData(Helper.SessionCacheNames.CONTACT_METHOD_TYPES);
-        var contactMethodTypes = cachePersonTypes.get();
-        var promiseContactMethodTypes = Util.serviceCall({
-            service: LookupService.getContactMethodTypes
-            , result: contactMethodTypes
-            , onSuccess: function (data) {
-                if (Validator.validateContactMethodTypes(data)) {
-                    contactMethodTypes = data;
-                    cacheContactMethodTypes.set(contactMethodTypes);
-                    return contactMethodTypes;
-                }
-            }
-        }).then(
+        var promiseContactMethodTypes = ObjectLookupService.getContactMethodTypes().then(
             function (contactMethodTypes) {
                 var options = [];
                 Util.forEachStripNg(contactMethodTypes, function (v, k) {
@@ -74,19 +47,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         );
 
-        var cacheOrganizationTypes = new Store.SessionData(Helper.SessionCacheNames.ORGANIZATION_TYPES);
-        var organizationTypes = cacheOrganizationTypes.get();
-        var promiseOrganizationTypes = Util.serviceCall({
-            service: LookupService.getOrganizationTypes
-            , result: organizationTypes
-            , onSuccess: function (data) {
-                if (Validator.validateOrganizationTypes(data)) {
-                    organizationTypes = data;
-                    cacheOrganizationTypes.set(organizationTypes);
-                    return organizationTypes;
-                }
-            }
-        }).then(
+        var promiseOrganizationTypes = ObjectLookupService.getOrganizationTypes().then(
             function (organizationTypes) {
                 var options = [];
                 Util.forEachStripNg(organizationTypes, function (v, k) {
@@ -97,19 +58,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         );
 
-        var cacheAddressTypes = new Store.SessionData(Helper.SessionCacheNames.ADDRESS_TYPES);
-        var addressTypes = cacheAddressTypes.get();
-        var promiseAddressTypes = Util.serviceCall({
-            service: LookupService.getAddressTypes
-            , result: addressTypes
-            , onSuccess: function (data) {
-                if (Validator.validateAddressTypes(data)) {
-                    addressTypes = data;
-                    cacheAddressTypes.set(addressTypes);
-                    return addressTypes;
-                }
-            }
-        }).then(
+        var promiseAddressTypes = ObjectLookupService.getAddressTypes().then(
             function (addressTypes) {
                 var options = [];
                 Util.forEachStripNg(addressTypes, function (v, k) {
@@ -120,19 +69,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         );
 
-        var cacheAliasTypes = new Store.SessionData(Helper.SessionCacheNames.ALIAS_TYPES);
-        var aliasTypes = cacheAliasTypes.get();
-        var promiseAliasTypes = Util.serviceCall({
-            service: LookupService.getAliasTypes
-            , result: aliasTypes
-            , onSuccess: function (data) {
-                if (Validator.validateAliasTypes(data)) {
-                    aliasTypes = data;
-                    cacheAliasTypes.set(aliasTypes);
-                    return aliasTypes;
-                }
-            }
-        }).then(
+        var promiseAliasTypes = ObjectLookupService.getAliasTypes().then(
             function (aliasTypes) {
                 var options = [];
                 Util.forEachStripNg(aliasTypes, function (v, k) {
@@ -143,19 +80,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         );
 
-        var cacheSecurityTagTypes = new Store.SessionData(Helper.SessionCacheNames.SECURITY_TAG_TYPES);
-        var securityTagTypes = cacheSecurityTagTypes.get();
-        var promiseSecurityTagTypes = Util.serviceCall({
-            service: LookupService.getSecurityTagTypes
-            , result: securityTagTypes
-            , onSuccess: function (data) {
-                if (Validator.validateSecurityTagTypes(data)) {
-                    securityTagTypes = data;
-                    cacheSecurityTagTypes.set(securityTagTypes);
-                    return securityTagTypes;
-                }
-            }
-        }).then(
+        var promiseSecurityTagTypes = ObjectLookupService.getSecurityTagTypes().then(
             function (securityTagTypes) {
                 var options = [];
                 Util.forEachStripNg(securityTagTypes, function (v, k) {
@@ -487,12 +412,11 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }); //end $q            
         };
         $scope.$on('complaint-updated', function (e, data) {
-            if (Validator.validateComplaint(data)) {
-                if (data.id == $stateParams.id) {
-                    updateGridData(data);
-                } else {                      // condition when data comes before state is routed and config is not set
-                    deferPeopleData.set(data);
-                }
+            if (data.id == $stateParams.id) {
+                updateGridData(data);
+            } else {                      // condition when data comes before state is routed and config is not set
+                var deferPeopleData = new Store.Variable("deferComplaintPeopleData");    // used to hold grid data before grid config is ready
+                deferPeopleData.set(data);
             }
         });
 
@@ -512,50 +436,23 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             if (Util.isEmpty(rowEntity.id)) {
                 var pa = newPersonAssociation();
                 pa.parentId = $scope.complaintInfo.id;
-                pa.parentType = Helper.ObjectTypes.COMPLAINT;
+                pa.parentType = Constant.ObjectTypes.COMPLAINT;
                 pa.person.className = Util.goodValue($scope.config.className); //"com.armedia.acm.plugins.person.model.Person";
                 pa.person.givenName = givenName;
                 pa.person.familyName = familyName;
-                Util.serviceCall({
-                    service: ComplaintsService.addPersonAssociation
-                    , data: pa
-                    , onSuccess: function (data) {
-                        if (Validator.validatePersonAssociation(data)) {
-                            return data;
-                        }
-                    }
-                }).then(
+                ObjectPersonService.addPersonAssociation(pa).then(
                     function (personAssociationAdded) {
                         rowEntity = _.merge(rowEntity, personAssociationAdded);
                         return personAssociationAdded;
                     }
                 );
-                //ComplaintsService.addPersonAssociation({}, pa
-                //    , function (successData) {
-                //        if (Validator.validatePersonAssociation(successData)) {
-                //            var personAssociationAdded = successData;
-                //            rowEntity = _.merge(rowEntity, personAssociationAdded);
-                //        }
-                //    }
-                //    , function (errorData) {
-                //    }
-                //);
 
                 //
                 // update person association
                 //
             } else {
                 var complaintInfo = Util.omitNg($scope.complaintInfo);
-                Util.serviceCall({
-                    service: ComplaintsService.save
-                    , data: complaintInfo
-                    , onSuccess: function (data) {
-                        if (Validator.validateComplaint(data)) {
-                            var complaintSaved = data;
-                            return complaintSaved;
-                        }
-                    }
-                }).then(
+                ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                     function (complaintSaved) {
                         return complaintSaved;
                     }
@@ -570,16 +467,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                Util.serviceCall({
-                    service: ComplaintsService.deletePersonAssociation
-                    , param: {personAssociationId: id}
-                    , data: {}
-                    , onSuccess: function (data) {
-                        if (Validator.validateDeletedPersonAssociation(data)) {
-                            return data;
-                        }
-                    }
-                }).then(
+                ObjectPersonService.deletePersonAssociation(id).then(
                     function (personAssociationDeleted) {
                         return personAssociationDeleted;
                     }
@@ -587,15 +475,6 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                         return error;
                     }
                 );
-                //ComplaintsService.deletePersonAssociation({personAssociationId: id}
-                //    , function (personAssociationDeleted) {
-                //        if (Validator.validateDeletedPersonAssociation(personAssociationDeleted)) {
-                //            console.log("deleted People row");
-                //        }
-                //    }
-                //    , function (errorData) {
-                //    }
-                //);
             }
 
         };
@@ -613,15 +492,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
         };
         $scope.updateRowContactMethods = function (personAssociation, rowEntity) {
             var complaintInfo = Util.omitNg($scope.complaintInfo);
-            Util.serviceCall({
-                service: ComplaintsService.save
-                , data: complaintInfo
-                , onSuccess: function (data) {
-                    if (Validator.validateComplaint(data)) {
-                        return data;
-                    }
-                }
-            }).then(
+            ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                 function (complaintSaved) {
                     if (Util.isEmpty(rowEntity.id)) {
                         var personAssociationsSaved = Util.goodMapValue(complaintSaved, "personAssociations", []);
@@ -643,15 +514,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
                 var complaintInfo = Util.omitNg($scope.complaintInfo);
-                Util.serviceCall({
-                    service: ComplaintsService.save
-                    , data: complaintInfo
-                    , onSuccess: function (data) {
-                        if (Validator.validateComplaint(data)) {
-                            return data;
-                        }
-                    }
-                });
+                ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };
         $scope.addNewOrganizations = function (rowParent) {
@@ -673,16 +536,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
                 var complaintInfo = Util.omitNg($scope.complaintInfo);
-                Util.serviceCall({
-                    service: ComplaintsService.save
-                    , data: complaintInfo
-                    , onSuccess: function (data) {
-                        if (Validator.validateComplaint(data)) {
-                            var complaintSaved = data;
-                            return complaintSaved;
-                        }
-                    }
-                });
+                ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };
         $scope.addNewAddresses = function (rowParent) {
@@ -704,15 +558,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
                 var complaintInfo = Util.omitNg($scope.complaintInfo);
-                Util.serviceCall({
-                    service: ComplaintsService.save
-                    , data: complaintInfo
-                    , onSuccess: function (complaintSaved) {
-                        if (Validator.validateComplaint(complaintSaved)) {
-                            return complaintSaved;
-                        }
-                    }
-                });
+                ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };
         $scope.addNewAliases = function (rowParent) {
@@ -734,15 +580,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
                 var complaintInfo = Util.omitNg($scope.complaintInfo);
-                Util.serviceCall({
-                    service: ComplaintsService.save
-                    , data: complaintInfo
-                    , onSuccess: function (complaintSaved) {
-                        if (Validator.validateComplaint(complaintSaved)) {
-                            return complaintSaved;
-                        }
-                    }
-                });
+                ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };
         $scope.addNewSecurityTags = function (rowParent) {
@@ -764,9 +602,8 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                //
-                // save data to server
-                //
+                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };
 
