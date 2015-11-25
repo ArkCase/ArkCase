@@ -1,6 +1,5 @@
 <div ng-controller="ReportsController">
     <div class="module-content">
-
         <div class="left-sidebar">
             <div class="module-header">
                 <h3>{{'reports.title' | translate}}</h3>
@@ -9,7 +8,7 @@
                 <div class="panel-body">
 
                     <div ng-include="'modules/reports/views/components/reports-selection.client.view.html'"></div>
-
+                    <div ng-include="'modules/reports/views/components/reports-state.client.view.html'"></div>
                     <div ng-include="'modules/reports/views/components/reports-datepickers.client.view.html'"></div>
 
                     <div>
@@ -23,10 +22,9 @@
 
         <div class="content-body">
             <div class="well">
-                <iframe name="reports-iframe" style="width:100%; height:100%;" frameborder="0" ng-src="{{reportUrl}}"></iframe>
+                <iframe name="reports-iframe" style="width:100%; height:100%;" frameborder="0"
+                        ng-src="{{reportUrl}}"></iframe>
             </div>
         </div>
-
     </div>
-
 </div>

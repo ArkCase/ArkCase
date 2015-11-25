@@ -36,7 +36,8 @@
     "ng-file-upload-shim": "~7.0.17",
     "ui-contextmenu": "~1.11.0",
     "ngBootbox": "~0.1.1",
-    "ngHandsontable": "~0.7.0"
+    "ngHandsontable": "~0.7.0",
+    "ng-tags-input": "~3.0.0"
   },
   "resolutions": {
     "angular": "1.4.7",
