@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'HelperService', 'Case.InfoService', 'LookupService', 'Object.LookupService',
-    function ($scope, $stateParams, $q, Store, Util, Helper, CaseInfoService, LookupService, ObjectLookupService) {
+angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$stateParams', '$q'
+    , 'StoreService', 'UtilService', 'HelperService', 'Case.InfoService', 'LookupService', 'Object.LookupService'
+    , function ($scope, $stateParams, $q, Store, Util, Helper, CaseInfoService, LookupService, ObjectLookupService) {
+
         var deferParticipantData = new Store.Variable("deferCaseParticipantData");    // used to hold grid data before grid config is ready
 
         var promiseConfig = Helper.requestComponentConfig($scope, "participants", function (config) {

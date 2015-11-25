@@ -135,6 +135,12 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 	}
 
 	@Override
+	public Class<?> getFormClass()
+	{
+		return PlainConfigurationForm.class;
+	}
+
+	@Override
 	public Object convertToFrevvoForm(Object obj, Object form) {
 		// Implementation no need so far
 		return null;

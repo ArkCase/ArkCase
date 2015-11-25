@@ -251,13 +251,12 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "entity",
@@ -288,13 +287,12 @@
         "title": "Contact Methods",
         "enableFiltering": true,
         "paginationPageSizes": [
-          2,
           5,
           10,
           20,
           50
         ],
-        "paginationPageSize": 2,
+        "paginationPageSize": 5,
         "columnDefs": [
           {
             "name": "type",
@@ -494,13 +492,12 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "participantType",
@@ -521,27 +518,35 @@
       "title": "Locations",
       "enabled": true,
       "type": "grid",
-      "enableFiltering": true,
-      "paginationPageSizes": [
-        2,
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 2,
+      "enableFiltering": false,
+      "enableSorting": false,
       "columnDefs": [
         {
-          "name": "participantType",
-          "displayName": "complaints.comp.participants.table.columns.type",
-          "headerCellFilter": "translate",
-          "lookup": "participantTypes"
+          "name": "address",
+          "field": "streetAddress",
+          "displayName": "complaints.comp.locations.table.columns.address",
+          "headerCellFilter": "translate"
         },
         {
-          "name": "participantLdapId",
-          "displayName": "complaints.comp.participants.table.columns.name",
+          "name": "type",
+          "displayName": "complaints.comp.locations.table.columns.type",
           "headerCellFilter": "translate",
-          "lookup": "participantNames"
+          "lookup": "addressTypes"
+        },
+        {
+          "name": "city",
+          "displayName": "complaints.comp.locations.table.columns.city",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "state",
+          "displayName": "complaints.comp.locations.table.columns.state",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "zip",
+          "displayName": "complaints.comp.locations.table.columns.zip",
+          "headerCellFilter": "translate"
         }
       ]
     },
@@ -552,13 +557,13 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
+
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "note",
@@ -768,13 +773,12 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 2,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "name",

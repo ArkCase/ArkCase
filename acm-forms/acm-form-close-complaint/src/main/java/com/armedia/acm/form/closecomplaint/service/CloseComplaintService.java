@@ -215,6 +215,12 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
         return FrevvoFormName.CLOSE_COMPLAINT;
     }
 
+	@Override
+	public Class<?> getFormClass()
+	{
+		return CloseComplaintForm.class;
+	}
+
 	/**
 	 * @return the complaintDao
 	 */
