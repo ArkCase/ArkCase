@@ -462,6 +462,12 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         return FrevvoFormName.COMPLAINT;
     }
 
+    @Override
+    public Class<?> getFormClass()
+    {
+        return ComplaintForm.class;
+    }
+
     public SaveComplaintTransaction getSaveComplaintTransaction()
     {
         return saveComplaintTransaction;
