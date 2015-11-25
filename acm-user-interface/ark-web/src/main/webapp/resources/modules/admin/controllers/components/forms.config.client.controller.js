@@ -53,9 +53,9 @@ angular.module('admin').controller('Admin.FormsConfigController', ['$scope', '$s
             $scope.deletePlainForm = rowEntity;
             FormConfigService.deletePlainForm($scope.deletePlainForm.key, $scope.deletePlainForm.target).then(function () {
                 Helper.Grid.deleteRow($scope, $scope.deletePlainForm);
-                messageService.info($translate.instant('successfully deleted form'));
+                messageService.info($translate.instant('admin.forms.message.delete.success'));
             }, function () {
-                messageService.error($translate.instant('error while deleting form'));
+                messageService.error($translate.instant('admin.forms.message.delete.error'));
             });
         };
 
