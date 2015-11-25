@@ -20,7 +20,7 @@ angular.module('cost-tracking').controller('CostTracking.ActionsController', ['$
 
         $scope.costsheetInfo = null;
 
-        $scope.$on('costsheet-retrieved', function(e, data) {
+        $scope.$on('costsheet-updated', function (e, data) {
             $scope.costsheetInfo = data;
         });
 

@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('cases').controller('Cases.HistoryController', ['$scope', '$stateParams', '$q', 'UtilService', 'HelperService', 'ConstantService', 'Object.AuditService',
-    function ($scope, $stateParams, $q, Util, Helper, Constant, ObjectAuditService) {
+angular.module('cases').controller('Cases.HistoryController', ['$scope', '$stateParams', '$q'
+    , 'UtilService', 'HelperService', 'ConstantService', 'Object.AuditService'
+    , function ($scope, $stateParams, $q, Util, Helper, Constant, ObjectAuditService) {
         $scope.$emit('req-component-config', 'history');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('history' == componentId) {

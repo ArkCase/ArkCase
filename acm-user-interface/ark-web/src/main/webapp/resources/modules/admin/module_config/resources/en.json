@@ -87,6 +87,16 @@
         "modified": "Modified",
         "creator": "Creator"
       }
-    }
+    },
+    "forms.defaultValue": "Select Target",
+    "forms.addForm": "Add Plain Form",
+    "forms.data":{
+      "name": "Form Name",
+      "applicationName": "Application name",
+      "description": "Description",
+      "target": "Target"
+    },
+    "forms.message.delete.success": "Successfully deleted row.",
+    "forms.message.delete.error": "Error deleting row."
   }
 }
