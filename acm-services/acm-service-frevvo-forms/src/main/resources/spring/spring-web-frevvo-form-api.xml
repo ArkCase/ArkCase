@@ -52,6 +52,7 @@
         </property>
         <property name="notificationDao" ref="notificationDao"/>
         <property name="notificationEventPublisher" ref="notificationEventPublisher"/>
+        <property name="frevvoFormServiceFactory" ref="frevvoFormServiceFactory"/>
 	</bean>
 
 </beans>
