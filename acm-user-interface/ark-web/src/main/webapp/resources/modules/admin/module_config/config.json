@@ -131,6 +131,40 @@
           "headerCellFilter": "translate"
         }
       ]
+    },
+    {
+      "id": "labelsConfig",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "id",
+          "displayName": "admin.labels.config.data.id",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "value",
+          "displayName": "admin.labels.config.data.value",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' editable-text='row.entity.value' onbeforesave='grid.appScope.updateLabelValue($data, row.entity)'>{{ row.entity.value}}</a>"
+        },
+        {
+          "name": "description",
+          "displayName": "admin.labels.config.data.description",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' editable-text='row.entity.description' onbeforesave='grid.appScope.updateLabelDesc($data, row.entity)'>{{ row.entity.description || 'Unknown' }}</a>"
+        },
+        {
+          "name": "defaultValue",
+          "displayName": "admin.labels.config.data.defaultValue",
+          "visible": true,
+          "headerCellFilter": "translate"
+        }
+      ]
     }
   ],
   "adminTree": [
