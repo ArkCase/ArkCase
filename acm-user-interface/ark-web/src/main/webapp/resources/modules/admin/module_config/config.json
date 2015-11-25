@@ -131,7 +131,39 @@
           "headerCellFilter": "translate"
         }
       ]
-    }
+    },
+    {
+      "id": "plainFormsConfig",
+      "enabled": true,
+      "type": "grid",
+      "formsDropdown": [
+        {"id": "CASE_FILE", "name": "Case File"},
+        {"id": "COMPLAINT", "name": "Complaint"}
+      ],
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "admin.forms.data.name",
+          "visible": true,
+          "headerCellFilter": "translate"
+        }, {
+          "name": "applicationName",
+          "displayName": "admin.forms.data.applicationName",
+          "visible": true,
+          "headerCellFilter": "translate"
+        }, {
+          "name": "description",
+          "displayName": "admin.forms.data.description",
+          "visible": true,
+          "headerCellFilter": "translate"
+        }, {
+          "name": "target",
+          "displayName": "admin.forms.data.target",
+          "visible": true,
+          "headerCellFilter": "translate"
+        }
+       ]
+      }
   ],
   "adminTree": [
     {
