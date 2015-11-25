@@ -375,6 +375,12 @@ public class CaseFilePSService extends FrevvoFormAbstractService
         return FrevvoFormName.CASE_FILE_PS;
     }
 
+    @Override
+    public Class<?> getFormClass()
+    {
+        return CaseFilePSForm.class;
+    }
+
     private Object initFormData()
     {
         CaseFilePSForm caseFileForm = new CaseFilePSForm();

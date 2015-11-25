@@ -165,6 +165,12 @@ public class ROIService extends FrevvoFormAbstractService {
         return FrevvoFormName.ROI;
     }
 
+	@Override
+	public Class<?> getFormClass()
+	{
+		return ROIForm.class;
+	}
+
 	/**
 	 * @return the complaintDao
 	 */
