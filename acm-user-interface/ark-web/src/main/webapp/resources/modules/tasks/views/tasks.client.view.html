@@ -1,13 +1,10 @@
 <div ng-controller="TasksController">
     <div class="module-content">
-        <div class="left-sidebar">
+        <div class="left-sidebar scroll-body">
             <div class="module-header">
                 <h3>{{'tasks.title' | translate}}</h3>
             </div>
-
-            <div class="scroll-body" slimscroll="{height: '800px'}"
-                 ng-include="'modules/tasks/views/tasks-list.client.view.html'">
-            </div>
+            <div ng-include="'modules/tasks/views/tasks-list.client.view.html'"/>
         </div>
 
         <section class="content-body" ng-show="taskInfo">
