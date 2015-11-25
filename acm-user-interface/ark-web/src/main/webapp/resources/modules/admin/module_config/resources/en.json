@@ -95,6 +95,8 @@
       "applicationName": "Application name",
       "description": "Description",
       "target": "Target"
-    }
+    },
+    "forms.message.delete.success": "Successfully deleted row.",
+    "forms.message.delete.error": "Error deleting row."
   }
 }

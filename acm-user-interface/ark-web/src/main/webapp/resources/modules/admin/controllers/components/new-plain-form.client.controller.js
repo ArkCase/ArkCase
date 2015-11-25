@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('admin').controller('Admin.NewPlainFormController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'FrevvoFormService',
-    function($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, FrevvoFormService) {
+angular.module('admin').controller('Admin.NewPlainFormController', ['$scope', '$stateParams', '$sce', '$q', 'TicketService', 'LookupService', 'FrevvoFormService',
+    function($scope, $stateParams, $sce, $q, TicketService, LookupService, FrevvoFormService) {
 
         $scope.target = $stateParams.target;
         $scope.acmTicket = '';
