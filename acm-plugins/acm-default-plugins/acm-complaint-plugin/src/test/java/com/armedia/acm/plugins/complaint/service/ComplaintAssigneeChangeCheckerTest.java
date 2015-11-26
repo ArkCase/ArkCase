@@ -58,13 +58,13 @@ public class ComplaintAssigneeChangeCheckerTest extends EasyMockSupport {
 		AcmObjectHistory currentHistory = new AcmObjectHistory();
 		currentHistory.setObjectType(objectType);
 		
-		String currentHistoryJson = "{\"complaintId\":" + objectId.toString() + ",\"complaintNumber\":\"" + objectName + "\",\"complaintTitle\":\"" + objectTitle + "\",\"participants\":[{\"participantType\":\"assignee\",\"participantLdapId\":\"" + newAssignee + "\"}]}";
+		String currentHistoryJson = "{\"complaintId\":" + objectId.toString() + ",\"complaintNumber\":\"" + objectName + "\",\"complaintTitle\":\"" + objectTitle + "\",\"participants\":[{\"participantType\":\"assignee\",\"participantLdapId\":\"" + newAssignee + "\"}],\"className\":\"com.armedia.acm.plugins.complaint.model.Complaint\"}";
 		currentHistory.setObjectString(currentHistoryJson);
 		
 		AcmObjectHistory previousHistory = new AcmObjectHistory();
 		previousHistory.setObjectType(objectType);
 		
-		String previousHistoryJson = "{\"complaintId\":" + objectId.toString() + ",\"complaintNumber\":\"" + objectName + "\",\"complaintTitle\":\"" + objectTitle + "\",\"participants\":[{\"participantType\":\"assignee\",\"participantLdapId\":\"" + oldAssignee + "\"}]}";
+		String previousHistoryJson = "{\"complaintId\":" + objectId.toString() + ",\"complaintNumber\":\"" + objectName + "\",\"complaintTitle\":\"" + objectTitle + "\",\"participants\":[{\"participantType\":\"assignee\",\"participantLdapId\":\"" + oldAssignee + "\"}],\"className\":\"com.armedia.acm.plugins.complaint.model.Complaint\"}";
 		previousHistory.setObjectString(previousHistoryJson);
 		
 		AcmObjectHistoryEvent event = new AcmObjectHistoryEvent(currentHistory);
