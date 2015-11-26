@@ -69,7 +69,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'StoreSer
              * Create a new note or update an existing note
              *
              * @param {Object} params Map of input parameter
-             * @param {String} params.id  Note ID
+             * @param {String} params.noteId  Note ID
              * @param {Function} onSuccess (Optional)Callback function of success query
              * @param {Function} onError (Optional) Callback function when fail
              *
@@ -171,11 +171,11 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'StoreSer
                 , data: noteInfo
                 , onSuccess: function (data) {
                     if (Service.validateNote(data)) {
-                        noteInfo = data;
+                        var noteInfo = data;
                         var cacheKey = Util.goodValue(noteInfo.parentType) + "." + Util.goodValue(noteInfo.parentId, 0);
                         var cacheNotes = new Store.CacheFifo(Service.CacheNames.NOTES);
                         cacheNotes.put(cacheKey, noteInfo);
-                        return data;
+                        return noteInfo;
                     }
                 }
             });
@@ -204,7 +204,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'StoreSer
                     }
                 }
             });
-        }
+        };
 
         /**
          * @ngdoc method
@@ -231,7 +231,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'StoreSer
                 }
             }
             return true;
-        }
+        };
 
         /**
          * @ngdoc method
@@ -256,7 +256,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'StoreSer
                 return false;
             }
             return true;
-        }
+        };
 
         /**
          * private method
@@ -278,7 +278,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'StoreSer
                 return false;
             }
             return true;
-        }
+        };
 
         /**
          * @ngdoc method

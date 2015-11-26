@@ -10,8 +10,8 @@
 
  * Object.TaskService includes functions for object relate to task.
  */
-angular.module('services').factory('Object.TaskService', ['$resource', 'StoreService', 'UtilService', 'Object.ListService',
-    function ($resource, Store, Util, ObjectListService) {
+angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'StoreService', 'UtilService', 'Object.ListService', 'Authentication'
+    , function ($resource, $q, Store, Util, ObjectListService, Authentication) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
             /**
              * @ngdoc method
@@ -74,12 +74,12 @@ angular.module('services').factory('Object.TaskService', ['$resource', 'StoreSer
          * @description
          * Query child tasks for an object.
          *
-         * @param {Object} params Map of input parameter
-         * @param {String} params.objectType  Object type
-         * @param {Number} params.parentId  Object ID
-         * @param {Number} params.start Zero based start number of record
-         * @param {Number} params.n Max Number of list to return
-         * @param {String} params.sort  Sort value, with format 'sortBy sortDir', sortDir can be 'asc' or 'desc'
+         * @param {String} parentType  Object type
+         * @param {Number} parentId  Object ID
+         * @param {Number} start Zero based start number of record
+         * @param {Number} n Max Number of list to return
+         * @param {String} sortBy  (Optional)Sort property
+         * @param {String} sortDir  (Optional)Sort direction. Value can be 'asc' or 'desc'
          *
          * @returns {Object} Promise
          */
@@ -150,7 +150,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', 'StoreSer
             var myTasks = cacheMyTasks.get(cacheKey);
 
             return Util.serviceCall({
-                service: Service._queryChildTasks
+                service: Service._queryMyTasks
                 , param: {
                     user: userId
                 }
@@ -196,6 +196,41 @@ angular.module('services').factory('Object.TaskService', ['$resource', 'StoreSer
                 return false;
             }
             return true;
+        };
+
+
+        /**
+         * @ngdoc method
+         * @name queryCurrentUserTasks
+         * @methodOf services:Object.TaskService
+         *
+         * @description
+         * Query list of tasks for current login user.
+         *
+         * @returns {Object} Promise
+         */
+        Service.queryCurrentUserTasks = function () {
+            var dfd = $q.defer();
+            Authentication.queryUserInfoNew().then(
+                function (userInfo) {
+                    Service.queryMyTasks(userInfo.userId).then(
+                        function (myTasks) {
+                            dfd.resolve(myTasks);
+                            return myTasks;
+                        }
+                        , function (error) {
+                            dfd.reject(error);
+                            return error;
+                        }
+                    );
+                    return userInfo;
+                }
+                , function (error) {
+                    dfd.reject(error);
+                    return error;
+                }
+            );
+            return dfd.promise;
         };
 
         return Service;

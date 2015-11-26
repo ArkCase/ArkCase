@@ -1,11 +1,8 @@
 'use strict';
 
 angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'UtilService'
-    , 'LookupService', 'Object.LookupService', 'Case.LookupService'
-    , 'Case.InfoService', 'Object.ModelService'
-    , function ($scope, $stateParams, Util
-        , LookupService, ObjectLookupService, CaseLookupService
-        , CaseInfoService, ObjectModelService) {
+    , 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService'
+    , function ($scope, $stateParams, Util, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService) {
 
         $scope.$emit('req-component-config', 'info');
         $scope.$on('component-config', function (e, componentId, config) {
@@ -13,17 +10,6 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
                 $scope.config = config;
             }
         });
-
-        LookupService.getUsers().then(
-            function (users) {
-                var options = [];
-                _.each(users, function (user) {
-                    options.push({object_id_s: user.object_id_s, name: user.name});
-                });
-                $scope.assignableUsers = options;
-                return users;
-            }
-        );
 
         ObjectLookupService.getPriorities().then(
             function (priorities) {
@@ -36,17 +22,16 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        ObjectLookupService.getOwningGroups().then(
+        ObjectLookupService.getGroups().then(
             function (groups) {
                 var options = [];
-                _.each(groups, function (item) {
-                    options.push({value: item.name, text: item.name});
+                _.each(groups, function (group) {
+                    options.push({value: group.name, text: group.name});
                 });
                 $scope.owningGroups = options;
                 return groups;
             }
         );
-
 
         CaseLookupService.getCaseTypes().then(
             function (caseTypes) {
@@ -59,65 +44,28 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        //$scope.owningGroups = [];
-        //var cacheGroups = new Store.SessionData(Helper.SessionCacheNames.GROUPS);
-        //var groups = cacheGroups.get();
-        //Util.serviceCall({
-        //    service: LookupService.getGroups
-        //    , result: groups
-        //    , onSuccess: function (data) {
-        //        if (Validator.validateSolrData(data)) {
-        //            var groups = data.response.docs;
-        //            cacheGroups.set(groups);
-        //            return groups;
-        //        }
-        //    }
-        //}).then(
-        //    function (groups) {
-        //        var options = [];
-        //        _.each(groups, function (item) {
-        //            options.push({value: item.name, text: item.name});
-        //        });
-        //        $scope.owningGroups = options;
-        //        return groups;
-        //    }
-        //);
-
-        //$scope.caseTypes = [];
-        //var cacheCaseTypes = new Store.SessionData(Helper.SessionCacheNames.CASE_TYPES);
-        //var caseTypes = cacheCaseTypes.get();
-        //Util.serviceCall({
-        //    service: LookupService.getCaseTypes
-        //    , result: caseTypes
-        //    , onSuccess: function (data) {
-        //        if (Validator.validateCaseTypes(data)) {
-        //            caseTypes = data;
-        //            cacheCaseTypes.set(caseTypes);
-        //            return caseTypes;
-        //        }
-        //    }
-        //}).then(
-        //    function (caseTypes) {
-        //        var options = [];
-        //        _.forEach(caseTypes, function (item) {
-        //            options.push({value: item, text: item});
-        //        });
-        //        $scope.caseTypes = options;
-        //        return caseTypes;
-        //    }
-        //);
-
-        $scope.caseSolr = null;
-        $scope.caseInfo = null;
         $scope.$on('case-selected', function onSelectedCase(e, selectedCase) {
             $scope.caseSolr = selectedCase;
         });
-        $scope.assignee = null;
-        $scope.owningGroup = null;
+
+        var previousId = null;
         $scope.$on('case-updated', function (e, data) {
             $scope.caseInfo = data;
-            $scope.assignee = ObjectModelService.getAssignee(data);
             $scope.owningGroup = ObjectModelService.getGroup(data);
+            $scope.assignee = ObjectModelService.getAssignee(data);
+            if (previousId != $stateParams.id) {
+                CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
+                    function (approvers) {
+                        var options = [];
+                        _.each(approvers, function (approver) {
+                            options.push({id: approver.userId, name: approver.fullName});
+                        });
+                        $scope.assignees = options;
+                        return approvers;
+                    }
+                );
+                previousId = $stateParams.id;
+            }
         });
 
         /**
@@ -140,27 +88,6 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
                 );
             }
         }
-
-        //function saveCase() {
-        //    if (CaseInfoService.validateCaseInfo($scope.caseInfo)) {
-        //        var caseInfo = Util.omitNg($scope.caseInfo);
-        //        Util.serviceCall({
-        //            service: CasesService.save
-        //            , data: caseInfo
-        //            , onSuccess: function (data) {
-        //                return data;
-        //            }
-        //        }).then(
-        //            function (successData) {
-        //                //notify "case saved successfully" ?
-        //            }
-        //            , function (errorData) {
-        //                //handle error
-        //            }
-        //        );
-        //    }
-        //}
-
 
 
         // Updates the ArkCase database when the user changes a case attribute

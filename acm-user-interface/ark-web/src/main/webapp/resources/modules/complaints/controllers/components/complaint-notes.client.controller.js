@@ -1,10 +1,9 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.NotesController', ['$scope', '$stateParams', '$q', 'UtilService', 'ConstantService', 'HelperService', 'Object.NoteService', 'Authentication',
-    function ($scope, $stateParams, $q, Util, Constant, Helper, ObjectNoteService, Authentication) {
-        var z = 1;
-        $scope.gridOptions = {};
-        return;
+angular.module('complaints').controller('Complaints.NotesController', ['$scope', '$stateParams', '$q'
+    , 'UtilService', 'ConstantService', 'HelperService', 'Object.NoteService', 'Authentication'
+    , function ($scope, $stateParams, $q, Util, Constant, Helper, ObjectNoteService, Authentication) {
+
         $scope.$emit('req-component-config', 'notes');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("notes" == componentId) {
@@ -46,7 +45,7 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
             $scope.gridApi.pagination.seek(lastPage);
             var newRow = {};
             newRow.parentId = $scope.currentId;
-            newRow.parentType = Helper.ObjectTypes.COMPLAINT;
+            newRow.parentType = Constant.ObjectTypes.COMPLAINT;
             newRow.created = Util.getCurrentDay();
             newRow.creator = $scope.userId;
             $scope.gridOptions.data.push(newRow);
