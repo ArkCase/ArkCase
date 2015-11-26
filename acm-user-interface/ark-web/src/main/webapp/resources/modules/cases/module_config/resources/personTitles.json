@@ -1,6 +1,18 @@
-{
-  "mr"    : "Mr"
-  ,"mrs"  : "Mrs"
-  ,"ms"   : "Ms"
-  ,"miss" : "Miss"
-}
+[
+  {
+    "type": "mr",
+    "name": "Mr"
+  },
+  {
+    "type": "mrs",
+    "name": "Mrs"
+  },
+  {
+    "type": "ms",
+    "name": "Ms"
+  },
+  {
+    "type": "miss",
+    "name": "Miss"
+  }
+]
