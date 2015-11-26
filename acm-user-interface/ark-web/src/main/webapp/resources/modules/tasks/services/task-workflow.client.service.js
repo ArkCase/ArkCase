@@ -76,6 +76,11 @@ angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translat
 
         });
 
+        Service.WorkflowStatus = {
+            COMPLETE: "COMPLETE"
+            //other status ?
+        };
+
         /**
          * @ngdoc method
          * @name completeTask
@@ -84,17 +89,14 @@ angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translat
          * @description
          * Complete a task
          *
-         * @param {Object} taskInfo  Task data
+         * @param {Number} taskId  Task ID
          *
          * @returns {Object} Promise
          */
-        Service.completeTask = function (taskInfo) {
-            if (!TaskInfoService.validateTaskInfo(taskInfo)) {
-                return Util.errorPromise($translate.instant("common.service.error.invalidData"));
-            }
+        Service.completeTask = function (taskId) {
             return Util.serviceCall({
                 service: Service._completeTask
-                , param: {id: taskInfo.taskId}
+                , param: {id: taskId}
                 , data: {}
                 , onSuccess: function (data) {
                     if (TaskInfoService.validateTaskInfo(data)) {
@@ -156,13 +158,10 @@ angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translat
          *
          * @returns {Object} Promise
          */
-        Service.deleteTask = function (taskInfo) {
-            if (!TaskInfoService.validateTaskInfo(taskInfo)) {
-                return Util.errorPromise($translate.instant("common.service.error.invalidData"));
-            }
+        Service.deleteTask = function (taskId) {
             return Util.serviceCall({
                 service: Service._deleteTask
-                , param: {id: taskInfo.taskId}
+                , param: {id: taskId}
                 , data: {}
                 , onSuccess: function (data) {
                     if (TaskInfoService.validateTaskInfo(data)) {

@@ -66,12 +66,49 @@
     "workflows.config": "Workflow Configuration",
     "formWorkflows.title": "Form/Workflow Link",
     "formWorkflows.link": "Link Forms/Workflows",
+    "formWorkflows.link.undo": "Undo",
+    "formWorkflows.link.saveChanges": "Save Changes",
+    "formWorkflows.link.editRole.save.success": "Link Forms/Workflows configuration saved successfully",
+    "formWorkflows.link.editRole.save.error": "Can't save Link Forms/Workflows configuration",
     "labels.title": "Application Labels",
     "labels.config": "Label Configuration",
+    "labels.config.filterBy": "Filter By Id",
+    "labels.config.filterByValue": "Filter By Value",
+    "labels.config.data": {
+      "id": "ID",
+      "value": "Value",
+      "description": "Description",
+      "defaultValue": "Default Value"
+    },
+    "labels.config.defaultLabel": "Default Language",
+    "labels.config.applyBtn": "Apply",
+    "labels.config.resetlModule": "Reset Current Module Resource",
+    "labels.config.resetAll": "Reset All Resources",
     "branding.title": "Branding",
     "branding.logo": "Logo",
     "branding.customCss": "Custom CSS",
-    "correspondenceManagement.title": "Correspondence Management",
-    "correspondenceManagement.templates": "Correspondence Templates"
+    "correspondenceManagement": {
+      "title": "Correspondence Management",
+      "templates": "Correspondence Templates",
+      "templates.addNewTemplate": "Add New Template",
+      "templates.grid": {
+        "id": "ID",
+        "title": "Title",
+        "path": "Path",
+        "created": "Created",
+        "modified": "Modified",
+        "creator": "Creator"
+      }
+    },
+    "forms.defaultValue": "Select Target",
+    "forms.addForm": "Add Plain Form",
+    "forms.data":{
+      "name": "Form Name",
+      "applicationName": "Application name",
+      "description": "Description",
+      "target": "Target"
+    },
+    "forms.message.delete.success": "Successfully deleted row.",
+    "forms.message.delete.error": "Error deleting row."
   }
 }

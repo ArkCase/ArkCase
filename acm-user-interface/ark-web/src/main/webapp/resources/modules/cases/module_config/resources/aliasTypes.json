@@ -1,4 +1,10 @@
-{
-"FKA"       : "FKA"
-,"Married"  : "Married"
-}
+[
+  {
+    "type": "FKA",
+    "name": "FKA"
+  },
+  {
+    "type": "Married",
+    "name": "Married"
+  }
+]

@@ -27,20 +27,19 @@ angular.module('services').factory('Object.ModelService', ['$q', '$resource', 'U
              * @returns {String} Assignee, or 'null' if not found
              */
             getAssignee: function (objectInfo) {
-                var find = _.find(objectInfo.participants, {participantType: "assignee"});
-                var a2 = _.result(find, "participantLdapId");
-
-                var assignee = null;
-                if (Util.isArray(objectInfo.participants)) {
-                    for (var i = 0; i < objectInfo.participants.length; i++) {
-                        var participant = objectInfo.participants[i];
-                        if ("assignee" == participant.participantType) {
-                            assignee = participant.participantLdapId;
-                            break;
-                        }
-                    }
-                }
-                return assignee;
+                return _.result(_.find(Util.goodMapValue(objectInfo, "participants", []), {participantType: "assignee"}), "participantLdapId");
+                //above code is equivalent to following
+                //var assignee = null;
+                //if (Util.isArray(objectInfo.participants)) {
+                //    for (var i = 0; i < objectInfo.participants.length; i++) {
+                //        var participant = objectInfo.participants[i];
+                //        if ("assignee" == participant.participantType) {
+                //            assignee = participant.participantLdapId;
+                //            break;
+                //        }
+                //    }
+                //}
+                //return assignee;
             }
 
             /**
@@ -57,17 +56,26 @@ angular.module('services').factory('Object.ModelService', ['$q', '$resource', 'U
              */
             , setAssignee: function (objectInfo, assignee) {
                 if (Util.isArray(objectInfo.participants)) {
-                    for (var i = 0; i < objectInfo.participants.length; i++) {
-                        if ("assignee" == objectInfo.participants[i].participantType) {
-                            objectInfo.participants[i].participantLdapId = assignee;
-                            return;
-                        }
+                    var found = _.find(objectInfo.participants, {participantType: "assignee"});
+                    if (found) {
+                        found.participantLdapId = assignee;
+                    } else {
+                        objectInfo.participants.push({
+                            participantType: "assignee"
+                            , participantLdapId: assignee
+                        });
                     }
-
-                    var participant = {};
-                    participant.participantType = "assignee";
-                    participant.participantLdapId = assignee;
-                    objectInfo.participants.push(participant);
+                    //for (var i = 0; i < objectInfo.participants.length; i++) {
+                    //    if ("assignee" == objectInfo.participants[i].participantType) {
+                    //        objectInfo.participants[i].participantLdapId = assignee;
+                    //        return;
+                    //    }
+                    //}
+                    //
+                    //var participant = {};
+                    //participant.participantType = "assignee";
+                    //participant.participantLdapId = assignee;
+                    //objectInfo.participants.push(participant);
                 }
             }
 
@@ -84,17 +92,19 @@ angular.module('services').factory('Object.ModelService', ['$q', '$resource', 'U
              * @returns {String} Group, or 'null' if not found
              */
             , getGroup: function (objectInfo) {
-                var group = null;
-                if (Util.isArray(objectInfo.participants)) {
-                    for (var i = 0; i < objectInfo.participants.length; i++) {
-                        var participant = objectInfo.participants[i];
-                        if ("owning group" == participant.participantType) {
-                            group = participant.participantLdapId;
-                            break;
-                        }
-                    }
-                }
-                return group;
+                return _.result(_.find(Util.goodMapValue(objectInfo, "participants", []), {participantType: "owning group"}), "participantLdapId");
+                //above code is equivalent to following
+                //var group = null;
+                //if (Util.isArray(objectInfo.participants)) {
+                //    for (var i = 0; i < objectInfo.participants.length; i++) {
+                //        var participant = objectInfo.participants[i];
+                //        if ("owning group" == participant.participantType) {
+                //            group = participant.participantLdapId;
+                //            break;
+                //        }
+                //    }
+                //}
+                //return group;
             }
 
             /**
@@ -111,18 +121,82 @@ angular.module('services').factory('Object.ModelService', ['$q', '$resource', 'U
              */
             , setGroup: function (objectInfo, group) {
                 if (Util.isArray(objectInfo.participants)) {
-                    for (var i = 0; i < objectInfo.participants.length; i++) {
-                        if ("owning group" == objectInfo.participants[i].participantType) {
-                            objectInfo.participants[i].participantLdapId = group;
-                            return;
+                    var found = _.find(objectInfo.participants, {participantType: "owning group"});
+                    if (found) {
+                        found.participantLdapId = assignee;
+                    } else {
+                        objectInfo.participants.push({
+                            participantType: "owning group"
+                            , participantLdapId: group
+                        });
+                    }
+
+                    //for (var i = 0; i < objectInfo.participants.length; i++) {
+                    //    if ("owning group" == objectInfo.participants[i].participantType) {
+                    //        objectInfo.participants[i].participantLdapId = group;
+                    //        return;
+                    //    }
+                    //}
+                    //
+                    //var participant = {};
+                    //participant.participantType = "owning group";
+                    //participant.participantLdapId = group;
+                    //objectInfo.participants.push(participant);
+                }
+            }
+
+            /**
+             * @ngdoc method
+             * @name checkRestriction
+             * @methodOf services:Object.ModelService
+             *
+             * @description
+             * Check if Case or Complaint is restricted
+             *
+             * @param {String} userId Current login user ID
+             * @param {String} assignee Assignee
+             * @param {String} group Group LDAP ID
+             * @param {Array} assignees List of assignees
+             * @param {Array} groups List of Group
+             *
+             * @returns {Boolean} Return True if it is determined that it is restricted
+             */
+            , checkRestriction: function (userId, assignee, group, assignees, groups) {
+                var restricted = true;
+
+                // We need only one true condition.
+                // First check if the assignee is the logged user
+                if (!Util.isEmpty(assignee) && Util.compare(assignee, userId)) {
+                    restricted = false;
+                } else {
+                    // If the user is not assignee, check in the assignees (users that belong to the group)
+                    // Skip this check if the group is empty
+                    if (Util.isArray(assignees) && !Util.isEmpty(group)) {
+                        for (var i = 0; i < assignees.length; i++) {
+                            if (Util.compare(assignees[i].userId, userId)) {
+                                restricted = false;
+                                break;
+                            }
                         }
                     }
 
-                    var participant = {};
-                    participant.participantType = "owning group";
-                    participant.participantLdapId = group;
-                    objectInfo.participants.push(participant);
+                    // If the user in not assignee or is not in the users that belong to a group, check if it's supervisor of the group
+                    // Skip this check if the group is empty
+                    if (restricted) {
+                        if (Util.isArray(groups) && !Util.isEmpty(group)) {
+                            for (var i = 0; i < groups.length; i++) {
+                                if (Util.compare(groups[i].object_id_s, group)) {
+                                    if (!Util.isEmpty(groups[i].supervisor_id_s) && Util.compare(groups[i].supervisor_id_s, userId)) {
+                                        restricted = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
+
+                return restricted;
             }
         }
     }

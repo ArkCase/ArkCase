@@ -9,9 +9,9 @@
  *
  * The Cost Tracking module main controller
  */
-angular.module('cost-tracking').controller('CostTrackingController', ['$scope', '$stateParams', '$translate', 'CallConfigService', 'CallCostTrackingService', 'UtilService',
-	function($scope, $stateParams, $translate, CallConfigService, CallCostTrackingService, Util) {
-		var promiseGetModuleConfig = CallConfigService.getModuleConfig("cost-tracking").then(function (config) {
+angular.module('cost-tracking').controller('CostTrackingController', ['$scope', '$stateParams', '$translate', 'ConfigService', 'CallCostTrackingService', 'UtilService',
+	function($scope, $stateParams, $translate, ConfigService, CallCostTrackingService, Util) {
+		var promiseGetModuleConfig = ConfigService.getModuleConfig("cost-tracking").then(function (config) {
 			$scope.config = config;
 			return config;
 		});
@@ -43,7 +43,7 @@ angular.module('cost-tracking').controller('CostTrackingController', ['$scope', 
 					function (costsheetInfo) {
 						$scope.progressMsg = null;
 						$scope.costsheetInfo = costsheetInfo;
-						$scope.$broadcast('costsheet-retrieved', costsheetInfo);
+						$scope.$broadcast('costsheet-updated', costsheetInfo);
 						return costsheetInfo;
 					}
 					, function (errorData) {

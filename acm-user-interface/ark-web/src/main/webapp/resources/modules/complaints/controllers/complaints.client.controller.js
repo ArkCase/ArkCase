@@ -13,7 +13,7 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
             });
         });
         $scope.$on('report-complaint-updated', function (e, complaintInfo) {
-            ComplaintInfoService.updateTaskInfo(complaintInfo);
+            ComplaintInfoService.updateComplaintInfo(complaintInfo);
             $scope.$broadcast('complaint-updated', complaintInfo);
         });
 

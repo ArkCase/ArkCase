@@ -62,6 +62,12 @@ public class PlainFormService extends FrevvoFormAbstractService {
 		return formName;
 	}
 
+	@Override
+	public Class<?> getFormClass()
+	{
+		return PlainForm.class;
+	}
+
 	public void setFormName(String formName) 
 	{
 		this.formName = formName;

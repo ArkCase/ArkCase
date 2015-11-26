@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'CasesService', 'LookupService',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, CasesService, LookupService) {
+angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$stateParams', '$q'
+    , 'StoreService', 'UtilService', 'HelperService', 'Case.InfoService', 'LookupService', 'Object.LookupService'
+    , function ($scope, $stateParams, $q, Store, Util, Helper, CaseInfoService, LookupService, ObjectLookupService) {
+
         var deferParticipantData = new Store.Variable("deferCaseParticipantData");    // used to hold grid data before grid config is ready
 
         var promiseConfig = Helper.requestComponentConfig($scope, "participants", function (config) {
@@ -74,74 +76,21 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
         });
 
 
-        var cacheParticipantTypes = new Store.SessionData(Helper.SessionCacheNames.PARTICIPANT_TYPES);
-        var participantTypes = cacheParticipantTypes.get();
-        var promiseTypes = Util.serviceCall({
-            service: LookupService.getParticipantTypes
-            , result: participantTypes
-            , onSuccess: function (data) {
-                if (Validator.validateParticipantTypes(data)) {
-                    participantTypes = [{type: "*", name: "*"}];
-                    Util.forEachStripNg(data, function (v, k) {
-                        participantTypes.push({type: k, name: v});
-                    });
-                }
-                cacheParticipantTypes.set(participantTypes);
-                return participantTypes;
-            }
-        }).then(
+        var promiseTypes = ObjectLookupService.getParticipantTypes().then(
             function (participantTypes) {
                 $scope.participantTypes = participantTypes;
                 return participantTypes;
             }
         );
 
-
-        var cacheParticipantUsers = new Store.SessionData(Helper.SessionCacheNames.PARTICIPANT_USERS);
-        var participantUsers = cacheParticipantUsers.get();
-        var promiseUsers = Util.serviceCall({
-            service: LookupService.getUsersBasic
-            , result: participantUsers
-            , onSuccess: function (data) {
-                if (Validator.validateSolrData(data)) {
-                    participantUsers = [];
-                    _.each(data.response.docs, function (doc) {
-                        var user = {};
-                        user.id = Util.goodValue(doc.object_id_s, 0);
-                        user.name = Util.goodValue(doc.name);
-                        participantUsers.push(user);
-
-                    });
-                    cacheParticipantUsers.set(participantUsers);
-                    return participantUsers;
-                }
-            }
-        }).then(
+        var promiseUsers = LookupService.getUsersBasic().then(
             function (participantUsers) {
                 $scope.participantUsers = participantUsers;
                 return participantUsers;
             }
         );
 
-        var cacheParticipantGroups = new Store.SessionData(Helper.SessionCacheNames.PARTICIPANT_GROUPS);
-        var participantGroups = cacheParticipantGroups.get();
-        var promiseGroups = Util.serviceCall({
-            service: LookupService.getGroups
-            , result: participantGroups
-            , onSuccess: function (data) {
-                if (Validator.validateSolrData(data)) {
-                    participantGroups = [];
-                    _.each(data.response.docs, function (doc) {
-                        var group = {};
-                        group.id = Util.goodValue(doc.object_id_s, 0);
-                        group.name = Util.goodValue(doc.name);
-                        participantGroups.push(group);
-                    });
-                    cacheParticipantGroups.set(participantGroups);
-                    return participantGroups;
-                }
-            }
-        }).then(
+        var promiseGroups = ObjectLookupService.getGroups().then(
             function (participantGroups) {
                 $scope.participantGroups = participantGroups;
                 return participantGroups;
@@ -169,12 +118,10 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             });
         };
         $scope.$on('case-updated', function (e, data) {
-            if (Validator.validateCaseFile(data)) {
-                if (data.id == $stateParams.id) {
-                    updateGridData(data);
-                } else {                      // condition when data comes before state is routed and config is not set
-                    deferParticipantData.set(data);
-                }
+            if (data.id == $stateParams.id) {
+                updateGridData(data);
+            } else {                      // condition when data comes before state is routed and config is not set
+                deferParticipantData.set(data);
             }
         });
 
@@ -187,15 +134,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
         };
         $scope.updateRow = function (rowEntity) {
             var caseInfo = Util.omitNg($scope.caseInfo);
-            Util.serviceCall({
-                service: CasesService.save
-                , data: caseInfo
-                , onSuccess: function (data) {
-                    if (Validator.validateCaseFile(data)) {
-                        return data;
-                    }
-                }
-            }).then(
+            CaseInfoService.saveCaseInfo(caseInfo).then(
                 function (caseSaved) {
                     //if participant is newly added, fill incomplete values with the latest
                     if (Util.isEmpty(rowEntity.id)) {
@@ -211,26 +150,6 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                     return caseSaved;
                 }
             );
-            //CasesService.save({}, caseInfo
-            //    , function (caseSaved) {
-            //        if (Validator.validateCaseFile(caseSaved)) {
-            //            //if participant is newly added, fill incomplete values with the latest
-            //            if (Util.isEmpty(rowEntity.id)) {
-            //                var participants = Util.goodMapValue(caseSaved, "participants", []);
-            //                var participantAdded = _.find(participants, {
-            //                    participantType: rowEntity.participantType,
-            //                    participantLdapId: rowEntity.participantLdapId
-            //                });
-            //                if (participantAdded) {
-            //                    rowEntity = _.merge(rowEntity, participantAdded);
-            //                }
-            //            }
-            //        }
-            //    }
-            //    , function (errorData) {
-            //        var z = 2;
-            //    }
-            //);
         };
         $scope.deleteRow = function (rowEntity) {
             Helper.Grid.deleteRow($scope, rowEntity);
@@ -238,26 +157,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row
                 var caseInfo = Util.omitNg($scope.caseInfo);
-                Util.serviceCall({
-                    service: CasesService.save
-                    , data: caseInfo
-                    , onSuccess: function (data) {
-                        if (Validator.validateCaseFile(data)) {
-                            return data;
-                        }
-                    }
-                });
-                //CasesService.save({}, caseInfo
-                //    , function (caseSaved) {
-                //        if (Validator.validateCaseFile(caseSaved)) {
-                //            var z = 1;
-                //        }
-                //        var z = 1;
-                //    }
-                //    , function (errorData) {
-                //        var z = 2;
-                //    }
-                //);
+                CaseInfoService.saveCaseInfo(caseInfo);
             }
 
         };

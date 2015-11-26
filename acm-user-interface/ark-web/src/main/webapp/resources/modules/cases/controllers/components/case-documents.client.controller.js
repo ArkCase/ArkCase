@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ConstantService', 'CallLookupService',
-    function ($scope, $stateParams, $modal, Util, Constant, CallLookupService) {
+angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ConstantService', 'Object.LookupService',
+    function ($scope, $stateParams, $modal, Util, Constant, ObjectLookupService) {
 		$scope.$emit('req-component-config', 'documents');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('documents' == componentId) {
@@ -9,14 +9,14 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             }
         });
 
-        CallLookupService.getFormTypes().then(
+        ObjectLookupService.getFormTypes().then(
             function (formTypes) {
                 $scope.fileTypes = $scope.fileTypes || [];
                 $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));
                 return formTypes;
             }
         );
-        CallLookupService.getFileTypes().then(
+        ObjectLookupService.getFileTypes().then(
             function (fileTypes) {
                 $scope.fileTypes = $scope.fileTypes || [];
                 $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
@@ -42,7 +42,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             if ($scope.caseInfo) {
                 //CaseFile.View.Documents.getFileTypeByType(type);
                 var fileType = _.find($scope.fileTypes, {type: type});
-                if (CallLookupService.validatePlainForm(fileType)) {
+                if (ObjectLookupService.validatePlainForm(fileType)) {
                     var data = "_data=(";
 
                     var url = fileType.url;
