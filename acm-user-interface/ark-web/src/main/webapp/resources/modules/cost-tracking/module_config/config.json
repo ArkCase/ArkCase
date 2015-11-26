@@ -8,6 +8,13 @@
       "menuItemTitle": "Cost tracking",
       "iconClass": "fa fa-money",
       "position": 120
+    },
+    {
+      "menuId": "topbar",
+      "menuItemURL": "newCostsheet",
+      "menuItemTitle": "Costsheet",
+      "iconClass": "fa fa-money",
+      "position": 50
     }
   ],
   "tree": {
