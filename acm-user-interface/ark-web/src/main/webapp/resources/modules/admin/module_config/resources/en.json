@@ -72,6 +72,18 @@
     "formWorkflows.link.editRole.save.error": "Can't save Link Forms/Workflows configuration",
     "labels.title": "Application Labels",
     "labels.config": "Label Configuration",
+    "labels.config.filterBy": "Filter By Id",
+    "labels.config.filterByValue": "Filter By Value",
+    "labels.config.data": {
+      "id": "ID",
+      "value": "Value",
+      "description": "Description",
+      "defaultValue": "Default Value"
+    },
+    "labels.config.defaultLabel": "Default Language",
+    "labels.config.applyBtn": "Apply",
+    "labels.config.resetlModule": "Reset Current Module Resource",
+    "labels.config.resetAll": "Reset All Resources",
     "branding.title": "Branding",
     "branding.logo": "Logo",
     "branding.customCss": "Custom CSS",
