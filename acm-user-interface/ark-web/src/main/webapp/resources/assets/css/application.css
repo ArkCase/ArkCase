@@ -780,6 +780,19 @@ input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
     border-color: #ff7373;
 }
 
+/* Dropdowns in the left sidebar (ie. datepicker) */ 
+
+.left-sidebar label ul.dropdown-menu {
+	border-radius: 0px;
+	margin: -2px 0px 0px 0px;
+	padding: 5px;
+}
+
+ .left-sidebar label ul.dropdown-menu button{
+	border: 0px;
+	border-radius: 0px;
+}
+
 .ace_editor {
     height: 500px;
     border: 1px solid #cbd5dd;
