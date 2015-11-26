@@ -89,6 +89,8 @@ public class CaseFileDaoIT
         caseFile.setTitle("title");
         caseFile.setRestricted(true);
 
+        caseFile.setCreator("creator");
+
         AcmContainer container = new AcmContainer();
         AcmFolder folder = new AcmFolder();
         folder.setCmisFolderId("cmisFolderId");
@@ -120,6 +122,8 @@ public class CaseFileDaoIT
         caseFile.setStatus("status");
         caseFile.setTitle("title");
         caseFile.setRestricted(true);
+
+        caseFile.setCreator("creator");
 
         AcmContainer container = new AcmContainer();
         AcmFolder folder = new AcmFolder();
@@ -156,6 +160,8 @@ public class CaseFileDaoIT
         caseFile.setStatus("status");
         caseFile.setTitle("title");
         caseFile.setRestricted(true);
+
+        caseFile.setCreator("creator");
 
         AcmContainer container = new AcmContainer();
         AcmFolder folder = new AcmFolder();

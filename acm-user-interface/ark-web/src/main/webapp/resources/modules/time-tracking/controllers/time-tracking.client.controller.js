@@ -42,7 +42,7 @@ angular.module('time-tracking').controller('TimeTrackingController', ['$scope', 
 					function (timesheetInfo) {
 						$scope.progressMsg = null;
 						$scope.timesheetInfo = timesheetInfo;
-						$scope.$broadcast('timesheet-retrieved', timesheetInfo);
+						$scope.$broadcast('timesheet-updated', timesheetInfo);
 						return timesheetInfo;
 					}
 					, function (errorData) {

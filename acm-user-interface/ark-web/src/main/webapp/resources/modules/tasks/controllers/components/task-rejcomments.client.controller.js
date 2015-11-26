@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'ConstantService', 'Object.NoteService', 'Authentication',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, Constant, ObjectNoteService, Authentication) {
+angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'HelperService', 'ConstantService', 'Object.NoteService', 'Authentication',
+    function ($scope, $stateParams, $q, Store, Util, Helper, Constant, ObjectNoteService, Authentication) {
         $scope.$emit('req-component-config', 'rejcomments');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("rejcomments" == componentId) {
@@ -42,7 +42,7 @@ angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', 
             $scope.gridApi.pagination.seek(lastPage);
             var newRow = {};
             newRow.parentId = $scope.currentId;
-            newRow.parentType = Helper.ObjectTypes.CASE_FILE;
+            newRow.parentType = Constant.ObjectTypes.CASE_FILE;
             newRow.created = Util.getCurrentDay();
             newRow.creator = $scope.userId;
             $scope.gridOptions.data.push(newRow);

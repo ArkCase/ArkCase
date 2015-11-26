@@ -91,7 +91,7 @@ public class CaseFileService extends FrevvoFormAbstractService
                         MultiValueMap<String, MultipartFile> attachments) throws Exception
     {
         // Convert XML to Object
-        CaseFileForm form = (CaseFileForm) convertFromXMLToObject(cleanXML(xml), CaseFileForm.class);
+        CaseFileForm form = (CaseFileForm) convertFromXMLToObject(cleanXML(xml), getFormClass());
 
         if (form == null)
         {
@@ -108,13 +108,13 @@ public class CaseFileService extends FrevvoFormAbstractService
         // Create Frevvo form from CaseFile
         form = getCaseFileFactory().asFrevvoCaseFile(getCaseFile(), form, this);
 
-        updateXMLAttachment(attachments, FrevvoFormName.CASE_FILE, form);
+        updateXMLAttachment(attachments, getFormName(), form);
 
         // Save Attachments
         FrevvoUploadedFiles frevvoFiles = saveAttachments(
                 attachments,
                 form.getCmisFolderId(),
-                FrevvoFormName.CASE_FILE.toUpperCase(),
+                getFormName().toUpperCase(),
                 form.getId());
 
         // Log the last user action
@@ -186,12 +186,18 @@ public class CaseFileService extends FrevvoFormAbstractService
         return FrevvoFormName.CASE_FILE;
     }
 
+    @Override
+    public Class<?> getFormClass()
+    {
+        return CaseFileForm.class;
+    }
+
     private Object initFormData()
     {
         CaseFileForm caseFileForm = new CaseFileForm();
 
         // Init Case File types
-        caseFileForm.setCaseTypes(convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".types"), ","));
+        caseFileForm.setCaseTypes(convertToList((String) getProperties().get(getFormName() + ".types"), ","));
 
         // Init Initiator information
         caseFileForm.setInitiator(initInitiator());
@@ -215,13 +221,13 @@ public class CaseFileService extends FrevvoFormAbstractService
     {
         InitiatorPerson initiator = new InitiatorPerson();
 
-        List<String> titles = convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".titles"), ",");
+        List<String> titles = convertToList((String) getProperties().get(getFormName() + ".titles"), ",");
         initiator.setTitles(titles);
         initiator.setContactMethods(initContactMethods());
         initiator.setOrganizations(initOrganizations());
         initiator.setAddresses(initAddresses());
         initiator.setType(CaseFileFormConstants.PERSON_TYPE_INITIATOR);
-        initiator.setTypes(convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".personTypes"), ","));
+        initiator.setTypes(convertToList((String) getProperties().get(getFormName() + ".personTypes"), ","));
 
         return initiator;
     }
@@ -232,13 +238,13 @@ public class CaseFileService extends FrevvoFormAbstractService
 
         PeoplePerson peoplePerson = new PeoplePerson();
 
-        List<String> titles = convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".titles"), ",");
+        List<String> titles = convertToList((String) getProperties().get(getFormName() + ".titles"), ",");
         peoplePerson.setTitles(titles);
         peoplePerson.setContactMethods(initContactMethods());
         peoplePerson.setOrganizations(initOrganizations());
         peoplePerson.setAddresses(initAddresses());
 
-        List<String> types = convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".personTypes"), ",");
+        List<String> types = convertToList((String) getProperties().get(getFormName() + ".personTypes"), ",");
 
         // Remove "Initiator". It's first in the list
         if (types != null && types.size() > 0)
@@ -258,17 +264,17 @@ public class CaseFileService extends FrevvoFormAbstractService
         CaseFileForm form = new CaseFileForm();
 
         // Init Participant types
-        List<String> participantTypes = convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".participantTypes"), ",");
+        List<String> participantTypes = convertToList((String) getProperties().get(getFormName() + ".participantTypes"), ",");
         form.setParticipantsTypeOptions(participantTypes);
-        form.setParticipantsPrivilegeTypes(getParticipantsPrivilegeTypes(participantTypes, FrevvoFormName.CASE_FILE));
+        form.setParticipantsPrivilegeTypes(getParticipantsPrivilegeTypes(participantTypes, getFormName()));
 
         // Init Owning Group information
-        String owningGroupType = (String) getProperties().get(FrevvoFormName.CASE_FILE + ".owningGroupType");
+        String owningGroupType = (String) getProperties().get(getFormName() + ".owningGroupType");
         OwningGroupItem owningGroupItem = new OwningGroupItem();
         owningGroupItem.setType(owningGroupType);
 
         form.setOwningGroup(owningGroupItem);
-        form.setOwningGroupOptions(getOwningGroups(owningGroupType, FrevvoFormName.CASE_FILE));
+        form.setOwningGroupOptions(getOwningGroups(owningGroupType, getFormName()));
 
         JSONObject json = createResponse(form);
 
@@ -278,7 +284,7 @@ public class CaseFileService extends FrevvoFormAbstractService
     private List<ContactMethod> initContactMethods()
     {
         List<ContactMethod> contactMethods = new ArrayList<>();
-        List<String> contactMethodTypes = convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".deviceTypes"), ",");
+        List<String> contactMethodTypes = convertToList((String) getProperties().get(getFormName() + ".deviceTypes"), ",");
 
         ContactMethod contactMethod = new ContactMethod();
 
@@ -294,7 +300,7 @@ public class CaseFileService extends FrevvoFormAbstractService
     private List<Organization> initOrganizations()
     {
         List<Organization> organizations = new ArrayList<>();
-        List<String> organizationsTypes = convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".organizationTypes"), ",");
+        List<String> organizationsTypes = convertToList((String) getProperties().get(getFormName() + ".organizationTypes"), ",");
 
         Organization organization = new Organization();
 
@@ -310,7 +316,7 @@ public class CaseFileService extends FrevvoFormAbstractService
     private List<PostalAddress> initAddresses()
     {
         List<PostalAddress> locations = new ArrayList<>();
-        List<String> locationTypes = convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".locationTypes"), ",");
+        List<String> locationTypes = convertToList((String) getProperties().get(getFormName() + ".locationTypes"), ",");
 
         PostalAddress location = new PostalAddress();
 
@@ -373,10 +379,10 @@ public class CaseFileService extends FrevvoFormAbstractService
                 ObjectAssociation objectAssociation = new ObjectAssociation();
 
                 objectAssociation.setStatus(status);
-                objectAssociation.setParentType(FrevvoFormName.CASE_FILE.toUpperCase());
+                objectAssociation.setParentType(getFormName().toUpperCase());
                 objectAssociation.setParentId(form.getId());
                 objectAssociation.setParentName(form.getCaseNumber());
-                objectAssociation.setTargetType(FrevvoFormName.CASE_FILE.toUpperCase());
+                objectAssociation.setTargetType(getFormName().toUpperCase());
                 objectAssociation.setTargetId(oldCaseId);
                 objectAssociation.setTargetName(oldCaseNumber);
                 objectAssociation.setTargetTitle(oldCaseTitle);

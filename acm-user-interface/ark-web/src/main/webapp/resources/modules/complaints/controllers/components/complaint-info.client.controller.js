@@ -1,11 +1,9 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', 'UtilService'
-    , 'LookupService', 'Object.LookupService', 'Complaint.LookupService'
-    , 'Complaint.InfoService', 'Object.ModelService'
+    , 'Object.LookupService', 'Complaint.LookupService', 'Complaint.InfoService', 'Object.ModelService'
     , function ($scope, $stateParams, Util
-        , LookupService, ObjectLookupService, ComplaintLookupService
-        , ComplaintInfoService, ObjectModelService) {
+        , ObjectLookupService, ComplaintLookupService, ComplaintInfoService, ObjectModelService) {
 
         $scope.$emit('req-component-config', 'info');
         $scope.$on('component-config', function (e, componentId, config) {
@@ -13,18 +11,6 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
                 $scope.config = config;
             }
         });
-
-
-        LookupService.getUsers().then(
-            function (users) {
-                var options = [];
-                _.each(users, function (user) {
-                    options.push({object_id_s: user.object_id_s, name: user.name});
-                });
-                $scope.assignableUsers = options;
-                return users;
-            }
-        );
 
         ObjectLookupService.getPriorities().then(
             function (priorities) {
@@ -37,11 +23,11 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             }
         );
 
-        ObjectLookupService.getOwningGroups().then(
+        ObjectLookupService.getGroups().then(
             function (groups) {
                 var options = [];
-                _.each(groups, function (item) {
-                    options.push({value: item.name, text: item.name});
+                _.each(groups, function (group) {
+                    options.push({value: group.name, text: group.name});
                 });
                 $scope.owningGroups = options;
                 return groups;
@@ -60,17 +46,28 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
         );
 
 
-        $scope.complaintSolr = null;
-        $scope.complaintInfo = null;
         $scope.$on('complaint-selected', function onSelectedComplaint(e, selectedComplaint) {
             $scope.complaintSolr = selectedComplaint;
         });
-        $scope.assignee = null;
-        $scope.owningGroup = null;
+
+        var previousId = null;
         $scope.$on('complaint-updated', function (e, data) {
             $scope.complaintInfo = data;
             $scope.assignee = ObjectModelService.getAssignee(data);
             $scope.owningGroup = ObjectModelService.getGroup(data);
+            if (previousId != $stateParams.id) {
+                ComplaintLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
+                    function (approvers) {
+                        var options = [];
+                        _.each(approvers, function (approver) {
+                            options.push({id: approver.userId, name: approver.fullName});
+                        });
+                        $scope.assignees = options;
+                        return approvers;
+                    }
+                );
+                previousId = $stateParams.id;
+            }
         });
 
         /**

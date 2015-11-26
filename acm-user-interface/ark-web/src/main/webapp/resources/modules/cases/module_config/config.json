@@ -11,7 +11,7 @@
     },
     {
       "menuId": "topbar",
-      "menuItemURL": "newcase",
+      "menuItemURL": "cases.wizard",
       "menuItemTitle": "Case File",
       "iconClass": "fa fa-folder",
       "position": 20
@@ -107,9 +107,9 @@
           "references",
           "history",
           "correspondence",
-          "calendar",
           "time",
-          "cost"
+          "cost",
+          "calendar"
         ]
       },
       {

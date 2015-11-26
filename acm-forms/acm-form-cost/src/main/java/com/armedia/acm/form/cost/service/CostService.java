@@ -216,6 +216,12 @@ public class CostService extends FrevvoFormChargeAbstractService {
 		return FrevvoFormName.COSTSHEET;
 	}
 
+	@Override
+	public Class<?> getFormClass()
+	{
+		return CostForm.class;
+	}
+
 	public CostsheetService getCostsheetService() {
 		return costsheetService;
 	}

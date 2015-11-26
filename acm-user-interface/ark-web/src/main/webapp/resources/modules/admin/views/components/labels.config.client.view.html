@@ -1,0 +1,47 @@
+<panel-view header="{{'admin.labels.config' | translate}}" collapsible="false">
+    <div ng-controller="Admin.LabelsConfigController">
+        <div class="row">
+            <div class="pull-left">
+                <select ng-model="selectedNamespace"
+                        ng-options="option.id as option.name for option in namespacesDropdownOptions">
+                </select>
+                <select ng-model="selectedLanguage"
+                        ng-options="str as str for str in languagesDropdownOptions">
+                </select>
+                <input type="text" ng-model="gridApi.grid.columns[0].filters[0].term"
+                       placeholder="{{'admin.labels.config.filterBy' | translate}}">
+                <input type="text" ng-model="gridApi.grid.columns[1].filters[0].term"
+                       placeholder="{{'admin.labels.config.filterByValue' | translate}}">
+            </div>
+            <div class="pull-right">
+                {{'admin.labels.config.defaultLabel' | translate}}
+                <select ng-model="selectedDefaultLanguage"
+                        ng-options="str as str for str in languagesDropdownOptions">
+                </select>
+
+                <button class="btn btn-sm btn-default" ng-click="changeDefaultLng()">
+                    {{'admin.labels.config.applyBtn' |
+                    translate}}
+                </button>
+                <button class="btn btn-sm btn-default" ng-click="resetCurrentModuleResources()">
+                    {{'admin.labels.config.resetlModule' |
+                    translate}}
+                </button>
+                <button class="btn btn-sm btn-default" ng-click="resetAllResources()">
+                    {{'admin.labels.config.resetAll' |
+                    translate}}
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div ui-grid="gridOptions"
+                 ui-grid-resize-columns
+                 ui-grid-selection
+                 adjust-table-height="gridOptions.data.length"
+                 ui-grid-auto-resize
+                 class="grid">
+            </div>
+        </div>
+    </div>
+</panel-view>

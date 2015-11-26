@@ -104,7 +104,6 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,
@@ -131,7 +130,6 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-        2,
         5,
         10,
         20,

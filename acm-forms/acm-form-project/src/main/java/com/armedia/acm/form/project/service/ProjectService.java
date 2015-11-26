@@ -137,6 +137,12 @@ public class ProjectService extends FrevvoFormAbstractService
         return FrevvoFormName.PROJECT;
     }
 
+    @Override
+    public Class<?> getFormClass()
+    {
+        return ProjectForm.class;
+    }
+
     private Object initFormData()
     {
         ProjectForm form = new ProjectForm();

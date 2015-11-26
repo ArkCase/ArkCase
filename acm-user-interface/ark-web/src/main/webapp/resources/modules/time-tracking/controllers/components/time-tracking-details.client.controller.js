@@ -9,7 +9,7 @@ angular.module('time-tracking').controller('TimeTracking.DetailsController', ['$
             }
         });
 
-        $scope.$on('timesheet-retrieved', function(e, data) {
+        $scope.$on('timesheet-updated', function (e, data) {
             $scope.timesheetInfo = data;
         });
 
