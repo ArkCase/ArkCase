@@ -31,5 +31,6 @@ public interface ComplaintConstants {
 	String XML_BATCH_EMPLOYER_PHONE_KEY = "EmployerPhone";
 	String XML_BATCH_COMPLAINT_DOC_ID = "ComplaintDocID";
 	String XML_BATCH_EVENT_TYPE = "CAPTURE";
-	
+
+	String ACTIVE_COMPLAINT_FORM_KEY = "active.complaint.form";
 }
