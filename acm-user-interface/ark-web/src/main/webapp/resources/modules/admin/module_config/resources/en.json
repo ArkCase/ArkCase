@@ -86,7 +86,21 @@
     "labels.config.resetAll": "Reset All Resources",
     "branding.title": "Branding",
     "branding.logo": "Logo",
-    "branding.customCss": "Custom CSS",
+    "branding.logo.messages": {
+      "upload.success": "Custom logo files updated. Refresh browser page to see result.",
+      "upload.error": "Error uploading custom logo files."
+    },
+    "branding.logo.btn": {
+      "chooseHeader": "Choose Header logo",
+      "chooseLogin": "Choose Login logo",
+      "saveFiles": "Save"
+    },
+    "branding": {
+      "customCss": "Custom CSS",
+      "customCss.save.success": "Custom CSS updated. Refresh browser page to see result.",
+      "customCss.save.error": "Error saving Custom CSS.",
+      "customCss.save": "Save"
+    },
     "correspondenceManagement": {
       "title": "Correspondence Management",
       "templates": "Correspondence Templates",
