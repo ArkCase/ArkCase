@@ -10,6 +10,10 @@
       "position": 80
     }
   ],
+  "dateFormat": "MM-DD-YYYY",
+
+  "pentahoDateFormat": "MM/DD/YYYY",
+
   "components": [
     {
       "id": "datepickers",
@@ -22,28 +26,48 @@
       "id": "reportselection",
       "title": "Reports",
       "enabled": true,
-      "reports":
-      [
-        {"id":"turnaround", "name": "Turnaround Time by Requestor"},
-        {"id":"requester", "name": "Requester Type Summary"},
-        {"id":"pending", "name": "Pending Orders Report"},
-        {"id":"associate", "name": "Associate Productivity Report"},
-        {"id":"origination", "name": "Origination Count"},
-        {"id":"transfers", "name": "Transfers Report"},
-        {"id":"exceptions", "name": "Exceptions Report (Non-Compliance)"}
-
-      ],
-      "caseStates":
-      [
+      "resetCaseStateValue": "COMPLAINT_DISPOSITION_COUNT",
+      "reports": [
+        {
+          "id": "turnaround",
+          "name": "Turnaround Time by Requester"
+        },
+        {
+          "id": "requester",
+          "name": "Requester Type Summary"
+        },
+        {
+          "id": "pending",
+          "name": "Pending Orders Report"
+        },
+        {
+          "id": "associate",
+          "name": "Associate Productivity Report"
+        },
+        {
+          "id": "origination",
+          "name": "Origination Count"
+        },
+        {
+          "id": "transfers",
+          "name": "Transfers Report"
+        },
+        {
+          "id": "exceptions",
+          "name": "Exceptions Report (Non-Compliance)"
+        }
+      ]
+    },
+    {
+      "id": "caseStates",
+      "resetCaseStateValue": "COMPLAINT_DISPOSITION_COUNT",
+      "states": [
         {"id":"DRAFT", "name": "Draft"},
         {"id":"IN APPROVAL", "name": "In Approval"},
         {"id":"ACTIVE", "name": "Active"},
         {"id":"INACTIVE", "name": "Inactive"},
         {"id":"CLOSED", "name": "Closed"}
-      ],
-      "resetCaseStateValues": ["COMPLAINT_DISPOSITION_COUNT"]
+      ]
     }
-  ],
-  "dateFormat": "MM-DD-YYYY",
-  "pentahoDateFormat": "MM/DD/YYYY"
+  ]
 }
