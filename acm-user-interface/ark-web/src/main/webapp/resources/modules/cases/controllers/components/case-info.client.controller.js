@@ -50,6 +50,9 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
 
         var previousId = null;
         $scope.$on('case-updated', function (e, data) {
+            if (!CaseInfoService.validateCaseInfo(data)) {
+                return;
+            }
             $scope.caseInfo = data;
             $scope.owningGroup = ObjectModelService.getGroup(data);
             $scope.assignee = ObjectModelService.getAssignee(data);

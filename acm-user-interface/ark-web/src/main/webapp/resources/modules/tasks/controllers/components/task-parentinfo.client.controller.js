@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams', 'UtilService', 'ConstantService', 'Case.InfoService', 'Complaint.InfoService', 'Object.ModelService',
-    function ($scope, $stateParams, Util, Constant, CaseInfoService, ComplaintInfoService, ObjectModelService) {
+angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams', 'UtilService'
+    , 'ConstantService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService', 'Object.ModelService'
+    , function ($scope, $stateParams, Util, Constant, CaseInfoService, ComplaintInfoService, TaskInfoService, ObjectModelService) {
+
         $scope.$emit('req-component-config', 'parentinfo');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("parentinfo" == componentId) {
@@ -10,6 +12,9 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
         });
 
         $scope.$on('task-updated', function (e, data) {
+            if (!TaskInfoService.validateTaskInfo(data)) {
+                return;
+            }
             $scope.taskInfo = data;
             if (Util.isEmpty($scope.taskInfo.parentObjectId)) {
                 return;

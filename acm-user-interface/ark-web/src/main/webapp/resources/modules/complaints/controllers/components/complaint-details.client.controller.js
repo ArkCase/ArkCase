@@ -10,7 +10,9 @@ angular.module('complaints').controller('Complaints.DetailsController', ['$scope
         });
 
         $scope.$on('complaint-updated', function (e, data) {
-            $scope.complaintInfo = data;
+            if (ComplaintInfoService.validateComplaintInfo(data)) {
+                $scope.complaintInfo = data;
+            }
         });
 
 

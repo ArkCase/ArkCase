@@ -412,6 +412,10 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }); //end $q            
         };
         $scope.$on('complaint-updated', function (e, data) {
+            if (!ComplaintInfoService.validateComplaintInfo(data)) {
+                return;
+            }
+
             if (data.id == $stateParams.id) {
                 updateGridData(data);
             } else {                      // condition when data comes before state is routed and config is not set

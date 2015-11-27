@@ -39,10 +39,6 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
             );
         }
 
-        $scope.$on('case-updated', function (e, data) {
-            $scope.caseInfo = data;
-        });
-
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();

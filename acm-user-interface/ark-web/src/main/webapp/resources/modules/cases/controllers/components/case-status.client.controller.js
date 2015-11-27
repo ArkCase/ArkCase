@@ -1,14 +1,6 @@
 'use strict';
-///**
-// * @ngdoc controller
-// * @name cases.controller:Cases.StatusController
-// *
-// * @description
-// * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/components/case-status.client.controller.js modules/cases/controllers/components/case-status.client.controller.js}
-// *
-// * The Status Controller
-// */
-angular.module('cases').controller('Cases.StatusController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'FrevvoFormService',
+
+angular.module('cases').controller('Cases.StatusController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'Frevvo.FormService',
     function ($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, FrevvoFormService) {
         $scope.$emit('req-component-config', 'status');
 
@@ -20,11 +12,6 @@ angular.module('cases').controller('Cases.StatusController', ['$scope', '$stateP
         $scope.openChangeCaseStatusFrevvoForm = openChangeCaseStatusFrevvoForm;
 
         /**
-         //* @ngdoc method
-         //* @name openChangeCaseStatusFrevvoForm
-         //* @methodOf cases.controller:Cases.StatusController
-         //*
-         //* @description
          * This method generates the change case status Frevvo form url and loads the form
          * into an iframe as a trusted resource.  It can only be called after the
          * acm-forms.properties config and the acmTicket have been obtained.
