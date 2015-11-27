@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.NewComplaintController', ['$scope', '$stateParams', '$sce', '$log', '$q'
-    , 'UtilService', 'TicketService', 'Authentication', 'LookupService', 'Frevvo.FormService'
-    , function ($scope, $stateParams, $sce, $log, $q, Util, TicketService, Authentication, LookupService, FrevvoFormService) {
+angular.module('complaints').controller('Complaints.NewComplaintController', ['$scope', '$stateParams', '$sce', '$q'
+    , 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService'
+    , function ($scope, $stateParams, $sce, $q, Util, TicketService, LookupService, FrevvoFormService) {
 
         //$scope.$emit('req-component-config', 'new');
         //$scope.$on('component-config', function (e, componentId, config) {

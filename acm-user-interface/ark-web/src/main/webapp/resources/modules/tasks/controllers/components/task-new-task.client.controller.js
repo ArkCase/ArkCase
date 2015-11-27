@@ -1,16 +1,9 @@
 'use strict';
 
 
-angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$stateParams', '$sce', '$log', '$q'
-    , 'UtilService', 'TicketService', 'Authentication', 'LookupService', 'Frevvo.FormService'
-    , function ($scope, $stateParams, $sce, $log, $q, Util, TicketService, Authentication, LookupService, FrevvoFormService) {
-
-        $scope.$emit('req-component-config', 'newTask');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if (componentId == 'newTask') {
-                $scope.config = config;
-            }
-        });
+angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$stateParams', '$sce', '$q'
+    , 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService'
+    , function ($scope, $stateParams, $sce, $q, Util, TicketService, LookupService, FrevvoFormService) {
 
         var ticketInfo = TicketService.getArkCaseTicket();
         var acmFormsInfo = LookupService.getConfig({name: 'acm-forms'});
