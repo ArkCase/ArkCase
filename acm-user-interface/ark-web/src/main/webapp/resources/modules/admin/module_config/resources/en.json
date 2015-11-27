@@ -64,6 +64,36 @@
     "forms.config": "Form Configuration",
     "workflows.title": "Workflows",
     "workflows.config": "Workflow Configuration",
+    "workflows.config.activate": {
+      "error": "Cant make this process active!",
+      "success": "Process succesfully activated."
+    },
+    "workflows.config.showHistory.dialog": {
+      "title": "History",
+      "body": "Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
+      "cancel": "Cancel",
+      "activate": "Make Active"
+    },
+    "workflows.config.grid": {
+      "businessProcess": "Business Process",
+      "description": "Description",
+      "active": "Active",
+      "modified": "Modified",
+      "creator": "Author"
+    },
+    "workflows.config.btn": {
+      "createNew": "Create New Model",
+      "uploadNew": "Upload New BPMN"
+    },
+    "workflows.config.links": {
+      "download": "Download",
+      "replaceFile": "Replace File",
+      "versionHistory": "Version History"
+    },
+    "workflows.config.upload": {
+      "success": "Successfully uploaded new process definition",
+      "error": "Error uploading new process definition"
+    },
     "formWorkflows.title": "Form/Workflow Link",
     "formWorkflows.link": "Link Forms/Workflows",
     "formWorkflows.link.undo": "Undo",
@@ -116,7 +146,7 @@
     },
     "forms.defaultValue": "Select Target",
     "forms.addForm": "Add Plain Form",
-    "forms.data":{
+    "forms.data": {
       "name": "Form Name",
       "applicationName": "Application name",
       "description": "Description",
