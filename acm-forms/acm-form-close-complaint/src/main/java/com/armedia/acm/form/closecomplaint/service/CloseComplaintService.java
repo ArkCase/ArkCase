@@ -45,6 +45,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	private ApplicationEventPublisher applicationEventPublisher;
 	private AcmPluginManager acmPluginManager;
 	private FunctionalAccessService functionalAccessService;
+	private CloseComplaintRequestFactory closeComplaintRequestFactory;
 
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
@@ -98,8 +99,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 			return true;
 		}
 
-        CloseComplaintRequestFactory factory = new CloseComplaintRequestFactory();
-        CloseComplaintRequest closeComplaintRequest = factory.fromFormXml(form, getAuthentication());
+        CloseComplaintRequest closeComplaintRequest = getCloseComplaintRequestFactory().fromFormXml(form, getAuthentication());
         
         if ("edit".equals(mode)){
         	String requestId = getRequest().getParameter("requestId");
@@ -290,5 +290,15 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	public Object convertToFrevvoForm(Object obj, Object form) {
 		// Implementation no needed so far
 		return null;
+	}
+
+	public CloseComplaintRequestFactory getCloseComplaintRequestFactory()
+	{
+		return closeComplaintRequestFactory;
+	}
+
+	public void setCloseComplaintRequestFactory(CloseComplaintRequestFactory closeComplaintRequestFactory)
+	{
+		this.closeComplaintRequestFactory = closeComplaintRequestFactory;
 	}
 }
