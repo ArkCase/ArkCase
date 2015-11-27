@@ -30,7 +30,6 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
 
         var loadComplaint = function (id) {
             if (Util.goodPositive(id)) {
-//            if (id) {
                 if ($scope.complaintInfo && $scope.complaintInfo.id != id) {
                     $scope.complaintInfo = null;
                 }

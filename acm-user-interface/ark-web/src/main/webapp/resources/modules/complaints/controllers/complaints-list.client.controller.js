@@ -8,8 +8,6 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
             return config;
         });
 
-        var id = $stateParams.id;
-
         var treeHelper = new HelperObjectTreeService.Tree({
             scope: $scope
             , nodeId: $stateParams.id

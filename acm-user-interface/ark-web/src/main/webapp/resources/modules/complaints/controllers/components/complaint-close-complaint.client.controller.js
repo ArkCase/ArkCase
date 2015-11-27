@@ -4,17 +4,6 @@ angular.module('complaints').controller('Complaints.CloseComplaintController', [
     , 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService'
     , function ($scope, $stateParams, $sce, $log, $q, Util, TicketService, LookupService, FrevvoFormService) {
 
-        //$scope.$emit('req-component-config', 'close');
-        //$scope.$on('component-config', function (e, componentId, config) {
-        //    if (componentId == 'close') {
-        //        $scope.config = config;
-        //    }
-        //});
-
-        $scope.acmTicket = '';
-        $scope.acmFormsProperties = {};
-        $scope.frevvoFormUrl = '';
-
         var ticketInfo = TicketService.getArkCaseTicket();
         var acmFormsInfo = LookupService.getConfig({name: 'acm-forms'});
 
