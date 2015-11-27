@@ -30,7 +30,7 @@
       "reports": [
         {
           "id": "turnaround",
-          "name": "Turnaround Time by Requestor"
+          "name": "Turnaround Time by Requester"
         },
         {
           "id": "requester",
