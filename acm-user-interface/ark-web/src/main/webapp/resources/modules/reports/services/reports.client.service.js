@@ -22,21 +22,25 @@ angular.module('reports').factory('Reports.BuildUrl', ['$sce',
              * @description
              * This function builds report url with given parameters
              *
-             * @param {String} reportsHost String that represents reports server URL
-             * @param {String} reportsPort String that represents reports server port
-             * @param {String} reportUri String that represents report URL
-             * @param {String} startDate String that represents value for date chosen from dateFrom input
-             * @param {String} endDate String that represents value for date chosen from dateTo input
-             * @param {String} dateFormat String that represents report server date format
+             * @param {Object} params Data required form generation report URL
+             * @param {String} params.reportSelected Selected report
+             * @param {Array}  params.reports List of reports
+             * @param {String} params.reportsHost Represents reports server URL
+             * @param {String} params.reportsPort Represents reports server port
+             * @param {String} params.reportUri Represents report URL
+             * @param {String} params.startDate Represents value for date chosen from dateFrom input
+             * @param {String} params.endDate Represents value for date chosen from dateTo input
+             * @param {String} params.reportDateFormat Represents report server date format
+             * @param {String} params.stateSelected Represents report server date format
              * @returns {Object} Object assigned as trusted for angular to display the report in an iFrame
              */
-            getUrl: function (reportsHost, reportsPort, reportUri, stateSelected, startDate, endDate, dateFormat) {
-                var reportUrl = reportsHost + reportsPort + reportUri
-                    + "&startDate=" + startDate
-                    + "&endDate=" + endDate
-                    + "&dateFormat=" + encodeURIComponent(dateFormat);
-                if(stateSelected){
-                    reportUrl += "&caseStatus=" + stateSelected;
+            getUrl: function (params) {
+                var reportUrl = params.reportsHost + params.reportsPort + params.reports[params.reportSelected]
+                    + "&startDate=" + moment(params.startDate).format(params.dateFormat)
+                    + "&endDate=" + moment(params.endDate).format(params.dateFormat)
+                    + "&dateFormat=" + encodeURIComponent(params.reportDateFormat);
+                if(params.stateSelected){
+                    reportUrl += "&caseStatus=" + params.stateSelected;
                 }
                 return $sce.trustAsResourceUrl(reportUrl);
             }

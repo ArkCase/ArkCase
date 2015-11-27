@@ -11,32 +11,20 @@
 angular.module('reports').controller('Reports.SelectionController', ['$scope',
     function ($scope) {
         $scope.$on('component-config', applyConfig);
-        $scope.$on('reports-data-retrieved',updateData);
-        $scope.$on('available-reports', updateAvailableReports);
         $scope.$emit('req-component-config', 'reportselection');
 
         $scope.config = null;
         function applyConfig(e, componentId, config) {
             if (componentId == 'reportselection') {
                 $scope.config = config;
+                // Watch parent reports variable
+                $scope.$watchCollection('data.reports', updateAvailableReports);
             }
         }
 
-        $scope.$watch('reportsData.reportSelected', function(newValue, oldValue){
-            if(newValue){
-                if($scope.config.resetCaseStateValues.indexOf($scope.reportsData.reportSelected) > -1){
-                    $scope.reportsData.caseStateSelected = ''
-                }
-            }
-        })
-
-        function updateData(e, reportsData){
-            $scope.reportsData = reportsData;
-        }
-
-        function updateAvailableReports(e, availableReports){
+        function updateAvailableReports() {
             $scope.availableReports = [];
-            _.forEach(availableReports, function(value, key){
+            _.forEach($scope.data.reports, function (value, key) {
                 $scope.availableReports.push({"name": key.split('_').join(' '), "id": key});
             })
         }
