@@ -250,17 +250,16 @@ iframe {
 
 /* Search Facets */
 
-
 .left-sidebar ul.list-unstyled li div {
-    margin:0px;
+    margin: 0px;
 }
 
 .left-sidebar ul.list-unstyled li {
-	margin: 10px;
+    margin: 10px;
 }
 
-.left-sidebar ul.list-unstyled li ul li{
-	margin: 0px;
+.left-sidebar ul.list-unstyled li ul li {
+    margin: 0px;
 }
 
 .left-sidebar ul.list-unstyled li ul.list-unstyled li label {
@@ -295,7 +294,6 @@ iframe {
     z-index: 1000;
     position: relative;
 }
-
 
 .module-header .btn-group {
     margin-right: 15px;
@@ -348,6 +346,7 @@ iframe {
     color: white;
     background-color: #177bbb;
 }
+
 .module-header .well-sm.pull-right input {
     width: 200px;
     border: 0px;
@@ -369,12 +368,11 @@ iframe {
 }
 
 .module-content .left-sidebar header.header .btn-group.select.pull-right {
-	position: relative;
-	top: -90px;
-	z-index: 20000;
-	
-}
+    position: relative;
+    top: -90px;
+    z-index: 20000;
 
+}
 
 /* Content Body */
 
@@ -573,7 +571,6 @@ thead {
     background-color: #ff7373;
     color: #fff;
 }
-
 
 /* Modal Window Columns */
 
@@ -794,4 +791,9 @@ input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
  .left-sidebar label ul.dropdown-menu button{
 	border: 0px;
 	border-radius: 0px;
+}
+
+.ace_editor {
+    height: 500px;
+    border: 1px solid #cbd5dd;
 }

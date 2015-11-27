@@ -89,7 +89,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
             }
         );
 
-        var promiseGroups = ObjectLookupService.getOwningGroups().then(
+        var promiseGroups = ObjectLookupService.getGroups().then(
             function (participantGroups) {
                 $scope.participantGroups = participantGroups;
                 return participantGroups;

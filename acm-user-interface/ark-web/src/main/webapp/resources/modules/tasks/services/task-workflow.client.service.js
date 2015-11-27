@@ -76,6 +76,11 @@ angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translat
 
         });
 
+        Service.WorkflowStatus = {
+            COMPLETE: "COMPLETE"
+            //other status ?
+        };
+
         /**
          * @ngdoc method
          * @name completeTask

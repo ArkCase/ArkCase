@@ -17,7 +17,6 @@ angular.module('reports').controller('Reports.SelectionController', ['$scope',
         function applyConfig(e, componentId, config) {
             if (componentId == 'reportselection') {
                 $scope.config = config;
-
                 // Watch parent reports variable
                 $scope.$watchCollection('data.reports', updateAvailableReports);
             }

@@ -81,7 +81,9 @@ module.exports = {
                 'lib/bootbox/bootbox.js',
                 'lib/ngBootbox/ngBootbox.js',
                 'lib/handsontable/dist/handsontable.full.js',
-                'lib/ngHandsontable/dist/ngHandsontable.js'
+                'lib/ngHandsontable/dist/ngHandsontable.js',
+                'lib/ace-builds/src-min-noconflict/ace.js',
+                'lib/angular-ui-ace/ui-ace.min.js'
             ]
         },
         css: [

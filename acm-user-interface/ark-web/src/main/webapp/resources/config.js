@@ -29,7 +29,8 @@ var ApplicationConfiguration = (function() {
         'summernote',
         'ngBootbox',
         'ngHandsontable',
-        'ngTagsInput'
+        'ngTagsInput',
+        'ui.ace'
     ];
 
     // Add a new vertical module
