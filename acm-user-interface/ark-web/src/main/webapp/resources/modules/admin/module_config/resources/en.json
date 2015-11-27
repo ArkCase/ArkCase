@@ -64,6 +64,36 @@
     "forms.config": "Form Configuration",
     "workflows.title": "Workflows",
     "workflows.config": "Workflow Configuration",
+    "workflows.config.activate": {
+      "error": "Cant make this process active!",
+      "success": "Process succesfully activated."
+    },
+    "workflows.config.showHistory.dialog": {
+      "title": "History",
+      "body": "Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
+      "cancel": "Cancel",
+      "activate": "Make Active"
+    },
+    "workflows.config.grid": {
+      "businessProcess": "Business Process",
+      "description": "Description",
+      "active": "Active",
+      "modified": "Modified",
+      "creator": "Author"
+    },
+    "workflows.config.btn": {
+      "createNew": "Create New Model",
+      "uploadNew": "Upload New BPMN"
+    },
+    "workflows.config.links": {
+      "download": "Download",
+      "replaceFile": "Replace File",
+      "versionHistory": "Version History"
+    },
+    "workflows.config.upload": {
+      "success": "Successfully uploaded new process definition",
+      "error": "Error uploading new process definition"
+    },
     "formWorkflows.title": "Form/Workflow Link",
     "formWorkflows.link": "Link Forms/Workflows",
     "formWorkflows.link.undo": "Undo",
@@ -72,9 +102,35 @@
     "formWorkflows.link.editRole.save.error": "Can't save Link Forms/Workflows configuration",
     "labels.title": "Application Labels",
     "labels.config": "Label Configuration",
+    "labels.config.filterBy": "Filter By Id",
+    "labels.config.filterByValue": "Filter By Value",
+    "labels.config.data": {
+      "id": "ID",
+      "value": "Value",
+      "description": "Description",
+      "defaultValue": "Default Value"
+    },
+    "labels.config.defaultLabel": "Default Language",
+    "labels.config.applyBtn": "Apply",
+    "labels.config.resetlModule": "Reset Current Module Resource",
+    "labels.config.resetAll": "Reset All Resources",
     "branding.title": "Branding",
     "branding.logo": "Logo",
-    "branding.customCss": "Custom CSS",
+    "branding.logo.messages": {
+      "upload.success": "Custom logo files updated. Refresh browser page to see result.",
+      "upload.error": "Error uploading custom logo files."
+    },
+    "branding.logo.btn": {
+      "chooseHeader": "Choose Header logo",
+      "chooseLogin": "Choose Login logo",
+      "saveFiles": "Save"
+    },
+    "branding": {
+      "customCss": "Custom CSS",
+      "customCss.save.success": "Custom CSS updated. Refresh browser page to see result.",
+      "customCss.save.error": "Error saving Custom CSS.",
+      "customCss.save": "Save"
+    },
     "correspondenceManagement": {
       "title": "Correspondence Management",
       "templates": "Correspondence Templates",
@@ -87,6 +143,16 @@
         "modified": "Modified",
         "creator": "Creator"
       }
-    }
+    },
+    "forms.defaultValue": "Select Target",
+    "forms.addForm": "Add Plain Form",
+    "forms.data": {
+      "name": "Form Name",
+      "applicationName": "Application name",
+      "description": "Description",
+      "target": "Target"
+    },
+    "forms.message.delete.success": "Successfully deleted row.",
+    "forms.message.delete.error": "Error deleting row."
   }
 }

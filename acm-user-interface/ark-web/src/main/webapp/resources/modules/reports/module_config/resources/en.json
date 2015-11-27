@@ -20,6 +20,9 @@
       "transfers": "Transfers Report",
       "exceptions": "Exceptions Report (Non-Compliance)"
     },
+    "datepicker":{
+      "close": "Close"
+    },
     "btn": {
       "generateReport": "Generate report"
     }

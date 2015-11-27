@@ -111,6 +111,8 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
                 url: "modules_config/config/modules/cases/resources/participantTypes.json"
                 , method: "GET"
                 , cache: true
+                , isArray: true
+
             }
 
             /**
@@ -127,6 +129,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
                 url: "modules_config/config/modules/cases/resources/personTitles.json"
                 , method: "GET"
                 , cache: true
+                , isArray: true
             }
 
             /**
@@ -143,6 +146,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
                 url: "modules_config/config/modules/cases/resources/contactMethodTypes.json"
                 , method: "GET"
                 , cache: true
+                , isArray : true
             }
 
             /**
@@ -159,6 +163,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
                 url: "modules_config/config/modules/cases/resources/organizationTypes.json"
                 , method: "GET"
                 , cache: true
+                , isArray: true
             }
 
             /**
@@ -175,6 +180,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
                 url: "modules_config/config/modules/cases/resources/addressTypes.json"
                 , method: "GET"
                 , cache: true
+                , isArray: true
             }
 
             /**
@@ -191,6 +197,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
                 url: "modules_config/config/modules/cases/resources/aliasTypes.json"
                 , method: "GET"
                 , cache: true
+                , isArray: true
             }
 
             /**
@@ -207,6 +214,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
                 url: "modules_config/config/modules/cases/resources/securityTagTypes.json"
                 , method: "GET"
                 , cache: true
+                , isArray: true
             }
 
             /**
