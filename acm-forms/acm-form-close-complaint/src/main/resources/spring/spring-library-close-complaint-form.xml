@@ -14,4 +14,24 @@
               <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
               <property name="closeComplaintTaskName" ref="closeComplaintTaskName"/>
        </bean>
+
+       <bean id="closeComplaintRequestFactory" class="com.armedia.acm.form.closecomplaint.service.CloseComplaintRequestFactory"/>
+
+       <bean id="closeComplaintService" class="com.armedia.acm.form.closecomplaint.service.CloseComplaintService">
+              <property name="closeComplaintRequestFactory" ref="closeComplaintRequestFactory"/>
+              <property name="ecmFileService" ref="ecmFileService"/>
+              <property name="properties" ref="acm-form-properties" />
+              <property name="authenticationTokenService" ref="authenticationTokenService" />
+              <property name="userDao" ref="userJpaDao" />
+              <property name="userActionDao" ref="userActionDao" />
+              <property name="userActionExecutor" ref="userActionExecutor"/>
+              <property name="complaintDao" ref="acmComplaintDao" />
+              <property name="caseFileDao" ref="caseFileDao" />
+              <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
+              <property name="ecmFileDao" ref="ecmFileDao"/>
+              <property name="muleContextManager" ref="muleContextManager"/>
+              <property name="acmPluginManager" ref="acmPluginManager"/>
+              <property name="functionalAccessService" ref="functionalAccessService"/>
+              <property name="applicationEventPublisher" ref="frevvoApplicationEventPublisher"/>
+       </bean>
 </beans>

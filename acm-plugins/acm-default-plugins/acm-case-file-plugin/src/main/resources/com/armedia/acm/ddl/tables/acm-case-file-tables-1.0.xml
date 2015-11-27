@@ -328,4 +328,11 @@
         </addColumn>
     </changeSet>
 
+    <!-- adding discriminator column, needed for extensibility -->
+    <changeSet id="27-add-acm_disposition-discriminator-column-extensibility" author="riste.tutureski">
+        <addColumn tableName="acm_disposition">
+            <column name="cm_class_name" type="VARCHAR(400)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

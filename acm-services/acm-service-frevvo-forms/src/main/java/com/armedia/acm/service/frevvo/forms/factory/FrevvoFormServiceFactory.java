@@ -109,33 +109,6 @@ public class FrevvoFormServiceFactory
 	            return service;
 			}
 			
-			if (FrevvoFormName.CLOSE_COMPLAINT.equals(name))
-			{
-				String contextPath = request.getServletContext().getContextPath();
-				
-				CloseComplaintService service = new CloseComplaintService();
-				
-				service.setEcmFileService(frevvoFormController.getEcmFileService());
-	            service.setServletContextPath(contextPath);
-	            service.setProperties(frevvoFormController.getProperties());
-	            service.setRequest(request);
-	            service.setAuthentication(authentication);
-	            service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
-	            service.setUserDao(frevvoFormController.getUserDao());
-	            service.setUserActionDao(frevvoFormController.getUserActionDao());
-	            service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
-	            service.setComplaintDao(frevvoFormController.getComplaintDao());
-	            service.setCaseFileDao(frevvoFormController.getCaseFileDao());
-	            service.setCloseComplaintRequestDao(frevvoFormController.getCloseComplaintRequestDao());
-	            service.setApplicationEventPublisher(frevvoFormController.getApplicationEventPublisher());
-	            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
-	            service.setMuleContextManager(frevvoFormController.getMuleContextManager());
-	            service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
-	            service.setFunctionalAccessService(frevvoFormController.getFunctionalAccessService());
-	            
-	            return service;
-			}
-			
 			if (FrevvoFormName.CASE_FILE_PS.equals(name))
 	        {
 	            String contextPath = request.getServletContext().getContextPath();
@@ -325,7 +298,8 @@ public class FrevvoFormServiceFactory
 	            return service;
 			}
 
-			// TODO: So far, only CaseFileService, ComplaintService are re-written on this way. On time, we should do for all other services
+			// TODO: So far, only CaseFileService, ComplaintService, CloseComplaintService are re-written on this way.
+			// TODO: On time, we should do for all other services
 			if (getServices() != null && getServices().containsKey(name))
 			{
 				FrevvoFormService service = getServices().get(name);
