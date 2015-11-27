@@ -36,7 +36,8 @@ module.exports = {
                 'lib/summernote/dist/summernote.css',
                 'lib/angular-dashboard-framework/dist/angular-dashboard-framework.css',
                 'lib/angular-notify/dist/angular-notify.css',
-                'lib/handsontable/dist/handsontable.full.css'
+                'lib/handsontable/dist/handsontable.full.css',
+                '/lib/ng-tags-input/ng-tags-input.css'
             ],
             customJs : [
                 '***REMOVED***/s/31413758042897b94fd2d74d89768365-T/en_US9cltp4/6346/2/1.4.16/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?locale=en-US&collectorId=aad5f79b'
@@ -46,8 +47,6 @@ module.exports = {
                 'lib/jquery-ui/jquery-ui.js',
                 'lib/bootstrap/dist/js/bootstrap.js',
                 'lib/highcharts/highcharts.js',
-                'lib/tv4/tv4.js',
-                'lib/objectpath/lib/ObjectPath.js',
                 'lib/lodash/lodash.js',
                 'lib/moment/moment.js',
                 'lib/multi-download/browser.js',
@@ -62,9 +61,7 @@ module.exports = {
                 'lib/angular-bootstrap/ui-bootstrap-tpls.js',
                 'lib/angular-ui-grid/ui-grid.js',
                 'lib/angular-notify/dist/angular-notify.js',
-                'lib/angular-schema-form/dist/schema-form.js',
                 'lib/angular-summernote/dist/angular-summernote.js',
-                'lib/angular-schema-form/dist/bootstrap-decorator.js',
                 'lib/angular-translate/angular-translate.js',
                 'lib/angular-translate-loader-partial/angular-translate-loader-partial.js',
                 'lib/angular-xeditable/dist/js/xeditable.js',
@@ -78,6 +75,7 @@ module.exports = {
                 'lib/highcharts-ng/dist/highcharts-ng.js',
                 'lib/ng-file-upload/ng-file-upload.js',
                 'lib/ng-file-upload-shim/ng-file-upload-shim.js',
+                'lib/ng-tags-input/ng-tags-input.js',
                 'lib/summernote/dist/summernote.js',
                 'lib/ui-contextmenu/jquery.ui-contextmenu.js',
                 'lib/bootbox/bootbox.js',
