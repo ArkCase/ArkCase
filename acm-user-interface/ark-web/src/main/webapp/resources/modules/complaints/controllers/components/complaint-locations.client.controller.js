@@ -38,9 +38,11 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
         );
 
         $scope.$on('complaint-updated', function (e, data) {
-            $scope.complaintInfo = data;
-            $scope.gridOptions.data = [Util.goodValue($scope.complaintInfo.location, {})];
-            Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.data.length);
+            if (ComplaintInfoService.validateComplaintInfo(data)) {
+                $scope.complaintInfo = data;
+                $scope.gridOptions.data = [Util.goodValue($scope.complaintInfo.location, {})];
+                Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.data.length);
+            }
         });
 
 

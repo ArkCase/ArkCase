@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'HelperService', 'ConstantService', 'Object.NoteService', 'Authentication',
-    function ($scope, $stateParams, $q, Store, Util, Helper, Constant, ObjectNoteService, Authentication) {
+angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', '$stateParams', '$q'
+    , 'UtilService', 'HelperService', 'ConstantService', 'Object.NoteService', 'Authentication'
+    , function ($scope, $stateParams, $q, Util, Helper, Constant, ObjectNoteService, Authentication) {
+
         $scope.$emit('req-component-config', 'rejcomments');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("rejcomments" == componentId) {

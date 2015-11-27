@@ -13,6 +13,9 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
         });
 
         $scope.$on('complaint-updated', function (e, data) {
+            if (!ComplaintInfoService.validateComplaintInfo(data)) {
+                return;
+            }
             $scope.complaintInfo = data;
             var references = [];
             _.each($scope.complaintInfo.childObjects, function (childObject) {

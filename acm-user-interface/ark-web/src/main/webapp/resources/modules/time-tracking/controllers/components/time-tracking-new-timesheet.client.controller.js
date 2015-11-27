@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTracking.NewTimesheetController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'FrevvoFormService',
+angular.module('time-tracking').controller('TimeTracking.NewTimesheetController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'Frevvo.FormService',
     function($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, FrevvoFormService) {
         $scope.$emit('req-component-config', 'newtimesheet');
 

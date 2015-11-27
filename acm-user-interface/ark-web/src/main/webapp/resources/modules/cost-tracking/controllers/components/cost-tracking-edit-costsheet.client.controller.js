@@ -9,7 +9,7 @@
  *
  * The EditCostsheet Controller
  */
-angular.module('cost-tracking').controller('CostTracking.EditCostsheetController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'FrevvoFormService',
+angular.module('cost-tracking').controller('CostTracking.EditCostsheetController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'Frevvo.FormService',
     function($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, FrevvoFormService) {
         $scope.$emit('req-component-config', 'editcostsheet');
         $scope.$on('component-config', applyConfig);

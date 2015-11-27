@@ -11,8 +11,8 @@
     },
     {
       "menuId": "topbar",
-      "menuItemURL": "cases.wizard",
-      "menuItemTitle": "Case File",
+      "menuItemURL": "newCase",
+      "menuItemTitle": "Case",
       "iconClass": "fa fa-folder",
       "position": 20
     }
