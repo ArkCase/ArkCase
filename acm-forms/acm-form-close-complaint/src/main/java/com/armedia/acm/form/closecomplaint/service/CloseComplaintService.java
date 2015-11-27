@@ -78,7 +78,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		String mode = getRequest().getParameter("mode");
 		
 		// Convert XML data to Object
-		CloseComplaintForm form = (CloseComplaintForm) convertFromXMLToObject(cleanXML(xml), CloseComplaintForm.class);
+		CloseComplaintForm form = (CloseComplaintForm) convertFromXMLToObject(cleanXML(xml), getFormClass());
 		
 		if (form == null){
 			LOG.warn("Cannot unmarshall Close Complaint Form.");
@@ -164,7 +164,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		{
 			information.setDate(new Date());
 		}
-		information.setResolveOptions(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".dispositions"), ","));
+		information.setResolveOptions(convertToList((String) getProperties().get(getFormName() + ".dispositions"), ","));
 		
 		ReferExternal referExternal = new ReferExternal();
 		if (!"edit".equals(mode))
@@ -172,7 +172,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 			referExternal.setDate(new Date());
 		}
 		ContactMethod contact = new ContactMethod();
-		contact.setTypes(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".deviceTypes"), ","));
+		contact.setTypes(convertToList((String) getProperties().get(getFormName() + ".deviceTypes"), ","));
 		referExternal.setContact(contact);
 		
 		closeComplaint.setInformation(information);
