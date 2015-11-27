@@ -40,55 +40,35 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
         var promiseContactMethodTypes = ObjectLookupService.getContactMethodTypes().then(
             function (contactMethodTypes) {
-                var options = [];
-                Util.forEachStripNg(contactMethodTypes, function (v, k) {
-                    options.push({type: k, name: v});
-                });
-                $scope.contactMethodTypes = options;
+                $scope.contactMethodTypes = contactMethodTypes;
                 return contactMethodTypes;
             }
         );
 
         var promiseOrganizationTypes = ObjectLookupService.getOrganizationTypes().then(
             function (organizationTypes) {
-                var options = [];
-                Util.forEachStripNg(organizationTypes, function (v, k) {
-                    options.push({type: k, name: v});
-                });
-                $scope.organizationTypes = options;
+                $scope.organizationTypes = organizationTypes;
                 return organizationTypes;
             }
         );
 
         var promiseAddressTypes = ObjectLookupService.getAddressTypes().then(
             function (addressTypes) {
-                var options = [];
-                Util.forEachStripNg(addressTypes, function (v, k) {
-                    options.push({type: k, name: v});
-                });
-                $scope.addressTypes = options;
+                $scope.addressTypes = addressTypes;
                 return addressTypes;
             }
         );
 
         var promiseAliasTypes = ObjectLookupService.getAliasTypes().then(
             function (aliasTypes) {
-                var options = [];
-                Util.forEachStripNg(aliasTypes, function (v, k) {
-                    options.push({type: k, name: v});
-                });
-                $scope.aliasTypes = options;
+                $scope.aliasTypes = aliasTypes;
                 return aliasTypes;
             }
         );
 
         var promiseSecurityTagTypes = ObjectLookupService.getSecurityTagTypes().then(
             function (securityTagTypes) {
-                var options = [];
-                Util.forEachStripNg(securityTagTypes, function (v, k) {
-                    options.push({type: k, name: v});
-                });
-                $scope.securityTagTypes = options;
+                $scope.securityTagTypes = securityTagTypes;
                 return securityTagTypes;
             }
         );
