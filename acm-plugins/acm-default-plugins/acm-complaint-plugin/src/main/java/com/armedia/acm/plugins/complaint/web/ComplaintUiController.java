@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
+import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -104,7 +105,7 @@ public class ComplaintUiController
         log.debug("Security token: " + token);
 
         // Frevvo form URLs
-        mv.addObject("newComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.COMPLAINT, false));
+        mv.addObject("newComplaintFormUrl", getComplaintUrl());
         mv.addObject("closeComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT, false));
         mv.addObject("formDocuments", getFormProperties().get("form.documents"));
         return mv;
@@ -117,10 +118,35 @@ public class ComplaintUiController
         mv.setViewName("complaintWizard");
 
         // Frevvo form URLs
-        mv.addObject("newComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.COMPLAINT, false));
+        mv.addObject("newComplaintFormUrl", getComplaintUrl());
 
         return mv;
 
+    }
+
+    /**
+     * Create complaint URL
+     *
+     * @return
+     */
+    private String getComplaintUrl()
+    {
+        // Default one
+        String complaintFormName = FrevvoFormName.COMPLAINT.toLowerCase();
+        if (getFormProperties() != null)
+        {
+            if (getFormProperties().containsKey(ComplaintConstants.ACTIVE_COMPLAINT_FORM_KEY))
+            {
+                String activeFormName = (String) getFormProperties().get(ComplaintConstants.ACTIVE_COMPLAINT_FORM_KEY);
+
+                if (activeFormName != null && !"".equals(activeFormName))
+                {
+                    complaintFormName = activeFormName;
+                }
+            }
+        }
+
+        return formUrl.getNewFormUrl(complaintFormName, false);
     }
 
 

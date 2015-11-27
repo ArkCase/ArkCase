@@ -144,6 +144,60 @@ angular.module('services').factory('Object.ModelService', ['$q', '$resource', 'U
                     //objectInfo.participants.push(participant);
                 }
             }
+
+            /**
+             * @ngdoc method
+             * @name checkRestriction
+             * @methodOf services:Object.ModelService
+             *
+             * @description
+             * Check if Case or Complaint is restricted
+             *
+             * @param {String} userId Current login user ID
+             * @param {String} assignee Assignee
+             * @param {String} group Group LDAP ID
+             * @param {Array} assignees List of assignees
+             * @param {Array} groups List of Group
+             *
+             * @returns {Boolean} Return True if it is determined that it is restricted
+             */
+            , checkRestriction: function (userId, assignee, group, assignees, groups) {
+                var restricted = true;
+
+                // We need only one true condition.
+                // First check if the assignee is the logged user
+                if (!Util.isEmpty(assignee) && Util.compare(assignee, userId)) {
+                    restricted = false;
+                } else {
+                    // If the user is not assignee, check in the assignees (users that belong to the group)
+                    // Skip this check if the group is empty
+                    if (Util.isArray(assignees) && !Util.isEmpty(group)) {
+                        for (var i = 0; i < assignees.length; i++) {
+                            if (Util.compare(assignees[i].userId, userId)) {
+                                restricted = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    // If the user in not assignee or is not in the users that belong to a group, check if it's supervisor of the group
+                    // Skip this check if the group is empty
+                    if (restricted) {
+                        if (Util.isArray(groups) && !Util.isEmpty(group)) {
+                            for (var i = 0; i < groups.length; i++) {
+                                if (Util.compare(groups[i].object_id_s, group)) {
+                                    if (!Util.isEmpty(groups[i].supervisor_id_s) && Util.compare(groups[i].supervisor_id_s, userId)) {
+                                        restricted = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return restricted;
+            }
         }
     }
 ]);

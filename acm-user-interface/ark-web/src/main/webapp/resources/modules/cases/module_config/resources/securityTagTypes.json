@@ -1,4 +1,10 @@
-{
-  "Tag1"  : "Tag1"
-  ,"Tag2" : "Tag2"
-}
+[
+  {
+    "type": "Tag1",
+    "name": "Tag1"
+  },
+  {
+    "type": "Tag2",
+    "name": "Tag2"
+  }
+]

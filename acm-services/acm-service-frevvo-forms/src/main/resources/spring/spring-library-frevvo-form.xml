@@ -35,6 +35,7 @@
         <constructor-arg>
             <map key-type="java.lang.String" value-type="com.armedia.acm.frevvo.config.FrevvoFormService">
                 <entry key="case_file" value-ref="caseFileService"/>
+                <entry key="complaint" value-ref="complaintService"/>
             </map>
         </constructor-arg>
     </bean>

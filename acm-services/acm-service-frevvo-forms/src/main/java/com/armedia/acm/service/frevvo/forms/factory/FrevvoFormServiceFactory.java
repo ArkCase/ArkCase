@@ -60,33 +60,7 @@ public class FrevvoFormServiceFactory
             return service;
 		}
 		else 
-		{		
-			if (FrevvoFormName.COMPLAINT.equals(name))
-	        {
-	            String contextPath = request.getServletContext().getContextPath();
-	
-	            ComplaintService service = new ComplaintService();
-	
-	            service.setSaveComplaintTransaction(frevvoFormController.getSaveComplaintTransaction());
-	            service.setEcmFileService(frevvoFormController.getEcmFileService());
-	            service.setServletContextPath(contextPath);
-	            service.setProperties(frevvoFormController.getProperties());
-	            service.setRequest(request);
-	            service.setAuthentication(authentication);
-	            service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
-	            service.setUserDao(frevvoFormController.getUserDao());
-	            service.setUserActionDao(frevvoFormController.getUserActionDao());
-	            service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
-	            service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
-	            service.setPersonDao(frevvoFormController.getPersonDao());
-	            service.setComplaintEventPublisher(frevvoFormController.getComplaintEventPublisher());
-	            service.setFunctionalAccessService(frevvoFormController.getFunctionalAccessService());
-	            service.setSearchResults(frevvoFormController.getSearchResults());
-	            service.setComplaintFactory(frevvoFormController.getComplaintFactory());
-	            
-	            return service;
-			}
-			
+		{
 			if (FrevvoFormName.ROI.equals(name))
 	        {
 	            String contextPath = request.getServletContext().getContextPath();
@@ -105,8 +79,8 @@ public class FrevvoFormServiceFactory
 	            service.setComplaintDao(frevvoFormController.getComplaintDao());
 	            service.setCaseFileDao(frevvoFormController.getCaseFileDao());
 	            service.setApplicationEventPublisher(frevvoFormController.getApplicationEventPublisher());
-            service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
-            service.setAcmFolderService(frevvoFormController.getAcmFolderService());
+				service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
+				service.setAcmFolderService(frevvoFormController.getAcmFolderService());
 	            
 	            return service;
 			}
@@ -294,8 +268,8 @@ public class FrevvoFormServiceFactory
 	            service.setFunctionalAccessService(frevvoFormController.getFunctionalAccessService());
 	            service.setActivitiRuntimeService(frevvoFormController.getActivitiRuntimeService());
 	            service.setFileWorkflowBusinessRule(frevvoFormController.getFileWorkflowBusinessRule());
-            service.setNotificationDao(frevvoFormController.getNotificationDao());
-            service.setNotificationEventPublisher(frevvoFormController.getNotificationEventPublisher());
+				service.setNotificationDao(frevvoFormController.getNotificationDao());
+				service.setNotificationEventPublisher(frevvoFormController.getNotificationEventPublisher());
 	            
 	            return service;
 			}
@@ -351,7 +325,7 @@ public class FrevvoFormServiceFactory
 	            return service;
 			}
 
-			// TODO: So far, only CaseFileService is re-written on this way. On time, we should do for all other services
+			// TODO: So far, only CaseFileService, ComplaintService are re-written on this way. On time, we should do for all other services
 			if (getServices() != null && getServices().containsKey(name))
 			{
 				FrevvoFormService service = getServices().get(name);

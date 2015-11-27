@@ -98,7 +98,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
             TaskWorkflowService.completeTask(rowEntity.id).then(
                 function (taskInfo) {
                     rowEntity.acm$_taskActionDone = true;
-                    rowEntity.status_s = "COMPLETE";
+                    rowEntity.status_s = TaskWorkflowService.WorkflowStatus.COMPLETE;
                     return taskInfo;
                 }
             );
@@ -124,7 +124,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
             TaskWorkflowService.completeTaskWithOutcome(task, outcome).then(
                 function (successData) {
                     rowEntity.acm$_taskActionDone = true;
-                    rowEntity.status_s = "COMPLETE";
+                    rowEntity.status_s = TaskWorkflowService.WorkflowStatus.COMPLETE;
                     return successData;
                 }
             );

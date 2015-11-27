@@ -222,5 +222,12 @@
             <column name="cm_seq_name" value="acm_close_complaint_request"></column>
         </insert>
     </changeSet>
+
+    <!-- adding discriminator column, needed for extensibility -->
+    <changeSet id="23-acm_complaint-add-discriminator-column-extensibility" author="riste.tutureski">
+        <addColumn tableName="acm_complaint">
+            <column name="cm_class_name" type="VARCHAR(400)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
 
