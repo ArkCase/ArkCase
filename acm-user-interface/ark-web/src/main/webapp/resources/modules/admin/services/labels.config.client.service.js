@@ -135,8 +135,8 @@ angular.module('admin').factory('Admin.LabelsConfigService', ['$resource',
              * Reseting values for grid columns to default values
              *
              * @param {Object} params Map of input parameter.
-             * @param {Object params.lng Object that contains value for selected language from dropdown
-             * @param {Object params.ns Object that contains value for selected namespace from dropdown
+             * @param {Object} params.lng Object that contains value for selected language from dropdown
+             * @param {Object} params.ns Object that contains value for selected namespace from dropdown
              * @param {Function} onSuccess (Optional)Callback function of success query
              * @param {Function} onError (Optional) Callback function when fail
              *
