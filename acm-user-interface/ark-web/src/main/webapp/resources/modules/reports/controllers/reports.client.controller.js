@@ -47,6 +47,5 @@ angular.module('reports').controller('ReportsController', ['$scope', 'ConfigServ
                 $scope.$broadcast('component-config', componentId, componentConfig);
             });
         }
-
     }
 ]);
