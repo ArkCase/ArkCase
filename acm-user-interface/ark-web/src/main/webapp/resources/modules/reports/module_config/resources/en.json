@@ -10,7 +10,7 @@
     "endDate.label": "To",
 
     "dropdown": {
-      "turnaround": "Turnaround Time by Requestor",
+      "turnaround": "Turnaround Time by Requester",
       "requester": "Requester Type Summary",
       "pending": "Pending Orders Report",
       "associate": "Associate Productivity Report",
