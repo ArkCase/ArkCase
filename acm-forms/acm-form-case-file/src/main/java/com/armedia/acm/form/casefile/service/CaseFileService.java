@@ -114,7 +114,7 @@ public class CaseFileService extends FrevvoFormAbstractService
         FrevvoUploadedFiles frevvoFiles = saveAttachments(
                 attachments,
                 form.getCmisFolderId(),
-                getFormName().toUpperCase(),
+                FrevvoFormName.CASE_FILE.toUpperCase(),
                 form.getId());
 
         // Log the last user action

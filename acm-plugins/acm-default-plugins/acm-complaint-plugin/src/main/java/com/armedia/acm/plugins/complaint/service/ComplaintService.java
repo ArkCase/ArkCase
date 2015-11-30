@@ -125,7 +125,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         saveAttachments(
                 attachments,
                 complaint.getCmisFolderId(),
-                getFormName().toUpperCase(),
+                FrevvoFormName.COMPLAINT.toUpperCase(),
                 complaint.getComplaintId());
 
         if (null != complaint && null != complaint.getComplaintId())

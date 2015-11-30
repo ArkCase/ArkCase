@@ -25,6 +25,9 @@
             </props>
         </property>
     </bean>
+
+    <bean id="frevvoApplicationEventPublisherAware" class="com.armedia.acm.service.frevvo.forms.publisher.FrevvoApplicationEventPublisherAware"/>
+    <bean id="frevvoApplicationEventPublisher" factory-bean="frevvoApplicationEventPublisherAware" factory-method="getApplicationEventPublisher"/>
     
     <bean id="plainFormPropertiesConfigurer" class="net.unicon.springframework.addons.properties.ReloadingPropertyPlaceholderConfigurer">
 		<property name="properties" ref="plainFormProperties"/>
@@ -36,6 +39,7 @@
             <map key-type="java.lang.String" value-type="com.armedia.acm.frevvo.config.FrevvoFormService">
                 <entry key="case_file" value-ref="caseFileService"/>
                 <entry key="complaint" value-ref="complaintService"/>
+                <entry key="close_complaint" value-ref="closeComplaintService"/>
             </map>
         </constructor-arg>
     </bean>
