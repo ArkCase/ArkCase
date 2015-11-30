@@ -23,8 +23,14 @@ public class ConfigApiController {
 
     private List<AcmConfig> configList;
 
+    /**
+     * This method return json stucture when /api/v1/service/config is called.
+     *
+     * @return - Returns json structure, list of config names and their descriptions
+     *
+     */
     @RequestMapping(method = RequestMethod.GET
-            ,produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE}
+            ,produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     @ResponseBody
     public List<Map<String, String>> getInfo (
