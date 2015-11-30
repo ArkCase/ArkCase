@@ -106,7 +106,7 @@ public class ComplaintUiController
 
         // Frevvo form URLs
         mv.addObject("newComplaintFormUrl", getComplaintUrl());
-        mv.addObject("closeComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT, false));
+        mv.addObject("closeComplaintFormUrl", getCloseComplaintUrl());
         mv.addObject("formDocuments", getFormProperties().get("form.documents"));
         return mv;
     }
@@ -133,20 +133,49 @@ public class ComplaintUiController
     {
         // Default one
         String complaintFormName = FrevvoFormName.COMPLAINT.toLowerCase();
+        String activeFormName = getActiveFormName(ComplaintConstants.ACTIVE_COMPLAINT_FORM_KEY);
+        if (activeFormName != null)
+        {
+            complaintFormName = activeFormName;
+        }
+
+        return formUrl.getNewFormUrl(complaintFormName, false);
+    }
+
+    /**
+     * Create complaint URL
+     *
+     * @return
+     */
+    private String getCloseComplaintUrl()
+    {
+        // Default one
+        String closeComplaintFormName = FrevvoFormName.CLOSE_COMPLAINT.toLowerCase();
+        String activeFormName = getActiveFormName(ComplaintConstants.ACTIVE_CLOSE_COMPLAINT_FORM_KEY);
+        if (activeFormName != null)
+        {
+            closeComplaintFormName = activeFormName;
+        }
+
+        return formUrl.getNewFormUrl(closeComplaintFormName, false);
+    }
+
+    private String getActiveFormName(String key)
+    {
         if (getFormProperties() != null)
         {
-            if (getFormProperties().containsKey(ComplaintConstants.ACTIVE_COMPLAINT_FORM_KEY))
+            if (getFormProperties().containsKey(key))
             {
-                String activeFormName = (String) getFormProperties().get(ComplaintConstants.ACTIVE_COMPLAINT_FORM_KEY);
+                String activeFormName = (String) getFormProperties().get(key);
 
                 if (activeFormName != null && !"".equals(activeFormName))
                 {
-                    complaintFormName = activeFormName;
+                    return activeFormName;
                 }
             }
         }
 
-        return formUrl.getNewFormUrl(complaintFormName, false);
+        return null;
     }
 
 
