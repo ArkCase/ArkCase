@@ -25,6 +25,8 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 
     private RuntimeService activitiRuntimeService;
 
+    private String closeComplaintTaskName;
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -61,7 +63,14 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         String author = closeComplaintFormEvent.getUserId();
         List<String> reviewers = findReviewers(closeComplaintFormEvent);
 
-        String taskName = "Request to Close Complaint '" + closeComplaintFormEvent.getComplaintNumber() + "'";
+        // Default one if "closeComplaintTaskName" is null or empty
+        String taskName = "Task " + closeComplaintFormEvent.getComplaintNumber();
+
+        // Overwrite "taskName" with "closeComplaintTaskName" has value
+        if (getCloseComplaintTaskName() != null && !getCloseComplaintTaskName().isEmpty())
+        {
+            taskName = String.format(getCloseComplaintTaskName(), closeComplaintFormEvent.getComplaintNumber());
+        }
 
         Map<String, Object> pvars = new HashMap<>();
 
@@ -116,5 +125,15 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
     public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
     {
         this.activitiRuntimeService = activitiRuntimeService;
+    }
+
+    public String getCloseComplaintTaskName()
+    {
+        return closeComplaintTaskName;
+    }
+
+    public void setCloseComplaintTaskName(String closeComplaintTaskName)
+    {
+        this.closeComplaintTaskName = closeComplaintTaskName;
     }
 }

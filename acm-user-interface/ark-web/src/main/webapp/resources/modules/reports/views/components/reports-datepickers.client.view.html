@@ -1,12 +1,12 @@
 <div ng-controller="Reports.DatepickersController" ng-cloak>
 
-    <label>{{'reports.label.startDate' | translate}}
+    <label>{{'reports.startDate.label' | translate}}
         <div>
             <p class="input-group">
                 <input type="text"
                        class="form-control"
                        datepicker-popup="{{config.datepickerPopupFormat}}"
-                       ng-model="reportsData.startDate"
+                       ng-model="data.startDate"
                        is-open="opened.openedStart"
                        close-on-date-selection="true"
                        show-button-bar="true"
@@ -21,13 +21,13 @@
         </div>
     </label>
 
-    <label>{{'reports.label.endDate' | translate}}
+    <label>{{'reports.endDate.label' | translate}}
         <div>
             <p class="input-group">
                 <input type="text"
                        class="form-control"
                        datepicker-popup="{{config.datepickerPopupFormat}}"
-                       ng-model="reportsData.endDate"
+                       ng-model="data.endDate"
                        is-open="opened.openedEnd"
                        close-on-date-selection="true"
                        show-button-bar="true"
