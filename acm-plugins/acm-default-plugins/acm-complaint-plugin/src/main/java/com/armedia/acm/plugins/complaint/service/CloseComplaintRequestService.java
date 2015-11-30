@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * Created by armdev on 11/13/14.
  */
-public class CloseCompaintRequestService
+public class CloseComplaintRequestService
 {
     private ComplaintDao complaintDao;
     private CloseComplaintRequestDao closeComplaintRequestDao;
