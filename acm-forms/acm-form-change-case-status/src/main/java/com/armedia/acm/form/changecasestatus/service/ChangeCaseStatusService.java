@@ -144,8 +144,14 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService {
     {
         return FrevvoFormName.CHANGE_CASE_STATUS;
     }
-    
-    private Object initFormData()
+
+	@Override
+	public Class<?> getFormClass()
+	{
+		return ChangeCaseStatusForm.class;
+	}
+
+	private Object initFormData()
     {
     	String mode = getRequest().getParameter("mode");
     	ChangeCaseStatusForm changeCaseStatus = new ChangeCaseStatusForm();

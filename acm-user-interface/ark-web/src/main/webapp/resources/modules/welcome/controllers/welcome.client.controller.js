@@ -1,17 +1,18 @@
 'use strict';
 
-angular.module('welcome').controller('WelcomeController', ['$scope', '$q', '$state', 'StoreService', 'HelperService', 'CallAuthentication', 'CallLookupService', 'CallConfigService', 'CallObjectsService', 'CallCasesService', 'CallComplaintsService', 'CallTasksService',
-    function ($scope, $q, $state, Store, Helper, CallAuthentication, CallLookupService, CallConfigService, CallObjectsService, CallCasesService, CallComplaintsService, CallTasksService) {
+angular.module('welcome').controller('WelcomeController', ['$scope', '$q', '$state', 'StoreService', 'HelperService', 'Authentication'
+    , 'ConfigService', 'LookupService', 'Object.LookupService', 'Case.LookupService', 'Complaint.LookupService'
+    , function ($scope, $q, $state, Store, Helper, Authentication, ConfigService
+        , LookupService, ObjectLookupService, CaseLookupService, ComplaintLookupService) {
 
         var sessionCacheNamesList = [
-            CallAuthentication.SessionCacheNames
-            , CallConfigService.SessionCacheNames
+            Authentication.SessionCacheNames
+            , ConfigService.SessionCacheNames
             , Helper.SessionCacheNames
-            , CallLookupService.SessionCacheNames
-            , CallObjectsService.SessionCacheNames
-            , CallCasesService.SessionCacheNames
-            , CallComplaintsService.SessionCacheNames
-            , CallTasksService.SessionCacheNames
+            , LookupService.SessionCacheNames
+            , ObjectLookupService.SessionCacheNames
+            , CaseLookupService.SessionCacheNames
+            , ComplaintLookupService.SessionCacheNames
 
         ];
         for (var i = 0; i < sessionCacheNamesList.length; i++) {
@@ -22,7 +23,7 @@ angular.module('welcome').controller('WelcomeController', ['$scope', '$q', '$sta
         }
 
 
-        //var promiseGetModuleConfig = CallConfigService.getModuleConfig("welcome").then(function (config) {
+        //var promiseGetModuleConfig = ConfigService.getModuleConfig("welcome").then(function (config) {
         //    $scope.config = config;
         //    return config;
         //});

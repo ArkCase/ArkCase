@@ -2,11 +2,59 @@
   "admin": {
     "title": "Admin",
     "security.title": "Security",
-    "security.functional-access-control": "Functional Access Control",
-    "security.ldap-config": "LDAP Configuration",
-    "security.organizational-hierarchy": "Organizational Hierarchy",
-    "security.select-privileges": "Create Role/Select Privileges",
-    "security.module-config": "Module Configuration",
+    "security.functionalAccessControl": "Functional Access Control",
+    "security.functionalAccessControl.applicationRole": "Application Role",
+    "security.ldapConfig": "LDAP Configuration",
+    "security.ldapConfig.addNewDirectory": "Add New Directory",
+    "security.ldapConfig.table.ldapUrl": "LDAP Url",
+    "security.ldapConfig.table.directoryName": "Directory Name",
+    "security.ldapConfig.data": {
+      "addNewDirectory": "Add New Directory",
+      "editRecord": "Edit Record",
+      "id": "ID",
+      "name": "Name",
+      "ldapUrl": "LDAP Url",
+      "base": "Base",
+      "directoryName": "Directory Name",
+      "authUserDn": "Auth User Dn",
+      "authUserPassword": "Auth User Password",
+      "userSearchBase": "User Search Base",
+      "groupSearchBase": "Group Search Base",
+      "groupSeachBaseOU": "Group Search Base OU",
+      "userIdAttributeName": "User Id Attribute Name",
+      "cancel": "Cancel",
+      "ok": "OK"
+    },
+    "security.ldapConfig.messages": {
+      "delete.success": "Successfully deleted row.",
+      "delete.error": "Error deleting row.",
+      "insert.success": "Successfully inserted new row.",
+      "insert.error": "Error inserting new row.",
+      "update.success": "Successfully updated row.",
+      "update.error": "Error updating row."
+    },
+    "security.ldapConfig.dialog": {
+      "cancel": "Cancel",
+      "ok": "OK",
+      "confirm.delete": {
+        "deleteBtn": "Delete",
+        "cancelBtn": "Cancel",
+        "headerText": "Are you sure?",
+        "bodyText": "This record will be deleted. Are you sure?"
+      }
+    },
+    "admin.security.addNew": "Add New Directory",
+    "security.organizationalHierarchy": "Organizational Hierarchy",
+    "security.selectPrivileges": "Create Role/Select Privileges",
+    "security.selectPrivileges.applicationRole": "Application Role",
+    "security.selectPrivileges.createRole": "Create Role",
+    "security.selectPrivileges.editRole": "Edit Role",
+    "security.selectPrivileges.applyChanges": "Apply Changes",
+    "security.selectPrivileges.enterRoleName": "Enter the role name in the box below.",
+    "security.selectPrivileges.cancel": "Cancel",
+    "security.selectPrivileges.name": "Name",
+    "security.moduleConfig": "Module Configuration",
+    "security.moduleConfig.module": "Module",
     "dashboard.title": "Dashboard",
     "dashboard.config": "Dashboard Configuration",
     "dashboard.widgets": "Widgets",
@@ -16,14 +64,95 @@
     "forms.config": "Form Configuration",
     "workflows.title": "Workflows",
     "workflows.config": "Workflow Configuration",
-    "form-workflows.title": "Form/Workflow Link",
-    "form-workflows.link": "Link Forms/Workflows",
+    "workflows.config.activate": {
+      "error": "Cant make this process active!",
+      "success": "Process succesfully activated."
+    },
+    "workflows.config.showHistory.dialog": {
+      "title": "History",
+      "body": "Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
+      "cancel": "Cancel",
+      "activate": "Make Active"
+    },
+    "workflows.config.grid": {
+      "businessProcess": "Business Process",
+      "description": "Description",
+      "active": "Active",
+      "modified": "Modified",
+      "creator": "Author"
+    },
+    "workflows.config.btn": {
+      "createNew": "Create New Model",
+      "uploadNew": "Upload New BPMN"
+    },
+    "workflows.config.links": {
+      "download": "Download",
+      "replaceFile": "Replace File",
+      "versionHistory": "Version History"
+    },
+    "workflows.config.upload": {
+      "success": "Successfully uploaded new process definition",
+      "error": "Error uploading new process definition"
+    },
+    "formWorkflows.title": "Form/Workflow Link",
+    "formWorkflows.link": "Link Forms/Workflows",
+    "formWorkflows.link.undo": "Undo",
+    "formWorkflows.link.saveChanges": "Save Changes",
+    "formWorkflows.link.editRole.save.success": "Link Forms/Workflows configuration saved successfully",
+    "formWorkflows.link.editRole.save.error": "Can't save Link Forms/Workflows configuration",
     "labels.title": "Application Labels",
     "labels.config": "Label Configuration",
+    "labels.config.filterBy": "Filter By Id",
+    "labels.config.filterByValue": "Filter By Value",
+    "labels.config.data": {
+      "id": "ID",
+      "value": "Value",
+      "description": "Description",
+      "defaultValue": "Default Value"
+    },
+    "labels.config.defaultLabel": "Default Language",
+    "labels.config.applyBtn": "Apply",
+    "labels.config.resetlModule": "Reset Current Module Resource",
+    "labels.config.resetAll": "Reset All Resources",
     "branding.title": "Branding",
     "branding.logo": "Logo",
-    "branding.custom-css": "Custom CSS",
-    "correspondence-management.title": "Correspondence Management",
-    "correspondence-management.templates": "Correspondence Templates"
+    "branding.logo.messages": {
+      "upload.success": "Custom logo files updated. Refresh browser page to see result.",
+      "upload.error": "Error uploading custom logo files."
+    },
+    "branding.logo.btn": {
+      "chooseHeader": "Choose Header logo",
+      "chooseLogin": "Choose Login logo",
+      "saveFiles": "Save"
+    },
+    "branding": {
+      "customCss": "Custom CSS",
+      "customCss.save.success": "Custom CSS updated. Refresh browser page to see result.",
+      "customCss.save.error": "Error saving Custom CSS.",
+      "customCss.save": "Save"
+    },
+    "correspondenceManagement": {
+      "title": "Correspondence Management",
+      "templates": "Correspondence Templates",
+      "templates.addNewTemplate": "Add New Template",
+      "templates.grid": {
+        "id": "ID",
+        "title": "Title",
+        "path": "Path",
+        "created": "Created",
+        "modified": "Modified",
+        "creator": "Creator"
+      }
+    },
+    "forms.defaultValue": "Select Target",
+    "forms.addForm": "Add Plain Form",
+    "forms.data": {
+      "name": "Form Name",
+      "applicationName": "Application name",
+      "description": "Description",
+      "target": "Target"
+    },
+    "forms.message.delete.success": "Successfully deleted row.",
+    "forms.message.delete.error": "Error deleting row."
   }
 }

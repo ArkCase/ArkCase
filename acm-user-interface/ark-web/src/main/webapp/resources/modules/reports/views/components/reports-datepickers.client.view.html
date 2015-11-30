@@ -1,27 +1,44 @@
 <div ng-controller="Reports.DatepickersController" ng-cloak>
 
-    <label>{{'reports.label.dateFrom' | translate}}
+    <label>{{'reports.startDate.label' | translate}}
         <div>
-            <input
-                type="date"
-                ng-model="reportsData.startDate"
-                class="form-control"
-                datepicker-popup
-                value="{{reportsData.startDate}}"
-                is-open="opened.openedStart"
-            />
+            <p class="input-group">
+                <input type="text"
+                       class="form-control"
+                       datepicker-popup="{{config.datepickerPopupFormat}}"
+                       ng-model="data.startDate"
+                       is-open="opened.openedStart"
+                       close-on-date-selection="true"
+                       show-button-bar="true"
+                       on-open-focus="false"
+                       close-text="{{'reports.datepicker.close' | translate}}"/>
+                <span class="input-group-btn">
+			        <button type="button" class="btn btn-default" ng-click="opened.openedStart = !opened.openedStart">
+                        <i class="fa fa-calendar"></i>
+                    </button>
+		        </span>
+            </p>
         </div>
     </label>
-    <label>{{'reports.label.dateTo' | translate}}
+
+    <label>{{'reports.endDate.label' | translate}}
         <div>
-            <input
-                type="date"
-                ng-model="reportsData.endDate"
-                class="form-control"
-                datepicker-popup
-                value="{{reportsData.endDate}}"
-                is-open="opened.openedEnd"
-            />
+            <p class="input-group">
+                <input type="text"
+                       class="form-control"
+                       datepicker-popup="{{config.datepickerPopupFormat}}"
+                       ng-model="data.endDate"
+                       is-open="opened.openedEnd"
+                       close-on-date-selection="true"
+                       show-button-bar="true"
+                       on-open-focus="false"
+                       close-text="{{'reports.datepicker.close' | translate}}"/>
+                <span class="input-group-btn">
+			        <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd">
+                        <i class="fa fa-calendar"></i>
+                    </button>
+		        </span>
+            </p>
         </div>
     </label>
 

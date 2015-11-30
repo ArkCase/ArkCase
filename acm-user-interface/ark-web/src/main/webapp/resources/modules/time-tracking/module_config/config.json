@@ -8,7 +8,14 @@
             "menuItemURL": "time-tracking",
             "menuItemTitle": "Time tracking",
             "iconClass": "fa fa-clock-o",
-            "position": 100
+            "position": 130
+        },
+        {
+            "menuId": "topbar",
+            "menuItemURL": "newTimesheet",
+            "menuItemTitle": "Timesheet",
+            "iconClass": "fa fa-clock-o",
+            "position": 40
         }
         
     ],

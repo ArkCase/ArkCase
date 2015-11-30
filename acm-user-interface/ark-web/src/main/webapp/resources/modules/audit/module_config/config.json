@@ -8,7 +8,7 @@
             "menuItemURL": "audit",
             "menuItemTitle": "Audit",
             "iconClass": "fa fa-bolt",
-            "position": 70
+            "position": 140
         }
         
     ],
@@ -30,7 +30,8 @@
         {
             "id": "datepickers",
             "title": "Audits",
-            "enabled": true
+            "enabled": true,
+            "datepickerPopupFormat": "MM/dd/yyyy"
         }
    ]
 }

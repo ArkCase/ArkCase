@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.ReferencesController', ['$scope', '$window', 'UtilService', 'ValidationService', 'HelperService', 'LookupService',
-    function ($scope, $window, Util, Validator, Helper, LookupService) {
-        var z = 1;
-        return;
+angular.module('complaints').controller('Complaints.ReferencesController', ['$scope', 'UtilService', 'HelperService'
+    , 'Complaint.InfoService'
+    , function ($scope, Util, Helper, ComplaintInfoService) {
+
         $scope.$emit('req-component-config', 'references');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("references" == componentId) {
@@ -12,10 +12,16 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
             }
         });
 
-        $scope.$on('complaint-retrieved', function (e, data) {
+        $scope.$on('complaint-updated', function (e, data) {
             $scope.complaintInfo = data;
-            $scope.gridOptions.data = $scope.complaintInfo.references;
-            Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.complaintInfo.references.length);
+            var references = [];
+            _.each($scope.complaintInfo.childObjects, function (childObject) {
+                if (ComplaintInfoService.validateReferenceRecord(childObject)) {
+                    references.push(childObject);
+                }
+            });
+            $scope.gridOptions.data = references;
+            Helper.Grid.hidePagingControlsIfAllDataShown($scope, references.length);
         });
 
         $scope.onClickObjLink = function (event, rowEntity) {

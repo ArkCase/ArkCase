@@ -147,7 +147,7 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
     @Test
     public void invalidInput() throws Exception
     {
-        String notComplaintJson = "{ \"user\": \"dmiller\" }";
+        String notComplaintJson = "{ \"user\": \"dmiller\",\"className\":\"com.armedia.acm.plugins.complaint.model.Complaint\" }";
 
         Capture<Complaint> found = new Capture<>();
 

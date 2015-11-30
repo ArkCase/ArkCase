@@ -1,7 +1,10 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'ComplaintsService', 'ObjectsModelsService',
-    function ($scope, $stateParams, Store, Util, Validator, Helper, LookupService, ComplaintsService, ObjectsModelsService) {
+angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', 'UtilService'
+    , 'Object.LookupService', 'Complaint.LookupService', 'Complaint.InfoService', 'Object.ModelService'
+    , function ($scope, $stateParams, Util
+        , ObjectLookupService, ComplaintLookupService, ComplaintInfoService, ObjectModelService) {
+
         $scope.$emit('req-component-config', 'info');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("info" == componentId) {
@@ -9,22 +12,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             }
         });
 
-
-        // Obtains the dropdown menu selection options via REST calls to ArkCase
-        $scope.priorities = [];
-        var cachePriorities = new Store.SessionData(Helper.SessionCacheNames.PRIORITIES);
-        var priorities = cachePriorities.get();
-        Util.serviceCall({
-            service: LookupService.getPriorities
-            , result: priorities
-            , onSuccess: function (data) {
-                if (Validator.validatePriorities(data)) {
-                    priorities = data;
-                    cachePriorities.set(priorities);
-                    return priorities;
-                }
-            }
-        }).then(
+        ObjectLookupService.getPriorities().then(
             function (priorities) {
                 var options = [];
                 _.each(priorities, function (priority) {
@@ -34,71 +22,19 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
                 return priorities;
             }
         );
-        var z = 1;
-        return;
-        $scope.assignableUsers = [];
-        var cacheUsers = new Store.SessionData(Helper.SessionCacheNames.USERS);
-        var users = cacheUsers.get();
-        Util.serviceCall({
-            service: LookupService.getUsers
-            , result: users
-            , onSuccess: function (data) {
-                if (Validator.validateUsers(data)) {
-                    users = data;
-                    cacheUsers.set(users);
-                    return users;
-                }
-            }
-        }).then(
-            function (users) {
-                var options = [];
-                _.each(users, function (user) {
-                    var userInfo = JSON.parse(user);
-                    options.push({value: userInfo.object_id_s, text: userInfo.object_id_s});
-                });
-                $scope.assignableUsers = options;
-                return users;
-            }
-        );
 
-        $scope.owningGroups = [];
-        var cacheGroups = new Store.SessionData(Helper.SessionCacheNames.GROUPS);
-        var groups = cacheGroups.get();
-        Util.serviceCall({
-            service: LookupService.getGroups
-            , result: groups
-            , onSuccess: function (data) {
-                if (Validator.validateSolrData(data)) {
-                    var groups = data.response.docs;
-                    cacheGroups.set(groups);
-                    return groups;
-                }
-            }
-        }).then(
+        ObjectLookupService.getGroups().then(
             function (groups) {
                 var options = [];
-                _.each(groups, function (item) {
-                    options.push({value: item.name, text: item.name});
+                _.each(groups, function (group) {
+                    options.push({value: group.name, text: group.name});
                 });
                 $scope.owningGroups = options;
                 return groups;
             }
         );
 
-        $scope.complaintTypes = [];
-        var cacheComplaintTypes = new Store.SessionData(Helper.SessionCacheNames.CASE_TYPES);
-        var complaintTypes = cacheComplaintTypes.get();
-        Util.serviceCall({
-            service: LookupService.getComplaintTypes
-            , result: complaintTypes
-            , onSuccess: function (data) {
-                if (Validator.validateComplaintTypes(data)) {
-                    complaintTypes = data;
-                    cacheComplaintTypes.set(complaintTypes);
-                    return complaintTypes;
-                }
-            }
-        }).then(
+        ComplaintLookupService.getComplaintTypes().then(
             function (complaintTypes) {
                 var options = [];
                 _.forEach(complaintTypes, function (item) {
@@ -109,18 +45,28 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             }
         );
 
-        $scope.complaintSolr = null;
-        $scope.complaintInfo = null;
+
         $scope.$on('complaint-selected', function onSelectedComplaint(e, selectedComplaint) {
             $scope.complaintSolr = selectedComplaint;
         });
-        $scope.assignee = null;
-        $scope.owningGroup = null;
-        $scope.$on('complaint-retrieved', function (e, data) {
-            if (Validator.validateComplaint(data)) {
-                $scope.complaintInfo = data;
-                $scope.assignee = ObjectsModelsService.getAssignee(data);
-                $scope.owningGroup = ObjectsModelsService.getGroup(data);
+
+        var previousId = null;
+        $scope.$on('complaint-updated', function (e, data) {
+            $scope.complaintInfo = data;
+            $scope.assignee = ObjectModelService.getAssignee(data);
+            $scope.owningGroup = ObjectModelService.getGroup(data);
+            if (previousId != $stateParams.id) {
+                ComplaintLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
+                    function (approvers) {
+                        var options = [];
+                        _.each(approvers, function (approver) {
+                            options.push({id: approver.userId, name: approver.fullName});
+                        });
+                        $scope.assignees = options;
+                        return approvers;
+                    }
+                );
+                previousId = $stateParams.id;
             }
         });
 
@@ -128,33 +74,21 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
          * Persists the updated complaint metadata to the ArkComplaint data
          */
         function saveComplaint() {
-            if (Validator.validateComplaint($scope.complaintInfo)) {
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
-                Util.serviceCall({
-                    service: ComplaintsService.save
-                    , data: complaintInfo
-                    , onSuccess: function (data) {
-                        return data;
+            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            if (ComplaintInfoService.validateComplaintInfo(complaintInfo)) {
+                ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
+                    function (complaintInfo) {
+                        //update tree node tittle
+                        $scope.$emit("report-complaint-updated", complaintInfo);
+                        return complaintInfo;
                     }
-                }).then(
-                    function (successData) {
-                        //notify "complaint saved successfully" ?
-                    }
-                    , function (errorData) {
-                        //handle error
+                    , function (error) {
+                        //set error to x-editable title
+                        //update tree node tittle
+                        return error;
                     }
                 );
             }
-
-            //var complaintInfo = Util.omitNg($scope.complaintInfo);
-            //ComplaintsService.save({}, complaintInfo
-            //    ,function(successData) {
-            //        $log.debug("complaint saved successfully");
-            //    }
-            //    ,function(errorData) {
-            //        $log.error("complaint save failed");
-            //    }
-            //);
         }
 
         // Updates the ArkComplaint data when the user changes a complaint attribute
@@ -163,7 +97,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             saveComplaint();
         };
         $scope.updateOwningGroup = function () {
-            ObjectsModelsService.setGroup($scope.complaintInfo, $scope.owningGroup);
+            ObjectModelService.setGroup($scope.complaintInfo, $scope.owningGroup);
             saveComplaint();
         };
         $scope.updatePriority = function () {
@@ -173,7 +107,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             saveComplaint();
         };
         $scope.updateAssignee = function () {
-            ObjectsModelsService.setAssignee($scope.complaintInfo, $scope.assignee);
+            ObjectModelService.setAssignee($scope.complaintInfo, $scope.assignee);
             saveComplaint();
         };
         $scope.updateDueDate = function () {

@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('complaints').controller('ComplaintsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallConfigService', 'CallComplaintsService',
-    function ($scope, $stateParams, $translate, Util, CallConfigService, CallComplaintsService) {
-        var promiseGetModuleConfig = CallConfigService.getModuleConfig("complaints").then(function (config) {
+angular.module('complaints').controller('ComplaintsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'ConfigService', 'Complaint.InfoService',
+    function ($scope, $stateParams, $translate, Util, ConfigService, ComplaintInfoService) {
+        var promiseGetModuleConfig = ConfigService.getModuleConfig("complaints").then(function (config) {
             $scope.config = config;
             return config;
         });
@@ -12,7 +12,10 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
                 $scope.$broadcast('component-config', componentId, componentConfig);
             });
         });
-
+        $scope.$on('report-complaint-updated', function (e, complaintInfo) {
+            ComplaintInfoService.updateComplaintInfo(complaintInfo);
+            $scope.$broadcast('complaint-updated', complaintInfo);
+        });
 
 
         $scope.progressMsg = $translate.instant("complaints.progressNoComplaint");
@@ -31,11 +34,11 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
                 }
                 $scope.progressMsg = $translate.instant("complaints.progressLoading") + " " + id + "...";
 
-                CallComplaintsService.getComplaintInfo(id).then(
+                ComplaintInfoService.getComplaintInfo(id).then(
                     function (complaintInfo) {
                         $scope.progressMsg = null;
                         $scope.complaintInfo = complaintInfo;
-                        $scope.$broadcast('complaint-retrieved', complaintInfo);
+                        $scope.$broadcast('complaint-updated', complaintInfo);
                         return complaintInfo;
                     }
                     , function (error) {

@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'CallLookupService', 'CallCasesService', 'LookupService', 'CasesService', 'ObjectsModelsService',
-    function ($scope, $stateParams, Store, Util, Validator, Helper, CallLookupService, CallCasesService, LookupService, CasesService, ObjectsModelsService) {
+angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'UtilService'
+    , 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService'
+    , function ($scope, $stateParams, Util, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService) {
+
         $scope.$emit('req-component-config', 'info');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("info" == componentId) {
@@ -9,19 +11,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         });
 
-
-        CallLookupService.getUsers().then(
-            function (users) {
-                var options = [];
-                _.each(users, function (user) {
-                    options.push({object_id_s: user.object_id_s, name: user.name});
-                });
-                $scope.assignableUsers = options;
-                return users;
-            }
-        );
-
-        CallLookupService.getPriorities().then(
+        ObjectLookupService.getPriorities().then(
             function (priorities) {
                 var options = [];
                 _.each(priorities, function (priority) {
@@ -32,45 +22,18 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-
-        $scope.owningGroups = [];
-        var cacheGroups = new Store.SessionData(Helper.SessionCacheNames.GROUPS);
-        var groups = cacheGroups.get();
-        Util.serviceCall({
-            service: LookupService.getGroups
-            , result: groups
-            , onSuccess: function (data) {
-                if (Validator.validateSolrData(data)) {
-                    var groups = data.response.docs;
-                    cacheGroups.set(groups);
-                    return groups;
-                }
-            }
-        }).then(
+        ObjectLookupService.getGroups().then(
             function (groups) {
                 var options = [];
-                _.each(groups, function (item) {
-                    options.push({value: item.name, text: item.name});
+                _.each(groups, function (group) {
+                    options.push({value: group.name, text: group.name});
                 });
                 $scope.owningGroups = options;
                 return groups;
             }
         );
 
-        $scope.caseTypes = [];
-        var cacheCaseTypes = new Store.SessionData(Helper.SessionCacheNames.CASE_TYPES);
-        var caseTypes = cacheCaseTypes.get();
-        Util.serviceCall({
-            service: LookupService.getCaseTypes
-            , result: caseTypes
-            , onSuccess: function (data) {
-                if (Validator.validateCaseTypes(data)) {
-                    caseTypes = data;
-                    cacheCaseTypes.set(caseTypes);
-                    return caseTypes;
-                }
-            }
-        }).then(
+        CaseLookupService.getCaseTypes().then(
             function (caseTypes) {
                 var options = [];
                 _.forEach(caseTypes, function (item) {
@@ -81,41 +44,51 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        $scope.caseSolr = null;
-        $scope.caseInfo = null;
         $scope.$on('case-selected', function onSelectedCase(e, selectedCase) {
             $scope.caseSolr = selectedCase;
         });
-        $scope.assignee = null;
-        $scope.owningGroup = null;
-        $scope.$on('case-retrieved', function(e, data){
+
+        var previousId = null;
+        $scope.$on('case-updated', function (e, data) {
             $scope.caseInfo = data;
-            $scope.assignee = ObjectsModelsService.getAssignee(data);
-            $scope.owningGroup = ObjectsModelsService.getGroup(data);
+            $scope.owningGroup = ObjectModelService.getGroup(data);
+            $scope.assignee = ObjectModelService.getAssignee(data);
+            if (previousId != $stateParams.id) {
+                CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
+                    function (approvers) {
+                        var options = [];
+                        _.each(approvers, function (approver) {
+                            options.push({id: approver.userId, name: approver.fullName});
+                        });
+                        $scope.assignees = options;
+                        return approvers;
+                    }
+                );
+                previousId = $stateParams.id;
+            }
         });
 
         /**
          * Persists the updated casefile metadata to the ArkCase database
          */
         function saveCase() {
-            if (CallCasesService.validateCaseInfo($scope.caseInfo)) {
-                var caseInfo = Util.omitNg($scope.caseInfo);
-                Util.serviceCall({
-                    service: CasesService.save
-                    , data: caseInfo
-                    , onSuccess: function (data) {
-                        return data;
+            var caseInfo = Util.omitNg($scope.caseInfo);
+            if (CaseInfoService.validateCaseInfo(caseInfo)) {
+                CaseInfoService.saveCaseInfo(caseInfo).then(
+                    function (caseInfo) {
+                        //update tree node tittle
+                        $scope.$emit("report-case-updated", caseInfo);
+                        return caseInfo;
                     }
-                }).then(
-                    function (successData) {
-                        //notify "case saved successfully" ?
-                    }
-                    , function (errorData) {
-                        //handle error
+                    , function (error) {
+                        //set error to x-editable title
+                        //update tree node tittle
+                        return error;
                     }
                 );
             }
         }
+
 
         // Updates the ArkCase database when the user changes a case attribute
         // in a case top bar menu item and clicks the save check button
@@ -123,7 +96,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             saveCase();
         };
         $scope.updateOwningGroup = function() {
-            ObjectsModelsService.setGroup($scope.caseInfo, $scope.owningGroup);
+            ObjectModelService.setGroup($scope.caseInfo, $scope.owningGroup);
             saveCase();
         };
         $scope.updatePriority = function() {
@@ -133,7 +106,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             saveCase();
         };
         $scope.updateAssignee = function() {
-            ObjectsModelsService.setAssignee($scope.caseInfo, $scope.assignee);
+            ObjectModelService.setAssignee($scope.caseInfo, $scope.assignee);
             saveCase();
         };
         $scope.updateDueDate = function() {

@@ -8,10 +8,9 @@
  *
  * The Reports module's date pickers controller
  */
-angular.module('cases').controller('Reports.DatepickersController', ['$scope',
+angular.module('reports').controller('Reports.DatepickersController', ['$scope',
     function ($scope) {
         $scope.$on('component-config', applyConfig);
-        $scope.$on('reports-data-retrieved',updateData);
         $scope.$emit('req-component-config', 'datepickers');
 
         $scope.config = null;
@@ -24,15 +23,5 @@ angular.module('cases').controller('Reports.DatepickersController', ['$scope',
         $scope.opened = {};
         $scope.opened.openedStart = false;
         $scope.opened.openedEnd = false;
-
-        $scope.open = function ($event, datepicker) {
-            $event.stopPropagation();
-            $scope.opened[datepicker] = true;
-        };
-
-        function updateData(e, reportsData){
-            $scope.reportsData = reportsData;
-        }
-
     }
 ]);

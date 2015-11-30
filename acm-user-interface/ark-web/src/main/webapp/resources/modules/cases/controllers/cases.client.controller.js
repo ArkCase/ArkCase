@@ -1,21 +1,8 @@
 'use strict';
 
-//
-//jwu: need ngdoc in controller ???
-//
-
-///**
-// * @ngdoc controller
-// * @name cases.controller:CasesController
-// *
-// * @description
-// * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/cases.client.controller.js modules/cases/controllers/cases.client.controller.js}
-// *
-// * The Cases module main controller
-// */
-angular.module('cases').controller('CasesController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallConfigService', 'CallCasesService',
-    function ($scope, $stateParams, $translate, Util, CallConfigService, CallCasesService) {
-        var promiseGetModuleConfig = CallConfigService.getModuleConfig("cases").then(function (config) {
+angular.module('cases').controller('CasesController', ['$scope', '$stateParams', '$translate', 'UtilService', 'ConfigService', 'Case.InfoService',
+    function ($scope, $stateParams, $translate, Util, ConfigService, CaseInfoService) {
+        var promiseGetModuleConfig = ConfigService.getModuleConfig("cases").then(function (config) {
             $scope.config = config;
             return config;
         });
@@ -24,6 +11,10 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
                 var componentConfig = _.find(config.components, {id: componentId});
                 $scope.$broadcast('component-config', componentId, componentConfig);
             });
+        });
+        $scope.$on('report-case-updated', function (e, caseInfo) {
+            CaseInfoService.updateCaseInfo(caseInfo);
+            $scope.$broadcast('case-updated', caseInfo);
         });
 
 
@@ -44,11 +35,11 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
                 }
                 $scope.progressMsg = $translate.instant("cases.progressLoading") + " " + id + "...";
 
-                CallCasesService.getCaseInfo(id).then(
+                CaseInfoService.getCaseInfo(id).then(
                     function (caseInfo) {
                         $scope.progressMsg = null;
                         $scope.caseInfo = caseInfo;
-                        $scope.$broadcast('case-retrieved', caseInfo);
+                        $scope.$broadcast('case-updated', caseInfo);
                         return caseInfo;
                     }
                     , function (error) {

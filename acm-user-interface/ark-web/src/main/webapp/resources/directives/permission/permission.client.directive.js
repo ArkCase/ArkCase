@@ -30,8 +30,8 @@
  </file>
  </example>
  */
-angular.module('directives').directive('permission', ['$q', 'PermissionsService',
-    function ($q, PermissionsService) {
+angular.module('directives').directive('permission', ['$q', '$log', 'PermissionsService',
+    function ($q, $log, PermissionsService) {
         return {
             priority: 100,
             restrict: 'A',
@@ -92,7 +92,7 @@ angular.module('directives').directive('permission', ['$q', 'PermissionsService'
                             element.attr('permission-disabled', false);
                         }
                     }, function error() {
-                        debugger;
+                        $log.error('Can\'t get permission info for action ' + actionName);
                     }
                 );
         };

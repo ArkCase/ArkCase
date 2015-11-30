@@ -250,17 +250,16 @@ iframe {
 
 /* Search Facets */
 
-
 .left-sidebar ul.list-unstyled li div {
-    margin:0px;
+    margin: 0px;
 }
 
 .left-sidebar ul.list-unstyled li {
-	margin: 10px;
+    margin: 10px;
 }
 
-.left-sidebar ul.list-unstyled li ul li{
-	margin: 0px;
+.left-sidebar ul.list-unstyled li ul li {
+    margin: 0px;
 }
 
 .left-sidebar ul.list-unstyled li ul.list-unstyled li label {
@@ -292,7 +291,6 @@ iframe {
     border-bottom: 1px solid #e1e6ef;
     border-left: 0px;
     border-right: 0px;
-    width: 100%;
     z-index: 1000;
     position: relative;
 }
@@ -348,6 +346,7 @@ iframe {
     color: white;
     background-color: #177bbb;
 }
+
 .module-header .well-sm.pull-right input {
     width: 200px;
     border: 0px;
@@ -369,12 +368,11 @@ iframe {
 }
 
 .module-content .left-sidebar header.header .btn-group.select.pull-right {
-	position: relative;
-	top: -90px;
-	z-index: 20000;
-	
-}
+    position: relative;
+    top: -90px;
+    z-index: 20000;
 
+}
 
 /* Content Body */
 
@@ -382,7 +380,6 @@ iframe {
     padding-left: 10px;
     padding-right: 500px;
     padding-bottom: 70px;
-    margin-top: 72px;
 }
 
 .module-content .content-body .well-sm {
@@ -574,7 +571,6 @@ thead {
     background-color: #ff7373;
     color: #fff;
 }
-
 
 /* Modal Window Columns */
 
@@ -782,4 +778,22 @@ a.editable.editable-click.editable-hide {
 /* Style of invalid fields */
 input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
     border-color: #ff7373;
+}
+
+/* Dropdowns in the left sidebar (ie. datepicker) */ 
+
+.left-sidebar label ul.dropdown-menu {
+	border-radius: 0px;
+	margin: -2px 0px 0px 0px;
+	padding: 5px;
+}
+
+ .left-sidebar label ul.dropdown-menu button{
+	border: 0px;
+	border-radius: 0px;
+}
+
+.ace_editor {
+    height: 500px;
+    border: 1px solid #cbd5dd;
 }

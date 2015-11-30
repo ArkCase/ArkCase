@@ -10,155 +10,197 @@
 
  * LookupService contains functions to lookup data (typically static data).
  */
-angular.module('services').factory('LookupService', ['$resource',
-    function ($resource) {
-        return $resource('proxy/arkcase/api/latest/plugin', {}, {
+angular.module('services').factory('LookupService', ['$resource', 'StoreService', 'UtilService', 'Object.ListService'
+    , function ($resource, Store, Util, ObjectListService) {
+        var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
 
             getConfig: {
                 url: "proxy/arkcase/api/latest/service/config/:name"
                 , method: "GET"
                 , cache: true
             }
-            , getCaseTypes: {
-                url: 'proxy/arkcase/api/latest/plugin/casefile/caseTypes'
-                , cache: true
-                , isArray: true
-            }
 
             /**
              * @ngdoc method
-             * @name getUsers
+             * @name _getUsers
              * @methodOf services.service:LookupService
              *
              * @description
              * Query list of users
              *
-             * @returns {Object} An array returned by $resource
+             * @returns {Object} An object returned by $resource
              */
-            , getUsers: {
+            , _getUsers: {
                 url: "proxy/arkcase/api/latest/plugin/search/advanced/USER/all"
                 , method: "GET"
                 , cache: true
                 , isArray: true
             }
-            , getUsersBasic: {
+
+            /**
+             * @ngdoc method
+             * @name _getUsersBasic
+             * @methodOf services.service:LookupService
+             *
+             * @description
+             * Query users from SOLR
+             *
+             * @returns {Object} An object returned by $resource
+             */
+            , _getUsersBasic: {
                 url: "proxy/arkcase/api/latest/plugin/search/USER?n=1000&s=name asc"
                 , method: "GET"
                 , cache: true
             }
 
-            /**
-             * @ngdoc method
-             * @name get
-             * @methodOf services.service:LookupService
-             *
-             * @description
-             * Query list of priorities
-             *
-             * @returns {Object} An array returned by $resource
-             */
-            , getPriorities: {
-                url: "proxy/arkcase/api/latest/plugin/complaint/priorities"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-            }
-            , getGroups: {
-                url: "proxy/arkcase/api/latest/service/functionalaccess/groups/acm-complaint-approve?n=1000&s=name asc"
-                , method: "GET"
-                , cache: true
-            }
-            , getPersonTypes: {
-                url: "proxy/arkcase/api/latest/plugin/person/types"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-            }
-            , getParticipantTypes: {
-                url: "modules_config/config/modules/cases/resources/participantTypes.json"
-                , method: "GET"
-                , cache: true
-            }
-            , getPersonTitles: {
-                url: "modules_config/config/modules/cases/resources/personTitles.json"
-                , method: "GET"
-                , cache: true
-            }
-            , getContactMethodTypes: {
-                url: "modules_config/config/modules/cases/resources/contactMethodTypes.json"
-                , method: "GET"
-                , cache: true
-            }
-            , getOrganizationTypes: {
-                url: "modules_config/config/modules/cases/resources/organizationTypes.json"
-                , method: "GET"
-                , cache: true
-            }
-            , getAddressTypes: {
-                url: "modules_config/config/modules/cases/resources/addressTypes.json"
-                , method: "GET"
-                , cache: true
-            }
-            , getAliasTypes: {
-                url: "modules_config/config/modules/cases/resources/aliasTypes.json"
-                , method: "GET"
-                , cache: true
-            }
-            , getSecurityTagTypes: {
-                url: "modules_config/config/modules/cases/resources/securityTagTypes.json"
-                , method: "GET"
-                , cache: true
-            }
-
-            , getObjectTypes: {
-                url: "modules_config/config/modules/cases/resources/objectTypes.json"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-            }
-
-            /**
-             * @ngdoc method
-             * @name getFileTypes
-             * @methodOf services.service:LookupService
-             *
-             * @description
-             * Query list of file types
-             *
-             * @returns {Object} An array returned by $resource
-             */
-            , getFileTypes: {
-                url: "modules_config/config/modules/cases/resources/fileTypes.json"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-            }
-
-            /**
-             * @ngdoc method
-             * @name getFormTypes
-             * @methodOf services.service:LookupService
-             *
-             * @description
-             * Query list of form types
-             *
-             * @returns {Object} An array returned by $resource
-             */
-            , getFormTypes: {
-                url: "proxy/arkcase/api/latest/plugin/admin/plainforms/:objType"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-            }
-
-            , getCorrespondenceForms: {
-                url: "modules_config/config/modules/cases/resources/correspondenceForms.json"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-            }
-
-
         });
+
+
+        Service.SessionCacheNames = {
+            USERS: "AcmUsers"
+            , USERS_BASIC: "AcmUsersBasic"
+            , USER_FULL_NAMES: "AcmUserFullNames"
+        };
+        Service.CacheNames = {};
+
+
+        /**
+         * @ngdoc method
+         * @name getUsers
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Query list of users
+         *
+         * @returns {Object} Promise
+         */
+        Service.getUsers = function () {
+            var cacheUsers = new Store.SessionData(Service.SessionCacheNames.USERS);
+            var users = cacheUsers.get();
+            return Util.serviceCall({
+                service: Service._getUsers
+                , result: users
+                , onSuccess: function (data) {
+                    if (Service.validateUsersRaw(data)) {
+                        users = [];
+                        _.each(data, function (item) {
+                            users.push(Util.goodJsonObj(item));
+                        });
+                        cacheUsers.set(users);
+                        return users;
+                    }
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name getUserFullNames
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Query list of user full names
+         *
+         * @returns {Object} Promise
+         */
+        Service.getUserFullNames = function () {
+            var cacheUserFullNames = new Store.SessionData(Service.SessionCacheNames.USER_FULL_NAMES);
+            var userFullNames = cacheUserFullNames.get();
+            return Util.serviceCall({
+                service: Service._getUsers
+                , result: userFullNames
+                , onSuccess: function (data) {
+                    if (Service.validateUsersRaw(data)) {
+                        userFullNames = [];
+                        var arr = data;
+                        for (var i = 0; i < arr.length; i++) {
+                            var obj = Util.goodJsonObj(arr[i]);
+                            if (obj) {
+                                var user = {};
+                                user.id = Util.goodValue(obj.object_id_s);
+                                user.name = Util.goodValue(obj.name);
+                                userFullNames.push(user);
+                            }
+                        }
+                        cacheUserFullNames.set(userFullNames);
+                        return userFullNames;
+                    }
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name validateUsersRaw
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Validate user list data in with each entry as stringify'ed JSON.
+         *
+         * @param {Object} data  Data to be validated
+         *
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validateUsersRaw = function (data) {
+            if (!Util.isArray(data)) {
+                return false;
+            }
+            return true;
+        };
+
+
+        /**
+         * @ngdoc method
+         * @name getUsersBasic
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Query list of users
+         *
+         * @returns {Object} Promise
+         */
+        Service.getUsersBasic = function () {
+            var cacheUsers = new Store.SessionData(Service.SessionCacheNames.USERS_BASIC);
+            var users = cacheUsers.get();
+            return Util.serviceCall({
+                service: Service._getUsersBasic
+                , result: users
+                , onSuccess: function (data) {
+                    if (Service.validateUsersBasic(data)) {
+                        users = [];
+                        _.each(data.response.docs, function (doc) {
+                            var user = {};
+                            user.id = Util.goodValue(doc.object_id_s, 0);
+                            user.name = Util.goodValue(doc.name);
+                            users.push(user);
+
+                        });
+                        cacheUsers.set(users);
+                        return users;
+                    }
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name validateUsersBasic
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Validate users data
+         *
+         * @param {Object} data  Data to be validated
+         *
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validateUsersBasic = function (data) {
+            if (!ObjectListService.validateSolrData(data)) {
+                return false;
+            }
+            return true;
+        };
+
+        return Service;
     }
 ]);

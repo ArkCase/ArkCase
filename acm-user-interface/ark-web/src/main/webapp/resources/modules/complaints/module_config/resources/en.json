@@ -12,13 +12,10 @@
   },
   "complaints.comp.actions": {
     "restrict": "Restrict?",
-    "new.button": "New",
-    "edit.button": "Edit",
-    "status.button": "Change Complaint Status",
-    "reinvestigate.button": "Reinvestigate",
+    "new.button": "New Complaint",
+    "close.button": "Close Complaint",
     "subscribe.button": "Subscribe",
-    "merge.button": "Merge",
-    "split.button": "Split"
+    "unsubscribe.button": "Unsubscribe"
   },
   "complaints.comp.details": {
     "title": "Details",
@@ -90,6 +87,16 @@
     "table.columns": {
       "type": "Type",
       "name": "Name"
+    }
+  },
+  "complaints.comp.locations": {
+    "title": "Locations",
+    "table.columns": {
+      "address": "Address",
+      "type": "Type",
+      "city": "City",
+      "state": "State",
+      "zip": "Zip"
     }
   },
   "complaints.comp.notes": {

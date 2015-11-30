@@ -11,8 +11,8 @@
  * This service package contains various commonly used miscellaneous help functions.
  */
 
-angular.module('services').factory('HelperService', ['$q', '$window', 'StoreService', 'UtilService', 'ValidationService', 'LookupService', 'Authentication',
-    function ($q, $window, Store, Util, Validator, LookupService, Authentication) {
+angular.module('services').factory('HelperService', ['$q', '$window', 'UtilService', 'LookupService', 'Object.LookupService',
+    function ($q, $window, Util, LookupService, ObjectLookupService) {
         var Helper = {
             ObjectTypes: {
                 CASE_FILE: "CASE_FILE"
@@ -35,61 +35,61 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                 , ALIAS_TYPES: "aliasTypes"
                 , SECURITY_TAG_TYPES: "securityTagTypes"
             }
-            , SessionCacheNames: {
-                USER_INFO: "AcmUserInfo"
-                , USER_FULL_NAMES: "AcmUserFullNames"
-                , USERS: "AcmUsers"
-                , GROUPS: "AcmGroups"
-                , PRIORITIES: "AcmPriorities"
-                , OBJECT_TYPES: "AcmObjectTypes"
-                , FILE_TYPES: "AcmFileTypes"
-                , FORM_TYPES: "AcmFormTypes"
-                , PARTICIPANT_TYPES: "AcmParticipantTypes"
-                , PARTICIPANT_USERS: "AcmParticipantUsers"
-                , PARTICIPANT_GROUPS: "AcmParticipantGroups"
-                , PERSON_TYPES: "AcmPersonTypes"
-                , CONTACT_METHOD_TYPES: "AcmContactMethodTypes"
-                , ORGANIZATION_TYPES: "AcmOrganizationTypes"
-                , ADDRESS_TYPES: "AcmAddressTypes"
-                , ALIAS_TYPES: "AcmAliasTypes"
-                , SECURITY_TAG_TYPES: "AcmSecurityTagTypes"
-
-                , CASE_CONFIG: "AcmCaseConfig"
-                , CASE_TYPES: "AcmCaseTypes"
-                , CASE_CORRESPONDENCE_FORMS: "AcmCaseCorrespondenceForms"
-
-                , COMPLAINT_CONFIG: "AcmComplaintConfig"
-                , COMPLAINT_TYPES: "AcmComplaintTypes"
-                , COMPLAINT_CORRESPONDENCE_FORMS: "AcmComplaintCorrespondenceForms"
-
-                , TASK_CONFIG: "AcmTaskConfig"
-                , TASK_TYPES: "AcmTaskTypes"
-                , TASK_CORRESPONDENCE_FORMS: "AcmTaskCorrespondenceForms"
-
-            }
-            , CacheNames: {
-                MY_TASKS: "MyTasks"
-                , CASE_LIST: "CaseList"
-                , CASE_INFO: "CaseInfo"
-                , CASE_HISTORY_DATA: "CaseHistoryData"
-                , CASE_CORRESPONDENCE_DATA: "CaseCorrespondenceData"
-                , CASE_NOTES: "CaseNotes"
-                , CASE_COST_SHEETS: "CaseCostSheets"
-                , CASE_TIME_SHEETS: "CaseTimeSheets"
-
-                , COMPLAINT_LIST: "ComplaintList"
-                , COMPLAINT_INFO: "ComplaintInfo"
-                , COMPLAINT_HISTORY_DATA: "ComplaintHistoryData"
-                , COMPLAINT_CORRESPONDENCE_DATA: "ComplaintCorrespondenceData"
-                , COMPLAINT_NOTES: "ComplaintNotes"
-                , COMPLAINT_COST_SHEETS: "ComplaintCostSheets"
-                , COMPLAINT_TIME_SHEETS: "ComplaintTimeSheets"
-
-                , TASK_LIST: "TaskList"
-                , TASK_INFO: "TaskInfo"
-                , TASK_HISTORY_DATA: "TaskHistoryData"
-                , TASK_NOTES: "TaskNotes"
-            }
+            //, SessionCacheNames: {
+            //    USER_INFO: "AcmUserInfo"
+            //    , USER_FULL_NAMES: "AcmUserFullNames"
+            //    , USERS: "AcmUsers"
+            //    , GROUPS: "AcmGroups"
+            //    , PRIORITIES: "AcmPriorities"
+            //    , OBJECT_TYPES: "AcmObjectTypes"
+            //    , FILE_TYPES: "AcmFileTypes"
+            //    , FORM_TYPES: "AcmFormTypes"
+            //    , PARTICIPANT_TYPES: "AcmParticipantTypes"
+            //    , PARTICIPANT_USERS: "AcmParticipantUsers"
+            //    , PARTICIPANT_GROUPS: "AcmParticipantGroups"
+            //    , PERSON_TYPES: "AcmPersonTypes"
+            //    , CONTACT_METHOD_TYPES: "AcmContactMethodTypes"
+            //    , ORGANIZATION_TYPES: "AcmOrganizationTypes"
+            //    , ADDRESS_TYPES: "AcmAddressTypes"
+            //    , ALIAS_TYPES: "AcmAliasTypes"
+            //    , SECURITY_TAG_TYPES: "AcmSecurityTagTypes"
+            //
+            //    , CASE_CONFIG: "AcmCaseConfig"
+            //    , CASE_TYPES: "AcmCaseTypes"
+            //    , CASE_CORRESPONDENCE_FORMS: "AcmCaseCorrespondenceForms"
+            //
+            //    , COMPLAINT_CONFIG: "AcmComplaintConfig"
+            //    , COMPLAINT_TYPES: "AcmComplaintTypes"
+            //    , COMPLAINT_CORRESPONDENCE_FORMS: "AcmComplaintCorrespondenceForms"
+            //
+            //    , TASK_CONFIG: "AcmTaskConfig"
+            //    , TASK_TYPES: "AcmTaskTypes"
+            //    , TASK_CORRESPONDENCE_FORMS: "AcmTaskCorrespondenceForms"
+            //
+            //}
+            //, CacheNames: {
+            //    MY_TASKS: "MyTasks"
+            //    , CASE_LIST: "CaseList"
+            //    , CASE_INFO: "CaseInfo"
+            //    , CASE_HISTORY_DATA: "CaseHistoryData"
+            //    , CASE_CORRESPONDENCE_DATA: "CaseCorrespondenceData"
+            //    , CASE_NOTES: "CaseNotes"
+            //    , CASE_COST_SHEETS: "CaseCostSheets"
+            //    , CASE_TIME_SHEETS: "CaseTimeSheets"
+            //
+            //    , COMPLAINT_LIST: "ComplaintList"
+            //    , COMPLAINT_INFO: "ComplaintInfo"
+            //    , COMPLAINT_HISTORY_DATA: "ComplaintHistoryData"
+            //    , COMPLAINT_CORRESPONDENCE_DATA: "ComplaintCorrespondenceData"
+            //    , COMPLAINT_NOTES: "ComplaintNotes"
+            //    , COMPLAINT_COST_SHEETS: "ComplaintCostSheets"
+            //    , COMPLAINT_TIME_SHEETS: "ComplaintTimeSheets"
+            //
+            //    , TASK_LIST: "TaskList"
+            //    , TASK_INFO: "TaskInfo"
+            //    , TASK_HISTORY_DATA: "TaskHistoryData"
+            //    , TASK_NOTES: "TaskNotes"
+            //}
 
             /**
              * @ngdoc method
@@ -116,28 +116,28 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
             }
 
             /**
-             * @ngdoc method
-             * @name getUserInfo
-             * @methodOf services.service:HelperService
+             * ngdoc method
+             * name getUserInfo
+             * methodOf services.service:HelperService
              *
              * @description
              * Retrieves current login user info
              */
-            , getUserInfo: function () {
-                var cacheUserInfo = new Store.SessionData(Helper.SessionCacheNames.USER_INFO);
-                var userInfo = cacheUserInfo.get();
-                return Util.serviceCall({
-                    service: Authentication.queryUserInfo
-                    , result: userInfo
-                    , onSuccess: function (data) {
-                        if (Validator.validateUserInfo(data)) {
-                            userInfo = data;
-                            cacheUserInfo.set(userInfo);
-                            return userInfo;
-                        }
-                    }
-                });
-            }
+            //, getUserInfo: function () {
+            //    var cacheUserInfo = new Store.SessionData(Helper.SessionCacheNames.USER_INFO);
+            //    var userInfo = cacheUserInfo.get();
+            //    return Util.serviceCall({
+            //        service: Authentication.queryUserInfo
+            //        , result: userInfo
+            //        , onSuccess: function (data) {
+            //            if (Validator.validateUserInfo(data)) {
+            //                userInfo = data;
+            //                cacheUserInfo.set(userInfo);
+            //                return userInfo;
+            //            }
+            //        }
+            //    });
+            //}
 
             /**
              * @ngdoc service
@@ -198,6 +198,7 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                     scope.gridOptions.paginationPageSizes = config.paginationPageSizes;
                     scope.gridOptions.paginationPageSize = config.paginationPageSize;
                     scope.gridOptions.enableFiltering = config.enableFiltering;
+                    scope.gridOptions.enableSorting = config.enableSorting;
 
                     var d = $q.defer();
                     scope.gridOptions.promiseRegisterApi = d.promise;
@@ -340,28 +341,33 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                  * Go to a page that show the specified ArkCase Object (Case, Complaint, Document, etc.)
                  */
                 , showObject: function (scope, objType, objId) {
-                    var cacheObjectTypes = new Store.SessionData(Helper.SessionCacheNames.OBJECT_TYPES);
-                    var objectTypes = cacheObjectTypes.get();
-                    var promiseObjectTypes = Util.serviceCall({
-                        service: LookupService.getObjectTypes
-                        , result: cacheObjectTypes
-                        , onSuccess: function (data) {
-                            if (Validator.validateObjectTypes(data)) {
-                                objectTypes = [];
-                                _.forEach(data, function (item) {
-                                    objectTypes.push(item);
-                                });
-                                cacheObjectTypes.set(objectTypes);
-                                return objectTypes;
-                            }
-                        }
-                    }).then(
+                    //var cacheObjectTypes = new Store.SessionData(Helper.SessionCacheNames.OBJECT_TYPES);
+                    //var objectTypes = cacheObjectTypes.get();
+                    //var promiseObjectTypes = Util.serviceCall({
+                    //    service: LookupService.getObjectTypes
+                    //    , result: objectTypes
+                    //    , onSuccess: function (data) {
+                    //        if (Validator.validateObjectTypes(data)) {
+                    //            objectTypes = [];
+                    //            _.forEach(data, function (item) {
+                    //                objectTypes.push(item);
+                    //            });
+                    //            cacheObjectTypes.set(objectTypes);
+                    //            return objectTypes;
+                    //        }
+                    //    }
+                    //}).then(
+                    //    function (objectTypes) {
+                    //        scope.objectTypes = objectTypes;
+                    //        return objectTypes;
+                    //    }
+                    //);
+                    var promiseObjectTypes = ObjectLookupService.getObjectTypes().then(
                         function (objectTypes) {
                             scope.objectTypes = objectTypes;
                             return objectTypes;
                         }
                     );
-
                     promiseObjectTypes.then(function (data) {
                         var found = _.find(scope.objectTypes, {type: objType});
                         if (found) {
@@ -383,34 +389,38 @@ angular.module('services').factory('HelperService', ['$q', '$window', 'StoreServ
                  * Get list of user full names
                  */
                 , getUsers: function (scope) {
-                    var cacheUserFullNames = new Store.SessionData(Helper.SessionCacheNames.USER_FULL_NAMES);
-                    var userFullNames = cacheUserFullNames.get();
-                    return Util.serviceCall({
-                        service: LookupService.getUsers
-                        , result: userFullNames
-                        , onSuccess: function (data) {
-                            if (Util.isArray(data)) {
-                                userFullNames = [];
-                                var arr = data;
-                                for (var i = 0; i < arr.length; i++) {
-                                    var obj = Util.goodJsonObj(arr[i]);
-                                    if (obj) {
-                                        var user = {};
-                                        user.id = Util.goodValue(obj.object_id_s);
-                                        user.name = Util.goodValue(obj.name);
-                                        userFullNames.push(user);
-                                    }
-                                }
-                                cacheUserFullNames.set(userFullNames);
-                                return userFullNames;
-                            }
-                        }
-                    }).then(
-                        function (userFullNames) {
-                            scope.userFullNames = userFullNames;
-                            return userFullNames;
-                        }
-                    );
+                    return LookupService.getUserFullNames().then(function (userFullNames) {
+                        scope.userFullNames = userFullNames;
+                        return userFullNames;
+                    });
+                    //var cacheUserFullNames = new Store.SessionData(Helper.SessionCacheNames.USER_FULL_NAMES);
+                    //var userFullNames = cacheUserFullNames.get();
+                    //return Util.serviceCall({
+                    //    service: LookupService.getUsers
+                    //    , result: userFullNames
+                    //    , onSuccess: function (data) {
+                    //        if (Util.isArray(data)) {
+                    //            userFullNames = [];
+                    //            var arr = data;
+                    //            for (var i = 0; i < arr.length; i++) {
+                    //                var obj = Util.goodJsonObj(arr[i]);
+                    //                if (obj) {
+                    //                    var user = {};
+                    //                    user.id = Util.goodValue(obj.object_id_s);
+                    //                    user.name = Util.goodValue(obj.name);
+                    //                    userFullNames.push(user);
+                    //                }
+                    //            }
+                    //            cacheUserFullNames.set(userFullNames);
+                    //            return userFullNames;
+                    //        }
+                    //    }
+                    //}).then(
+                    //    function (userFullNames) {
+                    //        scope.userFullNames = userFullNames;
+                    //        return userFullNames;
+                    //    }
+                    //);
                 }
 
                 /**

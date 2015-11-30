@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$translate', 'StoreService', 'UtilService', 'CallConfigService', 'CallTasksService',
-    function ($scope, $stateParams, $translate, Store, Util, CallConfigService, CallTasksService) {
-        var promiseGetModuleConfig = CallConfigService.getModuleConfig("tasks").then(function (config) {
+angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$translate', 'StoreService', 'UtilService', 'ConfigService', 'Task.InfoService',
+    function ($scope, $stateParams, $translate, Store, Util, ConfigService, TaskInfoService) {
+        var promiseGetModuleConfig = ConfigService.getModuleConfig("tasks").then(function (config) {
             $scope.config = config;
             return config;
         });
@@ -12,7 +12,10 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 $scope.$broadcast('component-config', componentId, componentConfig);
             });
         });
-
+        $scope.$on('report-task-updated', function (e, taskInfo) {
+            TaskInfoService.updateTaskInfo(taskInfo);
+            $scope.$broadcast('task-updated', taskInfo);
+        });
 
         $scope.progressMsg = $translate.instant("tasks.progressNoTask");
         $scope.$on('req-select-task', function (e, selectedTask) {
@@ -32,11 +35,11 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
                 }
                 $scope.progressMsg = $translate.instant("tasks.progressLoading") + " " + id + "...";
 
-                CallTasksService.getTaskInfo(id).then(
+                TaskInfoService.getTaskInfo(id).then(
                     function (taskInfo) {
                         $scope.progressMsg = null;
                         $scope.taskInfo = taskInfo;
-                        $scope.$broadcast('task-retrieved', taskInfo);
+                        $scope.$emit("report-task-updated", taskInfo);
                         return taskInfo;
                     }
                     , function (error) {

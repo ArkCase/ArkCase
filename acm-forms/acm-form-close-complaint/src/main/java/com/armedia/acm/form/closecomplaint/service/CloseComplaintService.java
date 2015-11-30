@@ -45,6 +45,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	private ApplicationEventPublisher applicationEventPublisher;
 	private AcmPluginManager acmPluginManager;
 	private FunctionalAccessService functionalAccessService;
+	private CloseComplaintRequestFactory closeComplaintRequestFactory;
 
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
@@ -78,7 +79,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		String mode = getRequest().getParameter("mode");
 		
 		// Convert XML data to Object
-		CloseComplaintForm form = (CloseComplaintForm) convertFromXMLToObject(cleanXML(xml), CloseComplaintForm.class);
+		CloseComplaintForm form = (CloseComplaintForm) convertFromXMLToObject(cleanXML(xml), getFormClass());
 		
 		if (form == null){
 			LOG.warn("Cannot unmarshall Close Complaint Form.");
@@ -98,8 +99,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 			return true;
 		}
 
-        CloseComplaintRequestFactory factory = new CloseComplaintRequestFactory();
-        CloseComplaintRequest closeComplaintRequest = factory.fromFormXml(form, getAuthentication());
+        CloseComplaintRequest closeComplaintRequest = getCloseComplaintRequestFactory().fromFormXml(form, getAuthentication());
         
         if ("edit".equals(mode)){
         	String requestId = getRequest().getParameter("requestId");
@@ -164,7 +164,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		{
 			information.setDate(new Date());
 		}
-		information.setResolveOptions(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".dispositions"), ","));
+		information.setResolveOptions(convertToList((String) getProperties().get(getFormName() + ".dispositions"), ","));
 		
 		ReferExternal referExternal = new ReferExternal();
 		if (!"edit".equals(mode))
@@ -172,7 +172,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 			referExternal.setDate(new Date());
 		}
 		ContactMethod contact = new ContactMethod();
-		contact.setTypes(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".deviceTypes"), ","));
+		contact.setTypes(convertToList((String) getProperties().get(getFormName() + ".deviceTypes"), ","));
 		referExternal.setContact(contact);
 		
 		closeComplaint.setInformation(information);
@@ -214,6 +214,12 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
     {
         return FrevvoFormName.CLOSE_COMPLAINT;
     }
+
+	@Override
+	public Class<?> getFormClass()
+	{
+		return CloseComplaintForm.class;
+	}
 
 	/**
 	 * @return the complaintDao
@@ -284,5 +290,15 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	public Object convertToFrevvoForm(Object obj, Object form) {
 		// Implementation no needed so far
 		return null;
+	}
+
+	public CloseComplaintRequestFactory getCloseComplaintRequestFactory()
+	{
+		return closeComplaintRequestFactory;
+	}
+
+	public void setCloseComplaintRequestFactory(CloseComplaintRequestFactory closeComplaintRequestFactory)
+	{
+		this.closeComplaintRequestFactory = closeComplaintRequestFactory;
 	}
 }
