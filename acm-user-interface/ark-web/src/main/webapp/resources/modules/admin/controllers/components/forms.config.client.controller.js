@@ -1,7 +1,10 @@
 'use strict';
 
-angular.module('admin').controller('Admin.FormsConfigController', ['$scope', '$state', 'Admin.FormConfigService', 'HelperService', 'MessageService', '$translate',
-    function ($scope, $state, FormConfigService, Helper, messageService, $translate) {
+angular.module('admin').controller('Admin.FormsConfigController', ['$scope', '$state', 'Admin.FormConfigService', 'Helper.UiGridService', 'MessageService', '$translate',
+    function ($scope, $state, FormConfigService, HelperUiGridService, messageService, $translate) {
+
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
         $scope.gridOptions = {
             enableColumnResizing: true,
             enableRowSelection: true,
@@ -18,7 +21,7 @@ angular.module('admin').controller('Admin.FormsConfigController', ['$scope', '$s
             var columnDef = addEditColumn();
             columnDefs.push(columnDef);
 
-            Helper.Grid.addDeleteButton(columnDefs, "grid.appScope.deleteRow(row.entity)");
+            gridHelper.addDeleteButton(columnDefs, "grid.appScope.deleteRow(row.entity)");
 
             $scope.gridOptions.columnDefs = columnDefs;
             $scope.formsDropdownOptions = plainFormConfig.formsDropdown;
@@ -52,7 +55,7 @@ angular.module('admin').controller('Admin.FormsConfigController', ['$scope', '$s
         $scope.deleteRow = function (rowEntity) {
             $scope.deletePlainForm = rowEntity;
             FormConfigService.deletePlainForm($scope.deletePlainForm.key, $scope.deletePlainForm.target).then(function () {
-                Helper.Grid.deleteRow($scope, $scope.deletePlainForm);
+                gridHelper.deleteRow($scope.deletePlainForm);
                 messageService.info($translate.instant('admin.forms.message.delete.success'));
             }, function () {
                 messageService.error($translate.instant('admin.forms.message.delete.error'));

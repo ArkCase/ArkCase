@@ -11,7 +11,7 @@ angular.module('complaints').controller('Complaints.CloseComplaintController', [
             .then(function (data) {
                 $scope.acmTicket = data[0].data;
                 $scope.acmFormsProperties = data[1];
-                var complaintType = Util.goodValue($scope.acmFormsProperties["close.complaint.form"], "close_complaint");
+                var complaintType = Util.goodValue($scope.acmFormsProperties["active.close.complaint.form"], "close_complaint");
                 var formUrl = FrevvoFormService.buildFrevvoUrl($scope.acmFormsProperties, complaintType, $scope.acmTicket);
                 $scope.frevvoFormUrl = $sce.trustAsResourceUrl(formUrl);
             });

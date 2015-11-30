@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cost-tracking').controller('CostTrackingListController',['$scope', '$state', '$stateParams', '$q', '$translate', 'UtilService', 'ConstantService', 'CallCostTrackingService', 'ConfigService', 'Authentication', 'Helper.ObjectTreeService',
-    function($scope, $state, $stateParams, $q, $translate, Util, Constant, CallCostTrackingService, ConfigService, Authentication, HelperObjectTreeService){
+angular.module('cost-tracking').controller('CostTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate', 'UtilService', 'ObjectService', 'CallCostTrackingService', 'ConfigService', 'Authentication', 'Helper.ObjectTreeService',
+    function ($scope, $state, $stateParams, $q, $translate, Util, ObjectService, CallCostTrackingService, ConfigService, Authentication, HelperObjectTreeService) {
         ConfigService.getModuleConfig("cost-tracking").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
@@ -13,7 +13,7 @@ angular.module('cost-tracking').controller('CostTrackingListController',['$scope
             , nodeId: $stateParams.id
             , getTreeData: function (start, n, sort, filters) {
                 var dfd = $q.defer();
-                Authentication.queryUserInfoNew().then(
+                Authentication.queryUserInfo().then(
                     function (userInfo) {
                         var userId = userInfo.userId;
                         CallCostTrackingService.queryCostTrackingTreeData(userId, start, n, sort, filters).then(
@@ -41,7 +41,7 @@ angular.module('cost-tracking').controller('CostTrackingListController',['$scope
             , makeTreeNode: function (costsheetId) {
                 return {
                     nodeId: Util.goodValue(costsheetId.id, 0)
-                    , nodeType: Constant.ObjectTypes.COSTSHEET
+                    , nodeType: ObjectService.ObjectTypes.COSTSHEET
                     , nodeTitle: Util.goodValue(costsheetId.title)
                     , nodeToolTip: Util.goodValue(costsheetId.title)
                 };

@@ -10,8 +10,8 @@
 
  * CallCostTrackingService contains functions of CostTracking service to support default error handling and data validation.
  */
-angular.module('services').factory('CallCostTrackingService', ['$resource', '$translate', 'UtilService', 'ValidationService', 'CostTrackingService', 'ConstantService',
-    function ($resource, $translate, Util, Validator, CostTrackingService, Constant) {
+angular.module('services').factory('CallCostTrackingService', ['$resource', '$translate', 'UtilService', 'Solr.SearchService', 'CostTrackingService', 'ObjectService',
+    function ($resource, $translate, Util, SolrSearchService, CostTrackingService, ObjectService) {
         var ServiceCall = {
 
             /**
@@ -43,13 +43,13 @@ angular.module('services').factory('CallCostTrackingService', ['$resource', '$tr
                     service: CostTrackingService.listObjects
                     , param: param
                     , onSuccess: function (data) {
-                        if (Validator.validateSolrData(data)) {
+                        if (SolrSearchService.validateSolrData(data)) {
                             treeData = {docs: [], total: data.response.numFound};
                             var docs = data.response.docs;
                             _.forEach(docs, function (doc) {
                                 treeData.docs.push({
                                     nodeId: Util.goodValue(doc.object_id_s, 0)
-                                    , nodeType: Constant.ObjectTypes.COSTSHEET
+                                    , nodeType: ObjectService.ObjectTypes.COSTSHEET
                                     , nodeTitle: Util.goodValue(doc.name)
                                     , nodeToolTip: Util.goodValue(doc.name)
                                 });
@@ -77,7 +77,7 @@ angular.module('services').factory('CallCostTrackingService', ['$resource', '$tr
                     service: CostTrackingService.get
                     , param: {id: id}
                     , onSuccess: function (data) {
-                        if (Validator.validateCostsheet(data)) {
+                        if (ServiceCall.validateCostsheet(data)) {
                             return data;
                         }
                     }

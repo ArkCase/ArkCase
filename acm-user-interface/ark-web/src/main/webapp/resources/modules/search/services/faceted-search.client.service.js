@@ -9,8 +9,8 @@
  *
  * The SearchService provides "Faceted Search" REST call functionality
  */
-angular.module('search').factory('SearchService', ['$resource', 'ValidationService',
-    function ($resource, ValidationService) {
+angular.module('search').factory('SearchService', ['$resource', 'Solr.SearchService',
+    function ($resource, SolrSearchService) {
         return $resource('proxy/arkcase/api/latest/plugin/search', {}, {
             /**
              * @ngdoc method
@@ -29,7 +29,7 @@ angular.module('search').factory('SearchService', ['$resource', 'ValidationServi
                 cache: true,
                 isArray: false,
                 transformResponse: function (data, headerGetter) {
-                    if(ValidationService.validateSolrData(JSON.parse(data))){
+                    if (SolrSearchService.validateSolrData(JSON.parse(data))) {
                         var result = {};
                         var searchObj = JSON.parse(data);
 

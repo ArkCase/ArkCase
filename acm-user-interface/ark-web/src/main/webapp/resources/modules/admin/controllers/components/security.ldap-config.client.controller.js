@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Admin.LdapConfigService', '$modal', 'HelperService', 'Admin.ModalDialogService', 'MessageService', '$translate',
-    function ($scope, ldapConfigService, $modal, Helper, modalDialogService, messageService, $translate) {
+angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Admin.LdapConfigService', '$modal', 'Helper.UiGridService', 'Admin.ModalDialogService', 'MessageService', '$translate',
+    function ($scope, ldapConfigService, $modal, HelperUiGridService, modalDialogService, messageService, $translate) {
+
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
         //get config and init grid settings
         $scope.config.$promise.then(function (config) {
@@ -10,7 +12,7 @@ angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Adm
             var columnDef = addEditColumn();
             columnDefs.push(columnDef);
 
-            Helper.Grid.addDeleteButton(columnDefs, "grid.appScope.deleteRow(row.entity)");
+            gridHelper.addDeleteButton(columnDefs, "grid.appScope.deleteRow(row.entity)");
 
             $scope.gridOptions = {
                 enableColumnResizing: true,
@@ -40,7 +42,7 @@ angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Adm
             };
             modalDialogService.showModal({}, modalOptions).then(function () {
                 ldapConfigService.deleteDirectory($scope.deleteDir.id).then(function () {
-                    Helper.Grid.deleteRow($scope, $scope.deleteDir);
+                    gridHelper.deleteRow($scope.deleteDir);
                     messageService.info($translate.instant('admin.security.ldapConfig.messages.delete.success'));
                 }, function () {
                     messageService.error($translate.instant('admin.security.ldapConfig.messages.delete.error'));

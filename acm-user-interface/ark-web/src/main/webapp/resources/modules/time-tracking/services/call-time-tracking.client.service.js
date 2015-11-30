@@ -10,8 +10,8 @@
 
  * CallTimeTrackingService contains functions of TimeTracking service to support default error handling and data validation.
  */
-angular.module('services').factory('CallTimeTrackingService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'TimeTrackingService', 'ConstantService',
-    function ($resource, $translate, Store, Util, Validator, TimeTrackingService, Constant) {
+angular.module('services').factory('CallTimeTrackingService', ['$resource', '$translate', 'StoreService', 'UtilService', 'Solr.SearchService', 'TimeTrackingService', 'ObjectService',
+    function ($resource, $translate, Store, Util, SolrSearchService, TimeTrackingService, ObjectService) {
         var ServiceCall = {
 
             /**
@@ -43,13 +43,13 @@ angular.module('services').factory('CallTimeTrackingService', ['$resource', '$tr
                     service: TimeTrackingService.listObjects
                     , param: param
                     , onSuccess: function (data) {
-                        if (Validator.validateSolrData(data)) {
+                        if (SolrSearchService.validateSolrData(data)) {
                             treeData = {docs: [], total: data.response.numFound};
                             var docs = data.response.docs;
                             _.forEach(docs, function (doc) {
                                 treeData.docs.push({
                                     nodeId: Util.goodValue(doc.object_id_s, 0)
-                                    , nodeType: Constant.ObjectTypes.TIMESHEET
+                                    , nodeType: ObjectService.ObjectTypes.TIMESHEET
                                     , nodeTitle: Util.goodValue(doc.name)
                                     , nodeToolTip: Util.goodValue(doc.name)
                                 });
@@ -77,7 +77,7 @@ angular.module('services').factory('CallTimeTrackingService', ['$resource', '$tr
                     service: TimeTrackingService.get
                     , param: {id: id}
                     , onSuccess: function (data) {
-                        if (Validator.validateTimesheet(data)) {
+                        if (ServiceCall.validateTimesheet(data)) {
                             return data;
                         }
                     }
