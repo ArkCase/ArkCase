@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate', 'ConfigService', 'UtilService', 'ConstantService', 'TimeTrackingService', 'CallTimeTrackingService', 'Profile.UserInfoService', 'HelperService', 'Authentication', 'Helper.ObjectTreeService',
-    function ($scope, $state, $stateParams, $q, $translate, ConfigService, Util, Constant, TimeTrackingService, CallTimeTrackingService, UserInfoService, Helper, Authentication, HelperObjectTreeService) {
+angular.module('time-tracking').controller('TimeTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate', 'ConfigService', 'UtilService', 'ConstantService', 'TimeTracking.ListService', 'TimeTracking.InfoService', 'Profile.UserInfoService', 'HelperService', 'Authentication', 'Helper.ObjectTreeService',
+    function ($scope, $state, $stateParams, $q, $translate, ConfigService, Util, Constant, TimeTrackingListService, TimeTrackingInfoService, UserInfoService, Helper, Authentication, HelperObjectTreeService) {
         ConfigService.getModuleConfig("time-tracking").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
@@ -16,7 +16,7 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
                 Authentication.queryUserInfoNew().then(
                     function (userInfo) {
                         var userId = userInfo.userId;
-                        CallTimeTrackingService.queryTimeTrackingTreeData(userId, start, n, sort, filters).then(
+                        TimeTrackingListService.queryTimeTrackingTreeData(userId, start, n, sort, filters).then(
                             function (treeData) {
                                 dfd.resolve(treeData);
                                 return treeData;
@@ -36,7 +36,7 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
                 return dfd.promise;
             }
             , getNodeData: function (timesheetId) {
-                return CallTimeTrackingService.getTimeTrackingInfo(timesheetId);
+                return TimeTrackingInfoService.getTimeTrackingInfo(timesheetId);
             }
             , makeTreeNode: function (timesheetInfo) {
                 return {
