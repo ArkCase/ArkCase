@@ -3,6 +3,9 @@ package com.armedia.acm.services.config.model;
 import java.io.Serializable;
 
 /**
+ * This class implement AcmConfig interface.
+ * It is used for reading json files under .acm/lookups folder
+ *
  * Created by Bojan Mickoski on 26-Nov-15.
  */
 public class JsonConfig implements AcmConfig, Serializable
