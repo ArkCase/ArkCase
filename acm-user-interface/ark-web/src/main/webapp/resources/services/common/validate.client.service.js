@@ -16,58 +16,60 @@
 angular.module('services').factory('ValidationService', ["UtilService",
     function (Util) {return {
 
-        validateUsers: function(data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        }
-        ,validateUserInfo: function(data){
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.userId)) {
-                return false;
-            }
-            if (Util.isEmpty(data.fullName)) {
-                return false;
-            }
-            if (Util.isEmpty(data.mail)) {
-                return false;
-            }
-            if (Util.isEmpty(data.firstName)) {
-                return false;
-            }
-            if (Util.isEmpty(data.lastName)) {
-                return false;
-            }
-            return true;
-        }
-        ,validateUser: function(data){
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.name)) {
-                return false;
-            }
-            if (Util.isEmpty(data.last_name_lcs)) {
-                return false;
-            }
-            if (Util.isEmpty(data.first_name_lcs)) {
-                return false;
-            }
-            if (Util.isEmpty(data.object_id_s)) {
-                return false;
-            }
-            if (Util.isEmpty(data.object_type_s)) {
-                return false;
-            }
-            return true;
-        }
-        , validateSolrData: function (data) {
+        //validateUsers: function(data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    if (!Util.isArray(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //,validateUserInfo: function(data){
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.userId)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.fullName)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.mail)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.firstName)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.lastName)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //,validateUser: function(data){
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.name)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.last_name_lcs)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.first_name_lcs)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.object_id_s)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.object_type_s)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+
+        //this funciton will refactor to Object.ListService.validateSolrData
+        validateSolrData: function (data) {
             if (!data) {
                 return false;
             }
@@ -95,134 +97,134 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
-        ,validatePersonAssociations: function(data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            for (var i = 0; i < data.length; i++) {
-                if (!this.validatePersonAssociation(data[i])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        ,validatePersonAssociation: function(data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.id)) {
-                return false;
-            }
-            if (Util.isEmpty(data.person)) {
-                return false;
-            }
-            if (!Util.isArray(data.person.contactMethods)) {
-                return false;
-            }
-            if (!Util.isArray(data.person.addresses)) {
-                return false;
-            }
-            if (!Util.isArray(data.person.securityTags)) {
-                return false;
-            }
-            if (!Util.isArray(data.person.personAliases)) {
-                return false;
-            }
-            if (!Util.isArray(data.person.organizations)) {
-                return false;
-            }
-            return true;
-        }
-        ,validateDeletedPersonAssociation: function(data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.deletedPersonAssociationId)) {
-                return false;
-            }
-            return true;
-        }
-
-        , validateCorrespondences: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.containerObjectId)) {
-                return false;
-            }
-            if (Util.isEmpty(data.folderId)) {
-                return false;
-            }
-            if (Util.isEmpty(data.totalChildren)) {
-                return false;
-            }
-            if (!Util.isArray(data.children)) {
-                return false;
-            }
-            for (var i = 0; i < data.children.length; i++) {
-                if (!this.validateCorrespondence(data.children[i])) {
-                    return false;
-                }
-            }
-            if ("Correspondence" != data.category) {
-                return false;
-            }
-            return true;
-        }
-        , validateCorrespondence: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.objectId)) {
-                return false;
-            }
-            if (Util.isEmpty(data.name)) {
-                return false;
-            }
-            if (Util.isEmpty(data.created)) {
-                return false;
-            }
-            if (Util.isEmpty(data.creator)) {
-                return false;
-            }
-            if ("file" != data.objectType) {
-                return false;
-            }
-            if ("Correspondence" != data.category) {
-                return false;
-            }
-            return true;
-        }
-        , validateNewCorrespondence: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.category)) {
-                return false;
-            }
-            if ("Correspondence" != data.category) {
-                return false;
-            }
-            if (Util.isEmpty(data.created)) {
-                return false;
-            }
-            if (Util.isEmpty(data.creator)) {
-                return false;
-            }
-            if (Util.isEmpty(data.fileId)) {
-                return false;
-            }
-            if (Util.isEmpty(data.fileName)) {
-                return false;
-            }
-            if (Util.isEmpty(data.fileType)) {
-                return false;
-            }
-            return true;
-        }
+        //,validatePersonAssociations: function(data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    if (!Util.isArray(data)) {
+        //        return false;
+        //    }
+        //    for (var i = 0; i < data.length; i++) {
+        //        if (!this.validatePersonAssociation(data[i])) {
+        //            return false;
+        //        }
+        //    }
+        //    return true;
+        //}
+        //,validatePersonAssociation: function(data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.id)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.person)) {
+        //        return false;
+        //    }
+        //    if (!Util.isArray(data.person.contactMethods)) {
+        //        return false;
+        //    }
+        //    if (!Util.isArray(data.person.addresses)) {
+        //        return false;
+        //    }
+        //    if (!Util.isArray(data.person.securityTags)) {
+        //        return false;
+        //    }
+        //    if (!Util.isArray(data.person.personAliases)) {
+        //        return false;
+        //    }
+        //    if (!Util.isArray(data.person.organizations)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //,validateDeletedPersonAssociation: function(data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.deletedPersonAssociationId)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //
+        //, validateCorrespondences: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.containerObjectId)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.folderId)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.totalChildren)) {
+        //        return false;
+        //    }
+        //    if (!Util.isArray(data.children)) {
+        //        return false;
+        //    }
+        //    for (var i = 0; i < data.children.length; i++) {
+        //        if (!this.validateCorrespondence(data.children[i])) {
+        //            return false;
+        //        }
+        //    }
+        //    if ("Correspondence" != data.category) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateCorrespondence: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.objectId)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.name)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.created)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.creator)) {
+        //        return false;
+        //    }
+        //    if ("file" != data.objectType) {
+        //        return false;
+        //    }
+        //    if ("Correspondence" != data.category) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateNewCorrespondence: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.category)) {
+        //        return false;
+        //    }
+        //    if ("Correspondence" != data.category) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.created)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.creator)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.fileId)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.fileName)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.fileType)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
 
 
         , validateCostsheets: function (data) {
@@ -570,66 +572,66 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
-        , validateMyTasks: function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validateParticipantTypes: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validatePersonTypes: function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validateContactMethodTypes: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validateOrganizationTypes: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validateAddressTypes: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validateAliasTypes: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validateSecurityTagTypes: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validateCaseTypes: function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        }
-        , validateObjectTypes: function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        }
+        //, validateMyTasks: function (data) {
+        //    if (!Util.isArray(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateParticipantTypes: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validatePersonTypes: function (data) {
+        //    if (!Util.isArray(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateContactMethodTypes: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateOrganizationTypes: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateAddressTypes: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateAliasTypes: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateSecurityTagTypes: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateCaseTypes: function (data) {
+        //    if (!Util.isArray(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateObjectTypes: function (data) {
+        //    if (!Util.isArray(data)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
         , validateCaseFile: function (data) {
             if (Util.isEmpty(data)) {
                 return false;
@@ -657,31 +659,31 @@ angular.module('services').factory('ValidationService', ["UtilService",
             }
             return true;
         }
-        , validateComplaint: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.complaintId) || Util.isEmpty(data.complaintNumber)) {
-                return false;
-            }
-            if (!Util.isArray(data.childObjects)) {
-                return false;
-            }
-            if (!Util.isArray(data.participants)) {
-                return false;
-            }
-            if (!Util.isArray(data.personAssociations)) {
-                return false;
-            }
-            return true;
-        }
-        , validateTask: function (data) {
-            if (Util.isEmpty(data)) {
-                return false;
-            }
-            if (Util.isEmpty(data.taskId)) {
-                return false;
-            }
+        //, validateComplaint: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.complaintId) || Util.isEmpty(data.complaintNumber)) {
+        //        return false;
+        //    }
+        //    if (!Util.isArray(data.childObjects)) {
+        //        return false;
+        //    }
+        //    if (!Util.isArray(data.participants)) {
+        //        return false;
+        //    }
+        //    if (!Util.isArray(data.personAssociations)) {
+        //        return false;
+        //    }
+        //    return true;
+        //}
+        //, validateTask: function (data) {
+        //    if (Util.isEmpty(data)) {
+        //        return false;
+        //    }
+        //    if (Util.isEmpty(data.taskId)) {
+        //        return false;
+        //    }
 //            if (Util.isEmpty(data.id) || Util.isEmpty(data.caseNumber)) {
 //             return false;
 //             }
@@ -694,8 +696,8 @@ angular.module('services').factory('ValidationService', ["UtilService",
 //             if (!Util.isArray(data.personAssociations)) {
 //             return false;
 //             }
-            return true;
-        }
+//            return true;
+//        }
 
     }}
 ]);

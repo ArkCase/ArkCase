@@ -1,0 +1,29 @@
+<panel-view header="{{'admin.forms.config' | translate}}" collapsible="false">
+    <div ng-controller="Admin.FormsConfigController">
+        <div class="row">
+            <div class="pull-right">
+                <select ng-model="selectedTarget"
+                        ng-options="option.id as option.name for option in formsDropdownOptions">
+                    <option value="">{{'admin.forms.defaultValue' | translate}}</option>
+                </select>
+
+                <div class="btn-group">
+                    <button ng-disabled="selectedTarget == null" class="btn btn-sm btn-default"
+                            ng-disabled="disabledSelectButton" ng-click="openNewFrevvoForm()">
+                        <i class="glyphicon glyphicon-plus-sign"></i>{{'admin.forms.addForm' |
+                        translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div ui-grid="gridOptions"
+                 ui-grid-resize-columns
+                 ui-grid-selection
+                 adjust-table-height="gridOptions.data.length"
+                 ui-grid-auto-resize
+                 class="grid">
+            </div>
+        </div>
+    </div>
+</panel-view>

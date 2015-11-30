@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.casefile.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,6 +11,9 @@ import java.util.Date;
 
 @Entity
 @Table(name="acm_disposition")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.casefile.model.Disposition")
 public class Disposition implements Serializable, AcmObject, AcmEntity
 {
     private static final long serialVersionUID = 7786267451369775524L;
@@ -60,6 +64,9 @@ public class Disposition implements Serializable, AcmObject, AcmEntity
 
     @Column(name = "cm_disposition_modifier")
     private String modifier;
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     @Override
     public String getObjectType() {

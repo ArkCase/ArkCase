@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('cases').controller('Cases.HistoryController', ['$scope', '$stateParams', '$q', 'UtilService', 'HelperService', 'ConstantService', 'CallObjectsService',
-    function ($scope, $stateParams, $q, Util, Helper, Constant, CallObjectsService) {
+angular.module('cases').controller('Cases.HistoryController', ['$scope', '$stateParams', '$q'
+    , 'UtilService', 'HelperService', 'ConstantService', 'Object.AuditService'
+    , function ($scope, $stateParams, $q, Util, Helper, Constant, ObjectAuditService) {
         $scope.$emit('req-component-config', 'history');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('history' == componentId) {
@@ -20,7 +21,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
 
         $scope.retrieveGridData = function () {
             if ($scope.currentId) {
-                var promiseQueryAudit = CallObjectsService.queryAudit(Constant.ObjectTypes.CASE_FILE
+                var promiseQueryAudit = ObjectAuditService.queryAudit(Constant.ObjectTypes.CASE_FILE
                     , $scope.currentId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)

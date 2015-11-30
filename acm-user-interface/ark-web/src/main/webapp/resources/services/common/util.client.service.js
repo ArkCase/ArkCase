@@ -13,8 +13,8 @@
 
 //angular.module('services').factory('UtilService', ['$q', '$window', 'ngBootbox', 'LookupService',
 //    function ($q, $window, $ngBootbox, LookupService) {
-angular.module('services').factory('UtilService', ['$q', '$window', 'LookupService',
-    function ($q, $window, LookupService) {
+angular.module('services').factory('UtilService', ['$q', '$window',
+    function ($q, $window) {
         var Util = {
 
             //
@@ -267,16 +267,18 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
              */
             , serviceCall: function (arg) {
                 var d = $q.defer();
-                var onSuccess = function (successData) {
+                var callbacks = {};
+                callbacks.onSuccess = function (successData) {
                     var rc = successData;
                     if (arg.onSuccess) {
                         rc = arg.onSuccess(successData);
                         if (undefined == rc) {
                             if (arg.onInvalid) {
-                                d.reject(arg.onInvalid(successData));
+                                rc = arg.onInvalid(successData);
                             } else {
-                                d.reject("Validation failure");
+                                rc = Util.goodMapValue(successData, "error", "Validation failure");
                             }
+                            callbacks.onError(rc);
                         } else {
                             d.resolve(rc);
                         }
@@ -285,12 +287,15 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                     }
                     return rc;
                 };
-                var onError = function (errorData) {
+                callbacks.onError = function (errorData) {
                     var rc = errorData;
                     if (arg.onError) {
                         rc = arg.onError(errorData);
                     }
                     d.reject(rc);
+
+                    //todo: show error in UI
+                    console.log("service call error:" + rc);
                     return rc;
                 };
 
@@ -303,9 +308,9 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                     var data = arg.data;
 
                     if (data) {
-                        service(param, data, onSuccess, onError);
+                        service(param, data, callbacks.onSuccess, callbacks.onError);
                     } else {
-                        service(param, onSuccess, onError);
+                        service(param, callbacks.onSuccess, callbacks.onError);
                     }
                 }
                 return d.promise;

@@ -92,6 +92,13 @@
           "width": 100
         }
       ]
+    },
+
+    {
+      "id": "casesByQueue",
+      "title": "Cases By Queue",
+      "redirectSettings": {
+      }
     }
   ]
 }

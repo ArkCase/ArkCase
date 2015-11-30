@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'TasksService', 'CallLookupService', 'CallTasksService', 'TasksModelsService',
-    function ($scope, $stateParams, Store, Util, Validator, Helper, LookupService, TasksService, CallLookupService, CallTasksService, TasksModelsService) {
+angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', 'UtilService', 'LookupService', 'Object.LookupService', 'Task.InfoService',
+    function ($scope, $stateParams, Util, LookupService, ObjectLookupService, TaskInfoService) {
         $scope.$emit('req-component-config', 'info');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("info" == componentId) {
@@ -10,7 +10,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         });
 
 
-        CallLookupService.getUsers().then(
+        LookupService.getUsers().then(
             function (users) {
                 var options = [];
                 _.each(users, function (user) {
@@ -21,7 +21,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             }
         );
 
-        CallLookupService.getPriorities().then(
+        ObjectLookupService.getPriorities().then(
             function (priorities) {
                 var options = [];
                 _.each(priorities, function (priority) {
@@ -33,7 +33,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         );
 
 
-        $scope.$on('task-retrieved', function (e, data) {
+        $scope.$on('task-updated', function (e, data) {
             $scope.taskInfo = data;
         });
 
@@ -61,10 +61,11 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
 
         function saveTask() {
             var taskInfo = Util.omitNg($scope.taskInfo);
-            if (CallTasksService.validateTaskInfo(taskInfo)) {
-                CallTasksService.saveTaskInfo(taskInfo).then(
+            if (TaskInfoService.validateTaskInfo(taskInfo)) {
+                TaskInfoService.saveTaskInfo(taskInfo).then(
                     function (taskInfo) {
                         //update tree node tittle
+                        $scope.$emit("report-task-updated", taskInfo);
                         return taskInfo;
                     }
                     , function (error) {

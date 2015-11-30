@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-import com.armedia.acm.services.participants.model.AcmParticipantPrivilege;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.junit.Before;
@@ -47,9 +46,9 @@ public class ComplaintAccessControlRulesTest
         dtconf.setInputType(DecisionTableInputType.XLS);
         kbuilder.add(ResourceFactory.newInputStreamResource(xls.getInputStream()), ResourceType.DTABLE, dtconf);
 
-        if ( kbuilder.hasErrors() )
+        if (kbuilder.hasErrors())
         {
-            for (KnowledgeBuilderError error : kbuilder.getErrors() )
+            for (KnowledgeBuilderError error : kbuilder.getErrors())
             {
                 log.error("Error building rules: " + error);
             }
@@ -76,12 +75,16 @@ public class ComplaintAccessControlRulesTest
 
         workingMemory.execute(complaint);
 
-        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().size());
+        assertEquals(3, complaint.getParticipants().get(0).getPrivileges().size());
 
-        AcmParticipantPrivilege priv = complaint.getParticipants().get(0).getPrivileges().get(0);
+        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream().
+                filter(app -> app.getAccessType().equals("deny") && app.getObjectAction().equals("read")).count());
 
-        assertEquals("deny", priv.getAccessType());
-        assertEquals("read", priv.getObjectAction());
+        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream().
+                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());
+
+        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream().
+                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addComment")).count());
     }
 
     @Test
@@ -98,12 +101,16 @@ public class ComplaintAccessControlRulesTest
 
         workingMemory.execute(complaint);
 
-        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().size());
+        assertEquals(3, complaint.getParticipants().get(0).getPrivileges().size());
 
-        AcmParticipantPrivilege priv = complaint.getParticipants().get(0).getPrivileges().get(0);
+        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream().
+                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("read")).count());
 
-        assertEquals("grant", priv.getAccessType());
-        assertEquals("read", priv.getObjectAction());
+        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream().
+                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());
+
+        assertEquals(1, complaint.getParticipants().get(0).getPrivileges().stream().
+                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addComment")).count());
     }
 
 

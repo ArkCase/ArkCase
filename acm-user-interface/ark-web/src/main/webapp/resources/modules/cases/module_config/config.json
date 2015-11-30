@@ -7,7 +7,14 @@
       "menuItemURL": "cases",
       "menuItemTitle": "Case Files",
       "iconClass": "fa fa-folder",
-      "position": 40
+      "position": 50
+    },
+    {
+      "menuId": "topbar",
+      "menuItemURL": "cases.wizard",
+      "menuItemTitle": "Case File",
+      "iconClass": "fa fa-folder",
+      "position": 20
     }
   ],
   "tree": {
@@ -100,9 +107,9 @@
           "references",
           "history",
           "correspondence",
-          "calendar",
           "time",
-          "cost"
+          "cost",
+          "calendar"
         ]
       },
       {

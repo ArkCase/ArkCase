@@ -1,24 +1,25 @@
 {
   "reports": {
     "title": "Reports",
-    "label": {
-      "selectReport": "Report",
-      "selectState": "State",
-      "startDate": "From",
-      "endDate": "To"
-    },
-    "placeholder": {
-      "selectState": "Select State",
-      "selectReport": "Select Report"
-    },
+
+    "selectReport.label": "Report",
+    "selectReport.placeholder": "Select Report",
+    "selectState.label": "State",
+    "selectState.placeholder": "Select State",
+    "startDate.label": "From",
+    "endDate.label": "To",
+
     "dropdown": {
-      "turnaround": "Turnaround Time by Requestor",
+      "turnaround": "Turnaround Time by Requester",
       "requester": "Requester Type Summary",
       "pending": "Pending Orders Report",
       "associate": "Associate Productivity Report",
       "origination": "Origination Count",
       "transfers": "Transfers Report",
       "exceptions": "Exceptions Report (Non-Compliance)"
+    },
+    "datepicker":{
+      "close": "Close"
     },
     "btn": {
       "generateReport": "Generate report"

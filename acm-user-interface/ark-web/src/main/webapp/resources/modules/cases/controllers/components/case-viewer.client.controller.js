@@ -1,16 +1,16 @@
 'use strict';
 
-/**
- * @ngdoc controller
- * @name cases.controller:Cases.ViewerController
- *
- * @description
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/components/case-viewer.client.controller.js modules/cases/controllers/components/case-viewer.client.controller.js}
- *
- * The Viewer Controller
- */
-angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'ObjectsModelsService', 'CallCasesService',
-    function($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, SnowboundService, Authentication, EcmService, ObjectsModelsService, CallCasesService) {
+///**
+// * @ngdoc controller
+// * @name cases.controller:Cases.ViewerController
+// *
+// * @description
+// * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/components/case-viewer.client.controller.js modules/cases/controllers/components/case-viewer.client.controller.js}
+// *
+// * The Viewer Controller
+// */
+angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'ObjectsModelsService', 'Case.InfoService',
+    function ($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, SnowboundService, Authentication, EcmService, ObjectsModelsService, CaseInfoService) {
         $scope.$emit('req-component-config', 'viewer');
 
         $scope.acmTicket = '';
@@ -29,11 +29,11 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
         $scope.openSnowboundViewer = openSnowboundViewer;
 
         /**
-          * @ngdoc method
-          * @name openSnowboundViewer
-          * @methodOf cases.controller:Cases.ViewerController
-          *
-          * @description
+         //* @ngdoc method
+         //* @name openSnowboundViewer
+         //* @methodOf cases.controller:Cases.ViewerController
+         //*
+         //* @description
           * This method generates the url to open the snowbound viewer
           * with the specified document loaded.
           */
@@ -53,7 +53,8 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
         var ticketInfo = TicketService.getArkCaseTicket();
 
         // Obtains the currently logged in user
-        var userInfo = Authentication.queryUserInfo({});
+        //var userInfo = Authentication.queryUserInfo({});
+        var userInfo = Authentication.queryUserInfoNew();
 
         // Obtains a list of all users in ArkCase
         var totalUserInfo = LookupService.getUsers({});
@@ -67,7 +68,7 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
         var ecmFileNotes = EcmService.getFileNotes({fileId: $stateParams['id']});
         var ecmFileParticipants = EcmService.getFileParticipants({fileId: $stateParams['id']});
 
-        $q.all([ticketInfo, userInfo.$promise, totalUserInfo.$promise, ecmFileConfig.$promise,
+        $q.all([ticketInfo, userInfo, totalUserInfo.$promise, ecmFileConfig.$promise,
                 ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileNotes.$promise, ecmFileParticipants.$promise])
             .then(function(data) {
                 $scope.acmTicket = data[0].data;
@@ -86,7 +87,7 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
                 $scope.ecmFileParticipants = data[7];
 
                 // Obtains the case file metadata which contains the assignee information
-                CallCasesService.getCaseInfo($scope.ecmFile.container.containerObjectId)
+                CaseInfoService.getCaseInfo($scope.ecmFile.container.containerObjectId)
                     .then(function (data) {
                         $scope.caseInfo = data;
                         $scope.assignee = ObjectsModelsService.getAssignee(data);
