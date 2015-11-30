@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/objects/object-correspondence.client.service.js services/objects/object-correspondence.client.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/object/object-correspondence.client.service.js services/object/object-correspondence.client.service.js}
 
  * Object.CorrespondenceService includes group of REST calls related to correspondence.
  */

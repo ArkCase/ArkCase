@@ -1,12 +1,15 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTracking.PersonController', ['$scope', 'HelperService',
-    function ($scope, Helper) {
+angular.module('time-tracking').controller('TimeTracking.PersonController', ['$scope', 'Helper.UiGridService',
+    function ($scope, HelperUiGridService) {
+
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
         $scope.$emit('req-component-config', 'person');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('person' == componentId) {
-                Helper.Grid.setColumnDefs($scope, config);
-                Helper.Grid.setBasicOptions($scope, config);
+                gridHelper.setColumnDefs(config);
+                gridHelper.setBasicOptions(config);
             }
         });
 

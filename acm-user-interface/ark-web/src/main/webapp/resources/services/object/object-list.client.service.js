@@ -6,12 +6,12 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/objects/object-list.client.service.js services/objects/object-list.client.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/object/object-list.client.service.js services/object/object-list.client.service.js}
 
  * Object.ListService includes REST calls related to object list in SOLR
  */
-angular.module('services').factory('Object.ListService', ['$resource', 'UtilService',
-    function ($resource, Util) {
+angular.module('services').factory('Object.ListService', ['$resource', 'UtilService', 'Solr.SearchService'
+    , function ($resource, Util, SolrSearchService) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
             /**
              * @ngdoc method
@@ -44,40 +44,18 @@ angular.module('services').factory('Object.ListService', ['$resource', 'UtilServ
 
         /**
          * @ngdoc method
-         * @name validateSolrData
+         * @name validateObjects
          * @methodOf services:Object.ListService
          *
          * @description
-         * Validate data of query from SOLR
+         * Validate list of objects as SOLR query result
          *
          * @param {Object} data  Data to be validated
          *
          * @returns {Boolean} Return true if data is valid
          */
-        Service.validateSolrData = function (data) {
-            if (!data) {
-                return false;
-            }
-            if (Util.isEmpty(data.responseHeader) || Util.isEmpty(data.response)) {
-                return false;
-            }
-            if (Util.isEmpty(data.responseHeader.status)) {
-                return false;
-            }
-//            if (0 != responseHeader.status) {
-//                return false;
-//            }
-            if (Util.isEmpty(data.responseHeader.params)) {
-                return false;
-            }
-            if (Util.isEmpty(data.responseHeader.params.q)) {
-                return false;
-            }
-
-            if (Util.isEmpty(data.response.numFound) || Util.isEmpty(data.response.start)) {
-                return false;
-            }
-            if (!Util.isArray(data.response.docs)) {
+        Service.validateObjects = function (data) {
+            if (!SolrSearchService.validateSolrData(data)) {
                 return false;
             }
             return true;

@@ -1,7 +1,12 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate', 'ConfigService', 'UtilService', 'ConstantService', 'TimeTrackingService', 'CallTimeTrackingService', 'Profile.UserInfoService', 'HelperService', 'Authentication', 'Helper.ObjectTreeService',
-    function ($scope, $state, $stateParams, $q, $translate, ConfigService, Util, Constant, TimeTrackingService, CallTimeTrackingService, UserInfoService, Helper, Authentication, HelperObjectTreeService) {
+angular.module('time-tracking').controller('TimeTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate'
+    , 'ConfigService', 'UtilService', 'ObjectService', 'TimeTrackingService', 'CallTimeTrackingService'
+    , 'Profile.UserInfoService', 'Authentication', 'Helper.ObjectTreeService'
+    , function ($scope, $state, $stateParams, $q, $translate
+        , ConfigService, Util, ObjectService, TimeTrackingService, CallTimeTrackingService
+        , UserInfoService, Authentication, HelperObjectTreeService) {
+
         ConfigService.getModuleConfig("time-tracking").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
@@ -13,7 +18,7 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
             , nodeId: $stateParams.id
             , getTreeData: function (start, n, sort, filters) {
                 var dfd = $q.defer();
-                Authentication.queryUserInfoNew().then(
+                Authentication.queryUserInfo().then(
                     function (userInfo) {
                         var userId = userInfo.userId;
                         CallTimeTrackingService.queryTimeTrackingTreeData(userId, start, n, sort, filters).then(
@@ -41,7 +46,7 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
             , makeTreeNode: function (timesheetInfo) {
                 return {
                     nodeId: Util.goodValue(timesheetInfo.id, 0)
-                    , nodeType: Constant.ObjectTypes.TIMESHEET
+                    , nodeType: ObjectService.ObjectTypes.TIMESHEET
                     , nodeTitle: Util.goodValue(timesheetInfo.title)
                     , nodeToolTip: Util.goodValue(timesheetInfo.title)
                 };

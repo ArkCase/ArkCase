@@ -6,12 +6,12 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/objects/object-task.client.service.js services/objects/object-task.client.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/object/object-task.client.service.js services/object/object-task.client.service.js}
 
  * Object.TaskService includes functions for object relate to task.
  */
-angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'StoreService', 'UtilService', 'Object.ListService', 'Authentication'
-    , function ($resource, $q, Store, Util, ObjectListService, Authentication) {
+angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'StoreService', 'UtilService', 'Solr.SearchService', 'Authentication'
+    , function ($resource, $q, Store, Util, SolrSearchService, Authentication) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
             /**
              * @ngdoc method
@@ -126,7 +126,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'St
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateChildTaskData = function (data) {
-            if (!ObjectListService.validateSolrData(data)) {
+            if (!SolrSearchService.validateSolrData(data)) {
                 return false;
             }
             return true;
@@ -211,7 +211,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'St
          */
         Service.queryCurrentUserTasks = function () {
             var dfd = $q.defer();
-            Authentication.queryUserInfoNew().then(
+            Authentication.queryUserInfo().then(
                 function (userInfo) {
                     Service.queryMyTasks(userInfo.userId).then(
                         function (myTasks) {

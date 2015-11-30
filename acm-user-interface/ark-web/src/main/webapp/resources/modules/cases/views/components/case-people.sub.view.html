@@ -1,4 +1,4 @@
-<div class="panel panel-success" ng-show="'contactMethods' == grid.appScope.currentSubGrid">
+<div class="panel panel-success" ng-show="'contactMethods' == row.entity.currentSubGrid">
     <div class="panel-heading">
         <div class="panel-title">{{"cases.comp.people.contactMethods.title" | translate}}
             <div class="pull-right">
@@ -13,7 +13,7 @@
 
 </div>
 
-<div class="panel panel-success" ng-show="'organizations' == grid.appScope.currentSubGrid">
+<div class="panel panel-success" ng-show="'organizations' == row.entity.currentSubGrid">
     <div class="panel-heading">
         <div class="panel-title">{{"cases.comp.people.organizations.title" | translate}}
             <div class="pull-right">
@@ -27,7 +27,7 @@
     </div>
 </div>
 
-<div class="panel panel-success" ng-show="'addresses' == grid.appScope.currentSubGrid">
+<div class="panel panel-success" ng-show="'addresses' == row.entity.currentSubGrid">
     <div class="panel-heading">
         <div class="panel-title">{{"cases.comp.people.addresses.title" | translate}}
             <div class="pull-right">
@@ -41,7 +41,7 @@
     </div>
 </div>
 
-<div class="panel panel-success" ng-show="'aliases' == grid.appScope.currentSubGrid">
+<div class="panel panel-success" ng-show="'aliases' == row.entity.currentSubGrid">
     <div class="panel-heading">
         <div class="panel-title">{{"cases.comp.people.aliases.title" | translate}}
             <div class="pull-right">
@@ -55,7 +55,7 @@
     </div>
 </div>
 
-<div class="panel panel-success" ng-show="'securityTags' == grid.appScope.currentSubGrid">
+<div class="panel panel-success" ng-show="'securityTags' == row.entity.currentSubGrid">
     <div class="panel-heading">
         <div class="panel-title">{{"cases.comp.people.securityTags.title" | translate}}
             <div class="pull-right">

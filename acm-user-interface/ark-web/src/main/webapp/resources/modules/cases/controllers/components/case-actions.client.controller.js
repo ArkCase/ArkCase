@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state', '$stateParams', '$q', 'UtilService'
-    , 'ConstantService', 'Authentication', 'Object.LookupService', 'Case.LookupService', 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService'
-    , function ($scope, $state, $stateParams, $q, Util, Constant, Authentication, ObjectLookupService, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService) {
+    , 'ObjectService', 'Authentication', 'Object.LookupService', 'Case.LookupService', 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService'
+    , function ($scope, $state, $stateParams, $q, Util, ObjectService, Authentication, ObjectLookupService, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService) {
 
         $scope.$emit('req-component-config', 'actions');
         $scope.$on('component-config', function (e, componentId, config) {
@@ -11,7 +11,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             }
         });
 
-        var promiseQueryUser = Authentication.queryUserInfoNew();
+        var promiseQueryUser = Authentication.queryUserInfo();
 
         var promiseGetGroups = ObjectLookupService.getGroups();
 
@@ -36,10 +36,10 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
 
                 promiseQueryUser.then(function (userInfo) {
                     $scope.userId = userInfo.userId;
-                    ObjectSubscriptionService.getSubscriptions(userInfo.userId, Constant.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (subscriptions) {
+                    ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (subscriptions) {
                         var found = _.find(subscriptions, {
                             userId: userInfo.userId,
-                            subscriptionObjectType: Constant.ObjectTypes.CASE_FILE,
+                            subscriptionObjectType: ObjectService.ObjectTypes.CASE_FILE,
                             objectId: $scope.caseInfo.id
                         });
                         $scope.showBtnSubscribe = Util.isEmpty(found);
@@ -78,14 +78,14 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             console.log('reinvestigate');
         };
         $scope.subscribe = function (caseInfo) {
-            ObjectSubscriptionService.subscribe($scope.userId, Constant.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (data) {
+            ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (data) {
                 $scope.showBtnSubscribe = false;
                 $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 return data;
             });
         };
         $scope.unsubscribe = function (caseInfo) {
-            ObjectSubscriptionService.unsubscribe($scope.userId, Constant.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (data) {
+            ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (data) {
                 $scope.showBtnSubscribe = true;
                 $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 return data;

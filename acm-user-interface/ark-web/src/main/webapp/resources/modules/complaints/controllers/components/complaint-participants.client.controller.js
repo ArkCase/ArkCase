@@ -1,14 +1,18 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.ParticipantsController', ['$scope', '$stateParams', '$q'
-    , 'StoreService', 'UtilService', 'HelperService', 'Complaint.InfoService', 'LookupService', 'Object.LookupService'
-    , function ($scope, $stateParams, $q, Store, Util, Helper, ComplaintInfoService, LookupService, ObjectLookupService) {
+    , 'StoreService', 'UtilService', 'Helper.UiGridService', 'Helper.ConfigService'
+    , 'Complaint.InfoService', 'LookupService', 'Object.LookupService'
+    , function ($scope, $stateParams, $q, Store, Util, HelperUiGridService, HelperConfigService
+        , ComplaintInfoService, LookupService, ObjectLookupService) {
 
-        var promiseConfig = Helper.requestComponentConfig($scope, "participants", function (config) {
-            Helper.Grid.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
-            Helper.Grid.setColumnDefs($scope, config);
-            Helper.Grid.setBasicOptions($scope, config);
-            Helper.Grid.addGridApiHandler($scope, function (gridApi) {
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
+        var promiseConfig = HelperConfigService.requestComponentConfig($scope, "participants", function (config) {
+            gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.addGridApiHandler(function (gridApi) {
                 $scope.gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
                     if (newValue == oldValue) {
                         return;
@@ -17,7 +21,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                     //
                     // Fix participant names selection
                     //
-                    if (Helper.Lookups.PARTICIPANT_TYPES === colDef.lookup) {
+                    if (HelperUiGridService.Lookups.PARTICIPANT_TYPES === colDef.lookup) {
                         if ("*" === newValue) {
                             rowEntity.acm$_participantNames = [
                                 {id: "*", name: "*"}
@@ -46,7 +50,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                 //$scope.gridOptions.enableCellEdit = true;
                 //$scope.gridOptions.enableCellEditOnFocus = true;
                 for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                    if (Helper.Lookups.PARTICIPANT_TYPES == $scope.config.columnDefs[i].lookup) {
+                    if (HelperUiGridService.Lookups.PARTICIPANT_TYPES == $scope.config.columnDefs[i].lookup) {
                         $scope.gridOptions.columnDefs[i].enableCellEdit = true;
                         $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                         $scope.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
@@ -55,7 +59,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                         $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
-                    } else if (Helper.Lookups.PARTICIPANT_NAMES == $scope.config.columnDefs[i].lookup) {
+                    } else if (HelperUiGridService.Lookups.PARTICIPANT_NAMES == $scope.config.columnDefs[i].lookup) {
                         $scope.gridOptions.columnDefs[i].enableCellEdit = true;
                         $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                         $scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
@@ -112,7 +116,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                 });
                 $scope.gridOptions.data = participants;
                 $scope.complaintInfo = data;
-                Helper.Grid.hidePagingControlsIfAllDataShown($scope, participants.length);
+                gridHelper.hidePagingControlsIfAllDataShown(participants.length);
             });
         };
         $scope.$on('complaint-updated', function (e, data) {
@@ -120,7 +124,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                 return;
             }
 
-            if (data.id == $stateParams.id) {
+            if (data.complaintId == $stateParams.id) {
                 updateGridData(data);
             } else {                      // condition when data comes before state is routed and config is not set
                 var deferParticipantData = new Store.Variable("deferComplaintParticipantData");
@@ -133,7 +137,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
             var lastPage = $scope.gridApi.pagination.getTotalPages();
             $scope.gridApi.pagination.seek(lastPage);
             $scope.gridOptions.data.push({});
-            Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.data.length);
+            gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
         };
         $scope.updateRow = function (rowEntity) {
             var complaintInfo = Util.omitNg($scope.complaintInfo);
@@ -155,7 +159,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
             );
         };
         $scope.deleteRow = function (rowEntity) {
-            Helper.Grid.deleteRow($scope, rowEntity);
+            gridHelper.deleteRow(rowEntity);
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row
