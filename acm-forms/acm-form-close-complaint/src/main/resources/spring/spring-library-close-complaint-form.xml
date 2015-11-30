@@ -3,8 +3,35 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
+       <bean id="closeComplaintTaskName" class="java.lang.String">
+              <constructor-arg>
+                     <value>Request to Close Complaint '%s'</value>
+              </constructor-arg>
+       </bean>
+
        <bean id="closeComplaintWorkflowListener" class="com.armedia.acm.form.closecomplaint.service.CloseComplaintWorkflowListener">
               <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
               <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+              <property name="closeComplaintTaskName" ref="closeComplaintTaskName"/>
+       </bean>
+
+       <bean id="closeComplaintRequestFactory" class="com.armedia.acm.form.closecomplaint.service.CloseComplaintRequestFactory"/>
+
+       <bean id="closeComplaintService" class="com.armedia.acm.form.closecomplaint.service.CloseComplaintService">
+              <property name="closeComplaintRequestFactory" ref="closeComplaintRequestFactory"/>
+              <property name="ecmFileService" ref="ecmFileService"/>
+              <property name="properties" ref="acm-form-properties" />
+              <property name="authenticationTokenService" ref="authenticationTokenService" />
+              <property name="userDao" ref="userJpaDao" />
+              <property name="userActionDao" ref="userActionDao" />
+              <property name="userActionExecutor" ref="userActionExecutor"/>
+              <property name="complaintDao" ref="acmComplaintDao" />
+              <property name="caseFileDao" ref="caseFileDao" />
+              <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
+              <property name="ecmFileDao" ref="ecmFileDao"/>
+              <property name="muleContextManager" ref="muleContextManager"/>
+              <property name="acmPluginManager" ref="acmPluginManager"/>
+              <property name="functionalAccessService" ref="functionalAccessService"/>
+              <property name="applicationEventPublisher" ref="frevvoApplicationEventPublisher"/>
        </bean>
 </beans>
