@@ -10,8 +10,8 @@
 
  * CostTracking.ListService provides functions for Costsheet database data
  */
-angular.module('services').factory('CostTracking.ListService', ['$resource', '$translate', 'UtilService', 'ConstantService', 'Object.ListService',
-    function ($resource, $translate, Util, Constant, ObjectListService) {
+angular.module('services').factory('CostTracking.ListService', ['$resource', '$translate', 'UtilService', 'ObjectService', 'Object.ListService',
+    function ($resource, $translate, Util, ObjectService, ObjectListService) {
         var Service = $resource('proxy/arkcase/api/v1/service/costsheet', {}, {
 
             /**
@@ -75,7 +75,7 @@ angular.module('services').factory('CostTracking.ListService', ['$resource', '$t
                         _.forEach(docs, function (doc) {
                             treeData.docs.push({
                                 nodeId: Util.goodValue(doc.object_id_s, 0)
-                                , nodeType: Constant.ObjectTypes.COSTSHEET
+                                , nodeType: ObjectService.ObjectTypes.COSTSHEET
                                 , nodeTitle: Util.goodValue(doc.name)
                                 , nodeToolTip: Util.goodValue(doc.name)
                             });
@@ -99,7 +99,7 @@ angular.module('services').factory('CostTracking.ListService', ['$resource', '$t
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateCostsheetList = function (data) {
-            if (!ObjectListService.validateSolrData(data)) {
+            if (!ObjectListService.validateObjects(data)) {
                 return false;
             }
 
