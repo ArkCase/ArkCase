@@ -9,7 +9,7 @@
  *
  * The NewCostsheet Controller
  */
-angular.module('cost-tracking').controller('CostTracking.NewCostsheetController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'FrevvoFormService',
+angular.module('cost-tracking').controller('CostTracking.NewCostsheetController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'Frevvo.FormService',
     function($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, FrevvoFormService) {
         $scope.$emit('req-component-config', 'newcostsheet');
 

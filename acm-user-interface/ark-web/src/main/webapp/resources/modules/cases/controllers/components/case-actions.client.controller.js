@@ -17,6 +17,9 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
 
         var previousId = null;
         $scope.$on('case-updated', function (e, data) {
+            if (!CaseInfoService.validateCaseInfo(data)) {
+                return;
+            }
             $scope.caseInfo = data;
 
             var group = ObjectModelService.getGroup(data);
@@ -59,7 +62,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         $scope.createNew = function () {
-            $state.go('cases.wizard');
+            $state.go('newCase');
         };
 
         $scope.edit = function () {
@@ -68,7 +71,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
 
         $scope.changeStatus = function (caseInfo) {
             if (caseInfo && caseInfo.id && caseInfo.caseNumber && caseInfo.status) {
-                $state.go('cases.status', {id: caseInfo.id, caseNumber: caseInfo.caseNumber, status: caseInfo.status});
+                $state.go('status', {id: caseInfo.id, caseNumber: caseInfo.caseNumber, status: caseInfo.status});
             }
         };
         $scope.reinvestigate = function () {

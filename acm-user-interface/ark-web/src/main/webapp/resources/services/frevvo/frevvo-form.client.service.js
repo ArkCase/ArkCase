@@ -2,20 +2,20 @@
 
 /**
  * @ngdoc service
- * @name services.service:FrevvoFormService
+ * @name services.service:Frevvo.FormService
  *
  * @description
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/config/frevvo-form.client.service.js services/config/frevvo-form.client.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/frevvo/frevvo-form.client.service.js services/frevvo/frevvo-form.client.service.js}
  *
  * This service contains functionality for Frevvo form management.
  */
-angular.module('services').factory('FrevvoFormService', [
+angular.module('services').factory('Frevvo.FormService', [
     function () {
         return {
             /**
              * @ngdoc method
              * @name buildFrevvoUrl
-             * @methodOf services.service:FrevvoFormService
+             * @methodOf services.service:Frevvo.FormService
              *
              * @param {JSON} acmFormsProperties properties from the acm-forms.properties configuration file
              * @param {String} type of the form to load (case_file, change_case_status, etc.)

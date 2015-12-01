@@ -17,6 +17,9 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
 
         var previousId = null;
         $scope.$on('complaint-updated', function (e, data) {
+            if (!ComplaintInfoService.validateComplaintInfo(data)) {
+                return;
+            }
             $scope.complaintInfo = data;
 
             var group = ObjectModelService.getGroup(data);
@@ -59,11 +62,12 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
         };
 
         $scope.createNew = function () {
-            $state.go('complaints.wizard');
+            $state.go('newComplaint');
+
         };
 
         $scope.close = function () {
-            console.log('close');
+            $state.go('closeComplaint');
         };
 
         $scope.subscribe = function (complaintInfo) {

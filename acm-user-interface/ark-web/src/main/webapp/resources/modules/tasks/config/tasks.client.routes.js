@@ -30,14 +30,9 @@ angular.module('tasks').config(['$stateProvider', '$urlRouterProvider',
                 templateUrl: 'modules/tasks/views/components/task-main.client.view.html'
             })
 
-            .state('tasks.status', {
-                url: '/status/:id/:taskNumber/:status',
-                templateUrl: 'modules/tasks/views/components/task-status.client.view.html'
-            })
-
-            .state('tasks.wizard', {
-                url: '/wizard',
-                templateUrl: 'modules/tasks/views/components/task-wizard.client.view.html'
+            .state('newTask', {
+                url: '/newTask',
+                templateUrl: 'modules/tasks/views/components/task-new-task.client.view.html'
             })
 
             .state('tasks.details', {

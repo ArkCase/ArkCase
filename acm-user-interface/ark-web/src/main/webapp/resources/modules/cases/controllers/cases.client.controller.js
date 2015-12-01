@@ -29,7 +29,7 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
 
 
         var loadCase = function (id) {
-            if (id) {
+            if (Util.goodPositive(id)) {
                 if ($scope.caseInfo && $scope.caseInfo.id != id) {
                     $scope.caseInfo = null;
                 }

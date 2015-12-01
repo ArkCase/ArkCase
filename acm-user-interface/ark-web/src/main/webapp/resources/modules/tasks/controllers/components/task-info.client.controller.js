@@ -34,7 +34,9 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
 
 
         $scope.$on('task-updated', function (e, data) {
-            $scope.taskInfo = data;
+            if (TaskInfoService.validateTaskInfo(data)) {
+                $scope.taskInfo = data;
+            }
         });
 
 

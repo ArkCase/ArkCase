@@ -17,6 +17,9 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         );
 
         $scope.$on('task-updated', function (e, data) {
+            if (!TaskInfoService.validateTaskInfo(data)) {
+                return;
+            }
             $scope.taskInfo = data;
 
             $scope.showBtnSignature = false;
