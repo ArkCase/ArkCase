@@ -1,11 +1,12 @@
 'use strict';
 
+
 angular.module('time-tracking').controller('TimeTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate'
-    , 'ConfigService', 'UtilService', 'ObjectService', 'TimeTrackingService', 'CallTimeTrackingService'
-    , 'Profile.UserInfoService', 'Authentication', 'Helper.ObjectTreeService'
+    , 'ConfigService', 'Authentication', 'UtilService', 'ObjectService', 'Helper.ObjectTreeService'
+    , 'TimeTracking.ListService', 'TimeTracking.InfoService'
     , function ($scope, $state, $stateParams, $q, $translate
-        , ConfigService, Util, ObjectService, TimeTrackingService, CallTimeTrackingService
-        , UserInfoService, Authentication, HelperObjectTreeService) {
+        , ConfigService, Authentication, Util, ObjectService, HelperObjectTreeService
+        , TimeTrackingListService, TimeTrackingInfoService) {
 
         ConfigService.getModuleConfig("time-tracking").then(function (config) {
             $scope.treeConfig = config.tree;
@@ -21,7 +22,7 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
                 Authentication.queryUserInfo().then(
                     function (userInfo) {
                         var userId = userInfo.userId;
-                        CallTimeTrackingService.queryTimeTrackingTreeData(userId, start, n, sort, filters).then(
+                        TimeTrackingListService.queryTimeTrackingTreeData(userId, start, n, sort, filters).then(
                             function (treeData) {
                                 dfd.resolve(treeData);
                                 return treeData;
@@ -41,7 +42,7 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
                 return dfd.promise;
             }
             , getNodeData: function (timesheetId) {
-                return CallTimeTrackingService.getTimeTrackingInfo(timesheetId);
+                return TimeTrackingInfoService.getTimeTrackingInfo(timesheetId);
             }
             , makeTreeNode: function (timesheetInfo) {
                 return {
