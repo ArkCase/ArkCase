@@ -104,7 +104,8 @@ angular.module('services').factory('Helper.ObjectTreeService', ['$resource', '$t
                     }
                 );
 
-                if (that.firstLoad && that.nodeId) {
+
+                if (that.firstLoad && Util.goodPositive(that.nodeId)) {
                     that.getNodeData(that.nodeId).then(
                         function (objectInfo) {
                             var treeNode = that.makeTreeNode(objectInfo);

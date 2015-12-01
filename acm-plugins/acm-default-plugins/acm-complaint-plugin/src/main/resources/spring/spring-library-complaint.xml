@@ -71,8 +71,8 @@
         </property>
     </bean>
 
-    <bean id="closeCompaintRequestService"
-          class="com.armedia.acm.plugins.complaint.service.CloseCompaintRequestService">
+    <bean id="closeComplaintRequestService"
+          class="com.armedia.acm.plugins.complaint.service.CloseComplaintRequestService">
         <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
         <property name="complaintDao" ref="acmComplaintDao"/>
         <property name="complaintEventPublisher" ref="complaintEventPublisher"/>
@@ -84,7 +84,7 @@
 
     <bean id="closeComplaintRequestProcessEndHandler"
           class="com.armedia.acm.plugins.complaint.service.CloseComplaintRequestProcessEndHandler">
-        <property name="closeCompaintRequestService" ref="closeCompaintRequestService"/>
+        <property name="closeComplaintRequestService" ref="closeComplaintRequestService"/>
     </bean>
     <!-- end of event responses -->
 

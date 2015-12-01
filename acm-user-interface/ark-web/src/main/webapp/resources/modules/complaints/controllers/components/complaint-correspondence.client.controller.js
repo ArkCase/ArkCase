@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.CorrespondenceController', ['$scope', '$stateParams', '$q', '$window', '$translate'
-    , 'UtilService', 'HelperService', 'ConstantService', 'LookupService', 'Object.LookupService', 'Object.CorrespondenceService'
-    , function ($scope, $stateParams, $q, $window, $translate, Util, Helper, Constant, LookupService, ObjectLookupService, ObjectCorrespondenceService) {
+    , 'UtilService', 'HelperService', 'ConstantService', 'LookupService', 'Object.LookupService', 'Object.CorrespondenceService', 'Complaint.InfoService'
+    , function ($scope, $stateParams, $q, $window, $translate, Util, Helper, Constant, LookupService, ObjectLookupService
+        , ObjectCorrespondenceService, ComplaintInfoService) {
 
         $scope.$emit('req-component-config', 'correspondence');
         $scope.$on('component-config', function (e, componentId, config) {
@@ -40,7 +41,9 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
         );
 
         $scope.$on('complaint-updated', function (e, data) {
-            $scope.complaintInfo = data;
+            if (ComplaintInfoService.validateComplaintInfo(data)) {
+                $scope.complaintInfo = data;
+            }
         });
 
         $scope.currentId = $stateParams.id;

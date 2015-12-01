@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ConstantService', 'Object.LookupService',
-    function ($scope, $stateParams, $modal, Util, Constant, ObjectLookupService) {
+angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal'
+    , 'UtilService', 'ConstantService', 'Object.LookupService', 'Complaint.InfoService'
+    , function ($scope, $stateParams, $modal, Util, Constant, ObjectLookupService, ComplaintInfoService) {
 
         $scope.$emit('req-component-config', 'documents');
         $scope.$on('component-config', function (e, componentId, config) {
@@ -31,7 +32,9 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         $scope.objectId = $stateParams.id;
 
         $scope.$on('complaint-updated', function (e, data) {
-            $scope.complaintInfo = data;
+            if (ComplaintInfoService.validateComplaintInfo(data)) {
+                $scope.complaintInfo = data;
+            }
         });
 
         var silentReplace = function (value, replace, replacement) {
