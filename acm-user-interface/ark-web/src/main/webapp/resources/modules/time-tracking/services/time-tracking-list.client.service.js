@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name time-tracking.service:TimeTracking.ListService
+ * @name service:TimeTracking.ListService
  *
  * @description
  *
@@ -17,7 +17,7 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
             /**
              * @ngdoc method
              * @name listObjects
-             * @methodOf time-tracking.service:TimeTracking.ListService
+             * @methodOf service:TimeTracking.ListService
              *
              * @description
              * Get list of all timesheets from SOLR.
@@ -43,7 +43,7 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
         /**
          * @ngdoc method
          * @name queryTimeTrackingTreeData
-         * @methodOf time-tracking.service:TimeTracking.ListService
+         * @methodOf service:TimeTracking.ListService
          *
          * @description
          * Query list of timesheets from SOLR and pack result for Object Tree.
@@ -89,7 +89,7 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
         /**
          * @ngdoc method
          * @name validateTimesheetList
-         * @methodOf time-tracking.service:TimeTracking.ListService
+         * @methodOf service:TimeTracking.ListService
          *
          * @description
          * Validate timesheet list data

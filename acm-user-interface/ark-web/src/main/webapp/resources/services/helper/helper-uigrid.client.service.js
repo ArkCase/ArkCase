@@ -34,7 +34,6 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              *
              * @param {Object} arg Map arguments
              * @param {Object} arg.scope Angular $scope
-             * @param {Function} arg.makeGridNode Function to make tree node from object data
              *
              * @description
              * Helper.UiGridService.Grid is to help a typical usage of 'ui-grid' directive.

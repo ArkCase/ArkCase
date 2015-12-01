@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name cost-tracking.service:CostTracking.ListService
+ * @name service:CostTracking.ListService
  *
  * @description
  *
@@ -17,7 +17,7 @@ angular.module('services').factory('CostTracking.ListService', ['$resource', '$t
             /**
              * @ngdoc method
              * @name listObjects
-             * @methodOf cost-tracking.service:CostTracking.ListService
+             * @methodOf service:CostTracking.ListService
              *
              * @description
              * Get list of all costsheets from SOLR.
@@ -43,7 +43,7 @@ angular.module('services').factory('CostTracking.ListService', ['$resource', '$t
         /**
          * @ngdoc method
          * @name queryCostTrackingTreeData
-         * @methodOf cost-tracking.service:CostTracking.ListService
+         * @methodOf service:CostTracking.ListService
          *
          * @description
          * Query list of costsheets from SOLR and pack result for Object Tree.
@@ -89,7 +89,7 @@ angular.module('services').factory('CostTracking.ListService', ['$resource', '$t
         /**
          * @ngdoc method
          * @name validateCostsheetList
-         * @methodOf time-tracking.service:CostTracking.ListService
+         * @methodOf service:CostTracking.ListService
          *
          * @description
          * Validate costsheet list data
