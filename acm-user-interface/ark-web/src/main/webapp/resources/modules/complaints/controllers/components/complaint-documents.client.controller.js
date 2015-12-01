@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal'
-    , 'UtilService', 'ConstantService', 'Object.LookupService', 'Complaint.InfoService'
-    , function ($scope, $stateParams, $modal, Util, Constant, ObjectLookupService, ComplaintInfoService) {
+    , 'UtilService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
+    , function ($scope, $stateParams, $modal, Util, ObjectService, ObjectLookupService, ComplaintInfoService) {
 
         $scope.$emit('req-component-config', 'documents');
         $scope.$on('component-config', function (e, componentId, config) {
@@ -28,7 +28,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         );
 
 
-        $scope.objectType = Constant.ObjectTypes.COMPLAINT;
+        $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
         $scope.objectId = $stateParams.id;
 
         $scope.$on('complaint-updated', function (e, data) {

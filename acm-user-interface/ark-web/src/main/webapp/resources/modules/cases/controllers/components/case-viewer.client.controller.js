@@ -40,7 +40,7 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
 
         // Obtains the currently logged in user
         //var userInfo = Authentication.queryUserInfo({});
-        var userInfo = Authentication.queryUserInfoNew();
+        var userInfo = Authentication.queryUserInfo();
 
         // Obtains a list of all users in ArkCase
         var totalUserInfo = LookupService.getUsers({});

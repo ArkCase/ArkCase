@@ -6,7 +6,7 @@ angular.module('profile').service('Profile.SubscriptionService', function ($http
     });
     function getSubscriptions() {
         var deferred = $q.defer();
-        Authentication.queryUserInfoNew().then(
+        Authentication.queryUserInfo().then(
             function (userInfo) {
                 var user = userInfo.userId;
                 if(user){

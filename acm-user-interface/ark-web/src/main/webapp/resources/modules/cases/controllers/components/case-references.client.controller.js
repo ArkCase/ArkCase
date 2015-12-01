@@ -1,13 +1,15 @@
 'use strict';
 
-angular.module('cases').controller('Cases.ReferencesController', ['$scope', 'UtilService', 'HelperService', 'Case.InfoService'
-    , function ($scope, Util, Helper, CaseInfoService) {
+angular.module('cases').controller('Cases.ReferencesController', ['$scope', 'UtilService', 'Helper.UiGridService', 'Case.InfoService'
+    , function ($scope, Util, HelperUiGridService, CaseInfoService) {
+
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
 		$scope.$emit('req-component-config', 'references');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("references" == componentId) {
-                Helper.Grid.setColumnDefs($scope, config);
-                Helper.Grid.setBasicOptions($scope, config);
+                gridHelper.setColumnDefs(config);
+                gridHelper.setBasicOptions(config);
             }
         });
 
@@ -16,7 +18,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', 'Uti
                 $scope.caseInfo = data;
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.caseInfo.references;
-                Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.caseInfo.references.length);
+                gridHelper.hidePagingControlsIfAllDataShown($scope.caseInfo.references.length);
             }
         });
 
@@ -25,7 +27,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', 'Uti
 
             var targetType = Util.goodMapValue(rowEntity, "targetType");
             var targetId = Util.goodMapValue(rowEntity, "targetId");
-            Helper.Grid.showObject($scope, targetType, targetId);
+            gridHelper.showObject(targetType, targetId);
         };
 
 	}

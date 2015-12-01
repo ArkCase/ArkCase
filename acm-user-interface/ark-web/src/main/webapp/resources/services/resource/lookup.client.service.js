@@ -10,11 +10,16 @@
 
  * LookupService contains functions to lookup data (typically static data).
  */
-angular.module('services').factory('LookupService', ['$resource', 'StoreService', 'UtilService', 'Object.ListService'
-    , function ($resource, Store, Util, ObjectListService) {
+angular.module('services').factory('LookupService', ['$resource', 'StoreService', 'UtilService', 'Solr.SearchService'
+    , function ($resource, Store, Util, SolrSearchService) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
 
             getConfig: {
+                url: "proxy/arkcase/api/latest/service/config/:name"
+                , method: "GET"
+                , cache: true
+            }
+            , getConfig_tmp: {
                 url: "proxy/arkcase/api/latest/service/config/:name"
                 , method: "GET"
                 , cache: true
@@ -195,7 +200,7 @@ angular.module('services').factory('LookupService', ['$resource', 'StoreService'
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateUsersBasic = function (data) {
-            if (!ObjectListService.validateSolrData(data)) {
+            if (!SolrSearchService.validateSolrData(data)) {
                 return false;
             }
             return true;

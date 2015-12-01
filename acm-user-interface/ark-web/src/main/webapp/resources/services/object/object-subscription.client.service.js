@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/objects/object-subscription.client.service.js services/objects/object-subscription.client.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/object/object-subscription.client.service.js services/object/object-subscription.client.service.js}
 
  * Object.SubscriptionService includes methods for managing subscriptions
  */
