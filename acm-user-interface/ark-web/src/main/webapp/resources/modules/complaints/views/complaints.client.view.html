@@ -1,11 +1,11 @@
 <div ng-controller="ComplaintsController">
     <div class="module-content">
-        <div class="left-sidebar scroll-body">
+        <div class="left-sidebar scroll-body" slimscroll="">
             <div class="module-header">
                 <h3>{{'complaints.title' | translate}}</h3>
             </div>
 
-            <div ng-include="'modules/complaints/views/complaints-list.client.view.html'" slimscroll=""/>
+            <div ng-include="'modules/complaints/views/complaints-list.client.view.html'" />
         </div>
 
         <section class="content-body" ng-show="complaintInfo">
