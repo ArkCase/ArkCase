@@ -136,8 +136,8 @@
  </file>
  </example>
  */
-angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilService', 'ValidationService', 'StoreService',
-    function ($q, $translate, Util, Validator, Store) {
+angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilService', 'StoreService',
+    function ($q, $translate, Util, Store) {
         var Tree = {
             create: function (treeArgs) {
                 Tree.Info.create({name: "ObjectTree"});
@@ -444,10 +444,12 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     var id = "";
                     if (!Util.isEmpty(key)) {
                         var arr = key.split(this.KEY_SEPARATOR);
-                        var lastPart = arr[arr.length - 1];
-                        var typeAndId = lastPart.split(this.TYPE_ID_SEPARATOR);
-                        if (1 < typeAndId.length) {
-                            id = typeAndId[1];
+                        if (1 < arr.length) {
+                            var idPart = arr[1];
+                            var typeAndId = idPart.split(this.TYPE_ID_SEPARATOR);
+                            if (1 < typeAndId.length) {
+                                id = typeAndId[1];
+                            }
                         }
                     }
                     return id;

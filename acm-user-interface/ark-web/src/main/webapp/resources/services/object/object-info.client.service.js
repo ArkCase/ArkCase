@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/objects/object-info.client.service.js services/objects/object-info.client.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/object/object-info.client.service.js services/object/object-info.client.service.js}
 
  * Object.InfoService includes group of REST calls to retrieve and save object info; Objects can be Case, Complaint, Task, etc.
  */

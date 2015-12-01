@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('CasesListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'Case.ListService', 'Case.InfoService', 'ConfigService', 'Helper.ObjectTreeService',
-    function ($scope, $state, $stateParams, $translate, Util, Constant, CaseListService, CaseInfoService, ConfigService, HelperObjectTreeService) {
+angular.module('cases').controller('CasesListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Case.ListService', 'Case.InfoService', 'ConfigService', 'Helper.ObjectTreeService',
+    function ($scope, $state, $stateParams, $translate, Util, ObjectService, CaseListService, CaseInfoService, ConfigService, HelperObjectTreeService) {
         ConfigService.getModuleConfig("cases").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
@@ -20,7 +20,7 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
             , makeTreeNode: function (caseInfo) {
                 return {
                     nodeId: Util.goodValue(caseInfo.id, 0)
-                    , nodeType: Constant.ObjectTypes.CASE_FILE
+                    , nodeType: ObjectService.ObjectTypes.CASE_FILE
                     , nodeTitle: Util.goodValue(caseInfo.title)
                     , nodeToolTip: Util.goodValue(caseInfo.title)
                 };
