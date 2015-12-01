@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name cost-tracking.service:CostTracking.InfoService
+ * @name service:CostTracking.InfoService
  *
  * @description
  *
@@ -17,7 +17,7 @@ angular.module('services').factory('CostTracking.InfoService', ['$resource', '$t
             /**
              * @ngdoc method
              * @name get
-             * @methodOf cost-tracking.service:CostTracking.InfoService
+             * @methodOf service:CostTracking.InfoService
              *
              * @description
              * Query costsheet data by given id
@@ -39,7 +39,7 @@ angular.module('services').factory('CostTracking.InfoService', ['$resource', '$t
             /**
              * @ngdoc method
              * @name save
-             * @methodOf cost-tracking.service:CostTracking.InfoService
+             * @methodOf service:CostTracking.InfoService
              *
              * @description
              * Save costsheet data
@@ -61,7 +61,7 @@ angular.module('services').factory('CostTracking.InfoService', ['$resource', '$t
         /**
          * @ngdoc method
          * @name getCostTrackingInfo
-         * @methodOf cost-tracking.service:CostTracking.InfoService
+         * @methodOf service:CostTracking.InfoService
          *
          * @description
          * Query costsheet data
@@ -85,7 +85,7 @@ angular.module('services').factory('CostTracking.InfoService', ['$resource', '$t
         /**
          * @ngdoc method
          * @name saveCostsheetInfo
-         * @methodOf cost-tracking.service:CostTracking.InfoService
+         * @methodOf service:CostTracking.InfoService
          *
          * @description
          * Save costsheet data
@@ -112,7 +112,7 @@ angular.module('services').factory('CostTracking.InfoService', ['$resource', '$t
         /**
          * @ngdoc method
          * @name validateCostsheet
-         * @methodOf cost-tracking.service:CostTracking.InfoService
+         * @methodOf service:CostTracking.InfoService
          *
          * @description
          * Validate costsheet

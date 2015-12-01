@@ -10,8 +10,8 @@
  *
  * Complaint.ListService provides functions for Complaint database data
  */
-angular.module('services').factory('Complaint.ListService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ConstantService', 'Object.ListService',
-    function ($resource, $translate, Store, Util, Constant, ObjectListService) {
+angular.module('services').factory('Complaint.ListService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ObjectService', 'Object.ListService',
+    function ($resource, $translate, Store, Util, ObjectService, ObjectListService) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {});
 
         Service.SessionCacheNames = {};
@@ -56,7 +56,7 @@ angular.module('services').factory('Complaint.ListService', ['$resource', '$tran
                         _.forEach(docs, function (doc) {
                             treeData.docs.push({
                                 nodeId: Util.goodValue(doc.object_id_s, 0)
-                                , nodeType: Constant.ObjectTypes.COMPLAINT
+                                , nodeType: ObjectService.ObjectTypes.COMPLAINT
                                 , nodeTitle: Util.goodValue(doc.title_parseable)
                                 , nodeToolTip: Util.goodValue(doc.title_parseable)
                             });
@@ -82,7 +82,7 @@ angular.module('services').factory('Complaint.ListService', ['$resource', '$tran
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateComplaintList = function (data) {
-            if (!ObjectListService.validateSolrData(data)) {
+            if (!ObjectListService.validateObjects(data)) {
                 return false;
             }
 

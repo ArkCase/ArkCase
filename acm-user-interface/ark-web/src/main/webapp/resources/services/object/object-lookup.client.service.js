@@ -6,12 +6,12 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/objects/object-lookup.client.service.js services/objects/object-lookup.client.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/object/object-lookup.client.service.js services/object/object-lookup.client.service.js}
 
  * LookupService contains functions to lookup data (typically static data).
  */
-angular.module('services').factory('Object.LookupService', ['$resource', 'StoreService', 'UtilService', 'Object.ListService',
-    function ($resource, Store, Util, ObjectListService) {
+angular.module('services').factory('Object.LookupService', ['$resource', 'StoreService', 'UtilService', 'Solr.SearchService',
+    function ($resource, Store, Util, SolrSearchService) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
             /**
              * @ngdoc method
@@ -353,7 +353,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateGroups = function (data) {
-            if (!ObjectListService.validateSolrData(data)) {
+            if (!SolrSearchService.validateSolrData(data)) {
                 return false;
             }
 
@@ -557,14 +557,8 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
                 , result: participantTypes
                 , onSuccess: function (data) {
                     if (Service.validateParticipantTypes(data)) {
-
-                        participantTypes = [{type: "*", name: "*"}];
-                        Util.forEachStripNg(data, function (v, k) {
-                            participantTypes.push({type: k, name: v});
-                        });
-
-                        cacheParticipantTypes.set(participantTypes);
-                        return participantTypes;
+                        cacheParticipantTypes.set(data);
+                        return data;
                     }
                 }
             });
@@ -583,7 +577,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateParticipantTypes = function (data) {
-            if (Util.isEmpty(data)) {
+            if (!Util.isArray(data)) {
                 return false;
             }
             return true;
@@ -673,8 +667,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateContactMethodTypes = function (data) {
-            //if (!Util.isArray(data)) {
-            if (Util.isEmpty(data)) {
+            if (!Util.isArray(data)) {
                 return false;
             }
             return true;
@@ -719,8 +712,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateOrganizationTypes = function (data) {
-            //if (!Util.isArray(data)) {
-            if (Util.isEmpty(data)) {
+            if (!Util.isArray(data)) {
                 return false;
             }
             return true;
@@ -765,8 +757,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateAddressTypes = function (data) {
-            //if (!Util.isArray(data)) {
-            if (Util.isEmpty(data)) {
+            if (!Util.isArray(data)) {
                 return false;
             }
             return true;
@@ -811,8 +802,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateAliasTypes = function (data) {
-            //if (!Util.isArray(data)) {
-            if (Util.isEmpty(data)) {
+            if (!Util.isArray(data)) {
                 return false;
             }
             return true;
@@ -857,8 +847,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateSecurityTagTypes = function (data) {
-            //if (!Util.isArray(data)) {
-            if (Util.isEmpty(data)) {
+            if (!Util.isArray(data)) {
                 return false;
             }
             return true;

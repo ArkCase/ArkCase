@@ -13,21 +13,21 @@
 angular.module('services').factory('Complaint.InfoService', ['$resource', '$translate', 'StoreService', 'UtilService', 'Object.InfoService',
     function ($resource, $translate, Store, Util, ObjectInfoService) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
-            /**
-             * ngdoc method
-             * name get
-             * methodOf services:Complaint.InfoService
-             *
-             * @description
-             * Query complaint data
-             *
-             * @param {Object} params Map of input parameter.
-             * @param {Number} params.id  Complaint ID
-             * @param {Function} onSuccess (Optional)Callback function of success query.
-             * @param {Function} onError (Optional) Callback function when fail.
-             *
-             * @returns {Object} Object returned by $resource
-             */
+            ///**
+            // * ngdoc method
+            // * name get
+            // * methodOf services:Complaint.InfoService
+            // *
+            // * @description
+            // * Query complaint data
+            // *
+            // * @param {Object} params Map of input parameter.
+            // * @param {Number} params.id  Complaint ID
+            // * @param {Function} onSuccess (Optional)Callback function of success query.
+            // * @param {Function} onError (Optional) Callback function when fail.
+            // *
+            // * @returns {Object} Object returned by $resource
+            // */
             //get: {
             //    method: 'GET',
             //    url: 'proxy/arkcase/api/latest/plugin/complaint/byId/:id',

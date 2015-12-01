@@ -1,12 +1,14 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.CostController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'ConstantService', 'HelperService', 'Object.CostService'
-    , function ($scope, $stateParams, $translate, Util, Constant, Helper, ObjectCostService) {
+    , 'UtilService', 'ObjectService', 'Helper.UiGridService', 'Helper.ConfigService', 'Object.CostService'
+    , function ($scope, $stateParams, $translate, Util, ObjectService, HelperUiGridService, HelperConfigService, ObjectCostService) {
 
-        var promiseConfig = Helper.requestComponentConfig($scope, "cost", function (config) {
-            Helper.Grid.setColumnDefs($scope, config);
-            Helper.Grid.setBasicOptions($scope, config);
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
+        var promiseConfig = HelperConfigService.requestComponentConfig($scope, "cost", function (config) {
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
 
             for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                 if ("name" == $scope.config.columnDefs[i].name) {
@@ -17,8 +19,8 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
             }
         });
 
-        if ($stateParams.id) {
-            ObjectCostService.queryCostsheets(Constant.ObjectTypes.COMPLAINT, $stateParams.id).then(
+        if (Util.goodPositive($stateParams.id)) {
+            ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.COMPLAINT, $stateParams.id).then(
                 function (costsheets) {
                     promiseConfig.then(function (config) {
                         for (var i = 0; i < costsheets.length; i++) {
@@ -31,7 +33,7 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
                         $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = costsheets;
                         $scope.gridOptions.totalItems = Util.goodValue(costsheets.length, 0);
-                        Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
+                        gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                         return config;
                     });
                     return costsheets;
@@ -41,7 +43,7 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();
-            Helper.Grid.showObject($scope, Constant.ObjectTypes.COSTSHEET, Util.goodMapValue(rowEntity, "id", 0));
+            gridHelper.showObject(ObjectService.ObjectTypes.COSTSHEET, Util.goodMapValue(rowEntity, "id", 0));
         };
     }
 ]);

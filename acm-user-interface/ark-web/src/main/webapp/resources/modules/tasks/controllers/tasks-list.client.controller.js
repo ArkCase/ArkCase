@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('TasksListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'Task.InfoService', 'Task.ListService', 'ConfigService', 'Helper.ObjectTreeService',
-    function ($scope, $state, $stateParams, $translate, Util, Constant, TaskInfoService, TaskListService, ConfigService, HelperObjectTreeService) {
+angular.module('tasks').controller('TasksListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Task.InfoService', 'Task.ListService', 'ConfigService', 'Helper.ObjectTreeService',
+    function ($scope, $state, $stateParams, $translate, Util, ObjectService, TaskInfoService, TaskListService, ConfigService, HelperObjectTreeService) {
         ConfigService.getModuleConfig("tasks").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
@@ -20,7 +20,7 @@ angular.module('tasks').controller('TasksListController', ['$scope', '$state', '
             , makeTreeNode: function (taskInfo) {
                 return {
                     nodeId: Util.goodValue(taskInfo.taskId, 0)
-                    , nodeType: Constant.ObjectTypes.TASK
+                    , nodeType: ObjectService.ObjectTypes.TASK
                     , nodeTitle: Util.goodValue(taskInfo.title)
                     , nodeToolTip: Util.goodValue(taskInfo.title)
                 };

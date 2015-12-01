@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name time-tracking.service:TimeTracking.InfoService
+ * @name service:TimeTracking.InfoService
  *
  * @description
  *
@@ -17,7 +17,7 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
             /**
              * @ngdoc method
              * @name get
-             * @methodOf time-tracking.service:TimeTracking.InfoService
+             * @methodOf service:TimeTracking.InfoService
              *
              * @description
              * Query timesheet data by given id
@@ -39,7 +39,7 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
             /**
              * @ngdoc method
              * @name save
-             * @methodOf time-tracking.service:TimeTracking.InfoService
+             * @methodOf service:TimeTracking.InfoService
              *
              * @description
              * Save timesheet data
@@ -61,7 +61,7 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
         /**
          * @ngdoc method
          * @name getTimeTrackingInfo
-         * @methodOf time-tracking.service:TimeTracking.InfoService
+         * @methodOf service:TimeTracking.InfoService
          *
          * @description
          * Query timesheet data
@@ -85,7 +85,7 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
         /**
          * @ngdoc method
          * @name saveTimesheetInfo
-         * @methodOf time-tracking.service:TimeTracking.InfoService
+         * @methodOf service:TimeTracking.InfoService
          *
          * @description
          * Save timesheet data
@@ -112,7 +112,7 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
         /**
          * @ngdoc method
          * @name validateTimesheet
-         * @methodOf time-tracking.service:TimeTracking.InfoService
+         * @methodOf service:TimeTracking.InfoService
          *
          * @description
          * Validate timesheet

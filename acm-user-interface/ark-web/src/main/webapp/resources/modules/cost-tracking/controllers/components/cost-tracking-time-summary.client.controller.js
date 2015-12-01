@@ -1,12 +1,15 @@
 'use strict';
 
-angular.module('cost-tracking').controller('CostTracking.TimeSummaryController', ['$scope', 'UtilService', 'HelperService',
-    function ($scope, Util, Helper) {
+angular.module('cost-tracking').controller('CostTracking.TimeSummaryController', ['$scope', 'UtilService', 'Helper.UiGridService',
+    function ($scope, Util, HelperUiGridService) {
+
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
         $scope.$emit('req-component-config', 'time-summary');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('time-summary' == componentId) {
-                Helper.Grid.setColumnDefs($scope, config);
-                Helper.Grid.setBasicOptions($scope, config);
+                gridHelper.setColumnDefs(config);
+                gridHelper.setBasicOptions(config);
             }
         });
 
@@ -27,7 +30,7 @@ angular.module('cost-tracking').controller('CostTracking.TimeSummaryController',
 
             var targetType = Util.goodMapValue(rowEntity, "parentType");
             var targetId = Util.goodMapValue(rowEntity, "parentId");
-            Helper.Grid.showObject($scope, targetType, targetId);
+            gridHelper.showObject(targetType, targetId);
         };
 
     }

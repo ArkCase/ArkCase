@@ -1,7 +1,12 @@
 'use strict';
 
-angular.module('cost-tracking').controller('CostTrackingListController',['$scope', '$state', '$stateParams', '$q', '$translate', 'UtilService', 'ConstantService', 'CostTracking.InfoService', 'CostTracking.ListService', 'ConfigService', 'Authentication', 'Helper.ObjectTreeService',
-    function($scope, $state, $stateParams, $q, $translate, Util, Constant, CostTrackingInfoService, CostTrackingListService, ConfigService, Authentication, HelperObjectTreeService){
+angular.module('cost-tracking').controller('CostTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate'
+    , 'ConfigService', 'Authentication', 'UtilService', 'ObjectService', 'Helper.ObjectTreeService'
+    , 'CostTracking.ListService', 'CostTracking.InfoService'
+    , function ($scope, $state, $stateParams, $q, $translate
+        , ConfigService, Authentication, Util, ObjectService, HelperObjectTreeService
+        , CostTrackingListService, CostTrackingInfoService) {
+
         ConfigService.getModuleConfig("cost-tracking").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
@@ -13,7 +18,7 @@ angular.module('cost-tracking').controller('CostTrackingListController',['$scope
             , nodeId: $stateParams.id
             , getTreeData: function (start, n, sort, filters) {
                 var dfd = $q.defer();
-                Authentication.queryUserInfoNew().then(
+                Authentication.queryUserInfo().then(
                     function (userInfo) {
                         var userId = userInfo.userId;
                         CostTrackingListService.queryCostTrackingTreeData(userId, start, n, sort, filters).then(
@@ -41,7 +46,7 @@ angular.module('cost-tracking').controller('CostTrackingListController',['$scope
             , makeTreeNode: function (costsheetId) {
                 return {
                     nodeId: Util.goodValue(costsheetId.id, 0)
-                    , nodeType: Constant.ObjectTypes.COSTSHEET
+                    , nodeType: ObjectService.ObjectTypes.COSTSHEET
                     , nodeTitle: Util.goodValue(costsheetId.title)
                     , nodeToolTip: Util.goodValue(costsheetId.title)
                 };

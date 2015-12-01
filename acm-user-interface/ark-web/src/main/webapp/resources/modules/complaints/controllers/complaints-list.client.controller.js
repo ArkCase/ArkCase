@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('ComplaintsListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ConstantService', 'Complaint.ListService', 'Complaint.InfoService', 'ConfigService', 'Helper.ObjectTreeService',
-    function ($scope, $state, $stateParams, $translate, Util, Constant, ComplaintListService, ComplaintInfoService, ConfigService, HelperObjectTreeService) {
+angular.module('complaints').controller('ComplaintsListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Complaint.ListService', 'Complaint.InfoService', 'ConfigService', 'Helper.ObjectTreeService',
+    function ($scope, $state, $stateParams, $translate, Util, ObjectService, ComplaintListService, ComplaintInfoService, ConfigService, HelperObjectTreeService) {
         ConfigService.getModuleConfig("complaints").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
@@ -20,7 +20,7 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
             , makeTreeNode: function (complaintInfo) {
                 return {
                     nodeId: Util.goodValue(complaintInfo.id, 0)
-                    , nodeType: Constant.ObjectTypes.TASK
+                    , nodeType: ObjectService.ObjectTypes.TASK
                     , nodeTitle: Util.goodValue(complaintInfo.title)
                     , nodeToolTip: Util.goodValue(complaintInfo.title)
                 };

@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name time-tracking.service:TimeTracking.ListService
+ * @name service:TimeTracking.ListService
  *
  * @description
  *
@@ -10,14 +10,14 @@
 
  * TimeTracking.ListService provides functions for Timesheet database data
  */
-angular.module('services').factory('TimeTracking.ListService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ConstantService', 'Object.ListService',
-    function ($resource, $translate, Store, Util, Constant, ObjectListService) {
+angular.module('services').factory('TimeTracking.ListService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ObjectService', 'Object.ListService',
+    function ($resource, $translate, Store, Util, ObjectService, ObjectListService) {
         var Service = $resource('proxy/arkcase/api/v1/service/timesheet', {}, {
 
             /**
              * @ngdoc method
              * @name listObjects
-             * @methodOf time-tracking.service:TimeTracking.ListService
+             * @methodOf service:TimeTracking.ListService
              *
              * @description
              * Get list of all timesheets from SOLR.
@@ -43,7 +43,7 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
         /**
          * @ngdoc method
          * @name queryTimeTrackingTreeData
-         * @methodOf time-tracking.service:TimeTracking.ListService
+         * @methodOf service:TimeTracking.ListService
          *
          * @description
          * Query list of timesheets from SOLR and pack result for Object Tree.
@@ -75,7 +75,7 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
                         _.forEach(docs, function (doc) {
                             treeData.docs.push({
                                 nodeId: Util.goodValue(doc.object_id_s, 0)
-                                , nodeType: Constant.ObjectTypes.TIMESHEET
+                                , nodeType: ObjectService.ObjectTypes.TIMESHEET
                                 , nodeTitle: Util.goodValue(doc.name)
                                 , nodeToolTip: Util.goodValue(doc.name)
                             });
@@ -89,7 +89,7 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
         /**
          * @ngdoc method
          * @name validateTimesheetList
-         * @methodOf time-tracking.service:TimeTracking.ListService
+         * @methodOf service:TimeTracking.ListService
          *
          * @description
          * Validate timesheet list data
@@ -99,7 +99,7 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateTimesheetList = function (data) {
-            if (!ObjectListService.validateSolrData(data)) {
+            if (!ObjectListService.validateObjects(data)) {
                 return false;
             }
 
