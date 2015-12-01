@@ -303,9 +303,7 @@ body {
     overflow-y: auto;
     height: 100%;
 }
-.module-content .content-body iframe {
-    height: 600px !important;
-}
+
 /* Right Sidebar (Right Column) */
 
 .module-content .right-sidebar {
