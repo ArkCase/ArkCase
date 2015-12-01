@@ -35,14 +35,14 @@ angular.module('complaints').config(['$stateProvider', '$urlRouterProvider',
                 templateUrl: 'modules/complaints/views/components/complaint-viewer.client.view.html'
             })
 
-            .state('complaints.status', {
-                url: '/:id/status/:complaintNumber/:status',
-                templateUrl: 'modules/complaints/views/components/complaint-status.client.view.html'
+            .state('closeComplaint', {
+                url: '/:id/closeComplaint',
+                templateUrl: 'modules/complaints/views/components/complaint-close-complaint.client.view.html'
             })
 
-            .state('complaints.wizard', {
-                url: '/wizard',
-                templateUrl: 'modules/complaints/views/components/complaint-wizard.client.view.html'
+            .state('newComplaint', {
+                url: '/newComplaint',
+                templateUrl: 'modules/complaints/views/components/complaint-new-complaint.client.view.html'
             })
 
             .state('complaints.calendar', {

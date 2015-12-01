@@ -21,20 +21,6 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
             ObjectCostService.queryCostsheets(Constant.ObjectTypes.COMPLAINT, $stateParams.id).then(
                 function (costsheets) {
                     promiseConfig.then(function (config) {
-                        $scope.gridOptions = $scope.gridOptions || {};
-                        $scope.gridOptions.data = costsheets;
-                        $scope.gridOptions.totalItems = Util.goodValue(costsheets.length, 0);
-                        Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
-                        return config;
-                    });
-                    return costsheets;
-                }
-            );
-        }
-        if ($stateParams.id) {
-            ObjectCostService.queryCostsheets(Constant.ObjectTypes.COMPLAINT, $stateParams.id).then(
-                function (costsheets) {
-                    promiseConfig.then(function (config) {
                         for (var i = 0; i < costsheets.length; i++) {
                             costsheets[i].acm$_formName = $translate.instant("components.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
                             costsheets[i].acm$_costs = _.reduce(Util.goodArray(costsheets[i].costs), function (total, n) {
@@ -52,12 +38,6 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
                 }
             );
         }
-
-
-        $scope.$on('complaint-updated', function (e, data) {
-            $scope.complaintInfo = data;
-        });
-
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();

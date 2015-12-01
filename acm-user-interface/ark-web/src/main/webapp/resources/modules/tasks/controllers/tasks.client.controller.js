@@ -29,7 +29,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 
 
         var loadTask = function (id) {
-            if (id) {
+            if (Util.goodPositive(id)) {
                 if ($scope.taskInfo && $scope.taskInfo.taskId != id) {
                     $scope.taskInfo = null;
                 }

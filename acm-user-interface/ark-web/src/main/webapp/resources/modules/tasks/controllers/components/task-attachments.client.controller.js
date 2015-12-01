@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ConstantService', 'Object.LookupService',
-    function ($scope, $stateParams, $modal, Util, Constant, ObjectLookupService) {
+angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal'
+    , 'UtilService', 'ConstantService', 'Object.LookupService', 'Task.InfoService'
+    , function ($scope, $stateParams, $modal, Util, Constant, ObjectLookupService, TaskInfoService) {
+
         $scope.$emit('req-component-config', 'attachments');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('attachments' == componentId) {
@@ -22,7 +24,9 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         $scope.objectType = Constant.ObjectTypes.TASK;
         $scope.objectId = $stateParams.id;
         $scope.$on('task-updated', function (e, data) {
-            $scope.taskInfo = data;
+            if (TaskInfoService.validateTaskInfo(data)) {
+                $scope.taskInfo = data;
+            }
         });
 
     }
