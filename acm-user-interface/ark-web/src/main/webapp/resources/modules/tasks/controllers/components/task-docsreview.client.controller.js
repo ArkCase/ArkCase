@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q', 'UtilService', 'HelperService',
-    function ($scope, $q, Util, Helper) {
+angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q', 'UtilService', 'HelperService', 'Task.InfoService'
+    , function ($scope, $q, Util, Helper, TaskInfoService) {
         $scope.$emit('req-component-config', 'docsreview');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("docsreview" == componentId) {
@@ -16,6 +16,9 @@ angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
         var promiseUsers = Helper.Grid.getUsers($scope);
 
         $scope.$on('task-updated', function (e, data) {
+            if (!TaskInfoService.validateTaskInfo(data)) {
+                return;
+            }
             $scope.taskInfo = data;
             $q.all([promiseUsers]).then(function (data) {
                 var arr = (data.documentUnderReview) ? [data.documentUnderReview] : [];

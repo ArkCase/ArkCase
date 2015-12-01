@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', '$stateParams', '$q', '$window', '$translate'
-    , 'UtilService', 'HelperService', 'ConstantService', 'LookupService', 'Object.LookupService', 'Object.CorrespondenceService'
-    , function ($scope, $stateParams, $q, $window, $translate, Util, Helper, Constant, LookupService, ObjectLookupService, ObjectCorrespondenceService) {
+    , 'UtilService', 'HelperService', 'ConstantService', 'LookupService', 'Object.LookupService', 'Object.CorrespondenceService', 'Case.InfoService'
+    , function ($scope, $stateParams, $q, $window, $translate, Util, Helper, Constant, LookupService, ObjectLookupService, ObjectCorrespondenceService, CaseInfoService) {
 
         $scope.$emit('req-component-config', 'correspondence');
         $scope.$on('component-config', function (e, componentId, config) {
@@ -40,7 +40,9 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         );
 
         $scope.$on('case-updated', function (e, data) {
-            $scope.caseInfo = data;
+            if (CaseInfoService.validateCaseInfo(data)) {
+                $scope.caseInfo = data;
+            }
         });
 
         $scope.currentId = $stateParams.id;
@@ -52,24 +54,6 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
                 , Util.goodValue($scope.sort.by)
                 , Util.goodValue($scope.sort.dir)
             );
-
-            //var cacheCorrespondenceData = new Store.CacheFifo(Helper.CacheNames.CASE_CORRESPONDENCE_DATA);
-            //var cacheKey = Constant.ObjectTypes.CASE_FILE + "." + $scope.currentId;
-            //var correspondenceData = cacheCorrespondenceData.get(cacheKey);
-            //var promiseCorrespondence = Util.serviceCall({
-            //    service: CasesService.queryCorrespondence
-            //    , param: Helper.Grid.withPagingParams($scope, {
-            //        parentType: Constant.ObjectTypes.CASE_FILE,
-            //        parentId: $scope.currentId
-            //    })
-            //    , onSuccess: function (data) {
-            //        if (Validator.validateCorrespondences(data)) {
-            //            correspondenceData = data;
-            //            cacheCorrespondenceData.put(cacheKey, correspondenceData);
-            //            return correspondenceData;
-            //        }
-            //    }
-            //});
 
             $q.all([promiseCorrespondence, promiseUsers]).then(function (data) {
                 var correspondenceData = data[0];
@@ -98,22 +82,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             var folderId = Util.goodMapValue($scope.caseInfo, "container.folder.cmisFolderId", "");
             var template = $scope.correspondenceForm.value;
             var promiseCreateCorrespondence = ObjectCorrespondenceService.createCorrespondence(template, Constant.ObjectTypes.CASE_FILE, $scope.currentId, folderId);
-            //var promiseCreateCorrespondence = Util.serviceCall({
-            //    service: CasesService.createCorrespondence
-            //    , param: {
-            //        parentType: Constant.ObjectTypes.CASE_FILE,
-            //        parentId: $scope.currentId,
-            //        folderId: folderId,
-            //        template: template
-            //    }
-            //    , data: {}
-            //    , onSuccess: function (data) {
-            //        if (Validator.validateNewCorrespondence(data)) {
-            //            var newCorrespondence = data;
-            //            return newCorrespondence;
-            //        }
-            //    }
-            //});
+
             $q.all([promiseCreateCorrespondence, promiseUsers]).then(function (data) {
                 var newCorrespondence = data[0];
                 var correspondence = {};

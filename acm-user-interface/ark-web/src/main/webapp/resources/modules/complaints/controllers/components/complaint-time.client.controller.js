@@ -39,11 +39,6 @@ angular.module('complaints').controller('Complaints.TimeController', ['$scope', 
             );
         }
 
-        $scope.$on('complaint-updated', function (e, data) {
-            $scope.complaintInfo = data;
-        });
-
-
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();
             Helper.Grid.showObject($scope, Constant.ObjectTypes.TIMESHEET, Util.goodMapValue(rowEntity, "id", 0));

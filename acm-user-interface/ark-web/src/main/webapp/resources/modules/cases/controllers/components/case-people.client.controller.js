@@ -394,6 +394,10 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }); //end $q
         };
         $scope.$on('case-updated', function (e, data) {
+            if (!CaseInfoService.validateCaseInfo(data)) {
+                return;
+            }
+
             if (data.id == $stateParams.id) {
                 updateGridData(data);
             } else {                      // condition when data comes before state is routed and config is not set

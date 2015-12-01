@@ -11,7 +11,7 @@
     },
     {
       "menuId": "topbar",
-      "menuItemURL": "complaints.wizard",
+      "menuItemURL": "newComplaint",
       "menuItemTitle": "Complaint",
       "iconClass": "fa fa-exclamation-triangle",
       "position": 10
