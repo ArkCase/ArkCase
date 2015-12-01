@@ -4,10 +4,7 @@
 package com.armedia.acm.service.frevvo.forms.factory;
 
 import com.armedia.acm.form.casefile.service.CaseFilePSService;
-import com.armedia.acm.form.casefile.service.CaseFileService;
 import com.armedia.acm.form.changecasestatus.service.ChangeCaseStatusService;
-import com.armedia.acm.form.closecomplaint.service.CloseComplaintService;
-import com.armedia.acm.form.cost.service.CostService;
 import com.armedia.acm.form.ebrief.service.EbriefService;
 import com.armedia.acm.form.electroniccommunication.service.ElectronicCommunicationService;
 import com.armedia.acm.form.plain.service.PlainFormService;
@@ -17,7 +14,6 @@ import com.armedia.acm.form.time.service.TimeService;
 import com.armedia.acm.forms.roi.service.ROIService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
-import com.armedia.acm.plugins.complaint.service.ComplaintService;
 import com.armedia.acm.service.frevvo.forms.web.api.FrevvoFormController;
 import org.springframework.security.core.Authentication;
 
@@ -155,8 +151,8 @@ public class FrevvoFormServiceFactory
 	            service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
 	            service.setComplaintDao(frevvoFormController.getComplaintDao());
 	            service.setCaseFileDao(frevvoFormController.getCaseFileDao());
-            service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
-            service.setAcmFolderService(frevvoFormController.getAcmFolderService());
+				service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
+				service.setAcmFolderService(frevvoFormController.getAcmFolderService());
 	            
 	            return service;
 			}
@@ -185,34 +181,6 @@ public class FrevvoFormServiceFactory
 				service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
 				service.setEcmFileDao(frevvoFormController.getEcmFileDao());
 	            service.setTimesheetEventPublisher(frevvoFormController.getTimesheetEventPublisher());
-	            
-	            return service;
-			}
-			
-			if (FrevvoFormName.COSTSHEET.equals(name))
-	        {
-	            String contextPath = request.getServletContext().getContextPath();
-	
-	            CostService service = new CostService();
-	
-	            service.setEcmFileService(frevvoFormController.getEcmFileService());
-	            service.setServletContextPath(contextPath);
-	            service.setProperties(frevvoFormController.getProperties());
-	            service.setRequest(request);
-	            service.setAuthentication(authentication);
-	            service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
-	            service.setUserDao(frevvoFormController.getUserDao());
-	            service.setUserActionDao(frevvoFormController.getUserActionDao());
-	            service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
-	            service.setCostsheetService(frevvoFormController.getCostsheetService());
-	            service.setAcmCostsheetDao(frevvoFormController.getAcmCostsheetDao());
-	            service.setCostFactory(frevvoFormController.getCostFactory());
-	            service.setSearchResults(frevvoFormController.getSearchResults());
-	            service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
-	            service.setAcmContainerDao(frevvoFormController.getAcmContainerDao());
-				service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
-	            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
-	            service.setCostsheetEventPublisher(frevvoFormController.getCostsheetEventPublisher());
 	            
 	            return service;
 			}
@@ -298,7 +266,7 @@ public class FrevvoFormServiceFactory
 	            return service;
 			}
 
-			// TODO: So far, only CaseFileService, ComplaintService, CloseComplaintService are re-written on this way.
+			// TODO: So far, only CaseFileService, ComplaintService, CloseComplaintService, CostService are re-written on this way.
 			// TODO: On time, we should do for all other services
 			if (getServices() != null && getServices().containsKey(name))
 			{
