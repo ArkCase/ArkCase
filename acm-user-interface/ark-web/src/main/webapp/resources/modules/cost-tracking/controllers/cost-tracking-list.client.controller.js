@@ -1,7 +1,12 @@
 'use strict';
 
-angular.module('cost-tracking').controller('CostTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate', 'UtilService', 'ObjectService', 'CallCostTrackingService', 'ConfigService', 'Authentication', 'Helper.ObjectTreeService',
-    function ($scope, $state, $stateParams, $q, $translate, Util, ObjectService, CallCostTrackingService, ConfigService, Authentication, HelperObjectTreeService) {
+angular.module('cost-tracking').controller('CostTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate'
+    , 'ConfigService', 'Authentication', 'UtilService', 'ObjectService', 'Helper.ObjectTreeService'
+    , 'CostTracking.ListService', 'CostTracking.InfoService'
+    , function ($scope, $state, $stateParams, $q, $translate
+        , ConfigService, Authentication, Util, ObjectService, HelperObjectTreeService
+        , CostTrackingListService, CostTrackingInfoService) {
+
         ConfigService.getModuleConfig("cost-tracking").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
@@ -16,7 +21,7 @@ angular.module('cost-tracking').controller('CostTrackingListController', ['$scop
                 Authentication.queryUserInfo().then(
                     function (userInfo) {
                         var userId = userInfo.userId;
-                        CallCostTrackingService.queryCostTrackingTreeData(userId, start, n, sort, filters).then(
+                        CostTrackingListService.queryCostTrackingTreeData(userId, start, n, sort, filters).then(
                             function (treeData) {
                                 dfd.resolve(treeData);
                                 return treeData;
@@ -36,7 +41,7 @@ angular.module('cost-tracking').controller('CostTrackingListController', ['$scop
                 return dfd.promise;
             }
             , getNodeData: function (costsheetId) {
-                return CallCostTrackingService.getCostTrackingInfo(costsheetId);
+                return CostTrackingInfoService.getCostTrackingInfo(costsheetId);
             }
             , makeTreeNode: function (costsheetId) {
                 return {
