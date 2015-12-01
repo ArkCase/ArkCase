@@ -65,8 +65,10 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             $state.go('newCase');
         };
 
-        $scope.edit = function () {
-            console.log('edit');
+        $scope.edit = function (caseInfo) {
+            if (caseInfo && caseInfo.id && caseInfo.caseNumber && caseInfo.status) {
+                $state.go('editCase', {id: caseInfo.id, caseNumber: caseInfo.caseNumber, containerId: caseInfo.container.id, folderId: caseInfo.container.folder.id});
+            }
         };
 
         $scope.changeStatus = function (caseInfo) {

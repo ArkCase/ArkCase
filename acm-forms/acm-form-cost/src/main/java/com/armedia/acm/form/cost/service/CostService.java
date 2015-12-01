@@ -84,7 +84,7 @@ public class CostService extends FrevvoFormChargeAbstractService {
 		if (costsheet != null)
 		{
 			form = getCostFactory().asFrevvoCostForm(costsheet);
-			form = (CostForm) populateEditInformation(form, costsheet.getContainer(), FrevvoFormName.COSTSHEET.toLowerCase());
+			form = (CostForm) populateEditInformation(form, costsheet.getContainer(), getFormName());
 		}
 		else
 		{
@@ -130,7 +130,7 @@ public class CostService extends FrevvoFormChargeAbstractService {
 		String submissionName = getRequest().getParameter("submission_name");
 		
 		// Unmarshall XML to object
-		CostForm form = (CostForm) convertFromXMLToObject(cleanXML(xml), CostForm.class);
+		CostForm form = (CostForm) convertFromXMLToObject(cleanXML(xml), getFormClass());
 		
 		if (form == null)
 		{
@@ -175,19 +175,19 @@ public class CostService extends FrevvoFormChargeAbstractService {
 		form.setUserOptions(Arrays.asList(userId + "=" + user.getFullName()));
 		
 		// Init Types
-		List<String> types = convertToList((String) getProperties().get(FrevvoFormName.COSTSHEET + ".types"), ",");
+		List<String> types = convertToList((String) getProperties().get(getFormName() + ".types"), ",");
 		form.setObjectTypeOptions(types);
 		
 		// Init Statuses
-		form.setStatusOptions(convertToList((String) getProperties().get(FrevvoFormName.COSTSHEET + ".statuses"), ","));
+		form.setStatusOptions(convertToList((String) getProperties().get(getFormName() + ".statuses"), ","));
 		
 		// Init Titles
 		CostItem item = new CostItem();
-		item.setTitleOptions(convertToList((String) getProperties().get(FrevvoFormName.COSTSHEET + ".titles"), ","));
+		item.setTitleOptions(convertToList((String) getProperties().get(getFormName() + ".titles"), ","));
 		form.setItems(Arrays.asList(item));
 		
 		// Set charge codes for each type and details for them
-		OptionsAndDetailsByType optionsAndDetailsByType = getCodeOptionsAndDetails(FrevvoFormName.COSTSHEET, types);
+		OptionsAndDetailsByType optionsAndDetailsByType = getCodeOptionsAndDetails(getFormName(), types);
 				
 		Map<String, Options> codeOptions = optionsAndDetailsByType.getOptionsByType();
 		Map<String, Map<String, Details>> codeOptionsDetails = optionsAndDetailsByType.getOptionsDetailsByType();
