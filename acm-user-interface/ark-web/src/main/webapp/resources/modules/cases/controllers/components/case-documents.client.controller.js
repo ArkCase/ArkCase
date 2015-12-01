@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal'
-    , 'UtilService', 'ConstantService', 'Object.LookupService', 'Case.InfoService'
-    , function ($scope, $stateParams, $modal, Util, Constant, ObjectLookupService, CaseInfoService) {
+    , 'UtilService', 'ObjectService', 'Object.LookupService', 'Case.InfoService'
+    , function ($scope, $stateParams, $modal, Util, ObjectService, ObjectLookupService, CaseInfoService) {
 
 		$scope.$emit('req-component-config', 'documents');
         $scope.$on('component-config', function (e, componentId, config) {
@@ -27,7 +27,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         );
 
 
-        $scope.objectType = Constant.ObjectTypes.CASE_FILE;
+        $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
         $scope.objectId = $stateParams.id;
         //$scope.containerId = 0;
         $scope.$on('case-updated', function (e, data) {

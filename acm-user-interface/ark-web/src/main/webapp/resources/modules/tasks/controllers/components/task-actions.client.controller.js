@@ -9,7 +9,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             }
         });
 
-        Authentication.queryUserInfoNew().then(
+        Authentication.queryUserInfo().then(
             function (userInfo) {
                 $scope.userId = userInfo.userId;
                 return userInfo;

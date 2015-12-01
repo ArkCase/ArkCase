@@ -75,8 +75,8 @@ angular.module('tasks').config(['$stateProvider', '$urlRouterProvider',
                 templateUrl: 'modules/tasks/views/components/task-history.client.view.html'
             })
 
-            .state('tasks.esignatures', {
-                url: '/:id/esignatures',
+            .state('tasks.signatures', {
+                url: '/:id/signatures',
                 templateUrl: 'modules/tasks/views/components/task-signatures.client.view.html'
             })
     }

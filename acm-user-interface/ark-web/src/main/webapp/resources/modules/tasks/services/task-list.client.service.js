@@ -10,8 +10,8 @@
  *
  * Task.ListService provides functions for Task database data
  */
-angular.module('tasks').factory('Task.ListService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ConstantService', 'Object.ListService',
-    function ($resource, $translate, Store, Util, Constant, ObjectListService) {
+angular.module('tasks').factory('Task.ListService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ObjectService', 'Object.ListService',
+    function ($resource, $translate, Store, Util, ObjectService, ObjectListService) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {});
 
         Service.SessionCacheNames = {};
@@ -54,11 +54,11 @@ angular.module('tasks').factory('Task.ListService', ['$resource', '$translate', 
                         treeData = {docs: [], total: data.response.numFound};
                         var docs = data.response.docs;
                         _.forEach(docs, function (doc) {
-                            var nodeType = (Util.goodValue(doc.adhocTask_b, false)) ? Constant.ObjectTypes.ADHOC_TASK : Constant.ObjectTypes.TASK;
+                            var nodeType = (Util.goodValue(doc.adhocTask_b, false)) ? ObjectService.ObjectTypes.ADHOC_TASK : ObjectService.ObjectTypes.TASK;
 
                             //jwu: for testing
                             //if (doc.object_id_s == 9601) {
-                            //    nodeType = Constant.ObjectTypes.ADHOC_TASK;
+                            //    nodeType = ObjectService.ObjectTypes.ADHOC_TASK;
                             //}
 
                             treeData.docs.push({
@@ -89,7 +89,7 @@ angular.module('tasks').factory('Task.ListService', ['$resource', '$translate', 
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateTaskList = function (data) {
-            if (!ObjectListService.validateSolrData(data)) {
+            if (!ObjectListService.validateObjects(data)) {
                 return false;
             }
 
