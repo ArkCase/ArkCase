@@ -10,8 +10,8 @@
 
  * Object.NoteService includes group of REST calls related to note.
  */
-angular.module('services').factory('Object.NoteService', ['$resource', 'StoreService', 'UtilService',
-    function ($resource, Store, Util) {
+angular.module('services').factory('Object.NoteService', ['$resource', 'StoreService', 'UtilService', '$translate',
+    function ($resource, Store, Util, $translate) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
             /**
              * @ngdoc method
