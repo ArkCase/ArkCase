@@ -1,10 +1,10 @@
 <div ng-controller="CasesController">
     <div class="module-content">
-        <div class="left-sidebar scroll-body" slimscroll="">
+        <div class="left-sidebar scroll-body" ng-slimscroll="">
             <div class="module-header">
                 <h3>{{'cases.title' | translate}}</h3>
             </div>
-            <div ng-include="'modules/cases/views/cases-list.client.view.html'" />
+            <div ng-include="'modules/cases/views/cases-list.client.view.html'"/>
         </div>
         <section class="content-body" ng-show="caseInfo">
             <div class="module-header">
