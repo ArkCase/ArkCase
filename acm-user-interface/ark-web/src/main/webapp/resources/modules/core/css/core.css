@@ -1,3 +1,6 @@
+/* @override http://10.21.4.149/arkcase/modules/core/css/core.css
+	http://sharecaredev.armedianet.com/arkcase/modules/core/css/core.css */
+
 /* @override http://sharecaredev.armedianet.com/arkcase/modules/core/css/core.css */
 
 html {
@@ -76,17 +79,24 @@ body {
 }
 .navbar-arkcase .dropdown-menu {
     text-align: center;
+    width: 275px;
 }
-.navbar-arkcase .dropdown-menu i.navigation-icon.glyphicon.glyphicon-upload {
+
+.navbar-arkcase .dropdown-menu .col-xs-4 {
+	padding: 0px;
+}
+
+.navbar-arkcase .dropdown-menu i.navigation-icon {
     position: relative;
-    float: left;
-    margin: 0 0 3px 9px;
     font-size: 2em;
+    width: 100%;
+    text-align: center;
 }
-.navbar-arkcase .dropdown-menu span.text-muted.ng-binding {
-    position: relative;
-    float: left;
+
+.navbar-arkcase .dropdown-menu span {
+	text-align: center;
 }
+
 /* 2 Column Layout (Left Menu and Page Content) */
 
 .page-wrapper {
