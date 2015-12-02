@@ -47,9 +47,11 @@ angular.module('admin').controller('Admin.ComponentsListController', ['$scope', 
             var promises = [];
             _.forEach(requiredSchemas, function(schema){
                 promises.push(
-                    SchemasService.getSchema({schemaId: schema}).$promise.then(function(schemaData){
-                        return schemaData;
-                    })
+
+                    //FIXME there are no schemas so we have all the time some error message, when schemas being used than enable code below
+                    //SchemasService.getSchema({schemaId: schema}).$promise.then(function(schemaData){
+                    //    return schemaData;
+                    //})
                 );
             });
 
