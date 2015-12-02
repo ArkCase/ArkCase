@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('administration').controller('AdministrationController', ['$scope',
+angular.module('admin').controller('Admin.ModuleConfigController', ['$scope',
 	function($scope) {
 		$scope.$on('req-module-selected', moduleSelected);
 

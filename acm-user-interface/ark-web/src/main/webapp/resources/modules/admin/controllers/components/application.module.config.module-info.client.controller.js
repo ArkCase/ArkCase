@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('administration').controller('ModuleInfoController', ['$scope', '$state', '$stateParams', 'ConfigService',
+angular.module('admin').controller('Admin.ModuleInfoController', ['$scope', '$state', '$stateParams', 'ConfigService',
     function ($scope, $state, $stateParams, ConfigService) {
         $scope.module = null;
         $scope.$on('module-selected', moduleSelected);
