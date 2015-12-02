@@ -765,6 +765,11 @@ a.editable.editable-click.editable-hide {
     padding-right: 200px;
 }
 
+.reports-iframe {
+    width:100% !important; 
+    height:100% !important;
+}
+
 /* To Be Removed */
 
 .ui-grid-pinned-container .ui-grid-header-canvas {
