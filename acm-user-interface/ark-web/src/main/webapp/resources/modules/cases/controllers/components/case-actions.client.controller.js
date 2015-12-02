@@ -76,8 +76,10 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                 $state.go('status', {id: caseInfo.id, caseNumber: caseInfo.caseNumber, status: caseInfo.status});
             }
         };
-        $scope.reinvestigate = function () {
-            console.log('reinvestigate');
+        $scope.reinvestigate = function (caseInfo) {
+            if (caseInfo && caseInfo.id && caseInfo.caseNumber && caseInfo.status) {
+                $state.go('reinvestigate', {id: caseInfo.id, caseNumber: caseInfo.caseNumber, containerId: caseInfo.container.id, folderId: caseInfo.container.folder.id});
+            }
         };
         $scope.subscribe = function (caseInfo) {
             ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (data) {
