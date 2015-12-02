@@ -13,6 +13,7 @@
   "components": [
     {
       "id": "securityLdapConfig",
+      "title": "Security - Ldap config grid",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -87,6 +88,7 @@
     },
     {
       "id": "correspondenceManagementTemplates",
+      "title": "Correspondance Management Templates grid",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -134,6 +136,7 @@
     },
     {
       "id": "labelsConfig",
+      "title": "Application - Labels Config grid",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -168,6 +171,7 @@
     },
     {
       "id": "plainFormsConfig",
+      "title": "Forms - Forms Config grid",
       "enabled": true,
       "type": "grid",
       "formsDropdown": [
@@ -209,6 +213,7 @@
     },
     {
       "id": "workflowsConfig",
+      "title": "Workflows - Workflows Config grid",
       "enabled": true,
       "type": "grid",
       "columnDefs": [
@@ -273,6 +278,7 @@
     },
     {
       "id": "workflowsHistoryDialogConfig",
+      "title": "Workflows - Workflows Config history dialog grid",
       "enabled": true,
       "type": "grid",
       "columnDefs": [
