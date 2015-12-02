@@ -1,6 +1,6 @@
 {
   "costTracking": {
-    "title": "Cost tracking",
+    "title": "Cost Tracking",
     "progressNoCostsheet": "[ No costsheet is selected ]",
     "progressLoading": "Loading costsheet ",
     "progressError": "Failed to load costsheet"
