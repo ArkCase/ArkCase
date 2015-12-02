@@ -85,6 +85,14 @@
   },
   "components": [
     {
+      "id": "info",
+      "title": "Info",
+      "enabled": false,
+      "type": "empty",
+      "editable": false,
+      "parentDateFormat": "DD/MM/YYYY"
+    },
+    {
       "id": "actions",
       "title": "Actions",
       "enabled": false,
