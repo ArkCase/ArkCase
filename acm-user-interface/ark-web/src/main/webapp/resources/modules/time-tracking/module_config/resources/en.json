@@ -1,6 +1,6 @@
 {
   "timeTracking": {
-    "title": "Time tracking",
+    "title": "Time Tracking",
     "progressNoTimesheet": "[ No timesheet is selected ]",
     "progressLoading": "Loading timesheet ",
     "progressError": "Failed to load timesheet"
