@@ -140,27 +140,27 @@
       "columnDefs": [
         {
           "name": "id",
-          "displayName": "admin.labels.config.data.id",
+          "displayName": "admin.application.labels.config.data.id",
           "visible": true,
           "headerCellFilter": "translate"
         },
         {
           "name": "value",
-          "displayName": "admin.labels.config.data.value",
+          "displayName": "admin.application.labels.config.data.value",
           "visible": true,
           "headerCellFilter": "translate",
           "cellTemplate": "<a href='#' editable-text='row.entity.value' onbeforesave='grid.appScope.updateLabelValue($data, row.entity)'>{{ row.entity.value}}</a>"
         },
         {
           "name": "description",
-          "displayName": "admin.labels.config.data.description",
+          "displayName": "admin.application.labels.config.data.description",
           "visible": true,
           "headerCellFilter": "translate",
           "cellTemplate": "<a href='#' editable-text='row.entity.description' onbeforesave='grid.appScope.updateLabelDesc($data, row.entity)'>{{ row.entity.description || 'Unknown' }}</a>"
         },
         {
           "name": "defaultValue",
-          "displayName": "admin.labels.config.data.defaultValue",
+          "displayName": "admin.application.labels.config.data.defaultValue",
           "visible": true,
           "headerCellFilter": "translate"
         }
@@ -348,8 +348,8 @@
           "templateName": "security.select-privileges"
         },
         {
-          "title": "admin.security.moduleConfig",
-          "templateName": "security.module-config"
+          "title": "admin.security.modules",
+          "templateName": "security.modules"
         }
       ]
     },
@@ -404,12 +404,16 @@
       ]
     },
     {
-      "title": "admin.labels.title",
+      "title": "admin.application.title",
       "folder": "true",
       "children": [
         {
-          "title": "admin.labels.config",
-          "templateName": "labels.config"
+          "title": "admin.application.labels.config.title",
+          "templateName": "application.labels.config"
+        },
+        {
+          "title": "admin.application.module.config.title",
+          "templateName": "application.module.config"
         }
       ]
     },

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('administration').controller('ModulesListController', ['$scope', '$state', '$stateParams', 'ConfigService',
+angular.module('admin').controller('Admin.ModulesListController', ['$scope', '$state', '$stateParams', 'ConfigService',
     function ($scope, $state, $stateParams, ConfigService) {
         $scope.modules = ConfigService.queryModules();
         $scope.selectModule = selectModule;

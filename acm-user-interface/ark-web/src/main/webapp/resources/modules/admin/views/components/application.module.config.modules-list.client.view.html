@@ -1,4 +1,4 @@
-<div ng-controller="ModulesListController" class="well-sm">
+<div ng-controller="Admin.ModulesListController" class="well-sm">
     <a ng-class="{active: module.active}" class="list-group-item" ng-repeat="module in modules" ng-click="selectModule(module)">{{module.title}}</a>
     <div ng-if="!modules || modules.length == 0">No modules found in the system</div>
 </div>

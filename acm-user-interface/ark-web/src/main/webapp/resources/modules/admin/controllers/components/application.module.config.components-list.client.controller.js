@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('administration').controller('ComponentsListController', ['$scope', '$q', '$state', '$stateParams', 'AdministrationService', 'SchemasService',
+angular.module('admin').controller('Admin.ComponentsListController', ['$scope', '$q', '$state', '$stateParams', 'AdministrationService', 'SchemasService',
     function ($scope, $q, $state, $stateParams, AdministrationService, SchemasService) {
         $scope.schemas = {};
         $scope.components = [];
