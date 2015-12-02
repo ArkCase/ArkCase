@@ -152,6 +152,14 @@ iframe {
     text-decoration: underline;
 }
 
+.panel-heading .btn.btn-default:hover {
+    background-color: #167abb;
+    border: 0px;
+    color: white;
+    text-shadow: none;
+    text-decoration: underline;
+}
+
 /* Panels */
 
 .panel {
@@ -738,7 +746,7 @@ a.editable.editable-click.editable-hide {
     min-height: 100px;
 }
 
-/* Cases Module - FancyTree Table */
+/* Cases Module - FancyTree Table */ 
 
 .fancytree-container.fancytree-ext-table.fancytree-ext-gridnav.fancytree-ext-edit.ui-draggable-handle {
     margin: 0px;
