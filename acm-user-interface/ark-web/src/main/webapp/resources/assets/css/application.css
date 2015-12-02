@@ -1,3 +1,6 @@
+/* @override http://10.21.4.149/arkcase/assets/css/application.css
+	http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
+
 /* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
 
 /* Typography */
@@ -765,9 +768,25 @@ a.editable.editable-click.editable-hide {
     padding-right: 200px;
 }
 
-.reports-iframe {
-    width:100% !important; 
-    height:100% !important;
+.new-iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding-bottom: 60px;
+    padding-right: 200px;
+}
+
+.reports-iframe {    
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding-bottom: 60px;
+    padding-right: 500px;
+    
 }
 
 /* To Be Removed */
@@ -802,3 +821,4 @@ input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
     height: 500px;
     border: 1px solid #cbd5dd;
 }
+
