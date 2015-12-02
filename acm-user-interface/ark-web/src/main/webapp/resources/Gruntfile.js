@@ -34,21 +34,21 @@ module.exports = function (grunt) {
                     mangle: false
                 },
                 files: {
-                    'dist/application.min.js': 'dist/application.js'
+                    'assets/dist/application.min.js': 'assets/dist/application.js'
                 }
             }
         },
         cssmin: {
             combine: {
                 files: {
-                    'dist/application.min.css': '<%= applicationCSSFiles %>'
+                    'assets/dist/application.min.css': '<%= applicationCSSFiles %>'
                 }
             }
         },
         ngAnnotate: {
             production: {
                 files: {
-                    'dist/application.js': '<%= applicationJavaScriptFiles %>'
+                    'assets/dist/application.js': '<%= applicationJavaScriptFiles %>'
                 }
             }
         }
@@ -64,9 +64,9 @@ module.exports = function (grunt) {
     // A Task for loading the configuration object
     grunt.task.registerTask('loadConfig', 'Task that loads the config into a grunt option.', function () {
         //var init = require('./config/init')();
-        var config = require('./config/config');
-        grunt.config.set('applicationJavaScriptFiles', config.assets.js);
-        grunt.config.set('applicationCSSFiles', config.assets.css);
+        var configUtil = require('./config/config');
+        grunt.config.set('applicationJavaScriptFiles', configUtil.assets.js.concat(configUtil.getModulesJavaScriptAssets()));
+        grunt.config.set('applicationCSSFiles', configUtil.getCSSAssets());
     });
 
 
@@ -75,9 +75,17 @@ module.exports = function (grunt) {
         var configUtil = require('./config/config');
 
         var title = config.homePage.title;
+        var jsFiles = [];
+        var cssFiles = [];
 
-        var jsFiles = configUtil.getJavaScriptAssets();
-        var cssFiles = configUtil.getCSSAssets();
+        if (process.env.NODE_ENV == 'production') {
+            jsFiles = configUtil.getJavaScriptAssets().concat(config.assets.distJs);
+            cssFiles = configUtil.getCSSAssets();
+            //cssFiles = config.assets.lib.css.concat(config.assets.distCss);
+        } else {
+            jsFiles = configUtil.getJavaScriptAssets().concat(configUtil.getModulesJavaScriptAssets());
+            cssFiles = configUtil.getCSSAssets();
+        }
 
 
         var html = nunjucks.render(config.homePage.template, {
@@ -182,5 +190,5 @@ module.exports = function (grunt) {
 
     // Build task.
     //grunt.registerTask('build', ['renderHome', 'sass', 'lint', 'loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
-    grunt.registerTask('default', ['loadConfig', 'renderHome', 'updateModulesConfig']);
+    grunt.registerTask('default', ['loadConfig', 'ngAnnotate', 'uglify', 'cssmin', 'renderHome', 'updateModulesConfig']);
 };

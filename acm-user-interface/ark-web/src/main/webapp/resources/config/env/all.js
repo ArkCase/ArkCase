@@ -90,7 +90,8 @@ module.exports = {
             'assets/css/application.css',
             'modules/**/css/*.css',
             'custom_modules/**/css/*.css',
-            'assets/css/arkcase-extension.css'
+            'assets/css/arkcase-extension.css',
+            'custom_assets/css/arkcase-extension.css'
         ],
         scss: [
             'modules/**/scss/*.scss',
@@ -107,6 +108,8 @@ module.exports = {
             'filters/*.js',
             'filters/*/*.js'
         ],
+        distJs: ['assets/dist/application.min.js'],
+        distCss: ['assets/dist/application.min.css'],
         jsModules: [
             'modules/*/*.js',
             'modules/*/**/*.js'

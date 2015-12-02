@@ -53,6 +53,11 @@ module.exports.getGlobbedFiles = function (globPatterns, removeRoot) {
  */
 module.exports.getJavaScriptAssets = function () {
     var output = this.getGlobbedFiles(this.assets.lib.js.concat(this.assets.js, this.assets.lib.customJs), '');
+    return output;
+};
+
+module.exports.getModulesJavaScriptAssets = function(){
+    var output = [];
 
     var jsModules = this.getGlobbedFiles(this.assets.jsModules, 'modules/');
     var jsCustomModules = this.getGlobbedFiles(this.assets.jsCustomModules, 'custom_modules/');
@@ -73,7 +78,6 @@ module.exports.getJavaScriptAssets = function () {
 
     output = output.concat(jsModules);
     output = output.concat(jsCustomModules);
-
     return output;
 };
 
