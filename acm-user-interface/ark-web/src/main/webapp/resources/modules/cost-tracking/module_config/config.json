@@ -1,11 +1,11 @@
 {
   "id": "cost-tracking",
-  "title": "Cost tracking",
+  "title": "Cost Tracking",
   "menus": [
     {
       "menuId": "leftnav",
       "menuItemURL": "cost-tracking",
-      "menuItemTitle": "Cost tracking",
+      "menuItemTitle": "Cost Tracking",
       "iconClass": "fa fa-money",
       "position": 120
     },
