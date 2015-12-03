@@ -18,11 +18,13 @@ angular.module('cost-tracking').controller('CostTracking.TimeSummaryController',
             var parentNumber = {parentNumber: $scope.costsheetInfo.parentNumber};
             var parentType = {parentType: $scope.costsheetInfo.parentType};
             var parentId = {parentId: $scope.costsheetInfo.parentId};
-            $scope.costsheetInfo.costs = $scope.costsheetInfo.costs.map(function (obj){
-               return angular.extend(obj, parentNumber, parentType, parentId);
+
+            var costs = angular.copy($scope.costsheetInfo.costs);
+            costs = costs.map(function (obj){
+                return angular.extend(obj, parentNumber, parentType, parentId);
             });
             $scope.gridOptions = $scope.gridOptions || {};
-            $scope.gridOptions.data = $scope.costsheetInfo.costs;
+            $scope.gridOptions.data = costs;
         });
 
         $scope.onClickObjectType = function (event, rowEntity) {

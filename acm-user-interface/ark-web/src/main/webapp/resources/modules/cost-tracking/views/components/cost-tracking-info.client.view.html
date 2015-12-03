@@ -1,0 +1,56 @@
+<div ng-controller="CostTracking.InfoController">
+    <div class="clearfix">
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <a ng-click="onClickTitle()">
+                    <div class="h4 font-bold">
+                        {{parentInfo.title || 'Unknown'}}
+                    </div>
+                    <small class="text-muted">
+                        {{costsheetInfo.parentNumber || 'Unknown'}}
+                    </small>
+                </a>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    {{parentInfo.incidentDate || 'Unknown'}}
+                </div>
+                <small class="text-muted">
+                    {{'costTracking.comp.info.incidentDate' | translate}}
+                </small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    {{parentInfo.priortiy || 'Unknown'}}
+                </div>
+                <small class="text-muted">
+                    {{'costTracking.comp.info.priority' | translate}}
+                </small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    {{costsheetInfo.user.fullName || 'Unknown'}}
+                </div>
+                <small class="text-muted">
+                    {{'costTracking.comp.info.assignedTo' | translate}}
+                </small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    {{parentInfo.type || 'Unknown'}}
+                </div>
+                <small class="text-muted">
+                    {{'costTracking.comp.info.subjectType' | translate}}
+                </small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    {{parentInfo.status || 'Unknown'}}
+                </div>
+                <small class="text-muted">
+                    {{'costTracking.comp.info.state' | translate}}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>

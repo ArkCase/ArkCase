@@ -26,37 +26,7 @@
       "id": "reportselection",
       "title": "Reports",
       "enabled": true,
-      "resetCaseStateValue": "COMPLAINT_DISPOSITION_COUNT",
-      "reports": [
-        {
-          "id": "turnaround",
-          "name": "Turnaround Time by Requester"
-        },
-        {
-          "id": "requester",
-          "name": "Requester Type Summary"
-        },
-        {
-          "id": "pending",
-          "name": "Pending Orders Report"
-        },
-        {
-          "id": "associate",
-          "name": "Associate Productivity Report"
-        },
-        {
-          "id": "origination",
-          "name": "Origination Count"
-        },
-        {
-          "id": "transfers",
-          "name": "Transfers Report"
-        },
-        {
-          "id": "exceptions",
-          "name": "Exceptions Report (Non-Compliance)"
-        }
-      ]
+      "resetCaseStateValue": "COMPLAINT_DISPOSITION_COUNT"
     },
     {
       "id": "caseStates",

@@ -53,8 +53,8 @@
     "security.selectPrivileges.enterRoleName": "Enter the role name in the box below.",
     "security.selectPrivileges.cancel": "Cancel",
     "security.selectPrivileges.name": "Name",
-    "security.moduleConfig": "Module Configuration",
-    "security.moduleConfig.module": "Module",
+    "security.modules": "Modules",
+    "security.modules.module": "Module",
     "dashboard.title": "Dashboard",
     "dashboard.config": "Dashboard Configuration",
     "dashboard.widgets": "Widgets",
@@ -100,20 +100,27 @@
     "formWorkflows.link.saveChanges": "Save Changes",
     "formWorkflows.link.editRole.save.success": "Link Forms/Workflows configuration saved successfully",
     "formWorkflows.link.editRole.save.error": "Can't save Link Forms/Workflows configuration",
-    "labels.title": "Application Labels",
-    "labels.config": "Label Configuration",
-    "labels.config.filterBy": "Filter By Id",
-    "labels.config.filterByValue": "Filter By Value",
-    "labels.config.data": {
-      "id": "ID",
-      "value": "Value",
-      "description": "Description",
-      "defaultValue": "Default Value"
+    "application": {
+      "title": "Application",
+      "labels.config": {
+        "defaultLabel": "Default Language",
+        "applyBtn": "Apply",
+        "resetlModule": "Reset Current Module Resource",
+        "resetAll": "Reset All Resources",
+        "title": "Label Configuration",
+        "filterBy": "Filter By Id",
+        "filterByValue": "Filter By Value",
+        "data": {
+          "description": "Description",
+          "defaultValue": "Default Value",
+          "id": "ID",
+          "value": "Value"
+        }
+      },
+      "module.config": {
+        "title": "Module Configuration"
+      }
     },
-    "labels.config.defaultLabel": "Default Language",
-    "labels.config.applyBtn": "Apply",
-    "labels.config.resetlModule": "Reset Current Module Resource",
-    "labels.config.resetAll": "Reset All Resources",
     "branding.title": "Branding",
     "branding.logo": "Logo",
     "branding.logo.messages": {
