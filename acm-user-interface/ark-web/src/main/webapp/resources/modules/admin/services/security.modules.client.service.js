@@ -6,15 +6,15 @@
 
 /**
  * @ngdoc service
- * @name admin.service:Admin.ModuleConfigService
+ * @name admin.service:Admin.ModulesService
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/security.module-config.client.service.js modules/admin/services/security.module-config.client.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/security.modules.client.service.js modules/admin/services/security.modules.client.service.js}
  *
- * The Admin.ModuleConfigService provides Modules config REST calls functionality
+ * The Admin.ModulesService provides Modules REST calls functionality
  */
-angular.module('admin').service('Admin.ModulesConfigService', function ($http) {
+angular.module('admin').service('Admin.ModulesService', function ($http) {
     return ({
         getAppModules: getAppModules,
         getRolesForModulePrivilege: getRolesForModulePrivilege,
@@ -25,7 +25,7 @@ angular.module('admin').service('Admin.ModulesConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name getAppModules
-     * @methodOf admin.service:Admin.ModuleConfigService
+     * @methodOf admin.service:Admin.ModulesService
      *
      * @description
      * Performs retrieving all application modules
@@ -43,7 +43,7 @@ angular.module('admin').service('Admin.ModulesConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name getRolesForModulePrivilege
-     * @methodOf admin.service:Admin.ModuleConfigService
+     * @methodOf admin.service:Admin.ModulesService
      *
      * @description
      * Performs retrieving roles for provided module privilege
@@ -62,7 +62,7 @@ angular.module('admin').service('Admin.ModulesConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name addRolesToModule
-     * @methodOf admin.service:Admin.ModuleConfigService
+     * @methodOf admin.service:Admin.ModulesService
      *
      * @description
      * Performs adding roles to module
@@ -87,7 +87,7 @@ angular.module('admin').service('Admin.ModulesConfigService', function ($http) {
     /**
      * @ngdoc method
      * @name removeRolesFromModule
-     * @methodOf admin.service:Admin.ModuleConfigService
+     * @methodOf admin.service:Admin.ModulesService
      *
      * @description
      * Performs removing roles to module
