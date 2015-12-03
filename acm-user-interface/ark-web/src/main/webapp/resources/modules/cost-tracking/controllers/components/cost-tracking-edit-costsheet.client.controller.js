@@ -19,8 +19,7 @@ angular.module('cost-tracking').controller('CostTracking.EditCostsheetController
             }
         }
 
-        $scope.parentId = $stateParams.parentId;
-        $scope.parentType = $stateParams.parentType;
+        $scope.id = $stateParams.id;
         $scope.acmTicket = '';
         $scope.acmFormsProperties = {};
         $scope.frevvoFormUrl = '';
@@ -41,8 +40,8 @@ angular.module('cost-tracking').controller('CostTracking.EditCostsheetController
          */
         function openExistingCaseFrevvoForm() {
             var formUrl = FrevvoFormService.buildFrevvoUrl($scope.acmFormsProperties, "costsheet", $scope.acmTicket);
-            var timesheetArgs = "objectId:'" +  $scope.parentId  + "',type:'" + $scope.parentType + "',acm_ticket:";
-            formUrl = formUrl.replace('acm_ticket:', timesheetArgs);
+            var costsheetArgs = "id:'" +  $scope.id  + "',acm_ticket:";
+            formUrl = formUrl.replace('acm_ticket:', costsheetArgs);
             $scope.frevvoFormUrl = $sce.trustAsResourceUrl(formUrl);
         }
 
