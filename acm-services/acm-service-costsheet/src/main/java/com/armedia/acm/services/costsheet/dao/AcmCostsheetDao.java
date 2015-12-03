@@ -27,31 +27,6 @@ public class AcmCostsheetDao extends AcmAbstractDao<AcmCostsheet> {
 	{
 		return AcmCostsheet.class;
 	}
-
-	public AcmCostsheet findByUserIdObjectIdAndType(String userId, Long objectId, String objectType)
-	{
-		Query selectQuery = getEm().createQuery("SELECT costsheet "
-											  + "FROM AcmCostsheet costsheet "
-											  + "WHERE costsheet.user.userId = :userId "
-											  + "AND costsheet.parentId = :objectId "
-											  + "AND costsheet.parentType = :objectType");
-		
-		selectQuery.setParameter("userId", userId);
-		selectQuery.setParameter("objectId", objectId);
-		selectQuery.setParameter("objectType", objectType);
-		
-		AcmCostsheet costsheet = null;
-		try
-		{
-			costsheet = (AcmCostsheet) selectQuery.getSingleResult();
-		}
-		catch (Exception e)
-		{
-			LOG.warn("Costsheet for objectId " + objectId + " is not found.");
-		}
-		
-		return costsheet;
-	}
 	
 	public List<AcmCostsheet> findByObjectIdAndType(Long objectId, String objectType, int startRow, int maxRows, String sortParams)
 	{
