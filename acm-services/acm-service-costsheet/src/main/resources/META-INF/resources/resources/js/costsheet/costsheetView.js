@@ -170,9 +170,8 @@ Costsheet.View = {
             if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.editCostsheetFormUrl)){
                 var editCostsheetFormUrl = Costsheet.View.MicroData.formUrls.editCostsheetFormUrl;
                 if(Costsheet.Model.Detail.validateCostsheet(Costsheet.View.getActiveCostsheet())){
-                    var objectId = Acm.goodValue(Costsheet.View.getActiveCostsheet().parentId);
-                    var objectType = Acm.goodValue(Costsheet.View.getActiveCostsheet().parentType);
-                    editCostsheetFormUrl = editCostsheetFormUrl.replace("_data=(", "_data=(objectId:'" + objectId + "',type:'" + objectType + "',");
+                    var costsheetId = Acm.goodValue(Costsheet.View.getActiveCostsheet().id);
+                    editCostsheetFormUrl = editCostsheetFormUrl.replace("_data=(", "_data=(id:'" + costsheetId + "',");
                     editCostsheetFormUrl = editCostsheetFormUrl.replace("embed", "popupform");
                     Acm.Dialog.openWindow(editCostsheetFormUrl, "", 1060, 700, function() {
                         Costsheet.Controller.viewClosedEditCostsheetWindow(Costsheet.View.getActiveCostsheet());
