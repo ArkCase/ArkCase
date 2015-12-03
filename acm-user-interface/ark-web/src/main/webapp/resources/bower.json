@@ -8,6 +8,7 @@
   "license": "Proprietary software",
   "dependencies": {
     "angular": "~1.4.4",
+    "angular-slimscroll": "~1.1.5",
     "angular-animate": "~1.4.3",
     "angular-bootstrap": "~0.13.0",
     "angular-cookies": "~1.4.3",
@@ -41,7 +42,7 @@
     "ng-tags-input": "~3.0.0"
   },
   "resolutions": {
-    "angular": "1.4.7",
+    "angular": "~1.4.7",
     "angular-ui-utils": "~3.0.0"
   }
 }
