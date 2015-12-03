@@ -53,7 +53,7 @@ body {
     overflow: hidden;
 }
 .navbar-arkcase .navbar-form {
-    margin-top: 15px;
+    margin-top: 15px; 
 }
 .navbar-arkcase .navbar-nav > li > a {
     font-size: 12px;
@@ -115,8 +115,11 @@ body {
     width: 200px;
     border-right: 1px solid #e1e6ef;
     position: absolute;
-    overflow-y: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
     z-index: 1;
+    top: 60px;
+    -webkit-overflow-scrolling: touch;
     padding-bottom: 60px;
 }
 .leftnav-menu .user-info {
