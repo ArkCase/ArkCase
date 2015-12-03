@@ -17,6 +17,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
  * @author riste.tutureski
@@ -24,6 +25,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table(name = "acm_costsheet")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.services.costsheet.model.AcmCostsheet")
 public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity, AcmStatefulEntity {
 
 	private static final long serialVersionUID = 6290288826480329085L;
@@ -90,6 +94,9 @@ public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity, AcmSta
 	@OneToOne
     @JoinColumn(name = "cm_container_id")
     private AcmContainer container = new AcmContainer();
+
+	@Column(name = "cm_class_name")
+	private String className = this.getClass().getName();
 	
 	@PrePersist
     protected void beforeInsert()
@@ -266,6 +273,16 @@ public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity, AcmSta
 
 	public void setContainer(AcmContainer container) {
 		this.container = container;
+	}
+
+	public String getClassName()
+	{
+		return className;
+	}
+
+	public void setClassName(String className)
+	{
+		this.className = className;
 	}
 
 	@Override
