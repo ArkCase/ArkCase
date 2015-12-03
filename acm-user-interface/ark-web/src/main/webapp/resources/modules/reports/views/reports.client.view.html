@@ -12,7 +12,8 @@
                     <div ng-include="'modules/reports/views/components/reports-datepickers.client.view.html'"></div>
 
                     <div>
-                        <button class="btn btn-sm btn-default left-block" ng-click="generateReport()" ng-disabled="!data.reportSelected">
+                        <button class="btn btn-sm btn-default left-block" ng-click="generateReport()"
+                                ng-disabled="!data.reportSelected">
                             {{'reports.btn.generateReport'| translate}}
                         </button>
                     </div>
@@ -21,11 +22,11 @@
         </div>
 
         <div class="content-body">
-                <iframe name="reports-iframe"
-                        style="width:100% !important; height:100% !important;"
-                        frameborder="0"
-                        ng-src="{{reportUrl}}">
-                </iframe>
+            <iframe name="reports-iframe"
+                    class="reports-iframe"
+                    frameborder="0"
+                    ng-src="{{reportUrl}}">
+            </iframe>
         </div>
     </div>
 </div>

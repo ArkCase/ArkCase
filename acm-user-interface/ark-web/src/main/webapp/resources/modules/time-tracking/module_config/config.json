@@ -1,12 +1,12 @@
 {
     "id": "time-tracking",
-    "title": "Time tracking",
+    "title": "Time Tracking",
     "menus": [
         
         {
             "menuId": "leftnav",
             "menuItemURL": "time-tracking",
-            "menuItemTitle": "Time tracking",
+            "menuItemTitle": "Time Tracking",
             "iconClass": "fa fa-clock-o",
             "position": 130
         },

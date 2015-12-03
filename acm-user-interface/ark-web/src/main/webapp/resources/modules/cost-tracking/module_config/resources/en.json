@@ -1,11 +1,18 @@
 {
   "costTracking": {
-    "title": "Cost tracking",
+    "title": "Cost Tracking",
     "progressNoCostsheet": "[ No costsheet is selected ]",
     "progressLoading": "Loading costsheet ",
     "progressError": "Failed to load costsheet"
   },
   "costTracking.tree": {
+  },
+  "costTracking.comp.info": {
+    "incidentDate": "Incident Date",
+    "priority": "Priority",
+    "assignedTo": "Assigned To",
+    "subjectType": "Subject Type",
+    "state": "State"
   },
   "costTracking.comp.actions": {
     "new.button": "New Costsheet",

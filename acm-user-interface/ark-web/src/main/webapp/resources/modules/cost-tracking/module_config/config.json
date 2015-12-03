@@ -1,11 +1,11 @@
 {
   "id": "cost-tracking",
-  "title": "Cost tracking",
+  "title": "Cost Tracking",
   "menus": [
     {
       "menuId": "leftnav",
       "menuItemURL": "cost-tracking",
-      "menuItemTitle": "Cost tracking",
+      "menuItemTitle": "Cost Tracking",
       "iconClass": "fa fa-money",
       "position": 120
     },
@@ -84,6 +84,14 @@
     ]
   },
   "components": [
+    {
+      "id": "info",
+      "title": "Info",
+      "enabled": false,
+      "type": "empty",
+      "editable": false,
+      "parentDateFormat": "DD/MM/YYYY"
+    },
     {
       "id": "actions",
       "title": "Actions",
