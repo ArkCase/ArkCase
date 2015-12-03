@@ -485,6 +485,7 @@ iframe {
 
 .ui-grid-viewport {
     height: auto !important;
+    overflow: auto !important;
 }
 
 .ui-grid {
