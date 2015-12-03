@@ -35,26 +35,26 @@ angular.module('cases').config(['$stateProvider', '$urlRouterProvider',
                 templateUrl: 'modules/cases/views/components/case-viewer.client.view.html'
             })
 
-            .state('status', {
-                url: '/status/:id/:caseNumber/:status',
-                templateUrl: 'modules/cases/views/components/case-status.client.view.html'
-            })
-
-            .state('newCase', {
-                url: '/newCase',
-                templateUrl: 'modules/cases/views/components/case-new-case.client.view.html'
-            })
-
-            .state('editCase', {
-                url: '/editCase',
-                templateUrl: 'modules/cases/views/components/case-edit-case.client.view.html',
-                params: {
-                    id: null,
-                    caseNumber: null,
-                    containerId: null,
-                    folderId: null
-                }
-            })
+            //.state('status', {
+            //    url: '/status/:id/:caseNumber/:status',
+            //    templateUrl: 'modules/cases/views/components/case-status.client.view.html'
+            //})
+            //
+            //.state('newCase', {
+            //    url: '/newCase',
+            //    templateUrl: 'modules/cases/views/components/case-new-case.client.view.html'
+            //})
+            //
+            //.state('editCase', {
+            //    url: '/editCase',
+            //    templateUrl: 'modules/cases/views/components/case-edit-case.client.view.html',
+            //    params: {
+            //        id: null,
+            //        caseNumber: null,
+            //        containerId: null,
+            //        folderId: null
+            //    }
+            //})
 
             .state('cases.calendar', {
                 url: '/:id/calendar',

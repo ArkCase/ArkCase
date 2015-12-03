@@ -35,18 +35,18 @@ angular.module('cost-tracking').config(['$stateProvider',
 				templateUrl: 'modules/cost-tracking/views/components/cost-tracking-time-summary.client.view.html'
 			})
 
-			.state('newCostsheet', {
-				url: '/newcostsheet',
-				templateUrl: 'modules/cost-tracking/views/components/cost-tracking-new-costsheet.client.view.html'
-			})
-
-			.state('editCostsheet', {
-				url: '/editcostsheet',
-				templateUrl: 'modules/cost-tracking/views/components/cost-tracking-edit-costsheet.client.view.html',
-				params: {
-					parentId: null,
-					parentType: null
-				}
-			})
+		//.state('newCostsheet', {
+		//	url: '/newcostsheet',
+		//	templateUrl: 'modules/cost-tracking/views/components/cost-tracking-new-costsheet.client.view.html'
+		//})
+		//
+		//.state('editCostsheet', {
+		//	url: '/editcostsheet',
+		//	templateUrl: 'modules/cost-tracking/views/components/cost-tracking-edit-costsheet.client.view.html',
+		//	params: {
+		//		parentId: null,
+		//		parentType: null
+		//	}
+		//})
 	}
 ]);

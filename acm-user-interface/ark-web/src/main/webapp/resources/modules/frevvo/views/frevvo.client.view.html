@@ -1,0 +1,12 @@
+<!--<section ng-controller="FrevvoController" class="well-sm">-->
+<!--Hello, world, where have you been? This is the <strong>Frevvo</strong> module. 11111111111111111-->
+<!--<iframe ng-src="{{frevvoFormUrl}}" class="case-frevvo-iframe">-->
+<!--</iframe>    -->
+<!--Hello, world, where have you been? This is the <strong>Frevvo</strong> module. 2222222222222222222-->
+<!--</section>-->
+
+<div ng-controller="FrevvoController">
+    <p ng-hide="frevvoFormUrl">{{'frevvo.errorForm' | translate}}"errorForm" | translate </p>
+    <iframe ng-src="{{frevvoFormUrl}}" class="case-frevvo-iframe" ng-if="frevvoFormUrl">
+    </iframe>
+</div>
