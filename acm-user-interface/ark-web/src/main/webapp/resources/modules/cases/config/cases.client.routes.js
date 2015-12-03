@@ -55,17 +55,17 @@ angular.module('cases').config(['$stateProvider', '$urlRouterProvider',
             //        folderId: null
             //    }
             //})
-
-            .state('reinvestigate', {
-                url: '/reinvestigate',
-                templateUrl: 'modules/cases/views/components/case-reinvestigate.client.view.html',
-                params: {
-                    id: null,
-                    caseNumber: null,
-                    containerId: null,
-                    folderId: null
-                }
-            })
+            //
+            //.state('reinvestigate', {
+            //    url: '/reinvestigate',
+            //    templateUrl: 'modules/cases/views/components/case-reinvestigate.client.view.html',
+            //    params: {
+            //        id: null,
+            //        caseNumber: null,
+            //        containerId: null,
+            //        folderId: null
+            //    }
+            //})
 
             .state('cases.calendar', {
                 url: '/:id/calendar',

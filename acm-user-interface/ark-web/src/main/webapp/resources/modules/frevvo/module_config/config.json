@@ -1,15 +1,7 @@
 {
   "id": "frevvo",
   "title": "Frevvo",
-  "menus": [
-    {
-      "menuId": "leftnav",
-      "menuItemURL": "frevvo",
-      "menuItemTitle": "Frevvo",
-      "iconClass": "glyphicon glyphicon-asterisk",
-      "position": 100
-    }
-  ],
+  "menus": [],
   "components": [],
   "forms": [
     {
