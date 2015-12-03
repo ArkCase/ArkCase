@@ -26,11 +26,10 @@ angular.module('cost-tracking').controller('CostTracking.ActionsController', ['$
             $state.go("frevvo", {
                 name: "edit-costsheet",
                 arg: {
-                    parentId: costsheetInfo.parentId
-                    , parentType: costsheetInfo.parentType
+                    id: costsheetInfo.id
                 }
             });
-            //$state.go('editCostsheet', { parentId : $scope.costsheetInfo.parentId, parentType : $scope.costsheetInfo.parentType});
+            //$state.go('editCostsheet', { id : $scope.costsheetInfo.id});
         };
 
     }
