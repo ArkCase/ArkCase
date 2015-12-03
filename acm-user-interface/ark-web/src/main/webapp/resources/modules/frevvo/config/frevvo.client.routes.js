@@ -5,7 +5,6 @@ angular.module('frevvo').config(['$stateProvider',
         $stateProvider.
             state('frevvo', {
                 url: '/frevvo',
-                params: {name: null, arg: null},
                 templateUrl: 'modules/frevvo/views/frevvo.client.view.html',
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
@@ -14,12 +13,6 @@ angular.module('frevvo').config(['$stateProvider',
                     }]
                 }
             })
-            //.state('frevvo-form', {
-            //    //url: '/frevvo?form=:form&id=:id&status=:status&caseNumber=:caseNumber',
-            //    url: '/frevvo',
-            //    params: {arg: null},
-            //    templateUrl: 'modules/frevvo/views/frevvo.client.view.html'
-            //})
             .state('frevvo-new-case', {
                 url: '/frevvo-new-case',
                 params: {name: 'new-case'},

@@ -49,8 +49,6 @@ angular.module('services').factory('Frevvo.FormService', ['UtilService'
 
 
                 if (!Util.isEmpty(arg)) {
-                    var caseFileArgs = "caseId:'" + arg.caseId + "',actionNumber:'" + arg.actionNumber + "',status:'" + arg.status + "',acm_ticket:";
-
                     var replacement = "";
                     _.each(arg, function (v, k) {
                         replacement += k + ":'" + v + "',";

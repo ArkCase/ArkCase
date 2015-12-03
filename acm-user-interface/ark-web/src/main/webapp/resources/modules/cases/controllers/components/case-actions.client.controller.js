@@ -98,7 +98,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
         $scope.reinvestigate = function (caseInfo) {
             $state.go("frevvo", {
-                name: "edit-case"
+                name: "reinvestigate"
                 , arg: {
                     caseId: caseInfo.id
                     , caseNumber: caseInfo.caseNumber
