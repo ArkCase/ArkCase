@@ -1,13 +1,10 @@
 <div ng-controller="TimeTrackingController">
 	<div class="module-content">
-		<div class="left-sidebar">
+		<div class="left-sidebar scroll-body" ng-slimscroll="">
 			<div class="module-header">
 				<h3>{{'timeTracking.title' | translate}}</h3>
 			</div>
-
-			<div class="scroll-body" slimscroll="{height: '800px'}"
-					ng-include="'modules/time-tracking/views/time-tracking-list.client.view.html'">
-			</div>
+			<div ng-include="'modules/time-tracking/views/time-tracking-list.client.view.html'" />
 		</div>
 
 		<section class="content-body" ng-show="timesheetInfo">

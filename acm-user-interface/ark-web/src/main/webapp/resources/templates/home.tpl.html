@@ -35,7 +35,7 @@
 <header data-ng-include="'modules/core/views/header.client.view.html'" class="navbar-arkcase"></header>
 <div ng-controller="PageController" ng-class="isLeftMenuCollapsed ? 'page-wrapper collapsed' : 'page-wrapper uncollapsed'">
     <div style="display:table-row">
-        <div class="leftnav-menu" ng-include="'modules/core/views/left-navigation.client.view.html'"></div>
+        <div class="leftnav-menu scroll-body" ng-include="'modules/core/views/left-navigation.client.view.html'" ng-slimscroll=""></div>
         <div class="page-content">
             <section data-ui-view></section>
         </div>
