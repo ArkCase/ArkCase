@@ -302,7 +302,6 @@ iframe {
     border-bottom: 1px solid #e1e6ef;
     border-left: 0px;
     border-right: 0px;
-    z-index: 1000;
     position: relative;
 }
 
