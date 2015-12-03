@@ -45,7 +45,7 @@ angular.module('cost-tracking').controller('CostTracking.ActionsController', ['$
          * Displays the existing costsheet Frevvo form for the user
          */
         $scope.loadExistingCostsheetFrevvoForm = function () {
-            $state.go('editCostsheet', { parentId : $scope.costsheetInfo.parentId, parentType : $scope.costsheetInfo.parentType});
+            $state.go('editCostsheet', { id : $scope.costsheetInfo.id});
         };
 
     }

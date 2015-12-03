@@ -44,8 +44,7 @@ angular.module('cost-tracking').config(['$stateProvider',
 				url: '/editcostsheet',
 				templateUrl: 'modules/cost-tracking/views/components/cost-tracking-edit-costsheet.client.view.html',
 				params: {
-					parentId: null,
-					parentType: null
+					id: null
 				}
 			})
 	}
