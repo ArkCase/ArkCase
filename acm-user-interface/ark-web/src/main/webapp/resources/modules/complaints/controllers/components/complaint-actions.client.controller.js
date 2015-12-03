@@ -67,7 +67,7 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
             //$state.go('newComplaint');
         };
 
-        $scope.close = function (caseInfo) {
+        $scope.close = function (complaintInfo) {
             $state.go("frevvo", {
                 name: "close-complaint"
                 , arg: {

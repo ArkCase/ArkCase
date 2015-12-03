@@ -20,6 +20,11 @@
       "formDefault": ""
     },
     {
+      "name": "reinvestigate",
+      "formKey": "active.case.form",
+      "formDefault": "case_file"
+    },
+    {
       "name": "new-complaint",
       "formKey": "active.complaint.form",
       "formDefault": "complaint"
