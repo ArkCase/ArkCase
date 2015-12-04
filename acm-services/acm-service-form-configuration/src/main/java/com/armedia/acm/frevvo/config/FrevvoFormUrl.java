@@ -102,6 +102,7 @@ public class FrevvoFormUrl implements FormUrl {
 		String mode = plain == false ? (String) properties.get(formName + ".mode") : (String) getPlainFormProperties().get(formName + ".mode");
 		String token = this.authenticationTokenService.getTokenForAuthentication(authentication);
 		String service = (String) properties.get(FrevvoFormConstants.SERVICE);
+		String serviceExternal = (String) properties.get(FrevvoFormConstants.SERVICE);
 		String redirect = (String) properties.get(FrevvoFormConstants.REDIRECT);
 		String timezone = (String) properties.get(FrevvoFormConstants.TIMEZONE);
 		String locale = getLocale();
@@ -132,6 +133,10 @@ public class FrevvoFormUrl implements FormUrl {
 		
 		if (service != null) {
 			uri = uri.replace("{frevvo_service_baseUrl}", service);
+		}
+
+		if (serviceExternal != null) {
+			uri = uri.replace("{frevvo_service_external_baseUrl}", service);
 		}
 		
 		if (redirect != null) {

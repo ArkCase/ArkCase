@@ -62,6 +62,7 @@ public interface FrevvoFormConstants {
 	 */
 	public static final String FREVVO_FORMS_SERVICE = "frevvo.forms.service";
 	public static final String SERVICE = "frevvo.service.baseUrl";
+	public static final String SERVICE_EXTERNAL = "frevvo.service.external.baseUrl";
 	public static final String REDIRECT = "frevvo.browser.redirect.baseUrl";
 	public static final String INTERNAL_PROTOCOL = "frevvo.protocol.internal";
 	public static final String INTERNAL_HOST = "frevvo.host.internal";
