@@ -3,8 +3,10 @@
  */
 package com.armedia.acm.form.plain.service;
 
+import com.armedia.acm.form.plain.model.PlainFormCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +22,7 @@ public class PlainFormService extends FrevvoFormAbstractService {
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private String formName;
+	private ApplicationEventPublisher applicationEventPublisher;
 	
 	@Override
 	public Object get(String action) 
@@ -52,6 +55,9 @@ public class PlainFormService extends FrevvoFormAbstractService {
 		}
 		
 		saveAttachments(attachments, cmisFolderId, form.getObjectType(), form.getObjectId());
+
+		PlainFormCreatedEvent event = new PlainFormCreatedEvent(form, getFormName(), folderId, cmisFolderId, getAuthentication().getName(), getUserIpAddress());
+		getApplicationEventPublisher().publishEvent(event);
 		
 		return true;
 	}
@@ -71,6 +77,16 @@ public class PlainFormService extends FrevvoFormAbstractService {
 	public void setFormName(String formName) 
 	{
 		this.formName = formName;
+	}
+
+	public ApplicationEventPublisher getApplicationEventPublisher()
+	{
+		return applicationEventPublisher;
+	}
+
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+	{
+		this.applicationEventPublisher = applicationEventPublisher;
 	}
 
 	@Override
