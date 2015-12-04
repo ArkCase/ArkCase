@@ -11,8 +11,8 @@
  * Helper.UiGridService has functions for typical usage in ArCase of 'ui-grid' directive
  */
 angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '$translate'
-    , 'UtilService', 'LookupService', 'Object.LookupService'
-    , function ($resource, $q, $translate, Util, LookupService, ObjectLookupService) {
+    , 'UtilService', 'LookupService', 'Object.LookupService', 'ObjectService'
+    , function ($resource, $q, $translate, Util, LookupService, ObjectLookupService, ObjectService) {
         var Service = {
             Lookups: {
                 USER_FULL_NAMES: "userFullNames"
@@ -289,17 +289,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * Go to a page that show the specified ArkCase Object (Case, Complaint, Document, etc.)
              */
             , showObject: function (objType, objId) {
-                var promiseObjectTypes = ObjectLookupService.getObjectTypes().then(
-                    function (objectTypes) {
-                        var found = _.find(objectTypes, {type: objType});
-                        if (found) {
-                            var url = Util.goodValue(found.url);
-                            url = url.replace(":id", objId);
-                            $window.location.href = url;
-                        }
-                        return objectTypes;
-                    }
-                );
+                return ObjectService.gotoUrl(objType, objId);
             }
 
             /**

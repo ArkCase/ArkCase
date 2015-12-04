@@ -1,21 +1,21 @@
 'use strict';
 /**
  * @ngdoc service
- * @name search.service:SearchService
+ * @name services:Search.SearchService
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/search/services/faceted-search.client.service.js modules/search/services/faceted-search.client.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/search/services/search.client.service.js modules/search/services/search.client.service.js}
  *
  * The SearchService provides "Faceted Search" REST call functionality
  */
-angular.module('search').factory('SearchService', ['$resource', 'Solr.SearchService',
-    function ($resource, SolrSearchService) {
-        return $resource('proxy/arkcase/api/latest/plugin/search', {}, {
+angular.module('search').factory('SearchService', ['$resource', 'UtilService',
+    function ($resource, Util) {
+        var Service = $resource('proxy/arkcase/api/latest/plugin/search', {}, {
             /**
              * @ngdoc method
              * @name queryFilteredSearch
-             * @methodOf search.service:SearchService
+             * @methodOf services:Search.SearchService
              *
              * @description
              * Performs "Faceted Search" REST call by supplying default filters
@@ -29,7 +29,7 @@ angular.module('search').factory('SearchService', ['$resource', 'Solr.SearchServ
                 cache: true,
                 isArray: false,
                 transformResponse: function (data, headerGetter) {
-                    if (SolrSearchService.validateSolrData(JSON.parse(data))) {
+                    if (Service.validateSolrData(JSON.parse(data))) {
                         var result = {};
                         var searchObj = JSON.parse(data);
 
@@ -58,5 +58,48 @@ angular.module('search').factory('SearchService', ['$resource', 'Solr.SearchServ
                 }
             }
         });
+
+        /**
+         * @ngdoc method
+         * @name validateSolrData
+         * @methodOf services:Search.SearchService
+         *
+         * @description
+         * Validate SOLR search data
+         *
+         * @param {Object} data  Data to be validated
+         *
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validateSolrData = function (data) {
+            if (!data) {
+                return false;
+            }
+            if (Util.isEmpty(data.responseHeader) || Util.isEmpty(data.response)) {
+                return false;
+            }
+            if (Util.isEmpty(data.responseHeader.status)) {
+                return false;
+            }
+//            if (0 != responseHeader.status) {
+//                return false;
+//            }
+            if (Util.isEmpty(data.responseHeader.params)) {
+                return false;
+            }
+            if (Util.isEmpty(data.responseHeader.params.q)) {
+                return false;
+            }
+
+            if (Util.isEmpty(data.response.numFound) || Util.isEmpty(data.response.start)) {
+                return false;
+            }
+            if (!Util.isArray(data.response.docs)) {
+                return false;
+            }
+            return true;
+        }
+
+        return Service;
     }
 ]);

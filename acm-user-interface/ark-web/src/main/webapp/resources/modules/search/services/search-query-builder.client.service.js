@@ -1,11 +1,11 @@
 'use strict';
 /**
  * @ngdoc service
- * @name search.service:Search.QueryBuilderService
+ * @name service:Search.QueryBuilderService
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/search/services/faceted-search-query-builder.client.service.js modules/search/services/faceted-search-query-builder.client.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/search/services/search-query-builder.client.service.js modules/search/services/search-query-builder.client.service.js}
  *
  * The Search.QueryBuilderService provides functions to build service URL using passed parameters
  */
@@ -16,7 +16,7 @@ angular.module('search').factory('Search.QueryBuilderService', [
             /**
              * @ngdoc method
              * @name buildFacetedSearchQuery
-             * @methodOf search.service:Search.QueryBuilderService
+             * @methodOf service:Search.QueryBuilderService
              *
              * @description
              * Builds URL to pass to the faceted search service
