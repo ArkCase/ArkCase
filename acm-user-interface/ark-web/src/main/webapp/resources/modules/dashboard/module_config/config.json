@@ -14,12 +14,15 @@
     {
       "id": "news",
       "title": "News Widget",
-      "url": "https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&callback=JSON_CALLBACK&q="
+      "url": "https://query.yahooapis.com/v1/public/yql",
+      "query": "select * from xml where url = '$1'",
+      "format": "json"
     },
     {
       "id": "weather",
       "title": "Weather Widget",
-      "APPID": "672e193bbf022bdc749986f7be4c0364"
+      "APPID": "672e193bbf022bdc749986f7be4c0364",
+      "units": "imperial"
     },
     {
       "id": "myCases",
