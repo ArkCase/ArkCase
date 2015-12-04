@@ -6,7 +6,7 @@ angular.module('profile').service('Profile.UserInfoService', function ($http, $q
     });
     function getUserInfo() {
         var deferred = $q.defer();
-        Authentication.queryUserInfoNew().then(
+        Authentication.queryUserInfo().then(
             function (userInfo) {
                 var user = userInfo.userId;
                 if(user){
@@ -29,30 +29,8 @@ angular.module('profile').service('Profile.UserInfoService', function ($http, $q
                 return userInfo;
             }
         );
-        //Authentication.queryUserInfo({}
-        //    , function (userInfo) {
-        //        var user = userInfo.userId;
-        //        if(user){
-        //            var request = $http({
-        //                method: 'GET',
-        //                cache: true,
-        //                url: 'proxy/arkcase/api/latest/plugin/profile/get/' + user
-        //            }).then(
-        //                function successCallback(response) {
-        //                    deferred.resolve(response.data);
-        //                },
-        //                function errorCallback(response) {
-        //                    if (!angular.isObject(response.data) || !response.data.message) {
-        //                        deferred.reject('An unknown error occurred.');
-        //                    }
-        //                    deferred.reject(response.data.message);
-        //                }
-        //            );
-        //        }
-        //    }
-        //);
         return deferred.promise;
-    };
+    }
     function updateUserInfo(data) {
         var deferred = $q.defer();
         $http({
@@ -72,5 +50,5 @@ angular.module('profile').service('Profile.UserInfoService', function ($http, $q
             }
         );
         return deferred.promise;
-    };
+    }
 });

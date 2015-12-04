@@ -1,7 +1,13 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate', 'ConfigService', 'UtilService', 'ConstantService', 'TimeTrackingService', 'CallTimeTrackingService', 'Profile.UserInfoService', 'HelperService', 'Authentication', 'Helper.ObjectTreeService',
-    function ($scope, $state, $stateParams, $q, $translate, ConfigService, Util, Constant, TimeTrackingService, CallTimeTrackingService, UserInfoService, Helper, Authentication, HelperObjectTreeService) {
+
+angular.module('time-tracking').controller('TimeTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate'
+    , 'ConfigService', 'Authentication', 'UtilService', 'ObjectService', 'Helper.ObjectTreeService'
+    , 'TimeTracking.ListService', 'TimeTracking.InfoService'
+    , function ($scope, $state, $stateParams, $q, $translate
+        , ConfigService, Authentication, Util, ObjectService, HelperObjectTreeService
+        , TimeTrackingListService, TimeTrackingInfoService) {
+
         ConfigService.getModuleConfig("time-tracking").then(function (config) {
             $scope.treeConfig = config.tree;
             $scope.componentsConfig = config.components;
@@ -13,10 +19,10 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
             , nodeId: $stateParams.id
             , getTreeData: function (start, n, sort, filters) {
                 var dfd = $q.defer();
-                Authentication.queryUserInfoNew().then(
+                Authentication.queryUserInfo().then(
                     function (userInfo) {
                         var userId = userInfo.userId;
-                        CallTimeTrackingService.queryTimeTrackingTreeData(userId, start, n, sort, filters).then(
+                        TimeTrackingListService.queryTimeTrackingTreeData(userId, start, n, sort, filters).then(
                             function (treeData) {
                                 dfd.resolve(treeData);
                                 return treeData;
@@ -36,12 +42,12 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
                 return dfd.promise;
             }
             , getNodeData: function (timesheetId) {
-                return CallTimeTrackingService.getTimeTrackingInfo(timesheetId);
+                return TimeTrackingInfoService.getTimeTrackingInfo(timesheetId);
             }
             , makeTreeNode: function (timesheetInfo) {
                 return {
                     nodeId: Util.goodValue(timesheetInfo.id, 0)
-                    , nodeType: Constant.ObjectTypes.TIMESHEET
+                    , nodeType: ObjectService.ObjectTypes.TIMESHEET
                     , nodeTitle: Util.goodValue(timesheetInfo.title)
                     , nodeToolTip: Util.goodValue(timesheetInfo.title)
                 };
@@ -50,126 +56,6 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
         $scope.onLoad = function (start, n, sort, filters) {
             treeHelper.onLoad(start, n, sort, filters);
         };
-
-        //var firstLoad = true;
-        //$scope.onLoad = function (start, n, sort, filters) {
-        //    if (firstLoad && $stateParams.id) {
-        //        $scope.treeData = null;
-        //    }
-        //    Authentication.queryUserInfoNew().then(function (userInfo) {
-        //        var userId = userInfo.userId;
-        //        CallTimeTrackingService.queryTimeTrackingTreeData(userId, start, n, sort).then(
-        //            function (treeData) {
-        //                if (firstLoad) {
-        //                    if ($stateParams.id) {
-        //                        if ($scope.treeData) {
-        //
-        //                            var found = _.find(treeData.docs, {nodeId: $scope.treeData.docs[0].nodeId});
-        //                            if (!found) {
-        //                                var clone = _.clone(treeData.docs);
-        //                                clone.unshift($scope.treeData.docs[0]);
-        //                                treeData.docs = clone;
-        //                            }
-        //                            firstLoad = false;
-        //                        }
-        //
-        //
-        //                    } else {
-        //                        if (0 < treeData.docs.length) {
-        //                            var selectNode = treeData.docs[0];
-        //                            $scope.treeControl.select({
-        //                                pageStart: start
-        //                                , nodeType: selectNode.nodeType
-        //                                , nodeId: selectNode.nodeId
-        //                            });
-        //                        }
-        //                        firstLoad = false;
-        //                    }
-        //                }
-        //
-        //                $scope.treeData = treeData;
-        //                return treeData;
-        //            }
-        //        );
-        //        return userInfo;
-        //    });
-        //    if (firstLoad && $stateParams.id) {
-        //        CallTimeTrackingService.getTimeTrackingInfo($stateParams.id).then(
-        //            function (timesheetInfo) {
-        //                $scope.treeControl.select({
-        //                    pageStart: start
-        //                    , nodeType: Constant.ObjectTypes.TIMESHEET
-        //                    , nodeId: timesheetInfo.id
-        //                });
-        //
-        //                var treeData = {docs: [], total: 0};
-        //                if ($scope.treeData) {
-        //                    var found = _.find($scope.treeData.docs, {nodeId: timesheetInfo.id});
-        //                    if (!found) {
-        //                        treeData.docs = _.clone($scope.treeData.docs);
-        //                        treeData.total = $scope.treeData.total;
-        //                        treeData.docs.unshift({
-        //                            nodeId: Util.goodValue(timesheetInfo.id, 0)
-        //                            , nodeType: Constant.ObjectTypes.TIMESHEET
-        //                            , nodeTitle: Util.goodValue(timesheetInfo.title)
-        //                            , nodeToolTip: Util.goodValue(timesheetInfo.title)
-        //                        });
-        //                    }
-        //                    firstLoad = false;
-        //
-        //                } else {
-        //                    treeData.total = 1;
-        //                    treeData.docs.unshift({
-        //                        nodeId: Util.goodValue(timesheetInfo.id, 0)
-        //                        , nodeType: Constant.ObjectTypes.TIMESHEET
-        //                        , nodeTitle: Util.goodValue(timesheetInfo.title)
-        //                        , nodeToolTip: Util.goodValue(timesheetInfo.title)
-        //                    });
-        //                }
-        //
-        //                $scope.treeData = treeData;
-        //                return timesheetInfo;
-        //            }
-        //            , function (errorData) {
-        //                $scope.treeControl.select({
-        //                    pageStart: start
-        //                    , nodeType: Constant.ObjectTypes.TIMESHEET
-        //                    , nodeId: $stateParams.id
-        //                });
-        //
-        //
-        //                var treeData = {docs: [], total: 0};
-        //                if ($scope.treeData) {            //It must be set by CallCasesService.queryCasesTreeData()
-        //                    var found = _.find($scope.treeData.docs, {nodeId: $stateParams.id});
-        //                    if (!found) {
-        //                        treeData.docs = _.clone($scope.treeData.docs);
-        //                        treeData.total = $scope.treeData.total;
-        //                        treeData.docs.unshift({
-        //                            nodeId: $stateParams.id
-        //                            , nodeType: Constant.ObjectTypes.TIMESHEET
-        //                            , nodeTitle: $translate.instant("common.directive.objectTree.errorNode.title")
-        //                            , nodeToolTip: $translate.instant("common.directive.objectTree.errorNode.toolTip")
-        //                        });
-        //                    }
-        //                    firstLoad = false;
-        //
-        //                } else {
-        //                    treeData.total = 1;
-        //                    treeData.docs.unshift({
-        //                        nodeId: $stateParams.id
-        //                        , nodeType: Constant.ObjectTypes.TIMESHEET
-        //                        , nodeTitle: $translate.instant("common.directive.objectTree.errorNode.title")
-        //                        , nodeToolTip: $translate.instant("common.directive.objectTree.errorNode.toolTip")
-        //                    });
-        //                }
-        //
-        //                $scope.treeData = treeData;
-        //                return errorData;
-        //            }
-        //        );
-        //    }
-        //
-        //};
 
         $scope.onSelect = function (selectedTimesheet) {
             $scope.$emit('req-select-timesheet', selectedTimesheet);

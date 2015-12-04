@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams', 'UtilService', 'ConstantService', 'Case.InfoService', 'Complaint.InfoService', 'Object.ModelService',
-    function ($scope, $stateParams, Util, Constant, CaseInfoService, ComplaintInfoService, ObjectModelService) {
+angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams', 'UtilService'
+    , 'ObjectService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService', 'Object.ModelService'
+    , function ($scope, $stateParams, Util, ObjectService, CaseInfoService, ComplaintInfoService, TaskInfoService, ObjectModelService) {
+
         $scope.$emit('req-component-config', 'parentinfo');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("parentinfo" == componentId) {
@@ -10,6 +12,9 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
         });
 
         $scope.$on('task-updated', function (e, data) {
+            if (!TaskInfoService.validateTaskInfo(data)) {
+                return;
+            }
             $scope.taskInfo = data;
             if (Util.isEmpty($scope.taskInfo.parentObjectId)) {
                 return;
@@ -22,7 +27,7 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
             //}
 
 
-            if (Constant.ObjectTypes.CASE_FILE == $scope.taskInfo.parentObjectType) {
+            if (ObjectService.ObjectTypes.CASE_FILE == $scope.taskInfo.parentObjectType) {
                 CaseInfoService.getCaseInfo($scope.taskInfo.parentObjectId).then(
                     function (caseInfo) {
                         $scope.parentCaseInfo = caseInfo;
@@ -31,7 +36,7 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
                         return caseInfo;
                     }
                 );
-            } else if (Constant.ObjectTypes.COMPLAINT == $scope.taskInfo.parentObjectType) {
+            } else if (ObjectService.ObjectTypes.COMPLAINT == $scope.taskInfo.parentObjectType) {
                 ComplaintInfoService.getComplaintInfo($scope.taskInfo.parentObjectId).then(
                     function (complaintInfo) {
                         $scope.parentComplaintInfo = complaintInfo;

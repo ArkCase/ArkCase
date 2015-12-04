@@ -66,8 +66,8 @@
  </file>
  </example>
  */
-angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', 'UtilService', 'ValidationService', 'StoreService', 'EcmService',
-    function ($q, $translate, $modal, Util, Validator, Store, Ecm) {
+angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', 'UtilService', 'StoreService', 'EcmService',
+    function ($q, $translate, $modal, Util, Store, Ecm) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
 
@@ -526,19 +526,19 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 Util.deferred(DocTree.Controller.viewChangedTree);
             }
             , markNodePending: function (node) {
-                if (this.validateFancyTreeNode(node)) {
+                if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).addClass("pending");
                     node.setStatus("loading");
                 }
             }
             , markNodeOk: function (node) {
-                if (this.validateFancyTreeNode(node)) {
+                if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).removeClass("pending");
                     node.setStatus("ok");
                 }
             }
             , markNodeError: function (node) {
-                if (this.validateFancyTreeNode(node)) {
+                if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).addClass("pending");
                     node.title = $translate.instant("common.directive.docTree.error.nodeTitle");
                     node.renderTitle();
@@ -546,56 +546,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     node.setStatus("ok");
                 }
             }
-            , validateNodes: function (data) {
-                if (!Util.isArray(data)) {
-                    return false;
-                }
-                for (var i = 0; i < data.length; i++) {
-                    if (!this.validateNode(data[i])) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            , validateNode: function (data) {
-                if (!this.validateFancyTreeNode(data)) {
-                    return false;
-                }
-                if (Util.isEmpty(data.data.objectId)) {
-                    return false;
-                }
-                return true;
-            }
-            , validateFancyTreeNodes: function (data) {
-                if (!Util.isArray(data)) {
-                    return false;
-                }
-                for (var i = 0; i < data.length; i++) {
-                    if (!this.validateFancyTreeNode(data[i])) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            , validateFancyTreeNode: function (data) {
-                if (Util.isEmpty(data)) {
-                    return false;
-                }
-                if (Util.isEmpty(data.tree)) {
-                    return false;
-                }
-                if (Util.isEmpty(data.data)) {
-                    return false;
-                }
-                if (Util.isEmpty(data.key)) {
-                    return false;
-                }
-                return true;
-            }
 
             , getNodePathNames: function (node) {
                 var names = [];
-                if (DocTree.validateNode(node)) {
+                if (Validator.validateNode(node)) {
                     var n = node;
                     while (n) {
                         names.unshift(Util.goodValue(n.title));
@@ -607,7 +561,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             }
             , findChildNodeByName: function (parentNode, name) {
                 var found = null;
-                if (DocTree.validateFancyTreeNode(parentNode)) {
+                if (Validator.validateFancyTreeNode(parentNode)) {
                     if (!Util.isArrayEmpty(parentNode.children)) {
                         for (var i = 0; i < parentNode.children.length; i++) {
                             if (parentNode.children[i].title == name) {
@@ -622,7 +576,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             , findSiblingNodeByName: function (node, name) {
                 var found = null;
                 var parentNode = node.getParent();
-                if (DocTree.validateFancyTreeNode(parentNode)) {
+                if (Validator.validateFancyTreeNode(parentNode)) {
                     if (!Util.isArrayEmpty(parentNode.children)) {
                         for (var i = 0; i < parentNode.children.length; i++) {
                             if (parentNode.children[i].title == name) {
@@ -677,7 +631,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             // In inNodes array, Parent nodes need to be before child nodes.
             , _findOldestParent: function (node, inNodes) {
                 var found = null;
-                if (DocTree.validateNode(node) && DocTree.validateNodes(inNodes)) {
+                if (Validator.validateNode(node) && Validator.validateNodes(inNodes)) {
                     for (var i = 0; i < inNodes.length; i++) {
                         if (!DocTree.isTopNode(inNodes[i])) {
                             var parent = node.parent;
@@ -879,10 +833,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     var node = tree.getActiveNode();
                     var batch = !Util.isArrayEmpty(selNodes);
                     if (batch) {
-                        if (!DocTree.validateNodes(selNodes)) {
+                        if (!Validator.validateNodes(selNodes)) {
                             return;
                         }
-                    } else if (!DocTree.validateNode(node)) {
+                    } else if (!Validator.validateNode(node)) {
                         return;
                     }
 
@@ -1169,7 +1123,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         cmd: "noop",
                         uiIcon: ""
                     }];
-                    if (DocTree.validateNodes(nodes)) {
+                    if (Validator.validateNodes(nodes)) {
                         var countFolder = 0;
                         var countFile = 0;
                         for (var i = 0; i < nodes.length; i++) {
@@ -1822,7 +1776,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             function (successData) {
                                 var uploadedFiles = successData[0];
                                 var fileNodes = successData[1];
-                                if (!Util.isArrayEmpty(uploadedFiles) && DocTree.validateFancyTreeNodes(fileNodes)) {
+                                if (!Util.isArrayEmpty(uploadedFiles) && Validator.validateFancyTreeNodes(fileNodes)) {
                                     for (var i = 0; i < uploadedFiles.length; i++) {
                                         var uploadedFile = uploadedFiles[i];
                                         var type = Util.goodValue(uploadedFile.type);
@@ -2317,7 +2271,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                     } else {
                         var parent = node.parent;
-                        if (!DocTree.validateNode(parent)) {
+                        if (!Validator.validateNode(parent)) {
                             dfd.reject();
 
                         } else {
@@ -2372,7 +2326,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                     } else {
                         var parent = node.parent;
-                        if (!DocTree.validateNode(parent)) {
+                        if (!Validator.validateNode(parent)) {
                             dfd.reject();
 
                         } else {
@@ -2619,7 +2573,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
 
                     var node = DocTree.findNodeByPathNames(findNames);
-                    if (DocTree.validateNode(node)) {
+                    if (Validator.validateNode(node)) {
                         DocTree.markNodePending(node);
                     }
 
@@ -2644,7 +2598,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             // fix target folders
                             //
                             var node = DocTree.findNodeByPathNames(findNames);
-                            if (DocTree.validateNode(node)) {
+                            if (Validator.validateNode(node)) {
                                 var cacheKey = DocTree.getCacheKeyByNode(node);
                                 DocTree.cacheFolderList.remove(cacheKey);
                                 node.setExpanded(false);
@@ -2654,7 +2608,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                             while (2 < findNames.length) {
                                 node = DocTree.findNodeByPathNames(findNames);
-                                if (DocTree.validateNode(node)) {
+                                if (Validator.validateNode(node)) {
                                     var parent = node.parent;
                                     var cacheKey = DocTree.getCacheKeyByNode(parent);
                                     var folderList = DocTree.cacheFolderList.get(cacheKey);
@@ -2686,7 +2640,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 for (var j = 0; j < node.length; j++) {
                                     if (DocTree.isFolderNode(node[j])) {
                                         for (var i = 0; i < node[j].children.length; i++) {
-                                            if (DocTree.validateNode(node[j].children[i])) {
+                                            if (Validator.validateNode(node[j].children[i])) {
                                                 node[j].children[i].data.status = "RECORD";
                                                 node[j].children[i].renderTitle();
                                             }
@@ -2873,7 +2827,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     );
 
                     $.when(promiseRetrieveLatest, promiseAddNode).done(function (uploadedFiles, fileNodes) {
-                        if (!Util.isArrayEmpty(uploadedFiles) && DocTree.validateFancyTreeNodes(fileNodes)) {
+                        if (!Util.isArrayEmpty(uploadedFiles) && Validator.validateFancyTreeNodes(fileNodes)) {
                             for (var i = 0; i < uploadedFiles.length; i++) {
                                 var uploadedFile = uploadedFiles[i];
                                 var emptyNode = null;
@@ -3776,6 +3730,257 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 $s.empty();
             }
         }; //end Ui
+
+        var Validator = {
+            validateNodes: function (data) {
+                if (!Util.isArray(data)) {
+                    return false;
+                }
+                for (var i = 0; i < data.length; i++) {
+                    if (!this.validateNode(data[i])) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            , validateNode: function (data) {
+                if (!this.validateFancyTreeNode(data)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.data.objectId)) {
+                    return false;
+                }
+                return true;
+            }
+            , validateFancyTreeNodes: function (data) {
+                if (!Util.isArray(data)) {
+                    return false;
+                }
+                for (var i = 0; i < data.length; i++) {
+                    if (!this.validateFancyTreeNode(data[i])) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            , validateFancyTreeNode: function (data) {
+                if (Util.isEmpty(data)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.tree)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.data)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.key)) {
+                    return false;
+                }
+                return true;
+            }
+
+            , validateFolderList: function (data) {
+                if (Util.isEmpty(data)) {
+                    return false;
+                }
+                if (!Util.isArray(data.children)) {
+                    return false;
+                }
+                return true;
+            }
+            , validateCreateInfo: function (data) {
+                if (Util.isEmpty(data)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.id)) {
+                    return false;
+                }
+                if (0 == data.id) {
+                    return false;
+                }
+                if (Util.isEmpty(data.parentFolderId)) {
+                    return false;
+                }
+                return true;
+            }
+            , validateDeletedFolder: function (data) {
+                if (Util.isEmpty(data)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.deletedFolderId)) {
+                    return false;
+                }
+                return true;
+            }
+            , validateDeletedFile: function (data) {
+                if (Util.isEmpty(data)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.deletedFileId)) {
+                    return false;
+                }
+                return true;
+            }
+            , validateRenamedFolder: function (data) {
+                if (Util.isEmpty(data)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.id)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.name)) {
+                    return false;
+                }
+                return true;
+            }
+            , validateRenamedFile: function (data) {
+                if (Util.isEmpty(data)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.fileId)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.fileName)) {
+                    return false;
+                }
+                return true;
+            }
+            , validateMoveFileInfo: function (data) {
+                if (Util.isEmpty(data)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.fileId)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.folder)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.folder.id)) {
+                    return false;
+                }
+                return true;
+            }
+            , validateCopyFileInfo: function (data) {
+                if (Util.isEmpty(data)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.originalId)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.newFile)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.newFile.fileId)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.newFile.folder)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.newFile.folder.id)) {
+                    return false;
+                }
+                return true;
+            }
+            , validateMoveFolderInfo: function (data) {
+                if (Util.isEmpty(data)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.id)) {
+                    return false;
+                }
+                return true;
+            }
+            , validateCopyFolderInfo: function (data) {
+                if (Util.isEmpty(data)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.originalFolderId)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.newFolder)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.newFolder.id)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.newFolder.parentFolderId)) {
+                    return false;
+                }
+                return true;
+            }
+            , validateUploadInfo: function (data) {
+                if (Util.isArrayEmpty(data)) {
+                    return false;
+                }
+                for (var i = 0; i < data.length; i++) {
+                    if (!Validator.validateUploadInfoItem(data[i])) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            , validateReplaceInfo: function (data) {
+                if (Util.isEmpty(data)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.fileId)) {
+                    return false;
+                }
+                return true;
+            }
+            , validateUploadInfoItem: function (data) {
+                if (Util.isEmpty(data)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.fileId)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.folder)) {
+                    return false;
+                }
+                if (!Util.isArray(data.versions)) {
+                    return false;
+                }
+                if (!Util.isArray(data.tags)) {
+                    return false;
+                }
+                return true;
+            }
+            , validateActiveVersion: function (data) {
+                if (Util.isEmpty(data)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.fileId)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.activeVersionTag)) {
+                    return false;
+                }
+                return true;
+            }
+            , validateSentEmails: function (data) {
+                if (!Util.isArray(data)) {
+                    return false;
+                }
+                for (var i = 0; i < data.length; i++) {
+                    if (!Validator.validateSentEmail(data[i])) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            , validateSentEmail: function (data) {
+                if (Util.isEmpty(data.state)) {
+                    return false;
+                }
+                if (Util.isEmpty(data.userEmail)) {
+                    return false;
+                }
+                return true;
+            }
+
+        };
+
 
         return {
             restrict: 'E'

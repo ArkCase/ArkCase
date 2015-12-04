@@ -1,4 +1,10 @@
-{
-"Business"  : "Business"
-,"Home"     : "Home"
-}
+[
+  {
+    "type": "Business",
+    "name": "Business"
+  },
+  {
+    "type": "Home",
+    "name": "Home"
+  }
+]

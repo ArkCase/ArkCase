@@ -208,6 +208,12 @@ public class EbriefService extends FrevvoFormAbstractService
         return FrevvoFormName.EBRIEF;
     }
 
+    @Override
+    public Class<?> getFormClass()
+    {
+        return EbriefForm.class;
+    }
+
     public CaseFileDao getCaseFileDao()
     {
         return caseFileDao;

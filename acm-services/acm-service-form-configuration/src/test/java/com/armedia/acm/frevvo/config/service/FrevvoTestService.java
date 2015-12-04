@@ -34,7 +34,14 @@ public class FrevvoTestService extends FrevvoFormAbstractService
         return "test";
     }
 
-	@Override
+    @Override
+    public Class<?> getFormClass()
+    {
+        // Implementation no needed so far
+        return null;
+    }
+
+    @Override
 	public Object convertToFrevvoForm(Object obj, Object form) {
 		// Implementation no needed so far
 		return null;

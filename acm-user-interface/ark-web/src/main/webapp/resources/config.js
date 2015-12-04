@@ -16,7 +16,6 @@ var ApplicationConfiguration = (function() {
         'ui.router',
         'ui.bootstrap',
         'pascalprecht.translate',
-        'schemaForm',
         'angularMoment',
         //'ui.utils',
         'ui.grid',
@@ -29,7 +28,9 @@ var ApplicationConfiguration = (function() {
         'xeditable',
         'summernote',
         'ngBootbox',
-        'ngHandsontable'
+        'ngHandsontable',
+        'ngTagsInput',
+        'ui.ace'
     ];
 
     // Add a new vertical module

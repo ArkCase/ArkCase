@@ -43,7 +43,7 @@
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "parent",
+                    "name": "parent_number_lcs",
                     "displayName": "search.comp.grid.columns.parent",
                     "headerCellFilter": "translate"
                 },
@@ -64,7 +64,7 @@
                 20,
                 50
             ],
-            "paginationPageSize": 10,
+            "paginationPageSize": 20,
             "start": 0,
             "filter": "",
             "filterName": ""

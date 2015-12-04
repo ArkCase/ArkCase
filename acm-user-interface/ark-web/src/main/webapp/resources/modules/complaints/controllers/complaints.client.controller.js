@@ -14,6 +14,7 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
         });
         $scope.$on('report-complaint-updated', function (e, complaintInfo) {
             ComplaintInfoService.updateComplaintInfo(complaintInfo);
+            $scope.complaintInfo = complaintInfo;
             $scope.$broadcast('complaint-updated', complaintInfo);
         });
 
@@ -28,7 +29,7 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
 
 
         var loadComplaint = function (id) {
-            if (id) {
+            if (Util.goodPositive(id)) {
                 if ($scope.complaintInfo && $scope.complaintInfo.id != id) {
                     $scope.complaintInfo = null;
                 }

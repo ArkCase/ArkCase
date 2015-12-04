@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DetailsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'Case.InfoService', 'MessageService',
-    function ($scope, $stateParams, $translate, Util, CaseInfoService, MessageService) {
+angular.module('cases').controller('Cases.DetailsController', ['$scope', '$stateParams', '$translate'
+    , 'UtilService', 'Case.InfoService', 'MessageService'
+    , function ($scope, $stateParams, $translate, Util, CaseInfoService, MessageService) {
+
 		$scope.$emit('req-component-config', 'details');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('details' == componentId) {
@@ -10,7 +12,9 @@ angular.module('cases').controller('Cases.DetailsController', ['$scope', '$state
         });
 
         $scope.$on('case-updated', function (e, data) {
-			$scope.caseInfo = data;
+            if (CaseInfoService.validateCaseInfo(data)) {
+                $scope.caseInfo = data;
+            }
 		});
 
 
