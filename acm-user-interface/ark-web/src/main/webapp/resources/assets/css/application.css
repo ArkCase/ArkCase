@@ -797,12 +797,6 @@ a.editable.editable-click.editable-hide {
     
 }
 
-/* To Be Removed */
-
-.ui-grid-pinned-container .ui-grid-header-canvas {
-    height: 60px !important;
-}
-
 .module-content .left-sidebar-lg .ui-grid-pinned-container .ui-grid-header-canvas {
     height: auto !important;
 }
