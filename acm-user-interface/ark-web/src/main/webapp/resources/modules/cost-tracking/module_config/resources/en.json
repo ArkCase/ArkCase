@@ -7,6 +7,13 @@
   },
   "costTracking.tree": {
   },
+  "costTracking.comp.info": {
+    "incidentDate": "Incident Date",
+    "priority": "Priority",
+    "assignedTo": "Assigned To",
+    "subjectType": "Subject Type",
+    "state": "State"
+  },
   "costTracking.comp.actions": {
     "new.button": "New Costsheet",
     "edit.button": "Edit Costsheet"

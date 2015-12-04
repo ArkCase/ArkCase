@@ -49,7 +49,7 @@
                 20,
                 50
             ],
-            "paginationPageSize": 10,
+            "paginationPageSize": 20,
             "start": 0,
             "filter": "\"Object Type\": NOTIFICATION",
             "filterName" : "Object Type"
