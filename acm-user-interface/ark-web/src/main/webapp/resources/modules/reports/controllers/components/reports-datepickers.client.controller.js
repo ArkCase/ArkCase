@@ -11,7 +11,6 @@
 angular.module('reports').controller('Reports.DatepickersController', ['$scope',
     function ($scope) {
         $scope.$on('component-config', applyConfig);
-        $scope.$on('reports-data-retrieved',updateData);
         $scope.$emit('req-component-config', 'datepickers');
 
         $scope.config = null;
@@ -24,10 +23,5 @@ angular.module('reports').controller('Reports.DatepickersController', ['$scope',
         $scope.opened = {};
         $scope.opened.openedStart = false;
         $scope.opened.openedEnd = false;
-
-        function updateData(e, reportsData){
-            $scope.reportsData = reportsData;
-        }
-
     }
 ]);

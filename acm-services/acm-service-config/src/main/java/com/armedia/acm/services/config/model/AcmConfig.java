@@ -4,5 +4,5 @@ public interface AcmConfig
 {
     public String getConfigName();
     public String getConfigAsJson();
-
+    public String getConfigDescription();
 }

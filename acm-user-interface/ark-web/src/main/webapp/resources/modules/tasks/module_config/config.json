@@ -11,7 +11,7 @@
     },
     {
       "menuId": "topbar",
-      "menuItemURL": "tasks.wizard",
+      "menuItemURL": "newTask",
       "menuItemTitle": "Task",
       "iconClass": "fa fa-check-circle",
       "position": 30

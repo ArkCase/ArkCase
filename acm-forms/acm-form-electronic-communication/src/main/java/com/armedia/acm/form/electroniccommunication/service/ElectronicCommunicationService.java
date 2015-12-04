@@ -119,6 +119,12 @@ public class ElectronicCommunicationService extends FrevvoFormAbstractService{
 		return FrevvoFormName.ELECTRONIC_COMMUNICATION;
 	}
 
+	@Override
+	public Class<?> getFormClass()
+	{
+		return ElectronicCommunicationForm.class;
+	}
+
 	public ComplaintDao getComplaintDao() {
 		return complaintDao;
 	}

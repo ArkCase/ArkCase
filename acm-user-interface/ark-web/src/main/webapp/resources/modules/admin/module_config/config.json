@@ -13,6 +13,7 @@
   "components": [
     {
       "id": "securityLdapConfig",
+      "title": "Security - Ldap config grid",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -87,6 +88,7 @@
     },
     {
       "id": "correspondenceManagementTemplates",
+      "title": "Correspondance Management Templates grid",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -131,6 +133,203 @@
           "headerCellFilter": "translate"
         }
       ]
+    },
+    {
+      "id": "labelsConfig",
+      "title": "Application - Labels Config grid",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "id",
+          "displayName": "admin.application.labels.config.data.id",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "value",
+          "displayName": "admin.application.labels.config.data.value",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' editable-text='row.entity.value' onbeforesave='grid.appScope.updateLabelValue($data, row.entity)'>{{ row.entity.value}}</a>"
+        },
+        {
+          "name": "description",
+          "displayName": "admin.application.labels.config.data.description",
+          "visible": true,
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' editable-text='row.entity.description' onbeforesave='grid.appScope.updateLabelDesc($data, row.entity)'>{{ row.entity.description || 'Unknown' }}</a>"
+        },
+        {
+          "name": "defaultValue",
+          "displayName": "admin.application.labels.config.data.defaultValue",
+          "visible": true,
+          "headerCellFilter": "translate"
+        }
+      ]
+    },
+    {
+      "id": "plainFormsConfig",
+      "title": "Forms - Forms Config grid",
+      "enabled": true,
+      "type": "grid",
+      "formsDropdown": [
+        {
+          "id": "CASE_FILE",
+          "name": "Case File"
+        },
+        {
+          "id": "COMPLAINT",
+          "name": "Complaint"
+        }
+      ],
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "admin.forms.data.name",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "applicationName",
+          "displayName": "admin.forms.data.applicationName",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "description",
+          "displayName": "admin.forms.data.description",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "target",
+          "displayName": "admin.forms.data.target",
+          "visible": true,
+          "headerCellFilter": "translate"
+        }
+      ]
+    },
+    {
+      "id": "workflowsConfig",
+      "title": "Workflows - Workflows Config grid",
+      "enabled": true,
+      "type": "grid",
+      "columnDefs": [
+        {
+          "name": "id",
+          "displayName": "id",
+          "visible": false
+        },
+        {
+          "name": "name",
+          "displayName": "admin.workflows.config.grid.businessProcess",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "description",
+          "displayName": "admin.workflows.config.grid.description",
+          "visible": true,
+          "cellTemplate": "<div class='ui-grid-cell-contents' title='{{row.entity.description}}'>{{row.entity.description}}</div>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "key",
+          "displayName": "key",
+          "visible": false
+        },
+        {
+          "name": "version",
+          "displayName": "version",
+          "visible": false
+        },
+        {
+          "name": "fileName",
+          "displayName": "fileName",
+          "visible": false
+        },
+        {
+          "name": "created",
+          "displayName": "Created",
+          "visible": false,
+          "cellTemplate": "<div>{{ row.entity.created | date : 'mediumDate'}}</div>"
+        },
+        {
+          "name": "modified",
+          "displayName": "admin.workflows.config.grid.modified",
+          "visible": true,
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'mediumDate'}}</div>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "creator",
+          "displayName": "admin.workflows.config.grid.creator",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modifier",
+          "displayName": "modifier",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": "workflowsHistoryDialogConfig",
+      "title": "Workflows - Workflows Config history dialog grid",
+      "enabled": true,
+      "type": "grid",
+      "columnDefs": [
+        {
+          "name": "id",
+          "displayName": "id",
+          "visible": false
+        },
+        {
+          "name": "name",
+          "displayName": "admin.workflows.config.grid.businessProcess",
+          "visible": true,
+          "cellTemplate": "<div class='ui-grid-cell-contents' title='{{row.entity.name}}'>{{row.entity.name}}</div>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "description",
+          "displayName": "admin.workflows.config.grid.description",
+          "visible": true,
+          "cellTemplate": "<div class='ui-grid-cell-contents' title='{{row.entity.description}}'>{{row.entity.description}}</div>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "key",
+          "displayName": "key",
+          "visible": false
+        },
+        {
+          "name": "version",
+          "displayName": "version",
+          "visible": false
+        },
+        {
+          "name": "fileName",
+          "displayName": "fileName",
+          "visible": false
+        },
+        {
+          "name": "modified",
+          "displayName": "admin.workflows.config.grid.modified",
+          "visible": true,
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'mediumDate'}}</div>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "creator",
+          "displayName": "admin.workflows.config.grid.creator",
+          "visible": true,
+          "headerCellFilter": "translate"
+        }
+      ]
     }
   ],
   "adminTree": [
@@ -155,8 +354,8 @@
           "templateName": "security.select-privileges"
         },
         {
-          "title": "admin.security.moduleConfig",
-          "templateName": "security.module-config"
+          "title": "admin.security.modules",
+          "templateName": "security.modules"
         }
       ]
     },
@@ -211,12 +410,16 @@
       ]
     },
     {
-      "title": "admin.labels.title",
+      "title": "admin.application.title",
       "folder": "true",
       "children": [
         {
-          "title": "admin.labels.config",
-          "templateName": "labels.config"
+          "title": "admin.application.labels.config.title",
+          "templateName": "application.labels.config"
+        },
+        {
+          "title": "admin.application.module.config.title",
+          "templateName": "application.module.config"
         }
       ]
     },

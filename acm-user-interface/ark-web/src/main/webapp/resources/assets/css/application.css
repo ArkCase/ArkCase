@@ -1,3 +1,6 @@
+/* @override http://10.21.4.149/arkcase/assets/css/application.css
+	http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
+
 /* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
 
 /* Typography */
@@ -149,6 +152,14 @@ iframe {
     text-decoration: underline;
 }
 
+.panel-heading .btn.btn-default:hover {
+    background-color: #167abb;
+    border: 0px;
+    color: white;
+    text-shadow: none;
+    text-decoration: underline;
+}
+
 /* Panels */
 
 .panel {
@@ -250,17 +261,16 @@ iframe {
 
 /* Search Facets */
 
-
 .left-sidebar ul.list-unstyled li div {
-    margin:0px;
+    margin: 0px;
 }
 
 .left-sidebar ul.list-unstyled li {
-	margin: 10px;
+    margin: 10px;
 }
 
-.left-sidebar ul.list-unstyled li ul li{
-	margin: 0px;
+.left-sidebar ul.list-unstyled li ul li {
+    margin: 0px;
 }
 
 .left-sidebar ul.list-unstyled li ul.list-unstyled li label {
@@ -292,10 +302,8 @@ iframe {
     border-bottom: 1px solid #e1e6ef;
     border-left: 0px;
     border-right: 0px;
-    z-index: 1000;
     position: relative;
 }
-
 
 .module-header .btn-group {
     margin-right: 15px;
@@ -348,6 +356,7 @@ iframe {
     color: white;
     background-color: #177bbb;
 }
+
 .module-header .well-sm.pull-right input {
     width: 200px;
     border: 0px;
@@ -369,12 +378,11 @@ iframe {
 }
 
 .module-content .left-sidebar header.header .btn-group.select.pull-right {
-	position: relative;
-	top: -90px;
-	z-index: 20000;
-	
-}
+    position: relative;
+    top: -90px;
+    z-index: 20000;
 
+}
 
 /* Content Body */
 
@@ -477,6 +485,7 @@ iframe {
 
 .ui-grid-viewport {
     height: auto !important;
+    overflow: auto !important;
 }
 
 .ui-grid {
@@ -573,7 +582,6 @@ thead {
     background-color: #ff7373;
     color: #fff;
 }
-
 
 /* Modal Window Columns */
 
@@ -738,7 +746,7 @@ a.editable.editable-click.editable-hide {
     min-height: 100px;
 }
 
-/* Cases Module - FancyTree Table */
+/* Cases Module - FancyTree Table */ 
 
 .fancytree-container.fancytree-ext-table.fancytree-ext-gridnav.fancytree-ext-edit.ui-draggable-handle {
     margin: 0px;
@@ -768,6 +776,27 @@ a.editable.editable-click.editable-hide {
     padding-right: 200px;
 }
 
+.new-iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding-bottom: 60px;
+    padding-right: 200px;
+}
+
+.reports-iframe {    
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding-bottom: 60px;
+    padding-right: 500px;
+    
+}
+
 /* To Be Removed */
 
 .ui-grid-pinned-container .ui-grid-header-canvas {
@@ -795,3 +824,9 @@ input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
 	border: 0px;
 	border-radius: 0px;
 }
+
+.ace_editor {
+    height: 500px;
+    border: 1px solid #cbd5dd;
+}
+

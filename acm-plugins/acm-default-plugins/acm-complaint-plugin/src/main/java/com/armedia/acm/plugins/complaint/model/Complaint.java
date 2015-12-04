@@ -12,12 +12,16 @@ import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -49,6 +53,9 @@ import java.util.List;
  */
 @Entity
 @Table(name = "acm_complaint")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.complaint.model.Complaint")
 public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity
 {
     private static final long serialVersionUID = -1154137631399833851L;
@@ -182,6 +189,9 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     @Column(name = "cm_complaint_restricted_flag", nullable = false)
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = false;
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     @PrePersist
     protected void beforeInsert()
@@ -514,6 +524,16 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     public void setRestricted(Boolean restricted)
     {
         this.restricted = restricted;
+    }
+
+    public String getClassName()
+    {
+        return className;
+    }
+
+    public void setClassName(String className)
+    {
+        this.className = className;
     }
 
     @Override

@@ -12,7 +12,7 @@
  *
  * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/form-workflows.link.client.service.js modules/admin/services/form-workflows.link.client.service.js}
  *
- * The Admin.ReportsConfigService provides Form workflows link calls functionality
+ * The Admin.FormWorkflowsLinkService provides Form workflows link calls functionality
  */
 angular.module('admin').service('Admin.FormWorkflowsLinkService', function ($http) {
     return ({

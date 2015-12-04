@@ -150,6 +150,8 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	
 	private NotificationDao notificationDao;
 	private NotificationEventPublisher notificationEventPublisher;
+
+	private FrevvoFormServiceFactory frevvoFormServiceFactory;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -159,7 +161,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 		LOG.info("Initialization form \"" + formName + "\"");
 		
 		// Create and initialize appropriate service for given form name
-		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName, this, request, authentication);
+		FrevvoFormService frevvoFormService = getFrevvoFormServiceFactory().getService(formName, this, request, authentication);
 		
 		// Initialize some data that should be shown on the form (if there should be any) - this is happen while form is loading for the first time
 		String result = (String) frevvoFormService.init();	
@@ -186,7 +188,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 		LOG.info("Execute action \"" + action + "\" for form \"" + formName + "\"");
 
 		// Create and initialize appropriate service for given form name
-		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName, this, request, authentication);
+		FrevvoFormService frevvoFormService = getFrevvoFormServiceFactory().getService(formName, this, request, authentication);
 
 		// Initialize some data that should be shown on the form (if there should be any) - this is happening after form is loaded
 		Object result = frevvoFormService.get(action);
@@ -224,7 +226,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 		LOG.info("Save form \"" + formName + "\"");
 
 		// Create and initialize appropriate service for given form name
-		FrevvoFormService frevvoFormService = FrevvoFormServiceFactory.getService(formName, this, request, authentication);
+		FrevvoFormService frevvoFormService = getFrevvoFormServiceFactory().getService(formName, this, request, authentication);
 		frevvoFormService.setUserIpAddress((String) session.getAttribute("acm_ip_address"));
 		
 		try{
@@ -676,5 +678,15 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	public void setNotificationEventPublisher(
 			NotificationEventPublisher notificationEventPublisher) {
 		this.notificationEventPublisher = notificationEventPublisher;
+	}
+
+	public FrevvoFormServiceFactory getFrevvoFormServiceFactory()
+	{
+		return frevvoFormServiceFactory;
+	}
+
+	public void setFrevvoFormServiceFactory(FrevvoFormServiceFactory frevvoFormServiceFactory)
+	{
+		this.frevvoFormServiceFactory = frevvoFormServiceFactory;
 	}
 }

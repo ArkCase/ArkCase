@@ -14,7 +14,7 @@ public class CloseComplaintRequestProcessEndHandler implements ApplicationListen
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private CloseCompaintRequestService closeCompaintRequestService;
+    private CloseComplaintRequestService closeComplaintRequestService;
 
     @Override
     public void onApplicationEvent(AcmBusinessProcessEvent acmBusinessProcessEvent)
@@ -37,7 +37,7 @@ public class CloseComplaintRequestProcessEndHandler implements ApplicationListen
                 log.debug("Complaint: " + complaintId);
                 log.debug("User: " + user);
 
-                getCloseCompaintRequestService().handleCloseComplaintRequestApproved(complaintId, requestId, user,
+                getCloseComplaintRequestService().handleCloseComplaintRequestApproved(complaintId, requestId, user,
                         acmBusinessProcessEvent.getEventDate());
             }
             catch ( Exception e)
@@ -89,13 +89,13 @@ public class CloseComplaintRequestProcessEndHandler implements ApplicationListen
         return true;
     }
 
-    public CloseCompaintRequestService getCloseCompaintRequestService()
+    public CloseComplaintRequestService getCloseComplaintRequestService()
     {
-        return closeCompaintRequestService;
+        return closeComplaintRequestService;
     }
 
-    public void setCloseCompaintRequestService(CloseCompaintRequestService closeCompaintRequestService)
+    public void setCloseComplaintRequestService(CloseComplaintRequestService closeComplaintRequestService)
     {
-        this.closeCompaintRequestService = closeCompaintRequestService;
+        this.closeComplaintRequestService = closeComplaintRequestService;
     }
 }

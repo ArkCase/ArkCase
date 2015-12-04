@@ -1,12 +1,15 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTracking.TimeSummaryController', ['$scope', 'UtilService', 'HelperService',
-    function ($scope, Util, Helper) {
+angular.module('time-tracking').controller('TimeTracking.TimeSummaryController', ['$scope', 'UtilService', 'Helper.UiGridService',
+    function ($scope, Util, HelperUiGridService) {
+
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
         $scope.$emit('req-component-config', 'time-summary');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('time-summary' == componentId) {
-                Helper.Grid.setColumnDefs($scope, config);
-                Helper.Grid.setBasicOptions($scope, config);
+                gridHelper.setColumnDefs(config);
+                gridHelper.setBasicOptions(config);
             }
         });
 
@@ -22,7 +25,7 @@ angular.module('time-tracking').controller('TimeTracking.TimeSummaryController',
 
             var targetType = Util.goodMapValue(rowEntity, "type");
             var targetId = Util.goodMapValue(rowEntity, "objectId");
-            Helper.Grid.showObject($scope, targetType, targetId);
+            gridHelper.showObject(targetType, targetId);
         };
 
     }

@@ -252,7 +252,13 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 	{
 		return FrevvoFormName.TIMESHEET;
 	}
-	
+
+	@Override
+	public Class<?> getFormClass()
+	{
+		return TimeForm.class;
+	}
+
 	public TimesheetService getTimesheetService() {
 		return timesheetService;
 	}
