@@ -2,20 +2,20 @@
 
 /**
  * @ngdoc service
- * @name services.service:Frevvo.FormService
+ * @name service:Frevvo.FormService
  *
  * @description
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/frevvo/frevvo-form.client.service.js services/frevvo/frevvo-form.client.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/frevvo/services/frevvo-form.client.service.js modules/frevvo/services/frevvo-form.client.service.js}
  *
  * This service contains functionality for Frevvo form management.
  */
-angular.module('services').factory('Frevvo.FormService', [
-    function () {
+angular.module('services').factory('Frevvo.FormService', ['UtilService'
+    , function (Util) {
         return {
             /**
              * @ngdoc method
              * @name buildFrevvoUrl
-             * @methodOf services.service:Frevvo.FormService
+             * @methodOf service:Frevvo.FormService
              *
              * @param {JSON} acmFormsProperties properties from the acm-forms.properties configuration file
              * @param {String} type of the form to load (case_file, change_case_status, etc.)
@@ -27,7 +27,7 @@ angular.module('services').factory('Frevvo.FormService', [
              * full Frevvo form url for the specified form type.  If a caseFile is specified,
              * then that case file data will be loaded into the form to edit.
              */
-            buildFrevvoUrl: function (acmFormsProperties, formType, acmTicket, caseFile) {
+            buildFrevvoUrl: function (acmFormsProperties, formType, acmTicket, arg) {
 
                 // Loads Frevvo server basic configuration
                 var protocol = acmFormsProperties['frevvo.protocol'];
@@ -47,11 +47,23 @@ angular.module('services').factory('Frevvo.FormService', [
                 urlTemplate = urlTemplate.replace('{frevvo_service_baseUrl}', acmFormsProperties['frevvo.service.baseUrl']);
                 urlTemplate = urlTemplate.replace('{frevvo_browser_redirect_baseUrl}', acmFormsProperties['frevvo.browser.redirect.baseUrl']);
 
-                // Frevvo will load an existing case file if we are changing the status/editing a case file
-                if (caseFile) {
-                    var caseFileArgs = "caseId:'" + caseFile.id + "',actionNumber:'" + caseFile.caseNumber + "',status:'" + caseFile.status + "',acm_ticket:";
-                    urlTemplate = urlTemplate.replace('acm_ticket:', caseFileArgs);
+
+                if (!Util.isEmpty(arg)) {
+                    var replacement = "";
+                    _.each(arg, function (v, k) {
+                        replacement += k + ":'" + v + "',";
+                    });
+                    if (!Util.isEmpty(replacement)) {
+                        replacement += "'acm_ticket:";
+                        urlTemplate = urlTemplate.replace('acm_ticket:', replacement);
+                    }
                 }
+
+                //// Frevvo will load an existing case file if we are changing the status/editing a case file
+                //if (caseFile) {
+                //    var caseFileArgs = "caseId:'" + caseFile.id + "',actionNumber:'" + caseFile.caseNumber + "',status:'" + caseFile.status + "',acm_ticket:";
+                //    urlTemplate = urlTemplate.replace('acm_ticket:', caseFileArgs);
+                //}
 
                 // Assembles the full url including the server host/port and the configured Frevvo form path
                 return protocol + "://" + host + ":" + port + urlTemplate;
