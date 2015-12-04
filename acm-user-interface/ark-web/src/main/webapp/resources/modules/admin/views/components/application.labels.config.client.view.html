@@ -1,4 +1,4 @@
-<panel-view header="{{'admin.labels.config' | translate}}" collapsible="false">
+<panel-view header="{{'admin.application.labels.config.title' | translate}}" collapsible="false">
     <div ng-controller="Admin.LabelsConfigController">
         <div class="row">
             <div class="pull-left">
@@ -9,26 +9,26 @@
                         ng-options="str as str for str in languagesDropdownOptions">
                 </select>
                 <input type="text" ng-model="gridApi.grid.columns[0].filters[0].term"
-                       placeholder="{{'admin.labels.config.filterBy' | translate}}">
+                       placeholder="{{'admin.application.labels.config.filterBy' | translate}}">
                 <input type="text" ng-model="gridApi.grid.columns[1].filters[0].term"
-                       placeholder="{{'admin.labels.config.filterByValue' | translate}}">
+                       placeholder="{{'admin.application.labels.config.filterByValue' | translate}}">
             </div>
             <div class="pull-right">
-                {{'admin.labels.config.defaultLabel' | translate}}
+                {{'admin.application.labels.config.defaultLabel' | translate}}
                 <select ng-model="selectedDefaultLanguage"
                         ng-options="str as str for str in languagesDropdownOptions">
                 </select>
 
                 <button class="btn btn-sm btn-default" ng-click="changeDefaultLng()">
-                    {{'admin.labels.config.applyBtn' |
+                    {{'admin.application.labels.config.applyBtn' |
                     translate}}
                 </button>
                 <button class="btn btn-sm btn-default" ng-click="resetCurrentModuleResources()">
-                    {{'admin.labels.config.resetlModule' |
+                    {{'admin.application.labels.config.resetlModule' |
                     translate}}
                 </button>
                 <button class="btn btn-sm btn-default" ng-click="resetAllResources()">
-                    {{'admin.labels.config.resetAll' |
+                    {{'admin.application.labels.config.resetAll' |
                     translate}}
                 </button>
             </div>

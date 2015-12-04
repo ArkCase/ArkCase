@@ -1,0 +1,58 @@
+{
+  "id": "frevvo",
+  "title": "Frevvo",
+  "menus": [],
+  "components": [],
+  "forms": [
+    {
+      "name": "new-case",
+      "formKey": "active.case.form",
+      "formDefault": "case_file"
+    },
+    {
+      "name": "edit-case",
+      "formKey": "active.case.form",
+      "formDefault": "case_file"
+    },
+    {
+      "name": "change-case-status",
+      "formKey": "active.change_status.form",
+      "formDefault": ""
+    },
+    {
+      "name": "reinvestigate",
+      "formKey": "active.case.form",
+      "formDefault": "case_file"
+    },
+    {
+      "name": "new-complaint",
+      "formKey": "active.complaint.form",
+      "formDefault": "complaint"
+    },
+    {
+      "name": "close-complaint",
+      "formKey": "active.close.complaint.form",
+      "formDefault": "close_complaint"
+    },
+    {
+      "name": "new-costsheet",
+      "formKey": "active.costsheet.form",
+      "formDefault": "costsheet"
+    },
+    {
+      "name": "edit-costsheet",
+      "formKey": "active.edit.costsheet.form",
+      "formDefault": "costsheet"
+    },
+    {
+      "name": "new-timesheet",
+      "formKey": "active.timesheet.form",
+      "formDefault": "timesheet"
+    },
+    {
+      "name": "edit-timesheet",
+      "formKey": "active.edit.timesheet.form",
+      "formDefault": "timesheet"
+    }
+  ]
+}

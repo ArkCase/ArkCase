@@ -25,18 +25,18 @@ angular.module('time-tracking').config(['$stateProvider',
 				templateUrl: 'modules/time-tracking/views/components/time-tracking-main.client.view.html'
 			})
 
-			.state('newTimesheet', {
-				url: '/newtimesheet',
-				templateUrl: 'modules/time-tracking/views/components/time-tracking-new-timesheet.client.view.html'
-			})
-
-			.state('editTimesheet', {
-				url: '/edittimesheet',
-				templateUrl: 'modules/time-tracking/views/components/time-tracking-edit-timesheet.client.view.html',
-				params: {
-					period: null
-				}
-			})
+			//.state('newTimesheet', {
+			//	url: '/newtimesheet',
+			//	templateUrl: 'modules/time-tracking/views/components/time-tracking-new-timesheet.client.view.html'
+			//})
+			//
+			//.state('editTimesheet', {
+			//	url: '/edittimesheet',
+			//	templateUrl: 'modules/time-tracking/views/components/time-tracking-edit-timesheet.client.view.html',
+			//	params: {
+			//		period: null
+			//	}
+			//})
 
 			.state('time-tracking.details', {
 				url: '/:id/details',

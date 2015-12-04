@@ -11,7 +11,7 @@
     },
     {
       "menuId": "topbar",
-      "menuItemURL": "newCostsheet",
+      "menuItemURL": "frevvo-new-costsheet",
       "menuItemTitle": "Costsheet",
       "iconClass": "fa fa-money",
       "position": 50
@@ -84,6 +84,14 @@
     ]
   },
   "components": [
+    {
+      "id": "info",
+      "title": "Info",
+      "enabled": false,
+      "type": "empty",
+      "editable": false,
+      "parentDateFormat": "DD/MM/YYYY"
+    },
     {
       "id": "actions",
       "title": "Actions",

@@ -10,8 +10,8 @@
 
  * Object.ListService includes REST calls related to object list in SOLR
  */
-angular.module('services').factory('Object.ListService', ['$resource', 'UtilService', 'Solr.SearchService'
-    , function ($resource, Util, SolrSearchService) {
+angular.module('services').factory('Object.ListService', ['$resource', 'UtilService', 'SearchService'
+    , function ($resource, Util, SearchService) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
             /**
              * @ngdoc method
@@ -55,7 +55,7 @@ angular.module('services').factory('Object.ListService', ['$resource', 'UtilServ
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateObjects = function (data) {
-            if (!SolrSearchService.validateSolrData(data)) {
+            if (!SearchService.validateSolrData(data)) {
                 return false;
             }
             return true;

@@ -59,51 +59,29 @@ public class CostService extends FrevvoFormChargeAbstractService {
 		{
 			return result;
 		}
-	
-		String userId = getAuthentication().getName();
-		String objectId = getDocUriParameter("objectId");
-		String objectType = getDocUriParameter("objectType");
-		
-		CostForm form = new CostForm();
-		AcmCostsheet costsheet = null;
-			
-		if (objectId != null && !"".equals(objectId))
-		{			
-			try
+
+		String costsheetId = getDocUriParameter("costsheetId");
+
+		try
+		{
+			Long costsheetIdLong = Long.parseLong(costsheetId);
+			AcmCostsheet costsheet = getCostsheetService().get(costsheetIdLong);
+
+			if (costsheet != null)
 			{
-				Long objectIdLong = Long.parseLong(objectId);
-				costsheet = getAcmCostsheetDao().findByUserIdObjectIdAndType(userId, objectIdLong, objectType);
-				form.setObjectId(objectIdLong);
+				CostForm form = getCostFactory().asFrevvoCostForm(costsheet);
+				form = (CostForm) populateEditInformation(form, costsheet.getContainer(), getFormName());
+				form.setDocUriParameters(getDocUriParameters());
+				form.setBalanceTable(Arrays.asList(new String()));
+
+				result = convertFromObjectToXML(form);
 			}
-			catch(Exception e)
-			{
-				LOG.error("Cannot parse " + objectId + " to Long type. Empty form will be created.", e);
-			}			
 		}
-		
-		if (costsheet != null)
+		catch(Exception e)
 		{
-			form = getCostFactory().asFrevvoCostForm(costsheet);
-			form = (CostForm) populateEditInformation(form, costsheet.getContainer(), getFormName());
+			LOG.error("Cannot parse {} to Long type. Empty form will be created.", costsheetId, e);
 		}
-		else
-		{
-			form.setItems(Arrays.asList(new CostItem()));
-		}
-		
-		form.setObjectType(objectType);
-		form.setUser(userId);
-		form.setBalanceTable(Arrays.asList(new String()));
-		
-		if (form.getApprovers() == null || form.getApprovers().size() == 0)
-		{
-			form.setApprovers(Arrays.asList(new ApproverItem()));
-		}
-		
-		form.setDocUriParameters(getDocUriParameters());
-		
-		result = convertFromObjectToXML(form);
-		
+
 		return result;
 	}
 	
@@ -142,7 +120,9 @@ public class CostService extends FrevvoFormChargeAbstractService {
 		
 		// Create timesheet folder (if not exist)
 		String rootFolder = (String) getCostsheetService().getProperties().get(CostsheetConstants.ROOT_FOLDER_KEY);
-		AcmContainer container = createContainer(rootFolder, costsheet.getUser().getUserId(), costsheet.getId(), CostsheetConstants.OBJECT_TYPE, getCostsheetService().createName(costsheet));
+		String folderName = getCostsheetService().createName(costsheet);
+		String uniqueFolderName = getFolderAndFilesUtils().createUniqueFolderName(folderName);
+		AcmContainer container = createContainer(rootFolder, costsheet.getUser().getUserId(), costsheet.getId(), CostsheetConstants.OBJECT_TYPE, uniqueFolderName);
 		costsheet.setContainer(container);
 		
 		AcmCostsheet saved = getCostsheetService().save(costsheet, submissionName);
