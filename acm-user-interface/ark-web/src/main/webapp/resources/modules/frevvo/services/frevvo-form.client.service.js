@@ -45,6 +45,7 @@ angular.module('services').factory('Frevvo.FormService', ['UtilService'
                 urlTemplate = urlTemplate.replace('{frevvo_locale}', acmFormsProperties['frevvo.locale']);
                 urlTemplate = urlTemplate.replace('{acm_ticket}', acmTicket);
                 urlTemplate = urlTemplate.replace('{frevvo_service_baseUrl}', acmFormsProperties['frevvo.service.baseUrl']);
+                urlTemplate = urlTemplate.replace('{frevvo_service_external_baseUrl}', acmFormsProperties['frevvo.service.external.baseUrl']);
                 urlTemplate = urlTemplate.replace('{frevvo_browser_redirect_baseUrl}', acmFormsProperties['frevvo.browser.redirect.baseUrl']);
 
 
