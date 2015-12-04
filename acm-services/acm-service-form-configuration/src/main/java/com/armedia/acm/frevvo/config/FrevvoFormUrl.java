@@ -136,7 +136,7 @@ public class FrevvoFormUrl implements FormUrl {
 		}
 
 		if (serviceExternal != null) {
-			uri = uri.replace("{frevvo_service_external_baseUrl}", service);
+			uri = uri.replace("{frevvo_service_external_baseUrl}", serviceExternal);
 		}
 		
 		if (redirect != null) {
