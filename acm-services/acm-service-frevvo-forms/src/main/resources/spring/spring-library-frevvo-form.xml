@@ -41,6 +41,7 @@
                 <entry key="complaint" value-ref="complaintService"/>
                 <entry key="close_complaint" value-ref="closeComplaintService"/>
                 <entry key="costsheet" value-ref="costService"/>
+                <entry key="plain" value-ref="plainFormService"/>
             </map>
         </constructor-arg>
     </bean>

@@ -12,7 +12,6 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
         });
 
         var promiseQueryUser = Authentication.queryUserInfo();
-
         var promiseGetGroups = ObjectLookupService.getGroups();
 
         var previousId = null;
@@ -62,12 +61,22 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
         };
 
         $scope.createNew = function () {
-            $state.go('newComplaint');
-
+            $state.go("frevvo", {
+                name: "new-complaint"
+            });
+            //$state.go('newComplaint');
         };
 
-        $scope.close = function () {
-            $state.go('closeComplaint');
+        $scope.close = function (complaintInfo) {
+            $state.go("frevvo", {
+                name: "close-complaint"
+                , arg: {
+                    complaintId: complaintInfo.complaintId
+                    , complaintNumber: complaintInfo.complaintNumber
+                    , mode: "create"
+                }
+            });
+            //$state.go('closeComplaint');
         };
 
         $scope.subscribe = function (complaintInfo) {
