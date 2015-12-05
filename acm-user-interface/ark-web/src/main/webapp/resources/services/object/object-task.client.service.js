@@ -10,8 +10,8 @@
 
  * Object.TaskService includes functions for object relate to task.
  */
-angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'StoreService', 'UtilService', 'Solr.SearchService', 'Authentication'
-    , function ($resource, $q, Store, Util, SolrSearchService, Authentication) {
+angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'StoreService', 'UtilService', 'SearchService', 'Authentication'
+    , function ($resource, $q, Store, Util, SearchService, Authentication) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
             /**
              * @ngdoc method
@@ -126,7 +126,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'St
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateChildTaskData = function (data) {
-            if (!SolrSearchService.validateSolrData(data)) {
+            if (!SearchService.validateSolrData(data)) {
                 return false;
             }
             return true;

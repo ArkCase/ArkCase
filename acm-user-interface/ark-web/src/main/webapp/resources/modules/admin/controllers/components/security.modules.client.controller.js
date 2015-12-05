@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('admin').controller('Admin.ModuleConfigController', ['$scope', 'Admin.ModulesConfigService', 'Admin.SelectPrivilegesService', '$q',
-    function ($scope, modulesConfigService, selectPrivilegesService, $q) {
-        var tempAppModulesPromise = modulesConfigService.getAppModules();
+angular.module('admin').controller('Admin.ModulesController', ['$scope', 'Admin.ModulesService', 'Admin.SelectPrivilegesService', '$q',
+    function ($scope, modulesService, selectPrivilegesService, $q) {
+        var tempAppModulesPromise = modulesService.getAppModules();
         var tempAppRolesPromise = selectPrivilegesService.getAppRoles();
 
         $scope.appModules = [];
@@ -22,7 +22,7 @@ angular.module('admin').controller('Admin.ModuleConfigController', ['$scope', 'A
         //callback function when app role is selected
         $scope.onObjSelect = function (selectedObject, authorized, notAuthorized) {
 
-            var rolesForModulePromise = modulesConfigService.getRolesForModulePrivilege(selectedObject['privilege']);
+            var rolesForModulePromise = modulesService.getRolesForModulePrivilege(selectedObject['privilege']);
             rolesForModulePromise.then(function (payload) {
                 //set authorized roles
                 $scope.currentAuthRoles = payload.data;
@@ -62,7 +62,7 @@ angular.module('admin').controller('Admin.ModuleConfigController', ['$scope', 'A
             });
             //perform adding on server
             if (toBeAdded.length > 0) {
-                modulesConfigService.addRolesToModule(selectedObject['privilege'], toBeAdded);
+                modulesService.addRolesToModule(selectedObject['privilege'], toBeAdded);
                 $scope.currentAuthRoles = $scope.currentAuthRoles.concat(toBeAdded);
             }
 
@@ -74,7 +74,7 @@ angular.module('admin').controller('Admin.ModuleConfigController', ['$scope', 'A
             });
             if (toBeRemoved.length > 0) {
                 //perform removing on server
-                modulesConfigService.removeRolesFromModule(selectedObject['privilege'], toBeRemoved);
+                modulesService.removeRolesFromModule(selectedObject['privilege'], toBeRemoved);
                 //remove from $scope.currentAuthRoles
                 angular.forEach(toBeRemoved, function (element) {
                     $scope.currentAuthRoles.splice($scope.currentAuthRoles.indexOf(element), 1);
