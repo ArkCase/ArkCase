@@ -551,41 +551,6 @@ angular.module('services').factory('UtilService', ['$q'
                 return this.dateToString(d);
             }
 
-            /**
-             * @ngdoc method
-             * @name getValueByObjectKey
-             * @methodOf services.service:UtilService
-             *
-             * @param {Object} object - An object from where the value should be extracted
-             * @param {String} key - property name of the object from where the value should be extracted
-             *
-             * @description
-             * Return the value from the object for given property name. For child objects, use "." (dot).
-             *
-             * Example:
-             * var obj = {property1: {property2: "value"}}
-             *
-             * getValueByObjectKey(obj, "property1") - returns object {property2: "value"}
-             * getValueByObjectKey(obj, "property1.property2") - returns string "value"
-             */
-            ,getValueByObjectKey: function(object, key) {
-                var retval = null;
-                if (!this.isEmpty(object) && !this.isEmpty(key)) {
-                    var keyArray = key.split(".");
-                    if (this.isArray(keyArray) && keyArray.length > 0) {
-                        retval = object;
-                        for (var i = 0; i < keyArray.length; i++) {
-                            if (!this.isEmpty(retval[keyArray[i]])) {
-                                retval = retval[keyArray[i]];
-                            } else {
-                                retval = null;
-                            }
-                        }
-                    }
-                }
-                return retval;
-            }
-
         };
         return Util;
     }
