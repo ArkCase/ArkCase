@@ -242,14 +242,8 @@ public class FrevvoFormServiceFactory
 			return service;
 		}
 
-		// TODO: So far, only CaseFileService, ComplaintService, CloseComplaintService, CostService, PlainFormService are re-written on this way.
-		// TODO: On time, we should do for all other services
-		if (getServices() != null && getServices().containsKey(name))
-		{
-			return getService(name, plainForm, request, authentication);
-		}
-		
-		return null;
+
+		return getService(name, plainForm, request, authentication);
 	}
 
 	private FrevvoFormService getService(String name, String plainForm, HttpServletRequest request, Authentication authentication)
@@ -260,20 +254,28 @@ public class FrevvoFormServiceFactory
 			formName = "plain";
 		}
 
-		FrevvoFormService service = getServices().get(formName);
+		FrevvoFormService service = null;
 
-		if (service != null)
+		// TODO: So far, only CaseFileService, ComplaintService, CloseComplaintService, CostService, PlainFormService are re-written on this way.
+		// TODO: On time, we should do for all other services
+		if (getServices() != null && getServices().containsKey(formName))
 		{
-			String contextPath = request.getServletContext().getContextPath();
 
-			if (service.getFormName() == null && service instanceof PlainFormService)
+			service = getServices().get(formName);
+
+			if (service != null)
 			{
-				((PlainFormService) service).setFormName(name);
-			}
+				String contextPath = request.getServletContext().getContextPath();
 
-			service.setServletContextPath(contextPath);
-			service.setRequest(request);
-			service.setAuthentication(authentication);
+				if (service.getFormName() == null && service instanceof PlainFormService)
+				{
+					((PlainFormService) service).setFormName(name);
+				}
+
+				service.setServletContextPath(contextPath);
+				service.setRequest(request);
+				service.setAuthentication(authentication);
+			}
 		}
 
 		return service;
