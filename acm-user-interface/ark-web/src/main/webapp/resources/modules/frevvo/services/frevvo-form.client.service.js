@@ -55,7 +55,7 @@ angular.module('services').factory('Frevvo.FormService', ['UtilService'
                         replacement += k + ":'" + v + "',";
                     });
                     if (!Util.isEmpty(replacement)) {
-                        replacement += "'acm_ticket:";
+                        replacement += "acm_ticket:";
                         urlTemplate = urlTemplate.replace('acm_ticket:', replacement);
                     }
                 }
