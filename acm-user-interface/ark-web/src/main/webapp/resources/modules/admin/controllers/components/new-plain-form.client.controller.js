@@ -13,7 +13,7 @@ angular.module('admin').controller('Admin.NewPlainFormController', ['$scope', '$
 
         function openNewPlainFrevvoForm() {
             var formUrl = FrevvoFormService.buildFrevvoUrl($scope.acmFormsProperties, "plain_configuration", $scope.acmTicket);
-            var plainFormArgs = "formKey:'" +  $scope.target  + "',acm_ticket:";
+            var plainFormArgs = "target:'" +  $scope.target  + "',acm_ticket:";
             formUrl = formUrl.replace('acm_ticket:', plainFormArgs);
             $scope.frevvoFormUrl = $sce.trustAsResourceUrl(formUrl);
         }
