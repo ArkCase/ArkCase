@@ -1,8 +1,7 @@
-<div ng-controller="Reports.StateController" class="form-group" ng-if="data.reportSelected != config.resetReportSelectValue">
-    <label class="control-label">{{'reports.selectState.label'| translate}}
-        <select ng-model="data.stateSelected"
-                ng-options="option.id as option.name for option in config.states" class="form-control input-sm">
-            <option value="">{{'reports.selectState.placeholder'| translate}}</option>
-        </select>
-    </label>
+<div ng-controller="Reports.StateController" class="form-group">
+    <select ng-model="data.stateSelected"
+        ng-if="config.resetCaseStateValues.indexOf(data.reportSelected) == -1"
+        ng-options="option.id as option.name for option in config.states" class="form-control input-sm">
+        <option value="">{{'reports.selectState.placeholder' | translate}}</option>
+    </select>
 </div>
