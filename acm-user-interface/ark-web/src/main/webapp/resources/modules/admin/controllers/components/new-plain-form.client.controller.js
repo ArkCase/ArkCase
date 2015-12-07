@@ -22,9 +22,9 @@ angular.module('admin').controller('Admin.NewPlainFormController', ['$scope', '$
         var ticketInfo = TicketService.getArkCaseTicket();
 
         // Retrieves the properties from the acm-forms.properties file (including Frevvo configuration)
-        var acmFormsInfo = LookupService.getConfig({name: 'acm-forms'});
+        var acmFormsInfo = LookupService.getConfig("acm-forms");
 
-        $q.all([ticketInfo, acmFormsInfo.$promise])
+        $q.all([ticketInfo, acmFormsInfo])
             .then(function(data) {
                 $scope.acmTicket = data[0].data;
                 $scope.acmFormsProperties = data[1];
