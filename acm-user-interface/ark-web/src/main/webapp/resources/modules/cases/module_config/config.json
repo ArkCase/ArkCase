@@ -176,13 +176,6 @@
         ]
       },
       {
-        "type": "p/CASE_FILE/calendar",
-        "label": "Calendar",
-        "components": [
-          "calendar"
-        ]
-      },
-      {
         "type": "p/CASE_FILE/time",
         "label": "Time",
         "components": [
@@ -194,6 +187,13 @@
         "label": "Cost",
         "components": [
           "cost"
+        ]
+      },
+      {
+        "type": "p/CASE_FILE/calendar",
+        "label": "Calendar",
+        "components": [
+          "calendar"
         ]
       }
     ]
