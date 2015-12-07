@@ -52,6 +52,9 @@ public class ComplaintFactory extends FrevvoFormFactory
     {
         Complaint retval = new Complaint();
 
+        retval.setComplaintId(formComplaint.getComplaintId());
+        retval.setComplaintNumber(formComplaint.getComplaintNumber());
+
         retval.setCreator(getAuditPropertyEntityAdapter().getUserId());
         retval.setModifier(getAuditPropertyEntityAdapter().getUserId());
 
