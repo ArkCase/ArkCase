@@ -8,7 +8,7 @@ angular.module('frevvo').controller('FrevvoController', ['$scope', '$stateParams
         var promiseTicket = TicketService.getArkCaseTicket();
         var acmFormsInfo = LookupService.getConfig("acm-forms");
 
-        $q.all([promiseConfig, promiseTicket, acmFormsInfo.$promise, acmFormsInfo2]).then(function (data) {
+        $q.all([promiseConfig, promiseTicket, acmFormsInfo]).then(function (data) {
             $scope.config = data[0];
             $scope.acmTicket = data[1].data;
             $scope.acmFormsProperties = data[2];
