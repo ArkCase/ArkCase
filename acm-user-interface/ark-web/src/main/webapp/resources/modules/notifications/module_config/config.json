@@ -28,7 +28,8 @@
                 {
                     "name": "description_parseable",
                     "displayName": "notifications.comp.grid.columns.description",
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div data-toggle='tooltip' data-placement='bottom' title={{row.entity.description_parseable}}>{{row.entity.description_parseable}}</div>"
                 },
                 {
                     "name": "object_type_s",
