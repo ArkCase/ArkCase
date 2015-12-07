@@ -20,7 +20,7 @@
     <div class="content-body">
         <div class="module-header">
             <div class="input-group">
-                <input class="form-control input-md" ng-keydown="keyDown($event)" ng-model="searchQuery" placeholder="{{searchPlaceholder}}">
+                <input class="form-control input-md" ng-keyup="keyUp($event)" ng-model="searchQuery" placeholder="{{searchPlaceholder}}">
                 <span class="input-group-btn">
                     <button class="btn btn-md btn-primary" type="button" ng-click="queryExistingItems()">{{searchBtn}}</button>
                 </span>
