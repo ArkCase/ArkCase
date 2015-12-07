@@ -23,6 +23,11 @@ angular.module('frevvo').config(['$stateProvider',
                 params: {name: 'new-complaint'},
                 templateUrl: 'modules/frevvo/views/frevvo.client.view.html'
             })
+            .state('frevvo-close-complaint', {
+                url: '/frevvo-close-complaint',
+                params: {name: 'close-complaint', arg: null},
+                templateUrl: 'modules/frevvo/views/frevvo.client.view.html'
+            })
             .state('frevvo-new-costsheet', {
                 url: '/frevvo-new-costsheet',
                 params: {name: 'new-costsheet'},
