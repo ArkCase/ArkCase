@@ -2,12 +2,20 @@
   "reports": {
     "title": "Reports",
 
-    "selectReport.label": "Report",
-    "selectReport.placeholder": "Select Report",
-    "selectState.label": "State",
-    "selectState.placeholder": "Select State",
-    "startDate.label": "From",
-    "endDate.label": "To",
+    "selectReport" : {
+      "label": "Report",
+      "placeholder": "Select Report"
+    },
+    "selectState" : {
+      "label": "State",
+      "selectState.placeholder": "Select State"
+    },
+    "startDate": {
+      "label": "From"
+    },
+    "endDate" : {
+      "label": "To"
+    },
 
     "dropdown": {
       "turnaround": "Turnaround Time by Requester",
