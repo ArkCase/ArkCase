@@ -58,8 +58,9 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                         if (!Util.isEmpty(urlParameters[i].defaultValue)) {
                             value = silentReplace(urlParameters[i].defaultValue, "'", "_0027_");
                         } else if (!Util.isEmpty(urlParameters[i].keyValue)) {
-                            if (!Util.isEmpty($scope.caseInfo[urlParameters[i].keyValue])) {
-                                value = silentReplace($scope.caseInfo[urlParameters[i].keyValue], "'", "_0027_");
+                            var _value = _.get($scope.caseInfo, urlParameters[i].keyValue)
+                            if (!Util.isEmpty(_value)) {
+                                value = silentReplace(_value, "'", "_0027_");
                             }
                         }
                         value = encodeURIComponent(value);

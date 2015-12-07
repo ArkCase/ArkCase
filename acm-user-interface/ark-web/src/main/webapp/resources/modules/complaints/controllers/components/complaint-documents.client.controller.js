@@ -59,8 +59,9 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
                         if (!Util.isEmpty(urlParameters[i].defaultValue)) {
                             value = silentReplace(urlParameters[i].defaultValue, "'", "_0027_");
                         } else if (!Util.isEmpty(urlParameters[i].keyValue)) {
-                            if (!Util.isEmpty($scope.complaintInfo[urlParameters[i].keyValue])) {
-                                value = silentReplace($scope.complaintInfo[urlParameters[i].keyValue], "'", "_0027_");
+                            var _value = _.get($scope.complaintInfo, urlParameters[i].keyValue)
+                            if (!Util.isEmpty(_value)) {
+                                value = silentReplace(_value, "'", "_0027_");
                             }
                         }
                         value = encodeURIComponent(value);
