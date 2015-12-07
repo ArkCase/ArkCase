@@ -8,7 +8,7 @@
     },
     "selectState" : {
       "label": "State",
-      "selectState.placeholder": "Select State"
+      "placeholder": "Select State"
     },
     "startDate": {
       "label": "From"
