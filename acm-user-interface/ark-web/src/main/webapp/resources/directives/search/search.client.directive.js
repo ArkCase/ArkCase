@@ -58,8 +58,8 @@
      </file>
  </example>
  */
-angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService', 'Object.LookupService', '$window',
-    function (SearchService, SearchQueryBuilder, $q, Util, ObjectLookupService, $window) {
+angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService', 'Object.LookupService', '$window', 'Helper.UiGridService',
+    function (SearchService, SearchQueryBuilder, $q, Util, ObjectLookupService, $window, HelperUiGridService) {
         return {
             restrict: 'E',              //match only element name
             scope: {
@@ -163,6 +163,15 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             $window.location.href = url;
                         }
                     });
+                };
+
+                var gridHelper = new HelperUiGridService.Grid({scope: scope});
+
+                scope.onClickObjectType = function (event, rowEntity) {
+                    event.preventDefault();
+                    var targetType = Util.goodMapValue(rowEntity, "parent_type_s");
+                    var targetId = Util.goodMapValue(rowEntity, "parent_id_s");
+                    gridHelper.showObject(targetType, targetId);
                 };
 
                 scope.keyDown = function (event) {
