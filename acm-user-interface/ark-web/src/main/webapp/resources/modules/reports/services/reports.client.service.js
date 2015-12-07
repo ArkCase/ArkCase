@@ -35,7 +35,7 @@ angular.module('reports').factory('Reports.BuildUrl', ['$sce',
              * @returns {Object} Object assigned as trusted for angular to display the report in an iFrame
              */
             getUrl: function (params) {
-                var reportUrl = params.reportsHost + params.reportsPort + params.reports[params.reportSelected]
+                var reportUrl = params.reportsHost + (params.reportsPort ? ":" + params.reportsPort : "") + params.reports[params.reportSelected]
                     + "&startDate=" + moment(params.startDate).format(params.dateFormat)
                     + "&endDate=" + moment(params.endDate).format(params.dateFormat)
                     + "&dateFormat=" + encodeURIComponent(params.reportDateFormat);
