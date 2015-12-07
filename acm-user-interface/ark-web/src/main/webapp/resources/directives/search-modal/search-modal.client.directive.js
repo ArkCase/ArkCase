@@ -32,6 +32,7 @@ angular.module('directives').directive('searchModal', ['SearchService', 'Search.
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
                 scope.queryExistingItems = function (){
+                    scope.searchQuery = scope.searchQuery.replace('*', '');
                     var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*",scope.filters,scope.pageSize,scope.start);
                     if(query){
                         SearchService.queryFilteredSearch({
@@ -78,7 +79,9 @@ angular.module('directives').directive('searchModal', ['SearchService', 'Search.
                     }
                 }
 
-                scope.keyDown = function (event) {
+                scope.keyUp = function (event) {
+                    // Remove wildcard
+                    scope.searchQuery = scope.searchQuery.replace('*', '');
                     if (event.keyCode == 13 && scope.searchQuery) {
                         scope.queryExistingItems();
                     }
