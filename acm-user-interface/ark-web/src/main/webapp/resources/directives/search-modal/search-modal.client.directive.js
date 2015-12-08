@@ -21,8 +21,8 @@
  **/
 
 
-angular.module('directives').directive('searchModal', ['SearchService', 'Search.QueryBuilderService',
-    function (SearchService, SearchQueryBuilder) {
+angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'Search.QueryBuilderService',
+    function ($q, SearchService, SearchQueryBuilder) {
         return {
             restrict: 'E',              //match only element name
             scope: {
@@ -42,7 +42,7 @@ angular.module('directives').directive('searchModal', ['SearchService', 'Search.
                 scope.selectedItem = null;
                 scope.queryExistingItems = function () {
                     scope.searchQuery = scope.searchQuery.replace('*', '');
-                    var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*", scope.filters, scope.pageSize, scope.start);
+                    var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start);
                     if (query) {
                         SearchService.queryFilteredSearch({
                                 query: query
@@ -55,6 +55,21 @@ angular.module('directives').directive('searchModal', ['SearchService', 'Search.
                     }
                 };
 
+                scope.queryTypeahead = function (typeaheadQuery) {
+                    typeaheadQuery = typeaheadQuery.replace('*', '');
+                    var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery + '*', scope.filters, 10, 0);
+                    var deferred = $q.defer();
+                    if (query) {
+                        SearchService.queryFilteredSearch({
+                            query: query
+                        }, function(res){
+                            var result = _.pluck(res.response.docs, 'name');
+                            deferred.resolve(result);
+                        });
+                    }
+                    return deferred.promise;
+                };
+
                 function updateFacets(facets) {
                     if (facets) {
                         if (scope.facets.length) {
@@ -62,7 +77,7 @@ angular.module('directives').directive('searchModal', ['SearchService', 'Search.
                         }
                         _.forEach(facets, function (value, key) {
                             if (value) {
-                                scope.facets.push({"name": key, "fields": value});
+                                scope.facets.push({'name': key, 'fields': value});
                             }
                         });
                     }
