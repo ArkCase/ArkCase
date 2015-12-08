@@ -41,7 +41,6 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
                 scope.queryExistingItems = function () {
-                    scope.searchQuery = scope.searchQuery.replace('*', '');
                     var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start);
                     if (query) {
                         SearchService.queryFilteredSearch({
@@ -62,7 +61,7 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                     if (query) {
                         SearchService.queryFilteredSearch({
                             query: query
-                        }, function(res){
+                        }, function (res) {
                             var result = _.pluck(res.response.docs, 'name');
                             deferred.resolve(result);
                         });
