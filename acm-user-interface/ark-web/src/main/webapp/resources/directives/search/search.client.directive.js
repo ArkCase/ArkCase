@@ -77,7 +77,6 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
                 scope.queryExistingItems = function () {
-                    scope.searchQuery = scope.searchQuery.replace('*', '');
                     if (scope.searchQuery && scope.pageSize >= 0 && scope.start >= 0) {
                         var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*", scope.filters, scope.pageSize, scope.start);
                         if (query) {
@@ -134,25 +133,6 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         return objectTypes;
                     }
                 );
-                //var cacheObjectTypes = new Store.SessionData(Helper.SessionCacheNames.OBJECT_TYPES);
-                //var objectTypes = cacheObjectTypes.get();
-                //var promiseObjectTypes = Util.serviceCall({
-                //    service: LookupService.getObjectTypes
-                //    , result: objectTypes
-                //    , onSuccess: function (data) {
-                //        objectTypes = [];
-                //        _.forEach(data, function (item) {
-                //            objectTypes.push(item);
-                //        });
-                //        cacheObjectTypes.set(objectTypes);
-                //        return objectTypes;
-                //    }
-                //}).then(
-                //    function (objectTypes) {
-                //        scope.objectTypes = objectTypes;
-                //        return objectTypes;
-                //    }
-                //);
 
                 scope.onClickObjLink = function (event, rowEntity) {
                     event.preventDefault();
