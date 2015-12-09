@@ -58,7 +58,7 @@ public class CreateSubscriptionAPIController
     private Logger log = LoggerFactory.getLogger(getClass());
 
 
-    @PreAuthorize("hasPermission(#objectId, #objType, 'subscribe')")
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'subscribe')")
     @RequestMapping(value = "/{userId}/{objType}/{objId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmSubscription createSubscription(
