@@ -14,12 +14,10 @@ angular.module(ApplicationConfiguration.applicationModuleName).config([
         // Initialize angular-translate
         $translateProvider.useLoader('$translatePartialLoader', {
             urlTemplate: 'modules_config/config/modules/{part}/resources/{lang}.json'
-//            urlTemplate: '/api/config/resources/{part}/{lang}'
         });
 
-        //$translatePartialLoaderProvider.addPart('common');
-
         $translateProvider.preferredLanguage('en');
+        $translateProvider.useSanitizeValueStrategy('sanitize');
 
         // Add HTTP error interceptor
         function httpInterceptor($q, MessageService) {
