@@ -17,7 +17,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).config([
         });
 
         $translateProvider.preferredLanguage('en');
-        $translateProvider.useSanitizeValueStrategy('sanitize');
+        //$translateProvider.useSanitizeValueStrategy('sanitize');
 
         // Add HTTP error interceptor
         function httpInterceptor($q, MessageService) {
