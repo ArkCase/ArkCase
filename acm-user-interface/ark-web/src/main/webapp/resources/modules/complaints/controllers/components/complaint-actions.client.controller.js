@@ -61,7 +61,7 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
         };
 
         $scope.createNew = function () {
-            $state.go("frevvo", {
+            $state.go("frevvo-new-complaint", {
                 name: "new-complaint"
             });
             //$state.go('newComplaint');
