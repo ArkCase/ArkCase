@@ -467,7 +467,6 @@ iframe {
 }
 
 .module-content .right-sidebar .tab-pane .ui-grid {
-    width: 456px !important;
     border-left: none;
     border-right: none;
 }

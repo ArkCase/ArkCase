@@ -4,7 +4,8 @@
 var app = angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfiguration.applicationModuleVendorDependencies);
 
 // Setting HTML5 Location Mode
-angular.module(ApplicationConfiguration.applicationModuleName).config(['$locationProvider', '$translateProvider', '$translatePartialLoaderProvider', '$httpProvider',
+angular.module(ApplicationConfiguration.applicationModuleName).config([
+    '$locationProvider', '$translateProvider', '$translatePartialLoaderProvider', '$httpProvider',
     function ($locationProvider, $translateProvider, $translatePartialLoaderProvider, $httpProvider) {
         $locationProvider.hashPrefix('!');
 

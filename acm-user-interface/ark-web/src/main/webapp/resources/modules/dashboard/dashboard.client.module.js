@@ -10,5 +10,7 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.my-complaints',
     'dashboard.my-tasks',
     'dashboard.new-complaints',
-    'dashboard.team-workload'
+    'dashboard.team-workload',
+    'dashboard.weather',
+    'dashboard.news'
 ]);
