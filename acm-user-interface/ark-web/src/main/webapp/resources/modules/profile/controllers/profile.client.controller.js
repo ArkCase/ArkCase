@@ -26,48 +26,50 @@ angular.module('profile').run(function (editableOptions, editableThemes) {
     editableOptions.theme = 'bs3';
 });
 
-angular.module('profile').controller('ChangePasswordModalController', function ($scope, $modalInstance, $modal,ChangePasswordService) {
-    $scope.close = function () {
-        $modalInstance.dismiss('cancel');
-    };
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-        $scope.newPassword = '';
-        $scope.newPasswordAgain = '';
-    };
-    $scope.changePassword = function () {
-        if (!this.newPassword) {
-            $modal.open({
-                templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-emptyPassword.client.view.html',
-                controller: 'ChangePasswordModalController',
-                backdrop: false,
-                size: 'sm'
-            });
-        }
-        else if (!this.newPasswordAgain) {
-            $modal.open({
-                templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-emptyPasswordAgain.client.view.html',
-                controller: 'ChangePasswordModalController',
-                backdrop: false,
-                size: 'sm'
-            });
-        }
-        else if (this.newPassword !== this.newPasswordAgain) {
-            $modal.open({
-                templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-differentPasswords.client.view.html',
-                controller: 'ChangePasswordModalController',
-                backdrop: false,
-                size: 'sm'
-            });
-            this.newPassword = '';
-            this.newPasswordAgain = '';
-        }
-        else {
-            var data = '{"outlookPassword":' + '"' + this.newPassword + '"}';
-            ChangePasswordService.changePassword(data);
-            $modalInstance.close('done');
-            this.newPassword = '';
-            this.newPasswordAgain = '';
-        }
-    };
-});
+angular.module('profile').controller('ChangePasswordModalController', ['$scope', '$modalInstance', 'Profile.ChangePasswordService', '$modal',
+    function ($scope, $modalInstance, ChangePasswordService, $modal) {
+        $scope.close = function () {
+            $modalInstance.dismiss('cancel');
+        };
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+            $scope.newPassword = '';
+            $scope.newPasswordAgain = '';
+        };
+        $scope.changePassword = function () {
+            if (!this.newPassword) {
+                $modal.open({
+                    templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-emptyPassword.client.view.html',
+                    controller: 'ChangePasswordModalController',
+                    backdrop: false,
+                    size: 'sm'
+                });
+            }
+            else if (!this.newPasswordAgain) {
+                $modal.open({
+                    templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-emptyPasswordAgain.client.view.html',
+                    controller: 'ChangePasswordModalController',
+                    backdrop: false,
+                    size: 'sm'
+                });
+            }
+            else if (this.newPassword !== this.newPasswordAgain) {
+                $modal.open({
+                    templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-differentPasswords.client.view.html',
+                    controller: 'ChangePasswordModalController',
+                    backdrop: false,
+                    size: 'sm'
+                });
+                this.newPassword = '';
+                this.newPasswordAgain = '';
+            }
+            else {
+                var data = '{"outlookPassword":' + '"' + this.newPassword + '"}';
+                ChangePasswordService.changePassword(data);
+                $modalInstance.close('done');
+                this.newPassword = '';
+                this.newPasswordAgain = '';
+            }
+        };
+    }
+]);
