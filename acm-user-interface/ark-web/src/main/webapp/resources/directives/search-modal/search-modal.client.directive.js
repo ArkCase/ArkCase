@@ -88,6 +88,7 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                             scope.filters += '&fq="' + facet + '":' + field;
                         }
                         else {
+                            scope.filters=""
                             scope.filters += 'fq="' + facet + '":' + field;
                         }
                         scope.queryExistingItems();

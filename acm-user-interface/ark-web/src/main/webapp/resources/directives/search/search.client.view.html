@@ -20,7 +20,17 @@
     <div class="content-body">
         <div class="module-header">
             <div class="input-group">
-                <input class="form-control input-md" ng-keyup="keyUp($event)" ng-model="searchQuery" placeholder="{{searchPlaceholder}}">
+                <input  type="text"
+                    autofocus
+                    class="form-control input-md"
+                    ng-keyup="keyUp($event)"
+                    ng-model="searchQuery"
+                    typeahead="result for result in queryTypeahead($viewValue)"
+                    placeholder="{{searchPlaceholder}}"
+                    typeahead-wait-ms="200"
+                    typeahead-loading="loadingResults"
+                    typeahead-no-results="noResults"
+                >
                 <span class="input-group-btn">
                     <button class="btn btn-md btn-primary" type="button" ng-click="queryExistingItems()">{{searchBtn}}</button>
                 </span>
