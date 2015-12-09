@@ -134,13 +134,13 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     }
                 );
 
-                scope.onClickObjLink = function (event, rowEntity) {
+                scope.onClickObjLink = function (event, objectType, objectId) {
                     event.preventDefault();
                     promiseObjectTypes.then(function (data) {
-                        var found = _.find(scope.objectTypes, {type: rowEntity.object_sub_type_s ? rowEntity.object_sub_type_s : rowEntity.object_type_s});
+                        var found = _.find(scope.objectTypes, {type: objectType});
                         if (found && found.url) {
                             var url = Util.goodValue(found.url);
-                            var id = Util.goodMapValue(rowEntity, "object_id_s");
+                            var id = objectId;
                             url = url.replace(":id", id);
                             $window.location.href = url;
                         }
