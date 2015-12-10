@@ -1,5 +1,5 @@
 <div ng-controller="Cases.MainController">
-    <div ng-repeat="component in components">
+    <div ng-repeat="component in ::components">
         <div ng-if="component.enabled" ng-include="'modules/cases/views/components/case-'+ component.id  +'.client.view.html'"></div>
     </div>
 </div>
