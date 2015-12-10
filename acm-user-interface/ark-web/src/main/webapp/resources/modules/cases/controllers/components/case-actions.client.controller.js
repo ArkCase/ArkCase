@@ -61,14 +61,14 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         $scope.createNew = function () {
-            $state.go("frevvo", {
+            $state.go("frevvo-new-case", {
                 name: "new-case"
             });
             //$state.go('newCase');
         };
 
         $scope.edit = function (caseInfo) {
-            $state.go("frevvo", {
+            $state.go("frevvo-edit-case", {
                 name: "edit-case"
                 , arg: {
                     caseId: caseInfo.id
@@ -84,7 +84,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         $scope.changeStatus = function (caseInfo) {
-            $state.go("frevvo", {
+            $state.go("frevvo-change-case-status", {
                 name: "change-case-status"
                 , arg: {
                     caseId: caseInfo.id
@@ -97,7 +97,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             //}
         };
         $scope.reinvestigate = function (caseInfo) {
-            $state.go("frevvo", {
+            $state.go("frevvo-reinvestigate", {
                 name: "reinvestigate"
                 , arg: {
                     caseId: caseInfo.id

@@ -13,7 +13,7 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
     function ($q, $http, $log, $interpolate, Authentication) {
         // Iniital rules loading
         var rules = queryRules();
-        var userProfile = Authentication.queryUserInfo_tmp();
+        var userProfile = Authentication._queryUserInfo();       //todo: refactor to queryUserInfo()
 
         return {
             /**
@@ -39,7 +39,7 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                 } else {
                     var deferred = $q.defer();
                     var rulesPromise = queryRules();
-                    var userProfilePromise = Authentication.queryUserInfo_tmp();
+                    var userProfilePromise = Authentication._queryUserInfo();   //todo: refactor to queryUserInfo()
 
                     $q.all([rules, userProfilePromise])
                         .then(
