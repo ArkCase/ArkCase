@@ -7,7 +7,9 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 
         var promiseGetModuleConfig = ConfigService.getModuleConfig("tasks").then(function (config) {
             $scope.config = config;
-            $scope.componentLinks = HelperObjectTreeService.createComponentLinks(config, ObjectService.ObjectTypes.TASK);
+            $scope.taskLinks = HelperObjectTreeService.createComponentLinks(config, ObjectService.ObjectTypes.TASK);
+            $scope.adhocTaskLinks = HelperObjectTreeService.createComponentLinks(config, ObjectService.ObjectTypes.ADHOC_TASK);
+            $scope.componentLinks = (ObjectService.ObjectTypes.ADHOC_TASK == $stateParams.type) ? $scope.adhocTaskLinks : $scope.taskLinks;
             $scope.activeLinkId = "main";
             return config;
         });
@@ -24,6 +26,7 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
 
         $scope.$on('req-select-task', function (e, selectedTask) {
             var components = Util.goodArray(selectedTask.components);
+            $scope.componentLinks = (ObjectService.ObjectTypes.ADHOC_TASK == selectedTask.nodeType) ? $scope.adhocTaskLinks : $scope.taskLinks;
             $scope.activeLinkId = (1 == components.length) ? components[0] : "main";
         });
 
@@ -34,7 +37,8 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
         $scope.onClickComponentLink = function (linkId) {
             $scope.activeLinkId = linkId;
             $state.go('tasks.' + linkId, {
-                id: $stateParams.id
+                type: $stateParams.type
+                , id: $stateParams.id
             });
         };
 
