@@ -20,9 +20,12 @@
 					<div class="col-xs-4" ng-repeat="item in ::menu.items | orderBy: 'position' " >
 						<div class="well-sm">
 
-							<a data-ui-sref="{{item.link}}" title="{{item.title}}">
+							<a data-ui-sref="{{item.link}}"
+                               title="{{::item.title}}"
+                               permission="{{item.permissionAction}}"
+                               permission-action="hide">
 								<i ng-if="item.iconClass" class="navigation-icon {{item.iconClass}}"> </i>
-								<span class="text-muted">{{item.title}}</span>
+								<span class="text-muted">{{::item.title}}</span>
 							</a>
 						</div>
 					</div>
@@ -31,7 +34,14 @@
 		</ul>
 
 		<ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
-			<li ng-repeat="item in ::menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.menuItemType" ui-route="{{item.uiRoute}}" class="{{item.menuItemClass}}" ng-class="{active: ($uiRoute)}" dropdown="item.menuItemType === 'dropdown'">
+			<li ng-repeat="item in ::menu.items | orderBy: 'position'"
+                ng-if="item.shouldRender(authentication.user);"
+                ng-switch="item.menuItemType"
+                ui-route="{{item.uiRoute}}"
+                class="{{item.menuItemClass}}"
+                ng-class="{active: ($uiRoute)}"
+                dropdown="item.menuItemType === 'dropdown'"
+            >
 				<a ng-switch-when="dropdown" class="dropdown-toggle">
 					<span ng-bind="item.title"></span>
 					<b class="caret"></b>

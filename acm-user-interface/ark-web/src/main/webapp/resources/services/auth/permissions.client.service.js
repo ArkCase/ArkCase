@@ -9,7 +9,7 @@
  *
  * The Permissions service. Performs checking user permissions for action depends on user roles, and objectProperties, like orderInfo, queueInfo
  */
-angular.module('services').factory('PermissionsService', ['$q', '$http', '$log','$interpolate',  'Authentication',
+angular.module('services').factory('PermissionsService', ['$q', '$http', '$log', '$interpolate', 'Authentication',
     function ($q, $http, $log, $interpolate, Authentication) {
         // Iniital rules loading
         var rules = queryRules();
@@ -72,6 +72,7 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
             if (actions.length > 0) {
                 // Process all found actions objects
                 _.forEach(actions, function (action) {
+
                     isEnabled = true;
 
                     // Check ALL authorities
@@ -107,7 +108,7 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                     }
                 });
             } else {
-                $log.error('Action ' + actionName + ' was not found in rules list');
+                $log.warn('Action ' + actionName + ' was not found in rules list');
             }
             return isEnabled;
         }
