@@ -98,7 +98,7 @@
         },
         {
           "name": "dueDate",
-          "displayName": "dahboard.widgets.myTasks.table.header.dueDate",
+          "displayName": "dashboard.widgets.myTasks.table.header.dueDate",
           "headerCellFilter": "translate",
           "width": 70
         },
