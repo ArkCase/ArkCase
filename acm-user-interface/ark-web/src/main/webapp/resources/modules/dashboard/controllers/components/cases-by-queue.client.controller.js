@@ -19,58 +19,6 @@ angular.module('dashboard.cases-by-queue', ['adf.provider'])
             $scope.config = null;
             $scope.chartConfig = null;
 
-            // Load Cases info and render chart
-            DashboardService.queryCasesByQueue(function (cases) {
-
-                var data = [];
-
-                _.forEach(cases, function (value, key) {
-                    if (key.length > 0 && key[0] != '$') {
-                        data.push({
-                            name: key,
-                            y: value,
-                            drilldown: key
-                        });
-                    }
-                });
-
-                $scope.chartConfig = {
-                    chart: {
-                        type: 'column'
-                    },
-                    title: {
-                        text: ' '
-                    },
-                    noData: $translate.instant('dashboard.widgets.casesByQueue.noDataMessage'),
-                    xAxis: {
-                        type: 'category',
-                        title: {
-                            text: $translate.instant('dashboard.widgets.casesByQueue.xAxis')
-                        }
-                    },
-                    yAxis: {
-                        title: {
-                            text: $translate.instant('dashboard.widgets.casesByQueue.yAxis')
-                        }
-                    },
-                    series: [{
-                        type: 'column',
-                        dataLabels: {
-                            enabled: true,
-                            format: '{point.y}'
-                        },
-                        name: $translate.instant('dashboard.widgets.casesByQueue.title'),
-                        data: data,
-                        cursor: 'pointer',
-                        point: {
-                            events: {
-                                click: onBarClick
-                            }
-                        }
-                    }]
-                }
-            });
-
             function onBarClick(e) {
                 if ($scope.config.redirectSettings) {
                     var redirectObj = $scope.config.redirectSettings[this.name];
@@ -83,6 +31,58 @@ angular.module('dashboard.cases-by-queue', ['adf.provider'])
             function applyConfig(e, componentId, config) {
                 if (componentId == 'casesByQueue') {
                     $scope.config = config;
+
+                    // Load Cases info and render chart
+                    DashboardService.queryCasesByQueue(function (cases) {
+
+                        var data = [];
+
+                        _.forEach(cases, function (value, key) {
+                            if (key.length > 0 && key[0] != '$') {
+                                data.push({
+                                    name: _.get($scope.config, 'redirectSettings[' + key + '].title') || key,
+                                    y: value,
+                                    drilldown: key
+                                });
+                            }
+                        });
+
+                        $scope.chartConfig = {
+                            chart: {
+                                type: 'column'
+                            },
+                            title: {
+                                text: ' '
+                            },
+                            noData: $translate.instant('dashboard.widgets.casesByQueue.noDataMessage'),
+                            xAxis: {
+                                type: 'category',
+                                title: {
+                                    text: $translate.instant('dashboard.widgets.casesByQueue.xAxis')
+                                }
+                            },
+                            yAxis: {
+                                title: {
+                                    text: $translate.instant('dashboard.widgets.casesByQueue.yAxis')
+                                }
+                            },
+                            series: [{
+                                type: 'column',
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '{point.y}'
+                                },
+                                name: $translate.instant('dashboard.widgets.casesByQueue.title'),
+                                data: data,
+                                cursor: 'pointer',
+                                point: {
+                                    events: {
+                                        click: onBarClick
+                                    }
+                                }
+                            }]
+                        }
+                    });
                 }
             }
         }
