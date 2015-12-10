@@ -86,10 +86,10 @@
         "description": "Displays weather",
         "label": {
           "current": "Current:",
-          "enter-location": "Enter Location",
+          "enterLocation": "Enter Location",
           "description": "Display the current temperature of a city",
           "location": "Location",
-          "insert-location-in-configuration": "Please insert a location in the widget configuration"
+          "insertLocationInConfiguration": "Please insert a location in the widget configuration"
         },
         "title": "Weather",
         "noDataMessage": "Currently there are no weather info"
@@ -97,10 +97,10 @@
       "news": {
         "description": "Displays news",
         "label": {
-          "enter-feed-url": "Enter Feed url",
+          "enterFeedUrl": "Enter Feed url",
           "description": "Displays a RSS/Atom feed",
-          "feed-url": "Feed Url",
-          "insert-url": "Please insert a feed url in the widget configuration"
+          "feedUrl": "Feed Url",
+          "insertUrl": "Please insert a feed url in the widget configuration"
         },
         "title": "News",
         "noDataMessage": "Currently there is no RSS/info"
