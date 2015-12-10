@@ -17,7 +17,7 @@
 					<i class="fa fa-plus-circle"></i> New
 				</a>
 				<div class="dropdown-menu">
-					<div class="col-xs-4" ng-repeat="item in menu.items | orderBy: 'position' " >
+					<div class="col-xs-4" ng-repeat="item in ::menu.items | orderBy: 'position' " >
 						<div class="well-sm">
 
 							<a data-ui-sref="{{item.link}}" title="{{item.title}}">
@@ -31,13 +31,13 @@
 		</ul>
 
 		<ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
-			<li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.menuItemType" ui-route="{{item.uiRoute}}" class="{{item.menuItemClass}}" ng-class="{active: ($uiRoute)}" dropdown="item.menuItemType === 'dropdown'">
+			<li ng-repeat="item in ::menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.menuItemType" ui-route="{{item.uiRoute}}" class="{{item.menuItemClass}}" ng-class="{active: ($uiRoute)}" dropdown="item.menuItemType === 'dropdown'">
 				<a ng-switch-when="dropdown" class="dropdown-toggle">
 					<span ng-bind="item.title"></span>
 					<b class="caret"></b>
 				</a>
 				<ul ng-switch-when="dropdown" class="dropdown-menu">
-					<li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-route="{{subitem.uiRoute}}" ng-class="{active: $uiRoute}">
+					<li ng-repeat="subitem in ::item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-route="{{subitem.uiRoute}}" ng-class="{active: $uiRoute}">
 						<a href="/#!/{{subitem.link}}" ng-bind="subitem.title"></a>
 					</li>
 				</ul>
