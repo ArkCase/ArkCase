@@ -16,14 +16,14 @@ angular.module('cost-tracking').controller('CostTracking.ActionsController', ['$
         });
 
         $scope.createNew = function () {
-            $state.go("frevvo", {
+            $state.go("frevvo-new-costsheet", {
                 name: "new-costsheet"
             });
             //$state.go('newCostsheet');
         };
 
         $scope.edit = function (costsheetInfo) {
-            $state.go("frevvo", {
+            $state.go("frevvo-edit-costsheet", {
                 name: "edit-costsheet",
                 arg: {
                     id: costsheetInfo.id

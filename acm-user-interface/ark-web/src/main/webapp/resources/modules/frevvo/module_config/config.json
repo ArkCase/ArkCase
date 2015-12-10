@@ -53,6 +53,16 @@
       "name": "edit-timesheet",
       "formKey": "active.edit.timesheet.form",
       "formDefault": "timesheet"
+    },
+    {
+      "name": "new-plainform",
+      "formKey": "active.plain_configuration.form",
+      "formDefault": "plain_configuration"
+    },
+    {
+      "name": "edit-plainform",
+      "formKey": "active.edit.plain_configuration.form",
+      "formDefault": "plain_configuration"
     }
   ]
 }
