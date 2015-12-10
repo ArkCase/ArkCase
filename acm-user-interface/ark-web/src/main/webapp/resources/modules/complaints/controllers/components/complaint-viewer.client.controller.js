@@ -53,10 +53,10 @@ angular.module('complaints').controller('Complaints.ViewerController', ['$scope'
         var userInfo = Authentication.queryUserInfo();
 
         // Obtains a list of all users in ArkComplaint
-        var totalUserInfo = LookupService.getUsers({});
+        var totalUserInfo = LookupService.getUsers();
 
         // Retrieves the properties from the ecmFileService.properties file (including Snowbound configuration)
-        var ecmFileConfig = LookupService.getConfig({name: 'ecmFileService'});
+        var ecmFileConfig = LookupService.getConfig("ecmFileService");
 
         // Retrieves the metadata for the file which is being opened in the viewer
         var ecmFileInfo = EcmService.getFile({fileId: $stateParams['id']});
@@ -64,7 +64,7 @@ angular.module('complaints').controller('Complaints.ViewerController', ['$scope'
         var ecmFileNotes = EcmService.getFileNotes({fileId: $stateParams['id']});
         var ecmFileParticipants = EcmService.getFileParticipants({fileId: $stateParams['id']});
 
-        $q.all([ticketInfo, userInfo, totalUserInfo.$promise, ecmFileConfig.$promise,
+        $q.all([ticketInfo, userInfo, totalUserInfo, ecmFileConfig,
             ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileNotes.$promise, ecmFileParticipants.$promise])
             .then(function (data) {
                 $scope.acmTicket = data[0].data;
