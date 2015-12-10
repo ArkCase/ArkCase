@@ -27,10 +27,10 @@
         "noDataMessage": "Currently there are no cases info",
         "table": {
           "header": {
-            "caseId": "Case ID",
-            "client": "Client",
-            "status": "Status",
-            "priority": "Priority"
+            "caseId": "Number",
+            "title": "Title",
+            "priority": "Priority",
+            "status": "Status"
           }
         }
       },
@@ -83,13 +83,26 @@
         "noDataMessage": "Currently there are no team tasks info"
       },
       "weather": {
-        "title": "Weather",
         "description": "Displays weather",
+        "label": {
+          "current": "Current:",
+          "enter-location": "Enter Location",
+          "description": "Display the current temperature of a city",
+          "location": "Location",
+          "insert-location-in-configuration": "Please insert a location in the widget configuration"
+        },
+        "title": "Weather",
         "noDataMessage": "Currently there are no weather info"
       },
       "news": {
-        "title": "News",
         "description": "Displays news",
+        "label": {
+          "enter-feed-url": "Enter Feed url",
+          "description": "Displays a RSS/Atom feed",
+          "feed-url": "Feed Url",
+          "insert-url": "Please insert a feed url in the widget configuration"
+        },
+        "title": "News",
         "noDataMessage": "Currently there is no RSS/info"
       }
     }
