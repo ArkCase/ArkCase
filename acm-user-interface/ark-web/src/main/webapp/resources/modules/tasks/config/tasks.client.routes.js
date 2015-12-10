@@ -41,17 +41,17 @@ angular.module('tasks').config(['$stateProvider', '$urlRouterProvider',
             })
 
             .state('tasks.reworkdetails', {
-                url: '/:id/details',
+                url: '/:id/reworkdetails',
                 templateUrl: 'modules/tasks/views/components/task-reworkdetails.client.view.html'
             })
 
             .state('tasks.docsreview', {
-                url: '/:id/details',
+                url: '/:id/docsreview',
                 templateUrl: 'modules/tasks/views/components/task-docsreview.client.view.html'
             })
 
             .state('tasks.rejcomments', {
-                url: '/:id/details',
+                url: '/:id/rejcomments',
                 templateUrl: 'modules/tasks/views/components/task-rejcomments.client.view.html'
             })
 

@@ -1,18 +1,14 @@
 'use strict';
 
-///**
-// * @ngdoc controller
-// * @name time-tracking.controller:TimeTrackingController
-// *
-// * @description
-// * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/time-tracking/controllers/time-tracking.client.controller.js modules/time-tracking/controllers/time-tracking.client.controller.js}
-// *
-// * The Time Tracking module main controller
-// */
-angular.module('time-tracking').controller('TimeTrackingController', ['$scope', '$stateParams', '$translate', 'ConfigService', 'TimeTracking.InfoService', 'UtilService',
-	function ($scope, $stateParams, $translate, ConfigService, TimeTrackingInfoService, Util) {
+angular.module('time-tracking').controller('TimeTrackingController', ['$scope', '$stateParams', '$state', '$translate'
+    , 'UtilService', 'ConfigService', 'TimeTracking.InfoService', 'ObjectService', 'Helper.ObjectTreeService'
+    , function ($scope, $stateParams, $state, $translate
+        , Util, ConfigService, TimeTrackingInfoService, ObjectService, HelperObjectTreeService) {
+
 		var promiseGetModuleConfig = ConfigService.getModuleConfig("time-tracking").then(function (config) {
 			$scope.config = config;
+            $scope.componentLinks = HelperObjectTreeService.createComponentLinks(config, ObjectService.ObjectTypes.TIMESHEET);
+            $scope.activeLinkId = "main";
 			return config;
 		});
 		$scope.$on('req-component-config', function (e, componentId) {
@@ -21,6 +17,22 @@ angular.module('time-tracking').controller('TimeTrackingController', ['$scope', 
 				$scope.$broadcast('component-config', componentId, componentConfig);
 			});
 		});
+
+        $scope.$on('req-select-timesheet', function (e, selectedTimesheet) {
+            var components = Util.goodArray(selectedTimesheet.components);
+            $scope.activeLinkId = (1 == components.length) ? components[0] : "main";
+        });
+
+        $scope.getActive = function (linkId) {
+            return ($scope.activeLinkId == linkId) ? "active" : ""
+        };
+
+        $scope.onClickComponentLink = function (linkId) {
+            $scope.activeLinkId = linkId;
+            $state.go('time-tracking.' + linkId, {
+                id: $stateParams.id
+            });
+        };
 
 		$scope.progressMsg = $translate.instant("timeTracking.progressNoTimesheet");
 		$scope.$on('req-select-timesheet', function (e, selectedTimesheet) {
@@ -31,12 +43,11 @@ angular.module('time-tracking').controller('TimeTrackingController', ['$scope', 
 		});
 
 		var loadTimesheet = function (id) {
-			if (id) {
+            if (Util.goodPositive(id)) {
 				if ($scope.timesheetInfo && $scope.timesheetInfo.id != id) {
 					$scope.timesheetInfo = null;
 				}
 				$scope.progressMsg = $translate.instant("timeTracking.progressLoading") + " " + id + "...";
-
 
 				TimeTrackingInfoService.getTimeTrackingInfo(id).then(
 					function (timesheetInfo) {

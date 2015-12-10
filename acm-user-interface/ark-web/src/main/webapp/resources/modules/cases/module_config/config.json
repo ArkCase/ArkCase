@@ -200,6 +200,14 @@
   },
   "components": [
     {
+      "id": "main",
+      "title": "Overview",
+      "icon": "fa fa-tachometer",
+      "enabled": false,
+      "type": "empty",
+      "editable": false
+    },
+    {
       "id": "info",
       "title": "Info",
       "enabled": false,
@@ -216,18 +224,22 @@
     {
       "id": "details",
       "title": "Details",
+      "icon": "fa fa-info-circle",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "documents",
       "title": "Documents",
+      "icon": "fa fa-file",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "people",
       "title": "People",
+      "icon": "fa fa-user",
+      "icon": "fa fa-file",
       "className": "com.armedia.acm.plugins.person.model.Person",
       "enabled": true,
       "type": "grid",
@@ -470,6 +482,7 @@
     {
       "id": "participants",
       "title": "Participants",
+      "icon": "fa fa-users",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -498,6 +511,7 @@
     {
       "id": "notes",
       "title": "Notes",
+      "icon": "fa fa-comments",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -533,6 +547,7 @@
     {
       "id": "tasks",
       "title": "Tasks",
+      "icon": "fa fa-check-circle",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -600,6 +615,7 @@
     {
       "id": "references",
       "title": "References",
+      "icon": "fa fa-exchange",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -644,6 +660,7 @@
     {
       "id": "history",
       "title": "History",
+      "icon": "fa fa-bell-o",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -677,6 +694,7 @@
     {
       "id": "correspondence",
       "title": "Correspondence",
+      "icon": "fa fa-envelope",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -713,6 +731,7 @@
     {
       "id": "time",
       "title": "Time",
+      "icon": "fa fa-clock-o",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -758,6 +777,7 @@
     {
       "id": "cost",
       "title": "Cost",
+      "icon": "fa fa-money",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -803,6 +823,7 @@
     {
       "id": "calendar",
       "title": "Calendar",
+      "icon": "fa fa-calendar",
       "enabled": true,
       "type": "empty"
     }

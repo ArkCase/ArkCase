@@ -30,22 +30,10 @@ angular.module('cost-tracking').config(['$stateProvider',
 				templateUrl: 'modules/cost-tracking/views/components/cost-tracking-person.client.view.html'
 			})
 
-			.state('cost-tracking.timesSummary', {
-				url: '/:id/person',
-				templateUrl: 'modules/cost-tracking/views/components/cost-tracking-time-summary.client.view.html'
+			.state('cost-tracking.summary', {
+				url: '/:id/summary',
+				templateUrl: 'modules/cost-tracking/views/components/cost-tracking-summary.client.view.html'
 			})
 
-		//.state('newCostsheet', {
-		//	url: '/newcostsheet',
-		//	templateUrl: 'modules/cost-tracking/views/components/cost-tracking-new-costsheet.client.view.html'
-		//})
-		//
-		//.state('editCostsheet', {
-		//	url: '/editcostsheet',
-		//	templateUrl: 'modules/cost-tracking/views/components/cost-tracking-edit-costsheet.client.view.html',
-		//	params: {
-		//		id: null,
-		//	}
-		//})
 	}
 ]);
