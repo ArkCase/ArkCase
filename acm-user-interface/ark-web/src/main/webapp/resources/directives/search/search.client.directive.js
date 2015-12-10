@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/directives/search\search.client.directive.js directives/search\search.client.directive.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/directives/search/search.client.directive.js directives/search/search.client.directive.js}
  *
  * The "Search" directive triggers the faceted search functionality
  *
@@ -20,7 +20,7 @@
  *
  * @example
  <example>
-    <file name="index.html">
+     <file name="index.html">
          <search header="{{'module.title' | translate}}"
              search-btn="{{'module.search.btn' | translate}}"
              search-query="{{searchQuery}}"
@@ -28,8 +28,9 @@
              filter="{{filter}}"
              config="config">
          </search>
-    <file name="app.js">
-     angular.module('ngAppDemo', []).controller('ngAppDemoController', function($scope, $log) {
+     </file>
+     <file name="app.js">
+        angular.module('ngAppDemo', []).controller('ngAppDemoController', function($scope, $log) {
             $scope.config = {
                         "id": "searchModule",
                         "title": "Search Module Search",
@@ -72,18 +73,19 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
             },
 
             link: function (scope) {    //dom operations
-                scope.facets=[];
+                scope.facets = [];
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
-                scope.queryExistingItems = function (){
-                    if(scope.searchQuery && scope.pageSize >=0 && scope.start >=0){
-                        var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*",scope.filters,scope.pageSize,scope.start);
-                        if(query){
+                scope.queryExistingItems = function () {
+                    if (scope.searchQuery && scope.pageSize >= 0 && scope.start >= 0) {
+                        var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*", scope.filters, scope.pageSize, scope.start);
+                        if (query) {
                             SearchService.queryFilteredSearch({
                                     query: query
                                 },
                                 function (data) {
                                     updateFacets(data.facet_counts.facet_fields);
+                                    scope.searchQuery = scope.searchQuery.replace('*', '');
                                     scope.gridOptions.data = data.response.docs;
                                     scope.gridOptions.totalItems = data.response.numFound;
                                 }
@@ -92,35 +94,50 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     }
                 };
 
+                scope.queryTypeahead = function (typeaheadQuery) {
+                    typeaheadQuery = typeaheadQuery.replace('*', '');
+                    var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery + '*', scope.filters, 10, 0);
+                    var deferred = $q.defer();
+                    if (query) {
+                        SearchService.queryFilteredSearch({
+                            query: query
+                        }, function (res) {
+                            var result = _.pluck(res.response.docs, 'name');
+                            deferred.resolve(result);
+                        });
+                    }
+                    return deferred.promise;
+                };
 
-                function updateFacets(facets){
-                    if(facets){
-                        if(scope.facets.length){
-                            scope.facets.splice(0,scope.facets.length)
+                function updateFacets(facets) {
+                    if (facets) {
+                        if (scope.facets.length) {
+                            scope.facets.splice(0, scope.facets.length)
                         }
-                        _.forEach(facets, function(value, key) {
-                            if(value){
-                                scope.facets.push({"name": key, "fields":value});
+                        _.forEach(facets, function (value, key) {
+                            if (value) {
+                                scope.facets.push({"name": key, "fields": value});
                             }
                         });
                     }
                 }
 
-                scope.selectFacet = function (checked, facet, field){
-                    if(checked){
-                        if(scope.filters){
+                scope.selectFacet = function (checked, facet, field) {
+                    if (checked) {
+                        if (scope.filters) {
                             scope.filters += '&fq="' + facet + '":' + field;
                         }
-                        else{
+                        else {
+                            scope.filters=""
                             scope.filters += 'fq="' + facet + '":' + field;
                         }
                         scope.queryExistingItems();
-                    }else{
-                        if(scope.filters.indexOf('&fq="' + facet + '":' + field) > -1){
+                    } else {
+                        if (scope.filters.indexOf('&fq="' + facet + '":' + field) > -1) {
                             scope.filters = scope.filters.split('&fq="' + facet + '":' + field).join('');
                         }
-                        else if(scope.filters.indexOf('fq="' + facet + '":' + field) > -1){
-                            scope.filters='';
+                        else if (scope.filters.indexOf('fq="' + facet + '":' + field) > -1) {
+                            scope.filters = '';
                         }
                         scope.queryExistingItems();
                     }
@@ -132,40 +149,22 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         return objectTypes;
                     }
                 );
-                //var cacheObjectTypes = new Store.SessionData(Helper.SessionCacheNames.OBJECT_TYPES);
-                //var objectTypes = cacheObjectTypes.get();
-                //var promiseObjectTypes = Util.serviceCall({
-                //    service: LookupService.getObjectTypes
-                //    , result: objectTypes
-                //    , onSuccess: function (data) {
-                //        objectTypes = [];
-                //        _.forEach(data, function (item) {
-                //            objectTypes.push(item);
-                //        });
-                //        cacheObjectTypes.set(objectTypes);
-                //        return objectTypes;
-                //    }
-                //}).then(
-                //    function (objectTypes) {
-                //        scope.objectTypes = objectTypes;
-                //        return objectTypes;
-                //    }
-                //);
 
-                scope.onClickObjLink = function (event, rowEntity) {
+                scope.onClickObjLink = function (event, objectType, objectId) {
                     event.preventDefault();
                     promiseObjectTypes.then(function (data) {
-                        var found = _.find(scope.objectTypes, {type: rowEntity.object_sub_type_s ? rowEntity.object_sub_type_s : rowEntity.object_type_s});
+                        var found = _.find(scope.objectTypes, {type: objectType});
                         if (found && found.url) {
                             var url = Util.goodValue(found.url);
-                            var id = Util.goodMapValue(rowEntity, "object_id_s");
+                            var id = objectId;
                             url = url.replace(":id", id);
                             $window.location.href = url;
                         }
                     });
                 };
 
-                scope.keyDown = function (event) {
+                scope.keyUp = function (event) {
+                    scope.searchQuery = scope.searchQuery.replace('*', '');
                     if (event.keyCode == 13 && scope.searchQuery) {
                         scope.queryExistingItems();
                     }
@@ -173,7 +172,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                 //prepare the UI-grid
                 scope.gridOptions = {};
-                scope.$watchCollection('config', function(newValue, oldValue) {
+                scope.$watchCollection('config', function (newValue, oldValue) {
                     $q.when(newValue).then(function (config) {
                         scope.filterName = config.filterName;
                         scope.pageSize = config.paginationPageSize;
@@ -204,8 +203,8 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                 });
                             }
                         }
-                        if(scope.gridOptions){
-                            if(scope.filter){
+                        if (scope.gridOptions) {
+                            if (scope.filter) {
                                 scope.filters = 'fq=' + scope.filter;
                             }
                             scope.queryExistingItems();

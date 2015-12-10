@@ -35,11 +35,11 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
 
                 promiseQueryUser.then(function (userInfo) {
                     $scope.userId = userInfo.userId;
-                    ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.COMPLAINT, $scope.complaintInfo.id).then(function (subscriptions) {
+                    ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.COMPLAINT, $scope.complaintInfo.complaintId).then(function (subscriptions) {
                         var found = _.find(subscriptions, {
                             userId: userInfo.userId,
                             subscriptionObjectType: ObjectService.ObjectTypes.COMPLAINT,
-                            objectId: $scope.complaintInfo.id
+                            objectId: $scope.complaintInfo.complaintId
                         });
                         $scope.showBtnSubscribe = Util.isEmpty(found);
                         $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
@@ -61,7 +61,7 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
         };
 
         $scope.createNew = function () {
-            $state.go("frevvo", {
+            $state.go("frevvo-new-complaint", {
                 name: "new-complaint"
             });
             //$state.go('newComplaint');
@@ -80,14 +80,14 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
         };
 
         $scope.subscribe = function (complaintInfo) {
-            ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.COMPLAINT, $scope.complaintInfo.id).then(function (data) {
+            ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.COMPLAINT, $scope.complaintInfo.complaintId).then(function (data) {
                 $scope.showBtnSubscribe = false;
                 $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 return data;
             });
         };
         $scope.unsubscribe = function (complaintInfo) {
-            ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.COMPLAINT, $scope.complaintInfo.id).then(function (data) {
+            ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.COMPLAINT, $scope.complaintInfo.complaintId).then(function (data) {
                 $scope.showBtnSubscribe = true;
                 $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 return data;
