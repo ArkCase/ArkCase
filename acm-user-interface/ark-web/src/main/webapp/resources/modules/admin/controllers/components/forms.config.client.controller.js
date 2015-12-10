@@ -49,7 +49,12 @@ angular.module('admin').controller('Admin.FormsConfigController', ['$scope', '$s
         }
 
         $scope.editRow = function (rowEntity) {
-            $state.go('editplainform', {key: rowEntity.key, target: rowEntity.target});
+            $state.go('frevvo-edit-plainform', {
+                name: "edit-plainform"
+                , arg: {
+                    formKey: rowEntity.key, formTarget: rowEntity.target, mode: "edit"
+                }
+            });
         };
 
         $scope.deleteRow = function (rowEntity) {
@@ -62,8 +67,13 @@ angular.module('admin').controller('Admin.FormsConfigController', ['$scope', '$s
             });
         };
 
-        $scope.openNewFrevvoForm = function(){
-                $state.go('newplainform',{target: $scope.selectedTarget});
+        $scope.openNewFrevvoForm = function () {
+            $state.go('frevvo-new-plainform', {
+                name: "new-plainform"
+                , arg: {
+                    target: $scope.selectedTarget
+                }
+            });
         }
 
     }

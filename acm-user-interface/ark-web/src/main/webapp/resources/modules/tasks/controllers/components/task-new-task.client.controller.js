@@ -5,9 +5,9 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
     , function ($scope, $stateParams, $sce, $q, Util, TicketService, LookupService, FrevvoFormService) {
 
         //var ticketInfo = TicketService.getArkCaseTicket();
-        //var acmFormsInfo = LookupService.getConfig({name: 'acm-forms'});
+        //var acmFormsInfo = LookupService.getConfig("acm-forms");
         //
-        //$q.all([ticketInfo, acmFormsInfo.$promise])
+        //$q.all([ticketInfo, acmFormsInfo])
         //    .then(function (data) {
         //        $scope.acmTicket = data[0].data;
         //        $scope.acmFormsProperties = data[1];

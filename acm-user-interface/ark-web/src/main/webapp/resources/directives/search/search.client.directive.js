@@ -85,6 +85,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                 },
                                 function (data) {
                                     updateFacets(data.facet_counts.facet_fields);
+                                    scope.searchQuery = scope.searchQuery.replace('*', '');
                                     scope.gridOptions.data = data.response.docs;
                                     scope.gridOptions.totalItems = data.response.numFound;
                                 }
@@ -93,6 +94,20 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     }
                 };
 
+                scope.queryTypeahead = function (typeaheadQuery) {
+                    typeaheadQuery = typeaheadQuery.replace('*', '');
+                    var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery + '*', scope.filters, 10, 0);
+                    var deferred = $q.defer();
+                    if (query) {
+                        SearchService.queryFilteredSearch({
+                            query: query
+                        }, function (res) {
+                            var result = _.pluck(res.response.docs, 'name');
+                            deferred.resolve(result);
+                        });
+                    }
+                    return deferred.promise;
+                };
 
                 function updateFacets(facets) {
                     if (facets) {
@@ -113,6 +128,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             scope.filters += '&fq="' + facet + '":' + field;
                         }
                         else {
+                            scope.filters=""
                             scope.filters += 'fq="' + facet + '":' + field;
                         }
                         scope.queryExistingItems();
@@ -134,13 +150,13 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     }
                 );
 
-                scope.onClickObjLink = function (event, rowEntity) {
+                scope.onClickObjLink = function (event, objectType, objectId) {
                     event.preventDefault();
                     promiseObjectTypes.then(function (data) {
-                        var found = _.find(scope.objectTypes, {type: rowEntity.object_sub_type_s ? rowEntity.object_sub_type_s : rowEntity.object_type_s});
+                        var found = _.find(scope.objectTypes, {type: objectType});
                         if (found && found.url) {
                             var url = Util.goodValue(found.url);
-                            var id = Util.goodMapValue(rowEntity, "object_id_s");
+                            var id = objectId;
                             url = url.replace(":id", id);
                             $window.location.href = url;
                         }
