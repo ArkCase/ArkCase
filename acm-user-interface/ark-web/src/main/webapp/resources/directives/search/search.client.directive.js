@@ -85,6 +85,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                 },
                                 function (data) {
                                     updateFacets(data.facet_counts.facet_fields);
+                                    scope.searchQuery = scope.searchQuery.replace('*', '');
                                     scope.gridOptions.data = data.response.docs;
                                     scope.gridOptions.totalItems = data.response.numFound;
                                 }
@@ -93,6 +94,20 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     }
                 };
 
+                scope.queryTypeahead = function (typeaheadQuery) {
+                    typeaheadQuery = typeaheadQuery.replace('*', '');
+                    var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery + '*', scope.filters, 10, 0);
+                    var deferred = $q.defer();
+                    if (query) {
+                        SearchService.queryFilteredSearch({
+                            query: query
+                        }, function (res) {
+                            var result = _.pluck(res.response.docs, 'name');
+                            deferred.resolve(result);
+                        });
+                    }
+                    return deferred.promise;
+                };
 
                 function updateFacets(facets) {
                     if (facets) {
@@ -113,6 +128,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             scope.filters += '&fq="' + facet + '":' + field;
                         }
                         else {
+                            scope.filters=""
                             scope.filters += 'fq="' + facet + '":' + field;
                         }
                         scope.queryExistingItems();
