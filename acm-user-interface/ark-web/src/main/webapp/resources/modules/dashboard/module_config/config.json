@@ -29,24 +29,26 @@
       "title": "My Cases Widget",
       "enableFiltering": false,
       "paginationPageSizes": [
-        25,
-        50,
-        75
+        5,
+        10,
+        25
       ],
-      "paginationPageSize": 25,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
-          "name": "object_id_s",
+          "name": "name",
           "displayName": "dashboard.widgets.myCases.table.header.caseId",
           "headerCellFilter": "translate",
           "enableSorting": true,
+          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s)\">{{COL_FIELD}}</a></div>",
           "width": 130
         },
         {
-          "name": "client_name_s",
-          "displayName": "dashboard.widgets.myCases.table.header.client",
+          "name": "title_parseable",
+          "displayName": "dashboard.widgets.myCases.table.header.title",
           "headerCellFilter": "translate",
-          "enableSorting": true
+          "enableSorting": true,
+          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}</a></div>"
         },
         {
           "name": "status_lcs",
@@ -56,7 +58,7 @@
           "width": 150
         },
         {
-          "name": "priority_s",
+          "name": "priority_lcs",
           "displayName": "dashboard.widgets.myCases.table.header.priority",
           "headerCellFilter": "translate",
           "enableSorting": true,
@@ -69,22 +71,24 @@
       "title": "My Tasks Widget",
       "enableFiltering": false,
       "paginationPageSizes": [
-        25,
-        50,
-        75
+        5,
+        10,
+        25
       ],
-      "paginationPageSize": 25,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "taskId",
           "displayName": "dashboard.widgets.myTasks.table.header.taskId",
           "headerCellFilter": "translate",
+          "cellTemplate:": "<div><a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}</a></div>",
           "width": 75
         },
         {
           "name": "title",
           "displayName": "dashboard.widgets.myTasks.table.header.title",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate:": "<div><a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}</a></div>"
         },
         {
           "name": "priority",
@@ -94,7 +98,7 @@
         },
         {
           "name": "dueDate",
-          "displayName": "dashboard.widgets.myTasks.table.header.dueDate",
+          "displayName": "dahboard.widgets.myTasks.table.header.dueDate",
           "headerCellFilter": "translate",
           "width": 70
         },
