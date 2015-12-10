@@ -15,6 +15,15 @@
 				<div ng-include="'modules/cost-tracking/views/components/cost-tracking-actions.client.view.html'"></div>
 			</div>
 
+			<ul class="nav nav-tabs">
+				<li class="{{getActive(link.id)}}" ng-repeat="link in componentLinks">
+					<a ng-click="onClickComponentLink(link.id)">
+						<i class="{{link.icon}}"></i>
+						<br/> {{link.title}}
+					</a>
+				</li>
+			</ul>
+
 			<div class="well-sm">
 				<div data-ui-view></div>
 			</div>

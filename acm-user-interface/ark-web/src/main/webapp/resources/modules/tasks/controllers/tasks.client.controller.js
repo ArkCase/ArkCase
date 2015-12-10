@@ -1,9 +1,14 @@
 'use strict';
 
-angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$translate', 'StoreService', 'UtilService', 'ConfigService', 'Task.InfoService',
-    function ($scope, $stateParams, $translate, Store, Util, ConfigService, TaskInfoService) {
+angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$state', '$translate', 'StoreService'
+    , 'UtilService', 'ConfigService', 'Task.InfoService', 'ObjectService', 'Helper.ObjectTreeService'
+    , function ($scope, $stateParams, $state, $translate, Store
+        , Util, ConfigService, TaskInfoService, ObjectService, HelperObjectTreeService) {
+
         var promiseGetModuleConfig = ConfigService.getModuleConfig("tasks").then(function (config) {
             $scope.config = config;
+            $scope.componentLinks = HelperObjectTreeService.createComponentLinks(config, ObjectService.ObjectTypes.TASK);
+            $scope.activeLinkId = "main";
             return config;
         });
         $scope.$on('req-component-config', function (e, componentId) {
@@ -16,6 +21,22 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             TaskInfoService.updateTaskInfo(taskInfo);
             $scope.$broadcast('task-updated', taskInfo);
         });
+
+        $scope.$on('req-select-task', function (e, selectedTask) {
+            var components = Util.goodArray(selectedTask.components);
+            $scope.activeLinkId = (1 == components.length) ? components[0] : "main";
+        });
+
+        $scope.getActive = function (linkId) {
+            return ($scope.activeLinkId == linkId) ? "active" : ""
+        };
+
+        $scope.onClickComponentLink = function (linkId) {
+            $scope.activeLinkId = linkId;
+            $state.go('tasks.' + linkId, {
+                id: $stateParams.id
+            });
+        };
 
         $scope.progressMsg = $translate.instant("tasks.progressNoTask");
         $scope.$on('req-select-task', function (e, selectedTask) {

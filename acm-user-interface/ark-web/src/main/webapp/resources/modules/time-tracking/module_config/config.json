@@ -60,11 +60,12 @@
                 "components": [
                     "details",
                     "person",
-                    "timesSummary"
+                    "summary"
                 ]
             },
             {
                 "type": "p/TIMESHEET/detail",
+                "icon": "fa fa-info-circle",
                 "label": "Details",
                 "components": [
                     "details"
@@ -72,21 +73,31 @@
             },
             {
                 "type": "p/TIMESHEET/person",
+                "icon": "fa fa-user",
                 "label": "Person",
                 "components": [
                     "person"
                 ]
             },
             {
-                "type": "p/TIMESHEET/timeSummary",
-                "label": "Hours Summary",
+                "type": "p/TIMESHEET/summary",
+                "icon": "fa fa-clock-o",
+                "label": "Hour Summary",
                 "components": [
-                    "timesSummary"
+                    "summary"
                 ]
             }
         ]
     },
     "components": [
+        {
+            "id": "main",
+            "title": "Overview",
+            "icon": "fa fa-tachometer",
+            "enabled": false,
+            "type": "empty",
+            "editable": false
+        },
         {
             "id": "info",
             "title": "Info",
@@ -104,12 +115,14 @@
         {
             "id": "details",
             "title": "Details",
+            "icon": "fa fa-info-circle",
             "enabled": true,
             "type": "empty"
         },
         {
             "id": "person",
             "title": "Person",
+            "icon": "fa fa-user",
             "enabled": true,
             "type": "grid",
             "enableFiltering": true,
@@ -135,8 +148,9 @@
             ]
         },
         {
-            "id": "time-summary",
-            "title": "Time Summary",
+            "id": "summary",
+            "title": "Hour Summary",
+            "icon": "fa fa-clock-o",
             "enabled": true,
             "type": "grid",
             "enableFiltering": true,
@@ -151,29 +165,29 @@
             "columnDefs": [
                 {
                     "name": "code",
-                    "displayName": "timeTracking.comp.timesSummary.table.columns.code",
+                    "displayName": "timeTracking.comp.summary.table.columns.code",
                     "headerCellFilter": "translate",
                     "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjectType($event, row.entity)'>{{row.entity.code}}</a>"
                 },
                 {
                     "name": "type",
-                    "displayName": "timeTracking.comp.timesSummary.table.columns.type",
+                    "displayName": "timeTracking.comp.summary.table.columns.type",
                     "headerCellFilter": "translate"
                 },
                 {
                     "name": "value",
-                    "displayName": "timeTracking.comp.timesSummary.table.columns.value",
+                    "displayName": "timeTracking.comp.summary.table.columns.value",
                     "headerCellFilter": "translate"
                 },
                 {
                     "name": "date",
-                    "displayName": "timeTracking.comp.timesSummary.table.columns.date",
+                    "displayName": "timeTracking.comp.summary.table.columns.date",
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div>{{ row.entity.date | date : 'MM/dd/yyyy'}}</div>"
                 },
                 {
                     "name": "modified",
-                    "displayName": "timeTracking.comp.timesSummary.table.columns.modified",
+                    "displayName": "timeTracking.comp.summary.table.columns.modified",
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div>{{ row.entity.modified | date : 'MM/dd/yyyy'}}</div>"
                 }

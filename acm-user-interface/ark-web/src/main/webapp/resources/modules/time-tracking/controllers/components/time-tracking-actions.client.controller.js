@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTracking.ActionsController', ['$scope', '$state', 'UtilService', 'TimeTracking.InfoService',
-    function ($scope, $state, Util, TimeTrackingInfoService) {
+angular.module('time-tracking').controller('TimeTracking.ActionsController', ['$scope', '$state', '$translate', 'UtilService', 'TimeTracking.InfoService',
+    function ($scope, $state, $translate, Util, TimeTrackingInfoService) {
         $scope.$emit('req-component-config', 'actions');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('actions' == componentId) {
@@ -23,7 +23,7 @@ angular.module('time-tracking').controller('TimeTracking.ActionsController', ['$
         };
 
         $scope.edit = function (timesheetInfo) {
-            var frevvoDateFormat = Util.goodValue($scope.config.frevvoDateFormat, "YYYY-MM-DD");
+            var frevvoDateFormat = Util.goodValue($scope.config.frevvoDateFormat, $translate.instant("common.frevvo.defaultDateFormat"));
             var starDate = moment(timesheetInfo.startDate).format(frevvoDateFormat);
             $state.go("frevvo", {
                 name: "edit-timesheet",
