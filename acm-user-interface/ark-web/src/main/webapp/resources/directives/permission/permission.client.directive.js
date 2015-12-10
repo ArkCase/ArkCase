@@ -75,17 +75,19 @@ angular.module('directives').directive('permission', ['$q', '$log', 'Permissions
                     function success(enabled) {
 
                         if (enabled === false) {
-                            // Hide element if
                             if (permissionAction == 'hide') {
                                 element.css({'display': 'none'});
+                            } else if (permissionAction == 'show') {
+                                element.css({'display': ''});
                             } else {
                                 element.attr('disabled', true);
                             }
                             element.attr('permission-disabled', true);
                         } else {
-                            // Hide element if
                             if (permissionAction == 'hide') {
                                 element.css({'display': ''});
+                            } else if (permissionAction == 'show') {
+                                element.css({'display': 'none'});
                             } else {
                                 element.attr('disabled', false);
                             }
@@ -98,7 +100,7 @@ angular.module('directives').directive('permission', ['$q', '$log', 'Permissions
         };
 
         function onElementClick(e) {
-            if (e.data.element.attr('permission-disabled') ==='true') {
+            if (e.data.element.attr('permission-disabled') === 'true') {
                 e.stopImmediatePropagation();
                 e.preventDefault();
             }
