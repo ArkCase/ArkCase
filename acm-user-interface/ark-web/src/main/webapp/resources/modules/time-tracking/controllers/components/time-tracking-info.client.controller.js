@@ -15,7 +15,7 @@ angular.module('time-tracking').controller('TimeTracking.InfoController', ['$sco
             $scope.timesheetSolr = selectedTimesheet;
         });
 
-        $scope.$on('timesheet-retrieved', function(e, data){
+        $scope.$on('timesheet-updated', function (e, data) {
                 $scope.timesheetInfo = data;
 
         });

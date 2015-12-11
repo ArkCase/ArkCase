@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ConstantService', 'CallLookupService',
-    function ($scope, $stateParams, $modal, Util, Constant, CallLookupService) {
-        var z = 1;
-        return;
+angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal'
+    , 'UtilService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
+    , function ($scope, $stateParams, $modal, Util, ObjectService, ObjectLookupService, ComplaintInfoService) {
+
         $scope.$emit('req-component-config', 'documents');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('documents' == componentId) {
@@ -12,14 +12,14 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         });
 
 
-        CallLookupService.getFormTypes().then(
+        ObjectLookupService.getFormTypes().then(
             function (formTypes) {
                 $scope.fileTypes = $scope.fileTypes || [];
                 $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));
                 return formTypes;
             }
         );
-        CallLookupService.getFileTypes().then(
+        ObjectLookupService.getFileTypes().then(
             function (fileTypes) {
                 $scope.fileTypes = $scope.fileTypes || [];
                 $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
@@ -28,11 +28,13 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         );
 
 
-        $scope.objectType = Constant.ObjectTypes.COMPLAINT;
+        $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
         $scope.objectId = $stateParams.id;
-        //$scope.containerId = 0;
-        $scope.$on('complaint-retrieved', function (e, data) {
-            $scope.complaintInfo = data;
+
+        $scope.$on('complaint-updated', function (e, data) {
+            if (ComplaintInfoService.validateComplaintInfo(data)) {
+                $scope.complaintInfo = data;
+            }
         });
 
         var silentReplace = function (value, replace, replacement) {
@@ -45,7 +47,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             if ($scope.complaintInfo) {
                 //Complaint.View.Documents.getFileTypeByType(type);
                 var fileType = _.find($scope.fileTypes, {type: type});
-                if (CallLookupService.validatePlainForm(fileType)) {
+                if (ObjectLookupService.validatePlainForm(fileType)) {
                     var data = "_data=(";
 
                     var url = fileType.url;
@@ -57,8 +59,9 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
                         if (!Util.isEmpty(urlParameters[i].defaultValue)) {
                             value = silentReplace(urlParameters[i].defaultValue, "'", "_0027_");
                         } else if (!Util.isEmpty(urlParameters[i].keyValue)) {
-                            if (!Util.isEmpty($scope.complaintInfo[urlParameters[i].keyValue])) {
-                                value = silentReplace($scope.complaintInfo[urlParameters[i].keyValue], "'", "_0027_");
+                            var _value = _.get($scope.complaintInfo, urlParameters[i].keyValue)
+                            if (!Util.isEmpty(_value)) {
+                                value = silentReplace(_value, "'", "_0027_");
                             }
                         }
                         value = encodeURIComponent(value);

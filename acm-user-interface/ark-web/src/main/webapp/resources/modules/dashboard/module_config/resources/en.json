@@ -1,7 +1,6 @@
 {
   "dashboard": {
     "title": "Dashboard",
-
     "widgets": {
       "casesByQueue": {
         "title": "Active Case Files by Queue",
@@ -10,7 +9,6 @@
         "yAxis": "Number of Case Files",
         "noDataMessage": "Currently there are no cases info"
       },
-
       "casesByStatus": {
         "title": "Cases By Status",
         "description": "Displays cases by status",
@@ -23,7 +21,6 @@
         },
         "noDataMessage": "Currently there are no cases info"
       },
-
       "myCases": {
         "title": "My Cases",
         "description": "Displays my cases",
@@ -37,20 +34,18 @@
           }
         }
       },
-
       "myComplaints": {
         "title": "My Complaints",
         "description": "Displays my complaints",
         "noDataMessage": "Currently there are no complaints info"
       },
-
       "myTasks": {
         "title": "My Tasks",
         "description": "Displays my tasks",
         "rowNumbers.label": "Default Row Numbers",
         "rowNumbers.placeholder": "Enter Default Row Numbers",
         "table": {
-          "header" :{
+          "header": {
             "taskId": "Task ID",
             "title": "Title",
             "priority": "Priority",
@@ -61,7 +56,6 @@
         },
         "noDataMessage": "Currently there are no tasks info"
       },
-
       "newComplaints": {
         "title": "New Complaints",
         "description": "Displays new complaints",
@@ -75,7 +69,6 @@
         },
         "noDataMessage": "Currently there are no complaints info"
       },
-
       "teamWorkload": {
         "title": "Team Workload",
         "description": "Displays team workload",
@@ -88,6 +81,16 @@
           "all": "All"
         },
         "noDataMessage": "Currently there are no team tasks info"
+      },
+      "weather": {
+        "title": "Weather",
+        "description": "Displays weather",
+        "noDataMessage": "Currently there are no weather info"
+      },
+      "news": {
+        "title": "News",
+        "description": "Displays news",
+        "noDataMessage": "Currently there is no RSS/info"
       }
     }
   }

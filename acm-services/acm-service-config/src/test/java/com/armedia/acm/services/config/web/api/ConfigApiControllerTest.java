@@ -3,7 +3,9 @@ package com.armedia.acm.services.config.web.api;
 
 import com.armedia.acm.services.config.model.AcmConfig;
 import com.armedia.acm.services.config.model.AppConfig;
+import com.armedia.acm.services.config.model.JsonConfig;
 import com.armedia.acm.services.config.model.PropertyConfig;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
@@ -25,7 +27,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.*;
@@ -210,5 +214,58 @@ public class ConfigApiControllerTest extends EasyMockSupport
         String returned = result.getResponse().getContentAsString();
         assertEquals(returned, "{}");
         log.info("returned=", returned);
+    }
+
+    @Test
+    public void getInfo() throws Exception
+    {
+        mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
+
+        AppConfig acmConfig1 = new AppConfig();
+        PropertyConfig acmConfig2 = new PropertyConfig();
+        JsonConfig acmConfig3 = new JsonConfig();
+
+        acmConfig1.setConfigName("appConfigName");
+        acmConfig1.setConfigDescription("appConfigDescription");
+        acmConfig2.setConfigName("propertyConfigName");
+        acmConfig2.setConfigDescription("propertyConfigDescription");
+        acmConfig3.setConfigName("jsonConfigName");
+        acmConfig3.setConfigDescription("jsonConfigDescription");
+
+        List<AcmConfig> configList = Arrays.asList(acmConfig1, acmConfig2, acmConfig3);
+
+        unit.setConfigList(configList);
+
+        expect(mockAuthentication.getName()).andReturn("userName").atLeastOnce();
+
+        replayAll();
+
+        MvcResult result = mockMvc.perform(
+                get("/api/v1/service/config")
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .session(mockHttpSession)
+                        .principal(mockAuthentication))
+                .andReturn();
+
+        verifyAll();
+
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
+
+        String returned = result.getResponse().getContentAsString();
+        assertNotNull(returned);
+        log.info("returned={}", returned);
+
+        ObjectMapper om = new ObjectMapper();
+
+        List<Map<String, String>> resultList = om.readValue(returned, new TypeReference<List<Map<String, String>>>() {});
+
+        assertNotNull(resultList);
+        assertEquals(acmConfig1.getConfigName(), resultList.get(0).get("name"));
+        assertEquals(acmConfig1.getConfigDescription(), resultList.get(0).get("description"));
+        assertEquals(acmConfig2.getConfigName(), resultList.get(1).get("name"));
+        assertEquals(acmConfig2.getConfigDescription(), resultList.get(1).get("description"));
+        assertEquals(acmConfig3.getConfigName(), resultList.get(2).get("name"));
+        assertEquals(acmConfig3.getConfigDescription(), resultList.get(2).get("description"));
     }
 }

@@ -6,8 +6,8 @@ angular.module('profile').service('Profile.UserInfoService', function ($http, $q
     });
     function getUserInfo() {
         var deferred = $q.defer();
-        Authentication.queryUserInfo({}
-            , function (userInfo) {
+        Authentication.queryUserInfo().then(
+            function (userInfo) {
                 var user = userInfo.userId;
                 if(user){
                     var request = $http({
@@ -26,10 +26,11 @@ angular.module('profile').service('Profile.UserInfoService', function ($http, $q
                         }
                     );
                 }
+                return userInfo;
             }
         );
         return deferred.promise;
-    };
+    }
     function updateUserInfo(data) {
         var deferred = $q.defer();
         $http({
@@ -49,5 +50,5 @@ angular.module('profile').service('Profile.UserInfoService', function ($http, $q
             }
         );
         return deferred.promise;
-    };
+    }
 });

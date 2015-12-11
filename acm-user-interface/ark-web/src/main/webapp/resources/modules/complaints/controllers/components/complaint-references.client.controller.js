@@ -1,21 +1,32 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.ReferencesController', ['$scope', '$window', 'UtilService', 'ValidationService', 'HelperService', 'LookupService',
-    function ($scope, $window, Util, Validator, Helper, LookupService) {
-        var z = 1;
-        return;
+angular.module('complaints').controller('Complaints.ReferencesController', ['$scope', 'UtilService', 'Helper.UiGridService'
+    , 'Complaint.InfoService'
+    , function ($scope, Util, HelperUiGridService, ComplaintInfoService) {
+
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
         $scope.$emit('req-component-config', 'references');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("references" == componentId) {
-                Helper.Grid.setColumnDefs($scope, config);
-                Helper.Grid.setBasicOptions($scope, config);
+                gridHelper.setColumnDefs(config);
+                gridHelper.setBasicOptions(config);
             }
         });
 
-        $scope.$on('complaint-retrieved', function (e, data) {
+        $scope.$on('complaint-updated', function (e, data) {
+            if (!ComplaintInfoService.validateComplaintInfo(data)) {
+                return;
+            }
             $scope.complaintInfo = data;
-            $scope.gridOptions.data = $scope.complaintInfo.references;
-            Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.complaintInfo.references.length);
+            var references = [];
+            _.each($scope.complaintInfo.childObjects, function (childObject) {
+                if (ComplaintInfoService.validateReferenceRecord(childObject)) {
+                    references.push(childObject);
+                }
+            });
+            $scope.gridOptions.data = references;
+            gridHelper.hidePagingControlsIfAllDataShown(references.length);
         });
 
         $scope.onClickObjLink = function (event, rowEntity) {
@@ -23,7 +34,7 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
 
             var targetType = Util.goodMapValue(rowEntity, "targetType");
             var targetId = Util.goodMapValue(rowEntity, "targetId");
-            Helper.Grid.showObject($scope, targetType, targetId);
+            gridHelper.showObject(targetType, targetId);
         };
 
     }

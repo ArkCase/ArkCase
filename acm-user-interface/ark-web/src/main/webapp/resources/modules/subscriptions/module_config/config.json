@@ -8,7 +8,7 @@
             "menuItemURL": "subscriptions",
             "menuItemTitle": "Subscriptions",
             "iconClass": "fa fa-bullhorn",
-            "position": 60
+            "position": 100
         }
         
     ],
@@ -21,14 +21,21 @@
             "enableFiltering": false,
             "columnDefs": [
                 {
+                    "name": "parent_id_s",
+                    "displayName": "subscriptions.comp.grid.columns.id",
+                    "headerCellFilter": "translate",
+                    "visible": false
+                },
+                {
                     "name": "title_parseable",
                     "displayName": "subscriptions.comp.grid.columns.event",
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "parent_name_t",
+                    "name": "parent_number_lcs",
                     "displayName": "subscriptions.comp.grid.columns.parentName",
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity.parent_type_s, row.entity.parent_id_s)'>{{row.entity.parent_number_lcs}}</a>"
                 },
                 {
                     "name": "parent_type_s",
@@ -49,7 +56,7 @@
                 20,
                 50
             ],
-            "paginationPageSize": 10,
+            "paginationPageSize": 20,
             "start": 0,
             "filter": "\"Object Type\": SUBSCRIPTION_EVENT",
             "filterName" : "Object Type"

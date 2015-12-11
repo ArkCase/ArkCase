@@ -1,0 +1,21 @@
+<div>
+    <div class="modal-header">
+        <h4 class="modal-title">{{'admin.security.selectPrivileges.createRole'| translate}}</h4>
+    </div>
+    <div class="modal-body">
+        {{'admin.security.selectPrivileges.enterRoleName'| translate}}
+
+        <label for="dialogRoleName" class="label">{{'admin.security.selectPrivileges.name'| translate}}</label>
+        <input id="dialogRoleName" type="text" ng-model="roleName" class="form-control" required
+               placeholder="{{'admin.security.selectPrivileges.name'| translate}}">
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="cancel()">
+                {{'admin.security.selectPrivileges.cancel'| translate}}
+            </button>
+            <button type="button" class="btn btn-default" ng-click="ok()" ng-disabled="inputValid">
+                {{saveBtnText}}
+            </button>
+        </div>
+    </div>
+</div>

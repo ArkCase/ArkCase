@@ -9,11 +9,11 @@
  *
  * The Permissions service. Performs checking user permissions for action depends on user roles, and objectProperties, like orderInfo, queueInfo
  */
-angular.module('services').factory('PermissionsService', ['$q', '$http', '$log','$interpolate',  'Authentication', 'Profile.UserInfoService',
-    function ($q, $http, $log, $interpolate, Authentication, UserInfoService) {
+angular.module('services').factory('PermissionsService', ['$q', '$http', '$log', '$interpolate', 'Authentication',
+    function ($q, $http, $log, $interpolate, Authentication) {
         // Iniital rules loading
         var rules = queryRules();
-        var userProfile = UserInfoService.getUserInfo();
+        var userProfile = Authentication._queryUserInfo();       //todo: refactor to queryUserInfo()
 
         return {
             /**
@@ -39,7 +39,7 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                 } else {
                     var deferred = $q.defer();
                     var rulesPromise = queryRules();
-                    var userProfilePromise = UserInfoService.getUserInfo();
+                    var userProfilePromise = Authentication._queryUserInfo();   //todo: refactor to queryUserInfo()
 
                     $q.all([rules, userProfilePromise])
                         .then(
@@ -72,23 +72,24 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
             if (actions.length > 0) {
                 // Process all found actions objects
                 _.forEach(actions, function (action) {
+
                     isEnabled = true;
 
                     // Check ALL authorities
-                    if (isEnabled && userProfile.groups && action.userRolesAll) {
+                    if (isEnabled && _.isArray(userProfile.authorities) && action.userRolesAll) {
                         _.forEach(action.userRolesAll, function (role) {
                             var processedRole = processRole(role, objectProperties);
-                            isEnabled = (_.indexOf(userProfile.groups, processedRole) != -1);
+                            isEnabled = (_.indexOf(userProfile.authorities, processedRole) != -1);
                             return isEnabled
                         });
                     }
 
                     // Check ANY authorities
-                    if (isEnabled && userProfile.groups && action.userRolesAny) {
+                    if (isEnabled && _.isArray(userProfile.authorities) && action.userRolesAny) {
                         var anyEnabled = false;
                         _.forEach(action.userRolesAny, function (role) {
                             var processedRole = processRole(role, objectProperties);
-                            anyEnabled = anyEnabled || (_.indexOf(userProfile.groups, processedRole) != -1);
+                            anyEnabled = anyEnabled || (_.indexOf(userProfile.authorities, processedRole) != -1);
                         });
                         isEnabled = anyEnabled;
                     }
@@ -107,7 +108,7 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                     }
                 });
             } else {
-                $log.error('Action ' + actionName + ' was not found in rules list');
+                $log.warn('Action ' + actionName + ' was not found in rules list');
             }
             return isEnabled;
         }
@@ -132,7 +133,7 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
          * @returns {*}
          */
         function processRole(role, objectProperties) {
-            var exp  = $interpolate(role);
+            var exp = $interpolate(role);
             return exp(objectProperties);
         }
     }

@@ -17,6 +17,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ import java.util.List;
 
 /**
  * Watch folder changes and raise events if there is some new files
- *
+ * <p/>
  * Created by riste.tutureski on 10/08/2015.
  */
 public class FileWatcher implements FileListener, ApplicationContextAware, ApplicationEventPublisherAware
@@ -138,7 +139,7 @@ public class FileWatcher implements FileListener, ApplicationContextAware, Appli
     private File getFile(FileChangeEvent fileChangeEvent) throws FileSystemException, URISyntaxException
     {
         URL fileUrl = fileChangeEvent.getFile().getURL();
-        return new File(fileUrl.toURI());
+        return new File(new URI(fileUrl.toString().replace(" ", "%20")));
     }
 
     /**
@@ -186,7 +187,7 @@ public class FileWatcher implements FileListener, ApplicationContextAware, Appli
             try
             {
                 URL baseUrl = watchFolder.getURL();
-                File baseFile = new File(baseUrl.toURI());
+                File baseFile = new File(new URI(baseUrl.toString().replace(" ", "%20")));
                 setWatchFolderPath(baseFile.getCanonicalPath());
 
             } catch (URISyntaxException | IOException e)

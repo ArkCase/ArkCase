@@ -1,24 +1,22 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.MainController', ['$scope', 'StoreService', 'UtilService', 'HelperService', 'ConfigService',
-    function ($scope, Store, Util, Helper, ConfigService) {
-        $scope.$on('component-config', applyConfig);
+angular.module('tasks').controller('Tasks.MainController', ['$scope', 'StoreService', 'UtilService', 'ConfigService',
+    function ($scope, Store, Util, ConfigService) {
         $scope.$emit('req-component-config', 'main');
-        $scope.components = null;
-        $scope.config = null;
-
-        function applyConfig(e, componentId, config) {
+        $scope.$on('component-config', function applyConfig(e, componentId, config) {
             if (componentId == 'main') {
                 $scope.config = config;
             }
-        }
-
-        ConfigService.getModule({moduleId: 'tasks'}, function (moduleConfig) {
-            $scope.components = moduleConfig.components;
         });
 
 
-        $scope.$on('task-retrieved', function (e, data) {
+        ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
+            $scope.components = moduleConfig.components;
+            return moduleConfig;
+        });
+
+
+        $scope.$on('task-updated', function (e, data) {
             $scope.taskInfo = data;
         });
 

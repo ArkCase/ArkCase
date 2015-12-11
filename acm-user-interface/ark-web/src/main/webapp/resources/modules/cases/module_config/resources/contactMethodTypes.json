@@ -1,7 +1,23 @@
-{
-  "Home phone"  : "Home phone"
-  ,"Work phone" : "Work phone"
-  ,"Mobile"     : "Mobile"
-  ,"Email"      : "Email"
-  ,"Facebook"   : "Facebook"
-}
+[
+  {
+    "type": "Home phone",
+    "name": "Home phone"
+  },
+  {
+    "type": "Work phone",
+    "name": "Work phone"
+  },
+  {
+    "type": "Mobile",
+    "name": "Mobile"
+  },
+  {
+    "type": "Email",
+    "name": "Email"
+  },
+  {
+    "type": "Facebook",
+    "name": "Facebook"
+  }
+]
+

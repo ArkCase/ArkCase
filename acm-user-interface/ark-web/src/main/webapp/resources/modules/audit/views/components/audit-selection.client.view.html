@@ -1,12 +1,10 @@
 <div ng-controller="Audit.SelectionController">
-    <div class="well-panel">
-        <div class="panel-body">
-            <select class="form-control" ng-model="auditDropdown"
-                    ng-options="option.id as option.name for option in config.auditDropdown">
-            </select>
-            <input class="form-control" ng-model="selectId" type="text" placeholder="{{'audit.navigation.placeholder.inputId' | translate}}">
 
-            <div ng-include="'modules/audit/views/components/audit-datepickers.client.view.html'"></div>
-        </div>
+    <div class="form-group">
+        <select class="form-control" ng-model="auditDropdown"
+                ng-options="option.id as option.name for option in config.auditDropdown">
+        </select>
+
+        <input class="form-control" ng-model="selectId" type="text" placeholder="{{'audit.navigation.placeholder.inputId' | translate}}">
     </div>
 </div>

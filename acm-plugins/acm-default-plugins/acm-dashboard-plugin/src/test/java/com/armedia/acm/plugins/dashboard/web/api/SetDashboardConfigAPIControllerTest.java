@@ -6,7 +6,6 @@ import com.armedia.acm.plugins.dashboard.model.DashboardDto;
 import com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
@@ -26,19 +25,19 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-web-acm-web.xml",
         "classpath:/spring/spring-library-dashboard-plugin-test.xml"
 })
-public class SetDashboardConfigAPIControllerTest extends EasyMockSupport {
+public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
+{
 
     private MockMvc mockMvc;
     private MockHttpSession mockHttpSession;
@@ -56,7 +55,8 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
 
         mockDashboardDao = createMock(DashboardDao.class);
         mockUserDao = createMock(UserDao.class);
@@ -74,12 +74,13 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport {
     }
 
     @Test
-    public void setDashboardConfig() throws Exception {
+    public void setDashboardConfig() throws Exception
+    {
 
         String userId = "ann-acm";
 
         Dashboard dashboard = new Dashboard();
-        dashboard.setDashobardConfig("UPDATE TEST");
+        dashboard.setDashboardConfig("UPDATE TEST");
 
         AcmUser user = new AcmUser();
         user.setUserId(userId);
@@ -133,24 +134,24 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport {
         String userId = "ann-acm";
 
         Dashboard dashboard = new Dashboard();
-        dashboard.setDashobardConfig("UPDATE TEST");
+        dashboard.setDashboardConfig("UPDATE TEST");
 
         AcmUser user = new AcmUser();
         user.setUserId(userId);
 
         DashboardDto dashboardDto = new DashboardDto();
         dashboardDto.setDashboardConfig("UPDATE TEST");
-        
+
         Capture<DashboardDto> savedDashboardDto = new Capture<>();
         Capture<Dashboard> publishedDashboard = new Capture<>();
-        
+
         expect(mockUserDao.findByUserId(userId)).andReturn(user);
         expect(mockDashboardDao.getDashboardConfigForUser(user)).andReturn(dashboard);
-        
+
         // With upgrading spring version, bad JSON is not the problem for entering the execution in the controller
         expect(mockDashboardDao.setDasboardConfigForUser(eq(user), capture(savedDashboardDto))).andThrow(new RuntimeException());
         mockDashboardEventPublisher.publishDashboardEvent(capture(publishedDashboard), eq(mockAuthentication), eq(false), eq(false));
-        
+
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("ann-acm").atLeastOnce();
 
