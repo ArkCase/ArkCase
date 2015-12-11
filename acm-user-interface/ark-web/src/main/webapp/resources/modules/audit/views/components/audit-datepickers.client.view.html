@@ -1,45 +1,46 @@
 <div ng-controller="Audit.DatepickersController">
-    <label>{{'audit.navigation.label.dateFrom' | translate}}
-        <div>
 
-            <p class="input-group">
-                <input type="text"
-                       class="form-control"
-                       datepicker-popup="{{config.datepickerPopupFormat}}"
-                       ng-model="dateFrom"
-                       is-open="opened.openedStart"
-                       close-on-date-selection="true"
-                       show-button-bar="true"
-                       on-open-focus="false"
-                       close-text="{{'audit.datepickers.close' | translate}}"
-                       show-weeks="false"/>
+    {{'audit.navigation.label.dateFrom' | translate}}
+    <div>
+
+        <p class="input-group">
+            <input type="text"
+                   class="form-control"
+                   datepicker-popup="{{config.datepickerPopupFormat}}"
+                   ng-model="dateFrom"
+                   is-open="opened.openedStart"
+                   close-on-date-selection="true"
+                   show-button-bar="true"
+                   on-open-focus="false"
+                   close-text="{{'audit.datepickers.close' | translate}}"
+                   show-weeks="false"/>
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="opened.openedStart = !opened.openedStart">
                         <i class="fa fa-calendar"></i>
                     </button>
                 </span>
-            </p>
-        </div>
-    </label>
-    <label>{{'audit.navigation.label.dateTo' | translate}}
-        <div>
-            <p class="input-group">
-                <input type="text"
-                       class="form-control"
-                       datepicker-popup="{{config.datepickerPopupFormat}}"
-                       ng-model="dateTo"
-                       is-open="opened.openedEnd"
-                       close-on-date-selection="true"
-                       show-button-bar="true"
-                       on-open-focus="false"
-                       close-text="{{'audit.datepickers.close' | translate}}"
-                       show-weeks="false"/>
+        </p>
+    </div>
+
+    {{'audit.navigation.label.dateTo' | translate}}
+    <div>
+        <p class="input-group">
+            <input type="text"
+                   class="form-control"
+                   datepicker-popup="{{config.datepickerPopupFormat}}"
+                   ng-model="dateTo"
+                   is-open="opened.openedEnd"
+                   close-on-date-selection="true"
+                   show-button-bar="true"
+                   on-open-focus="false"
+                   close-text="{{'audit.datepickers.close' | translate}}"
+                   show-weeks="false"/>
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd">
                         <i class="fa fa-calendar"></i>
                     </button>
                 </span>
-            </p>
-        </div>
-    </label>
+        </p>
+    </div>
+
 </div>
