@@ -4,9 +4,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 
-
     <bean id="notificationProperties"
-          class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean" >
+          class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -22,43 +21,46 @@
             </props>
         </property>
     </bean>
-    
-    <bean id="notificationPropertiesConfigurer" class="net.unicon.springframework.addons.properties.ReloadingPropertyPlaceholderConfigurer">
-		<property name="properties" ref="notificationProperties"/>
-	</bean>
-	
-	<!-- Notification Service is defined under $HOME/.acm/spring folder -->
-	
-	<!-- We need these for adding in the Notification Service defined under $HOME/.acm/spring  -->
-	<bean id="notificationUserBatchRun" class="java.lang.Boolean">
-		<constructor-arg value="${notification.user.batch.run}"/>
-	</bean>
-	<bean id="notificationUserBatchSize" class="java.lang.Integer">
-		<constructor-arg value="${notification.user.batch.size}"/>
-	</bean>
-	<bean id="notificationUserBatchFrequency" class="java.lang.Long">
-		<constructor-arg value="${notification.user.batch.frequency}"/>
-	</bean>
-	<bean id="notificationPropertyFileLocation" class="java.lang.String">
-		<constructor-arg value="${user.home}/.acm/notification.properties"/>
-	</bean>
-	<bean id="notificationPurgeDays" class="java.lang.Long">
-		<constructor-arg value="${notification.purge.days}"/>
-	</bean>
+
+    <bean id="notificationPropertiesConfigurer"
+          class="net.unicon.springframework.addons.properties.ReloadingPropertyPlaceholderConfigurer">
+        <property name="properties" ref="notificationProperties"/>
+    </bean>
+
+    <!-- Notification Service is defined under $HOME/.acm/spring folder -->
+
+    <!-- We need these for adding in the Notification Service defined under $HOME/.acm/spring  -->
+    <bean id="notificationUserBatchRun" class="java.lang.Boolean">
+        <constructor-arg value="${notification.user.batch.run}"/>
+    </bean>
+    <bean id="notificationUserBatchSize" class="java.lang.Integer">
+        <constructor-arg value="${notification.user.batch.size}"/>
+    </bean>
+    <bean id="notificationUserBatchFrequency" class="java.lang.Long">
+        <constructor-arg value="${notification.user.batch.frequency}"/>
+    </bean>
+    <bean id="notificationPropertyFileLocation" class="java.lang.String">
+        <constructor-arg value="${user.home}/.acm/notification.properties"/>
+    </bean>
+    <bean id="notificationPurgeDays" class="java.lang.Long">
+        <constructor-arg value="${notification.purge.days}"/>
+    </bean>
 
     <bean id="notificationDao" class="com.armedia.acm.services.notification.dao.NotificationDao"/>
-    <bean id="notificationEventPublisher" class="com.armedia.acm.services.notification.service.NotificationEventPublisher"/>
-    
-    <bean id="notificationToSolrTransformer" class="com.armedia.acm.services.notification.service.NotificationToSolrTransformer">
-    	<property name="notificationDao" ref="notificationDao"/>
+    <bean id="notificationEventPublisher"
+          class="com.armedia.acm.services.notification.service.NotificationEventPublisher"/>
+
+    <bean id="notificationToSolrTransformer"
+          class="com.armedia.acm.services.notification.service.NotificationToSolrTransformer">
+        <property name="notificationDao" ref="notificationDao"/>
     </bean>
-    
+
     <!-- Executors -->
     <bean id="sendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
-		<property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
     <bean id="purgeExecutor" class="com.armedia.acm.services.notification.service.PurgeExecutor">
-    	<property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
     <bean id="noopExecutor" class="com.armedia.acm.services.notification.service.NoopExecutor"/>
 
@@ -69,17 +71,17 @@
     <!-- Senders Definition -->
 
     <!--<bean id="authenticationTokenDao" class="com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao"/>-->
-    <bean id="authenticationTokenDao" class="com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao"/>
+
 
     <bean id="emailNotificationSender" class="com.armedia.acm.services.notification.service.EmailNotificationSender">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="propertyFileManager">
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>
-        <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
+        <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation"/>
         <property name="muleContextManager" ref="muleContextManager"/>
-        <property name="authenticationTokenService" ref="authenticationTokenService" />
-        <property name="authenticationTokenDao" ref="authenticationTokenDao" />
+        <property name="authenticationTokenService" ref="authenticationTokenService"/>
+        <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
     </bean>
 
 </beans>
