@@ -1,3 +1,121 @@
-<div ng-controller="Tasks.NewTaskController">
-    <p>New Task wizard screen goes here</p>
+<!--<div >-->
+<div ng-controller="Tasks.NewTaskController"  class="module-content">
+    <div class="content-body">
+        <div class="module-header">
+            <h3>{{'tasks.newTask.title' | translate}}</h3>
+        </div>
+
+        <div class="row wrapper">
+            <div class="col-sm-6">
+                <button class="btn btn-default btn-sm pull-left" data-toggle="tooltip" id = "chooseAssignee" data-title="Choose assignee">
+                    <i class="fa fa-user"></i>
+                            <span >{{ 'tasks.newTask.assignee.button' | translate }}
+                            </span>
+                </button>
+            </div>
+        </div>
+        <div class="row wrapper">
+            <div class="col-sm-6">
+                <label  class="label">{{ 'tasks.newTask.assignee.label' | translate }}</label>
+                <input type="text" ng-model="config.newTask.data.assignee" class="input-sm form-control" placeholder="{{ 'tasks.new.assignee.placeholder' | translate }}" id="assignee" style="background-color: white;" readonly>
+            </div>
+
+            <div class="col-sm-6">
+                <label  class="label">{{ 'tasks.newTask.associateNumber.label' | translate }}</label>
+                <input type="text" ng-model="config.newTask.data.attachedToObjectName" class="input-sm form-control" placeholder="{{ 'tasks.new.associateNumber.placeholder' | translate }}" id="complaintId">
+            </div>
+        </div>
+
+        <div class="row wrapper">
+            <div class="col-sm-12">
+                <label  class="label">{{ 'tasks.newTask.subject.label' | translate }}</label>
+                <input type="text" ng-model="config.newTask.data.title" class="input-sm form-control" placeholder="{{ 'tasks.newTask.subject.label'  | translate }}" id="subject">
+            </div>
+        </div>
+
+        <div class="row wrapper">
+            <div class="col-sm-4">
+                <label class="label">{{ 'tasks.newTask.taskStartDate.label' | translate }}</label>
+                <div>
+                    <p class="input-group">
+                        <input type="text"
+                               class="form-control"
+                               datepicker-popup="{{config.datepickerPopupFormat}}"
+                               ng-model="config.newTask.data.taskStartDate"
+                               is-open="opened.openedStart"
+                               close-on-date-selection="true"
+                               show-button-bar="true"
+                               on-open-focus="false"
+                               close-text="{{ 'tasks.new.datepicker.close' | translate }}"/>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="opened.openedStart = !opened.openedStart">
+                    <i class="fa fa-calendar"></i>
+                </button>
+            </span>
+                    </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">{{ 'tasks.newTask.status.label' | translate }}
+                    <select ng-model="config.newTask.data.status" ng-options="option.id as option.name for option in config.newTask.status" class="form-control input-sm">
+                        <option value="">{{ 'tasks.newTask.status.placeholder' | translate }}</option>
+                    </select>
+                </label>
+            </div>
+
+        </div>
+
+        <div class="row wrapper">
+            <div class="col-sm-4">
+                <label class="label">{{ 'tasks.newTask.dueDate.label' | translate }}</label>
+                <div>
+                    <p class="input-group">
+                        <input type="text"
+                               class="form-control"
+                               datepicker-popup="{{config.datepickerPopupFormat}}"
+                               ng-model="config.newTask.data.dueDate"
+                               is-open="opened.openedEnd"
+                               close-on-date-selection="true"
+                               show-button-bar="true"
+                               on-open-focus="false"
+                               close-text="{{ 'tasks.newTask.datepicker.close' | translate }}"/>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd">
+                    <i class="fa fa-calendar"></i>
+                </button>
+            </span>
+                    </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">{{ 'tasks.newTask.priority.label' | translate }}
+                    <select ng-model="config.newTask.data.priority" ng-options="option.id as option.name for option in config.newTask.priority" class="form-control input-sm">
+                        <option value="">{{ 'tasks.newTask.priority.placeholder' | translate }}</option>
+                    </select>
+                </label>
+            </div>
+            <div class="col-sm-4">
+                <label class="label">{{ 'tasks.newTask.percentComplete.label' | translate }}</label>
+                <input type="text" ng-model="config.newTask.data.percentComplete" class="input-sm form-control" placeholder="{{ 'tasks.new.percentComplete.label' | translate }}" id="percentComplete">
+            </div>
+        </div>
+        <div class="row wrapper">
+            <div class="col-sm-12">
+                <label class="label">{{ 'tasks.newTask.notes.label' | translate }}</label>
+                <div class="panel-body">
+                    <summernote config="options" ng-model="config.newTask.data.details"></summernote>
+                </div>
+            </div>
+        </div>
+        <div class="row wrapper">
+            <div class="col-sm-6">
+                <button ng-disabled="!config.newTask.data.title || !config.newTask.data.taskStartDate || !config.newTask.data.dueDate" ng-click="saveNewTask" class="btn btn-default btn-sm pull-left" data-toggle="tooltip" id="saveButton" data-title="Save">
+                    <i class="fa fa-user"></i>
+                            <span > {{ 'tasks.newTask.saveButton' | translate }}
+                            </span>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
+<!--</div>-->
