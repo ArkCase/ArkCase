@@ -11,8 +11,10 @@
  */
 angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q','ConfigService', 'LookupService', 'AuditController.BuildUrl', 'UtilService',
 	function($scope, $sce, $q,ConfigService, LookupService, BuildUrl, Util) {
-		//$scope.config = ConfigService.getModule({moduleId: 'audit'});
-		$scope.config = ConfigService.getModuleConfig("audit");
+		var promiseModuleConfig = ConfigService.getModuleConfig("audit").then(function (config) {
+			$scope.config = config;
+			return config;
+		});
 
 		$scope.$on('req-component-config', onConfigRequest);
 		$scope.$on('send-type-id', getObjectValues);
@@ -26,7 +28,7 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q','C
 		$scope.showIframe = showIframe;
 
 		function onConfigRequest(e, componentId) {
-			$scope.config.then(function (config) {
+			promiseModuleConfig.then(function (config) {
 				var componentConfig = _.find(config.components, {id: componentId})
 				$scope.$broadcast('component-config', componentId, componentConfig);
 			});
@@ -74,12 +76,12 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q','C
 		}
 
 		// Retrieves the properties from the acm-reports-server-config.properties file
-		var acmReportsConfig = LookupService.getConfig("acm-reports-server-config");
+		var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
 
 		// Retrieves the properties from the auditPlugin.properties file
-		var auditPlugin = LookupService.getConfig("audit");
+		var promiseAuditConfig = LookupService.getConfig("audit");
 
-		$q.all([acmReportsConfig, auditPlugin])
+		$q.all([promiseServerConfig, promiseAuditConfig])
 			.then(function(data) {
 				$scope.acmReportsProperties = data[0];
 				$scope.auditPluginProperties = data[1];
