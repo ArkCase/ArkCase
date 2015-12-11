@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'ObjectsModelsService', 'Case.InfoService',
-    function ($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, SnowboundService, Authentication, EcmService, ObjectsModelsService, CaseInfoService) {
+angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Object.ModelService', 'Case.InfoService',
+    function ($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, SnowboundService, Authentication, EcmService, ObjectModelService, CaseInfoService) {
         $scope.$emit('req-component-config', 'viewer');
 
         $scope.acmTicket = '';
@@ -59,13 +59,7 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
             .then(function(data) {
                 $scope.acmTicket = data[0].data;
                 $scope.userId = data[1].userId;
-
-                var userListJSONStrings = data[2];
-                $scope.userList = [];
-                _.forEach(userListJSONStrings, function(value) {
-                    $scope.userList.push(JSON.parse(value));
-                });
-
+                $scope.userList = data[2];
                 $scope.ecmFileProperties = data[3];
                 $scope.ecmFile = data[4];
                 $scope.ecmFileEvents = data[5];
@@ -76,7 +70,7 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
                 CaseInfoService.getCaseInfo($scope.ecmFile.container.containerObjectId)
                     .then(function (data) {
                         $scope.caseInfo = data;
-                        $scope.assignee = ObjectsModelsService.getAssignee(data);
+                        $scope.assignee = ObjectModelService.getAssignee(data);
                     });
 
                 // Opens the selected document in the snowbound viewer
