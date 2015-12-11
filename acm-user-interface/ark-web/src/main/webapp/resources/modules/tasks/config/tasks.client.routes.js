@@ -35,6 +35,11 @@ angular.module('tasks').config(['$stateProvider', '$urlRouterProvider',
                 templateUrl: 'modules/tasks/views/components/task-new-task.client.view.html'
             })
 
+            .state('newTaskFromParentObject', {
+                url: '/newTask/:parentType/:parentObject',
+                templateUrl: 'modules/tasks/views/components/task-new-task.client.view.html'
+            })
+
             .state('tasks.details', {
                 url: '/:id/details',
                 templateUrl: 'modules/tasks/views/components/task-details.client.view.html'

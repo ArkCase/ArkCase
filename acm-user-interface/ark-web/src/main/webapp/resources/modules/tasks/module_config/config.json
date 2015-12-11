@@ -498,6 +498,33 @@
           "lookup": "userFullNames"
         }
       ]
+    },
+    {
+      "id" : "newTask",
+      "status" : [{"name":"Active", "id": "Active"}],
+      "priority" : [{"name":"Low", "id": "Low"},
+                    {"name":"Medium", "id": "Medium"},
+                    {"name":"High", "id": "High"},
+                    {"name":"Expedite", "id": "Expedite"}],
+      "datepickerPopupFormat": "MM/dd/yyyy",
+      "data": {
+        "adhocTask" : true,
+        "assignee" : "",
+        "attachedToObjectName" : "",
+        "attachedToObjectType" : "",
+        "businessProcessName" : "",
+        "completed" : "",
+        "details" : "",
+        "dueDate" : "",
+        "percentComplete" : "",
+        "priority" : "",
+        "status" : "",
+        "taskDurationInMillis" : "",
+        "taskFinishedDate" : "",
+        "taskId" : "",
+        "taskStartDate" : "",
+        "title" : ""
+      }
     }
   ]
 }
