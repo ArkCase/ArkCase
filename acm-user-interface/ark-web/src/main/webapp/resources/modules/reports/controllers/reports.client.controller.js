@@ -22,18 +22,21 @@ angular.module('reports').controller('ReportsController', ['$scope', 'ConfigServ
         }
 
         $scope.data = Data.getData();
-        $scope.config = ConfigService.getModuleConfig("reports");
+
+        var promiseModuleConfig = ConfigService.getModuleConfig("reports");
 
         // Retrieves the properties from the acm-reports-server-config.properties file
-        var reportsConfig = LookupService.getConfig("acm-reports-server-config");
+        var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
 
         // Retrieves the properties from the acm-reports.properties file
-        var reports = LookupService.getConfig("acm-reports");
+        var promiseReportConfig = LookupService.getConfig("acm-reports");
 
-        $q.all([reportsConfig, reports, $scope.config])
+        $q.all([promiseServerConfig, promiseReportConfig, promiseModuleConfig])
             .then(function (data) {
                 var reportsConfig = data[0].toJSON();
                 $scope.data.reports = data[1].toJSON();
+                $scope.config = data[2];
+
                 // On some reason reports list contains URL and PORT info
                 delete $scope.data.reports.PENTAHO_SERVER_URL;
                 delete $scope.data.reports.PENTAHO_SERVER_PORT;
