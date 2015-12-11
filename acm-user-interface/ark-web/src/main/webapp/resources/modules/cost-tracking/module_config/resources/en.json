@@ -29,8 +29,8 @@
       "userId": "Username"
     }
   },
-  "costTracking.comp.timesSummary": {
-    "title": "Hours Summary",
+  "costTracking.comp.summary": {
+    "title": "Cost Summary",
     "table.columns": {
       "parentId": "ID",
       "parentNumber": "Parent ID",

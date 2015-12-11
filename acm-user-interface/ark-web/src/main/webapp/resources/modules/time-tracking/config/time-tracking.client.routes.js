@@ -25,19 +25,6 @@ angular.module('time-tracking').config(['$stateProvider',
 				templateUrl: 'modules/time-tracking/views/components/time-tracking-main.client.view.html'
 			})
 
-			//.state('newTimesheet', {
-			//	url: '/newtimesheet',
-			//	templateUrl: 'modules/time-tracking/views/components/time-tracking-new-timesheet.client.view.html'
-			//})
-			//
-			//.state('editTimesheet', {
-			//	url: '/edittimesheet',
-			//	templateUrl: 'modules/time-tracking/views/components/time-tracking-edit-timesheet.client.view.html',
-			//	params: {
-			//		period: null
-			//	}
-			//})
-
 			.state('time-tracking.details', {
 				url: '/:id/details',
 				templateUrl: 'modules/time-tracking/views/components/time-tracking-details.client.view.html'
@@ -48,9 +35,9 @@ angular.module('time-tracking').config(['$stateProvider',
 				templateUrl: 'modules/time-tracking/views/components/time-tracking-person.client.view.html'
 			})
 
-			.state('time-tracking.timesSummary', {
-				url: '/:id/timesSummary',
-				templateUrl: 'modules/time-tracking/views/components/time-tracking-time-summary.client.view.html'
+			.state('time-tracking.summary', {
+				url: '/:id/summary',
+				templateUrl: 'modules/time-tracking/views/components/time-tracking-summary.client.view.html'
 			})
 
 	}

@@ -366,6 +366,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                             , lazy: true
                             , cache: false
                             , components: components
+                            , nodeType: nodeType
                             , nodeId: nodeId
                         });
                     }
@@ -408,6 +409,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                                     key: key + subPart
                                     , title: label
                                     , components: components
+                                    , nodeType: nodeType
                                     , nodeId: nodeId
                                 });
                             }

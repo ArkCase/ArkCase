@@ -1,13 +1,13 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTracking.TimeSummaryController', ['$scope', 'UtilService', 'Helper.UiGridService',
+angular.module('time-tracking').controller('TimeTracking.SummaryController', ['$scope', 'UtilService', 'Helper.UiGridService',
     function ($scope, Util, HelperUiGridService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        $scope.$emit('req-component-config', 'time-summary');
+        $scope.$emit('req-component-config', 'summary');
         $scope.$on('component-config', function (e, componentId, config) {
-            if ('time-summary' == componentId) {
+            if ('summary' == componentId) {
                 gridHelper.setColumnDefs(config);
                 gridHelper.setBasicOptions(config);
             }
