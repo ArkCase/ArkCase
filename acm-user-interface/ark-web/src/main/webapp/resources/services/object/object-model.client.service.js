@@ -123,7 +123,7 @@ angular.module('services').factory('Object.ModelService', ['$q', '$resource', 'U
                 if (Util.isArray(objectInfo.participants)) {
                     var found = _.find(objectInfo.participants, {participantType: "owning group"});
                     if (found) {
-                        found.participantLdapId = assignee;
+                        found.participantLdapId = group;
                     } else {
                         objectInfo.participants.push({
                             participantType: "owning group"
