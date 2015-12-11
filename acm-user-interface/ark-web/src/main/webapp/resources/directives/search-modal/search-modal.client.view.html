@@ -8,6 +8,7 @@
             <div class="modal-search-header">
                 <div class="input-group">
                     <input class="form-control input-md"
+                           autofocus
                            ng-keydown="keyUp($event)"
                            ng-model="searchQuery"
                            placeholder="{{searchPlaceholder}}"
@@ -39,7 +40,7 @@
                     </ul>
                 </div>
 
-                <div class="modal-right">
+                <div class="modal-right well-sm">
                     <div ui-grid="gridOptions"
                          ui-grid-resize-columns
                          ui-grid-pagination
