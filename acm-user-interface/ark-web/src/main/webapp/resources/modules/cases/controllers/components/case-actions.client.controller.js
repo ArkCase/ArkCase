@@ -142,7 +142,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
 
             modalInstance.result.then(function (selectedCase) {
                 if(selectedCase){
-                    alert("fileSelected");
+                    console.log("Code goes here.");
                 }
             }, function () {
                 // Cancel button was clicked

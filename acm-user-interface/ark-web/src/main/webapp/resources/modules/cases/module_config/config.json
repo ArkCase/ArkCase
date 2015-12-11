@@ -805,16 +805,6 @@
       "title": "Calendar",
       "enabled": true,
       "type": "empty"
-    },
-    {
-      "id": "merge",
-      "title": "Merge",
-      "cancel.btn": "Cancel",
-      "merge.btn": "Merge",
-      "search.placeholder": "Search for case file.",
-      "search.btn": "Search",
-      "enabled": true,
-      "clientFacetFilter": "\"Object Type\": CASE_FILE"
     }
   ]
 }
