@@ -56,7 +56,12 @@ import static org.junit.Assert.*;
                 "/spring/spring-library-task.xml",
                 "/spring/spring-library-note.xml",
                 "/spring/spring-library-event.xml",
-                "/spring/spring-library-complaint-plugin-test-mule.xml"
+                "/spring/spring-library-complaint-plugin-test-mule.xml",
+                "/spring/spring-library-forms-configuration.xml",
+                "/spring/spring-library-authentication-token.xml",
+                "/spring/spring-library-plugin-manager.xml",
+                "/spring/spring-library-functional-access-control.xml",
+                "/spring/spring-library-user-login.xml"
         }
 )
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
