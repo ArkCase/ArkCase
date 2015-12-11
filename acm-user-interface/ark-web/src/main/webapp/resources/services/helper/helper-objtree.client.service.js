@@ -8,7 +8,7 @@
  *
  * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/helper/helper-objtree.client.service.js services/helper/helper-objtree.client.service.js}
 
- * Helper.ObjectTreeService provide help to use 'object-tree' directive
+ * Helper.ObjectTreeService provide help to use 'object-tree' directive, and tree object related functions.
  */
 angular.module('services').factory('Helper.ObjectTreeService', ['$resource', '$translate', 'UtilService',
     function ($resource, $translate, Util) {
@@ -176,6 +176,48 @@ angular.module('services').factory('Helper.ObjectTreeService', ['$resource', '$t
             }
         };
 
+
+        /**
+         * @ngdoc method
+         * @name createComponentLinks
+         * @methodOf services:Helper.ObjectTreeService
+         *
+         * @param {Object} config Configuration
+         * @param {number} objType Object Type
+         *
+         * @description
+         * createComponentLinks, used in pages of case, complaint, task, etc., to create component links configuration
+         * based on tree configuration and component configuration.
+         *
+         * @returns {Object} Array of links with items in format of {id: "component ID", title: "Link Title", icon: "link icon"}
+         */
+        Service.createComponentLinks = function (config, objType) {
+            var treeConfig = Util.goodMapValue(config, "tree", {});
+            var componentsConfig = Util.goodMapValue(config, "components", []);
+
+            var componentLinks = [];
+            var foundComponent = _.find(componentsConfig, {id: "main"});
+            if (foundComponent) {
+                componentLinks.push({
+                    id: Util.goodValue(foundComponent.id)
+                    , title: Util.goodValue(foundComponent.title)
+                    , icon: Util.goodValue(foundComponent.icon)
+                });
+            }
+
+            var foundNodeType = _.find(Util.goodMapValue(treeConfig, "nodeTypes", []), {"type": "p/" + objType});
+            _.each(Util.goodMapValue(foundNodeType, "components", []), function (component) {
+                var foundComponent = _.find(componentsConfig, {id: component});
+                if (foundComponent) {
+                    componentLinks.push({
+                        id: Util.goodValue(foundComponent.id)
+                        , title: Util.goodValue(foundComponent.title)
+                        , icon: Util.goodValue(foundComponent.icon)
+                    });
+                }
+            });
+            return componentLinks;
+        }
         return Service;
     }
 ]);
