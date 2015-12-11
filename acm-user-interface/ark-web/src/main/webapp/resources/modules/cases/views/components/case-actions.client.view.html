@@ -3,41 +3,44 @@
         <div class="checkbox">
             <label>
                 <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)">
-                {{'cases.comp.actions.restrict' | translate}}
+                <span translate>cases.comp.actions.restrict</span>
             </label>
         </div>
     </div>
 
     <div class="pull-right">
         <div class="btn-group">
-            <button class="btn btn-sm btn-default" ng-click="createNew()"><i
-                    class="fa fa-edit"></i> {{'cases.comp.actions.new.button' | translate}}
+            <button class="btn btn-sm btn-default" ng-click="createNew()">
+                <i class="fa fa-edit"></i>
+                <span translate>cases.comp.actions.new.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-click="edit(caseInfo)"><i class="fa fa-edit"></i>
-                {{'cases.comp.actions.edit.button' |
-                translate}}
+            <button class="btn btn-sm btn-default" ng-click="edit(caseInfo)">
+                <i class="fa fa-edit"></i>
+                <span translate>cases.comp.actions.edit.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-click="changeStatus(caseInfo)"><i
-                    class="fa fa-edit"></i> {{'cases.comp.actions.status.button' | translate}}
+            <button class="btn btn-sm btn-default" ng-click="changeStatus(caseInfo)">
+                <i class="fa fa-edit"></i>
+                <span translate>cases.comp.actions.status.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-click="reinvestigate(caseInfo)"><i class="fa fa-reply"></i>
-                {{'cases.comp.actions.reinvestigate.button' | translate}}
+            <button class="btn btn-sm btn-default" ng-click="reinvestigate(caseInfo)">
+                <i class="fa fa-reply"></i>
+                <span translate>cases.comp.actions.reinvestigate.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-show="showBtnUnsubscribe" ng-click="unsubscribe(caseInfo)"><i
-                    class="fa fa-bullhorn"></i>
-                {{'cases.comp.actions.unsubscribe.button' | translate}}
+            <button class="btn btn-sm btn-default" ng-show="showBtnUnsubscribe" ng-click="unsubscribe(caseInfo)">
+                <i class="fa fa-bullhorn"></i>
+                <span translate>cases.comp.actions.unsubscribe.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-show="showBtnSubscribe" ng-click="subscribe(caseInfo)"><i
-                    class="fa fa-bullhorn"></i>
-                {{'cases.comp.actions.subscribe.button' | translate}}
+            <button class="btn btn-sm btn-default" ng-show="showBtnSubscribe" ng-click="subscribe(caseInfo)">
+                <i class="fa fa-bullhorn"></i>
+                <span translate>cases.comp.actions.subscribe.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-click="merge()"><i class="fa fa-random"></i>
-                {{'cases.comp.actions.merge.button' |
-                translate}}
+            <button class="btn btn-sm btn-default" ng-click="merge()">
+                <i class="fa fa-random"></i>
+                <span translate>cases.comp.actions.merge.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-click="split()"><i class="fa fa-code-fork"></i>
-                {{'cases.comp.actions.split.button' |
-                translate}}
+            <button class="btn btn-sm btn-default" ng-click="split()">
+                <i class="fa fa-code-fork"></i>
+                <span translate>cases.comp.actions.split.button</span>
             </button>
         </div>
     </div>
