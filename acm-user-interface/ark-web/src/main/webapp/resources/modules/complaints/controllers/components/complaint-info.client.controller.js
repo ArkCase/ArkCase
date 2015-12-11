@@ -52,6 +52,9 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
 
         var previousId = null;
         $scope.$on('complaint-updated', function (e, data) {
+            if (!ComplaintInfoService.validateComplaintInfo(data)) {
+                return;
+            }
             $scope.complaintInfo = data;
             $scope.assignee = ObjectModelService.getAssignee(data);
             $scope.owningGroup = ObjectModelService.getGroup(data);

@@ -1,22 +1,26 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.TasksController', ['$scope', '$state', '$stateParams', '$q', '$translate'
-    , 'UtilService', 'HelperService', 'ConstantService', 'Object.TaskService', 'Task.WorkflowService'
-    , function ($scope, $state, $stateParams, $q, $translate, Util, Helper, Constant, ObjectTaskService, TaskWorkflowService) {
+    , 'UtilService', 'Helper.UiGridService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
+    , function ($scope, $state, $stateParams, $q, $translate, Util, HelperUiGridService, ObjectService, ObjectTaskService, TaskWorkflowService) {
+
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+        var promiseUsers = gridHelper.getUsers();
+        var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
 
         $scope.$emit('req-component-config', 'tasks');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("tasks" == componentId) {
-                Helper.Grid.setColumnDefs($scope, config);
-                Helper.Grid.setBasicOptions($scope, config);
-                Helper.Grid.setExternalPaging($scope, config, $scope.retrieveGridData);
-                Helper.Grid.setUserNameFilter($scope, promiseUsers);
+                gridHelper.setColumnDefs(config);
+                gridHelper.setBasicOptions(config);
+                gridHelper.setExternalPaging(config, $scope.retrieveGridData);
+                gridHelper.setUserNameFilter(promiseUsers);
 
                 promiseMyTasks.then(function (data) {
                     for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                         if ("taskId" == $scope.config.columnDefs[i].name) {
                             $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.object_id_s}}</a>";
-                        } else if (Helper.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
+                        } else if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
                             $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
                                 + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
                                 + ' ng-model="row.entity.acm$_taskOutcome">'
@@ -30,13 +34,8 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
             }
         });
 
-
-        var promiseUsers = Helper.Grid.getUsers($scope);
-
-        var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
-
         $scope.retrieveGridData = function () {
-            ObjectTaskService.queryChildTasks(Constant.ObjectTypes.CASE_FILE
+            ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
                 , $stateParams.id
                 , Util.goodValue($scope.start, 0)
                 , Util.goodValue($scope.pageSize, 10)
@@ -49,7 +48,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                         $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = tasks;
                         $scope.gridOptions.totalItems = data.response.numFound;
-                        Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
+                        gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
 
                         for (var i = 0; i < tasks.length; i++) {
                             var task = tasks[i];
@@ -130,7 +129,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
             );
         };
         $scope.action = function (rowEntity) {
-            console.log("act, rowEntity.id=" + rowEntity.id + ", action=" + rowEntity.acm$_taskOutcome.id);
+            //console.log("act, rowEntity.id=" + rowEntity.id + ", action=" + rowEntity.acm$_taskOutcome.id);
             if ("complete" == rowEntity.acm$_taskOutcome.id) {
                 completeTask(rowEntity);
             } else if ("delete" == rowEntity.acm$_taskOutcome.id) {
@@ -141,7 +140,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         };
         $scope.showUrl = function (event, rowEntity) {
             event.preventDefault();
-            Helper.Grid.showObject($scope, Constant.ObjectTypes.TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
+            gridHelper.showObject(ObjectService.ObjectTypes.TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
         };
 
     }

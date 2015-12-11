@@ -1,16 +1,7 @@
 'use strict';
 
-///**
-// * @ngdoc controller
-// * @name cases.controller:Cases.ViewerController
-// *
-// * @description
-// * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/components/case-viewer.client.controller.js modules/cases/controllers/components/case-viewer.client.controller.js}
-// *
-// * The Viewer Controller
-// */
-angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'ObjectsModelsService', 'Case.InfoService',
-    function ($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, SnowboundService, Authentication, EcmService, ObjectsModelsService, CaseInfoService) {
+angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Object.ModelService', 'Case.InfoService',
+    function ($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, SnowboundService, Authentication, EcmService, ObjectModelService, CaseInfoService) {
         $scope.$emit('req-component-config', 'viewer');
 
         $scope.acmTicket = '';
@@ -29,11 +20,6 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
         $scope.openSnowboundViewer = openSnowboundViewer;
 
         /**
-         //* @ngdoc method
-         //* @name openSnowboundViewer
-         //* @methodOf cases.controller:Cases.ViewerController
-         //*
-         //* @description
           * This method generates the url to open the snowbound viewer
           * with the specified document loaded.
           */
@@ -54,13 +40,13 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
 
         // Obtains the currently logged in user
         //var userInfo = Authentication.queryUserInfo({});
-        var userInfo = Authentication.queryUserInfoNew();
+        var userInfo = Authentication.queryUserInfo();
 
         // Obtains a list of all users in ArkCase
-        var totalUserInfo = LookupService.getUsers({});
+        var totalUserInfo = LookupService.getUsers();
 
         // Retrieves the properties from the ecmFileService.properties file (including Snowbound configuration)
-        var ecmFileConfig = LookupService.getConfig({name: 'ecmFileService'});
+        var ecmFileConfig = LookupService.getConfig("ecmFileService");
 
         // Retrieves the metadata for the file which is being opened in the viewer
         var ecmFileInfo = EcmService.getFile({fileId: $stateParams['id']});
@@ -68,18 +54,12 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
         var ecmFileNotes = EcmService.getFileNotes({fileId: $stateParams['id']});
         var ecmFileParticipants = EcmService.getFileParticipants({fileId: $stateParams['id']});
 
-        $q.all([ticketInfo, userInfo, totalUserInfo.$promise, ecmFileConfig.$promise,
+        $q.all([ticketInfo, userInfo, totalUserInfo, ecmFileConfig,
                 ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileNotes.$promise, ecmFileParticipants.$promise])
             .then(function(data) {
                 $scope.acmTicket = data[0].data;
                 $scope.userId = data[1].userId;
-
-                var userListJSONStrings = data[2];
-                $scope.userList = [];
-                _.forEach(userListJSONStrings, function(value) {
-                    $scope.userList.push(JSON.parse(value));
-                });
-
+                $scope.userList = data[2];
                 $scope.ecmFileProperties = data[3];
                 $scope.ecmFile = data[4];
                 $scope.ecmFileEvents = data[5];
@@ -90,7 +70,7 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
                 CaseInfoService.getCaseInfo($scope.ecmFile.container.containerObjectId)
                     .then(function (data) {
                         $scope.caseInfo = data;
-                        $scope.assignee = ObjectsModelsService.getAssignee(data);
+                        $scope.assignee = ObjectModelService.getAssignee(data);
                     });
 
                 // Opens the selected document in the snowbound viewer

@@ -11,7 +11,7 @@
     },
     {
       "menuId": "topbar",
-      "menuItemURL": "tasks.wizard",
+      "menuItemURL": "newTask",
       "menuItemTitle": "Task",
       "iconClass": "fa fa-check-circle",
       "position": 30
@@ -235,6 +235,14 @@
   },
   "components": [
     {
+      "id": "main",
+      "title": "Overview",
+      "icon": "fa fa-tachometer",
+      "enabled": false,
+      "type": "empty",
+      "editable": false
+    },
+    {
       "id": "info",
       "title": "Info",
       "enabled": false,
@@ -258,18 +266,21 @@
     {
       "id": "details",
       "title": "Details",
+      "icon": "fa fa-info-circle",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "reworkdetails",
       "title": "Rework Details",
+      "icon": "fa fa-repeat",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "docsreview",
       "title": "Documents Under Review",
+      "icon": "fa fa-search-plus",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -316,6 +327,7 @@
     {
       "id": "rejcomments",
       "title": "Reject Comments",
+      "icon": "fa fa-hand-stop-o",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -351,12 +363,14 @@
     {
       "id": "attachments",
       "title": "Attachments",
+      "icon": "fa fa-file",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "notes",
       "title": "Notes",
+      "icon": "fa fa-comments",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -392,6 +406,7 @@
     {
       "id": "workflow",
       "title": "Workflow Overview",
+      "icon": "fa fa-code-fork",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -439,6 +454,7 @@
     {
       "id": "history",
       "title": "History",
+      "icon": "fa fa-bell-o",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -472,6 +488,7 @@
     {
       "id": "signatures",
       "title": "eSignatures",
+      "icon": "fa fa-certificate",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,

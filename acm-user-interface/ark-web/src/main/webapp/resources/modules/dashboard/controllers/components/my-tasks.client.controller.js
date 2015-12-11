@@ -41,7 +41,7 @@ angular.module('dashboard.my-tasks', ['adf.provider'])
                     $scope.gridOptions.paginationPageSizes = config.paginationPageSizes;
                     $scope.gridOptions.paginationPageSize = config.paginationPageSize;
 
-                    Authentication.queryUserInfoNew().then(function (userInfo) {
+                    Authentication.queryUserInfo().then(function (userInfo) {
                         DashboardService.queryMyTasks({userId: userInfo.userId},
                             function (data) {
                                 $scope.gridOptions.data = data;

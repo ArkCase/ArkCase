@@ -5,6 +5,9 @@
   "common.service": {
     "error.invalidData": "Invalid data"
   },
+  "common.frevvo": {
+    "defaultDateFormat": "YYYY-MM-DD"
+  },
 
   "common.service.messageService": {
     "authorizationError": "You are not authorized to take this action"

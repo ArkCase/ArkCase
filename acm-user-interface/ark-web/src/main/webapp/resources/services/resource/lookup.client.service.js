@@ -10,11 +10,16 @@
 
  * LookupService contains functions to lookup data (typically static data).
  */
-angular.module('services').factory('LookupService', ['$resource', 'StoreService', 'UtilService', 'Object.ListService'
-    , function ($resource, Store, Util, ObjectListService) {
+angular.module('services').factory('LookupService', ['$resource', 'StoreService', 'UtilService', 'SearchService'
+    , function ($resource, Store, Util, SearchService) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
 
-            getConfig: {
+            _getConfig: {
+                url: "proxy/arkcase/api/latest/service/config/:name"
+                , method: "GET"
+                , cache: true
+            }
+            , getConfig_tmp: {
                 url: "proxy/arkcase/api/latest/service/config/:name"
                 , method: "GET"
                 , cache: true
@@ -60,6 +65,7 @@ angular.module('services').factory('LookupService', ['$resource', 'StoreService'
             USERS: "AcmUsers"
             , USERS_BASIC: "AcmUsersBasic"
             , USER_FULL_NAMES: "AcmUserFullNames"
+            , CONFIG_MAP: "AcmConfigMap"
         };
         Service.CacheNames = {};
 
@@ -195,7 +201,59 @@ angular.module('services').factory('LookupService', ['$resource', 'StoreService'
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateUsersBasic = function (data) {
-            if (!ObjectListService.validateSolrData(data)) {
+            if (!SearchService.validateSolrData(data)) {
+                return false;
+            }
+            return true;
+        };
+
+        /**
+         * @ngdoc method
+         * @name getConfig
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Query a configuration
+         *
+         * @param {String} name  Config name
+         *
+         * @returns {Object} Promise
+         */
+        Service.getConfig = function (name) {
+            var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
+            var configMap = cacheConfigMap.get();
+            var config = Util.goodMapValue(configMap, name, null);
+            return Util.serviceCall({
+                service: Service._getConfig
+                , param: {name: name}
+                , result: config
+                , onSuccess: function (data) {
+                    if (Service.validateConfig(data, name)) {
+                        config = data;
+                        configMap = configMap || {};
+                        configMap[name] = config;
+                        cacheConfigMap.set(configMap);
+                        return config;
+                    }
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name validateConfig
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Validate config data
+         *
+         * @param {Object} data  Data to be validated
+         * @param {String} name  Data name
+         *
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validateConfig = function (data, name) {
+            if (Util.isEmpty(data)) {
                 return false;
             }
             return true;

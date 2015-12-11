@@ -225,7 +225,8 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              */
             , get: function () {
                 var data = sessionStorage.getItem(this.name);
-                var item = ("null" === data) ? null : JSON.parse(data);
+                var item = Util.goodJsonObj(data, null);
+                //var item = ("null" === data) ? null : JSON.parse(data);
                 return item;
             }
 
@@ -285,7 +286,8 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              */
             , get: function () {
                 var data = localStorage.getItem(this.name);
-                var item = ("null" === data) ? null : JSON.parse(data);
+                var item = Util.goodJsonObj(data, null);
+                //var item = ("null" === data) ? null : JSON.parse(data);
                 return item;
             }
 

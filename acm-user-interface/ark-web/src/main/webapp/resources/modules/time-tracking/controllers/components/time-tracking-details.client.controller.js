@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTracking.DetailsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'CallTimeTrackingService', 'MessageService',
-    function ($scope, $stateParams, $translate, Util, CallTimeTrackingService, MessageService) {
+angular.module('time-tracking').controller('TimeTracking.DetailsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'TimeTracking.InfoService', 'MessageService',
+    function ($scope, $stateParams, $translate, Util, TimeTrackingInfoService, MessageService) {
         $scope.$emit('req-component-config', 'details');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('details' == componentId) {
@@ -15,7 +15,7 @@ angular.module('time-tracking').controller('TimeTracking.DetailsController', ['$
 
         $scope.saveDetails = function() {
             var timesheetInfo = Util.omitNg($scope.timesheetInfo);
-           CallTimeTrackingService.saveTimesheetInfo(timesheetInfo).then(
+           TimeTrackingInfoService.saveTimesheetInfo(timesheetInfo).then(
                 function (timesheetInfo) {
                     MessageService.info($translate.instant("timeTracking.comp.details.informSaved"));
                     return timesheetInfo;

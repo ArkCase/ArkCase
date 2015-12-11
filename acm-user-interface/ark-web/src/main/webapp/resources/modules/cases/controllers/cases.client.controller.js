@@ -1,9 +1,14 @@
 'use strict';
 
-angular.module('cases').controller('CasesController', ['$scope', '$stateParams', '$translate', 'UtilService', 'ConfigService', 'Case.InfoService',
-    function ($scope, $stateParams, $translate, Util, ConfigService, CaseInfoService) {
+angular.module('cases').controller('CasesController', ['$scope', '$stateParams', '$state', '$translate'
+    , 'UtilService', 'ConfigService', 'Case.InfoService', 'ObjectService', 'Helper.ObjectTreeService'
+    , function ($scope, $stateParams, $state, $translate
+        , Util, ConfigService, CaseInfoService, ObjectService, HelperObjectTreeService) {
+
         var promiseGetModuleConfig = ConfigService.getModuleConfig("cases").then(function (config) {
             $scope.config = config;
+            $scope.componentLinks = HelperObjectTreeService.createComponentLinks(config, ObjectService.ObjectTypes.CASE_FILE);
+            $scope.activeLinkId = "main";
             return config;
         });
         $scope.$on('req-component-config', function (e, componentId) {
@@ -17,6 +22,21 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
             $scope.$broadcast('case-updated', caseInfo);
         });
 
+        $scope.$on('req-select-case', function (e, selectedCase) {
+            var components = Util.goodArray(selectedCase.components);
+            $scope.activeLinkId = (1 == components.length) ? components[0] : "main";
+        });
+
+        $scope.getActive = function (linkId) {
+            return ($scope.activeLinkId == linkId) ? "active" : ""
+        };
+
+        $scope.onClickComponentLink = function (linkId) {
+            $scope.activeLinkId = linkId;
+            $state.go('cases.' + linkId, {
+                id: $stateParams.id
+            });
+        };
 
 
         $scope.progressMsg = $translate.instant("cases.progressNoCase");
@@ -29,7 +49,7 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
 
 
         var loadCase = function (id) {
-            if (id) {
+            if (Util.goodPositive(id)) {
                 if ($scope.caseInfo && $scope.caseInfo.id != id) {
                     $scope.caseInfo = null;
                 }

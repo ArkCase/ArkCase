@@ -6,23 +6,14 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/helper/object-objtree.client.service.js services/helper/object-objtree.client.service.js}
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/helper/helper-objtree.client.service.js services/helper/helper-objtree.client.service.js}
 
- * Helper.ObjectTreeService has help functions to use 'object-tree' directive
+ * Helper.ObjectTreeService provide help to use 'object-tree' directive, and tree object related functions.
  */
 angular.module('services').factory('Helper.ObjectTreeService', ['$resource', '$translate', 'UtilService',
     function ($resource, $translate, Util) {
         var Service = {
-            /**
-             * @ngdoc service
-             * @name services:Helper.ObjectTreeService
-             *
-             * @description
-             *
-             * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/common/store.client.service.js services/common/store.client.service.js}
-             *
-             * Tree is used to help 'object-tree' directive.
-             */
+
             /**
              * @ngdoc method
              * @name Tree Constructor
@@ -75,8 +66,7 @@ angular.module('services').factory('Helper.ObjectTreeService', ['$resource', '$t
                         if (that.firstLoad) {
                             if (that.nodeId) {
                                 if (that.scope.treeData) {            //It must be set by CallTasksService.getTaskInfo(), only 1 items in docs[] is expected
-                                    var found = _.find(treeData.docs, {nodeId: that.scope.treeData.docs[0].nodeId});
-                                    //var found = that.findByNodeId(treeData.docs, that.scope.treeData.docs[0].nodeId);
+                                    var found = that.findByNodeId(treeData.docs, that.scope.treeData.docs[0].nodeId);
                                     if (!found) {
                                         var clone = _.clone(treeData.docs);
                                         clone.unshift(that.scope.treeData.docs[0]);
@@ -104,7 +94,8 @@ angular.module('services').factory('Helper.ObjectTreeService', ['$resource', '$t
                     }
                 );
 
-                if (that.firstLoad && that.nodeId) {
+
+                if (that.firstLoad && Util.goodPositive(that.nodeId)) {
                     that.getNodeData(that.nodeId).then(
                         function (objectInfo) {
                             var treeNode = that.makeTreeNode(objectInfo);
@@ -116,8 +107,7 @@ angular.module('services').factory('Helper.ObjectTreeService', ['$resource', '$t
 
                             var treeData = {docs: [], total: 0};
                             if (that.scope.treeData) {            //It must be set by CallTasksService.queryTasksTreeData()
-                                var found = _.find(that.scope.treeData.docs, {nodeId: that.nodeId});
-                                //var found = that.findByNodeId(that.scope.treeData.docs, that.nodeId);
+                                var found = that.findByNodeId(that.scope.treeData.docs, that.nodeId);
                                 if (!found) {
                                     treeData.docs = _.clone(that.scope.treeData.docs);
                                     treeData.total = that.scope.treeData.total;
@@ -151,8 +141,7 @@ angular.module('services').factory('Helper.ObjectTreeService', ['$resource', '$t
                                 , nodeToolTip: $translate.instant("common.directive.objectTree.errorNode.toolTip")
                             };
                             if (that.scope.treeData) {            //It must be set by CallTasksService.queryTasksTreeData()
-                                var found = _.find(that.scope.treeData.docs, {nodeId: that.nodeId});
-                                //var found = that.findByNodeId(that.scope.treeData.docs, that.nodeId);
+                                var found = that.findByNodeId(that.scope.treeData.docs, that.nodeId);
                                 if (!found) {
                                     treeData.docs = _.clone(that.scope.treeData.docs);
                                     treeData.total = that.scope.treeData.total;
@@ -173,18 +162,62 @@ angular.module('services').factory('Helper.ObjectTreeService', ['$resource', '$t
                     );
                 }
             }
-            //, findByNodeId: function (docs, nodeId) {
-            //    var found = null;
-            //    for (var i = 0; i < docs.length; i++) {
-            //        if (docs[i].nodeId == nodeId) {
-            //            found = docs[i];
-            //            break;
-            //        }
-            //    }
-            //    return found;
-            //}
+
+            , findByNodeId: function (docs, nodeId) {
+                //return _.find(docs, {nodeId: nodeId});   //somehow, _.find() does not always work
+                var found = null;
+                for (var i = 0; i < docs.length; i++) {
+                    if (docs[i].nodeId == nodeId) {
+                        found = docs[i];
+                        break;
+                    }
+                }
+                return found;
+            }
         };
 
+
+        /**
+         * @ngdoc method
+         * @name createComponentLinks
+         * @methodOf services:Helper.ObjectTreeService
+         *
+         * @param {Object} config Configuration
+         * @param {number} objType Object Type
+         *
+         * @description
+         * createComponentLinks, used in pages of case, complaint, task, etc., to create component links configuration
+         * based on tree configuration and component configuration.
+         *
+         * @returns {Object} Array of links with items in format of {id: "component ID", title: "Link Title", icon: "link icon"}
+         */
+        Service.createComponentLinks = function (config, objType) {
+            var treeConfig = Util.goodMapValue(config, "tree", {});
+            var componentsConfig = Util.goodMapValue(config, "components", []);
+
+            var componentLinks = [];
+            var foundComponent = _.find(componentsConfig, {id: "main"});
+            if (foundComponent) {
+                componentLinks.push({
+                    id: Util.goodValue(foundComponent.id)
+                    , title: Util.goodValue(foundComponent.title)
+                    , icon: Util.goodValue(foundComponent.icon)
+                });
+            }
+
+            var foundNodeType = _.find(Util.goodMapValue(treeConfig, "nodeTypes", []), {"type": "p/" + objType});
+            _.each(Util.goodMapValue(foundNodeType, "components", []), function (component) {
+                var foundComponent = _.find(componentsConfig, {id: component});
+                if (foundComponent) {
+                    componentLinks.push({
+                        id: Util.goodValue(foundComponent.id)
+                        , title: Util.goodValue(foundComponent.title)
+                        , icon: Util.goodValue(foundComponent.icon)
+                    });
+                }
+            });
+            return componentLinks;
+        }
         return Service;
     }
 ]);

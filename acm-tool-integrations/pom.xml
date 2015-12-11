@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.0.42</version>
+        <version>3.0.43</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -33,6 +33,7 @@
         <module>acm-snowbound-integration</module>
         <module>acm-ephesoft</module>
         <module>acm-pdf-utilities</module>
+        <module>acm-form-configuration</module>
     </modules>
 
 </project>

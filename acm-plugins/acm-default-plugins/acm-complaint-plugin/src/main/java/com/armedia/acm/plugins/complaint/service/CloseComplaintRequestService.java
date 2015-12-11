@@ -67,7 +67,7 @@ public class CloseComplaintRequestService
 
         if (shouldFullInvestigationBeOpened)
         {
-            CaseFile fullInvestigation = openFullInvestigation(updatedComplaint, user);
+            CaseFile fullInvestigation = openFullInvestigation(updatedComplaint, user, null);
             log.debug("Opened a full investigation: " + fullInvestigation.getCaseNumber());
 
             // Add CaseFile as Reference to the Complaint
@@ -206,9 +206,13 @@ public class CloseComplaintRequestService
         return "add_exising_case".equals(updatedRequest.getDisposition().getDispositionType());
     }
 
-    private CaseFile openFullInvestigation(Complaint updatedComplaint, String userId) throws PipelineProcessException
+    public CaseFile openFullInvestigation(Complaint updatedComplaint, String userId, CaseFile caseFile) throws PipelineProcessException
     {
-        CaseFile caseFile = new CaseFile();
+        if (caseFile == null)
+        {
+            caseFile = new CaseFile();
+        }
+
         caseFile.setStatus("ACTIVE");
         caseFile.setCaseType(updatedComplaint.getComplaintType());
 
@@ -289,7 +293,7 @@ public class CloseComplaintRequestService
         return c;
     }
 
-    private void addReferenceToComplaint(Complaint complaint, CaseFile caseFile)
+    public void addReferenceToComplaint(Complaint complaint, CaseFile caseFile)
     {
         if (complaint != null && caseFile != null)
         {

@@ -119,7 +119,8 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
                     uiRoute: '/' + menuObj.menuItemURL,
                     isPublic: true,
                     position: menuObj.position || 0,
-                    iconClass: menuObj.iconClass
+                    iconClass: menuObj.iconClass,
+                    permissionAction: menuObj.permissionAction || 'noAction'
                 });
             }
         };

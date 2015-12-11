@@ -135,4 +135,11 @@
             <column name="cm_seq_name" value="acm_cost"></column>
         </insert>
     </changeSet>
+
+	<!-- adding discriminator column, needed for extensibility -->
+	<changeSet id="10-acm_costsheet-add-discriminator-column-extensibility" author="riste.tutureski">
+		<addColumn tableName="acm_costsheet">
+			<column name="cm_class_name" type="VARCHAR(400)"/>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

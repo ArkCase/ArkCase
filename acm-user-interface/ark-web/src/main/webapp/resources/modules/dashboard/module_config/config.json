@@ -10,27 +10,45 @@
       "position": 0
     }
   ],
-
   "components": [
+    {
+      "id": "news",
+      "title": "News Widget",
+      "url": "https://query.yahooapis.com/v1/public/yql",
+      "query": "select * from xml where url = '$1'",
+      "format": "json"
+    },
+    {
+      "id": "weather",
+      "title": "Weather Widget",
+      "APPID": "672e193bbf022bdc749986f7be4c0364",
+      "units": "imperial"
+    },
     {
       "id": "myCases",
       "title": "My Cases Widget",
       "enableFiltering": false,
-      "paginationPageSizes": [25, 50, 75],
-      "paginationPageSize": 25,
+      "paginationPageSizes": [
+        5,
+        10,
+        25
+      ],
+      "paginationPageSize": 5,
       "columnDefs": [
         {
-          "name": "object_id_s",
+          "name": "name",
           "displayName": "dashboard.widgets.myCases.table.header.caseId",
           "headerCellFilter": "translate",
           "enableSorting": true,
+          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s)\">{{COL_FIELD}}</a></div>",
           "width": 130
         },
         {
-          "name": "client_name_s",
-          "displayName": "dashboard.widgets.myCases.table.header.client",
+          "name": "title_parseable",
+          "displayName": "dashboard.widgets.myCases.table.header.title",
           "headerCellFilter": "translate",
-          "enableSorting": true
+          "enableSorting": true,
+          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}</a></div>"
         },
         {
           "name": "status_lcs",
@@ -40,32 +58,37 @@
           "width": 150
         },
         {
-          "name": "priority_s",
+          "name": "priority_lcs",
           "displayName": "dashboard.widgets.myCases.table.header.priority",
           "headerCellFilter": "translate",
           "enableSorting": true,
           "width": 70
         }
       ]
-
     },
     {
       "id": "myTasks",
       "title": "My Tasks Widget",
       "enableFiltering": false,
-      "paginationPageSizes": [25, 50, 75],
-      "paginationPageSize": 25,
+      "paginationPageSizes": [
+        5,
+        10,
+        25
+      ],
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "taskId",
           "displayName": "dashboard.widgets.myTasks.table.header.taskId",
           "headerCellFilter": "translate",
+          "cellTemplate:": "<div><a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}</a></div>",
           "width": 75
         },
         {
           "name": "title",
           "displayName": "dashboard.widgets.myTasks.table.header.title",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate:": "<div><a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}</a></div>"
         },
         {
           "name": "priority",
@@ -93,7 +116,6 @@
         }
       ]
     },
-
     {
       "id": "casesByQueue",
       "title": "Cases By Queue",

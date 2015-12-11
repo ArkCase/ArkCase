@@ -21,7 +21,8 @@ angular.module('reports').controller('Reports.StateController', ['$scope',
 
                 $scope.$watchCollection('data.reportSelected', function (newValue, oldValue) {
                     if (newValue) {
-                        if ($scope.data.reportSelected == $scope.config.resetCaseStateValue) {
+                        $scope.data.reportSelected = newValue;
+                        if($scope.config.resetCaseStateValues.indexOf($scope.data.reportSelected) > -1){
                             $scope.data.caseStateSelected = '';
                         }
                     }

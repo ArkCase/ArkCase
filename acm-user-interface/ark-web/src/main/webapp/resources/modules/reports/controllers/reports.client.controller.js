@@ -14,16 +14,23 @@ angular.module('reports').controller('ReportsController', ['$scope', 'ConfigServ
     function ($scope, ConfigService, LookupService, BuildUrl, $q, Data) {
 
         $scope.$on('req-component-config', onConfigRequest);
+        function onConfigRequest(e, componentId) {
+            $scope.config.then(function (config) {
+                var componentConfig = _.find(config.components, {id: componentId});
+                $scope.$broadcast('component-config', componentId, componentConfig);
+            });
+        }
+
         $scope.data = Data.getData();
-        $scope.config = ConfigService.getModule({moduleId: 'reports'});
+        $scope.config = ConfigService.getModuleConfig("reports");
 
         // Retrieves the properties from the acm-reports-server-config.properties file
-        var reportsConfig = LookupService.getConfig({name: 'acm-reports-server-config'});
+        var reportsConfig = LookupService.getConfig("acm-reports-server-config");
 
         // Retrieves the properties from the acm-reports.properties file
-        var reports = LookupService.getConfig({name: 'acm-reports'});
+        var reports = LookupService.getConfig("acm-reports");
 
-        $q.all([reportsConfig.$promise, reports.$promise, $scope.config.$promise])
+        $q.all([reportsConfig, reports, $scope.config])
             .then(function (data) {
                 var reportsConfig = data[0].toJSON();
                 $scope.data.reports = data[1].toJSON();
@@ -40,12 +47,5 @@ angular.module('reports').controller('ReportsController', ['$scope', 'ConfigServ
         $scope.generateReport = function () {
             $scope.reportUrl = BuildUrl.getUrl($scope.data);
         };
-
-        function onConfigRequest(e, componentId) {
-            $scope.config.$promise.then(function (config) {
-                var componentConfig = _.find(config.components, {id: componentId});
-                $scope.$broadcast('component-config', componentId, componentConfig);
-            });
-        }
     }
 ]);
