@@ -13,17 +13,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-acm-encryption.xml"
 })
-public class AcmCryptoUtilsImplTest {
+public class AcmCryptoUtilsImplTest
+{
 
     private String passwordToBeEncrypted;
     private String userPassword;
@@ -32,21 +29,24 @@ public class AcmCryptoUtilsImplTest {
     private AcmCryptoUtils cryptoUtils;
 
     @Before
-    public void setUp() {
+    public void setUp()
+    {
         passwordToBeEncrypted = "password";
         userPassword = "userPassword";
         md5Hex = DigestUtils.md5Hex(userPassword);
     }
 
     @Test
-    public void testEncryptData() throws Exception {
+    public void testEncryptData() throws Exception
+    {
         byte[] encrypted = cryptoUtils.encryptData(md5Hex.getBytes(), passwordToBeEncrypted.getBytes(), true);
 
         assertNotNull(encrypted);
     }
 
     @Test
-    public void testDecryptData() throws Exception {
+    public void testDecryptData() throws Exception
+    {
         byte[] encrypted = cryptoUtils.encryptData(md5Hex.getBytes(), passwordToBeEncrypted.getBytes(), true);
 
         assertNotNull(encrypted);
@@ -58,7 +58,8 @@ public class AcmCryptoUtilsImplTest {
     }
 
     @Test
-    public void testPGPDecryptionValidPassPhrase() throws IOException, AcmEncryptionBadKeyOrDataException {
+    public void testPGPDecryptionValidPassPhrase() throws IOException, AcmEncryptionBadKeyOrDataException
+    {
         Resource encryptedFile = new ClassPathResource("encrypted.bin");
         assertTrue(encryptedFile.exists());
 
@@ -70,7 +71,8 @@ public class AcmCryptoUtilsImplTest {
     }
 
     @Test(expected = AcmEncryptionBadKeyOrDataException.class)
-    public void testPGPDecryptionInvalidPassPhrase() throws IOException, AcmEncryptionBadKeyOrDataException {
+    public void testPGPDecryptionInvalidPassPhrase() throws IOException, AcmEncryptionBadKeyOrDataException
+    {
         Resource encryptedFile = new ClassPathResource("encrypted.bin");
         assertTrue(encryptedFile.exists());
 

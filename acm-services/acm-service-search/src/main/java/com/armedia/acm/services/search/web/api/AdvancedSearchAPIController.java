@@ -18,8 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 
 @Controller
-@RequestMapping( { "/api/v1/plugin/search", "/api/latest/plugin/search"} )
-public class AdvancedSearchAPIController {
+@RequestMapping({"/api/v1/plugin/search", "/api/latest/plugin/search"})
+public class AdvancedSearchAPIController
+{
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private ExecuteSolrQuery executeSolrQuery;
@@ -32,15 +33,11 @@ public class AdvancedSearchAPIController {
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
             Authentication authentication
-    ) throws MuleException {
-        if ( log.isDebugEnabled() ) {
-            log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
-        }
-
-        // if the query ends in a *, it has to be quoted, or Solr will not find anything somehow.
-        if ( query.endsWith("*") )
+    ) throws MuleException
+    {
+        if (log.isDebugEnabled())
         {
-            query = "\"" + query + "\"";
+            log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
         }
 
         return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort);

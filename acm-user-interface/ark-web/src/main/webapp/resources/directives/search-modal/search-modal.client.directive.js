@@ -1,22 +1,31 @@
 'use strict';
+/**
+ * @ngdoc directive
+ * @name global.directive:searchModal
+ * @restrict E
+ *
+ * @description
+ *
+ *{@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/directives/search-modal/search-modal.client.directive.js directives/search-modal/search-modal.client.directive.js}
+ *
+ * The "Search" modal with faceted search functionality
+ *
+ * @param {String} header - label for the header of the modal box
+ * @param {String} search - label for the search button
+ * @param {String} cancel - label for the cancel button
+ * @param {String} ok - label for the add button
+ * @param {String} searchPlaceholder - label for the input placeholder
+ * @param {Object} filter - filter required to send to the faceted search by default (e.g. for client : "\"Object Sub Type\":CLIENT")
+ * @param {Object} config - config of the parent scope used mostly for the UI-grid and to retrieve other params
+ * @param {Object} modalInstance - current modalInstance in the parentScope, required to pass data when modal closes with "Add"
+ **/
 
-angular.module('directives').directive('searchModal', ['SearchService', 'Search.QueryBuilderService',
-    function (SearchService, SearchQueryBuilder) {
+
+angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'Search.QueryBuilderService',
+    function ($q, SearchService, SearchQueryBuilder) {
         return {
             restrict: 'E',              //match only element name
             scope: {
-                /**
-                 * directive parameters supplied by the parent scope
-                 * @param header - label for the header of the modal box
-                 * @param search - label for the search button
-                 * @param cancel - label for the cancel button
-                 * @param ok - label for the add button
-                 * @param searchPlaceholder - label for the input placeholder
-                 * @param filter - filter required to send to the faceted search by default (e.g. for client : "\"Object Sub Type\":CLIENT")
-                 * @param config - config of the parent scope used mostly for the UI-grid and to retrieve other params
-                 * @param modalInstance - current modalInstance in the parentScope, required to pass data when modal closes with "Add"
-                 **/
-
                 header: '@',            //@ : text binding (read-only and only strings)
                 search: '@',
                 cancel: '@',
@@ -28,12 +37,12 @@ angular.module('directives').directive('searchModal', ['SearchService', 'Search.
             },
 
             link: function (scope) {    //dom operations
-                scope.facets=[];
+                scope.facets = [];
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
-                scope.queryExistingItems = function (){
-                    var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*",scope.filters,scope.pageSize,scope.start);
-                    if(query){
+                scope.queryExistingItems = function () {
+                    var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start);
+                    if (query) {
                         SearchService.queryFilteredSearch({
                                 query: query
                             },
@@ -45,54 +54,72 @@ angular.module('directives').directive('searchModal', ['SearchService', 'Search.
                     }
                 };
 
-                function updateFacets(facets){
-                    if(facets){
-                        if(scope.facets.length){
-                            scope.facets.splice(0,scope.facets.length)
+                scope.queryTypeahead = function (typeaheadQuery) {
+                    typeaheadQuery = typeaheadQuery.replace('*', '');
+                    var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery + '*', scope.filters, 10, 0);
+                    var deferred = $q.defer();
+                    if (query) {
+                        SearchService.queryFilteredSearch({
+                            query: query
+                        }, function (res) {
+                            var result = _.pluck(res.response.docs, 'name');
+                            deferred.resolve(result);
+                        });
+                    }
+                    return deferred.promise;
+                };
+
+                function updateFacets(facets) {
+                    if (facets) {
+                        if (scope.facets.length) {
+                            scope.facets.splice(0, scope.facets.length)
                         }
-                        _.forEach(facets, function(value, key) {
-                            if(value){
-                                scope.facets.push({"name": key, "fields":value});
+                        _.forEach(facets, function (value, key) {
+                            if (value) {
+                                scope.facets.push({'name': key, 'fields': value});
                             }
                         });
                     }
                 }
 
-                scope.selectFacet = function (checked, facet, field){
-                    if(checked){
-                        if(scope.filters){
+                scope.selectFacet = function (checked, facet, field) {
+                    if (checked) {
+                        if (scope.filters) {
                             scope.filters += '&fq="' + facet + '":' + field;
                         }
-                        else{
+                        else {
+                            scope.filters=""
                             scope.filters += 'fq="' + facet + '":' + field;
                         }
                         scope.queryExistingItems();
-                    }else{
-                        if(scope.filters.indexOf('&fq="' + facet + '":' + field) > -1){
+                    } else {
+                        if (scope.filters.indexOf('&fq="' + facet + '":' + field) > -1) {
                             scope.filters = scope.filters.split('&fq="' + facet + '":' + field).join('');
                         }
-                        else if(scope.filters.indexOf('fq="' + facet + '":' + field) > -1){
-                            scope.filters='';
+                        else if (scope.filters.indexOf('fq="' + facet + '":' + field) > -1) {
+                            scope.filters = '';
                         }
                         scope.queryExistingItems();
                     }
-                }
+                };
 
-                scope.keyDown = function (event) {
+                scope.keyUp = function (event) {
+                    // Remove wildcard
+                    scope.searchQuery = scope.searchQuery.replace('*', '');
                     if (event.keyCode == 13 && scope.searchQuery) {
                         scope.queryExistingItems();
                     }
                 };
 
-                scope.addExistingItem = function() {
+                scope.addExistingItem = function () {
                     //when the modal is closed, the parent scope gets
                     //the selectedItem via the two-way binding
                     scope.modalInstance.close(scope.selectedItem);
-                }
+                };
 
-                scope.close = function() {
+                scope.close = function () {
                     scope.modalInstance.dismiss('cancel')
-                }
+                };
 
                 //prepare the UI-grid
                 if (scope.config()) {
@@ -123,9 +150,9 @@ angular.module('directives').directive('searchModal', ['SearchService', 'Search.
                                 scope.queryExistingItems();
                             });
                         }
-                    }
-                    if(scope.gridOptions){
-                        if(scope.filter){
+                    };
+                    if (scope.gridOptions) {
+                        if (scope.filter) {
                             scope.filters = 'fq=' + scope.filter;
                         }
                     }

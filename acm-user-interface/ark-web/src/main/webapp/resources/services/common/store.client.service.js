@@ -13,8 +13,6 @@
 angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
     function ($rootScope, Util) {
         var Store = {
-            rootMap: $rootScope._james
-
             /**
              * @ngdoc service
              * @name StoreService.Variable
@@ -42,7 +40,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              * var v2 = new Variable("MyData", "first");    //initialize value to "first"
              */
-            , Variable: function (name, initValue) {
+            Variable: function (name, initValue) {
                 this.name = name;
                 $rootScope._storeVariableMap = $rootScope._storeVariableMap || {};
                 if (undefined != initValue) {
@@ -227,7 +225,8 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              */
             , get: function () {
                 var data = sessionStorage.getItem(this.name);
-                var item = ("null" === data) ? null : JSON.parse(data);
+                var item = Util.goodJsonObj(data, null);
+                //var item = ("null" === data) ? null : JSON.parse(data);
                 return item;
             }
 
@@ -287,7 +286,8 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              */
             , get: function () {
                 var data = localStorage.getItem(this.name);
-                var item = ("null" === data) ? null : JSON.parse(data);
+                var item = Util.goodJsonObj(data, null);
+                //var item = ("null" === data) ? null : JSON.parse(data);
                 return item;
             }
 

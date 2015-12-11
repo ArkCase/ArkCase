@@ -1,11 +1,38 @@
-{
-  "assignee"      : "Assignee"
-  ,"co-owner"     : "Co-Owner"
-  ,"supervisor"   : "Supervisor"
-  ,"owning group" : "Owning Group"
-  ,"approver"     : "Approver"
-  ,"collaborator" : "Collaborator"
-  ,"follower"     : "Follower"
-  ,"reader"       : "Reader"
-  ,"No Access"    : "No Access"
-}
+[
+  {
+    "type": "assignee",
+    "name": "Assignee"
+  },
+  {
+    "type": "co-owner",
+    "name": "Co-Owner"
+  },
+  {
+    "type": "supervisor",
+    "name": "Supervisor"
+  },
+  {
+    "type": "owning group",
+    "name": "Owning Group"
+  },
+  {
+    "type": "approver",
+    "name": "Approver"
+  },
+  {
+    "type": "collaborator",
+    "name": "Collaborator"
+  },
+  {
+    "type": "follower",
+    "name": "Follower"
+  },
+  {
+    "type": "reader",
+    "name": "Reader"
+  },
+  {
+    "type": "No Access",
+    "name": "No Access"
+  }
+]

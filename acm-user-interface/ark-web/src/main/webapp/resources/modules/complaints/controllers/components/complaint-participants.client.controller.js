@@ -1,16 +1,18 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.ParticipantsController', ['$scope', '$stateParams', '$q', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'ComplaintsService', 'LookupService',
-    function ($scope, $stateParams, $q, Store, Util, Validator, Helper, ComplaintsService, LookupService) {
-        var z = 1;
-        return;
-        var deferParticipantData = new Store.Variable("deferComplaintParticipantData");    // used to hold grid data before grid config is ready
+angular.module('complaints').controller('Complaints.ParticipantsController', ['$scope', '$stateParams', '$q'
+    , 'StoreService', 'UtilService', 'Helper.UiGridService', 'Helper.ConfigService'
+    , 'Complaint.InfoService', 'LookupService', 'Object.LookupService'
+    , function ($scope, $stateParams, $q, Store, Util, HelperUiGridService, HelperConfigService
+        , ComplaintInfoService, LookupService, ObjectLookupService) {
 
-        var promiseConfig = Helper.requestComponentConfig($scope, "participants", function (config) {
-            Helper.Grid.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
-            Helper.Grid.setColumnDefs($scope, config);
-            Helper.Grid.setBasicOptions($scope, config);
-            Helper.Grid.addGridApiHandler($scope, function (gridApi) {
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
+        var promiseConfig = HelperConfigService.requestComponentConfig($scope, "participants", function (config) {
+            gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.addGridApiHandler(function (gridApi) {
                 $scope.gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
                     if (newValue == oldValue) {
                         return;
@@ -19,7 +21,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                     //
                     // Fix participant names selection
                     //
-                    if (Helper.Lookups.PARTICIPANT_TYPES === colDef.lookup) {
+                    if (HelperUiGridService.Lookups.PARTICIPANT_TYPES === colDef.lookup) {
                         if ("*" === newValue) {
                             rowEntity.acm$_participantNames = [
                                 {id: "*", name: "*"}
@@ -48,7 +50,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                 //$scope.gridOptions.enableCellEdit = true;
                 //$scope.gridOptions.enableCellEditOnFocus = true;
                 for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                    if (Helper.Lookups.PARTICIPANT_TYPES == $scope.config.columnDefs[i].lookup) {
+                    if (HelperUiGridService.Lookups.PARTICIPANT_TYPES == $scope.config.columnDefs[i].lookup) {
                         $scope.gridOptions.columnDefs[i].enableCellEdit = true;
                         $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                         $scope.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
@@ -57,7 +59,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                         $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
-                    } else if (Helper.Lookups.PARTICIPANT_NAMES == $scope.config.columnDefs[i].lookup) {
+                    } else if (HelperUiGridService.Lookups.PARTICIPANT_NAMES == $scope.config.columnDefs[i].lookup) {
                         $scope.gridOptions.columnDefs[i].enableCellEdit = true;
                         $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                         $scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
@@ -67,6 +69,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                 }
 
 
+                var deferParticipantData = new Store.Variable("deferComplaintParticipantData");    // used to hold grid data before grid config is ready
                 var complaintInfo = deferParticipantData.get();
                 if (complaintInfo) {
                     updateGridData(complaintInfo);
@@ -76,74 +79,21 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
         });
 
 
-        var cacheParticipantTypes = new Store.SessionData(Helper.SessionCacheNames.PARTICIPANT_TYPES);
-        var participantTypes = cacheParticipantTypes.get();
-        var promiseTypes = Util.serviceCall({
-            service: LookupService.getParticipantTypes
-            , result: participantTypes
-            , onSuccess: function (data) {
-                if (Validator.validateParticipantTypes(data)) {
-                    participantTypes = [{type: "*", name: "*"}];
-                    Util.forEachStripNg(data, function (v, k) {
-                        participantTypes.push({type: k, name: v});
-                    });
-                }
-                cacheParticipantTypes.set(participantTypes);
-                return participantTypes;
-            }
-        }).then(
+        var promiseTypes = ObjectLookupService.getParticipantTypes().then(
             function (participantTypes) {
                 $scope.participantTypes = participantTypes;
                 return participantTypes;
             }
         );
 
-
-        var cacheParticipantUsers = new Store.SessionData(Helper.SessionCacheNames.PARTICIPANT_USERS);
-        var participantUsers = cacheParticipantUsers.get();
-        var promiseUsers = Util.serviceCall({
-            service: LookupService.getUsersBasic
-            , result: participantUsers
-            , onSuccess: function (data) {
-                if (Validator.validateSolrData(data)) {
-                    participantUsers = [];
-                    _.each(data.response.docs, function (doc) {
-                        var user = {};
-                        user.id = Util.goodValue(doc.object_id_s, 0);
-                        user.name = Util.goodValue(doc.name);
-                        participantUsers.push(user);
-
-                    });
-                    cacheParticipantUsers.set(participantUsers);
-                    return participantUsers;
-                }
-            }
-        }).then(
+        var promiseUsers = LookupService.getUsersBasic().then(
             function (participantUsers) {
                 $scope.participantUsers = participantUsers;
                 return participantUsers;
             }
         );
 
-        var cacheParticipantGroups = new Store.SessionData(Helper.SessionCacheNames.PARTICIPANT_GROUPS);
-        var participantGroups = cacheParticipantGroups.get();
-        var promiseGroups = Util.serviceCall({
-            service: LookupService.getGroups
-            , result: participantGroups
-            , onSuccess: function (data) {
-                if (Validator.validateSolrData(data)) {
-                    participantGroups = [];
-                    _.each(data.response.docs, function (doc) {
-                        var group = {};
-                        group.id = Util.goodValue(doc.object_id_s, 0);
-                        group.name = Util.goodValue(doc.name);
-                        participantGroups.push(group);
-                    });
-                    cacheParticipantGroups.set(participantGroups);
-                    return participantGroups;
-                }
-            }
-        }).then(
+        var promiseGroups = ObjectLookupService.getGroups().then(
             function (participantGroups) {
                 $scope.participantGroups = participantGroups;
                 return participantGroups;
@@ -166,16 +116,19 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                 });
                 $scope.gridOptions.data = participants;
                 $scope.complaintInfo = data;
-                Helper.Grid.hidePagingControlsIfAllDataShown($scope, participants.length);
+                gridHelper.hidePagingControlsIfAllDataShown(participants.length);
             });
         };
-        $scope.$on('complaint-retrieved', function (e, data) {
-            if (Validator.validateComplaint(data)) {
-                if (data.id == $stateParams.id) {
-                    updateGridData(data);
-                } else {                      // condition when data comes before state is routed and config is not set
-                    deferParticipantData.set(data);
-                }
+        $scope.$on('complaint-updated', function (e, data) {
+            if (!ComplaintInfoService.validateComplaintInfo(data)) {
+                return;
+            }
+
+            if (data.complaintId == $stateParams.id) {
+                updateGridData(data);
+            } else {                      // condition when data comes before state is routed and config is not set
+                var deferParticipantData = new Store.Variable("deferComplaintParticipantData");
+                deferParticipantData.set(data);
             }
         });
 
@@ -184,19 +137,11 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
             var lastPage = $scope.gridApi.pagination.getTotalPages();
             $scope.gridApi.pagination.seek(lastPage);
             $scope.gridOptions.data.push({});
-            Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.data.length);
+            gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
         };
         $scope.updateRow = function (rowEntity) {
             var complaintInfo = Util.omitNg($scope.complaintInfo);
-            Util.serviceCall({
-                service: ComplaintsService.save
-                , data: complaintInfo
-                , onSuccess: function (data) {
-                    if (Validator.validateComplaint(data)) {
-                        return data;
-                    }
-                }
-            }).then(
+            ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                 function (complaintSaved) {
                     //if participant is newly added, fill incomplete values with the latest
                     if (Util.isEmpty(rowEntity.id)) {
@@ -214,20 +159,12 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
             );
         };
         $scope.deleteRow = function (rowEntity) {
-            Helper.Grid.deleteRow($scope, rowEntity);
+            gridHelper.deleteRow(rowEntity);
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row
                 var complaintInfo = Util.omitNg($scope.complaintInfo);
-                Util.serviceCall({
-                    service: ComplaintsService.save
-                    , data: complaintInfo
-                    , onSuccess: function (data) {
-                        if (Validator.validateComplaint(data)) {
-                            return data;
-                        }
-                    }
-                });
+                ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
 
         };

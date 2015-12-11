@@ -7,4 +7,84 @@
         <property name="pluginName" value="Config Service Plugin"/>
     </bean>
 
+    <bean id="addressTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/addressTypes.json"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="aliasTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/aliasTypes.json"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="contactMethodTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/contactMethodTypes.json"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="correspondenceFormsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/correspondenceForms.json"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="fileTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/fileTypes.json"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="objectTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/objectTypes.json"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="organizationTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/organizationTypes.json"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="participantTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/participantTypes.json"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="personTitlesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/personTitles.json"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="securityTagTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/securityTagTypes.json"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
 </beans>

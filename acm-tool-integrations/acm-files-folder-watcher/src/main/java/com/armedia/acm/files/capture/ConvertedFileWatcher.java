@@ -164,7 +164,7 @@ public class ConvertedFileWatcher implements FileListener, ApplicationEventPubli
             try
             {
                 URL baseUrl = baseFolder.getURL();
-                File baseFile = new File(baseUrl.toURI());
+                File baseFile = new File(new URI(baseUrl.toString().replace(" ", "%20")));
                 setBaseFolderPath(baseFile.getCanonicalPath());
 
             } catch (URISyntaxException | IOException e)

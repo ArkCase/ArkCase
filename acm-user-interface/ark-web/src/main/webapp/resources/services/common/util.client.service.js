@@ -13,48 +13,59 @@
 
 //angular.module('services').factory('UtilService', ['$q', '$window', 'ngBootbox', 'LookupService',
 //    function ($q, $window, $ngBootbox, LookupService) {
-angular.module('services').factory('UtilService', ['$q', '$window', 'LookupService',
-    function ($q, $window, LookupService) {
+angular.module('services').factory('UtilService', ['$q'
+    , function ($q) {
         var Util = {
-
-            //
-            // Constants are moving to HelperService. Do not add new constant here
-            //
-            //Constant: {
-            //    OBJTYPE_CASE_FILE: "CASE_FILE"
-            //    , OBJTYPE_COMPLAINT: "COMPLAINT"
-            //    , OBJTYPE_TASK: "TASK"
-            //    , OBJTYPE_TIMESHEET: "TIMESHEET"
-            //    , OBJTYPE_COSTSHEET: "COSTSHEET"
-            //    , OBJTYPE_FILE: "FILE"
-            //
-            //    , LOOKUP_USER_FULL_NAMES: "userFullNames"
-            //    , LOOKUP_PERSON_TYPES: "personTypes"
-            //    , LOOKUP_PARTICIPANT_TYPES: "participantTypes"
-            //    , LOOKUP_PARTICIPANT_NAMES: "participantNames"
-            //    , LOOKUP_TASK_OUTCOMES: "taskOutcomes"
-            //    , LOOKUP_CONTACT_METHODS_TYPES: "contactMethodTypes"
-            //    , LOOKUP_ORGANIZATION_TYPES: "organizationTypes"
-            //    , LOOKUP_ADDRESS_TYPES: "addressTypes"
-            //    , LOOKUP_ALIAS_TYPES: "aliasTypes"
-            //    , LOOKUP_SECURITY_TAG_TYPES: "securityTagTypes"
-            //}
 
             /**
              * @ngdoc method
              * @name goodValue
              * @methodOf services.service:UtilService
              *
-             * @param {Object} val An object, including value
+             * @param {Object} val An object, including string, number and boolean
              * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to ""
              *
              * @description
-             * This function check if 'val' is empty. Returns it only it is not empty. Else 'replacement' is used.
+             * This function check if 'val' is empty. Returns it only it is not empty; else 'replacement' is used.
              */
             goodValue: function (val, replacement) {
                 var replacedWith = (undefined === replacement) ? "" : replacement;
                 return this.isEmpty(val) ? replacedWith : val;
             }
+
+            /**
+             * @ngdoc method
+             * @name goodPositive
+             * @methodOf services.service:UtilService
+             *
+             * @param {Number} val A number
+             * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to 0
+             *
+             * @description
+             * This function returns itself only it is a positive number; else 'replacement' is used.
+             */
+            , goodPositive: function (val, replacement) {
+                var replacedWith = (undefined === replacement) ? 0 : replacement;
+                var rc = replacedWith;
+                if (!this.isEmpty(val)) {
+                    if (0 < val) {
+                        rc = val;
+                    }
+                }
+                return rc;
+            }
+
+            /**
+             * @ngdoc method
+             * @name goodArray
+             * @methodOf services.service:UtilService
+             *
+             * @param {Array} val An array
+             * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to []
+             *
+             * @description
+             * This function returns itself only it is a positive number; else 'replacement' is used.
+             */
             ,goodArray: function (val, replacement) {
                 var replacedWith = (undefined === replacement) ? [] : replacement;
                 return this.isArray(val) ? val : replacedWith;
@@ -71,17 +82,17 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
              * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to ""
              *
              * @description
-             * This function check if value of given map with given key is empty. Returns the value only it is not empty. Else 'replacement' is used.
+             * This function check if value of given map with given key is empty. Returns the value only it is not empty; else 'replacement' is used.
              *
              * Example:
              *
              * var emp = {name: "John",
              *   id: {
-             *       ssn: "123-45-6789"
+             *       ssn: "123-45-6789",
              *       driveLicence: "ABCD1234"
-             *  }
+             *  },
              *   phone: [
-             *       {type: "home", number: "555-555-5555"}
+             *       {type: "home", number: "555-555-5555"},
              *       {type: "cell", number: "555-555-5556"}
              *       ]
              *   }
@@ -155,6 +166,35 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                 }
             }
 
+
+            /**
+             * @ngdoc method
+             * @name goodJsonObj
+             * @methodOf services.service:UtilService
+             *
+             * @param {Object} str A JSON as string
+             * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to {}
+             *
+             * @description
+             * This function check if value of given string is a valid JSON. Returns JSON object only the string is a valid JSON; else 'replacement' is used.
+             *
+             * Example:
+             *
+             * var emp = '{name: "John",
+             *   id: {
+             *       ssn: "123-45-6789",
+             *       driveLicence: "ABCD1234"
+             *  },
+             *   phone: [
+             *       {type: "home", number: "555-555-5555"},
+             *       {type: "cell", number: "555-555-5556"}
+             *       ]
+             *   }
+             *
+             * var empStr = '{"name":"John","id":{"ssn":"123-45-6589","driveLicence":"ABCD1234"},"phone":[{"type":"home","number":"555-55-5555"},{"type":"cell","number":"555-55-5556"}]}';
+             * var good = UtilService.goodJsonObj(empStr);                       //good should be same as emp
+             * var bad  =  UtilService.goodJsonObj("{some bad JSON: str]");      //bad should be {}
+             */
             //todo: consider using lodash imppl
             //function parseLodash(str){
             //    return _.attempt(JSON.parse.bind(null, str));
@@ -267,16 +307,18 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
              */
             , serviceCall: function (arg) {
                 var d = $q.defer();
-                var onSuccess = function (successData) {
+                var callbacks = {};
+                callbacks.onSuccess = function (successData) {
                     var rc = successData;
                     if (arg.onSuccess) {
                         rc = arg.onSuccess(successData);
                         if (undefined == rc) {
                             if (arg.onInvalid) {
-                                d.reject(arg.onInvalid(successData));
+                                rc = arg.onInvalid(successData);
                             } else {
-                                d.reject("Validation failure");
+                                rc = Util.goodMapValue(successData, "error", "Validation failure");
                             }
+                            callbacks.onError(rc);
                         } else {
                             d.resolve(rc);
                         }
@@ -285,12 +327,15 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                     }
                     return rc;
                 };
-                var onError = function (errorData) {
+                callbacks.onError = function (errorData) {
                     var rc = errorData;
                     if (arg.onError) {
                         rc = arg.onError(errorData);
                     }
                     d.reject(rc);
+
+                    //todo: show error in UI
+                    console.log("service call error:" + rc);
                     return rc;
                 };
 
@@ -303,9 +348,9 @@ angular.module('services').factory('UtilService', ['$q', '$window', 'LookupServi
                     var data = arg.data;
 
                     if (data) {
-                        service(param, data, onSuccess, onError);
+                        service(param, data, callbacks.onSuccess, callbacks.onError);
                     } else {
-                        service(param, onSuccess, onError);
+                        service(param, callbacks.onSuccess, callbacks.onError);
                     }
                 }
                 return d.promise;

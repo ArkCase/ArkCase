@@ -8,6 +8,7 @@ angular.module('subscriptions').controller('Subscriptions.FacetedSearchControlle
                 if (componentId == 'subscriptionsFacetedSearch') {
                     $scope.config = config;
                     $scope.filter = config.filter;
+                    $scope.searchQuery = '*';
                 }
             }
         }

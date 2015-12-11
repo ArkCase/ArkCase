@@ -8,6 +8,7 @@ angular.module('tags').controller('Tags.FacetedSearchController', ['$scope',
                 if (componentId == 'tagsFacetedSearch') {
                     $scope.config = config;
                     $scope.filter = config.filter;
+                    $scope.searchQuery = '*';
                 }
             }
         }

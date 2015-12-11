@@ -1,20 +1,26 @@
 'use strict';
 
-angular.module('cases').controller('Cases.TasksController', ['$scope', '$stateParams', '$q', '$translate', 'StoreService', 'UtilService', 'ValidationService', 'HelperService', 'LookupService', 'CasesService',
-    function ($scope, $stateParams, $q, $translate, Store, Util, Validator, Helper, LookupService, CasesService) {
+angular.module('cases').controller('Cases.TasksController', ['$scope', '$state', '$stateParams', '$q', '$translate'
+    , 'UtilService', 'Helper.UiGridService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
+    , function ($scope, $state, $stateParams, $q, $translate, Util, HelperUiGridService, ObjectService, ObjectTaskService, TaskWorkflowService) {
+
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+        var promiseUsers = gridHelper.getUsers();
+        var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
+
 		$scope.$emit('req-component-config', 'tasks');
         $scope.$on('component-config', function (e, componentId, config) {
             if ("tasks" == componentId) {
-                Helper.Grid.setColumnDefs($scope, config);
-                Helper.Grid.setBasicOptions($scope, config);
-                Helper.Grid.setExternalPaging($scope, config, $scope.retrieveGridData);
-                Helper.Grid.setUserNameFilter($scope, promiseUsers);
+                gridHelper.setColumnDefs(config);
+                gridHelper.setBasicOptions(config);
+                gridHelper.setExternalPaging(config, $scope.retrieveGridData);
+                gridHelper.setUserNameFilter(promiseUsers);
 
-                promiseMyTasks.promise.then(function (data) {
+                promiseMyTasks.then(function (data) {
                     for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                         if ("taskId" == $scope.config.columnDefs[i].name) {
                             $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.object_id_s}}</a>";
-                        } else if (Helper.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
+                        } else if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
                             $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
                                 + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
                                 + ' ng-model="row.entity.acm$_taskOutcome">'
@@ -28,67 +34,21 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
             }
         });
 
-
-        var promiseUsers = Helper.Grid.getUsers($scope);
-
-        var promiseMyTasks = $q.defer();
-        Helper.getUserInfo().then(function (data) {
-            var userId = data.userId;
-
-            var cacheMyTasks = new Store.CacheFifo(Helper.CacheNames.MY_TASKS);
-            var cacheKey = $scope.currentId;
-            var myTasks = cacheMyTasks.get(cacheKey);
-            Util.serviceCall({
-                service: CasesService.queryMyTasks
-                , param: {user: userId}
-                , result: myTasks
-                , onSuccess: function (data) {
-                    if (Validator.validateMyTasks(data)) {
-                        myTasks = _.map(data, _.partialRight(_.pick, "taskId", "adhocTask", "completed", "status", "availableOutcomes"));
-                        //
-                        //Above lodash functions equivalent to the following:
-                        //
-                        //$scope.myTasks = [];
-                        //for (var i = 0; i < arr.length; i++) {
-                        //    var task = {};
-                        //    task.taskId = Util.goodValue(arr[i].taskId);
-                        //    task.adhocTask = Util.goodValue(arr[i].adhocTask);
-                        //    task.completed = Util.goodValue(arr[i].completed);
-                        //    task.status = Util.goodValue(arr[i].status);
-                        //    task.availableOutcomes = Util.goodArray(arr[i].availableOutcomes);
-                        //    $scope.myTasks.push(task);
-                        //}
-                        cacheMyTasks.put(cacheKey, myTasks);
-                        return myTasks;
-                    }
-                }
-            }).then(
-                function (myTasks) {
-                    $scope.myTasks = myTasks;
-                    promiseMyTasks.resolve(myTasks);
-                    return myTasks;
-                }
-                , function (error) {
-                    promiseMyTasks.reject(error);
-                    return error;
-                }
-            );
-
-        });
-
-
-        $scope.currentId = $stateParams.id;
         $scope.retrieveGridData = function () {
-            CasesService.queryTasks(Helper.Grid.withPagingParams($scope, {
-                id: $scope.currentId
-            }), function (data) {
-                if (Validator.validateSolrData(data)) {
+            ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
+                , $stateParams.id
+                , Util.goodValue($scope.start, 0)
+                , Util.goodValue($scope.pageSize, 10)
+                , Util.goodValue($scope.sort.by)
+                , Util.goodValue($scope.sort.dir)
+            ).then(
+                function (data) {
                     $q.all([promiseUsers, promiseMyTasks]).then(function () {
                         var tasks = data.response.docs;
                         $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = tasks;
                         $scope.gridOptions.totalItems = data.response.numFound;
-                        Helper.Grid.hidePagingControlsIfAllDataShown($scope, $scope.gridOptions.totalItems);
+                        gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
 
                         for (var i = 0; i < tasks.length; i++) {
                             var task = tasks[i];
@@ -123,43 +83,28 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                             }
                         }
                     }); //end $q
+
+                    return data;
                 }
-            })
+            );
         };
 
         $scope.addNew = function () {
-            alert("TODO: Launch task wizard");
+            $state.go("tasks.wizard");
         };
 
         var completeTask = function (rowEntity) {
-            return Util.serviceCall({
-                service: CasesService.completeTask
-                , param: {taskId: rowEntity.id}
-                , data: {}
-            }).then(
-                function (successData) {
+            TaskWorkflowService.completeTask(rowEntity.id).then(
+                function (taskInfo) {
                     rowEntity.acm$_taskActionDone = true;
-                    rowEntity.status_s = "COMPLETE";
-                    return successData;
+                    rowEntity.status_s = TaskWorkflowService.WorkflowStatus.COMPLETE;
+                    return taskInfo;
                 }
             );
-
-            //CasesService.completeTask({taskId: rowEntity.id}, {}
-            //    , function (successData) {
-            //        rowEntity.acm$_taskActionDone = true;
-            //        rowEntity.status_s = "COMPLETE";
-            //    }
-            //    , function (errorData) {
-            //    }
-            //);
         };
         var deleteTask = function (rowEntity) {
-            return Util.serviceCall({
-                service: CasesService.deleteTask
-                , param: {taskId: rowEntity.id}
-                , data: {}
-            }).then(
-                function (successData) {
+            TaskWorkflowService.deleteTask(rowEntity.id).then(
+                function (taskInfo) {
                     rowEntity.acm$_taskActionDone = true;
                     var tasks = Util.goodArray($scope.gridOptions.data);
                     for (var i = 0; i < tasks.length; i++) {
@@ -168,44 +113,20 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
                             break;
                         }
                     }
-                    return successData;
+                    return taskInfo;
                 }
             );
-            //CasesService.deleteTask({taskId: rowEntity.id}, {}
-            //    , function (successData) {
-            //        rowEntity.acm$_taskActionDone = true;
-            //        var tasks = Util.goodArray($scope.gridOptions.data);
-            //        for (var i = 0; i < tasks.length; i++) {
-            //            if (tasks[i].id == rowEntity.id) {
-            //                tasks.splice(i, 1);
-            //                break;
-            //            }
-            //        }
-            //    }
-            //    , function (errorData) {
-            //    }
-            //);
         };
         var completeTaskWithOutcome = function (rowEntity) {
-            var task = Util.omitNg(rowEntity);
-            return Util.serviceCall({
-                service: CasesService.completeTaskWithOutcome
-                , data: task
-            }).then(
+            var task = Util.omitNg(rowEntity);       //todo: need to convert taskSolr to taskInfo
+            var outcome = "fixme";
+            TaskWorkflowService.completeTaskWithOutcome(task, outcome).then(
                 function (successData) {
                     rowEntity.acm$_taskActionDone = true;
-                    rowEntity.status_s = "COMPLETE";
+                    rowEntity.status_s = TaskWorkflowService.WorkflowStatus.COMPLETE;
                     return successData;
                 }
             );
-            //CasesService.completeTaskWithOutcome({}, task
-            //    , function (successData) {
-            //        rowEntity.acm$_taskActionDone = true;
-            //        rowEntity.status_s = "COMPLETE";
-            //    }
-            //    , function (errorData) {
-            //    }
-            //);
         };
         $scope.action = function (rowEntity) {
             console.log("act, rowEntity.id=" + rowEntity.id + ", action=" + rowEntity.acm$_taskOutcome.id);
@@ -216,10 +137,10 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$statePa
             } else {
                 completeTaskWithOutcome(rowEntity);
             }
-        }
+        };
         $scope.showUrl = function (event, rowEntity) {
             event.preventDefault();
-            Helper.Grid.showObject($scope, Helper.ObjectTypes.TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
+            gridHelper.showObject(ObjectService.ObjectTypes.TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
         };
 
 	}

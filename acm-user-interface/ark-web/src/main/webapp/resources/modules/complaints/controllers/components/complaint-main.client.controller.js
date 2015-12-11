@@ -2,21 +2,20 @@
 
 angular.module('complaints').controller('Complaints.MainController', ['$scope', 'ConfigService',
     function ($scope, ConfigService) {
-        var z = 1;
-        return;
-        $scope.$on('component-config', applyConfig);
         $scope.$emit('req-component-config', 'main');
-        $scope.components = null;
-        $scope.config = null;
-
-        function applyConfig(e, componentId, config) {
+        $scope.$on('component-config', function applyConfig(e, componentId, config) {
             if (componentId == 'main') {
                 $scope.config = config;
             }
-        }
-
-        ConfigService.getModule({moduleId: 'complaints'}, function (moduleConfig) {
-            $scope.components = moduleConfig.components;
         });
+
+
+        ConfigService.getModuleConfig("complaints").then(function (moduleConfig) {
+            $scope.components = moduleConfig.components;
+            return moduleConfig;
+        });
+        //ConfigService.getModule({moduleId: 'complaints'}, function (moduleConfig) {
+        //    $scope.components = moduleConfig.components;
+        //});
     }
 ]);

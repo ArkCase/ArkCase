@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.casefile.service;
 
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-import com.armedia.acm.services.participants.model.AcmParticipantPrivilege;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.junit.Before;
@@ -19,9 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-import java.util.Calendar;
-import java.util.Date;
 
 import static org.junit.Assert.*;
 
@@ -50,9 +46,9 @@ public class CaseFileAccessControlRulesTest
         dtconf.setInputType(DecisionTableInputType.XLS);
         kbuilder.add(ResourceFactory.newInputStreamResource(xls.getInputStream()), ResourceType.DTABLE, dtconf);
 
-        if ( kbuilder.hasErrors() )
+        if (kbuilder.hasErrors())
         {
-            for (KnowledgeBuilderError error : kbuilder.getErrors() )
+            for (KnowledgeBuilderError error : kbuilder.getErrors())
             {
                 log.error("Error building rules: " + error);
             }
@@ -79,12 +75,14 @@ public class CaseFileAccessControlRulesTest
 
         workingMemory.execute(caseFile);
 
-        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().size());
+        assertEquals(2, caseFile.getParticipants().get(0).getPrivileges().size());
 
-        AcmParticipantPrivilege priv = caseFile.getParticipants().get(0).getPrivileges().get(0);
+        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream().
+                filter(app -> app.getAccessType().equals("deny") && app.getObjectAction().equals("read")).count());
 
-        assertEquals("deny", priv.getAccessType());
-        assertEquals("read", priv.getObjectAction());
+        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream().
+                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());
+
     }
 
     @Test
@@ -101,12 +99,13 @@ public class CaseFileAccessControlRulesTest
 
         workingMemory.execute(caseFile);
 
-        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().size());
+        assertEquals(2, caseFile.getParticipants().get(0).getPrivileges().size());
 
-        AcmParticipantPrivilege priv = caseFile.getParticipants().get(0).getPrivileges().get(0);
+        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream().
+                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("read")).count());
 
-        assertEquals("grant", priv.getAccessType());
-        assertEquals("read", priv.getObjectAction());
+        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream().
+                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());
     }
 
 

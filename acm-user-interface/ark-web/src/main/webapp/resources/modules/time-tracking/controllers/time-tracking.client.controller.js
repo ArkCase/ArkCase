@@ -9,9 +9,9 @@
 // *
 // * The Time Tracking module main controller
 // */
-angular.module('time-tracking').controller('TimeTrackingController', ['$scope', '$stateParams', '$translate', 'CallConfigService', 'TimeTrackingService', 'CallTimeTrackingService', 'ValidationService', 'UtilService',
-	function($scope, $stateParams, $translate, CallConfigService, TimeTrackingService, CallTimeTrackingService, Validator, Util) {
-		var promiseGetModuleConfig = CallConfigService.getModuleConfig("time-tracking").then(function (config) {
+angular.module('time-tracking').controller('TimeTrackingController', ['$scope', '$stateParams', '$translate', 'ConfigService', 'TimeTracking.InfoService', 'UtilService',
+	function ($scope, $stateParams, $translate, ConfigService, TimeTrackingInfoService, Util) {
+		var promiseGetModuleConfig = ConfigService.getModuleConfig("time-tracking").then(function (config) {
 			$scope.config = config;
 			return config;
 		});
@@ -38,11 +38,11 @@ angular.module('time-tracking').controller('TimeTrackingController', ['$scope', 
 				$scope.progressMsg = $translate.instant("timeTracking.progressLoading") + " " + id + "...";
 
 
-				CallTimeTrackingService.getTimeTrackingInfo(id).then(
+				TimeTrackingInfoService.getTimeTrackingInfo(id).then(
 					function (timesheetInfo) {
 						$scope.progressMsg = null;
 						$scope.timesheetInfo = timesheetInfo;
-						$scope.$broadcast('timesheet-retrieved', timesheetInfo);
+						$scope.$broadcast('timesheet-updated', timesheetInfo);
 						return timesheetInfo;
 					}
 					, function (errorData) {

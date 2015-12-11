@@ -30,8 +30,8 @@
  </file>
  </example>
  */
-angular.module('directives').directive('permission', ['$q', 'PermissionsService',
-    function ($q, PermissionsService) {
+angular.module('directives').directive('permission', ['$q', '$log', 'PermissionsService',
+    function ($q, $log, PermissionsService) {
         return {
             priority: 100,
             restrict: 'A',
@@ -75,30 +75,32 @@ angular.module('directives').directive('permission', ['$q', 'PermissionsService'
                     function success(enabled) {
 
                         if (enabled === false) {
-                            // Hide element if
                             if (permissionAction == 'hide') {
                                 element.css({'display': 'none'});
+                            } else if (permissionAction == 'show') {
+                                element.css({'display': ''});
                             } else {
                                 element.attr('disabled', true);
                             }
                             element.attr('permission-disabled', true);
                         } else {
-                            // Hide element if
                             if (permissionAction == 'hide') {
                                 element.css({'display': ''});
+                            } else if (permissionAction == 'show') {
+                                element.css({'display': 'none'});
                             } else {
                                 element.attr('disabled', false);
                             }
                             element.attr('permission-disabled', false);
                         }
                     }, function error() {
-                        debugger;
+                        $log.error('Can\'t get permission info for action ' + actionName);
                     }
                 );
         };
 
         function onElementClick(e) {
-            if (e.data.element.attr('permission-disabled') ==='true') {
+            if (e.data.element.attr('permission-disabled') === 'true') {
                 e.stopImmediatePropagation();
                 e.preventDefault();
             }

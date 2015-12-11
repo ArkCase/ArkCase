@@ -1,5 +1,14 @@
-{
-  "Non-profit"     : "Non-profit"
-  ,"Government"    : "Government"
-  ,"Corporation"   : "Corporation"
-}
+[
+  {
+    "type": "Non-profit",
+    "name": "Non-profit"
+  },
+  {
+    "type": "Government",
+    "name": "Government"
+  },
+  {
+    "type": "Corporation",
+    "name": "Corporation"
+  }
+]

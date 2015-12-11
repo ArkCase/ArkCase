@@ -8,6 +8,7 @@ angular.module('notifications').controller('Notifications.FacetedSearchControlle
                 if (componentId == 'notificationsFacetedSearch') {
                     $scope.config = config;
                     $scope.filter = config.filter;
+                    $scope.searchQuery = '*';
                 }
             }
         }

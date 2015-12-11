@@ -7,7 +7,14 @@
       "menuItemURL": "cases",
       "menuItemTitle": "Case Files",
       "iconClass": "fa fa-folder",
-      "position": 40
+      "position": 50
+    },
+    {
+      "menuId": "topbar",
+      "menuItemURL": "frevvo-new-case",
+      "menuItemTitle": "Case",
+      "iconClass": "fa fa-folder",
+      "position": 20
     }
   ],
   "tree": {
@@ -100,9 +107,9 @@
           "references",
           "history",
           "correspondence",
-          "calendar",
           "time",
-          "cost"
+          "cost",
+          "calendar"
         ]
       },
       {
@@ -169,13 +176,6 @@
         ]
       },
       {
-        "type": "p/CASE_FILE/calendar",
-        "label": "Calendar",
-        "components": [
-          "calendar"
-        ]
-      },
-      {
         "type": "p/CASE_FILE/time",
         "label": "Time",
         "components": [
@@ -187,6 +187,13 @@
         "label": "Cost",
         "components": [
           "cost"
+        ]
+      },
+      {
+        "type": "p/CASE_FILE/calendar",
+        "label": "Calendar",
+        "components": [
+          "calendar"
         ]
       }
     ]

@@ -1,26 +1,45 @@
 <div ng-controller="Audit.DatepickersController">
-    <section id="datepickerSection">
-        <label>{{'audit.navigation.label.dateFrom' | translate}}</label>
+    <label>{{'audit.navigation.label.dateFrom' | translate}}
         <div>
-            <input
-                    type="date"
-                    ng-model="dateFrom"
-                    class="form-control"
-                    datepicker-popup
-                    value="{{dateFrom}}"
-                    is-open="opened.openedStart"
-                    />
+
+            <p class="input-group">
+                <input type="text"
+                       class="form-control"
+                       datepicker-popup="{{config.datepickerPopupFormat}}"
+                       ng-model="dateFrom"
+                       is-open="opened.openedStart"
+                       close-on-date-selection="true"
+                       show-button-bar="true"
+                       on-open-focus="false"
+                       close-text="{{'audit.datepickers.close' | translate}}"
+                       show-weeks="false"/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="opened.openedStart = !opened.openedStart">
+                        <i class="fa fa-calendar"></i>
+                    </button>
+                </span>
+            </p>
         </div>
-        <label>{{'audit.navigation.label.dateTo' | translate}} </label>
+    </label>
+    <label>{{'audit.navigation.label.dateTo' | translate}}
         <div>
-            <input
-                    type="date"
-                    ng-model="dateTo"
-                    class="form-control"
-                    datepicker-popup
-                    value="{{dateTo}}"
-                    is-open="opened.openedEnd"
-                    />
+            <p class="input-group">
+                <input type="text"
+                       class="form-control"
+                       datepicker-popup="{{config.datepickerPopupFormat}}"
+                       ng-model="dateTo"
+                       is-open="opened.openedEnd"
+                       close-on-date-selection="true"
+                       show-button-bar="true"
+                       on-open-focus="false"
+                       close-text="{{'audit.datepickers.close' | translate}}"
+                       show-weeks="false"/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd">
+                        <i class="fa fa-calendar"></i>
+                    </button>
+                </span>
+            </p>
         </div>
-    </section>
+    </label>
 </div>

@@ -23,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.regex.Pattern;
 
 /**
@@ -111,7 +112,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
     {
         try
         {
-            File parentFolder = new File(folder.getURL().toURI());
+            File parentFolder = new File(new URI(folder.toString().replace(" ", "%20")));
             File workingFile = new File(parentFolder, file.getName());
 
             FileUtils.moveFile(file, workingFile);

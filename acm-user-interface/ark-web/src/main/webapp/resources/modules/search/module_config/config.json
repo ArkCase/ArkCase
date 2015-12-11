@@ -8,7 +8,7 @@
             "menuItemURL": "search",
             "menuItemTitle": "Search",
             "iconClass": "fa fa-search",
-            "position": 30
+            "position": 70
         }
         
     ],
@@ -30,7 +30,7 @@
                     "name": "name",
                     "displayName": "search.comp.grid.columns.name",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.name}}>{{row.entity.name}}</a>"
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity.object_type_s, row.entity.object_id_s)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.name}}>{{row.entity.name}}</a>"
                 },
                 {
                     "name": "object_type_s",
@@ -43,7 +43,7 @@
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "parent",
+                    "name": "parent_number_lcs",
                     "displayName": "search.comp.grid.columns.parent",
                     "headerCellFilter": "translate"
                 },
@@ -64,7 +64,7 @@
                 20,
                 50
             ],
-            "paginationPageSize": 10,
+            "paginationPageSize": 20,
             "start": 0,
             "filter": "",
             "filterName": ""
