@@ -239,7 +239,6 @@
       "id": "people",
       "title": "People",
       "icon": "fa fa-user",
-      "icon": "fa fa-file",
       "className": "com.armedia.acm.plugins.person.model.Person",
       "enabled": true,
       "type": "grid",
