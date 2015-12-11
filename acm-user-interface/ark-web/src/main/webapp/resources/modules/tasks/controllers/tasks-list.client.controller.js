@@ -18,9 +18,10 @@ angular.module('tasks').controller('TasksListController', ['$scope', '$state', '
                 return TaskInfoService.getTaskInfo(taskId);
             }
             , makeTreeNode: function (taskInfo) {
+                var adhocTask = Util.goodValue(taskInfo.adhocTask, false);
                 return {
                     nodeId: Util.goodValue(taskInfo.taskId, 0)
-                    , nodeType: ObjectService.ObjectTypes.TASK
+                    , nodeType: (adhocTask) ? ObjectService.ObjectTypes.ADHOC_TASK : ObjectService.ObjectTypes.TASK
                     , nodeTitle: Util.goodValue(taskInfo.title)
                     , nodeToolTip: Util.goodValue(taskInfo.title)
                 };
@@ -36,7 +37,8 @@ angular.module('tasks').controller('TasksListController', ['$scope', '$state', '
             var components = Util.goodArray(selectedTask.components);
             var componentType = (1 == components.length) ? components[0] : "main";
             $state.go('tasks.' + componentType, {
-                id: selectedTask.nodeId
+                type: selectedTask.nodeType
+                , id: selectedTask.nodeId
             });
         };
 

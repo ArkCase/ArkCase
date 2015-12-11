@@ -20,37 +20,42 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-        @ContextConfiguration(name = "spring",
-                locations = {
-                        "/spring/spring-library-object-history.xml",
-                        "/spring/spring-library-data-source.xml",
-                        "/spring/spring-library-object-association-plugin.xml",
-                        "/spring/spring-library-complaint-plugin-test.xml",
-                        "/spring/spring-library-complaint.xml",
-                        "/spring/spring-library-activiti-actions.xml",
-                        "/spring/spring-library-activiti-configuration.xml",
-                        "/spring/spring-library-folder-watcher.xml",
-                        "/spring/spring-library-drools-monitor.xml",
-                        "/spring/spring-library-user-service.xml",
-                        "/spring/spring-library-context-holder.xml",
-                        "/spring/spring-library-data-access-control.xml",
-                        "/spring/spring-library-search.xml",
-                        "/spring/spring-library-ecm-file.xml",
-                        "/spring/spring-library-particpants.xml",
-                        "/spring/spring-library-property-file-manager.xml",
-                        "/spring/spring-library-person.xml",
-                        "/spring/spring-library-case-file.xml",
-                        "/spring/spring-library-ms-outlook-integration.xml",
-                        "/spring/spring-library-ms-outlook-plugin.xml",
-                        "/spring/spring-library-profile.xml",
-                        "/spring/spring-library-acm-encryption.xml",
-                        "/spring/spring-library-task.xml",
-                        "/spring/spring-library-note.xml",
-                        "/spring/spring-library-event.xml",
-                        "/spring/spring-library-complaint-plugin-test-mule.xml"
+@ContextConfiguration(name = "spring",
+        locations = {
+                "/spring/spring-library-object-history.xml",
+                "/spring/spring-library-data-source.xml",
+                "/spring/spring-library-object-association-plugin.xml",
+                "/spring/spring-library-complaint-plugin-test.xml",
+                "/spring/spring-library-complaint.xml",
+                "/spring/spring-library-activiti-actions.xml",
+                "/spring/spring-library-activiti-configuration.xml",
+                "/spring/spring-library-folder-watcher.xml",
+                "/spring/spring-library-drools-monitor.xml",
+                "/spring/spring-library-user-service.xml",
+                "/spring/spring-library-context-holder.xml",
+                "/spring/spring-library-data-access-control.xml",
+                "/spring/spring-library-search.xml",
+                "/spring/spring-library-ecm-file.xml",
+                "/spring/spring-library-particpants.xml",
+                "/spring/spring-library-property-file-manager.xml",
+                "/spring/spring-library-person.xml",
+                "/spring/spring-library-case-file.xml",
+                "/spring/spring-library-ms-outlook-integration.xml",
+                "/spring/spring-library-ms-outlook-plugin.xml",
+                "/spring/spring-library-profile.xml",
+                "/spring/spring-library-acm-encryption.xml",
+                "/spring/spring-library-task.xml",
+                "/spring/spring-library-note.xml",
+                "/spring/spring-library-event.xml",
+                "/spring/spring-library-complaint-plugin-test-mule.xml",
+                "/spring/spring-library-forms-configuration.xml",
+                "/spring/spring-library-authentication-token.xml",
+                "/spring/spring-library-plugin-manager.xml",
+                "/spring/spring-library-functional-access-control.xml",
+                "/spring/spring-library-user-login.xml"
         }
 )
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
@@ -97,16 +102,15 @@ public class ComplaintDaoIT
         complaint = complaintDao.save(complaint);
 
 
-
         log.info("Complaint ID: " + complaint.getComplaintId());
         log.info("Complaint originator object ID: " + complaint.getOriginator().getId());
 
         assertNotNull(complaint.getComplaintId());
         assertNotNull(complaint.getOriginator().getId());
 
-        if ( complaint.getChildObjects() != null && !complaint.getChildObjects().isEmpty() )
+        if (complaint.getChildObjects() != null && !complaint.getChildObjects().isEmpty())
         {
-            for (ObjectAssociation oa : complaint.getChildObjects() )
+            for (ObjectAssociation oa : complaint.getChildObjects())
             {
                 assertNotNull(oa.getAssociationId());
             }
