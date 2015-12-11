@@ -6,31 +6,31 @@
                     <div class="clearfix">
                         <div class="col-xs-2 b-r">
                             <div class="h4 font-bold">
-                                <p>{{ecmFile.creator | mapKeyValue: userList:'object_id_s':'name' || 'Unknown'}}</p>
+                                <p>{{::ecmFile.creator | mapKeyValue: userList:'object_id_s':'name' || 'Unknown'}}</p>
                             </div>
                             <small class="text-muted">Owner</small>
                         </div>
                         <div class="col-xs-2 b-r">
                             <div class="h4 font-bold">
-                                <p>{{ecmFile.created | date: "MM/dd/yyyy" || 'Unknown'}}</p>
+                                <p>{{::ecmFile.created | date: "MM/dd/yyyy" || 'Unknown'}}</p>
                             </div>
                             <small class="text-muted">Create Date</small>
                         </div>
                         <div class="col-xs-3 b-r">
                             <div class="h4 font-bold">
-                                <p>{{assignee | mapKeyValue: userList:'object_id_s':'name' || 'Unknown'}}</p>
+                                <p>{{::assignee | mapKeyValue: userList:'object_id_s':'name' || 'Unknown'}}</p>
                             </div>
                             <small class="text-muted">Assigned To</small>
                         </div>
                         <div class="col-xs-3 b-r">
                             <div class="h4 font-bold">
-                                <p>{{ecmFile.fileType || 'Unknown'}}</p>
+                                <p>{{::ecmFile.fileType || 'Unknown'}}</p>
                             </div>
                             <small class="text-muted">Type</small>
                         </div>
                         <div class="col-xs-2">
                             <div class="h4 font-bold">
-                                <p>{{ecmFile.status || 'Unknown'}}</p>
+                                <p>{{::ecmFile.status || 'Unknown'}}</p>
                             </div>
                             <small class="text-muted">State</small>
                         </div>
