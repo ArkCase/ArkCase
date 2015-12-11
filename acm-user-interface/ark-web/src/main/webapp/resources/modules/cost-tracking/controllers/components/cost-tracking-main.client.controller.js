@@ -2,19 +2,16 @@
 
 angular.module('cost-tracking').controller('CostTracking.MainController', ['$scope', 'ConfigService',
     function($scope, ConfigService) {
-        $scope.$on('component-config', applyConfig);
         $scope.$emit('req-component-config', 'main');
-        $scope.components = null;
-        $scope.config = null;
-
-        function applyConfig(e, componentId, config) {
+        $scope.$on('component-config', function (e, componentId, config) {
             if (componentId == 'main') {
                 $scope.config = config;
             }
-        }
+        });
 
-        ConfigService.getModule({moduleId: 'cost-tracking'}, function(moduleConfig){
+        ConfigService.getModuleConfig("cost-tracking").then(function (moduleConfig) {
             $scope.components = moduleConfig.components;
+            return moduleConfig;
         });
     }
 ]);
