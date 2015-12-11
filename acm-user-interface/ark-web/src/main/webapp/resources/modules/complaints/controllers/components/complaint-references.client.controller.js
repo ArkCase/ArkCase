@@ -11,6 +11,7 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
             if ("references" == componentId) {
                 gridHelper.setColumnDefs(config);
                 gridHelper.setBasicOptions(config);
+                gridHelper.disableGridScrolling(config);
             }
         });
 
@@ -26,7 +27,6 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
                 }
             });
             $scope.gridOptions.data = references;
-            gridHelper.hidePagingControlsIfAllDataShown(references.length);
         });
 
         $scope.onClickObjLink = function (event, rowEntity) {
