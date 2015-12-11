@@ -5,7 +5,7 @@ angular.module('search').controller('SearchController', ['$scope', 'ConfigServic
 		$scope.config = ConfigService.getModule({moduleId: 'search'});
 		$scope.$on('req-component-config', onConfigRequest);
 
-		$scope.searchQuery = $stateParams['query'] ? $stateParams['query'] : '';
+		$scope.searchQuery = $stateParams['query'] ? $stateParams['query'] : '*';
 		$scope.$broadcast('search-query', $scope.searchQuery);
 
 		function onConfigRequest(e, componentId) {
