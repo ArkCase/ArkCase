@@ -10,7 +10,7 @@ angular.module('cases').controller('Cases.MergeController', ['$scope', '$modalIn
         $scope.config = null;
         $scope.modalInstance = $modalInstance;
         function applyConfig(e, componentId, config) {
-            if (componentId == 'merge') {
+            if (componentId == 'cases.comp.merge') {
                 $scope.config = config;
             }
         }
