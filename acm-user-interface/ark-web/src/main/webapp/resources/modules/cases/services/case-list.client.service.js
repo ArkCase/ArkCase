@@ -10,8 +10,8 @@
  *
  * Case.ListService provides functions for Case database data
  */
-angular.module('services').factory('Case.ListService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ConstantService', 'Object.ListService',
-    function ($resource, $translate, Store, Util, Constant, ObjectListService) {
+angular.module('services').factory('Case.ListService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ObjectService', 'Object.ListService',
+    function ($resource, $translate, Store, Util, ObjectService, ObjectListService) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {});
 
         Service.SessionCacheNames = {};
@@ -56,7 +56,7 @@ angular.module('services').factory('Case.ListService', ['$resource', '$translate
                         _.forEach(docs, function (doc) {
                             treeData.docs.push({
                                 nodeId: Util.goodValue(doc.object_id_s, 0)
-                                , nodeType: Constant.ObjectTypes.CASE_FILE
+                                , nodeType: ObjectService.ObjectTypes.CASE_FILE
                                 , nodeTitle: Util.goodValue(doc.title_parseable)
                                 , nodeToolTip: Util.goodValue(doc.title_parseable)
                             });
@@ -82,7 +82,7 @@ angular.module('services').factory('Case.ListService', ['$resource', '$translate
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateCaseList = function (data) {
-            if (!ObjectListService.validateSolrData(data)) {
+            if (!ObjectListService.validateObjects(data)) {
                 return false;
             }
 

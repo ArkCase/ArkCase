@@ -17,6 +17,7 @@ public class PropertyConfig implements AcmConfig, Serializable
 
     private String configName;
     private Map<Object, Object> properties;
+    private String configDescription;
 
     public String getConfigAsJson() {
         String json = "{}";
@@ -42,5 +43,14 @@ public class PropertyConfig implements AcmConfig, Serializable
 
     public void setProperties(Map<Object, Object> properties) {
         this.properties = properties;
+    }
+
+    @Override
+    public String getConfigDescription() {
+        return configDescription;
+    }
+
+    public void setConfigDescription(String configDescription) {
+        this.configDescription = configDescription;
     }
 }

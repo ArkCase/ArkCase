@@ -1,9 +1,10 @@
 <div ng-controller="Cases.PeopleController">
     <div class="panel panel-success panel-grid">
         <div class="panel-heading">
-            <div class="panel-title">{{"cases.comp.people.title" | translate}}
+            <div class="panel-title">
+                <span translate>cases.comp.people.title</span>
                 <div class="pull-right">
-                    <span class=""><i class='fa fa-plus' ng-click='addNew()'></i></span>
+                    <button class="btn btn-default btn-xs" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
                 </div>
             </div>
         </div>

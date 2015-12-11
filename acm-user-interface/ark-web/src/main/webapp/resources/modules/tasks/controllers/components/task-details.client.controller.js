@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.DetailsController', ['$scope', '$stateParams', '$translate', 'UtilService', 'Task.InfoService', 'MessageService',
-    function ($scope, $stateParams, $translate, Util, TaskInfoService, MessageService) {
+angular.module('tasks').controller('Tasks.DetailsController', ['$scope', '$stateParams', '$translate'
+    , 'UtilService', 'Task.InfoService', 'MessageService'
+    , function ($scope, $stateParams, $translate, Util, TaskInfoService, MessageService) {
         $scope.$emit('req-component-config', 'details');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('details' == componentId) {
@@ -10,7 +11,9 @@ angular.module('tasks').controller('Tasks.DetailsController', ['$scope', '$state
         });
 
         $scope.$on('task-updated', function (e, data) {
-            $scope.taskInfo = data;
+            if (TaskInfoService.validateTaskInfo(data)) {
+                $scope.taskInfo = data;
+            }
         });
 
 

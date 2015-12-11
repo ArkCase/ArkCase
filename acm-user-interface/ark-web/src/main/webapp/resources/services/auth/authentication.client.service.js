@@ -14,15 +14,15 @@ angular.module('services').factory('Authentication', ['$resource', 'StoreService
         var Service = $resource('proxy/arkcase/api/v1/users/info', {}, {
             /**
              * @ngdoc method
-             * @name queryUserInfo
+             * @name _queryUserInfo
              * @methodOf services.service:Authentication
              *
              * @description
-             * Returns User info object
+             * Query current login user info
              *
-             * @returns {HttpPromise} Future user info object
+             * @returns {Object} Returned by $resource
              */
-            queryUserInfo: {
+            _queryUserInfo: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/v1/users/info',
                 cache: true
@@ -41,7 +41,7 @@ angular.module('services').factory('Authentication', ['$resource', 'StoreService
 
         /**
          * @ngdoc method
-         * @name getCaseInfo
+         * @name queryUserInfo
          * @methodOf services.service:Authentication
          *
          * @description
@@ -49,11 +49,11 @@ angular.module('services').factory('Authentication', ['$resource', 'StoreService
          *
          * @returns {Object} Promise
          */
-        Service.queryUserInfoNew = function () {
+        Service.queryUserInfo = function () {
             var cacheUserInfo = new Store.SessionData(Service.SessionCacheNames.USER_INFO);
             var userInfo = cacheUserInfo.get();
             return Util.serviceCall({
-                service: Service.queryUserInfo
+                service: Service._queryUserInfo
                 , result: userInfo
                 , onSuccess: function (data) {
                     if (Service.validateUserInfo(data)) {

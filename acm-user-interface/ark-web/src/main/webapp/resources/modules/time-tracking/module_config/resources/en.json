@@ -1,6 +1,6 @@
 {
   "timeTracking": {
-    "title": "Time tracking",
+    "title": "Time Tracking",
     "progressNoTimesheet": "[ No timesheet is selected ]",
     "progressLoading": "Loading timesheet ",
     "progressError": "Failed to load timesheet"
@@ -22,7 +22,7 @@
       "userId": "Username"
     }
   },
-  "timeTracking.comp.timesSummary": {
+  "timeTracking.comp.summary": {
     "title": "Hours Summary",
     "table.columns": {
       "code": "Parent ID",

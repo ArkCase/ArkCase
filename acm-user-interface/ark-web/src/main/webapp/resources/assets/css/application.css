@@ -1,3 +1,6 @@
+/* @override http://10.21.4.149/arkcase/assets/css/application.css
+	http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
+
 /* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
 
 /* Typography */
@@ -149,6 +152,14 @@ iframe {
     text-decoration: underline;
 }
 
+.panel-heading .btn.btn-default:hover {
+    background-color: #167abb;
+    border: 0px;
+    color: white;
+    text-shadow: none;
+    text-decoration: underline;
+}
+
 /* Panels */
 
 .panel {
@@ -291,7 +302,6 @@ iframe {
     border-bottom: 1px solid #e1e6ef;
     border-left: 0px;
     border-right: 0px;
-    z-index: 1000;
     position: relative;
 }
 
@@ -457,7 +467,6 @@ iframe {
 }
 
 .module-content .right-sidebar .tab-pane .ui-grid {
-    width: 456px !important;
     border-left: none;
     border-right: none;
 }
@@ -475,6 +484,7 @@ iframe {
 
 .ui-grid-viewport {
     height: auto !important;
+    overflow: auto !important;
 }
 
 .ui-grid {
@@ -735,7 +745,7 @@ a.editable.editable-click.editable-hide {
     min-height: 100px;
 }
 
-/* Cases Module - FancyTree Table */
+/* Cases Module - FancyTree Table */ 
 
 .fancytree-container.fancytree-ext-table.fancytree-ext-gridnav.fancytree-ext-edit.ui-draggable-handle {
     margin: 0px;
@@ -765,10 +775,25 @@ a.editable.editable-click.editable-hide {
     padding-right: 200px;
 }
 
-/* To Be Removed */
+.new-iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding-bottom: 60px;
+    padding-right: 200px;
+}
 
-.ui-grid-pinned-container .ui-grid-header-canvas {
-    height: 60px !important;
+.reports-iframe, .audit-iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding-bottom: 60px;
+    padding-right: 500px;
+    
 }
 
 .module-content .left-sidebar-lg .ui-grid-pinned-container .ui-grid-header-canvas {
@@ -797,3 +822,4 @@ input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
     height: 500px;
     border: 1px solid #cbd5dd;
 }
+

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state', '$stateParams', '$q', 'UtilService'
-    , 'ConstantService', 'Authentication', 'Object.LookupService', 'Case.LookupService', 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService'
-    , function ($scope, $state, $stateParams, $q, Util, Constant, Authentication, ObjectLookupService, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService) {
+    , 'ObjectService', 'Authentication', 'Object.LookupService', 'Case.LookupService', 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService'
+    , function ($scope, $state, $stateParams, $q, Util, ObjectService, Authentication, ObjectLookupService, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService) {
 
         $scope.$emit('req-component-config', 'actions');
         $scope.$on('component-config', function (e, componentId, config) {
@@ -11,12 +11,14 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             }
         });
 
-        var promiseQueryUser = Authentication.queryUserInfoNew();
-
+        var promiseQueryUser = Authentication.queryUserInfo();
         var promiseGetGroups = ObjectLookupService.getGroups();
 
         var previousId = null;
         $scope.$on('case-updated', function (e, data) {
+            if (!CaseInfoService.validateCaseInfo(data)) {
+                return;
+            }
             $scope.caseInfo = data;
 
             var group = ObjectModelService.getGroup(data);
@@ -33,10 +35,10 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
 
                 promiseQueryUser.then(function (userInfo) {
                     $scope.userId = userInfo.userId;
-                    ObjectSubscriptionService.getSubscriptions(userInfo.userId, Constant.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (subscriptions) {
+                    ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (subscriptions) {
                         var found = _.find(subscriptions, {
                             userId: userInfo.userId,
-                            subscriptionObjectType: Constant.ObjectTypes.CASE_FILE,
+                            subscriptionObjectType: ObjectService.ObjectTypes.CASE_FILE,
                             objectId: $scope.caseInfo.id
                         });
                         $scope.showBtnSubscribe = Util.isEmpty(found);
@@ -59,30 +61,62 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         $scope.createNew = function () {
-            $state.go('cases.wizard');
+            $state.go("frevvo-new-case", {
+                name: "new-case"
+            });
+            //$state.go('newCase');
         };
 
-        $scope.edit = function () {
-            console.log('edit');
+        $scope.edit = function (caseInfo) {
+            $state.go("frevvo-edit-case", {
+                name: "edit-case"
+                , arg: {
+                    caseId: caseInfo.id
+                    , caseNumber: caseInfo.caseNumber
+                    , mode: "edit"
+                    , containerId: caseInfo.containerId
+                    , folderId: caseInfo.folderId
+                }
+            });
+            //if (caseInfo && caseInfo.id && caseInfo.caseNumber && caseInfo.status) {
+            //    $state.go('editCase', {id: caseInfo.id, caseNumber: caseInfo.caseNumber, containerId: caseInfo.container.id, folderId: caseInfo.container.folder.id});
+            //}
         };
 
         $scope.changeStatus = function (caseInfo) {
-            if (caseInfo && caseInfo.id && caseInfo.caseNumber && caseInfo.status) {
-                $state.go('cases.status', {id: caseInfo.id, caseNumber: caseInfo.caseNumber, status: caseInfo.status});
-            }
+            $state.go("frevvo-change-case-status", {
+                name: "change-case-status"
+                , arg: {
+                    caseId: caseInfo.id
+                    , caseNumber: caseInfo.caseNumber //or is it actionNumber?
+                    , status: caseInfo.status
+                }
+            });
+            //if (caseInfo && caseInfo.id && caseInfo.caseNumber && caseInfo.status) {
+            //    $state.go('status', {id: caseInfo.id, caseNumber: caseInfo.caseNumber, status: caseInfo.status});
+            //}
         };
-        $scope.reinvestigate = function () {
-            console.log('reinvestigate');
+        $scope.reinvestigate = function (caseInfo) {
+            $state.go("frevvo-reinvestigate", {
+                name: "reinvestigate"
+                , arg: {
+                    caseId: caseInfo.id
+                    , caseNumber: caseInfo.caseNumber
+                    , mode: "reinvestigate"
+                    , containerId: caseInfo.containerId
+                    , folderId: caseInfo.folderId
+                }
+            });
         };
         $scope.subscribe = function (caseInfo) {
-            ObjectSubscriptionService.subscribe($scope.userId, Constant.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (data) {
+            ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (data) {
                 $scope.showBtnSubscribe = false;
                 $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 return data;
             });
         };
         $scope.unsubscribe = function (caseInfo) {
-            ObjectSubscriptionService.unsubscribe($scope.userId, Constant.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (data) {
+            ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (data) {
                 $scope.showBtnSubscribe = true;
                 $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 return data;
@@ -97,90 +131,5 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             console.log('split');
         };
 
-
-        //$scope.$on('case-updated', function (e, data) {
-        //    $scope.caseInfo = data;
-        //
-        //    promiseQueryUser.then(function (userInfo) {
-        //        $scope.userId = userInfo.userId;
-        //
-        //        // Obtains the existing subscriptions from ArkCase
-        //        SubscriptionService.getSubscribers({userId: $scope.userId, objectId: $scope.caseInfo.id})
-        //            .then(function (data) {
-        //                var subscriptionArray = data.data;
-        //
-        //                // Is the currently logged in user subscribed to this case file already?
-        //                $scope.isSubscribed = SubscriptionService.isSubscribed($scope.userId, $scope.caseInfo, subscriptionArray);
-        //            });
-        //    })
-        //});
-
-        ///**
-        // * ngdoc method
-        // * name loadNewCaseFrevvoForm
-        // * methodOf cases:Cases.ActionsController
-        // *
-        // * @description
-        // * Displays the create new case Frevvo form for the user
-        // */
-        //$scope.loadNewCaseFrevvoForm = function () {
-        //    $state.go('newcase');
-        //};
-        //
-        ///**
-        // * ngdoc method
-        // * name loadChangeCaseStatusFrevvoForm
-        // * methodOf cases:Cases.ActionsController
-        // *
-        // * @description
-        // * Displays the change case status Frevvo form for the user
-        // *
-        // * @param {Object} caseInfo contains the metadata for the existing case which will be edited
-        // */
-        //$scope.loadChangeCaseStatusFrevvoForm = function (caseInfo) {
-        //    if (caseInfo && caseInfo.id && caseInfo.caseNumber && caseInfo.status) {
-        //        $state.go('status', {id: caseInfo.id, caseNumber: caseInfo.caseNumber, status: caseInfo.status});
-        //    }
-        //};
-
-
-        ///**
-        // * ngdoc method
-        // * name subscribeCase
-        // * methodOf cases:Cases.ActionsController
-        // *
-        // * @description
-        // * Subscribes the currently logged in user to the given case
-        // *
-        // * @param {Object} caseInfo contains the metadata for the existing case which will be subscribed
-        // */
-        //$scope.subscribeCase = function (caseInfo) {
-        //    SubscriptionService.subscribe({userId: $scope.userId, objectId: caseInfo.id})
-        //        .then(function (data) {
-        //            if (data && data.data && SubscriptionService.isSubscribed($scope.userId, caseInfo, [data.data])) {
-        //                $scope.isSubscribed = true;
-        //            }
-        //        });
-        //};
-        //
-        ///**
-        // * ngdoc method
-        // * name unsubscribeCase
-        // * methodOf cases:Cases.ActionsController
-        // *
-        // * @description
-        // * Unsubscribes the currently logged in user from the given case
-        // *
-        // * @param {Object} caseInfo contains the metadata for the existing case which will be unsubscribed
-        // */
-        //$scope.unsubscribeCase = function (caseInfo) {
-        //    SubscriptionService.unsubscribe({userId: $scope.userId, objectId: caseInfo.id})
-        //        .then(function (data) {
-        //            if (data && data.data && data.data.deletedSubscriptionId &&
-        //                data.data.deletedSubscriptionId == caseInfo.id) {
-        //                $scope.isSubscribed = false;
-        //            }
-        //        });
-        //};
     }
 ]);

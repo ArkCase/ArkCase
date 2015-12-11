@@ -7,11 +7,22 @@
         <div class="modal-search">
             <div class="modal-search-header">
                 <div class="input-group">
-                    <input class="form-control input-md" ng-keydown="keyDown($event)" ng-model="searchQuery" placeholder="{{searchPlaceholder}}">
-                <span class="input-group-btn">
-                    <button class="btn btn-md btn-primary" type="button" ng-click="queryExistingItems()">{{search}}</button>
-                </span>
+                    <input  type="text"
+                            autofocus
+                            class="form-control input-md"
+                            ng-keyup="keyUp($event)"
+                            ng-model="searchQuery"
+                            typeahead="result for result in queryTypeahead($viewValue)"
+                            placeholder="{{searchPlaceholder}}"
+                            typeahead-wait-ms="200"
+                            typeahead-loading="loadingResults"
+                            typeahead-no-results="noResults"
+                    >
+                    <span class="input-group-btn">
+                        <button class="btn btn-md btn-primary" type="button" ng-click="queryExistingItems()">{{search}}</button>
+                    </span>
                 </div>
+                <i ng-show="loadingResults" class="glyphicon glyphicon-refresh"></i>
             </div>
 
             <div class="modal-columns">

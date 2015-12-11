@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', 'UtilService', 'ConstantService', 'Object.LookupService',
-    function ($scope, $stateParams, $modal, Util, Constant, ObjectLookupService) {
+angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal'
+    , 'UtilService', 'ObjectService', 'Object.LookupService', 'Case.InfoService'
+    , function ($scope, $stateParams, $modal, Util, ObjectService, ObjectLookupService, CaseInfoService) {
+
 		$scope.$emit('req-component-config', 'documents');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('documents' == componentId) {
@@ -25,11 +27,13 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         );
 
 
-        $scope.objectType = Constant.ObjectTypes.CASE_FILE;
+        $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
         $scope.objectId = $stateParams.id;
         //$scope.containerId = 0;
         $scope.$on('case-updated', function (e, data) {
-            $scope.caseInfo = data;
+            if (CaseInfoService.validateCaseInfo(data)) {
+                $scope.caseInfo = data;
+            }
         });
 
         var silentReplace = function (value, replace, replacement) {
@@ -54,8 +58,9 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                         if (!Util.isEmpty(urlParameters[i].defaultValue)) {
                             value = silentReplace(urlParameters[i].defaultValue, "'", "_0027_");
                         } else if (!Util.isEmpty(urlParameters[i].keyValue)) {
-                            if (!Util.isEmpty($scope.caseInfo[urlParameters[i].keyValue])) {
-                                value = silentReplace($scope.caseInfo[urlParameters[i].keyValue], "'", "_0027_");
+                            var _value = _.get($scope.caseInfo, urlParameters[i].keyValue)
+                            if (!Util.isEmpty(_value)) {
+                                value = silentReplace(_value, "'", "_0027_");
                             }
                         }
                         value = encodeURIComponent(value);

@@ -15,6 +15,7 @@ public class AppConfig implements AcmConfig, Serializable
 
     private String configName;
     private AcmApplication acmApplication;
+    private String configDescription;
 
 
     public String getConfigAsJson() {
@@ -42,5 +43,14 @@ public class AppConfig implements AcmConfig, Serializable
 
     public void setAcmApplication(AcmApplication acmApplication) {
         this.acmApplication = acmApplication;
+    }
+
+    @Override
+    public String getConfigDescription() {
+        return configDescription;
+    }
+
+    public void setConfigDescription(String configDescription) {
+        this.configDescription = configDescription;
     }
 }

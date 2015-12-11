@@ -13,6 +13,9 @@
       "button": {
         "generateAuditReport.btn": "Generate Audit Report"
       }
+    },
+    "datepickers":{
+      "close": "Close"
     }
   }
 }

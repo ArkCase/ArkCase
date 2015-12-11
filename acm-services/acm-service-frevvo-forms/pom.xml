@@ -1,21 +1,26 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
-	<parent>
-	  <groupId>com.armedia.acm</groupId>
-	  <artifactId>acm-services</artifactId>
-	  <version>3.0.42</version>
-	</parent>
-	
-	<modelVersion>4.0.0</modelVersion>
-  
-  	<groupId>com.armedia.acm.acm-services</groupId>
-  	<artifactId>acm-service-frevvo-forms</artifactId>
-  	<name>ACM Service: Frevvo Forms Service</name>
-  	<description>Process Frevvo Forms</description>
-  	
-  	<dependencies>
-  		<!-- acm -->
+
+    <parent>
+        <groupId>com.armedia.acm</groupId>
+        <artifactId>acm-services</artifactId>
+        <version>3.0.43</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.armedia.acm.acm-services</groupId>
+    <artifactId>acm-service-frevvo-forms</artifactId>
+    <name>ACM Service: Frevvo Forms Service</name>
+    <description>Process Frevvo Forms</description>
+
+    <dependencies>
+        <!-- acm -->
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-form-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-authentication-token</artifactId>
@@ -91,8 +96,8 @@
             <artifactId>acm-reload-properties</artifactId>
             <version>${acm.version}</version>
         </dependency>
-  	
-		 <!-- spring -->
+
+        <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
@@ -101,15 +106,15 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
         </dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-oxm</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
-		<dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-oxm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-functional-access-control</artifactId>
             <version>${acm.version}</version>
@@ -136,9 +141,9 @@
 
         <!-- json -->
         <dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-		</dependency>
-	</dependencies>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

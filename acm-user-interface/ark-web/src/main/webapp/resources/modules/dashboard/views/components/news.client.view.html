@@ -1,0 +1,13 @@
+<p class="news">
+<div class="alert alert-info" ng-if="!dashboardNews.feed">
+    <p class="text-center">{{'dashboard.widgets.news.label.insertUrl' | translate}}</p>
+</div>
+<p>
+<h4><a ng-href="{{dashboardNews.feed.link}}" target="_blank"> {{dashboardNews.feed.title}}</a></h4>
+<ul>
+    <li ng-repeat="entry in dashboardNews.feed.item"><a ng-href="{{entry.link}}" target="_blank">
+        {{entry.title}}</a>
+    </li>
+</ul>
+</p>
+</div>

@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$modal', 'UtilService', 'Authentication', 'Task.InfoService', 'Task.WorkflowService',
-    function ($scope, $state, $modal, Util, Authentication, TaskInfoService, TaskWorkflowService) {
+angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$modal', 'UtilService', 'Authentication',
+    'Task.InfoService', 'Task.WorkflowService','Object.SubscriptionService','ObjectService',
+    function ($scope, $state, $modal, Util, Authentication, TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectService) {
         $scope.$emit('req-component-config', 'actions');
         $scope.$on('component-config', function (e, componentId, config) {
             if ('actions' == componentId) {
@@ -9,7 +10,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             }
         });
 
-        Authentication.queryUserInfoNew().then(
+        Authentication.queryUserInfo().then(
             function (userInfo) {
                 $scope.userId = userInfo.userId;
                 return userInfo;
@@ -17,6 +18,9 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         );
 
         $scope.$on('task-updated', function (e, data) {
+            if (!TaskInfoService.validateTaskInfo(data)) {
+                return;
+            }
             $scope.taskInfo = data;
 
             $scope.showBtnSignature = false;
@@ -73,7 +77,11 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             });
         };
         $scope.subscribe = function () {
-            console.log('subscribe');
+            ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.TASK, $scope.taskInfo.taskId).then(function (data) {
+                $scope.showBtnSubscribe = false;
+                $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
+                return data;
+            });
         };
         $scope.delete = function () {
             var taskInfo = Util.omitNg($scope.taskInfo);
