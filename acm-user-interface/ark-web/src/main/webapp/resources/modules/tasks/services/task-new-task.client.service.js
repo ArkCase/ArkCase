@@ -2,7 +2,7 @@
  * Created by nick.ferguson on 12/9/2015.
  */
 angular.module('tasks').factory('Task.NewTaskService', ['$resource', 'UtilService',
-    function ($resource, UtilService) {
+    function ($resource, Util) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
             /**
              * ngdoc method

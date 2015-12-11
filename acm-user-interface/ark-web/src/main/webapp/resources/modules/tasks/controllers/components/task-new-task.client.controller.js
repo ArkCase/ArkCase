@@ -28,6 +28,8 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.opened.openedStart = false;
         $scope.opened.openedEnd = false;
 
-        $scope.saveNewTask = TaskNewTaskService.saveAdHocTask($scope.config.data);
+        $scope.saveNewTask = function(){
+            TaskNewTaskService.saveAdHocTask($scope.config.data);
+        }
     }
 ]);
