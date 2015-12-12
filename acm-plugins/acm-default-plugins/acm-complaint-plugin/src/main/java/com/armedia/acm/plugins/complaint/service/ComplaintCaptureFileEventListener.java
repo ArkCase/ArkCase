@@ -13,10 +13,10 @@ import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.eclipse.persistence.dynamic.DynamicEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +40,7 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
     }
 
     @Override
-    public void processBatch(Map<String, DocumentObject> documents)
+    public void processBatch(Map<String, DocumentObject> documents, DynamicEntity parentBatch)
     {
         if (documents != null)
         {
@@ -172,8 +172,7 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
                     // Save documents and attachments for complaint
                     saveAttachments(cmisFolderId, saved.getId(), saved.getObjectType(), docObject, objectFileType, "attachment");
                 }
-            }
-            catch (Exception e)
+            } catch (Exception e)
             {
                 LOG.error("Cannot create complaint or uploading attachments: {}", e.getMessage(), e);
             }
