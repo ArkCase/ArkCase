@@ -10,8 +10,8 @@
  * The Reports module main controller
  */
 
-angular.module('reports').controller('ReportsController', ['$scope', 'ConfigService', 'LookupService', 'Reports.BuildUrl', '$q', 'Reports.Data',
-    function ($scope, ConfigService, LookupService, BuildUrl, $q, Data) {
+angular.module('reports').controller('ReportsController', ['$scope', 'UtilService', 'ConfigService', 'LookupService', 'Reports.BuildUrl', '$q', 'Reports.Data',
+    function ($scope, Util, ConfigService, LookupService, BuildUrl, $q, Data) {
 
         $scope.$on('req-component-config', function (e, componentId) {
             promiseModuleConfig.then(function (config) {
@@ -33,7 +33,7 @@ angular.module('reports').controller('ReportsController', ['$scope', 'ConfigServ
 
         $q.all([promiseServerConfig, promiseReportConfig, promiseModuleConfig])
             .then(function (data) {
-                var reportsConfig = data[0];
+                var reportsConfig = Util.omitNg(data[0]);
                 $scope.data.reports = data[1];
                 $scope.config = data[2];
 

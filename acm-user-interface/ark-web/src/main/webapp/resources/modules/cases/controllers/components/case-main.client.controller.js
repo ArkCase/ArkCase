@@ -12,16 +12,32 @@ angular.module('cases').controller('Cases.MainController', ['$scope', 'UtilServi
         var promiseConfig = ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
 			$scope.components = moduleConfig.components;
             $scope.config = _.find(moduleConfig.components, {id: "main"});
-            $scope.widgets = Util.goodMapValue($scope.config, "widgets", []);
+            $scope.widgets = [];
+            //_.each(Util.goodMapValue($scope.config, "widgets", []), function (widget) {
+            //    if ("component" == Util.goodValue(item.type)) {
+            //        var item = {};
+            //        item.id = widget.id;
+            //        item.type = widget.type;
+            //        var found = _.find(moduleConfig.components, {id: widget.id});
+            //        if (found) {
+            //            item.title = found.title;
+            //            $scope.widgets.push(item);
+            //        }
+            //    }
+            //});
+
+            $scope.widgets = Util.goodMapValue($scope.config, "widgets", []).filter(function (widget) {
+                return "component" == widget.type;
+            });
 			return moduleConfig;
 		});
 
-        ConfigService.getComponentConfig("cases", "main").then(function (componentConfig) {
-            var a1 = componentConfig;
-            var a2 = $scope.config;
-
-            return componentConfig;
-        });
+        //ConfigService.getComponentConfig("cases", "main").then(function (componentConfig) {
+        //    var a1 = componentConfig;
+        //    var a2 = $scope.config;
+        //
+        //    return componentConfig;
+        //});
 
 
         $scope.$on('case-updated', function (e, data) {
@@ -30,21 +46,26 @@ angular.module('cases').controller('Cases.MainController', ['$scope', 'UtilServi
             }
             $scope.caseInfo = data;
 
-            //promiseConfig.then(function(moduleConfig) {
-            $scope["details"] = "11111";
-            $scope["peopleNames"] = "22222";
-            $scope["documentCount"] = "33333";
-            $scope["participants"] = "44444";
-            $scope["noteCount"] = "55555";
-            $scope["taskCount"] = "66666";
-            $scope["referenceCount"] = "rrrrr";
-            $scope["historyCount"] = "hhhhh";
-            $scope["correspondenceCount"] = "cccccc";
-            $scope["timesheetCount"] = "timetttt";
-            $scope["costsheetCount"] = "costcccc";
-            $scope["calendarEventCount"] = "calllll";
-            //    return moduleConfig;
-            //});
+            promiseConfig.then(function (moduleConfig) {
+                _.each($scope.widgets, function (widget) {
+                    var z = 1;
+                });
+
+                $scope["details"] = "11111";
+                $scope["peopleNames"] = "22222";
+                $scope["documentCount"] = "33333";
+                $scope["participants"] = "44444";
+                $scope["noteCount"] = "55555";
+                $scope["taskCount"] = "66666";
+                $scope["referenceCount"] = "rrrrr";
+                $scope["historyCount"] = "hhhhh";
+                $scope["correspondenceCount"] = "cccccc";
+                $scope["timesheetCount"] = "timetttt";
+                $scope["costsheetCount"] = "costcccc";
+                $scope["calendarEventCount"] = "calllll";
+
+                return moduleConfig;
+            });
         });
 	}
 ]);
