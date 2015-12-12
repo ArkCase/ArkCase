@@ -17,6 +17,7 @@ angular.module('reports').controller('ReportsController', ['$scope', 'ConfigServ
             promiseModuleConfig.then(function (config) {
                 var componentConfig = _.find(config.components, {id: componentId});
                 $scope.$broadcast('component-config', componentId, componentConfig);
+                return config;
             });
         });
 

@@ -20,8 +20,9 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q','C
 
         $scope.$on('req-component-config', function (e, componentId) {
             promiseModuleConfig.then(function (config) {
-                var componentConfig = _.find(config.components, {id: componentId})
+                var componentConfig = _.find(config.components, {id: componentId});
                 $scope.$broadcast('component-config', componentId, componentConfig);
+                return config;
             });
         });
 
