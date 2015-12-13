@@ -31,12 +31,13 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
         };
 
         $scope.onSelect = function (selectedCase) {
-            $scope.$emit('req-select-case', selectedCase);
             var components = Util.goodArray(selectedCase.components);
             var componentType = (1 == components.length) ? components[0] : "main";
             $state.go('cases.' + componentType, {
                 id: selectedCase.nodeId
             });
+
+            $scope.$emit('req-select-case', selectedCase);
         };
     }
 ]);

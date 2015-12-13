@@ -1,25 +1,34 @@
 'use strict';
 
 angular.module('cases').controller('Cases.HistoryController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'Helper.UiGridService', 'ObjectService', 'Object.AuditService'
-    , function ($scope, $stateParams, $q, Util, HelperUiGridService, ObjectService, ObjectAuditService) {
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.AuditService'
+    , function ($scope, $stateParams, $q, Util, ConfigService, HelperUiGridService, ObjectService, ObjectAuditService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        $scope.$emit('req-component-config', 'history');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('history' == componentId) {
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.setExternalPaging(config, $scope.retrieveGridData);
-                gridHelper.setUserNameFilter(promiseUsers);
+        //$scope.$emit('req-component-config', 'history');
+        //$scope.$on('component-config', function (e, componentId, config) {
+        //    if ('history' == componentId) {
+        //        gridHelper.setColumnDefs(config);
+        //        gridHelper.setBasicOptions(config);
+        //        gridHelper.setExternalPaging(config, $scope.retrieveGridData);
+        //        gridHelper.setUserNameFilter(promiseUsers);
+        //
+        //        $scope.retrieveGridData();
+        //    }
+        //});
+        var promiseConfig = ConfigService.getComponentConfig("cases", "history").then(function (config) {
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.setExternalPaging(config, $scope.retrieveGridData);
+            gridHelper.setUserNameFilter(promiseUsers);
 
-                $scope.retrieveGridData();
-            }
+            //$scope.retrieveGridData();
+            return config;
         });
 
-        $scope.retrieveGridData = function () {
+        //$scope.retrieveGridData = function () {
             if (Util.goodPositive($stateParams.id)) {
                 var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.CASE_FILE
                     , $stateParams.id
@@ -29,7 +38,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
                     , Util.goodMapValue($scope.sort, "dir")
                 );
 
-                $q.all([promiseQueryAudit, promiseUsers]).then(function (data) {
+                $q.all([promiseQueryAudit, promiseUsers, promiseConfig]).then(function (data) {
                     var auditData = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = auditData.resultPage;
@@ -37,6 +46,6 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
                     gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                 });
             }
-        };
+        //};
     }
 ]);
