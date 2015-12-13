@@ -3,32 +3,18 @@
     <!--<div ng-if="component.enabled" ng-include="'modules/cases/views/components/case-'+ component.id  +'.client.view.html'"></div>-->
     <!--</div>-->
 
-    <!--<div class="tab-content">-->
+    <div class="tab-content">
+        <div class="panel panel-success panel-grid" ng-repeat="widget in widgets">
+            <div class="panel-heading">
+                <div class="panel-title ng-binding">{{widget.title}}
+                    <!--<div class="pull-right">-->
+                    <!--<span class=""><i class="fa fa-plus"></i></span>-->
+                    <!--</div>-->
+                </div>
+            </div>
+            <div class="panel-body">{{widgetData[widget.id]}}
+            </div>
+        </div>
 
-    <!--<div class="panel panel-success panel-grid">-->
-    <!--<div class="panel-heading">-->
-    <!--<div class="panel-title ng-binding">Locations-->
-    <!--<div class="pull-right">-->
-    <!--<span class=""><i class="fa fa-plus"></i></span>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--<div class="panel-body">{{caseInfo.details}}-->
-    <!--</div>-->
-    <!--</div>-->
-
-
-    <!--<div class="panel panel-success panel-grid">-->
-    <!--<div class="panel-heading">-->
-    <!--<div class="panel-title ng-binding">People-->
-    <!--<div class="pull-right">-->
-    <!--<span class=""><i class="fa fa-plus"></i></span>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--<div class="panel-body">{{peopleNames}}-->
-    <!--</div>-->
-    <!--</div>-->
-
-    <!--</div>-->
+    </div>
 </div>

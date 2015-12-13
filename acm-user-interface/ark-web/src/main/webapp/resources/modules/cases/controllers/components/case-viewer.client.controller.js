@@ -1,8 +1,25 @@
 'use strict';
 
-angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Object.ModelService', 'Case.InfoService',
-    function ($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, SnowboundService, Authentication, EcmService, ObjectModelService, CaseInfoService) {
-        $scope.$emit('req-component-config', 'viewer');
+angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q'
+    , 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService'
+    , 'Object.ModelService', 'Case.InfoService',
+    function ($scope, $stateParams, $sce, $log, $q
+        , TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService
+        , ObjectModelService, CaseInfoService) {
+
+        //$scope.$emit('req-component-config', 'viewer');
+        //$scope.config = null;
+        //$scope.$on('component-config', applyConfig);
+        //function applyConfig(e, componentId, config) {
+        //    if (componentId == 'viewer') {
+        //        $scope.config = config;
+        //    }
+        //}
+        ConfigService.getComponentConfig("cases", "viewer").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
+        });
+
 
         $scope.acmTicket = '';
         $scope.userId = '';
@@ -77,12 +94,5 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
                 openSnowboundViewer();
             });
 
-        $scope.config = null;
-        $scope.$on('component-config', applyConfig);
-        function applyConfig(e, componentId, config) {
-            if (componentId == 'viewer') {
-                $scope.config = config;
-            }
-        }
     }
 ]);

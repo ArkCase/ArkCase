@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateParams', '$q', '$translate'
-    , 'StoreService', 'UtilService', 'ObjectService', 'Helper.UiGridService', 'Helper.ConfigService'
+    , 'StoreService', 'UtilService', 'ObjectService', 'Helper.UiGridService', 'ConfigService'
     , 'Case.InfoService', 'Object.PersonService', 'LookupService', 'Object.LookupService'
-    , function ($scope, $stateParams, $q, $translate, Store, Util, ObjectService, HelperUiGridService, HelperConfigService
+    , function ($scope, $stateParams, $q, $translate, Store, Util, ObjectService, HelperUiGridService, ConfigService
         , CaseInfoService, ObjectPersonService, LookupService, ObjectLookupService) {
 
         $scope.contactMethods = {gridOptions: {appScopeProvider: $scope}};
@@ -65,22 +65,31 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         );
 
-        var promiseConfig = HelperConfigService.requestComponentConfig($scope, "people", function (config) {
+        //var promiseConfig = HelperConfigService.requestComponentConfig($scope, "people", function (config) {
+        //    configGridMain(config);
+        //    configGridContactMethod(config);
+        //    configGridOrganization(config);
+        //    configGridAddress(config);
+        //    configGridAlias(config);
+        //    configGridSecurityTag(config);
+        //
+        //    $q.all([promisePersonTypes, promiseUsers, promiseContactMethodTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes]).then(function (data) {
+        //        var deferPeopleData = new Store.Variable("deferCasePeopleData");    // used to hold grid data before grid config is ready
+        //        var caseInfo = deferPeopleData.get();
+        //        if (caseInfo) {
+        //            updateGridData(caseInfo);
+        //            deferPeopleData.set(null);
+        //        }
+        //    });
+        //});
+        var promiseConfig = ConfigService.getComponentConfig("cases", "people").then(function (config) {
             configGridMain(config);
             configGridContactMethod(config);
             configGridOrganization(config);
             configGridAddress(config);
             configGridAlias(config);
             configGridSecurityTag(config);
-
-            $q.all([promisePersonTypes, promiseUsers, promiseContactMethodTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes]).then(function (data) {
-                var deferPeopleData = new Store.Variable("deferCasePeopleData");    // used to hold grid data before grid config is ready
-                var caseInfo = deferPeopleData.get();
-                if (caseInfo) {
-                    updateGridData(caseInfo);
-                    deferPeopleData.set(null);
-                }
-            });
+            return config;
         });
 
 
@@ -410,17 +419,21 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 }
             }); //end $q
         };
-        $scope.$on('case-updated', function (e, data) {
-            if (!CaseInfoService.validateCaseInfo(data)) {
-                return;
-            }
-
-            if (data.id == $stateParams.id) {
-                updateGridData(data);
-            } else {                      // condition when data comes before state is routed and config is not set
-                var deferPeopleData = new Store.Variable("deferCasePeopleData");
-                deferPeopleData.set(data);
-            }
+        //$scope.$on('case-updated', function (e, data) {
+        //    if (!CaseInfoService.validateCaseInfo(data)) {
+        //        return;
+        //    }
+        //
+        //    if (data.id == $stateParams.id) {
+        //        updateGridData(data);
+        //    } else {                      // condition when data comes before state is routed and config is not set
+        //        var deferPeopleData = new Store.Variable("deferCasePeopleData");
+        //        deferPeopleData.set(data);
+        //    }
+        //});
+        CaseInfoService.getCaseInfo($stateParams.id).then(function (caseInfo) {
+            updateGridData(caseInfo);
+            return caseInfo;
         });
 
 
