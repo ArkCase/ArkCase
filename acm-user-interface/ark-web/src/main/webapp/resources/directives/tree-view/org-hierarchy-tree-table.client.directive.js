@@ -97,10 +97,7 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', '$tim
                 scope.addSupervisor = function (event) {
                     var node = $.ui.fancytree.getNode(event);
                     scope.onSetSupervisor(node.data).then(function (payload) {
-                        node.data.supervisor = payload.fullName;
-                        // TODO this is not working cause of bug in fancytree https://github.com/mar10/fancytree/issues/463 if fixed later than we should use this approach and comment out code bellow
-                        var $tdList = $(node.tr).find(">td");
-                        $($tdList.eq(2)).text(node.data.supervisor);
+                        node.data.supervisor = payload.supervisor.fullName;
                         node.renderTitle();
                     });
                 };
@@ -121,7 +118,7 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', '$tim
 
 
             },
-            templateUrl: 'directives/tree-view/tree-table.client.view.html'
+            templateUrl: 'directives/tree-view/org-hierarchy-tree-table.client.view.html'
         };
     }
 
