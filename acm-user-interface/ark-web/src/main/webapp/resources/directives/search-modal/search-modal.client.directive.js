@@ -10,6 +10,7 @@
  *
  * The "Search" modal with faceted search functionality
  *
+ * @param {boolean} multiSelect - multiple rows selection enabled
  * @param {String} header - label for the header of the modal box
  * @param {String} search - label for the search button
  * @param {String} cancel - label for the cancel button
@@ -26,6 +27,7 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
         return {
             restrict: 'E',              //match only element name
             scope: {
+                multiSelect: '@',
                 header: '@',            //@ : text binding (read-only and only strings)
                 search: '@',
                 cancel: '@',
@@ -37,9 +39,14 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
             },
 
             link: function (scope) {    //dom operations
+                if (scope.multiSelect == undefined || scope.multiSelect == '') {
+                    scope.multiSelect = false;
+                }
+
                 scope.facets = [];
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
+                scope.selectedItems = [];
                 scope.queryExistingItems = function () {
                     var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start);
                     if (query) {
@@ -88,7 +95,7 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                             scope.filters += '&fq="' + facet + '":' + field;
                         }
                         else {
-                            scope.filters=""
+                            scope.filters = ""
                             scope.filters += 'fq="' + facet + '":' + field;
                         }
                         scope.queryExistingItems();
@@ -114,7 +121,11 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                 scope.addExistingItem = function () {
                     //when the modal is closed, the parent scope gets
                     //the selectedItem via the two-way binding
-                    scope.modalInstance.close(scope.selectedItem);
+                    if (scope.multiSelect == true) {
+                        scope.modalInstance.close(scope.selectedItems);
+                    } else {
+                        scope.modalInstance.close(scope.selectedItem);
+                    }
                 };
 
                 scope.close = function () {
@@ -130,7 +141,7 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                         enableRowSelection: true,
                         enableRowHeaderSelection: false,
                         enableFiltering: scope.config().enableFiltering,
-                        multiSelect: false,
+                        multiSelect: scope.multiSelect==='true' ? true : false,
                         noUnselect: false,
                         useExternalPagination: true,
                         paginationPageSizes: scope.config().paginationPageSizes,
@@ -141,6 +152,11 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
 
                             gridApi.selection.on.rowSelectionChanged(scope, function (row) {
                                 scope.selectedItem = row.isSelected ? row.entity : null;
+                                scope.selectedItems = gridApi.selection.getSelectedRows();
+                            });
+
+                            gridApi.selection.on.rowSelectionChangedBatch(scope, function (rows) {
+                                scope.selectedItems = gridApi.selection.getSelectedRows();
                             });
 
 
