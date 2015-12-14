@@ -17,6 +17,7 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
             gridHelper.setInPlaceEditing(config, $scope.updateRow);
 
 
@@ -39,14 +40,12 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
             if (ComplaintInfoService.validateComplaintInfo(data)) {
                 $scope.complaintInfo = data;
                 $scope.gridOptions.data = [Util.goodValue($scope.complaintInfo.location, {})];
-                gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
             }
         });
 
 
         $scope.addNew = function () {
             $scope.gridOptions.data.push({});
-            gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
         };
         $scope.updateRow = function (rowEntity) {
             var complaintInfo = Util.omitNg($scope.complaintInfo);

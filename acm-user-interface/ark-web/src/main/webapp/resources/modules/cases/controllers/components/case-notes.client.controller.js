@@ -22,6 +22,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
                 gridHelper.setBasicOptions(config);
                 gridHelper.setInPlaceEditing(config, $scope.updateRow);
                 gridHelper.setUserNameFilter(promiseUsers);
+                gridHelper.disableGridScrolling(config);
 
                 $scope.retrieveGridData();
             }
@@ -35,7 +36,6 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = notes;
                     $scope.gridOptions.totalItems = notes.length;
-                    gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                 });
             }
         };
@@ -50,7 +50,6 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             newRow.creator = $scope.userId;
             $scope.gridOptions.data.push(newRow);
             $scope.gridOptions.totalItems++;
-            gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
         };
         $scope.updateRow = function (rowEntity) {
             var note = Util.omitNg(rowEntity);
