@@ -210,7 +210,24 @@
         {
           "id": "details",
           "type": "component",
-          "model": "details"
+          "model": "details",
+          "columnDefs": [
+            {
+              "name": "details",
+              "displayName": "dashboard.widgets.details.table.header.details",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "modified",
+              "displayName": "dashboard.widgets.details.table.header.modified",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "modifier",
+              "displayName": "dashboard.widgets.details.table.header.modifier",
+              "headerCellFilter": "translate"
+            }
+          ]
         },
         {
           "id": "people",
