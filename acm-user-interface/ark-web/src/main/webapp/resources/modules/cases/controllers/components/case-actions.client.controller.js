@@ -50,7 +50,6 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                         });
                         $scope.showBtnSubscribe = Util.isEmpty(found);
                         $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
-                        $scope.$apply();
                     });
                 });
 
