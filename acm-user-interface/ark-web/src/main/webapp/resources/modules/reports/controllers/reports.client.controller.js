@@ -10,30 +10,33 @@
  * The Reports module main controller
  */
 
-angular.module('reports').controller('ReportsController', ['$scope', 'ConfigService', 'LookupService', 'Reports.BuildUrl', '$q', 'Reports.Data',
-    function ($scope, ConfigService, LookupService, BuildUrl, $q, Data) {
+angular.module('reports').controller('ReportsController', ['$scope', 'UtilService', 'ConfigService', 'LookupService', 'Reports.BuildUrl', '$q', 'Reports.Data',
+    function ($scope, Util, ConfigService, LookupService, BuildUrl, $q, Data) {
 
-        $scope.$on('req-component-config', onConfigRequest);
-        function onConfigRequest(e, componentId) {
-            $scope.config.then(function (config) {
+        $scope.$on('req-component-config', function (e, componentId) {
+            promiseModuleConfig.then(function (config) {
                 var componentConfig = _.find(config.components, {id: componentId});
                 $scope.$broadcast('component-config', componentId, componentConfig);
+                return config;
             });
-        }
+        });
 
         $scope.data = Data.getData();
-        $scope.config = ConfigService.getModuleConfig("reports");
+
+        var promiseModuleConfig = ConfigService.getModuleConfig("reports");
 
         // Retrieves the properties from the acm-reports-server-config.properties file
-        var reportsConfig = LookupService.getConfig("acm-reports-server-config");
+        var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
 
         // Retrieves the properties from the acm-reports.properties file
-        var reports = LookupService.getConfig("acm-reports");
+        var promiseReportConfig = LookupService.getConfig("acm-reports");
 
-        $q.all([reportsConfig, reports, $scope.config])
+        $q.all([promiseServerConfig, promiseReportConfig, promiseModuleConfig])
             .then(function (data) {
-                var reportsConfig = data[0].toJSON();
-                $scope.data.reports = data[1].toJSON();
+                var reportsConfig = Util.omitNg(data[0]);
+                $scope.data.reports = data[1];
+                $scope.config = data[2];
+
                 // On some reason reports list contains URL and PORT info
                 delete $scope.data.reports.PENTAHO_SERVER_URL;
                 delete $scope.data.reports.PENTAHO_SERVER_PORT;
