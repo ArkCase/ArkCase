@@ -17,14 +17,14 @@
         <div class="row wrapper">
             <div class="col-sm-6">
                 <label class="label" translate> tasks.newTask.assignee.label </label>
-                <input type="text" ng-model="config.newTask.data.assignee" class="input-sm form-control"
+                <input type="text" ng-model="config.data.assignee" class="input-sm form-control"
                        placeholder="{{ 'tasks.newTask.assignee.placeholder' | translate }}" id="assignee"
                        style="background-color: white;" readonly>
             </div>
 
             <div class="col-sm-6">
                 <label class="label" translate> tasks.newTask.associateNumber.label </label>
-                <input type="text" ng-model="config.newTask.data.attachedToObjectName" class="input-sm form-control"
+                <input type="text" ng-model="config.data.attachedToObjectName" class="input-sm form-control"
                        placeholder="{{ 'tasks.newTask.associateNumber.placeholder' | translate }}" id="complaintId">
             </div>
         </div>
@@ -32,7 +32,7 @@
         <div class="row wrapper">
             <div class="col-sm-12">
                 <label class="label" translate> tasks.newTask.subject.label </label>
-                <input type="text" ng-model="config.newTask.data.title" class="input-sm form-control"
+                <input type="text" ng-required="true" ng-model="config.data.title" class="input-sm form-control"
                        placeholder="{{ 'tasks.newTask.subject.label'  | translate }}" id="subject">
             </div>
         </div>
@@ -43,9 +43,10 @@
                 <div>
                     <p class="input-group">
                         <input type="text"
+                               ng-required="true"
                                class="form-control"
                                datepicker-popup="{{config.datepickerPopupFormat}}"
-                               ng-model="config.newTask.data.taskStartDate"
+                               ng-model="config.data.taskStartDate"
                                is-open="opened.openedStart"
                                close-on-date-selection="true"
                                show-button-bar="true"
@@ -61,7 +62,7 @@
             </div>
             <div class="form-group">
                 <label class="control-label">{{ 'tasks.newTask.status.label' | translate }}
-                    <select ng-model="config.newTask.data.status"
+                    <select ng-model="config.data.status"
                             ng-options="status.id as status.name for status in config.status"
                             class="form-control input-sm">
                         <option value="" translate>tasks.newTask.status.placeholder</option>
@@ -77,9 +78,10 @@
                 <div>
                     <p class="input-group">
                         <input type="text"
+                               ng-required="true"
                                class="form-control"
                                datepicker-popup="{{config.datepickerPopupFormat}}"
-                               ng-model="config.newTask.data.dueDate"
+                               ng-model="config.data.dueDate"
                                is-open="opened.openedEnd"
                                close-on-date-selection="true"
                                show-button-bar="true"
@@ -95,7 +97,7 @@
             </div>
             <div class="form-group">
                 <label class="control-label">{{ 'tasks.newTask.priority.label' | translate }}
-                    <select ng-model="config.newTask.data.priority"
+                    <select ng-model="config.data.priority"
                             ng-options="priority.id as priority.name for priority in config.priority"
                             class="form-control input-sm">
                         <option value="" translate>tasks.newTask.priority.placeholder</option>
@@ -104,7 +106,7 @@
             </div>
             <div class="col-sm-4">
                 <label class="label" translate> tasks.newTask.percentComplete.label </label>
-                <input type="text" ng-model="config.newTask.data.percentComplete" class="input-sm form-control"
+                <input type="text" ng-model="config.data.percentComplete" class="input-sm form-control"
                        placeholder="{{ 'tasks.newTask.percentComplete.label' | translate }}" id="percentComplete">
             </div>
         </div>
@@ -112,13 +114,13 @@
             <div class="col-sm-12">
                 <label class="label" translate> tasks.newTask.notes.label </label>
                 <div class="panel-body">
-                    <summernote config="options" ng-model="config.newTask.data.details"></summernote>
+                    <summernote config="options" ng-model="config.data.details"></summernote>
                 </div>
             </div>
         </div>
         <div class="row wrapper">
             <div class="col-sm-6">
-                <button ng-disabled="!config.newTask.data.title || !config.newTask.data.taskStartDate || !config.newTask.data.dueDate"
+                <button ng-disabled="!config.data.title || !config.data.taskStartDate || !config.data.dueDate || !saved"
                         ng-click="saveNewTask()" class="btn btn-default btn-sm pull-left" data-toggle="tooltip"
                         id="saveButton" data-title="Save">
                     <i class="fa fa-user"></i>

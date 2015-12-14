@@ -122,6 +122,16 @@
     "percentComplete.label": "% Complete",
     "notes.label": "Notes",
     "saveButton": "Save"
+  },
+  "tasks.comp.userSearch": {
+    "id": "userSearch",
+    "title": "User Search",
+    "cancel.btn": "Cancel",
+    "confirm.btn": "Confirm",
+    "search.placeholder": "Search for the user to assign to this task.",
+    "search.btn": "Search",
+    "enabled": true,
+    "userFacetFilter": "\"Object Type\": USER"
   }
 }
 
