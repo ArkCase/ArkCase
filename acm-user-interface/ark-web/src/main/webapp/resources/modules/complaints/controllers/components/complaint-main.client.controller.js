@@ -7,7 +7,7 @@ angular.module('complaints').controller('Complaints.MainController', ['$scope', 
         , ComplaintInfoService, ObjectService, ObjectCorrespondenceService, ObjectNoteService, ObjectTaskService
         , ObjectAuditService, ObjectCostService, ObjectTimeService) {
 
-        var promiseConfig = ConfigService.getModuleConfig("complaints").then(function (moduleConfig) {
+        ConfigService.getModuleConfig("complaints").then(function (moduleConfig) {
             $scope.components = moduleConfig.components;
             $scope.config = _.find(moduleConfig.components, {id: "main"});
             $scope.widgets = [];

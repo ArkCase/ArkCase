@@ -2,20 +2,14 @@
 
 angular.module('cases').controller('Cases.MainController', ['$scope', '$stateParams', 'UtilService', 'ConfigService'
     , 'Case.InfoService', 'ObjectService', 'Object.CorrespondenceService', 'Object.NoteService', 'Object.TaskService'
-    , 'Object.AuditService', 'Object.CostService', 'Object.TimeService'
+    , 'Object.AuditService', 'Object.CostService', 'Object.TimeService', 'dashboard', 'Dashboard.DashboardService'
     , function ($scope, $stateParams, Util, ConfigService
         , CaseInfoService, ObjectService, ObjectCorrespondenceService, ObjectNoteService, ObjectTaskService
-        , ObjectAuditService, ObjectCostService, ObjectTimeService) {
+        , ObjectAuditService, ObjectCostService, ObjectTimeService, dashboard, DashboardService) {
 
-        //$scope.$emit('req-component-config', 'main');
-        //$scope.$on('component-config', function (e, componentId, config) {
-        //	if (componentId == 'main') {
-        //		$scope.config = config;
-        //	}
-        //});
 
         var promiseConfig = ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
-			$scope.components = moduleConfig.components;
+            $scope.components = moduleConfig.components;
             $scope.config = _.find(moduleConfig.components, {id: "main"});
             $scope.widgets = [];
             _.each(Util.goodMapValue($scope.config, "widgets", []), function (widget) {
@@ -31,8 +25,38 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
                 }
             });
 
-			return moduleConfig;
-		});
+            return moduleConfig;
+        });
+
+
+        _.forEach(dashboard.widgets, function (widget, widgetId) {
+            widget.title = $translate.instant('dashboard.widgets.' + widgetId + '.title');
+            widget.description = $translate.instant('dashboard.widgets.' + widgetId + '.description');
+        });
+
+        $scope.dashboard = {
+            structure: '6-6',
+            collapsible: false,
+            maximizable: false,
+            model: {
+                titleTemplateUrl: 'modules/dashboard/views/dashboard-title.client.view.html'
+            }
+        };
+
+        DashboardService.getConfig({}, function (data) {
+            $scope.dashboard.model = angular.fromJson(data.dashboardConfig);
+
+            // Set Dashboard custom title
+            $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
+        });
+
+        $scope.$on('adfDashboardChanged', function (event, name, model) {
+            DashboardService.saveConfig({
+                dashboardConfig: angular.toJson(model)
+            });
+        });
+
+
 
         //$scope.widgetData = {};
         //$scope.$on('case-updated', function (e, data) {
@@ -49,7 +73,6 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
         //    var participants = $scope.caseInfo.participants;
         //    $scope.widgetData["participants"] = participants.length;
         //});
-
         $scope.widgetData = {};
         CaseInfoService.getCaseInfo($stateParams.id).then(function (caseInfo) {
             $scope.caseInfo = caseInfo;
@@ -102,6 +125,6 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
             });
 
         $scope.widgetData["calendar"] = "calendar data";
-	}
+    }
 ]);
 
