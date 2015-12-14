@@ -1,6 +1,3 @@
-/**
- * Created by maksud.sharif on 12/11/2015.
- */
 'use strict';
 
 angular.module('dashboard.details', ['adf.provider'])
@@ -15,11 +12,11 @@ angular.module('dashboard.details', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.DetailsController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Object.InfoService','Authentication', 'Dashboard.DashboardService',
-        function ($scope, $translate, $stateParams, Util, ObjectInfoService, Authentication, DashboardService) {
+    .controller('Dashboard.DetailsController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Case.InfoService','Authentication', 'Dashboard.DashboardService',
+        function ($scope, $translate, $stateParams, Util, CaseInfoService, Authentication, DashboardService) {
 
             $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'details');
+            $scope.$emit('req-component-config', 'main');
             $scope.config = null;
             //var userInfo = null;
 
@@ -29,18 +26,20 @@ angular.module('dashboard.details', ['adf.provider'])
             };
 
             function applyConfig(e, componentId, config) {
-                if (componentId == 'details') {
+                if (componentId == 'main') {
                     $scope.config = config;
-                    $scope.gridOptions.columnDefs = config.columnDefs;
+                    $scope.gridOptions.columnDefs = config.widgets[0].columnDefs; //widgets[0] = details
 
                     //set gridOptions.data
-                    ObjectInfoService.get({
-                            type: 'casefile',
-                            id: ($stateParams.id ? $stateParams.id : 101)
-                        },
+                    CaseInfoService.getCaseInfo($stateParams.id).then(
                         function (data) {
                             $scope.gridOptions.data = [Util.omitNg(data)];
                             $scope.gridOptions.totalItems = 1;
+                        }
+                        , function (error) {
+                            $scope.caseInfo = null;
+                            $scope.progressMsg = $translate.instant("cases.progressError") + " " + id;
+                            return error;
                         }
                     );
                 }
