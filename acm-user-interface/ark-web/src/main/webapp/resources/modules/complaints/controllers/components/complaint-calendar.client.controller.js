@@ -17,7 +17,6 @@ angular.module('complaints').controller('Complaints.CalendarController', ['$scop
         });
 
         /* Calendar config object */
-        var currentView = "month";
         $scope.uiConfig = {
             calendar:{
                 height: 450,

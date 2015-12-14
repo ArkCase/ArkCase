@@ -16,7 +16,6 @@ angular.module('cases').controller('Cases.CalendarController', ['$scope','$timeo
 		});
 
 		/* Calendar config object */
-		var currentView = "month";
 		$scope.uiConfig = {
 			calendar:{
 				height: 450,
