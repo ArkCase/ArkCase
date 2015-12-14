@@ -2,7 +2,7 @@
 
 angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$stateParams', '$sce', '$q', 'ConfigService'
     , 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService', 'Authentication'
-    , function ($scope, $stateParams, $sce, $q, ConfigService, Util, TicketService, LookupService, FrevvoFormService, TaskNewTaskService, Authentication){
+    , function ($scope, $stateParams, $sce, $q, ConfigService, Util, TicketService, LookupService, FrevvoFormService, TaskNewTaskService, Authentication) {
 
         $scope.config = null;
 
@@ -19,7 +19,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
             $scope.config.data.assignee = $scope.userId;
 
-            if (!Util.isEmpty($stateParams.parentObject) && !Util.isEmpty($stateParams.parentType)){
+            if (!Util.isEmpty($stateParams.parentObject) && !Util.isEmpty($stateParams.parentType)) {
                 $scope.config.data.attachedToObjectName = $stateParams.parentObject;
                 $scope.config.data.attachedToObjectType = $stateParams.parentType;
             }
@@ -30,7 +30,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.opened.openedStart = false;
         $scope.opened.openedEnd = false;
 
-        $scope.saveNewTask = function(){
+        $scope.saveNewTask = function () {
             TaskNewTaskService.saveAdHocTask($scope.config.data);
         }
     }

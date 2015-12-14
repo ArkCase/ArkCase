@@ -1,34 +1,20 @@
 /**
- * Created by nick.ferguson on 12/9/2015.
+ * @ngdoc service
+ * @name tasks.service:Tasks.NewTaskService
+ *
+ * @description
+ *
+ * {@Link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/tasks/services/task-new-task.client.service.js modules/tasks/services/task-new-task.client.service.js}
+ *
+ * Task.NewTaskService provides the functions for creating an Ad Hoc task.
  */
 angular.module('tasks').factory('Task.NewTaskService', ['$resource', 'UtilService',
     function ($resource, Util) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
-            /**
-             * ngdoc method
-             * name get
-             * methodOf tasks.service:Task.NewTaskService
-             *
-             * @description
-             * Query task data
-             *
-             * @param {Object} params Map of input parameter.
-             * @param {Number} params.id  Task ID
-             * @param {Function} onSuccess (Optional)Callback function of success query.
-             * @param {Function} onError (Optional) Callback function when fail.
-             *
-             * @returns {Object} Object returned by $resource
-             */
-            //get: {
-            //    method: 'GET',
-            //    url: 'proxy/arkcase/api/latest/plugin/task/byId/:id',
-            //    cache: false,
-            //    isArray: false
-            //}
 
             /**
              * @ngdoc method
-             * @name save
+             * @name createNewTask
              * @methodOf tasks.service:Task.NewTaskService
              *
              * @description
@@ -48,37 +34,24 @@ angular.module('tasks').factory('Task.NewTaskService', ['$resource', 'UtilServic
             }
         });
 
-        Service.saveAdHocTask = function(taskData){
+        /**
+         * @ngdoc method
+         * @name saveAdHocTask
+         * @methodOf tasks.service:Task.NewTaskService
+         *
+         * @description
+         * Save ad hoc task data
+         *
+         * @param {Object} taskData Data from the ad hod task to be created
+         * @returns {*}
+         */
+        Service.saveAdHocTask = function (taskData) {
             return Util.serviceCall({
-                    service: Service.createNewTask
-                    , data: taskData
+                service: Service.createNewTask
+                , data: taskData
             })
         };
 
         return Service;
     }
 ]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
