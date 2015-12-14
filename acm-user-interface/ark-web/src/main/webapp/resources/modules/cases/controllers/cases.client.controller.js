@@ -15,6 +15,7 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
             promiseGetModuleConfig.then(function (config) {
                 var componentConfig = _.find(config.components, {id: componentId});
                 $scope.$broadcast('component-config', componentId, componentConfig);
+                return config;
             });
         });
         $scope.$on('report-case-updated', function (e, caseInfo) {
