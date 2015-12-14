@@ -296,6 +296,8 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     var newGroup = payload.data;
                     newGroup.object_sub_type_s = 'ADHOC_GROUP';
                     newGroup.object_id_s = payload.data.name;
+                    if (payload.data.supervisor)
+                        newGroup.supervisor = payload.data.supervisor.fullName;
                     groupsMap[payload.data.name] = newGroup;
                     addToTree(newGroup, true);
 
