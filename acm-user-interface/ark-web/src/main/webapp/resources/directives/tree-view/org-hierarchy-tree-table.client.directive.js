@@ -6,7 +6,6 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', '$tim
             restrict: 'E',
             scope: {
                 treeData: '=',
-                columns: '=',
                 onSelect: '&',
                 onLazyLoad: '=',
                 onDeleteMembers: '=',
