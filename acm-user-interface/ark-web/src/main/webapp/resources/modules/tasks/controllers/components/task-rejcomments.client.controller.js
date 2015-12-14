@@ -1,23 +1,22 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'Helper.UiGridService', 'ObjectService', 'Object.NoteService', 'Authentication'
-    , function ($scope, $stateParams, $q, Util, HelperUiGridService, ObjectService, ObjectNoteService, Authentication) {
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.NoteService', 'Authentication'
+    , function ($scope, $stateParams, $q
+        , Util, ConfigService, HelperUiGridService, ObjectService, ObjectNoteService, Authentication) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        $scope.$emit('req-component-config', 'rejcomments');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ("rejcomments" == componentId) {
-                gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.setInPlaceEditing(config, $scope.updateRow);
-                gridHelper.setUserNameFilter(promiseUsers);
+        ConfigService.getComponentConfig("tasks", "rejcomments").then(function (config) {
+            gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.setInPlaceEditing(config, $scope.updateRow);
+            gridHelper.setUserNameFilter(promiseUsers);
 
-                $scope.retrieveGridData();
-            }
+            $scope.retrieveGridData();
+            return config;
         });
 
         Authentication.queryUserInfo().then(

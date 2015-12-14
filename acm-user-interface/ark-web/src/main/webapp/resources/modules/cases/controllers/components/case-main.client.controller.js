@@ -13,12 +13,6 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
         //		$scope.config = config;
         //	}
         //});
-        //ConfigService.getComponentConfig("cases", "main").then(function (componentConfig) {
-        //    var a1 = componentConfig;
-        //    var a2 = $scope.config;
-        //
-        //    return componentConfig;
-        //});
 
         var promiseConfig = ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
 			$scope.components = moduleConfig.components;
@@ -60,7 +54,7 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
         CaseInfoService.getCaseInfo($stateParams.id).then(function (caseInfo) {
             $scope.caseInfo = caseInfo;
 
-            $scope.widgetData["details"] = $scope.caseInfo.details;
+            $scope.widgetData["details"] = Util.goodMapValue($scope.caseInfo, "details");
 
             var personAssociations = $scope.caseInfo.personAssociations;
             $scope.widgetData["people"] = personAssociations.length;

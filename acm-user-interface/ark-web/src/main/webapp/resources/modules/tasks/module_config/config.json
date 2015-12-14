@@ -240,7 +240,71 @@
       "icon": "fa fa-tachometer",
       "enabled": false,
       "type": "empty",
-      "editable": false
+      "editable": false,
+      "widgetsTask": [
+        {
+          "id": "details",
+          "type": "component"
+        },
+        {
+          "id": "reworkdetails",
+          "type": "component"
+        },
+        {
+          "id": "docsreview",
+          "type": "component"
+        },
+        {
+          "id": "attachments",
+          "type": "component"
+        },
+        {
+          "id": "notes",
+          "type": "component"
+        },
+        {
+          "id": "workflow",
+          "type": "component"
+        },
+        {
+          "id": "history",
+          "type": "component"
+        },
+        {
+          "id": "signatures",
+          "type": "component"
+        }
+      ],
+      "widgetsAdhoc": [
+        {
+          "id": "details",
+          "type": "component"
+        },
+        {
+          "id": "rejcomments",
+          "type": "component"
+        },
+        {
+          "id": "attachments",
+          "type": "component"
+        },
+        {
+          "id": "notes",
+          "type": "component"
+        },
+        {
+          "id": "workflow",
+          "type": "component"
+        },
+        {
+          "id": "history",
+          "type": "component"
+        },
+        {
+          "id": "signatures",
+          "type": "component"
+        }
+      ]
     },
     {
       "id": "info",

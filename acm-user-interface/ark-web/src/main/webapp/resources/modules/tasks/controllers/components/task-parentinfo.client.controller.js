@@ -1,14 +1,15 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams', 'UtilService'
-    , 'ObjectService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService', 'Object.ModelService'
-    , function ($scope, $stateParams, Util, ObjectService, CaseInfoService, ComplaintInfoService, TaskInfoService, ObjectModelService) {
+angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService'
+    , 'Object.ModelService'
+    , function ($scope, $stateParams
+        , Util, ConfigService, ObjectService, CaseInfoService, ComplaintInfoService, TaskInfoService
+        , ObjectModelService) {
 
-        $scope.$emit('req-component-config', 'parentinfo');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ("parentinfo" == componentId) {
-                $scope.config = config;
-            }
+        ConfigService.getComponentConfig("tasks", "parentinfo").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
         $scope.$on('task-updated', function (e, data) {

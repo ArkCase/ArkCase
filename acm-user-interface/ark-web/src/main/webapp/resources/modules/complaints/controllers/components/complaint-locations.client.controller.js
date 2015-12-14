@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.LocationsController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'Helper.UiGridService', 'Helper.ConfigService', 'Complaint.InfoService', 'Object.LookupService'
-    , function ($scope, $stateParams, $q, Util, HelperUiGridService, HelperConfigService, ComplaintInfoService, ObjectLookupService) {
+    , 'UtilService', 'Helper.UiGridService', 'ConfigService', 'Complaint.InfoService', 'Object.LookupService'
+    , function ($scope, $stateParams, $q, Util, HelperUiGridService, ConfigService, ComplaintInfoService, ObjectLookupService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
@@ -13,12 +13,11 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
             }
         );
 
-        var promiseConfig = HelperConfigService.requestComponentConfig($scope, "locations", function (config) {
+        var promiseConfig = ConfigService.getComponentConfig("complaints", "locations").then(function (config) {
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.setInPlaceEditing(config, $scope.updateRow);
-
 
             $q.all([promiseAddressTypes]).then(function (data) {
                 $scope.gridOptions.enableRowSelection = false;    //need to turn off for inline edit
@@ -33,14 +32,21 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
                     }
                 }
             });
+            return config;
         });
 
-        $scope.$on('complaint-updated', function (e, data) {
-            if (ComplaintInfoService.validateComplaintInfo(data)) {
-                $scope.complaintInfo = data;
-                $scope.gridOptions.data = [Util.goodValue($scope.complaintInfo.location, {})];
-                gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
-            }
+        //$scope.$on('complaint-updated', function (e, data) {
+        //    if (ComplaintInfoService.validateComplaintInfo(data)) {
+        //        $scope.complaintInfo = data;
+        //        $scope.gridOptions.data = [Util.goodValue($scope.complaintInfo.location, {})];
+        //        gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
+        //    }
+        //});
+        ComplaintInfoService.getComplaintInfo($stateParams.id).then(function (complaintInfo) {
+            $scope.complaintInfo = complaintInfo;
+            $scope.gridOptions.data = [Util.goodValue($scope.complaintInfo.location, {})];
+            gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
+            return complaintInfo;
         });
 
 

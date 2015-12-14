@@ -1,7 +1,15 @@
 <div ng-controller="Complaints.MainController">
-    Overview coming soon!
     <!--<div ng-repeat="component in components">-->
     <!--<div ng-if="component.enabled"-->
     <!--ng-include="'modules/complaints/views/components/complaint-'+ component.id  +'.client.view.html'"></div>-->
     <!--</div>-->
+
+    <div class="tab-content">
+        <div class="panel panel-success panel-grid" ng-repeat="widget in widgets">
+            <div class="panel-heading">
+                <div class="panel-title ng-binding">{{widget.title}}</div>
+            </div>
+            <div class="panel-body">{{widgetData[widget.id]}}</div>
+        </div>
+    </div>
 </div>

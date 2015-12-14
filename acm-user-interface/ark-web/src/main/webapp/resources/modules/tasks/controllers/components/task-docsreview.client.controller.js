@@ -1,33 +1,29 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
-    , 'UtilService', 'Helper.UiGridService', 'Task.InfoService'
-    , function ($scope, $q, Util, HelperUiGridService, TaskInfoService) {
+angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q', '$stateParams'
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'Task.InfoService'
+    , function ($scope, $q, $stateParams, Util, ConfigService, HelperUiGridService, TaskInfoService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        $scope.$emit('req-component-config', 'docsreview');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ("docsreview" == componentId) {
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.setUserNameFilter(promiseUsers);
+        ConfigService.getComponentConfig("tasks", "docsreview").then(function (config) {
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.setUserNameFilter(promiseUsers);
 
-                //$scope.gridOptions.enableFiltering = false;
-            }
+            //$scope.gridOptions.enableFiltering = false;
+            return config;
         });
 
-        $scope.$on('task-updated', function (e, data) {
-            if (!TaskInfoService.validateTaskInfo(data)) {
-                return;
-            }
-            $scope.taskInfo = data;
-            $q.all([promiseUsers]).then(function (data) {
-                var arr = (data.documentUnderReview) ? [data.documentUnderReview] : [];
+        TaskInfoService.getTaskInfo($stateParams.id).then(function (taskInfo) {
+            $scope.taskInfo = taskInfo;
+            $q.all([promiseUsers]).then(function () {
+                var arr = (taskInfo.documentUnderReview) ? [taskInfo.documentUnderReview] : [];
                 $scope.gridOptions.data = arr;
                 gridHelper.hidePagingControlsIfAllDataShown(1);
             });
+            return taskInfo;
         });
 
         $scope.onClickObjLink = function (event, rowEntity) {

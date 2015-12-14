@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.CorrespondenceController', ['$scope', '$stateParams', '$q', '$window', '$translate'
-    , 'UtilService', 'Helper.UiGridService', 'ObjectService', 'LookupService', 'Object.LookupService', 'Object.CorrespondenceService', 'Complaint.InfoService'
-    , function ($scope, $stateParams, $q, $window, $translate, Util, HelperUiGridService, ObjectService, LookupService, ObjectLookupService
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'LookupService', 'Object.LookupService'
+    , 'Object.CorrespondenceService', 'Complaint.InfoService'
+    , function ($scope, $stateParams, $q, $window, $translate
+        , Util, ConfigService, HelperUiGridService, ObjectService, LookupService, ObjectLookupService
         , ObjectCorrespondenceService, ComplaintInfoService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
@@ -15,16 +17,14 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
             }
         );
 
-        $scope.$emit('req-component-config', 'correspondence');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if (componentId == 'correspondence') {
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.setExternalPaging(config, $scope.retrieveGridData);
-                gridHelper.setUserNameFilter(promiseUsers);
+        ConfigService.getComponentConfig("complaints", "correspondence").then(function (config) {
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.setExternalPaging(config, $scope.retrieveGridData);
+            gridHelper.setUserNameFilter(promiseUsers);
 
-                $scope.retrieveGridData();
-            }
+            $scope.retrieveGridData();
+            return config;
         });
 
         $scope.correspondenceForms = [{"value": "noop", "name": $translate.instant("common.select.option.none")}];
@@ -40,10 +40,14 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
             }
         );
 
-        $scope.$on('complaint-updated', function (e, data) {
-            if (ComplaintInfoService.validateComplaintInfo(data)) {
-                $scope.complaintInfo = data;
-            }
+        //$scope.$on('complaint-updated', function (e, data) {
+        //    if (ComplaintInfoService.validateComplaintInfo(data)) {
+        //        $scope.complaintInfo = data;
+        //    }
+        //});
+        ComplaintInfoService.getComplaintInfo($stateParams.id).then(function (complaintInfo) {
+            $scope.complaintInfo = complaintInfo;
+            return complaintInfo;
         });
 
         $scope.retrieveGridData = function () {
