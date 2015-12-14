@@ -44,7 +44,105 @@
       }
     },
     "admin.security.addNew": "Add New Directory",
-    "security.organizationalHierarchy": "Organizational Hierarchy",
+    "security.organizationalHierarchy": {
+      "title": "Organizational Hierarchy",
+      "btn": {
+        "createAdHocGroup": "createAdHocGroup"
+      },
+      "createGroupDialog": {
+        "title": "Add Ad-Hoc Group",
+        "name": "Name",
+        "namePlaceholder": "Enter group name",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter Description",
+        "btn": {
+          "ok": "Add Ag-Hoc Group",
+          "cancel": "Cancel"
+        }
+      },
+      "addSubGroupDialog": {
+        "title": "Add Subgroup to",
+        "name": "Name",
+        "namePlaceholder": "Enter group name",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter Description",
+        "btn": {
+          "ok": "Add Ag-Hoc Group",
+          "cancel": "Cancel"
+        }
+      },
+      "addMembers": {
+        "title": "Add Members",
+        "btn": {
+          "search": "Go!",
+          "cancel": "Cancel",
+          "ok": "Add",
+          "searchPlaceholder": "Enter to search for members."
+        }
+      },
+      "addMembers": {
+        "title": "Add Supervisor",
+        "btn": {
+          "search": "Go!",
+          "cancel": "Cancel",
+          "ok": "Add",
+          "searchPlaceholder": "Enter to search for supervisor."
+        }
+      },
+      "addMembersGridColumns": {
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "parent": "Parent",
+        "assignee": "Assignee",
+        "modified": "Modified"
+      },
+      "addSupervisor": {
+        "title": "Add Supervisor",
+        "btn": {
+          "search": "Go!",
+          "cancel": "Cancel",
+          "ok": "Add",
+          "searchPlaceholder": "Enter to search for supervisor."
+        }
+      },
+      "addSupervisorGridColumns": {
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "parent": "Parent",
+        "assignee": "Assignee",
+        "modified": "Modified"
+      },
+      "dialog.group": {
+        "confirm.delete": {
+          "cancelBtn": "Cancel",
+          "deleteBtn": "Delete",
+          "headerText": "You are about to delete group: ",
+          "bodyText": "Are you sure?"
+        }
+      },
+      "dialog.member": {
+        "confirm.delete": {
+          "cancelBtn": "Cancel",
+          "deleteBtn": "Delete",
+          "headerText": "You are about to delete member: ",
+          "bodyText": "Are you sure?"
+        }
+      },
+      "messages": {
+        "delete": {
+          "group": {
+            "success": "success",
+            "error": "error"
+          },
+          "member": {
+            "success": "success",
+            "error": "error"
+          }
+        }
+      }
+    },
     "security.selectPrivileges": "Create Role/Select Privileges",
     "security.selectPrivileges.applicationRole": "Application Role",
     "security.selectPrivileges.createRole": "Create Role",
