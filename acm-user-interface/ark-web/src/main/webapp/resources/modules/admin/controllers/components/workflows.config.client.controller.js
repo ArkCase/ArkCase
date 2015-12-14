@@ -98,7 +98,6 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
                     animation: true,
                     templateUrl: 'modules/admin/views/components/workflows.config.show-history.dialog.view.html',
                     controller: function ($scope, $modalInstance) {
-                        console.log($scope);
                         //initial values
                         $scope.activeBPMN = undefined;
                         $scope.initialActiveBPMNVersion = undefined;
