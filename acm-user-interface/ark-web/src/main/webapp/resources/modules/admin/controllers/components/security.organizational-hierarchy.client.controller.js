@@ -39,8 +39,10 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             group.folder = true;
             group.title = group.name;
             if (group.supervisor_id_s) {
-                //TODO get user display name
-                group.supervisor = group.supervisor_id_s;
+                if (group.supervisor_name_s)
+                    group.supervisor = group.supervisor_name_s;
+                else
+                    group.supervisor = group.supervisor_id_s;
             }
             //init children array
             if (!group.children)
@@ -91,6 +93,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     newGroup.object_sub_type_s = 'ADHOC_GROUP';
                     newGroup.object_id_s = newGroup.name;
                     newGroup.parent_id_s = parent.object_id_s;
+                    newGroup.supervisor = newGroup.supervisor.fullName;
 
                     groupsMap[newGroup.object_id_s] = newGroup;
                     if (!groupsMap[newGroup.parent_id_s].child_id_ss) {
@@ -292,7 +295,8 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     //added successfully
                     var newGroup = payload.data;
                     newGroup.object_sub_type_s = 'ADHOC_GROUP';
-                    groupsMap[payload.data.name] = payload.data;
+                    newGroup.object_id_s = payload.data.name;
+                    groupsMap[payload.data.name] = newGroup;
                     addToTree(newGroup, true);
 
                 }, function () {

@@ -40,7 +40,7 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
 
             link: function (scope) {    //dom operations
                 if (scope.multiSelect == undefined || scope.multiSelect == '') {
-                    scope.multiSelect = false;
+                    scope.multiSelect = 'false';
                 }
 
                 scope.facets = [];
@@ -121,7 +121,7 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                 scope.addExistingItem = function () {
                     //when the modal is closed, the parent scope gets
                     //the selectedItem via the two-way binding
-                    if (scope.multiSelect == true) {
+                    if (scope.multiSelect === 'true') {
                         scope.modalInstance.close(scope.selectedItems);
                     } else {
                         scope.modalInstance.close(scope.selectedItem);
