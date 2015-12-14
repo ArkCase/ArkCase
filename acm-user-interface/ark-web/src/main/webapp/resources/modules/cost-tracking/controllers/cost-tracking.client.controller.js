@@ -9,10 +9,15 @@
  *
  * The Cost Tracking module main controller
  */
-angular.module('cost-tracking').controller('CostTrackingController', ['$scope', '$stateParams', '$translate', 'ConfigService', 'CostTracking.InfoService', 'UtilService',
-	function($scope, $stateParams, $translate, ConfigService, CostTrackingInfoService, Util) {
+angular.module('cost-tracking').controller('CostTrackingController', ['$scope', '$stateParams', '$state', '$translate'
+    , 'UtilService', 'ConfigService', 'CostTracking.InfoService', 'ObjectService', 'Helper.ObjectTreeService'
+    , function ($scope, $stateParams, $state, $translate
+        , Util, ConfigService, CostTrackingInfoService, ObjectService, HelperObjectTreeService) {
+
 		var promiseGetModuleConfig = ConfigService.getModuleConfig("cost-tracking").then(function (config) {
 			$scope.config = config;
+            $scope.componentLinks = HelperObjectTreeService.createComponentLinks(config, ObjectService.ObjectTypes.COSTSHEET);
+            $scope.activeLinkId = "main";
 			return config;
 		});
 		$scope.$on('req-component-config', function (e, componentId) {
@@ -21,6 +26,22 @@ angular.module('cost-tracking').controller('CostTrackingController', ['$scope', 
 				$scope.$broadcast('component-config', componentId, componentConfig);
 			});
 		});
+
+        $scope.$on('req-select-costsheet', function (e, selectedCostsheet) {
+            var components = Util.goodArray(selectedCostsheet.components);
+            $scope.activeLinkId = (1 == components.length) ? components[0] : "main";
+        });
+
+        $scope.getActive = function (linkId) {
+            return ($scope.activeLinkId == linkId) ? "active" : ""
+        };
+
+        $scope.onClickComponentLink = function (linkId) {
+            $scope.activeLinkId = linkId;
+            $state.go('cost-tracking.' + linkId, {
+                id: $stateParams.id
+            });
+        };
 
 		$scope.progressMsg = $translate.instant("costTracking.progressNoCostsheet");
 		$scope.$on('req-select-costsheet', function (e, selectedCostsheet) {
@@ -31,13 +52,11 @@ angular.module('cost-tracking').controller('CostTrackingController', ['$scope', 
 		});
 
 		var loadCostsheet = function (id) {
-			if (id) {
+            if (Util.goodPositive(id)) {
 				if ($scope.costsheetInfo && $scope.costsheetInfo.id != id) {
 					$scope.costsheetInfo = null;
 				}
 				$scope.progressMsg = $translate.instant("costTracking.progressLoading") + " " + id + "...";
-
-
 
 				CostTrackingInfoService.getCostTrackingInfo(id).then(
 					function (costsheetInfo) {

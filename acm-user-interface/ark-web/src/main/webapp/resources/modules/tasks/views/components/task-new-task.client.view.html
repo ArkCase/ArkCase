@@ -109,7 +109,7 @@
         </div>
         <div class="row wrapper">
             <div class="col-sm-6">
-                <button ng-disabled="!config.newTask.data.title || !config.newTask.data.taskStartDate || !config.newTask.data.dueDate" ng-click="saveNewTask" class="btn btn-default btn-sm pull-left" data-toggle="tooltip" id="saveButton" data-title="Save">
+                <button ng-disabled="!config.newTask.data.title || !config.newTask.data.taskStartDate || !config.newTask.data.dueDate" ng-click="saveNewTask()" class="btn btn-default btn-sm pull-left" data-toggle="tooltip" id="saveButton" data-title="Save">
                     <i class="fa fa-user"></i>
                             <span > {{ 'tasks.newTask.saveButton' | translate }}
                             </span>

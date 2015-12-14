@@ -13,13 +13,15 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             }
         );
 
+
         ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
             $scope.config = _.find(moduleConfig.components, {id: "newTask"});
+
+            $scope.config.data.assignee = $scope.userId;
 
             if (!Util.isEmpty($stateParams.parentObject) && !Util.isEmpty($stateParams.parentType)){
                 $scope.config.data.attachedToObjectName = $stateParams.parentObject;
                 $scope.config.data.attachedToObjectType = $stateParams.parentType;
-                $scope.config.data.assignee = $scope.userId;
             }
             return moduleConfig;
         });
