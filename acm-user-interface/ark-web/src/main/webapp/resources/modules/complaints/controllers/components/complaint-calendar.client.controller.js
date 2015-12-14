@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.CalendarController', ['$scope','$timeout', '$compile', 'uiCalendarConfig', 'Object.CalendarService','Complaint.InfoService',
-    function($scope,$timeout, $compile, uiCalendarConfig, CalendarService,ComplaintInfoService) {
+angular.module('complaints').controller('Complaints.CalendarController', ['$scope','$timeout', 'uiCalendarConfig', 'Object.CalendarService','Complaint.InfoService',
+    function($scope,$timeout, uiCalendarConfig, CalendarService,ComplaintInfoService) {
 
         $scope.$emit('req-component-config', 'calendar');
         $scope.$on('component-config', function (e, componentId, config) {
