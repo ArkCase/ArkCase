@@ -11,6 +11,7 @@ angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$state
             if ('history' == componentId) {
                 gridHelper.setColumnDefs(config);
                 gridHelper.setBasicOptions(config);
+                gridHelper.disableGridScrolling(config);
                 gridHelper.setExternalPaging(config, $scope.retrieveGridData);
                 gridHelper.setUserNameFilter(promiseUsers);
 
@@ -32,7 +33,6 @@ angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$state
                     var auditData = data[0];
                     $scope.gridOptions.data = auditData.resultPage;
                     $scope.gridOptions.totalItems = auditData.totalCount;
-                    gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                 });
             }
         };

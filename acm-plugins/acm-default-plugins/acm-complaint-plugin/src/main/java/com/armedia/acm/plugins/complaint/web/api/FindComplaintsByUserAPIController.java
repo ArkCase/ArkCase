@@ -1,10 +1,8 @@
 package com.armedia.acm.plugins.complaint.web.api;
 
-import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.ComplaintListView;
-import com.armedia.acm.plugins.complaint.model.ComplaintSearchResultEvent;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +21,9 @@ import java.util.List;
  * Created by marjan.stefanoski on 8/20/2014.
  */
 @Controller
-@RequestMapping({ "/api/v1/plugin/complaint", "/api/latest/plugin/complaint" })
-public class FindComplaintsByUserAPIController {
+@RequestMapping({"/api/v1/plugin/complaint", "/api/latest/plugin/complaint"})
+public class FindComplaintsByUserAPIController
+{
 
     private ComplaintDao complaintDao;
     private ComplaintEventPublisher eventPublisher;
@@ -38,36 +37,45 @@ public class FindComplaintsByUserAPIController {
             @PathVariable("user") String user,
             Authentication authentication,
             HttpSession session
-    ) throws AcmListObjectsFailedException {
-        if ( log.isInfoEnabled() ) {
+    ) throws AcmListObjectsFailedException
+    {
+        if (log.isInfoEnabled())
+        {
             log.info("Finding complaints created by user '" + user + "'");
         }
         String ipAddress = (String) session.getAttribute("acm_ip_address");
-        try {
+        try
+        {
             List<ComplaintListView> complaints = complaintDao.listAllUserComplaints(user);
-            for ( ComplaintListView complaint : complaints ){
-                getEventPublisher().publishComplaintSearchResultEvent(complaint,authentication,ipAddress);
+            for (ComplaintListView complaint : complaints)
+            {
+                getEventPublisher().publishComplaintSearchResultEvent(complaint, authentication, ipAddress);
             }
             return complaints;
-        } catch (Exception e){
+        } catch (Exception e)
+        {
             log.error("Could not list complaints: " + e.getMessage(), e);
             throw new AcmListObjectsFailedException("complaint", e.getMessage(), e);
         }
     }
 
-    public ComplaintEventPublisher getEventPublisher() {
+    public ComplaintEventPublisher getEventPublisher()
+    {
         return eventPublisher;
     }
 
-    public void setEventPublisher(ComplaintEventPublisher eventPublisher) {
+    public void setEventPublisher(ComplaintEventPublisher eventPublisher)
+    {
         this.eventPublisher = eventPublisher;
     }
 
-    public ComplaintDao getComplaintDao() {
+    public ComplaintDao getComplaintDao()
+    {
         return complaintDao;
     }
 
-    public void setComplaintDao(ComplaintDao complaintDao) {
+    public void setComplaintDao(ComplaintDao complaintDao)
+    {
         this.complaintDao = complaintDao;
     }
 

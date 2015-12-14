@@ -14,6 +14,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
                 gridHelper.setBasicOptions(config);
                 gridHelper.setExternalPaging(config, $scope.retrieveGridData);
                 gridHelper.setUserNameFilter(promiseUsers);
+                gridHelper.disableGridScrolling(config);
 
                 $scope.retrieveGridData();
             }
@@ -34,7 +35,6 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = auditData.resultPage;
                     $scope.gridOptions.totalItems = auditData.totalCount;
-                    gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                 });
             }
         };
