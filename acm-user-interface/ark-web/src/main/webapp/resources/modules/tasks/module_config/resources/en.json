@@ -104,7 +104,7 @@
       "userId": "User"
     }
   },
-  "tasks.newTask":{
+  "tasks.newTask": {
     "title": "New Task",
     "assignee.button": "Choose Assignee",
     "assignee.label": "Assign To",

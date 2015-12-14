@@ -1,41 +1,45 @@
-<!--<div >-->
-<div ng-controller="Tasks.NewTaskController"  class="module-content">
+<div ng-controller="Tasks.NewTaskController" class="module-content">
     <div class="content-body">
         <div class="module-header">
-            <h3>{{'tasks.newTask.title' | translate}}</h3>
+            <h3 translate>tasks.newTask.title</h3>
         </div>
 
         <div class="row wrapper">
             <div class="col-sm-6">
-                <button class="btn btn-default btn-sm pull-left" data-toggle="tooltip" id = "chooseAssignee" data-title="Choose assignee">
+                <button class="btn btn-default btn-sm pull-left" data-toggle="tooltip" id="chooseAssignee"
+                        data-title="Choose assignee">
                     <i class="fa fa-user"></i>
-                            <span >{{ 'tasks.newTask.assignee.button' | translate }}
+                            <span>{{ 'tasks.newTask.assignee.button' | translate }}
                             </span>
                 </button>
             </div>
         </div>
         <div class="row wrapper">
             <div class="col-sm-6">
-                <label  class="label">{{ 'tasks.newTask.assignee.label' | translate }}</label>
-                <input type="text" ng-model="config.newTask.data.assignee" class="input-sm form-control" placeholder="{{ 'tasks.new.assignee.placeholder' | translate }}" id="assignee" style="background-color: white;" readonly>
+                <label class="label" translate> tasks.newTask.assignee.label </label>
+                <input type="text" ng-model="config.newTask.data.assignee" class="input-sm form-control"
+                       placeholder="{{ 'tasks.newTask.assignee.placeholder' | translate }}" id="assignee"
+                       style="background-color: white;" readonly>
             </div>
 
             <div class="col-sm-6">
-                <label  class="label">{{ 'tasks.newTask.associateNumber.label' | translate }}</label>
-                <input type="text" ng-model="config.newTask.data.attachedToObjectName" class="input-sm form-control" placeholder="{{ 'tasks.new.associateNumber.placeholder' | translate }}" id="complaintId">
+                <label class="label" translate> tasks.newTask.associateNumber.label </label>
+                <input type="text" ng-model="config.newTask.data.attachedToObjectName" class="input-sm form-control"
+                       placeholder="{{ 'tasks.newTask.associateNumber.placeholder' | translate }}" id="complaintId">
             </div>
         </div>
 
         <div class="row wrapper">
             <div class="col-sm-12">
-                <label  class="label">{{ 'tasks.newTask.subject.label' | translate }}</label>
-                <input type="text" ng-model="config.newTask.data.title" class="input-sm form-control" placeholder="{{ 'tasks.newTask.subject.label'  | translate }}" id="subject">
+                <label class="label" translate> tasks.newTask.subject.label </label>
+                <input type="text" ng-model="config.newTask.data.title" class="input-sm form-control"
+                       placeholder="{{ 'tasks.newTask.subject.label'  | translate }}" id="subject">
             </div>
         </div>
 
         <div class="row wrapper">
             <div class="col-sm-4">
-                <label class="label">{{ 'tasks.newTask.taskStartDate.label' | translate }}</label>
+                <label class="label" translate> tasks.newTask.taskStartDate.label </label>
                 <div>
                     <p class="input-group">
                         <input type="text"
@@ -46,7 +50,7 @@
                                close-on-date-selection="true"
                                show-button-bar="true"
                                on-open-focus="false"
-                               close-text="{{ 'tasks.new.datepicker.close' | translate }}"/>
+                               close-text="{{ 'tasks.newTask.datepicker.close' | translate }}"/>
             <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="opened.openedStart = !opened.openedStart">
                     <i class="fa fa-calendar"></i>
@@ -57,8 +61,10 @@
             </div>
             <div class="form-group">
                 <label class="control-label">{{ 'tasks.newTask.status.label' | translate }}
-                    <select ng-model="config.newTask.data.status" ng-options="option.id as option.name for option in config.newTask.status" class="form-control input-sm">
-                        <option value="">{{ 'tasks.newTask.status.placeholder' | translate }}</option>
+                    <select ng-model="config.newTask.data.status"
+                            ng-options="status.id as status.name for status in config.status"
+                            class="form-control input-sm">
+                        <option value="" translate>tasks.newTask.status.placeholder</option>
                     </select>
                 </label>
             </div>
@@ -67,7 +73,7 @@
 
         <div class="row wrapper">
             <div class="col-sm-4">
-                <label class="label">{{ 'tasks.newTask.dueDate.label' | translate }}</label>
+                <label class="label" translate> tasks.newTask.dueDate.label </label>
                 <div>
                     <p class="input-group">
                         <input type="text"
@@ -89,19 +95,22 @@
             </div>
             <div class="form-group">
                 <label class="control-label">{{ 'tasks.newTask.priority.label' | translate }}
-                    <select ng-model="config.newTask.data.priority" ng-options="option.id as option.name for option in config.newTask.priority" class="form-control input-sm">
-                        <option value="">{{ 'tasks.newTask.priority.placeholder' | translate }}</option>
+                    <select ng-model="config.newTask.data.priority"
+                            ng-options="priority.id as priority.name for priority in config.priority"
+                            class="form-control input-sm">
+                        <option value="" translate>tasks.newTask.priority.placeholder</option>
                     </select>
                 </label>
             </div>
             <div class="col-sm-4">
-                <label class="label">{{ 'tasks.newTask.percentComplete.label' | translate }}</label>
-                <input type="text" ng-model="config.newTask.data.percentComplete" class="input-sm form-control" placeholder="{{ 'tasks.new.percentComplete.label' | translate }}" id="percentComplete">
+                <label class="label" translate> tasks.newTask.percentComplete.label </label>
+                <input type="text" ng-model="config.newTask.data.percentComplete" class="input-sm form-control"
+                       placeholder="{{ 'tasks.newTask.percentComplete.label' | translate }}" id="percentComplete">
             </div>
         </div>
         <div class="row wrapper">
             <div class="col-sm-12">
-                <label class="label">{{ 'tasks.newTask.notes.label' | translate }}</label>
+                <label class="label" translate> tasks.newTask.notes.label </label>
                 <div class="panel-body">
                     <summernote config="options" ng-model="config.newTask.data.details"></summernote>
                 </div>
@@ -109,13 +118,13 @@
         </div>
         <div class="row wrapper">
             <div class="col-sm-6">
-                <button ng-disabled="!config.newTask.data.title || !config.newTask.data.taskStartDate || !config.newTask.data.dueDate" ng-click="saveNewTask()" class="btn btn-default btn-sm pull-left" data-toggle="tooltip" id="saveButton" data-title="Save">
+                <button ng-disabled="!config.newTask.data.title || !config.newTask.data.taskStartDate || !config.newTask.data.dueDate"
+                        ng-click="saveNewTask()" class="btn btn-default btn-sm pull-left" data-toggle="tooltip"
+                        id="saveButton" data-title="Save">
                     <i class="fa fa-user"></i>
-                            <span > {{ 'tasks.newTask.saveButton' | translate }}
-                            </span>
+                    <span translate> tasks.newTask.saveButton </span>
                 </button>
             </div>
         </div>
     </div>
 </div>
-<!--</div>-->
