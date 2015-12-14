@@ -1,22 +1,21 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$stateParams', '$q', 'UtilService', 'Helper.UiGridService', 'ObjectService', 'Object.AuditService'
-    , function ($scope, $stateParams, $q, Util, HelperUiGridService, ObjectService, ObjectAuditService) {
+angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$stateParams', '$q'
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.AuditService'
+    , function ($scope, $stateParams, $q, Util, ConfigService, HelperUiGridService, ObjectService, ObjectAuditService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        $scope.$emit('req-component-config', 'history');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('history' == componentId) {
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.disableGridScrolling(config);
-                gridHelper.setExternalPaging(config, $scope.retrieveGridData);
-                gridHelper.setUserNameFilter(promiseUsers);
+        ConfigService.getComponentConfig("tasks", "history").then(function (config) {
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
+            gridHelper.setExternalPaging(config, $scope.retrieveGridData);
+            gridHelper.setUserNameFilter(promiseUsers);
 
-                $scope.retrieveGridData();
-            }
+            $scope.retrieveGridData();
+            return config;
         });
 
         $scope.retrieveGridData = function () {
@@ -33,6 +32,7 @@ angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$state
                     var auditData = data[0];
                     $scope.gridOptions.data = auditData.resultPage;
                     $scope.gridOptions.totalItems = auditData.totalCount;
+                    //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                 });
             }
         };

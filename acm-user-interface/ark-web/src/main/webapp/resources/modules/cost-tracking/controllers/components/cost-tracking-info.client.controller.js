@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module('cost-tracking').controller('CostTracking.InfoController', ['$scope', 'Object.InfoService', 'ObjectService',
-    function ($scope, ObjectInfoService, ObjectService) {
-        $scope.$emit('req-component-config', 'info');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ("info" == componentId) {
-                $scope.config = config;
-            }
+angular.module('cost-tracking').controller('CostTracking.InfoController', ['$scope'
+    , 'ConfigService', 'Object.InfoService', 'ObjectService'
+    , function ($scope, ConfigService, ObjectInfoService, ObjectService) {
+
+        ConfigService.getComponentConfig("cost-tracking", "info").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
         $scope.parentInfo = {};

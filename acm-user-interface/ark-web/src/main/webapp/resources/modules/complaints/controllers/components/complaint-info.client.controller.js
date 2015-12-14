@@ -1,15 +1,13 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', 'UtilService'
+angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', 'UtilService', 'ConfigService'
     , 'Object.LookupService', 'Complaint.LookupService', 'Complaint.InfoService', 'Object.ModelService'
-    , function ($scope, $stateParams, Util
+    , function ($scope, $stateParams, Util, ConfigService
         , ObjectLookupService, ComplaintLookupService, ComplaintInfoService, ObjectModelService) {
 
-        $scope.$emit('req-component-config', 'info');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ("info" == componentId) {
-                $scope.config = config;
-            }
+        ConfigService.getComponentConfig("complaints", "info").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
         ObjectLookupService.getPriorities().then(
@@ -46,9 +44,9 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
         );
 
 
-        $scope.$on('complaint-selected', function onSelectedComplaint(e, selectedComplaint) {
-            $scope.complaintSolr = selectedComplaint;
-        });
+        //$scope.$on('complaint-selected', function onSelectedComplaint(e, selectedComplaint) {
+        //    $scope.complaintSolr = selectedComplaint;
+        //});
 
         var previousId = null;
         $scope.$on('complaint-updated', function (e, data) {

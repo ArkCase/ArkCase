@@ -1,16 +1,13 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal'
-    , 'UtilService', 'ObjectService', 'Object.LookupService', 'Task.InfoService'
-    , function ($scope, $stateParams, $modal, Util, ObjectService, ObjectLookupService, TaskInfoService) {
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService'
+    , function ($scope, $stateParams, $modal, Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService) {
 
-        $scope.$emit('req-component-config', 'attachments');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('attachments' == componentId) {
-                $scope.config = config;
-            }
+        ConfigService.getComponentConfig("tasks", "attachments").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
-
 
         ObjectLookupService.getFileTypes().then(
             function (fileTypes) {
@@ -20,13 +17,11 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             }
         );
 
-
-        $scope.objectType = ObjectService.ObjectTypes.TASK;
+        $scope.objectType = $stateParams.type; //ObjectService.ObjectTypes.TASK;
         $scope.objectId = $stateParams.id;
-        $scope.$on('task-updated', function (e, data) {
-            if (TaskInfoService.validateTaskInfo(data)) {
-                $scope.taskInfo = data;
-            }
+        TaskInfoService.getTaskInfo($stateParams.id).then(function (taskInfo) {
+            $scope.taskInfo = taskInfo;
+            return taskInfo;
         });
 
     }

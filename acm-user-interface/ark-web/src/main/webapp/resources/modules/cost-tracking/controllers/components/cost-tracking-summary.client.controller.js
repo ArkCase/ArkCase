@@ -1,17 +1,14 @@
 'use strict';
 
-angular.module('cost-tracking').controller('CostTracking.SummaryController', ['$scope', 'UtilService', 'Helper.UiGridService',
-    function ($scope, Util, HelperUiGridService) {
+angular.module('cost-tracking').controller('CostTracking.SummaryController', ['$scope'
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService'
+    , function ($scope, Util, ConfigService, HelperUiGridService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-
-        $scope.$emit('req-component-config', 'summary');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('summary' == componentId) {
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.disableGridScrolling(config);
-            }
+        ConfigService.getComponentConfig("cost-tracking", "summary").then(function (config) {
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            return config;
         });
 
         $scope.$on('costsheet-updated', function (e, data) {
