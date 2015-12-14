@@ -9,6 +9,7 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
         var promiseConfig = ConfigService.getComponentConfig("complaints", "cost").then(function (config) {
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
 
             for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                 if ("name" == $scope.config.columnDefs[i].name) {
@@ -34,7 +35,7 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
                         $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = costsheets;
                         $scope.gridOptions.totalItems = Util.goodValue(costsheets.length, 0);
-                        gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+                        //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                         return config;
                     });
                     return costsheets;

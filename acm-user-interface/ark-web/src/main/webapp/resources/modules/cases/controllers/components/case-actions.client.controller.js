@@ -115,8 +115,8 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                     caseId: caseInfo.id
                     , caseNumber: caseInfo.caseNumber
                     , mode: "edit"
-                    , containerId: caseInfo.containerId
-                    , folderId: caseInfo.folderId
+                    , containerId: caseInfo.container.id
+                    , folderId: caseInfo.container.folder.id
                 }
             });
         };
@@ -138,8 +138,8 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                     caseId: caseInfo.id
                     , caseNumber: caseInfo.caseNumber
                     , mode: "reinvestigate"
-                    , containerId: caseInfo.containerId
-                    , folderId: caseInfo.folderId
+                    , containerId: caseInfo.container.id
+                    , folderId: caseInfo.container.folder.id
                 }
             });
         };
@@ -159,7 +159,29 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         $scope.merge = function () {
-            console.log('merge');
+             $event.preventDefault();
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/cases/views/components/case-merge.client.view.html',
+                controller: 'Cases.MergeController',
+                size: 'lg',
+                resolve: {
+                    $clientInfoScope: function () {
+                      return $scope;
+                    },
+                    $filter: function () {
+                        return $scope.config.clientInfo.clientFacetFilter;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (selectedCase) {
+                if(selectedCase){
+                    console.log("Code goes here.");
+                }
+            }, function () {
+                // Cancel button was clicked
+            });
         };
 
         $scope.split = function () {

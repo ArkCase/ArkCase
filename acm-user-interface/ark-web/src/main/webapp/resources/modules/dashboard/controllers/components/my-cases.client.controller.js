@@ -31,7 +31,7 @@ angular.module('dashboard.my-cases', ['adf.provider'])
 
             var paginationOptions = {
                 pageNumber: 1,
-                pageSize: 25,
+                pageSize: 5,
                 sortBy: 'id',
                 sortDir: 'desc'
             };

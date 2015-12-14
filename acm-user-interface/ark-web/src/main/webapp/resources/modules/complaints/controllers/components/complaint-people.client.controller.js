@@ -81,6 +81,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
             gridHelper.setInPlaceEditing(config, $scope.updateRow,
                 function (rowEntity) {
                     return (!Util.isEmpty(rowEntity.personType)
@@ -122,6 +123,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 gridContactMethodHelper.addDeleteButton(config.contactMethods.columnDefs, "grid.appScope.deleteRowContactMethods(row.entity)");
                 gridContactMethodHelper.setColumnDefs(config.contactMethods);
                 gridContactMethodHelper.setBasicOptions(config.contactMethods);
+                gridContactMethodHelper.disableGridScrolling(config.contactMethods);
                 $q.all([promiseContactMethodTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.contactMethods.columnDefs.length; i++) {
                         if (HelperUiGridService.Lookups.CONTACT_METHODS_TYPES == $scope.config.contactMethods.columnDefs[i].lookup) {
@@ -153,6 +155,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 gridOrganizationHelper.addDeleteButton(config.organizations.columnDefs, "grid.appScope.deleteRowOrganizations(row.entity)");
                 gridOrganizationHelper.setColumnDefs(config.organizations);
                 gridOrganizationHelper.setBasicOptions(config.organizations);
+                gridOrganizationHelper.disableGridScrolling(config.organizations);
                 $q.all([promiseOrganizationTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.organizations.columnDefs.length; i++) {
                         if (HelperUiGridService.Lookups.ORGANIZATION_TYPES == $scope.config.organizations.columnDefs[i].lookup) {
@@ -181,6 +184,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 gridAddressHelper.addDeleteButton(config.addresses.columnDefs, "grid.appScope.deleteRowAddresses(row.entity)");
                 gridAddressHelper.setColumnDefs(config.addresses);
                 gridAddressHelper.setBasicOptions(config.addresses);
+                gridAddressHelper.disableGridScrolling(config.addresses);
                 $q.all([promiseAddressTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.addresses.columnDefs.length; i++) {
                         if (HelperUiGridService.Lookups.ADDRESS_TYPES == $scope.config.addresses.columnDefs[i].lookup) {
@@ -209,6 +213,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 gridAliasHelper.addDeleteButton(config.aliases.columnDefs, "grid.appScope.deleteRowAliases(row.entity)");
                 gridAliasHelper.setColumnDefs(config.aliases);
                 gridAliasHelper.setBasicOptions(config.aliases);
+                gridAliasHelper.disableGridScrolling(config.aliases);
                 $q.all([promiseAliasTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.aliases.columnDefs.length; i++) {
                         if (HelperUiGridService.Lookups.ALIAS_TYPES == $scope.config.aliases.columnDefs[i].lookup) {
@@ -237,6 +242,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 gridSecurityTagHelper.addDeleteButton(config.securityTags.columnDefs, "grid.appScope.deleteRowSecurityTags(row.entity)");
                 gridSecurityTagHelper.setColumnDefs(config.securityTags);
                 gridSecurityTagHelper.setBasicOptions(config.securityTags);
+                gridSecurityTagHelper.disableGridScrolling(config.securityTags);
                 $q.all([promiseSecurityTagTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.securityTags.columnDefs.length; i++) {
                         if (HelperUiGridService.Lookups.SECURITY_TAG_TYPES == $scope.config.securityTags.columnDefs[i].lookup) {
@@ -291,7 +297,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 $scope.complaintInfo = data;
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.complaintInfo.personAssociations;
-                gridHelper.hidePagingControlsIfAllDataShown($scope.complaintInfo.personAssociations.length);
+                //gridHelper.hidePagingControlsIfAllDataShown($scope.complaintInfo.personAssociations.length);
 
                 for (var i = 0; i < $scope.complaintInfo.personAssociations.length; i++) {
                     var personAssociation = $scope.complaintInfo.personAssociations[i];
@@ -314,7 +320,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                     _.each(personAssociation.acm$_contactMethods.gridOptions.data, function (item) {
                         item.acm$_paId = personAssociation.id;
                     });
-                    gridContactMethodHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_contactMethods.gridOptions.data.length);
+                    //gridContactMethodHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_contactMethods.gridOptions.data.length);
 
 
                     personAssociation.acm$_organizations = {};
@@ -335,7 +341,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                     _.each(personAssociation.acm$_organizations.gridOptions.data, function (item) {
                         item.acm$_paId = personAssociation.id;
                     });
-                    gridOrganizationHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_organizations.gridOptions.data.length);
+                    //gridOrganizationHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_organizations.gridOptions.data.length);
 
 
                     personAssociation.acm$_addresses = {};
@@ -356,7 +362,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                     _.each(personAssociation.acm$_addresses.gridOptions.data, function (item) {
                         item.acm$_paId = personAssociation.id;
                     });
-                    gridAddressHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_addresses.gridOptions.data.length);
+                    //gridAddressHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_addresses.gridOptions.data.length);
 
 
                     personAssociation.acm$_aliases = {};
@@ -377,7 +383,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                     _.each(personAssociation.acm$_aliases.gridOptions.data, function (item) {
                         item.acm$_paId = personAssociation.id;
                     });
-                    gridAliasHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_aliases.gridOptions.data.length);
+                    //gridAliasHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_aliases.gridOptions.data.length);
 
 
                     personAssociation.acm$_securityTags = {};
@@ -398,7 +404,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                     _.each(personAssociation.acm$_securityTags.gridOptions.data, function (item) {
                         item.acm$_paId = personAssociation.id;
                     });
-                    gridSecurityTagHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_securityTags.gridOptions.data.length);
+                    //gridSecurityTagHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_securityTags.gridOptions.data.length);
                 }
             }); //end $q
         };

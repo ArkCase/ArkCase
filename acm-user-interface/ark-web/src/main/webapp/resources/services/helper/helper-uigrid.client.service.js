@@ -11,8 +11,8 @@
  * Helper.UiGridService has functions for typical usage in ArCase of 'ui-grid' directive
  */
 angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '$translate'
-    , 'UtilService', 'LookupService', 'Object.LookupService', 'ObjectService'
-    , function ($resource, $q, $translate, Util, LookupService, ObjectLookupService, ObjectService) {
+    , 'UtilService', 'LookupService', 'Object.LookupService', 'ObjectService', 'uiGridConstants'
+    , function ($resource, $q, $translate, Util, LookupService, ObjectLookupService, ObjectService, uiGridConstants) {
         var Service = {
             Lookups: {
                 USER_FULL_NAMES: "userFullNames"
@@ -87,6 +87,23 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                     dfd.resolve(gridApi);
                 };
                 return dfd.promise;
+            }
+
+            /**
+             * @ngdoc method
+             * @name disableGridScrolling
+             * @methodOf services:Helper.UiGridService
+             *
+             * @param {Object} config Component configuration data with grid options
+             *
+             * @description
+             * Disabling vertical and horizontal scrolling to ui-grid options.
+             */
+            , disableGridScrolling: function(config) {
+                var that = this;
+                that.scope.config = config;
+                that.scope.gridOptions.enableHorizontalScrollbar = uiGridConstants.scrollbars.NEVER;
+                that.scope.gridOptions.enableVerticalScrollbar = uiGridConstants.scrollbars.NEVER;
             }
 
             /**

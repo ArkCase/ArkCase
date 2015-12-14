@@ -12,6 +12,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
             gridHelper.addGridApiHandler(function (gridApi) {
                 $scope.gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
                     if (newValue == oldValue) {
@@ -117,7 +118,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                 });
                 $scope.gridOptions.data = participants;
                 $scope.complaintInfo = data;
-                gridHelper.hidePagingControlsIfAllDataShown(participants.length);
+                //gridHelper.hidePagingControlsIfAllDataShown(participants.length);
             });
         };
 
@@ -143,7 +144,6 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
             var lastPage = $scope.gridApi.pagination.getTotalPages();
             $scope.gridApi.pagination.seek(lastPage);
             $scope.gridOptions.data.push({});
-            gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
         };
         $scope.updateRow = function (rowEntity) {
             var complaintInfo = Util.omitNg($scope.complaintInfo);

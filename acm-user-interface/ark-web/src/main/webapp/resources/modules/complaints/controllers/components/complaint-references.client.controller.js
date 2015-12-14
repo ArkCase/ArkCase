@@ -9,6 +9,7 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
         ConfigService.getComponentConfig("complaints", "references").then(function (config) {
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
             return config;
         });
 
@@ -35,7 +36,7 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
                 }
             });
             $scope.gridOptions.data = references;
-            gridHelper.hidePagingControlsIfAllDataShown(references.length);
+            //gridHelper.hidePagingControlsIfAllDataShown(references.length);
             return complaintInfo;
         });
 

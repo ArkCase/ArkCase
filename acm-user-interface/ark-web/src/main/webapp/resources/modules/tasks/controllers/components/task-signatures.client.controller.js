@@ -11,6 +11,7 @@ angular.module('tasks').controller('Tasks.SignaturesController', ['$scope', '$st
         ConfigService.getComponentConfig("tasks", "signatures").then(function (config) {
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
             gridHelper.setUserNameFilter(promiseUsers);
 
             $scope.retrieveGridData();
@@ -25,7 +26,7 @@ angular.module('tasks').controller('Tasks.SignaturesController', ['$scope', '$st
                     var signatures = data[0];
                     $scope.gridOptions.data = signatures;
                     $scope.gridOptions.totalItems = signatures.length;
-                    gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+                    //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                 });
             }
         };

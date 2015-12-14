@@ -21,6 +21,7 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
         var promiseConfig = ConfigService.getComponentConfig("cases", "time").then(function (config) {
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
 
             for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                 if ("name" == $scope.config.columnDefs[i].name) {
@@ -46,7 +47,7 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
                         $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = timesheets;
                         $scope.gridOptions.totalItems = Util.goodValue(timesheets.length, 0);
-                        gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+                        //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                         return config;
                     });
                     return timesheets;

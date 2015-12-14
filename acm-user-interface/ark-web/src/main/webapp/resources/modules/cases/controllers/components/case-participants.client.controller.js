@@ -101,6 +101,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
             gridHelper.addGridApiHandler(function (gridApi) {
                 $scope.gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
                     if (newValue == oldValue) {
@@ -178,7 +179,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = participants;
                 $scope.caseInfo = data;
-                gridHelper.hidePagingControlsIfAllDataShown(participants.length);
+                //gridHelper.hidePagingControlsIfAllDataShown(participants.length);
             });
         };
         //$scope.$on('case-updated', function (e, data) {
@@ -202,7 +203,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             var lastPage = $scope.gridApi.pagination.getTotalPages();
             $scope.gridApi.pagination.seek(lastPage);
             $scope.gridOptions.data.push({});
-            gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
+            //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
         };
         $scope.updateRow = function (rowEntity) {
             var caseInfo = Util.omitNg($scope.caseInfo);

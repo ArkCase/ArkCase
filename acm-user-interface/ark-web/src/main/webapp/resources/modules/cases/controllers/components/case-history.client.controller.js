@@ -7,28 +7,18 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        //$scope.$emit('req-component-config', 'history');
-        //$scope.$on('component-config', function (e, componentId, config) {
-        //    if ('history' == componentId) {
-        //        gridHelper.setColumnDefs(config);
-        //        gridHelper.setBasicOptions(config);
-        //        gridHelper.setExternalPaging(config, $scope.retrieveGridData);
-        //        gridHelper.setUserNameFilter(promiseUsers);
-        //
-        //        $scope.retrieveGridData();
-        //    }
-        //});
         var promiseConfig = ConfigService.getComponentConfig("cases", "history").then(function (config) {
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
             gridHelper.setExternalPaging(config, $scope.retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
 
-            //$scope.retrieveGridData();
+            $scope.retrieveGridData();
             return config;
         });
 
-        //$scope.retrieveGridData = function () {
+        $scope.retrieveGridData = function () {
             if (Util.goodPositive($stateParams.id)) {
                 var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.CASE_FILE
                     , $stateParams.id
@@ -43,9 +33,9 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = auditData.resultPage;
                     $scope.gridOptions.totalItems = auditData.totalCount;
-                    gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+                    //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                 });
             }
-        //};
+        };
     }
 ]);
