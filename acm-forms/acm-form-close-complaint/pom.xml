@@ -1,39 +1,39 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    
-	<modelVersion>4.0.0</modelVersion>
-	
-	<parent>
-		<groupId>com.armedia.acm</groupId>
-		<artifactId>acm-forms</artifactId>
-		<version>3.0.43-SNAPSHOT</version>
-	</parent>
 
-	<groupId>com.armedia.acm.acm-form</groupId>
-	<artifactId>acm-form-close-complaint</artifactId>
-	<name>ACM Forms: Close Complaint</name>
-  	<description>Close Complaint Form.</description>
-  	
-  	<dependencies>
-    	<!-- acm -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.armedia.acm</groupId>
+        <artifactId>acm-forms</artifactId>
+        <version>3.0.44-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.armedia.acm.acm-form</groupId>
+    <artifactId>acm-form-close-complaint</artifactId>
+    <name>ACM Forms: Close Complaint</name>
+    <description>Close Complaint Form.</description>
+
+    <dependencies>
+        <!-- acm -->
         <dependency>
             <groupId>com.armedia.acm.com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-form-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-complaint-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-case-file-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-object-converter</artifactId>
@@ -45,10 +45,16 @@
             <artifactId>acm-service-object-change-status</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-functional-access-control</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-form-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
@@ -107,12 +113,12 @@
             <artifactId>jdbc</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>1.7.1</version>
-		</dependency>
-		
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>1.7.1</version>
+        </dependency>
+
     </dependencies>
 </project>

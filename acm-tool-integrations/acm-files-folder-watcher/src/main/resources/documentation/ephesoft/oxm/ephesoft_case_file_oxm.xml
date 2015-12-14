@@ -14,6 +14,9 @@
 				<xml-element java-attribute="Documents" name="Document" type="com.armedia.acm.dynamic.Document" container-type="java.util.List">
                     <xml-element-wrapper/>
                 </xml-element>
+                <xml-element java-attribute="BatchLevelFields" name="BatchLevelField" type="com.armedia.acm.dynamic.BatchLevelField" container-type="java.util.List">
+                    <xml-element-wrapper/>
+                </xml-element>
             </java-attributes>
         </java-type>
 		
@@ -33,6 +36,14 @@
             <java-attributes>
 				<xml-element java-attribute="Name" type="java.lang.String"/>
 				<xml-element java-attribute="Value" type="java.lang.String"/>
+            </java-attributes>
+        </java-type>
+
+        <java-type name="BatchLevelField">
+            <java-attributes>
+                <xml-element java-attribute="Name" type="java.lang.String"/>
+                <xml-element java-attribute="Value" type="java.lang.String"/>
+                <xml-element java-attribute="Type" type="java.lang.String"/>
             </java-attributes>
         </java-type>
 

@@ -40,7 +40,7 @@
           "displayName": "dashboard.widgets.myCases.table.header.caseId",
           "headerCellFilter": "translate",
           "enableSorting": true,
-          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s)\">{{COL_FIELD}}</a></div>",
+          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: \'{{row.entity.object_id_s}}\'})\">{{COL_FIELD}}</a></div>",
           "width": 130
         },
         {
@@ -113,6 +113,71 @@
           "displayName": "dashboard.widgets.myTasks.table.header.caseId",
           "headerCellFilter": "translate",
           "width": 100
+        }
+      ]
+    },
+    {
+      "id": "myComplaints",
+      "title": "My Complaints Widget",
+      "enableFiltering": false,
+      "paginationPageSizes": [
+        5,
+        10,
+        25
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "complaintNumber",
+          "displayName": "dashboard.widgets.myTasks.table.header.complaintNumber",
+          "headerCellFilter": "translate",
+          "cellTemplate:": "'<div class=\"ui-grid-cell-contents\"><a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}</a></div>'",
+          "width": 175
+        },
+        {
+          "name": "complaintTitle",
+          "displayName": "dashboard.widgets.myTasks.table.header.title",
+          "headerCellFilter": "translate",
+          "cellTemplate:": "'<div class=\"ui-grid-cell-contents\"><a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}</a></div>'"
+        },
+        {
+          "name": "priority",
+          "displayName": "dashboard.widgets.myTasks.table.header.priority",
+          "headerCellFilter": "translate",
+          "width": 55
+        },
+        {
+          "name": "created",
+          "displayName": "dashboard.widgets.myTasks.table.header.created",
+          "headerCellFilter": "translate",
+          "width": 55
+        },
+        {
+          "name": "status",
+          "displayName": "dashboard.widgets.myTasks.table.header.status",
+          "headerCellFilter": "translate",
+          "width": 55
+        }
+      ]
+    },
+    {
+      "id": "details",
+      "title": "Details Widget",
+      "columnDefs": [
+        {
+          "name": "details",
+          "displayName": "dashboard.widgets.details.table.header.details",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified",
+          "displayName": "dashboard.widgets.details.table.header.modified",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modifier",
+          "displayName": "dashboard.widgets.details.table.header.modifier",
+          "headerCellFilter": "translate"
         }
       ]
     },

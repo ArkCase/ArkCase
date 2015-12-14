@@ -1,0 +1,26 @@
+<div>
+    <div class="modal-header">
+        <h4 class="modal-title">{{'admin.security.organizationalHierarchy.createGroupDialog.title'| translate}}</h4>
+    </div>
+    <div class="modal-body">
+        <div>
+
+            {{'admin.security.organizationalHierarchy.createGroupDialog.name'| translate}}
+            <input type="text" ng-model="adHocGroup.name" class="form-control" required
+                   placeholder="{{'admin.security.organizationalHierarchy.createGroupDialog.namePlaceholder'| translate}}">
+
+            {{'admin.security.organizationalHierarchy.createGroupDialog.description'| translate}}
+            <textarea type="text" ng-model="adHocGroup.description" class="form-control"
+                      placeholder="{{'admin.security.organizationalHierarchy.createGroupDialog.descriptionPlaceholder'| translate}}">
+            </textarea>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="cancel()">
+                {{'admin.security.organizationalHierarchy.createGroupDialog.btn.cancel'| translate}}
+            </button>
+            <button type="button" class="btn btn-default" ng-click="ok()" ng-disabled="inputValid">
+                {{'admin.security.organizationalHierarchy.createGroupDialog.btn.ok' | translate}}
+            </button>
+        </div>
+    </div>
+</div>
