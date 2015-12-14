@@ -1,24 +1,28 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTracking.SummaryController', ['$scope', 'UtilService', 'Helper.UiGridService',
-    function ($scope, Util, HelperUiGridService) {
+angular.module('time-tracking').controller('TimeTracking.SummaryController', ['$scope', '$stateParams'
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'TimeTracking.InfoService'
+    , function ($scope, $stateParams, Util, ConfigService, HelperUiGridService, TimeTrackingInfoService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-
-        $scope.$emit('req-component-config', 'summary');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('summary' == componentId) {
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.disableGridScrolling(config);
-            }
+        ConfigService.getComponentConfig("time-tracking", "summary").then(function (config) {
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
+            return config;
         });
 
-        $scope.$on('timesheet-updated', function (e, data) {
-            $scope.timesheetInfo = data;
-
+        //$scope.$on('timesheet-updated', function (e, data) {
+        //    $scope.timesheetInfo = data;
+        //
+        //    $scope.gridOptions = $scope.gridOptions || {};
+        //    $scope.gridOptions.data = $scope.timesheetInfo.times;
+        //});
+        TimeTrackingInfoService.getTimeTrackingInfo($stateParams.id).then(function (timesheetInfo) {
+            $scope.timesheetInfo = timesheetInfo;
             $scope.gridOptions = $scope.gridOptions || {};
             $scope.gridOptions.data = $scope.timesheetInfo.times;
+            return timesheetInfo;
         });
 
         $scope.onClickObjectType = function (event, rowEntity) {

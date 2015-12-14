@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTracking.ActionsController', ['$scope', '$state', '$translate', 'UtilService', 'TimeTracking.InfoService',
-    function ($scope, $state, $translate, Util, TimeTrackingInfoService) {
-        $scope.$emit('req-component-config', 'actions');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('actions' == componentId) {
-                $scope.config = config;
-            }
+angular.module('time-tracking').controller('TimeTracking.ActionsController', ['$scope', '$state', '$translate'
+    , 'UtilService', 'ConfigService', 'TimeTracking.InfoService'
+    , function ($scope, $state, $translate, Util, ConfigService, TimeTrackingInfoService) {
+
+        ConfigService.getComponentConfig("time-tracking", "actions").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
         $scope.$on('timesheet-updated', function (e, data) {
