@@ -10,6 +10,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', 'Uti
             if ("references" == componentId) {
                 gridHelper.setColumnDefs(config);
                 gridHelper.setBasicOptions(config);
+                gridHelper.disableGridScrolling(config);
             }
         });
 
@@ -18,7 +19,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', 'Uti
                 $scope.caseInfo = data;
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.caseInfo.references;
-                gridHelper.hidePagingControlsIfAllDataShown($scope.caseInfo.references.length);
+
             }
         });
 
