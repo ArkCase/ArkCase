@@ -74,8 +74,8 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                     caseId: caseInfo.id
                     , caseNumber: caseInfo.caseNumber
                     , mode: "edit"
-                    , containerId: caseInfo.containerId
-                    , folderId: caseInfo.folderId
+                    , containerId: caseInfo.container.id
+                    , folderId: caseInfo.container.folder.id
                 }
             });
             //if (caseInfo && caseInfo.id && caseInfo.caseNumber && caseInfo.status) {
@@ -103,8 +103,8 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                     caseId: caseInfo.id
                     , caseNumber: caseInfo.caseNumber
                     , mode: "reinvestigate"
-                    , containerId: caseInfo.containerId
-                    , folderId: caseInfo.folderId
+                    , containerId: caseInfo.container.id
+                    , folderId: caseInfo.container.folder.id
                 }
             });
         };
