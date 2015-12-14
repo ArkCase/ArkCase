@@ -166,5 +166,15 @@
   },
   "cases.comp.calendar": {
     "title": "Calendar"
-  }
+  },
+    "cases.comp.merge": {
+      "id": "merge",
+      "title": "Merge",
+      "cancel.btn": "Cancel",
+      "merge.btn": "Merge",
+      "search.placeholder": "Search for case file.",
+      "search.btn": "Search",
+      "enabled": true,
+      "clientFacetFilter": "\"Object Type\": CASE_FILE"
+    }
 }
