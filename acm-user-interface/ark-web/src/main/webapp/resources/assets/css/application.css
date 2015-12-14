@@ -1,7 +1,5 @@
-/* @override http://10.21.4.149/arkcase/assets/css/application.css
-	http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
-
-/* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
+/* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css
+	http://10.21.4.149/arkcase/assets/css/application.css */
 
 /* Typography */
 
@@ -75,14 +73,27 @@ iframe {
     background-color: #177bbb;
 }
 
+
+
 .ui-fancytree.fancytree-container {
     background: none;
     border: 0px;
     outline: 0px;
     padding: 0px;
     margin: 0px;
-
+    overflow-x: hidden;
+    width: 100%;
 }
+
+span.fancytree-title {
+	width: 100%;
+	padding-right: 30px;
+	overflow: hidden;
+	-ms-text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+}
+
 
 .form-group.well-sm {
     margin: 0px;
@@ -237,6 +248,34 @@ iframe {
 .dashboard .panel-default .panel-body .highcharts-container {
     margin-top: 20px;
 }
+
+.dashboard .alert{
+	margin: 10px;
+}
+
+.dashboard adf-widget-content h4{
+	margin-left: 10px;
+}
+
+.dashboard adf-widget-content ul{
+	margin-right: 10px;
+}
+
+
+.dashboard .weather {
+	text-align: left;
+}
+.dashboard .weather h4 {
+	margin: 0px;
+	padding-top: 20px;
+}
+.dashboard .weather h3 {
+	font-weight: bold;
+}
+.dashboard .weather .pull-left img {
+	padding: 15px;
+}
+
 
 /* Navigation List (Grouped)  */
 
@@ -576,6 +615,50 @@ thead {
     font-size: 13px;
 }
 
+/* Hyperlinks Padding/Wrap Issues */
+.ui-grid a {
+	padding: 5px;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	white-space: nowrap;
+	-ms-text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	position: relative;
+	top: 5px;
+}
+
+/* Dates Padding Issues */
+
+.ui-grid .ui-grid-cell {
+	-ms-text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+}
+
+.ui-grid .ui-grid-cell a.btn.btn-xs {
+	padding: 5px 5px 5px 5px;
+	border-radius: 0px;
+	border-left: 0px;
+	position: relative;
+	top: -1px;
+}
+
+.ui-grid .ui-grid-cell div {
+	padding: 5px;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	white-space: nowrap;
+	-ms-text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	position: relative;
+}
+
 /* Highlight error grid's cell */
 .ui-grid .ui-grid-cell.error-cell {
     background-color: #ff7373;
@@ -800,6 +883,25 @@ a.editable.editable-click.editable-hide {
     height: auto !important;
 }
 
+/*Case Overview */
+
+.overview-tabs {
+  border: 0px;
+}
+
+.overview-tabs li {
+  width: 125px;
+  height: 70px;
+  text-align: center;
+  cursor: pointer; cursor: hand; 
+}
+
+.overview-tabs li.active a {
+  border-bottom: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+
 /* Style of invalid fields */
 input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
     border-color: #ff7373;
@@ -822,4 +924,3 @@ input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
     height: 500px;
     border: 1px solid #cbd5dd;
 }
-
