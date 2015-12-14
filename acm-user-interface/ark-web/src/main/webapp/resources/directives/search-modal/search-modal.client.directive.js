@@ -39,6 +39,8 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
             },
 
             link: function (scope) {    //dom operations
+                scope.searchQuery = '';
+                scope.minSearchLength = 3;
                 if (scope.multiSelect == undefined || scope.multiSelect == '') {
                     scope.multiSelect = 'false';
                 }
@@ -61,21 +63,6 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                     }
                 };
 
-                scope.queryTypeahead = function (typeaheadQuery) {
-                    typeaheadQuery = typeaheadQuery.replace('*', '');
-                    var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery + '*', scope.filters, 10, 0);
-                    var deferred = $q.defer();
-                    if (query) {
-                        SearchService.queryFilteredSearch({
-                            query: query
-                        }, function (res) {
-                            var result = _.pluck(res.response.docs, 'name');
-                            deferred.resolve(result);
-                        });
-                    }
-                    return deferred.promise;
-                };
-
                 function updateFacets(facets) {
                     if (facets) {
                         if (scope.facets.length) {
@@ -95,7 +82,7 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                             scope.filters += '&fq="' + facet + '":' + field;
                         }
                         else {
-                            scope.filters = ""
+                            scope.filters='';
                             scope.filters += 'fq="' + facet + '":' + field;
                         }
                         scope.queryExistingItems();
@@ -113,7 +100,7 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                 scope.keyUp = function (event) {
                     // Remove wildcard
                     scope.searchQuery = scope.searchQuery.replace('*', '');
-                    if (event.keyCode == 13 && scope.searchQuery) {
+                    if (event.keyCode == 13 && scope.searchQuery.length >= scope.minSearchLength) {
                         scope.queryExistingItems();
                     }
                 };

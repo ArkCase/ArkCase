@@ -30,6 +30,13 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
                 data: ''
             },
 
+            queryMyComplaints: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/v1/plugin/complaint/forUser/:userId',
+                isArray: true,
+                data: ''
+            },
+
             queryMyCases: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::userId+' +

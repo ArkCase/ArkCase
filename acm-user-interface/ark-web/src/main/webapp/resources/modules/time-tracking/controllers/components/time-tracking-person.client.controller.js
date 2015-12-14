@@ -10,6 +10,7 @@ angular.module('time-tracking').controller('TimeTracking.PersonController', ['$s
             if ('person' == componentId) {
                 gridHelper.setColumnDefs(config);
                 gridHelper.setBasicOptions(config);
+                gridHelper.disableGridScrolling(config);
             }
         });
 
