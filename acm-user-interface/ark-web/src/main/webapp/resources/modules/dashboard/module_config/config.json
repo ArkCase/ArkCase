@@ -40,7 +40,7 @@
           "displayName": "dashboard.widgets.myCases.table.header.caseId",
           "headerCellFilter": "translate",
           "enableSorting": true,
-          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: \'{{row.entity.object_id_s}}\'})\">{{COL_FIELD}}</a></div>",
+          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}</a></div>",
           "width": 130
         },
         {
