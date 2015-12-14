@@ -68,7 +68,7 @@ angular.module('cases').controller('Cases.CalendarController', ['$scope','$timeo
 		};
 
 		$timeout(function () {
-			$scope.renderCalender('complaintsCalendar');
+			$scope.renderCalender('casesCalendar');
 		}, 1000);
 	}
 ]);
