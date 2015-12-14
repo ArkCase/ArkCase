@@ -49,6 +49,11 @@ angular.module('tasks').factory('Task.NewTaskService', ['$resource', 'UtilServic
             return Util.serviceCall({
                 service: Service.createNewTask
                 , data: taskData
+                , onSuccess: function (data) {
+                    if (Service.validateTaskInfo(data)) {
+                        $state.go('tasks.main', {type: 'ADHOC', id: data.taskId});
+                    }
+                }
             })
         };
 
