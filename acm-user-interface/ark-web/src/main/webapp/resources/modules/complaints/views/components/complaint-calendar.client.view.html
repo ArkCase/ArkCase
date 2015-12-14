@@ -1,10 +1,12 @@
 <div ng-controller="Complaints.CalendarController">
     <div class="panel panel-success">
         <div class="panel-heading">
-            <div class="panel-title">{{'complaints.comp.calendar.title' | translate}}</div>
+            <div class="panel-title">
+                <span translate>complaints.comp.calendar.title</span>
+            </div>
         </div>
         <div class="panel-body">
-            <!--<div ui-calendar ng-model="eventSources"></div>-->
+            <div ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="complaintsCalendar"></div>
         </div>
     </div>
 </div>
