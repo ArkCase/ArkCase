@@ -4,8 +4,8 @@
             translate}}</p>
     </div>
     <div class="weather" ng-if="dashboardWeather.weather">
-        <h4>{{dashboardWeather.weather.location.city}} ({{dashboardWeather.weather.location.country}})</h4>
         <weather-icon id="{{ dashboardWeather.weather.imgId }}"></weather-icon>
+        <h4>{{dashboardWeather.weather.location.city}} ({{dashboardWeather.weather.location.country}})</h4>
         <h3>{{'dashboard.widgets.weather.label.current' | translate}} {{ dashboardWeather.weather.temp.current |
             temp:2:dashboardWeather.units
             }}</h3>

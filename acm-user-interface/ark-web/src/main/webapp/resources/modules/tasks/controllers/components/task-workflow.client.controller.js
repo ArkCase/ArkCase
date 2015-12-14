@@ -12,6 +12,7 @@ angular.module('tasks').controller('Tasks.WorkflowOverviewController', ['$scope'
             if ('workflow' == componentId) {
                 gridHelper.setColumnDefs(config);
                 gridHelper.setBasicOptions(config);
+                gridHelper.disableGridScrolling(config);
                 gridHelper.setUserNameFilter(promiseUsers);
 
                 $scope.retrieveGridData();
@@ -31,7 +32,6 @@ angular.module('tasks').controller('Tasks.WorkflowOverviewController', ['$scope'
                     var taskHistory = data[0];
                     $scope.gridOptions.data = taskHistory;
                     $scope.gridOptions.totalItems = taskHistory.length;
-                    gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                 });
             }
         };

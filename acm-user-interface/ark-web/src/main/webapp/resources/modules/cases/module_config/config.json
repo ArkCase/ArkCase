@@ -205,7 +205,69 @@
       "icon": "fa fa-tachometer",
       "enabled": false,
       "type": "empty",
-      "editable": false
+      "editable": false,
+      "widgets": [
+        {
+          "id": "details",
+          "type": "component",
+          "model": "details"
+        },
+        {
+          "id": "people",
+          "type": "component",
+          "model": "peopleNames"
+        },
+        {
+          "id": "documents",
+          "type": "component",
+          "model": "documentCount"
+        },
+        {
+          "id": "participants",
+          "type": "component",
+          "model": "participants"
+        },
+        {
+          "id": "notes",
+          "type": "component",
+          "model": "noteCount"
+        },
+        {
+          "id": "tasks",
+          "type": "component",
+          "model": "taskCount"
+        },
+        {
+          "id": "references",
+          "type": "component",
+          "model": "referenceCount"
+        },
+        {
+          "id": "history",
+          "type": "component",
+          "model": "historyCount"
+        },
+        {
+          "id": "correspondence",
+          "type": "component",
+          "model": "correspondenceCount"
+        },
+        {
+          "id": "time",
+          "type": "component",
+          "model": "timesheetCount"
+        },
+        {
+          "id": "cost",
+          "type": "component",
+          "model": "costsheetCount"
+        },
+        {
+          "id": "calendar",
+          "type": "component",
+          "model": "calendarEventCount"
+        }
+      ]
     },
     {
       "id": "info",

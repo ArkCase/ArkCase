@@ -100,6 +100,28 @@ angular.module('services').factory('ConfigService', ['$resource', 'StoreService'
             return true;
         };
 
+
+        /**
+         * @ngdoc method
+         * @name getComponentConfig
+         * @methodOf services.service:ConfigService
+         *
+         * @description
+         * Query config of a component in a module
+         *
+         * @param {String} moduleId  Module ID
+         * @param {String} componentId  Component ID
+         *
+         * @returns {Object} Promise
+         */
+        Service.getComponentConfig = function (moduleId, componentId) {
+            return Service.getModuleConfig(moduleId).then(function (moduleConfig) {
+                var components = Util.goodMapValue(moduleConfig, "components", []);
+                var componentConfig = _.find(moduleConfig.components, {id: componentId});
+                return componentConfig;
+            });
+        }
+
         return Service;
 	}
 ]);
