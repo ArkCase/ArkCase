@@ -32,6 +32,18 @@ angular.module('tasks').config(['$stateProvider', '$urlRouterProvider',
 
             .state('newTask', {
                 url: '/newTask',
+                templateUrl: 'modules/tasks/views/components/task-new-task.client.view.html',
+                resolve: {
+                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                        $translatePartialLoader.addPart('common');
+                        $translatePartialLoader.addPart('tasks');
+                        return $translate.refresh();
+                    }]
+                }
+            })
+
+            .state('newTaskFromParentObject', {
+                url: '/newTask/:parentType/:parentObject',
                 templateUrl: 'modules/tasks/views/components/task-new-task.client.view.html'
             })
 
