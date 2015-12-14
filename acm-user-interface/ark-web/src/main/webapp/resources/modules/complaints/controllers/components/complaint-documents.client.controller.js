@@ -1,14 +1,12 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal'
-    , 'UtilService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
-    , function ($scope, $stateParams, $modal, Util, ObjectService, ObjectLookupService, ComplaintInfoService) {
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
+    , function ($scope, $stateParams, $modal, Util, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService) {
 
-        $scope.$emit('req-component-config', 'documents');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('documents' == componentId) {
-                $scope.config = config;
-            }
+        ConfigService.getComponentConfig("complaints", "documents").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
 
@@ -31,10 +29,14 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
         $scope.objectId = $stateParams.id;
 
-        $scope.$on('complaint-updated', function (e, data) {
-            if (ComplaintInfoService.validateComplaintInfo(data)) {
-                $scope.complaintInfo = data;
-            }
+        //$scope.$on('complaint-updated', function (e, data) {
+        //    if (ComplaintInfoService.validateComplaintInfo(data)) {
+        //        $scope.complaintInfo = data;
+        //    }
+        //});
+        ComplaintInfoService.getComplaintInfo($stateParams.id).then(function (complaintInfo) {
+            $scope.complaintInfo = complaintInfo;
+            return complaintInfo;
         });
 
         var silentReplace = function (value, replace, replacement) {

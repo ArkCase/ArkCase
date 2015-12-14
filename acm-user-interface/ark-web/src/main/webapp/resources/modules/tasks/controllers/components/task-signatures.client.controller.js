@@ -1,21 +1,20 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.SignaturesController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'Helper.UiGridService', 'ObjectService', 'Object.SignatureService'
-    , function ($scope, $stateParams, $q, Util, HelperUiGridService, ObjectService, ObjectSignatureService) {
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.SignatureService'
+    , function ($scope, $stateParams, $q
+        , Util, ConfigService, HelperUiGridService, ObjectService, ObjectSignatureService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        $scope.$emit('req-component-config', 'signatures');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('signatures' == componentId) {
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.setUserNameFilter(promiseUsers);
+        ConfigService.getComponentConfig("tasks", "signatures").then(function (config) {
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.setUserNameFilter(promiseUsers);
 
-                $scope.retrieveGridData();
-            }
+            $scope.retrieveGridData();
+            return config;
         });
 
         $scope.retrieveGridData = function () {

@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', 'UtilService', 'LookupService', 'Object.LookupService', 'Task.InfoService',
-    function ($scope, $stateParams, Util, LookupService, ObjectLookupService, TaskInfoService) {
-        $scope.$emit('req-component-config', 'info');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ("info" == componentId) {
-                $scope.config = config;
-            }
+angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams'
+    , 'UtilService', 'ConfigService', 'LookupService', 'Object.LookupService', 'Task.InfoService'
+    , function ($scope, $stateParams, Util, ConfigService, LookupService, ObjectLookupService, TaskInfoService) {
+
+        ConfigService.getComponentConfig("tasks", "info").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
 

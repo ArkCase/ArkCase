@@ -1,14 +1,14 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.ParticipantsController', ['$scope', '$stateParams', '$q'
-    , 'StoreService', 'UtilService', 'Helper.UiGridService', 'Helper.ConfigService'
+    , 'StoreService', 'UtilService', 'Helper.UiGridService', 'ConfigService'
     , 'Complaint.InfoService', 'LookupService', 'Object.LookupService'
-    , function ($scope, $stateParams, $q, Store, Util, HelperUiGridService, HelperConfigService
+    , function ($scope, $stateParams, $q, Store, Util, HelperUiGridService, ConfigService
         , ComplaintInfoService, LookupService, ObjectLookupService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        var promiseConfig = HelperConfigService.requestComponentConfig($scope, "participants", function (config) {
+        var promiseConfig = ConfigService.getComponentConfig("complaints", "participants").then(function (config) {
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
@@ -69,15 +69,16 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                 }
 
 
-                var deferParticipantData = new Store.Variable("deferComplaintParticipantData");    // used to hold grid data before grid config is ready
-                var complaintInfo = deferParticipantData.get();
-                if (complaintInfo) {
-                    updateGridData(complaintInfo);
-                    deferParticipantData.set(null);
-                }
+                //var deferParticipantData = new Store.Variable("deferComplaintParticipantData");    // used to hold grid data before grid config is ready
+                //var complaintInfo = deferParticipantData.get();
+                //if (complaintInfo) {
+                //    updateGridData(complaintInfo);
+                //    deferParticipantData.set(null);
+                //}
             });
-        });
 
+            return config;
+        });
 
         var promiseTypes = ObjectLookupService.getParticipantTypes().then(
             function (participantTypes) {
@@ -119,17 +120,22 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                 gridHelper.hidePagingControlsIfAllDataShown(participants.length);
             });
         };
-        $scope.$on('complaint-updated', function (e, data) {
-            if (!ComplaintInfoService.validateComplaintInfo(data)) {
-                return;
-            }
 
-            if (data.complaintId == $stateParams.id) {
-                updateGridData(data);
-            } else {                      // condition when data comes before state is routed and config is not set
-                var deferParticipantData = new Store.Variable("deferComplaintParticipantData");
-                deferParticipantData.set(data);
-            }
+        //$scope.$on('complaint-updated', function (e, data) {
+        //    if (!ComplaintInfoService.validateComplaintInfo(data)) {
+        //        return;
+        //    }
+        //
+        //    if (data.complaintId == $stateParams.id) {
+        //        updateGridData(data);
+        //    } else {                      // condition when data comes before state is routed and config is not set
+        //        var deferParticipantData = new Store.Variable("deferComplaintParticipantData");
+        //        deferParticipantData.set(data);
+        //    }
+        //});
+        ComplaintInfoService.getComplaintInfo($stateParams.id).then(function (complaintInfo) {
+            updateGridData(complaintInfo);
+            return complaintInfo;
         });
 
 

@@ -1,37 +1,36 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.TasksController', ['$scope', '$state', '$stateParams', '$q', '$translate'
-    , 'UtilService', 'Helper.UiGridService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
-    , function ($scope, $state, $stateParams, $q, $translate, Util, HelperUiGridService, ObjectService, ObjectTaskService, TaskWorkflowService) {
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
+    , function ($scope, $state, $stateParams, $q, $translate
+        , Util, ConfigService, HelperUiGridService, ObjectService, ObjectTaskService, TaskWorkflowService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
         var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
 
-        $scope.$emit('req-component-config', 'tasks');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ("tasks" == componentId) {
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.setExternalPaging(config, $scope.retrieveGridData);
-                gridHelper.setUserNameFilter(promiseUsers);
+        ConfigService.getComponentConfig("complaints", "tasks").then(function (config) {
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.setExternalPaging(config, $scope.retrieveGridData);
+            gridHelper.setUserNameFilter(promiseUsers);
 
-                promiseMyTasks.then(function (data) {
-                    for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                        if ("taskId" == $scope.config.columnDefs[i].name) {
-                            $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.object_id_s}}</a>";
-                        } else if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
-                            $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
-                                + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
-                                + ' ng-model="row.entity.acm$_taskOutcome">'
-                                + ' </select>'
-                                + ' <span ng-hide="\'noop\'==row.entity.acm$_taskOutcome.id"><i class="fa fa-gear fa-lg" ng-click="grid.appScope.action(row.entity)"></i></span></span>';
-                        }
+            promiseMyTasks.then(function (data) {
+                for (var i = 0; i < $scope.config.columnDefs.length; i++) {
+                    if ("taskId" == $scope.config.columnDefs[i].name) {
+                        $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.object_id_s}}</a>";
+                    } else if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
+                        $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
+                            + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
+                            + ' ng-model="row.entity.acm$_taskOutcome">'
+                            + ' </select>'
+                            + ' <span ng-hide="\'noop\'==row.entity.acm$_taskOutcome.id"><i class="fa fa-gear fa-lg" ng-click="grid.appScope.action(row.entity)"></i></span></span>';
                     }
-                });
+                }
+            });
 
-                $scope.retrieveGridData();
-            }
+            $scope.retrieveGridData();
+            return config;
         });
 
         $scope.retrieveGridData = function () {

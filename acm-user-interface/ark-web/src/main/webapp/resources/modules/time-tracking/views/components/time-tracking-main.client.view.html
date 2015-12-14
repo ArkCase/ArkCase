@@ -2,4 +2,12 @@
     <!--<div ng-repeat="component in components">-->
     <!--<div ng-if="component.enabled" ng-include="'modules/time-tracking/views/components/time-tracking-'+ component.id  +'.client.view.html'"></div>-->
     <!--</div>-->
+    <div class="tab-content">
+        <div class="panel panel-success panel-grid" ng-repeat="widget in widgets">
+            <div class="panel-heading">
+                <div class="panel-title ng-binding">{{widget.title}}</div>
+            </div>
+            <div class="panel-body">{{widgetData[widget.id]}}</div>
+        </div>
+    </div>
 </div>
