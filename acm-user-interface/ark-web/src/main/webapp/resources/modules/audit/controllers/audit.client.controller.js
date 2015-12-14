@@ -1,20 +1,31 @@
 'use strict';
 
-/**
- * @ngdoc controller
- * @name audit.controller:AuditController
- *
- * @description
- * {@link https://github.com/Armedia/ACM3/tree/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/audit/controllers/audit.client.controller.js modules/audit/controllers/audit.client.controller.js}
- *
- * The Audit module main controller
- */
+//Please do not document controller as ngdoc format
+
+///**
+// * @ngdoc controller
+// * @name audit.controller:AuditController
+// *
+// * @description
+// * {@link https://github.com/Armedia/ACM3/tree/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/audit/controllers/audit.client.controller.js modules/audit/controllers/audit.client.controller.js}
+// *
+// * The Audit module main controller
+// */
 angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q','ConfigService', 'LookupService', 'AuditController.BuildUrl', 'UtilService',
 	function($scope, $sce, $q,ConfigService, LookupService, BuildUrl, Util) {
-		//$scope.config = ConfigService.getModule({moduleId: 'audit'});
-		$scope.config = ConfigService.getModuleConfig("audit");
+		var promiseModuleConfig = ConfigService.getModuleConfig("audit").then(function (config) {
+			$scope.config = config;
+			return config;
+		});
 
-		$scope.$on('req-component-config', onConfigRequest);
+        $scope.$on('req-component-config', function (e, componentId) {
+            promiseModuleConfig.then(function (config) {
+                var componentConfig = _.find(config.components, {id: componentId});
+                $scope.$broadcast('component-config', componentId, componentConfig);
+                return config;
+            });
+        });
+
 		$scope.$on('send-type-id', getObjectValues);
 		$scope.$on('send-date', getDateValues);
 
@@ -23,19 +34,14 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q','C
 		$scope.dateFrom = null;
 		$scope.dateTo = null;
 
-		$scope.showIframe = showIframe;
+        //$scope.showIframe = showIframe;
 
-		function onConfigRequest(e, componentId) {
-			$scope.config.then(function (config) {
-				var componentConfig = _.find(config.components, {id: componentId})
-				$scope.$broadcast('component-config', componentId, componentConfig);
-			});
-		}
+
 
 		/**
-		 * @ngdoc method
-		 * @name getObjectValues
-		 * @methodOf audit.controller:AuditController
+         //* @ngdoc method
+         //* @name getObjectValues
+         //* @methodOf audit.controller:AuditController
 		 *
 		 * @description
 		 * This function is callback function which gets called when "send-type-id" event is emitted.
@@ -51,9 +57,9 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q','C
 		}
 
 		/**
-		 * @ngdoc method
-		 * @name getDateValues
-		 * @methodOf audit.controller:AuditController
+         //* @ngdoc method
+         //* @name getDateValues
+         //* @methodOf audit.controller:AuditController
 		 *
 		 * @description
 		 * This function is callback function which gets called when "send-date" event is emitted.
@@ -74,12 +80,12 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q','C
 		}
 
 		// Retrieves the properties from the acm-reports-server-config.properties file
-		var acmReportsConfig = LookupService.getConfig("acm-reports-server-config");
+		var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
 
 		// Retrieves the properties from the auditPlugin.properties file
-		var auditPlugin = LookupService.getConfig("audit");
+		var promiseAuditConfig = LookupService.getConfig("audit");
 
-		$q.all([acmReportsConfig, auditPlugin])
+		$q.all([promiseServerConfig, promiseAuditConfig])
 			.then(function(data) {
 				$scope.acmReportsProperties = data[0];
 				$scope.auditPluginProperties = data[1];
@@ -90,16 +96,16 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q','C
 			});
 
 		/**
-		 * @ngdoc method
-		 * @name showIframe
-		 * @methodOf audit.controller:AuditController
+         //* @ngdoc method
+         //* @name showIframe
+         //* @methodOf audit.controller:AuditController
 		 *
 		 * @description
 		 * This function is called when Generate Audit Report button is clicked.
 		 * In $scope.auditReportUrl is setting builder url from BuildUrl service.
 		 *
 		 */
-		function showIframe(){
+        $scope.showIframe = function () {
 			$scope.auditReportUrl = BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, $scope.auditReportUri,
 			$scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, $scope.config.pentahoDateFormat);
 		}
