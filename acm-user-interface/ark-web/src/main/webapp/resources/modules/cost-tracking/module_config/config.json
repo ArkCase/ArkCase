@@ -57,7 +57,7 @@
         "components": [
           "details",
           "person",
-          "costSummary"
+          "summary"
         ]
       },
       {
@@ -75,15 +75,23 @@
         ]
       },
       {
-        "type": "p/COSTSHEET/costSummary",
+        "type": "p/COSTSHEET/summary",
         "label": "Expenses",
         "components": [
-          "costSummary"
+          "summary"
         ]
       }
     ]
   },
   "components": [
+    {
+      "id": "main",
+      "title": "Overview",
+      "icon": "fa fa-tachometer",
+      "enabled": false,
+      "type": "empty",
+      "editable": false
+    },
     {
       "id": "info",
       "title": "Info",
@@ -102,12 +110,14 @@
     {
       "id": "details",
       "title": "Details",
+      "icon": "fa fa-info-circle",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "person",
       "title": "Person",
+      "icon": "fa fa-user",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -132,8 +142,9 @@
       ]
     },
     {
-      "id": "time-summary",
-      "title": "Time Summary",
+      "id": "summary",
+      "title": "Cost Summary",
+      "icon": "fa fa-money",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -147,34 +158,34 @@
       "columnDefs": [
         {
           "name": "parentId",
-          "displayName": "costTracking.comp.timesSummary.table.columns.parentId",
+          "displayName": "costTracking.comp.summary.table.columns.parentId",
           "headerCellFilter": "translate",
           "visible": false
         },
         {
           "name": "parentNumber",
-          "displayName": "costTracking.comp.timesSummary.table.columns.parentNumber",
+          "displayName": "costTracking.comp.summary.table.columns.parentNumber",
           "headerCellFilter": "translate",
           "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjectType($event, row.entity)'>{{row.entity.parentNumber}}</a>"
         },
         {
           "name": "parentType",
-          "displayName": "costTracking.comp.timesSummary.table.columns.parentType",
+          "displayName": "costTracking.comp.summary.table.columns.parentType",
           "headerCellFilter": "translate"
         },
         {
           "name": "value",
-          "displayName": "costTracking.comp.timesSummary.table.columns.value",
+          "displayName": "costTracking.comp.summary.table.columns.value",
           "headerCellFilter": "translate"
         },
         {
           "name": "title",
-          "displayName": "costTracking.comp.timesSummary.table.columns.title",
+          "displayName": "costTracking.comp.summary.table.columns.title",
           "headerCellFilter": "translate"
         },
         {
           "name": "description",
-          "displayName": "costTracking.comp.timesSummary.table.columns.description",
+          "displayName": "costTracking.comp.summary.table.columns.description",
           "headerCellFilter": "translate",
           "cellTemplate": "<div class='ui-grid-cell-contents'>{{ row.entity.description || 'N/A' }}</div>"
         }

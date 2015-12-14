@@ -12,6 +12,7 @@ angular.module('complaints').controller('Complaints.HistoryController', ['$scope
             if ('history' == componentId) {
                 gridHelper.setColumnDefs(config);
                 gridHelper.setBasicOptions(config);
+                gridHelper.disableGridScrolling(config);
                 gridHelper.setExternalPaging(config, $scope.retrieveGridData);
                 gridHelper.setUserNameFilter(promiseUsers);
 
@@ -34,7 +35,6 @@ angular.module('complaints').controller('Complaints.HistoryController', ['$scope
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = auditData.resultPage;
                     $scope.gridOptions.totalItems = auditData.totalCount;
-                    gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                 });
             }
         };

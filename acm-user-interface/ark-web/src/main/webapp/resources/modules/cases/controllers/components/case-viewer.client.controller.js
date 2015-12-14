@@ -1,5 +1,15 @@
 'use strict';
 
+/**
+ * @ngdoc controller
+ * @name controllers:Cases.ViewerController
+ *
+ * @description
+ *
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/components/case-viewer.client.controller.js modules/cases/controllers/components/case-viewer.client.controller.js}
+ *
+ * Cases.ViewerController loads a document into the snowbound viewer and displays metadata in a top bar
+ */
 angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Object.ModelService', 'Case.InfoService',
     function ($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, SnowboundService, Authentication, EcmService, ObjectModelService, CaseInfoService) {
         $scope.$emit('req-component-config', 'viewer');
@@ -8,22 +18,24 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
         $scope.userId = '';
         $scope.ecmFileProperties = {};
         $scope.snowboundUrl = '';
-        $scope.ecmFile = {};
+        //$scope.ecmFile = {};
         $scope.ecmFileEvents = [];
         $scope.ecmFileNotes = [];
         $scope.ecmFileParticipants = [];
         $scope.userList = [];
         $scope.caseInfo = {};
-        $scope.assignee = '';
-
-        // Methods
-        $scope.openSnowboundViewer = openSnowboundViewer;
+        //$scope.assignee = '';
 
         /**
-          * This method generates the url to open the snowbound viewer
-          * with the specified document loaded.
-          */
-        function openSnowboundViewer() {
+         * @ngdoc method
+         * @name openSnowboundViewer
+         * @methodOf controllers:Cases.ViewerController
+         *
+         * @description
+         * Builds the snowbound url based on the parameters passed into the controller state and opens the
+         * specified document in an iframe which points to snowbound
+         */
+        $scope.openSnowboundViewer = function() {
             var fileInfo = {
                 id: $stateParams['id'],
                 containerId: $stateParams['containerId'],
@@ -39,7 +51,6 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
         var ticketInfo = TicketService.getArkCaseTicket();
 
         // Obtains the currently logged in user
-        //var userInfo = Authentication.queryUserInfo({});
         var userInfo = Authentication.queryUserInfo();
 
         // Obtains a list of all users in ArkCase
@@ -74,7 +85,7 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
                     });
 
                 // Opens the selected document in the snowbound viewer
-                openSnowboundViewer();
+                $scope.openSnowboundViewer();
             });
 
         $scope.config = null;

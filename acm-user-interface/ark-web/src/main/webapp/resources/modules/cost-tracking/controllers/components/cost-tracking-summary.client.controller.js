@@ -1,15 +1,16 @@
 'use strict';
 
-angular.module('cost-tracking').controller('CostTracking.TimeSummaryController', ['$scope', 'UtilService', 'Helper.UiGridService',
+angular.module('cost-tracking').controller('CostTracking.SummaryController', ['$scope', 'UtilService', 'Helper.UiGridService',
     function ($scope, Util, HelperUiGridService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        $scope.$emit('req-component-config', 'time-summary');
+        $scope.$emit('req-component-config', 'summary');
         $scope.$on('component-config', function (e, componentId, config) {
-            if ('time-summary' == componentId) {
+            if ('summary' == componentId) {
                 gridHelper.setColumnDefs(config);
                 gridHelper.setBasicOptions(config);
+                gridHelper.disableGridScrolling(config);
             }
         });
 
@@ -20,7 +21,7 @@ angular.module('cost-tracking').controller('CostTracking.TimeSummaryController',
             var parentId = {parentId: $scope.costsheetInfo.parentId};
 
             var costs = angular.copy($scope.costsheetInfo.costs);
-            costs = costs.map(function (obj){
+            costs = costs.map(function (obj) {
                 return angular.extend(obj, parentNumber, parentType, parentId);
             });
             $scope.gridOptions = $scope.gridOptions || {};
