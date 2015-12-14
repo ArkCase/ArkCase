@@ -10,8 +10,8 @@ angular.module('cost-tracking').controller('CostTracking.InfoController', ['$sco
         });
 
         $scope.parentInfo = {};
-        $scope.costsheetSolr = null;
-        $scope.costsheetInfo = null;
+        //$scope.costsheetSolr = null;
+        //$scope.costsheetInfo = null;
         $scope.$on('costsheet-selected', function onSelectedCase(e, selectedTimesheet) {
             $scope.costsheetSolr = selectedTimesheet;
         });
