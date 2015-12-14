@@ -10,6 +10,7 @@ angular.module('cost-tracking').controller('CostTracking.SummaryController', ['$
             if ('summary' == componentId) {
                 gridHelper.setColumnDefs(config);
                 gridHelper.setBasicOptions(config);
+                gridHelper.disableGridScrolling(config);
             }
         });
 
