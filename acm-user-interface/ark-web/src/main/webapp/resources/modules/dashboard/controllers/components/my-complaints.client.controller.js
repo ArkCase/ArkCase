@@ -11,7 +11,12 @@ angular.module('dashboard.my-complaints')
             vm.config = null;
             var userInfo = null;
 
-
+            var paginationOptions = {
+                pageNumber: 1,
+                pageSize: 5,
+                sortBy: 'name',
+                sortDir: 'desc'
+            };
             vm.gridOptions = {
                 enableColumnResizing: true,
                 enableRowSelection: true,
@@ -25,7 +30,7 @@ angular.module('dashboard.my-complaints')
                 onRegisterApi: function (gridApi) {
                     vm.gridApi = gridApi;
 
-                    gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
+                    vm.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
                         if (sortColumns.length == 0) {
                             paginationOptions.sort = null;
                         } else {
@@ -46,11 +51,11 @@ angular.module('dashboard.my-complaints')
             function applyConfig(e, componentId, config) {
                 if (componentId == 'myComplaints') {
                     vm.config = config;
-                    vm.gridOptions.columnDefs = config.columnDefs;
-                    vm.gridOptions.enableFiltering = config.enableFiltering;
-                    vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
-                    vm.gridOptions.paginationPageSize = config.paginationPageSize;
-                    paginationOptions.pageSize = config.paginationPageSize;
+                    vm.gridOptions.columnDefs = vm.config.columnDefs;
+                    vm.gridOptions.enableFiltering = vm.config.enableFiltering;
+                    vm.gridOptions.paginationPageSizes = vm.config.paginationPageSizes;
+                    vm.gridOptions.paginationPageSize = vm.config.paginationPageSize;
+                    paginationOptions.pageSize = vm.config.paginationPageSize;
 
                     Authentication.queryUserInfo().then(function (responseUserInfo) {
                         userInfo = responseUserInfo;
@@ -69,8 +74,8 @@ angular.module('dashboard.my-complaints')
                         pageSize: paginationOptions.pageSize
                     },
                     function (data) {
-                        vm.gridOptions.data = data.response.docs;
-                        vm.gridOptions.totalItems = data.response.numFound;
+                        vm.gridOptions.data = data;
+                        vm.gridOptions.totalItems = data.length;
                     }
                 );
             }
