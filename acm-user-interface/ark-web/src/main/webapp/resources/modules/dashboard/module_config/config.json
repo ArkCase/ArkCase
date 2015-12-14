@@ -40,7 +40,7 @@
           "displayName": "dashboard.widgets.myCases.table.header.caseId",
           "headerCellFilter": "translate",
           "enableSorting": true,
-          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s)\">{{COL_FIELD}}</a></div>",
+          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: \'{{row.entity.object_id_s}}\'})\">{{COL_FIELD}}</a></div>",
           "width": 130
         },
         {
@@ -131,14 +131,14 @@
           "name": "complaintNumber",
           "displayName": "dashboard.widgets.myTasks.table.header.complaintNumber",
           "headerCellFilter": "translate",
-          "cellTemplate:": "<div><a data-ui-sref=\"complaints.main({id: row.entity.complaintId)\">{{COL_FIELD}}</a></div>",
+          "cellTemplate:": "'<div class=\"ui-grid-cell-contents\"><a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}</a></div>'",
           "width": 175
         },
         {
           "name": "complaintTitle",
           "displayName": "dashboard.widgets.myTasks.table.header.title",
           "headerCellFilter": "translate",
-          "cellTemplate:": "<div><a data-ui-sref=\"complaints.main({id: row.entity.complaintId)\">{{COL_FIELD}}</a></div>"
+          "cellTemplate:": "'<div class=\"ui-grid-cell-contents\"><a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}</a></div>'"
         },
         {
           "name": "priority",
