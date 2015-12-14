@@ -1,24 +1,32 @@
 'use strict';
 
 angular.module('cases').controller('Cases.DetailsController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'Case.InfoService', 'MessageService'
-    , function ($scope, $stateParams, $translate, Util, CaseInfoService, MessageService) {
+    , 'UtilService', 'ConfigService', 'Case.InfoService', 'MessageService'
+    , function ($scope, $stateParams, $translate, Util, ConfigService, CaseInfoService, MessageService) {
 
-		$scope.$emit('req-component-config', 'details');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('details' == componentId) {
-				$scope.config = config;
-			}
+        //$scope.$emit('req-component-config', 'details');
+        //$scope.$on('component-config', function (e, componentId, config) {
+        //    if ('details' == componentId) {
+        //	$scope.config = config;
+        //}
+        //});
+        ConfigService.getComponentConfig("cases", "details").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
-        $scope.$on('case-updated', function (e, data) {
-            if (CaseInfoService.validateCaseInfo(data)) {
-                $scope.caseInfo = data;
-            }
-		});
+        //$scope.$on('case-updated', function (e, data) {
+        //   if (CaseInfoService.validateCaseInfo(data)) {
+        //       $scope.caseInfo = data;
+        //   }
+        //});
+        CaseInfoService.getCaseInfo($stateParams.id).then(function (caseInfo) {
+            $scope.caseInfo = caseInfo;
+            return caseInfo;
+        });
 
 
-		$scope.options = {
+        $scope.options = {
             focus: true
 			//,height: 120
 		};

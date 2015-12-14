@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module('cost-tracking').controller('CostTracking.DetailsController', ['$scope', '$translate', 'UtilService', 'CostTracking.InfoService', 'MessageService',
-    function ($scope, $translate, Util, CostTrackingInfoService, MessageService) {
-        $scope.$emit('req-component-config', 'details');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('details' == componentId) {
-                $scope.config = config;
-            }
+angular.module('cost-tracking').controller('CostTracking.DetailsController', ['$scope', '$translate'
+    , 'UtilService', 'ConfigService', 'CostTracking.InfoService', 'MessageService'
+    , function ($scope, $translate, Util, ConfigService, CostTrackingInfoService, MessageService) {
+
+        ConfigService.getComponentConfig("cost-tracking", "details").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
         $scope.$on('costsheet-updated', function (e, data) {

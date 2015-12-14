@@ -1,18 +1,25 @@
 'use strict';
 
-/**
- * @ngdoc controller
- * @name controllers:Cases.ViewerController
- *
- * @description
- *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/controllers/components/case-viewer.client.controller.js modules/cases/controllers/components/case-viewer.client.controller.js}
- *
- * Cases.ViewerController loads a document into the snowbound viewer and displays metadata in a top bar
- */
-angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q', 'TicketService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Object.ModelService', 'Case.InfoService',
-    function ($scope, $stateParams, $sce, $log, $q, TicketService, LookupService, SnowboundService, Authentication, EcmService, ObjectModelService, CaseInfoService) {
-        $scope.$emit('req-component-config', 'viewer');
+angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q'
+    , 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService'
+    , 'Object.ModelService', 'Case.InfoService',
+    function ($scope, $stateParams, $sce, $log, $q
+        , TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService
+        , ObjectModelService, CaseInfoService) {
+
+        //$scope.$emit('req-component-config', 'viewer');
+        //$scope.config = null;
+        //$scope.$on('component-config', applyConfig);
+        //function applyConfig(e, componentId, config) {
+        //    if (componentId == 'viewer') {
+        //        $scope.config = config;
+        //    }
+        //}
+        ConfigService.getComponentConfig("cases", "viewer").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
+        });
+
 
         $scope.acmTicket = '';
         $scope.userId = '';
@@ -35,7 +42,7 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
          * Builds the snowbound url based on the parameters passed into the controller state and opens the
          * specified document in an iframe which points to snowbound
          */
-        $scope.openSnowboundViewer = function() {
+        $scope.openSnowboundViewer = function () {
             var fileInfo = {
                 id: $stateParams['id'],
                 containerId: $stateParams['containerId'],
@@ -45,7 +52,7 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
             };
             var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, fileInfo);
             $scope.snowboundUrl = $sce.trustAsResourceUrl(viewerUrl);
-        }
+        };
 
         // Obtains authentication token for ArkCase
         var ticketInfo = TicketService.getArkCaseTicket();
@@ -88,12 +95,5 @@ angular.module('cases').controller('Cases.ViewerController', ['$scope', '$stateP
                 $scope.openSnowboundViewer();
             });
 
-        $scope.config = null;
-        $scope.$on('component-config', applyConfig);
-        function applyConfig(e, componentId, config) {
-            if (componentId == 'viewer') {
-                $scope.config = config;
-            }
-        }
     }
 ]);
