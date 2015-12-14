@@ -10,6 +10,7 @@ angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
         ConfigService.getComponentConfig("tasks", "docsreview").then(function (config) {
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
             gridHelper.setUserNameFilter(promiseUsers);
 
             //$scope.gridOptions.enableFiltering = false;
@@ -21,7 +22,7 @@ angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
             $q.all([promiseUsers]).then(function () {
                 var arr = (taskInfo.documentUnderReview) ? [taskInfo.documentUnderReview] : [];
                 $scope.gridOptions.data = arr;
-                gridHelper.hidePagingControlsIfAllDataShown(1);
+                //gridHelper.hidePagingControlsIfAllDataShown(1);
             });
             return taskInfo;
         });

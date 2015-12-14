@@ -17,6 +17,7 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
             gridHelper.setInPlaceEditing(config, $scope.updateRow);
 
             $q.all([promiseAddressTypes]).then(function (data) {
@@ -35,24 +36,16 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
             return config;
         });
 
-        //$scope.$on('complaint-updated', function (e, data) {
-        //    if (ComplaintInfoService.validateComplaintInfo(data)) {
-        //        $scope.complaintInfo = data;
-        //        $scope.gridOptions.data = [Util.goodValue($scope.complaintInfo.location, {})];
-        //        gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
-        //    }
-        //});
         ComplaintInfoService.getComplaintInfo($stateParams.id).then(function (complaintInfo) {
             $scope.complaintInfo = complaintInfo;
             $scope.gridOptions.data = [Util.goodValue($scope.complaintInfo.location, {})];
-            gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
+            //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
             return complaintInfo;
         });
 
 
         $scope.addNew = function () {
             $scope.gridOptions.data.push({});
-            gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
         };
         $scope.updateRow = function (rowEntity) {
             var complaintInfo = Util.omitNg($scope.complaintInfo);

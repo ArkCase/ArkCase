@@ -12,6 +12,7 @@ angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', 
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
             gridHelper.setInPlaceEditing(config, $scope.updateRow);
             gridHelper.setUserNameFilter(promiseUsers);
 
@@ -48,7 +49,7 @@ angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', 
             newRow.creator = $scope.userId;
             $scope.gridOptions.data.push(newRow);
             $scope.gridOptions.totalItems++;
-            gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+            //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
         };
         $scope.updateRow = function (rowEntity) {
             var note = Util.omitNg(rowEntity);

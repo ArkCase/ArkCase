@@ -14,22 +14,11 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             }
         );
 
-        //$scope.$emit('req-component-config', 'notes');
-        //$scope.$on('component-config', function (e, componentId, config) {
-        //    if ("notes" == componentId) {
-        //        gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
-        //        gridHelper.setColumnDefs(config);
-        //        gridHelper.setBasicOptions(config);
-        //        gridHelper.setInPlaceEditing(config, $scope.updateRow);
-        //        gridHelper.setUserNameFilter(promiseUsers);
-        //
-        //        $scope.retrieveGridData();
-        //    }
-        //});
         var promiseConfig = ConfigService.getComponentConfig("cases", "notes").then(function (config) {
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
             gridHelper.setInPlaceEditing(config, $scope.updateRow);
             gridHelper.setUserNameFilter(promiseUsers);
 
@@ -45,7 +34,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = notes;
                     $scope.gridOptions.totalItems = notes.length;
-                    gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+                    //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                 });
             }
         };
@@ -60,7 +49,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             newRow.creator = $scope.userId;
             $scope.gridOptions.data.push(newRow);
             $scope.gridOptions.totalItems++;
-            gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+            //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
         };
         $scope.updateRow = function (rowEntity) {
             var note = Util.omitNg(rowEntity);

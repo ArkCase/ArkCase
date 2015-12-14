@@ -36,6 +36,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
         ConfigService.getComponentConfig("cases", "tasks").then(function (config) {
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
             gridHelper.setExternalPaging(config, $scope.retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
 
@@ -71,7 +72,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                         $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = tasks;
                         $scope.gridOptions.totalItems = data.response.numFound;
-                        gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+                        //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
 
                         for (var i = 0; i < tasks.length; i++) {
                             var task = tasks[i];
@@ -166,5 +167,5 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             gridHelper.showObject(ObjectService.ObjectTypes.TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
         };
 
-	}
+    }
 ]);

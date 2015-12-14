@@ -20,6 +20,7 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
         ConfigService.getComponentConfig("complaints", "correspondence").then(function (config) {
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
             gridHelper.setExternalPaging(config, $scope.retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
 
@@ -63,7 +64,7 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
                 var correspondenceData = data[0];
                 $scope.gridOptions.data = correspondenceData.children;
                 $scope.gridOptions.totalItems = Util.goodValue(correspondenceData.totalChildren, 0);
-                gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+                //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
             });
         };
 
@@ -97,7 +98,6 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
                 correspondence.category = "Correspondence";
                 $scope.gridOptions.data.push(correspondence);
                 $scope.gridOptions.totalItems++;
-                gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
             });
         };
 
