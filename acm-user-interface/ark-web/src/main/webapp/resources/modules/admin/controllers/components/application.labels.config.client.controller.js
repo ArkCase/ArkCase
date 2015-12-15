@@ -68,14 +68,15 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', 'A
                 var selectedLanguage = $scope.selectedLanguage;
                 labelsConfigService.retrieveResource({
                         lang: selectedLanguage,
-                        ns: selectedNamespace},
+                        ns: selectedNamespace
+                    },
                     function (data) {
                         $scope.gridOptions.data = data;
                         $scope.disabledInputs = false;
                     },
-                function(){
-                    $scope.disabledInputs = false;
-                });
+                    function () {
+                        $scope.disabledInputs = false;
+                    });
             }
         }
 
@@ -89,52 +90,52 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', 'A
         //changing default language
         $scope.changeDefaultLng = function () {
             labelsConfigService.updateSettings(
-                    angular.toJson($scope.settings)
+                angular.toJson($scope.settings)
             )
         };
 
         //reset all values to default for selected module from dropdown
-        $scope.resetCurrentModuleResources = function(){
+        $scope.resetCurrentModuleResources = function () {
             $scope.disabledInputs = true;
             labelsConfigService.resetResource({
                 lng: [$scope.selectedLanguage],
                 ns: [$scope.selectedNamespace]
             });
-            $timeout (function(){
+            $timeout(function () {
                 reloadGrid();
             }, 1000);
         };
 
         //reset all values to default for all modules
-        $scope.resetAllResources = function(){
+        $scope.resetAllResources = function () {
             takeAllNamespaces();
             $scope.disabledInputs = true;
             labelsConfigService.resetResource({
                 lng: [$scope.selectedLanguage],
                 ns: $scope.allNamespaces
             });
-            $timeout (function(){
+            $timeout(function () {
                 reloadGrid();
             }, 1000);
         };
 
         //retrieve all Namespaces from dropdown list and put them into allNamespaces array
-       function takeAllNamespaces(){
-            angular.forEach($scope.namespacesDropdownOptions, function(option){
+        function takeAllNamespaces() {
+            angular.forEach($scope.namespacesDropdownOptions, function (option) {
                 var exists = false;
-                angular.forEach($scope.allNamespaces, function(avOption){
-                    if(avOption == option){
+                angular.forEach($scope.allNamespaces, function (avOption) {
+                    if (avOption == option) {
                         exists = true;
                     }
                 });
-                if(exists == false){
+                if (exists == false) {
                     $scope.allNamespaces.push(option.id);
                 }
             });
         }
 
         //updating value for Description for selected record in grid
-        $scope.updateLabelDesc = function(desc, rowEntity){
+        $scope.updateLabelDesc = function (desc, rowEntity) {
             labelsConfigService.updateResource({
                 lang: $scope.selectedLanguage,
                 ns: $scope.selectedNamespace
@@ -146,7 +147,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', 'A
         };
 
         //updating value for Value for selected record in grid
-        $scope.updateLabelValue = function(value, rowEntity){
+        $scope.updateLabelValue = function (value, rowEntity) {
             labelsConfigService.updateResource({
                 lang: $scope.selectedLanguage,
                 ns: $scope.selectedNamespace
