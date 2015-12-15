@@ -1,12 +1,13 @@
 'use strict';
 
-angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', 'Admin.LabelsConfigService',
-    function ($scope, labelsConfigService) {
+angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', 'Admin.LabelsConfigService', '$timeout',
+    function ($scope, labelsConfigService, $timeout) {
 
         $scope.loaded = false;
         $scope.settings = {};
         $scope.takeAllNamespaces = takeAllNamespaces;
         $scope.allNamespaces = [];
+        $scope.disabledInputs = false;
 
         $scope.gridOptions = {
             enableColumnResizing: true,
@@ -62,6 +63,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', 'A
 
         function reloadGrid() {
             if ($scope.selectedNamespace && $scope.selectedLanguage) {
+                $scope.disabledInputs = true;
                 var selectedNamespace = $scope.selectedNamespace;
                 var selectedLanguage = $scope.selectedLanguage;
                 labelsConfigService.retrieveResource({
@@ -69,7 +71,11 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', 'A
                         ns: selectedNamespace},
                     function (data) {
                         $scope.gridOptions.data = data;
-                    });
+                        $scope.disabledInputs = false;
+                    },
+                function(){
+                    $scope.disabledInputs = false;
+                });
             }
         }
 
@@ -89,21 +95,27 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', 'A
 
         //reset all values to default for selected module from dropdown
         $scope.resetCurrentModuleResources = function(){
+            $scope.disabledInputs = true;
             labelsConfigService.resetResource({
                 lng: [$scope.selectedLanguage],
                 ns: [$scope.selectedNamespace]
             });
-            reloadGrid();
+            $timeout (function(){
+                reloadGrid();
+            }, 1000);
         };
 
         //reset all values to default for all modules
         $scope.resetAllResources = function(){
             takeAllNamespaces();
+            $scope.disabledInputs = true;
             labelsConfigService.resetResource({
                 lng: [$scope.selectedLanguage],
                 ns: $scope.allNamespaces
             });
-            reloadGrid();
+            $timeout (function(){
+                reloadGrid();
+            }, 1000);
         };
 
         //retrieve all Namespaces from dropdown list and put them into allNamespaces array
