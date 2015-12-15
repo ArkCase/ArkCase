@@ -2,15 +2,26 @@
 
 angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService'
-    , 'Object.ModelService'
+    , 'Object.ModelService', 'LookupService'
     , function ($scope, $stateParams
         , Util, ConfigService, ObjectService, CaseInfoService, ComplaintInfoService, TaskInfoService
-        , ObjectModelService) {
+        , ObjectModelService, LookupService) {
 
         ConfigService.getComponentConfig("tasks", "parentinfo").then(function (componentConfig) {
             $scope.config = componentConfig;
             return componentConfig;
         });
+
+        LookupService.getUsers().then(
+            function (users) {
+                var options = [];
+                _.each(users, function (user) {
+                    options.push({object_id_s: user.object_id_s, name: user.name});
+                });
+                $scope.assignableUsers = options;
+                return users;
+            }
+        );
 
         $scope.$on('task-updated', function (e, data) {
             if (!TaskInfoService.validateTaskInfo(data)) {
