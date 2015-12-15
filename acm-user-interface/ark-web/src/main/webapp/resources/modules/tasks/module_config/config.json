@@ -581,6 +581,54 @@
       ]
     },
     {
+      "id": "userSearch",
+      "title": "Select users",
+      "enabled": "true",
+      "multi": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "tasks.comp.userSearch.addMembersGridColumns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_type_s",
+          "displayName": "tasks.comp.userSearch.addMembersGridColumns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title",
+          "displayName": "tasks.comp.userSearch.addMembersGridColumns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "parent",
+          "displayName": "tasks.comp.userSearch.addMembersGridColumns.parent",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "assignee",
+          "displayName": "tasks.comp.userSearch.addMembersGridColumns.assignee",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified_date_tdt",
+          "displayName": "tasks.comp.userSearch.addMembersGridColumns.modified",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0
+    },
+    {
       "id": "newTask",
       "status": [
         {
@@ -624,6 +672,9 @@
         "taskId": "",
         "taskStartDate": "",
         "title": ""
+      },
+      "userSearch": {
+        "userFacetFilter": "\"Object Type\": USER"
       }
     }
   ]
