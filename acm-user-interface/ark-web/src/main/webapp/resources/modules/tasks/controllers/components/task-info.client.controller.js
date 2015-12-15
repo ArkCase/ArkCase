@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams'
-    , 'UtilService', 'ConfigService', 'LookupService', 'Object.LookupService', 'Task.InfoService'
-    , function ($scope, $stateParams, Util, ConfigService, LookupService, ObjectLookupService, TaskInfoService) {
+    , 'UtilService', 'ConfigService', 'LookupService', 'Object.LookupService', 'Task.InfoService', 'Object.ModelService'
+    , function ($scope, $stateParams, Util, ConfigService, LookupService, ObjectLookupService, TaskInfoService, ObjectModelService) {
 
         ConfigService.getComponentConfig("tasks", "info").then(function (componentConfig) {
             $scope.config = componentConfig;
@@ -36,6 +36,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         $scope.$on('task-updated', function (e, data) {
             if (TaskInfoService.validateTaskInfo(data)) {
                 $scope.taskInfo = data;
+                $scope.assignee = ObjectModelService.getAssignee(data);
             }
         });
 
