@@ -21,9 +21,11 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
                         item.title = found.title;
                         item.id = widget.id;
                         $scope.widgets.push(item);
-                    }
-                }
+            }
+        }
             });
+
+            $scope.allowedWidgets = ['details'];
 
             return moduleConfig;
         });
@@ -46,15 +48,54 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
         DashboardService.getConfig({}, function (data) {
             $scope.dashboard.model = angular.fromJson(data.dashboardConfig);
 
+            $scope.dashboard.caseModel = widgetFilter($scope.dashboard.model);
+            $scope.dashboard.caseModel.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
+
             // Set Dashboard custom title
             $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
         });
 
+        /**
+         * Remove unwanted widgets
+         * @param model
+         */
+        var widgetFilter = function(model) {
+            var caseModel = model;
+            //iterate over rows
+            for(var i = 0; i < caseModel.rows.length; i++) {
+                //iterate over columns
+                for(var j = 0; j < caseModel.rows[i].columns.length; j++) {
+                    //iterate over column widgets
+                    for(var k = caseModel.rows[i].columns[j].widgets.length; k < 0; k--) {
+                        if($scope.allowedWidgets.indexOf(caseModel.rows[i].columns[j].widgets[k].type) > -1) {
+                            //remove widget from array
+                            caseModel.rows[i].columns[j].widgets.pop();
+                        }
+                    }
+                }
+            }
+            caseModel = model;
+            return caseModel;
+        };
+
         $scope.$on('adfDashboardChanged', function (event, name, model) {
+            //restore main dashboard config and add new/remove
+            model = restoreWidgets(model, $scope.dashboard.model);
+
             DashboardService.saveConfig({
                 dashboardConfig: angular.toJson(model)
             });
         });
+
+        var restoreWidgets = function(caseModel, dashboardModel) {
+
+            //TODO
+            /**
+             * if caseModel has a widget that is not in dashboardModel,
+             * then add widget to dashboard model in the correct row:column
+             */
+        };
+
 
 
 
