@@ -71,14 +71,14 @@ angular.module('services').factory('EcmService', ['$resource', 'StoreService', '
                 method: 'POST',
                 url: 'proxy/arkcase/api/latest/service/ecm/file/:fileId?versionTag=:version'
             }
-            //, sendEmail: {
-            //    method: 'POST',
-            //    url: 'proxy/arkcase/api/latest/service/notification/email'
-            //}
-            //, sendEmailWithAttachments: {
-            //    method: 'POST',
-            //    url: 'proxy/arkcase/api/latest/plugin/outlook/email/withattachments'
-            //}
+            , sendEmail: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/service/notification/email'
+            }
+            , sendEmailWithAttachments: {
+                method: 'POST',
+                url: 'proxy/arkcase/api/latest/plugin/outlook/email/withattachments'
+            }
             , getFile: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/latest/service/ecm/file/:fileId'
