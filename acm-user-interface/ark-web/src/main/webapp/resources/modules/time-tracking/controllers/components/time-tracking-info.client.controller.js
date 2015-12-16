@@ -1,16 +1,15 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTracking.InfoController', ['$scope',
-    function ($scope) {
-        $scope.$emit('req-component-config', 'info');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ("info" == componentId) {
-                $scope.config = config;
-            }
+angular.module('time-tracking').controller('TimeTracking.InfoController', ['$scope', 'ConfigService'
+    , function ($scope, ConfigService) {
+
+        ConfigService.getComponentConfig("time-tracking", "info").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
-        $scope.timesheetSolr = null;
-        $scope.timesheetInfo = null;
+        //$scope.timesheetSolr = null;
+        //$scope.timesheetInfo = null;
         $scope.$on('timesheet-selected', function onSelectedCase(e, selectedTimesheet) {
             $scope.timesheetSolr = selectedTimesheet;
         });

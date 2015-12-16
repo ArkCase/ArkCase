@@ -330,12 +330,61 @@
           "headerCellFilter": "translate"
         }
       ]
+    },
+    {
+      "id": "usersPicker",
+      "title": "Select users",
+      "enabled": "true",
+      "multi": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_type_s",
+          "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title",
+          "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "parent",
+          "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.parent",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "assignee",
+          "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.assignee",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified_date_tdt",
+          "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.modified",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0
     }
   ],
   "adminTree": [
     {
       "title": "admin.security.title",
       "folder": "true",
+      "expanded": "true",
       "children": [
         {
           "title": "admin.security.functionalAccessControl",
@@ -346,7 +395,7 @@
           "templateName": "security.ldap-config"
         },
         {
-          "title": "admin.security.organizationalHierarchy",
+          "title": "admin.security.organizationalHierarchy.title",
           "templateName": "security.organizational-hierarchy"
         },
         {
@@ -362,6 +411,7 @@
     {
       "title": "admin.dashboard.title",
       "folder": "true",
+      "expanded": "true",
       "children": [
         {
           "title": "admin.dashboard.config",
@@ -372,6 +422,7 @@
     {
       "title": "admin.reports.title",
       "folder": "true",
+      "expanded": "true",
       "children": [
         {
           "title": "admin.reports.config",
@@ -382,6 +433,7 @@
     {
       "title": "admin.forms.title",
       "folder": "true",
+      "expanded": "true",
       "children": [
         {
           "title": "admin.forms.config",
@@ -392,6 +444,7 @@
     {
       "title": "admin.workflows.title",
       "folder": "true",
+      "expanded": "true",
       "children": [
         {
           "title": "admin.workflows.config",
@@ -402,6 +455,7 @@
     {
       "title": "admin.formWorkflows.title",
       "folder": "true",
+      "expanded": "true",
       "children": [
         {
           "title": "admin.formWorkflows.link",
@@ -412,6 +466,7 @@
     {
       "title": "admin.application.title",
       "folder": "true",
+      "expanded": "true",
       "children": [
         {
           "title": "admin.application.labels.config.title",
@@ -426,6 +481,7 @@
     {
       "title": "admin.branding.title",
       "folder": "true",
+      "expanded": "true",
       "children": [
         {
           "title": "admin.branding.logo",
@@ -440,6 +496,7 @@
     {
       "title": "admin.correspondenceManagement.title",
       "folder": "true",
+      "expanded": "true",
       "children": [
         {
           "title": "admin.correspondenceManagement.templates",
