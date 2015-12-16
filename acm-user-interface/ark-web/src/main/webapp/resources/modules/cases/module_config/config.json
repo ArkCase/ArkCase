@@ -210,62 +210,67 @@
         {
           "id": "details",
           "type": "component",
-          "model": "details"
+          "columnDefs": [
+            {
+              "name": "details",
+              "displayName": "dashboard.widgets.details.table.header.details",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "modified",
+              "displayName": "dashboard.widgets.details.table.header.modified",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "modifier",
+              "displayName": "dashboard.widgets.details.table.header.modifier",
+              "headerCellFilter": "translate"
+            }
+          ]
         },
         {
           "id": "people",
-          "type": "component",
-          "model": "peopleNames"
+          "type": "component"
         },
         {
           "id": "documents",
-          "type": "component",
-          "model": "documentCount"
+          "type": "component"
         },
         {
           "id": "participants",
-          "type": "component",
-          "model": "participants"
+          "type": "component"
         },
         {
           "id": "notes",
-          "type": "component",
-          "model": "noteCount"
+          "type": "component"
         },
         {
           "id": "tasks",
-          "type": "component",
-          "model": "taskCount"
+          "type": "component"
         },
         {
           "id": "references",
-          "type": "component",
-          "model": "referenceCount"
+          "type": "component"
         },
         {
           "id": "history",
-          "type": "component",
-          "model": "historyCount"
+          "type": "component"
         },
         {
           "id": "correspondence",
-          "type": "component",
-          "model": "correspondenceCount"
+          "type": "component"
         },
         {
           "id": "time",
-          "type": "component",
-          "model": "timesheetCount"
+          "type": "component"
         },
         {
           "id": "cost",
-          "type": "component",
-          "model": "costsheetCount"
+          "type": "component"
         },
         {
           "id": "calendar",
-          "type": "component",
-          "model": "calendarEventCount"
+          "type": "component"
         }
       ]
     },

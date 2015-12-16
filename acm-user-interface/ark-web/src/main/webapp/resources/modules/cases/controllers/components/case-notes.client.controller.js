@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cases').controller('Cases.NotesController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ObjectService', 'Helper.UiGridService', 'Object.NoteService', 'Authentication'
-    , function ($scope, $stateParams, $q, Util, ObjectService, HelperUiGridService, ObjectNoteService, Authentication) {
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Helper.UiGridService', 'Object.NoteService', 'Authentication'
+    , function ($scope, $stateParams, $q, Util, ConfigService, ObjectService, HelperUiGridService, ObjectNoteService, Authentication) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
@@ -14,28 +14,27 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             }
         );
 
-        $scope.$emit('req-component-config', 'notes');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ("notes" == componentId) {
-                gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.setInPlaceEditing(config, $scope.updateRow);
-                gridHelper.setUserNameFilter(promiseUsers);
+        var promiseConfig = ConfigService.getComponentConfig("cases", "notes").then(function (config) {
+            gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
+            gridHelper.setInPlaceEditing(config, $scope.updateRow);
+            gridHelper.setUserNameFilter(promiseUsers);
 
-                $scope.retrieveGridData();
-            }
+            $scope.retrieveGridData();
+            return config;
         });
 
         $scope.retrieveGridData = function () {
             if (Util.goodPositive($stateParams.id)) {
                 var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.CASE_FILE, $stateParams.id);
-                $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
+                $q.all([promiseQueryNotes, promiseUsers, promiseConfig]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = notes;
                     $scope.gridOptions.totalItems = notes.length;
-                    gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+                    //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                 });
             }
         };
@@ -50,7 +49,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             newRow.creator = $scope.userId;
             $scope.gridOptions.data.push(newRow);
             $scope.gridOptions.totalItems++;
-            gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+            //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
         };
         $scope.updateRow = function (rowEntity) {
             var note = Util.omitNg(rowEntity);

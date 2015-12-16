@@ -16,7 +16,7 @@
                 <div ng-include="'modules/complaints/views/components/complaint-actions.client.view.html'"></div>
             </div>
 
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs overview-tabs">
                 <li class="{{getActive(link.id)}}" ng-repeat="link in componentLinks">
                     <a ng-click="onClickComponentLink(link.id)">
                         <i class="{{link.icon}}"></i>

@@ -14,7 +14,7 @@
     {
       "id": "news",
       "title": "News Widget",
-      "url": "https://query.yahooapis.com/v1/public/yql",
+      "url": "https:\/\/query.yahooapis.com\/v1\/public\/yql",
       "query": "select * from xml where url = '$1'",
       "format": "json"
     },
@@ -40,7 +40,7 @@
           "displayName": "dashboard.widgets.myCases.table.header.caseId",
           "headerCellFilter": "translate",
           "enableSorting": true,
-          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}</a></div>",
+          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a><\/div>",
           "width": 130
         },
         {
@@ -48,7 +48,7 @@
           "displayName": "dashboard.widgets.myCases.table.header.title",
           "headerCellFilter": "translate",
           "enableSorting": true,
-          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}</a></div>"
+          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a><\/div>"
         },
         {
           "name": "status_lcs",

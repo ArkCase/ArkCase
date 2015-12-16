@@ -37,6 +37,7 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
             $state.go('cases.' + componentType, {
                 id: selectedCase.nodeId
             });
+
         };
     }
 ]);

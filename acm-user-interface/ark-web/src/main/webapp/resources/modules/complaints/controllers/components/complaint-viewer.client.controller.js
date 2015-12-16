@@ -1,9 +1,11 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.ViewerController', ['$scope', '$stateParams', '$sce', '$log', '$q'
-    , 'TicketService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'ObjectsModelsService', 'Complaint.InfoService'
+    , 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService'
+    , 'Object.ModelService', 'Complaint.InfoService'
     , function ($scope, $stateParams, $sce, $log, $q
-        , TicketService, LookupService, SnowboundService, Authentication, EcmService, ObjectsModelsService, ComplaintInfoService) {
+        , TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService
+        , ObjectModelService, ComplaintInfoService) {
 
         $scope.acmTicket = '';
         $scope.userId = '';
@@ -17,12 +19,10 @@ angular.module('complaints').controller('Complaints.ViewerController', ['$scope'
         $scope.complaintInfo = {};
         $scope.assignee = '';
 
-        $scope.config = null;
-        $scope.$emit('req-component-config', 'viewer');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if (componentId == 'viewer') {
-                $scope.config = config;
-            }
+
+        ConfigService.getComponentConfig("complaints", "viewer").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
 
@@ -86,7 +86,7 @@ angular.module('complaints').controller('Complaints.ViewerController', ['$scope'
                 ComplaintInfoService.getComplaintInfo($scope.ecmFile.container.containerObjectId)
                     .then(function (data) {
                         $scope.complaintInfo = data;
-                        $scope.assignee = ObjectsModelsService.getAssignee(data);
+                        $scope.assignee = ObjectModelService.getAssignee(data);
                     });
 
                 // Opens the selected document in the snowbound viewer

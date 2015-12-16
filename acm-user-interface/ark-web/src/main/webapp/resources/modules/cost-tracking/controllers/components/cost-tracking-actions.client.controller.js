@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module('cost-tracking').controller('CostTracking.ActionsController', ['$scope', '$state', 'CostTracking.InfoService',
-    function ($scope, $state, CostTrackingInfoService) {
-        $scope.$emit('req-component-config', 'actions');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('actions' == componentId) {
-                $scope.config = config;
-            }
+angular.module('cost-tracking').controller('CostTracking.ActionsController', ['$scope', '$state'
+    , 'ConfigService', 'CostTracking.InfoService'
+    , function ($scope, $state, ConfigService, CostTrackingInfoService) {
+
+        ConfigService.getComponentConfig("cost-tracking", "actions").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
         $scope.$on('costsheet-updated', function (e, data) {
@@ -19,7 +19,6 @@ angular.module('cost-tracking').controller('CostTracking.ActionsController', ['$
             $state.go("frevvo-new-costsheet", {
                 name: "new-costsheet"
             });
-            //$state.go('newCostsheet');
         };
 
         $scope.edit = function (costsheetInfo) {
@@ -29,7 +28,6 @@ angular.module('cost-tracking').controller('CostTracking.ActionsController', ['$
                     id: costsheetInfo.id
                 }
             });
-            //$state.go('editCostsheet', { id : $scope.costsheetInfo.id});
         };
 
     }

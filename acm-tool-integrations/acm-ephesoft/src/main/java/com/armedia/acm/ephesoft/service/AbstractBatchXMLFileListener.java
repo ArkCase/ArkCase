@@ -71,7 +71,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
                 LOG.debug("Start processing File Event!");
 
                 // If we moved the batch to "working" folder, create needed orders
-                processBatch(workingDocuments);
+                processBatch(workingDocuments, getEntity(workingXmlBatch));
 
                 // Move all files related to the batch to "completed" folder after processing
                 LOG.debug("Moving files to completed directory - START");
@@ -113,7 +113,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
             entity = (DynamicEntity) unmarshaller.unmarshal(xmlBatch);
         } catch (Exception e)
         {
-            LOG.warn("Error while creating DynamicEntity from XML batch {}", xmlBatch != null ? xmlBatch.getName() : "null");
+            LOG.warn("Error while creating DynamicEntity from XML batch {}", xmlBatch != null ? xmlBatch.getName() : "null", e);
         }
 
         return entity;
@@ -129,9 +129,10 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
     /**
      * Process batch file - create objects and save them to database
      *
-     * @param documents - documents with their attachments
+     * @param documents   - documents with their attachments
+     * @param batchEntity - parent batch dynamic entity
      */
-    public abstract void processBatch(Map<String, DocumentObject> documents);
+    public abstract void processBatch(Map<String, DocumentObject> documents, DynamicEntity batchEntity);
 
     /**
      * Check if entity is attachment or object for processing
