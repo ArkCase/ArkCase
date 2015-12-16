@@ -1135,16 +1135,17 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
 
                         if (0 < countFile && 0 >= countFolder) {              //file only menu
-                            menu = [{
-                                title: $translate.instant("common.directive.docTree.menu.email"),
-                                cmd: "email",
-                                uiIcon: "ui-icon-mail-closed"
-                            }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.print"),
-                                    cmd: "print",
-                                    uiIcon: "ui-icon-print"
+                            menu = [
+                                {
+                                    title: $translate.instant("common.directive.docTree.menu.email"),
+                                    cmd: "email",
+                                    uiIcon: "ui-icon-mail-closed"
                                 }
+                                //, {
+                                //    title: $translate.instant("common.directive.docTree.menu.print"),
+                                //    cmd: "print",
+                                //    uiIcon: "ui-icon-print"
+                                //}
                                 , {title: this.MENU_SEPARATOR}
                                 , {
                                     title: $translate.instant("common.directive.docTree.menu.cut"),
@@ -1168,11 +1169,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 }
                             ];
                         } else if (0 >= countFile || 0 < countFolder) {       //folder only menu
-                            menu = [{
-                                title: $translate.instant("common.directive.docTree.menu.cut"),
-                                cmd: "cut",
-                                uiIcon: "ui-icon-scissors"
-                            }
+                            menu = [
+                                {
+                                    title: $translate.instant("common.directive.docTree.menu.cut"),
+                                    cmd: "cut",
+                                    uiIcon: "ui-icon-scissors"
+                                }
                                 , {
                                     title: $translate.instant("common.directive.docTree.menu.copy"),
                                     cmd: "copy",
@@ -1190,11 +1192,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 }
                             ];
                         } else if (0 < countFile || 0 < countFolder) {        //mix file and folder menu
-                            menu = [{
-                                title: $translate.instant("common.directive.docTree.menu.cut"),
-                                cmd: "cut",
-                                uiIcon: "ui-icon-scissors"
-                            }
+                            menu = [
+                                {
+                                    title: $translate.instant("common.directive.docTree.menu.cut"),
+                                    cmd: "cut",
+                                    uiIcon: "ui-icon-scissors"
+                                }
                                 , {
                                     title: $translate.instant("common.directive.docTree.menu.copy"),
                                     cmd: "copy",
@@ -1223,11 +1226,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }];
                     if (node) {
                         if (DocTree.isTopNode(node)) {
-                            menu = [{
-                                title: $translate.instant("common.directive.docTree.menu.newFolder"),
-                                cmd: "newFolder",
-                                uiIcon: "ui-icon-plus"
-                            }
+                            menu = [
+                                {
+                                    title: $translate.instant("common.directive.docTree.menu.newFolder"),
+                                    cmd: "newFolder",
+                                    uiIcon: "ui-icon-plus"
+                                }
                                 , {
                                     title: $translate.instant("common.directive.docTree.menu.newFile"),
                                     children: DocTree.Menu.docSubMenu
@@ -1241,11 +1245,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 }
                             ];
                         } else if (DocTree.isFolderNode(node)) {
-                            menu = [{
-                                title: $translate.instant("common.directive.docTree.menu.newFolder"),
-                                cmd: "newFolder",
-                                uiIcon: "ui-icon-plus"
-                            }
+                            menu = [
+                                {
+                                    title: $translate.instant("common.directive.docTree.menu.newFolder"),
+                                    cmd: "newFolder",
+                                    uiIcon: "ui-icon-plus"
+                                }
                                 , {
                                     title: $translate.instant("common.directive.docTree.menu.newFile"),
                                     children: DocTree.Menu.docSubMenu
@@ -1270,11 +1275,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 , {title: this.MENU_SEPARATOR}
                             ];
                         } else if (DocTree.isFileNode(node)) {
-                            menu = [{
-                                title: $translate.instant("common.directive.docTree.menu.open"),
-                                cmd: "open",
-                                uiIcon: "ui-icon-folder-open"
-                            }
+                            menu = [
+                                {
+                                    title: $translate.instant("common.directive.docTree.menu.open"),
+                                    cmd: "open",
+                                    uiIcon: "ui-icon-folder-open"
+                                }
                                 , {
                                     title: $translate.instant("common.directive.docTree.menu.rename"),
                                     cmd: "rename",
@@ -1285,11 +1291,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     cmd: "email",
                                     uiIcon: "ui-icon-mail-closed"
                                 }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.print"),
-                                    cmd: "print",
-                                    uiIcon: "ui-icon-print"
-                                }
+                                //, {
+                                //    title: $translate.instant("common.directive.docTree.menu.print"),
+                                //    cmd: "print",
+                                //    uiIcon: "ui-icon-print"
+                                //}
                                 , {title: this.MENU_SEPARATOR}
                                 , {
                                     title: $translate.instant("common.directive.docTree.menu.copy"),
@@ -1315,11 +1321,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }];
                     if (node) {
                         if (DocTree.isTopNode(node)) {
-                            menu = [{
-                                title: $translate.instant("common.directive.docTree.menu.newFolder"),
-                                cmd: "newFolder",
-                                uiIcon: "ui-icon-plus"
-                            }
+                            menu = [
+                                {
+                                    title: $translate.instant("common.directive.docTree.menu.newFolder"),
+                                    cmd: "newFolder",
+                                    uiIcon: "ui-icon-plus"
+                                }
                                 , {
                                     title: $translate.instant("common.directive.docTree.menu.newFile"),
                                     children: DocTree.Menu.docSubMenu
@@ -1333,11 +1340,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 }
                             ];
                         } else if (DocTree.isFolderNode(node)) {
-                            menu = [{
-                                title: $translate.instant("common.directive.docTree.menu.newFolder"),
-                                cmd: "newFolder",
-                                uiIcon: "ui-icon-plus"
-                            }
+                            menu = [
+                                {
+                                    title: $translate.instant("common.directive.docTree.menu.newFolder"),
+                                    cmd: "newFolder",
+                                    uiIcon: "ui-icon-plus"
+                                }
                                 , {
                                     title: $translate.instant("common.directive.docTree.menu.newFile"),
                                     children: DocTree.Menu.docSubMenu
@@ -1377,26 +1385,27 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 }
                             ];
                         } else if (DocTree.isFileNode(node)) {
-                            menu = [{
-                                title: $translate.instant("common.directive.docTree.menu.open"),
-                                cmd: "open",
-                                uiIcon: "ui-icon-folder-open"
-                            }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.edit"),
-                                    cmd: "edit",
-                                    uiIcon: "ui-icon-pencil"
+                            menu = [
+                                {
+                                    title: $translate.instant("common.directive.docTree.menu.open"),
+                                    cmd: "open",
+                                    uiIcon: "ui-icon-folder-open"
                                 }
+                                //, {
+                                //    title: $translate.instant("common.directive.docTree.menu.edit"),
+                                //    cmd: "edit",
+                                //    uiIcon: "ui-icon-pencil"
+                                //}
                                 , {
                                     title: $translate.instant("common.directive.docTree.menu.email"),
                                     cmd: "email",
                                     uiIcon: "ui-icon-mail-closed"
                                 }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.print"),
-                                    cmd: "print",
-                                    uiIcon: "ui-icon-print"
-                                }
+                                //, {
+                                //    title: $translate.instant("common.directive.docTree.menu.print"),
+                                //    cmd: "print",
+                                //    uiIcon: "ui-icon-print"
+                                //}
                                 , {title: this.MENU_SEPARATOR}
                                 , {
                                     title: $translate.instant("common.directive.docTree.menu.cut"),

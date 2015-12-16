@@ -16,14 +16,20 @@
                 <div ng-include="'modules/complaints/views/components/complaint-actions.client.view.html'"></div>
             </div>
 
-            <ul class="nav nav-tabs overview-tabs">
-                <li class="{{getActive(link.id)}}" ng-repeat="link in componentLinks">
-                    <a ng-click="onClickComponentLink(link.id)">
-                        <i class="{{link.icon}}"></i>
-                        <br/> {{link.title}}
-                    </a>
-                </li>
-            </ul>
+            <div class="well-sm">
+                <a href title="{{linksShown ? 'Hide links' : 'Show links'}}"
+                   ng-click="toggleShowLinks()">
+                    <i x-ng-class="{'fa fa-plus-square-o' : !linksShown, 'fa fa-minus-square-o' : linksShown}"></i>
+                </a>
+                <ul ng-if="linksShown" class="nav nav-tabs overview-tabs">
+                    <li class="{{getActive(link.id)}}" ng-repeat="link in componentLinks">
+                        <a ng-click="onClickComponentLink(link.id)">
+                            <i class="{{link.icon}}"></i>
+                            <br/> {{link.title}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
             <div class="well-sm">
                 <div data-ui-view></div>
