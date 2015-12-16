@@ -39,6 +39,10 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
             });
         };
 
+        $scope.linksShown = false;
+        $scope.toggleShowLinks = function () {
+            $scope.linksShown = !$scope.linksShown;
+        };
 
         $scope.progressMsg = $translate.instant("cases.progressNoCase");
         $scope.$on('req-select-case', function (e, selectedCase) {
