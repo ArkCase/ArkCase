@@ -42,6 +42,10 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
             if (ObjectService.ObjectTypes.CASE_FILE == $scope.taskInfo.parentObjectType) {
                 CaseInfoService.getCaseInfo($scope.taskInfo.parentObjectId).then(
                     function (caseInfo) {
+
+                        // The parent case file name link redirects to the cases module with the parent case loaded
+                        $scope.parentRef = '!/cases/' + caseInfo.id + '/main';
+
                         $scope.parentCaseInfo = caseInfo;
                         $scope.owningGroup = ObjectModelService.getGroup(caseInfo);
                         $scope.assignee = ObjectModelService.getAssignee(caseInfo);
