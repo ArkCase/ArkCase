@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('cost-tracking').controller('CostTracking.PersonController', ['$scope'
-    , 'ConfigService', 'Helper.UiGridService'
-    , function ($scope, ConfigService, HelperUiGridService) {
+angular.module('cost-tracking').controller('CostTracking.PersonController', ['$scope', '$stateParams'
+    , 'ConfigService', 'Helper.UiGridService', 'CostTracking.InfoService'
+    , function ($scope, $stateParams, ConfigService, HelperUiGridService, CostTrackingInfoService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         ConfigService.getComponentConfig("cost-tracking", "person").then(function (config) {
@@ -11,10 +11,16 @@ angular.module('cost-tracking').controller('CostTracking.PersonController', ['$s
             return config;
         });
 
-        $scope.$on('costsheet-updated', function (e, data) {
-            $scope.costsheetInfo = data;
+        //$scope.$on('costsheet-updated', function (e, data) {
+        //    $scope.costsheetInfo = data;
+        //    $scope.gridOptions = $scope.gridOptions || {};
+        //    $scope.gridOptions.data = [$scope.costsheetInfo.user];
+        //});
+        CostTrackingInfoService.getCostTrackingInfo($stateParams.id).then(function (costsheetInfo) {
+            $scope.costsheetInfo = costsheetInfo;
             $scope.gridOptions = $scope.gridOptions || {};
             $scope.gridOptions.data = [$scope.costsheetInfo.user];
+            return costsheetInfo;
         });
 
 
