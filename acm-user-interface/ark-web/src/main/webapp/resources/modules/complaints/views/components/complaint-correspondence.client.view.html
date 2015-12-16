@@ -1,7 +1,8 @@
 <div ng-controller="Complaints.CorrespondenceController">
     <div class="panel panel-success panel-grid">
         <div class="panel-heading">
-            <div class="panel-title">{{'complaints.comp.correspondence.title' | translate}}
+            <div class="panel-title">
+                <span translate>complaints.comp.correspondence.title</span>
                 <div class="pull-right">
                     <span>
                         <!--<select class="input-sm form-control input-s-sm inline v-middle"-->
@@ -12,7 +13,7 @@
                                 ng-model="correspondenceForm">
                         </select>
                         <span ng-hide="'noop'==correspondenceForm.value">
-                            <i class="fa fa-plus" ng-click="addNew()"></i>
+                            <button class="btn btn-default btn-xs" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
                         </span>
                     </span>
 
