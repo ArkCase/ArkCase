@@ -46,7 +46,8 @@ public class FileUploadAPIController
 
     private final String uploadFileType = "attachment";
 
-    @PreAuthorize("hasPermission(#parentObjectId, #parentObjectType, 'uploadOrReplaceFile')")
+    // #parentObjectType == 'USER_ORG' applies to uploading profile picture
+    @PreAuthorize("hasPermission(#parentObjectId, #parentObjectType, 'uploadOrReplaceFile') or #parentObjectType == 'USER_ORG'")
     @RequestMapping(
             value = "/upload",
             method = RequestMethod.POST,
