@@ -10,6 +10,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         Authentication.queryUserInfo().then(
             function (userInfo) {
                 $scope.userId = userInfo.userId;
+                $scope.userName = userInfo.fullName;
                 return userInfo;
             }
         );
@@ -21,6 +22,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.userSearchConfig = _.find(moduleConfig.components, {id: "userSearch"})
 
             $scope.config.data.assignee = $scope.userId;
+            $scope.config.data.assigneeFullName = $scope.userName;
 
             if (!Util.isEmpty($stateParams.parentObject) && !Util.isEmpty($stateParams.parentType)) {
                 $scope.config.data.attachedToObjectName = $stateParams.parentObject;
@@ -50,7 +52,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                     $filter: function () {
                         return $scope.config.userSearch.userFacetFilter;
                     },
-                    $config: function(){
+                    $config: function () {
                         return $scope.userSearchConfig;
                     }
                 }
@@ -59,7 +61,10 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             modalInstance.result.then(function (chosenUser) {
                 if (chosenUser) {
                     console.log("A user was chosen for this task");
-                    return chosenUser;
+                    $scope.config.data.assignee  = chosenUser.object_id_s;
+                    $scope.config.data.assigneeFullName = chosenUser.name;
+
+                    return;
                 }
 
             }, function () {
