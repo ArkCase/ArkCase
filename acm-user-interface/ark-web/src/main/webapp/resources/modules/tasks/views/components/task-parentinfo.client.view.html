@@ -4,21 +4,29 @@
             <div class="col-xs-6">
                 <h4><a href="#">{{parentCaseInfo.title || "Unknown"}}</a> ({{parentCaseInfo.status}})</h4></div>
             <div class="col-xs-6  text-right">
-                <h4>{{parentCaseInfo.caseNumber}}</h4>
+                <h4>
+                    <span translate>parentCaseInfo.caseNumber</span>
+                </h4>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">{{parentCaseInfo.caseType || 'Unknown'}}</div>
-                <small class="text-muted">{{"tasks.comp.parentinfo.case.subjectType.label" | translate}}</small>
+                <small class="text-muted">
+                    <span translate>tasks.comp.parentinfo.case.subjectType.label</span>
+                </small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">{{parentCaseInfo.created | date: "MM/dd/yyyy"}}</div>
-                <small class="text-muted">{{"tasks.comp.parentinfo.case.incidentDate.label" | translate}}</small>
+                <small class="text-muted">
+                    <span translate>tasks.comp.parentinfo.case.incidentDate.label</span>
+                </small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">{{parentCaseInfo.priority || 'Unknown'}}</div>
-                <small class="text-muted">{{"tasks.comp.parentinfo.case.priority.label" | translate}}</small>
+                <small class="text-muted">
+                    <span translate>tasks.comp.parentinfo.case.priority.label</span>
+                </small>
             </div>
         </div>
         <div class="row">
@@ -27,11 +35,15 @@
                 <div class="h4 font-bold">{{assignee | mapKeyValue: assignableUsers:'object_id_s':'name' ||
                     'Unknown'}}
                 </div>
-                <small class="text-muted">{{"tasks.comp.parentinfo.case.assignee.label" | translate}}</small>
+                <small class="text-muted">
+                    <span translate>tasks.comp.parentinfo.case.assignee.label</span>
+                </small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">{{owningGroup || 'Unknown'}}</div>
-                <small class="text-muted">{{"tasks.comp.parentinfo.case.owningGroup.label" | translate}}</small>
+                <small class="text-muted">
+                    <span translate>tasks.comp.parentinfo.case.owningGroup.label</span>
+                </small>
             </div>
         </div>
     </div>
@@ -49,27 +61,37 @@
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">{{parentComplaintInfo.complaintType || 'Unknown'}}</div>
-                <small class="text-muted">{{"tasks.comp.parentinfo.complaint.subjectType.label" | translate}}</small>
+                <small class="text-muted">
+                    <span translate>tasks.comp.parentinfo.complaint.subjectType.label</span>
+                </small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <!--<div class="h4 font-bold">{{parentComplaintInfo.created | date: "MM/dd/yyyy"}}</div>-->
                 <div class="h4 font-bold">{{parentComplaintInfo.incidentDate | date: "MM/dd/yyyy"}}</div>
-                <small class="text-muted">{{"tasks.comp.parentinfo.complaint.incidentDate.label" | translate}}</small>
+                <small class="text-muted">
+                    <span translate>tasks.comp.parentinfo.complaint.incidentDate.label</span>
+                </small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">{{parentComplaintInfo.priority || 'Unknown'}}</div>
-                <small class="text-muted">{{"tasks.comp.parentinfo.complaint.priority.label" | translate}}</small>
+                <small class="text-muted">
+                    <span translate>tasks.comp.parentinfo.complaint.priority.label</span>
+                </small>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <!--<div class="h4 font-bold">{{parentComplaintInfo.creator || 'Unknown'}}</div>-->
                 <div class="h4 font-bold">{{assignee || 'Unknown'}}</div>
-                <small class="text-muted">{{"tasks.comp.parentinfo.complaint.assignee.label" | translate}}</small>
+                <small class="text-muted">
+                    <span translate>tasks.comp.parentinfo.complaint.assignee.label</span>
+                </small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">{{owningGroup || 'Unknown'}}</div>
-                <small class="text-muted">{{"tasks.comp.parentinfo.complaint.owningGroup.label" | translate}}</small>
+                <small class="text-muted">
+                    <span translate>tasks.comp.parentinfo.complaint.owningGroup.label</span>
+                </small>
             </div>
         </div>
     </div>
