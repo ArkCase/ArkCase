@@ -1,8 +1,19 @@
 'use strict';
 
-angular.module('services').factory('EcmService', ['$resource',
-    function ($resource) {
-        return $resource('proxy/arkcase/api/latest/service', {}, {
+/**
+ * @ngdoc service
+ * @name services:Object.Ecm.EcmService
+ *
+ * @description
+ *
+ * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/ecm/ecm.client.service.js services/ecm/ecm.client.service.js}
+
+ * EcmService contains functions to related to document management.
+ */
+angular.module('services').factory('EcmService', ['$resource', 'StoreService', 'UtilService'
+    , function ($resource, StoreService, UtilService) {
+
+        var Service = $resource('proxy/arkcase/api/latest/service', {}, {
             retrieveFolderList: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/latest/service/ecm/folder/:objType/:objId/:folderId?start=:start&n=:n&s=:sortBy&dir=:sortDir',
@@ -60,14 +71,14 @@ angular.module('services').factory('EcmService', ['$resource',
                 method: 'POST',
                 url: 'proxy/arkcase/api/latest/service/ecm/file/:fileId?versionTag=:version'
             }
-            , sendEmail: {
-                method: 'POST',
-                url: 'proxy/arkcase/api/latest/service/notification/email'
-            }
-            , sendEmailWithAttachments: {
-                method: 'POST',
-                url: 'proxy/arkcase/api/latest/plugin/outlook/email/withattachments'
-            }
+            //, sendEmail: {
+            //    method: 'POST',
+            //    url: 'proxy/arkcase/api/latest/service/notification/email'
+            //}
+            //, sendEmailWithAttachments: {
+            //    method: 'POST',
+            //    url: 'proxy/arkcase/api/latest/plugin/outlook/email/withattachments'
+            //}
             , getFile: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/latest/service/ecm/file/:fileId'
@@ -87,5 +98,7 @@ angular.module('services').factory('EcmService', ['$resource',
                 isArray: true
             }
         });
+
+        return Service;
     }
 ]);
