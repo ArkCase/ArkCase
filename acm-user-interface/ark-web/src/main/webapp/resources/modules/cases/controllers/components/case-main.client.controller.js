@@ -55,10 +55,40 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
             $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
         });
 
-        /**
-         * Remove unwanted widgets
-         * @param model
-         */
+        $scope.$on('adfDashboardChanged', function (event, name, model) {
+            //merge main dashboard and case dashboard widgets
+            model = mergeWidgets(model, $scope.dashboard.model);
+
+            DashboardService.saveConfig({
+                dashboardConfig: angular.toJson(model)
+            });
+        });
+
+        var getWidgets = function(model) {
+            var widgets = [];
+            for(var i = 0; i < model.rows.length; i++) {
+                //iterate over columns
+                for(var j = 0; j < model.rows[i].columns.length; j++) {
+                    //iterate over column widgets
+                    for(var k = 0; k < model.rows[i].columns[j].widgets.length; k++) {
+                        widgets.push( {'widget': model.rows[i].columns[j].widgets[k],
+                                        'row' : i,
+                                        'col' : j,
+                                        'wIndex': k
+                        });
+                    }
+                }
+            }
+            return widgets;
+        };
+        var hasWidget = function(name, widgets) {
+            for(var i = 0; i < widgets.length; i++) {
+                if(widgets[i].widget.type === name) {
+                    return true;
+                }
+            }
+            return false;
+        }
         var widgetFilter = function(model) {
             var caseModel = model;
             //iterate over rows
@@ -67,33 +97,68 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
                 for(var j = 0; j < caseModel.rows[i].columns.length; j++) {
                     //iterate over column widgets
                     for(var k = caseModel.rows[i].columns[j].widgets.length; k < 0; k--) {
-                        if($scope.allowedWidgets.indexOf(caseModel.rows[i].columns[j].widgets[k].type) > -1) {
+                        if($scope.allowedWidgets.indexOf(caseModel.rows[i].columns[j].widgets[k].type) < 0) {
                             //remove widget from array
                             caseModel.rows[i].columns[j].widgets.pop();
                         }
                     }
                 }
             }
-            caseModel = model;
             return caseModel;
         };
-
-        $scope.$on('adfDashboardChanged', function (event, name, model) {
-            //restore main dashboard config and add new/remove
-            model = restoreWidgets(model, $scope.dashboard.model);
-
-            DashboardService.saveConfig({
-                dashboardConfig: angular.toJson(model)
-            });
-        });
-
-        var restoreWidgets = function(caseModel, dashboardModel) {
-
+        var mergeWidgets = function(caseModel, dashboardModel) {
             //TODO
             /**
              * if caseModel has a widget that is not in dashboardModel,
              * then add widget to dashboard model in the correct row:column
+             * if caseModel doesnt have a widget that dashboard has and
+             * that widget is a 'case widget'
              */
+            // Find all widgets of dashboard model and caseModel
+            var dashWidgets = getWidgets(dashboardModel);
+            var caseWidgets = getWidgets(caseModel);
+
+            if(caseWidgets.length == 0){
+                //remove all 'case widgets' from dashboard
+                for(var i =0; i < dashWidgets.length; i++) {
+                    var row = dashWidgets[i].row;
+                    var col = dashWidgets[i].col;
+                    var wIndex = dashWidgets[i].wIndex;
+
+                    if($scope.allowedWidgets.indexOf(dashboardModel.rows[row].columns[col].widget[wIndex].type) > -1) {
+                        //remove case widget
+                        dashboardModel.rows[row].columns[col].widgets = dashboardModel.rows[row].columns[col].widgets.splice(wIndex,1);
+                    }
+                }
+            }
+            else {
+                //try to merge changes
+                for(var i =0; i < dashWidgets.length; i++) {
+                    var row = dashWidgets[i].row;
+                    var col = dashWidgets[i].col;
+                    var wIndex = dashWidgets[i].wIndex;
+
+                    //if casewidgets doesn't have a certain dashboard widget
+                    if(!hasWidget(dashWidgets[i].widget.type, caseWidgets)){
+                        //and the widget it doesnt have is a 'case widget'
+                        if($scope.allowedWidgets.indexOf(dashWidgets[i].widget.type) > -1) {
+                            //then remove that widget from dashboard widgets
+                            dashboardModel.rows[row].columns[col].widgets = dashboardModel.rows[row].columns[col].widgets.splice(wIndex,1);
+                        }
+                    }
+                }
+
+                //if casewidgets has a widget that dashboard widgets doesn't have, then add the widget to the dashboard
+                for(var i =0; i < caseWidgets; i++) {
+                    var row = caseWidgets[i].row;
+                    var col = caseWidgets[i].col;
+                    var wIndex = caseWidgets[i].wIndex;
+                    if(!hasWidget(caseWidgets[i].widget.type, dashWidgets)) {
+                        dashboardModel.rows[row].columns[col].widgets = dashboardModel.rows[row].columns[col].widgets.splice(wIndex, 1);
+                    }
+                }
+            }
+        return dashboardModel;
         };
 
 
