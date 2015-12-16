@@ -590,32 +590,32 @@
       "columnDefs": [
         {
           "name": "name",
-          "displayName": "tasks.comp.userSearch.addMembersGridColumns.name",
+          "displayName": "tasks.userSearch.assigneeGridColumns.name",
           "headerCellFilter": "translate"
         },
         {
           "name": "object_type_s",
-          "displayName": "tasks.comp.userSearch.addMembersGridColumns.type",
+          "displayName": "tasks.userSearch.assigneeGridColumns.type",
           "headerCellFilter": "translate"
         },
         {
           "name": "title",
-          "displayName": "tasks.comp.userSearch.addMembersGridColumns.title",
+          "displayName": "tasks.userSearch.assigneeGridColumns.title",
           "headerCellFilter": "translate"
         },
         {
           "name": "parent",
-          "displayName": "tasks.comp.userSearch.addMembersGridColumns.parent",
+          "displayName": "tasks.userSearch.assigneeGridColumns.parent",
           "headerCellFilter": "translate"
         },
         {
           "name": "assignee",
-          "displayName": "tasks.comp.userSearch.addMembersGridColumns.assignee",
+          "displayName": "tasks.userSearch.assigneeGridColumns.assignee",
           "headerCellFilter": "translate"
         },
         {
           "name": "modified_date_tdt",
-          "displayName": "tasks.comp.userSearch.addMembersGridColumns.modified",
+          "displayName": "tasks.userSearch.assigneeGridColumns.modified",
           "headerCellFilter": "translate"
         }
       ],
@@ -658,6 +658,7 @@
       "data": {
         "adhocTask": true,
         "assignee": "",
+        "assigneeFullName": "",
         "attachedToObjectName": "",
         "attachedToObjectType": "",
         "businessProcessName": "",
