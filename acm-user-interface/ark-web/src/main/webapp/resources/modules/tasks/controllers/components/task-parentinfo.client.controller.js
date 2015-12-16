@@ -2,10 +2,10 @@
 
 angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService'
-    , 'Object.ModelService', 'LookupService'
+    , 'Object.ModelService', 'LookupService', '$log'
     , function ($scope, $stateParams
         , Util, ConfigService, ObjectService, CaseInfoService, ComplaintInfoService, TaskInfoService
-        , ObjectModelService, LookupService) {
+        , ObjectModelService, LookupService, $log) {
 
         ConfigService.getComponentConfig("tasks", "parentinfo").then(function (componentConfig) {
             $scope.config = componentConfig;
@@ -22,6 +22,14 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
                 return users;
             }
         );
+
+        $scope.onClickTitle = function() {
+            if ($scope.parentCaseInfo) {
+                ObjectService.gotoUrl($scope.parentCaseInfo.caseType, $scope.parentCaseInfo.id);
+            } else {
+                $log.error('parentCaseInfo is undefined, cannot redirect to the parent case');
+            }
+        };
 
         $scope.$on('task-updated', function (e, data) {
             if (!TaskInfoService.validateTaskInfo(data)) {
@@ -42,10 +50,6 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
             if (ObjectService.ObjectTypes.CASE_FILE == $scope.taskInfo.parentObjectType) {
                 CaseInfoService.getCaseInfo($scope.taskInfo.parentObjectId).then(
                     function (caseInfo) {
-
-                        // The parent case file name link redirects to the cases module with the parent case loaded
-                        $scope.parentRef = '!/cases/' + caseInfo.id + '/main';
-
                         $scope.parentCaseInfo = caseInfo;
                         $scope.owningGroup = ObjectModelService.getGroup(caseInfo);
                         $scope.assignee = ObjectModelService.getAssignee(caseInfo);

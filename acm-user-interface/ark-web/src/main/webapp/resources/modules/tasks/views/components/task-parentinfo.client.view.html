@@ -2,7 +2,7 @@
     <div class="clearfix" ng-show="'CASE_FILE' == taskInfo.parentObjectType">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a ng-href="#{{parentRef}}">{{parentCaseInfo.title || "Unknown"}}</a> ({{parentCaseInfo.status}})
+                <h4><a ng-click="onClickTitle()">{{parentCaseInfo.title || "Unknown"}}</a> ({{parentCaseInfo.status}})
                 </h4></div>
             <div class="col-xs-6  text-right">
                 <h4>{{parentCaseInfo.caseNumber}}</h4>
