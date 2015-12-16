@@ -17,7 +17,7 @@
         <div class="row wrapper">
             <div class="col-sm-6">
                 <label class="label" translate> tasks.newTask.assignee.label </label>
-                <input type="text" ng-model="config.data.assignee" class="input-sm form-control"
+                <input type="text" ng-model="config.data.assigneeFullName" class="input-sm form-control"
                        placeholder="{{ 'tasks.newTask.assignee.placeholder' | translate }}" id="assignee"
                        style="background-color: white;" readonly>
             </div>
@@ -120,7 +120,7 @@
         </div>
         <div class="row wrapper">
             <div class="col-sm-6">
-                <button ng-disabled="!config.data.title || !config.data.taskStartDate || !config.data.dueDate || !saved"
+                <button ng-disabled="!config.data.title || !config.data.taskStartDate || !config.data.dueDate || saved"
                         ng-click="saveNewTask()" class="btn btn-default btn-sm pull-left" data-toggle="tooltip"
                         id="saveButton" data-title="Save">
                     <i class="fa fa-user"></i>
