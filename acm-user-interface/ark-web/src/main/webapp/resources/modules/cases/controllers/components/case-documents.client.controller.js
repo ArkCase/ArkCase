@@ -15,7 +15,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             return componentConfig;
         });
 
-        ObjectLookupService.getFormTypes().then(
+        ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE).then(
             function (formTypes) {
                 $scope.fileTypes = $scope.fileTypes || [];
                 $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));

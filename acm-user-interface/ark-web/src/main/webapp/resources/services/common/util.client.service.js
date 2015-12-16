@@ -116,6 +116,7 @@ angular.module('services').factory('UtilService', ['$q'
              */
             //
             //todo: consider using lodash impl _.map(obj, 'some.arr[0].name');
+            //todo: also examine _.get()
             //
             , goodMapValue: function (map, key, replacement) {
                 var replacedWith = (undefined === replacement) ? "" : replacement;
