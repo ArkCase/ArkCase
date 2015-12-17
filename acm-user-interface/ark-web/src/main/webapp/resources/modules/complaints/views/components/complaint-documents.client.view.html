@@ -1,7 +1,9 @@
 <div ng-controller="Complaints.DocumentsController">
     <div class="panel panel-success panel-grid">
         <div class="panel-heading">
-            <div class="panel-title">{{'complaints.comp.documents.title' | translate}}</div>
+            <div class="panel-title">
+                <span translate>complaints.comp.documents.title</span>
+            </div>
         </div>
         <div class="panel-body">
             <doc-tree object-type="objectType" object-id="objectId" tree-control="treeControl" file-types="fileTypes"
