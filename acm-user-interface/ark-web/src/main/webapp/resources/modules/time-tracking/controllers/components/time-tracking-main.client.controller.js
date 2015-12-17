@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('time-tracking').controller('TimeTracking.MainController', ['$scope', '$translate', 'TimeTracking.InfoService',
-    'ConfigService', 'dashboard', 'Dashboard.DashboardService', 'StoreService',
-    function($scope, $translate, dashboard, DashboardService, TimeTrackingInfoService, Store, ConfigService) {
+    'ConfigService', 'dashboard', 'Dashboard.DashboardService', 'StoreService', 'UtilService',
+    function($scope, $translate, dashboard, DashboardService, TimeTrackingInfoService, Store, ConfigService, Util) {
 
         ConfigService.getComponentConfig("time-tracking", "main").then(function (componentConfig) {
             $scope.config = componentConfig;
@@ -42,7 +42,7 @@ angular.module('time-tracking').controller('TimeTracking.MainController', ['$sco
             } else {
                 //Else use dashboard config and filter.
                 $scope.dashboard.model = angular.fromJson(data.dashboardConfig);
-                $scope.dashboard.timeModel = widgetFilter($scope.dashboard.model);
+                $scope.dashboard.timeModel = Util.filterWidgets($scope.dashboard.model, $scope.allowedWidgets);
                 $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
 
                 //Cache filtered dashboard model

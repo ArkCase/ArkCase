@@ -73,7 +73,7 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', '$statePar
             } else {
                 //Else use dashboard config and filter.
                 $scope.dashboard.model = angular.fromJson(data.dashboardConfig);
-                $scope.dashboard.taskModel = widgetFilter($scope.dashboard.model);
+                $scope.dashboard.taskModel = Util.filterWidgets($scope.dashboard.model, $scope.allowedWidgets);
                 $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
 
                 //Cache filtered dashboard model
