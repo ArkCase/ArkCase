@@ -88,7 +88,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         $scope.delete = function () {
             var taskInfo = Util.omitNg($scope.taskInfo);
             if (TaskInfoService.validateTaskInfo(taskInfo)) {
-                TaskWorkflowService.deleteTask(taskInfo).then(
+                TaskWorkflowService.deleteTask(taskInfo.taskId).then(
                     function (taskInfo) {
                         $scope.$emit("report-task-updated", taskInfo);
                         return taskInfo;

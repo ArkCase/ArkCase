@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('directives').directive('treeTableView', ['$q', '$compile', '$timeout',
-    function ($q, $compile, $timeout) {
+angular.module('directives').directive('treeTableView', ['$q', '$compile',
+    function ($q, $compile) {
         return {
             restrict: 'E',
             scope: {
@@ -73,23 +73,19 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', '$tim
 
                 scope.pickUsersBtn = function (event) {
                     var node = $.ui.fancytree.getNode(event);
-                    scope.onAddMembers(node.data).then(function () {
-                        $timeout(function () {
-                            node.load(true).done(function () {
-                                node.setExpanded();
-                            });
-                        }, 1000);
+                    scope.onAddMembers(node.data).then(function (members) {
+                        angular.forEach(members, function (member) {
+                            node.addChildren(member);
+                        });
+                        node.setExpanded();
                     });
                 };
 
                 scope.addSubgroup = function (event) {
                     var node = $.ui.fancytree.getNode(event);
-                    scope.onAddSubGroup(node.data).then(function () {
-                        $timeout(function () {
-                            node.load(true).done(function () {
-                                node.setExpanded();
-                            });
-                        }, 1000);
+                    scope.onAddSubGroup(node.data).then(function (subGroup) {
+                        node.addNode(subGroup, 'firstChild')
+                        node.setExpanded();
                     });
                 };
 

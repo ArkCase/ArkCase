@@ -30,21 +30,6 @@ angular.module('complaints').config(['$stateProvider', '$urlRouterProvider',
                 templateUrl: 'modules/complaints/views/components/complaint-main.client.view.html'
             })
 
-            .state('complaints.viewer', {
-                url: '/:id/viewer/:containerId/:containerType/:name/:selectedIds',
-                templateUrl: 'modules/complaints/views/components/complaint-viewer.client.view.html'
-            })
-
-            //.state('closeComplaint', {
-            //    url: '/:id/closeComplaint',
-            //    templateUrl: 'modules/complaints/views/components/complaint-close-complaint.client.view.html'
-            //})
-            //
-            //.state('newComplaint', {
-            //    url: '/newComplaint',
-            //    templateUrl: 'modules/complaints/views/components/complaint-new-complaint.client.view.html'
-            //})
-
             .state('complaints.calendar', {
                 url: '/:id/calendar',
                 templateUrl: 'modules/complaints/views/components/complaint-calendar.client.view.html'
