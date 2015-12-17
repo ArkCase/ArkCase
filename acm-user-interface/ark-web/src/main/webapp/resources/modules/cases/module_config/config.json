@@ -629,6 +629,7 @@
           "name": "taskId",
           "field": "object_id_s",
           "displayName": "cases.comp.tasks.table.columns.taskId",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.object_id_s}}</a>",
           "headerCellFilter": "translate"
         },
         {
