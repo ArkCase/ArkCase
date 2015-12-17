@@ -10,7 +10,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         });
 
 
-        ObjectLookupService.getFormTypes().then(
+        ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.COMPLAINT).then(
             function (formTypes) {
                 $scope.fileTypes = $scope.fileTypes || [];
                 $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));

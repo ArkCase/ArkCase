@@ -38,11 +38,15 @@ public class TaskChangeStatusListener implements ApplicationListener<AcmApplicat
                     // call Mule flow to create the Alfresco folder
                     MuleMessage msg = getMuleContextManager().send("jms://copyTaskFilesAndFoldersToParent.in", event);
 
-                    MuleException e = msg.getInboundProperty("executionException");
-
-                    if (e != null)
+                    // TODO: this is fix for bug EDTRM-178 (workaround). We should see why on this point msg is null (maybe it's normal behaviour?)
+                    if (msg != null)
                     {
-                        throw e;
+                        MuleException e = msg.getInboundProperty("executionException");
+
+                        if (e != null)
+                        {
+                            throw e;
+                        }
                     }
 
                 } catch (MuleException e)
