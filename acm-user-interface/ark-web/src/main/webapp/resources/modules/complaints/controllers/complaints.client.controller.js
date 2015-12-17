@@ -41,6 +41,11 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
             });
         };
 
+        $scope.linksShown = false;
+        $scope.toggleShowLinks = function () {
+            $scope.linksShown = !$scope.linksShown;
+        };
+
         $scope.progressMsg = $translate.instant("complaints.progressNoComplaint");
         $scope.$on('req-select-complaint', function (e, selectedComplaint) {
             $scope.$broadcast('complaint-selected', selectedComplaint);

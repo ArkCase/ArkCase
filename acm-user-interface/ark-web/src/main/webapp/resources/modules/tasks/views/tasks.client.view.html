@@ -2,7 +2,9 @@
     <div class="module-content">
         <div class="left-sidebar scroll-body" ng-slimscroll="">
             <div class="module-header">
-                <h3>{{'tasks.title' | translate}}</h3>
+                <h3>
+                    <span translate>tasks.title</span>
+                </h3>
             </div>
             <div ng-include="'modules/tasks/views/tasks-list.client.view.html'" />
         </div>
@@ -18,14 +20,20 @@
                 <div ng-include="'modules/tasks/views/components/task-info.client.view.html'"></div>
             </div>
 
-            <ul class="nav nav-tabs overview-tabs">
-                <li class="{{getActive(link.id)}}" ng-repeat="link in componentLinks">
-                    <a ng-click="onClickComponentLink(link.id)">
-                        <i class="{{link.icon}}"></i>
-                        <br/> {{link.title}}
-                    </a>
-                </li>
-            </ul>
+            <div class="well-sm">
+                <a href title="{{linksShown ? 'Hide links' : 'Show links'}}"
+                   ng-click="toggleShowLinks()">
+                    <i x-ng-class="{'fa fa-plus-square-o' : !linksShown, 'fa fa-minus-square-o' : linksShown}"></i>
+                </a>
+                <ul ng-if="linksShown" class="nav nav-tabs overview-tabs">
+                    <li class="{{getActive(link.id)}}" ng-repeat="link in componentLinks">
+                        <a ng-click="onClickComponentLink(link.id)">
+                            <i class="{{link.icon}}"></i>
+                            <br/> {{link.title}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
             <div class="well-sm">
                 <div data-ui-view></div>

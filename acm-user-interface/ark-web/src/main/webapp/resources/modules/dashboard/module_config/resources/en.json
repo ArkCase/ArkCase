@@ -39,7 +39,7 @@
         "description": "Displays my complaints",
         "table": {
           "header": {
-            "complaintNumber": "Complaint Number",
+            "number": "Complaint Number",
             "title": "Title",
             "priority": "Priority",
             "created": "Created",

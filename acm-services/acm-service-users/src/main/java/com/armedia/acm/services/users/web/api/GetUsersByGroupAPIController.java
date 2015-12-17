@@ -25,12 +25,15 @@ public class GetUsersByGroupAPIController
             method = RequestMethod.GET,
             value = "/by-group/{group}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody String info(Authentication auth, @PathVariable String group) throws MuleException
+    public
+    @ResponseBody
+    String info(Authentication auth, @PathVariable String group) throws MuleException
     {
         log.debug("Getting users for group {}", group);
 
         StringBuilder query = new StringBuilder();
-        query.append("groups_id_ss").append(":").append(group);
+        query.append("object_type_s").append(":").append("USER");
+        query.append(" AND ").append("groups_id_ss").append(":").append(group);
         log.debug("executing query for users in group: {}", query.toString());
 
         return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query.toString(), 0, 1000, "");
