@@ -43,6 +43,11 @@ angular.module('cost-tracking').controller('CostTrackingController', ['$scope', 
             });
         };
 
+		$scope.linksShown = false;
+		$scope.toggleShowLinks = function () {
+			$scope.linksShown = !$scope.linksShown;
+		};
+
 		$scope.progressMsg = $translate.instant("costTracking.progressNoCostsheet");
 		$scope.$on('req-select-costsheet', function (e, selectedCostsheet) {
 			$scope.$broadcast('costsheet-selected', selectedCostsheet);

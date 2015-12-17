@@ -33,9 +33,9 @@ angular.module('reports').controller('ReportsController', ['$scope', 'UtilServic
 
         $q.all([promiseServerConfig, promiseReportConfig, promiseModuleConfig])
             .then(function (data) {
-                var reportsConfig = Util.omitNg(data[0]);
-                $scope.data.reports = Util.omitNg(data[1]);
-                $scope.config = Util.omitNg(data[2]);
+                var reportsConfig = data[0];
+                $scope.data.reports = data[1];
+                $scope.config = data[2];
 
                 // On some reason reports list contains URL and PORT info
                 delete $scope.data.reports.PENTAHO_SERVER_URL;
