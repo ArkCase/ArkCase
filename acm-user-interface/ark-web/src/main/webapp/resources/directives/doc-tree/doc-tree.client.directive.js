@@ -66,10 +66,12 @@
  </file>
  </example>
  */
-angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', 'UtilService', 'StoreService', 'EcmService',
-    function ($q, $translate, $modal, Util, Store, Ecm) {
+angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
+    , 'StoreService', 'UtilService', 'Util.DateService', 'LookupService', 'EcmService'
+    , function ($q, $translate, $modal, Store, Util, UtilDateService, LookupService, Ecm) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
+        var promiseGetUserFullName = LookupService.getUserFullNames();
 
         var DocTree = {
             CLIPBOARD: null
@@ -131,9 +133,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             ;
                         } else if (DocTree.isFileNode(node)) {
                             $tdList.eq(3).text(DocTree.getDocumentTypeDisplayLabel(node.data.type)); // document type is mapped (afdp-1249)
-                            $tdList.eq(4).text("created"); //fixme: .text(Util.getDateFromDatetime(node.data.created, $.t("common:date.short")));
-                            $tdList.eq(5).text("ann-acm"); //fixme: .text(App.Model.Users.getUserFullName(Util.goodValue(node.data.creator)));
+                            $tdList.eq(4).text(UtilDateService.getDate(node.data.created));
 
+                            promiseGetUserFullName.then(function (userFullNames) {
+                                var found = _.find(userFullNames, {id: Util.goodValue(node.data.creator)});
+                                $tdList.eq(5).text(Util.goodMapValue(found, "name"));
+                            });
 
                             var $td6 = $("<td/>");
                             var $span = $("<span/>").appendTo($td6);
@@ -4026,9 +4031,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 , objectId: '='
                 , fileTypes: '='
                 , uploadForm: '&'
-            },
+            }
 
-            link: function (scope, element, attrs) {
+            , link: function (scope, element, attrs) {
                 Ui.scope = scope;
 
                 DocTree.jqTree = $(element).find("table");
