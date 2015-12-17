@@ -161,7 +161,7 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'StoreSer
          * @returns {Object} Promise
          */
         Service.saveNote = function (noteInfo) {
-            if (0 != noteInfo.id) {     //Don't validate when creating new note; there is no id yet
+            if (noteInfo.id && 0 != noteInfo.id) {     //Don't validate when creating new note; there is no id yet
                 if (!Service.validateNote(noteInfo)) {
                     return Util.errorPromise($translate.instant("common.service.error.invalidData"));
                 }
