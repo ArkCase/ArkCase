@@ -6,13 +6,12 @@
                 <div class="btn-group">
                     <button class="btn btn-sm btn-default" ng-click="editRole()" ng-disabled="editBtnDisabled"><i
                             class="fa fa-sitemap"/>
-                        {{'admin.workflows.config.btn.createNew' |
-                        translate}}
+                        <span translate>admin.workflows.config.btn.createNew</span>
                     </button>
                     <button class="btn btn-sm btn-default" ngf-select="uploadDefinition($file)" ng-disabled="uploadingInProgress"
                             data-ng-model="selectedBPMNFile" accept="application/xml"><i
                             class="fa fa-cloud-upload text"/>
-                        {{'admin.workflows.config.btn.uploadNew' | translate}}
+                        <span translate>admin.workflows.config.btn.uploadNew</span>
                     </button>
                 </div>
             </div>
