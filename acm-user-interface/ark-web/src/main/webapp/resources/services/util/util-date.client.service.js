@@ -104,22 +104,22 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
 
             //get day string in "yyyy-mm-dd" format
             //parameter d is java Date() format; for some reason getDate() is 1 based while getMonth() is zero based
-            , __copy_fr_old_app_dateToString: function (d) {
-                if (null == d) {
-                    return "";
-                }
-                var month = d.getMonth() + 1;
-                var day = d.getDate();
-                var year = d.getFullYear();
-                return this._padZero(month)
-                    + "/" + this._padZero(day)
-                    + "/" + year;
-            }
-
-            , __copy_fr_old_app_getCurrentDay: function () {
-                var d = new Date();
-                return this.dateToString(d);
-            }
+            //, __copy_fr_old_app_dateToString: function (d) {
+            //    if (null == d) {
+            //        return "";
+            //    }
+            //    var month = d.getMonth() + 1;
+            //    var day = d.getDate();
+            //    var year = d.getFullYear();
+            //    return this._padZero(month)
+            //        + "/" + this._padZero(day)
+            //        + "/" + year;
+            //}
+            //
+            //, __copy_fr_old_app_getCurrentDay: function () {
+            //    var d = new Date();
+            //    return this.dateToString(d);
+            //}
 
         };
 
