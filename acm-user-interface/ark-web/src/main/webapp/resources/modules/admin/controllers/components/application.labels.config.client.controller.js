@@ -128,7 +128,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', 'A
                         exists = true;
                     }
                 });
-                if (exists == false) {
+                if (!exists) {
                     $scope.allNamespaces.push(option.id);
                 }
             });
