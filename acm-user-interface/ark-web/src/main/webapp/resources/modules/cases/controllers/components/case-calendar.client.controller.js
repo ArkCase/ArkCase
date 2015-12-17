@@ -1,12 +1,11 @@
 'use strict';
 
-angular.module('cases').controller('Cases.CalendarController', ['$scope','$timeout', 'uiCalendarConfig', 'Object.CalendarService','Case.InfoService',
-	function($scope,$timeout, uiCalendarConfig, CalendarService,CaseInfoService) {
-		$scope.$emit('req-component-config', 'calendar');
-		$scope.$on('component-config', function (e, componentId, config) {
-			if (componentId == 'calendar') {
-				$scope.config = config;
-			}
+angular.module('cases').controller('Cases.CalendarController', ['$scope', 'ConfigService','$timeout', 'uiCalendarConfig', 'Object.CalendarService','Case.InfoService',
+	function($scope, ConfigService, $timeout, uiCalendarConfig, CalendarService,CaseInfoService) {
+
+		ConfigService.getComponentConfig("cases", "calendar").then(function (componentConfig) {
+			$scope.config = componentConfig;
+			return componentConfig;
 		});
 
 		$scope.$on('case-updated', function (e, data) {
@@ -17,19 +16,19 @@ angular.module('cases').controller('Cases.CalendarController', ['$scope','$timeo
 
 		/* Calendar config object */
 		$scope.uiConfig = {
-			calendar:{
+			calendar: {
 				height: 450,
 				editable: true,
-				header:{
+				header: {
 					left: 'month agendaWeek agendaDay',
 					center: 'title',
 					right: 'today prev,next'
 				},
 				buttonText: {
-					today:    'Today',
-					month:    'Month',
-					week:     'Week',
-					day:      'Day'
+					today: 'Today',
+					month: 'Month',
+					week: 'Week',
+					day: 'Day'
 				}
 			}
 		};
@@ -40,11 +39,11 @@ angular.module('cases').controller('Cases.CalendarController', ['$scope','$timeo
 		/* Event sources array */
 		$scope.eventSources = [$scope.events];
 
-		$scope.$watchCollection('caseInfo', function(newValue, oldValue){
-			if(newValue && newValue.container){
-				CalendarService.queryCalendarEvents(newValue.container.calendarFolderId).then(function(calendarEvents){
-					if(calendarEvents.items){
-						for(var i = 0; i < calendarEvents.items.length; i++){
+		$scope.$watchCollection('caseInfo', function (newValue, oldValue) {
+			if (newValue && newValue.container) {
+				CalendarService.queryCalendarEvents(newValue.container.calendarFolderId).then(function (calendarEvents) {
+					if (calendarEvents.items) {
+						for (var i = 0; i < calendarEvents.items.length; i++) {
 							var calendarEvent = {};
 							calendarEvent.id = calendarEvents.items[i].id;
 							calendarEvent.title = calendarEvents.items[i].subject;
@@ -61,8 +60,8 @@ angular.module('cases').controller('Cases.CalendarController', ['$scope','$timeo
 		});
 
 		/* Render calendar widget */
-		$scope.renderCalender = function(calendar) {
-			if(uiCalendarConfig.calendars[calendar]){
+		$scope.renderCalender = function (calendar) {
+			if (uiCalendarConfig.calendars[calendar]) {
 				uiCalendarConfig.calendars[calendar].fullCalendar('render');
 			}
 		};

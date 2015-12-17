@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.PeopleController', ['$scope', '$stateParams', '$q', '$translate'
-    , 'StoreService', 'UtilService', 'ObjectService', 'Helper.UiGridService', 'Helper.ConfigService'
+    , 'StoreService', 'UtilService', 'ObjectService', 'Helper.UiGridService', 'ConfigService'
     , 'Complaint.InfoService', 'Object.PersonService', 'LookupService', 'Object.LookupService'
-    , function ($scope, $stateParams, $q, $translate, Store, Util, ObjectService, HelperUiGridService, HelperConfigService
+    , function ($scope, $stateParams, $q, $translate, Store, Util, ObjectService, HelperUiGridService, ConfigService
         , ComplaintInfoService, ObjectPersonService, LookupService, ObjectLookupService) {
 
         $scope.contactMethods = {gridOptions: {appScopeProvider: $scope}};
@@ -65,22 +65,14 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         );
 
-        var promiseConfig = HelperConfigService.requestComponentConfig($scope, "people", function (config) {
+        var promiseConfig = ConfigService.getComponentConfig("complaints", "people").then(function (config) {
             configGridMain(config);
             configGridContactMethod(config);
             configGridOrganization(config);
             configGridAddress(config);
             configGridAlias(config);
             configGridSecurityTag(config);
-
-            $q.all([promisePersonTypes, promiseUsers, promiseContactMethodTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes]).then(function (data) {
-                var deferPeopleData = new Store.Variable("deferComplaintPeopleData");    // used to hold grid data before grid config is ready
-                var complaintInfo = deferPeopleData.get();
-                if (complaintInfo) {
-                    updateGridData(complaintInfo);
-                    deferPeopleData.set(null);
-                }
-            });
+            return config;
         });
 
 
@@ -305,6 +297,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 $scope.complaintInfo = data;
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.complaintInfo.personAssociations;
+                //gridHelper.hidePagingControlsIfAllDataShown($scope.complaintInfo.personAssociations.length);
 
                 for (var i = 0; i < $scope.complaintInfo.personAssociations.length; i++) {
                     var personAssociation = $scope.complaintInfo.personAssociations[i];
@@ -327,7 +320,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                     _.each(personAssociation.acm$_contactMethods.gridOptions.data, function (item) {
                         item.acm$_paId = personAssociation.id;
                     });
-                    gridContactMethodHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_contactMethods.gridOptions.data.length);
+                    //gridContactMethodHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_contactMethods.gridOptions.data.length);
 
 
                     personAssociation.acm$_organizations = {};
@@ -348,6 +341,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                     _.each(personAssociation.acm$_organizations.gridOptions.data, function (item) {
                         item.acm$_paId = personAssociation.id;
                     });
+                    //gridOrganizationHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_organizations.gridOptions.data.length);
 
 
                     personAssociation.acm$_addresses = {};
@@ -368,6 +362,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                     _.each(personAssociation.acm$_addresses.gridOptions.data, function (item) {
                         item.acm$_paId = personAssociation.id;
                     });
+                    //gridAddressHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_addresses.gridOptions.data.length);
 
 
                     personAssociation.acm$_aliases = {};
@@ -388,6 +383,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                     _.each(personAssociation.acm$_aliases.gridOptions.data, function (item) {
                         item.acm$_paId = personAssociation.id;
                     });
+                    //gridAliasHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_aliases.gridOptions.data.length);
 
 
                     personAssociation.acm$_securityTags = {};
@@ -408,20 +404,26 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                     _.each(personAssociation.acm$_securityTags.gridOptions.data, function (item) {
                         item.acm$_paId = personAssociation.id;
                     });
+                    //gridSecurityTagHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_securityTags.gridOptions.data.length);
                 }
             }); //end $q
         };
-        $scope.$on('complaint-updated', function (e, data) {
-            if (!ComplaintInfoService.validateComplaintInfo(data)) {
-                return;
-            }
 
-            if (data.complaintId == $stateParams.id) {
-                updateGridData(data);
-            } else {                      // condition when data comes before state is routed and config is not set
-                var deferPeopleData = new Store.Variable("deferComplaintPeopleData");
-                deferPeopleData.set(data);
-            }
+        //$scope.$on('complaint-updated', function (e, data) {
+        //    if (!ComplaintInfoService.validateComplaintInfo(data)) {
+        //        return;
+        //    }
+        //
+        //    if (data.complaintId == $stateParams.id) {
+        //        updateGridData(data);
+        //    } else {                      // condition when data comes before state is routed and config is not set
+        //        var deferPeopleData = new Store.Variable("deferComplaintPeopleData");
+        //        deferPeopleData.set(data);
+        //    }
+        //});
+        ComplaintInfoService.getComplaintInfo($stateParams.id).then(function (complaintInfo) {
+            updateGridData(complaintInfo);
+            return complaintInfo;
         });
 
 

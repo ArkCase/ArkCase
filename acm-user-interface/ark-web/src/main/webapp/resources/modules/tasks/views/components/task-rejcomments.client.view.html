@@ -1,9 +1,10 @@
 <div ng-controller="Tasks.RejectCommentsController">
     <div class="panel panel-success panel-grid">
         <div class="panel-heading">
-            <div class="panel-title">{{'tasks.comp.rejcomments.title' | translate}}
+            <div class="panel-title">
+                <span translate>tasks.comp.rejcomments.title</span>
                 <div class="pull-right">
-                    <span class=""><i class='fa fa-plus' ng-click='addNew()'></i></span>
+                    <button class="btn btn-default btn-xs" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
                 </div>
             </div>
         </div>

@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.CostController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'ObjectService', 'Helper.UiGridService', 'Helper.ConfigService', 'Object.CostService'
-    , function ($scope, $stateParams, $translate, Util, ObjectService, HelperUiGridService, HelperConfigService, ObjectCostService) {
+    , 'UtilService', 'ObjectService', 'Helper.UiGridService', 'ConfigService', 'Object.CostService'
+    , function ($scope, $stateParams, $translate, Util, ObjectService, HelperUiGridService, ConfigService, ObjectCostService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        var promiseConfig = HelperConfigService.requestComponentConfig($scope, "cost", function (config) {
+        var promiseConfig = ConfigService.getComponentConfig("complaints", "cost").then(function (config) {
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -18,6 +18,7 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
                     $scope.gridOptions.columnDefs[i].field = "acm$_costs";
                 }
             }
+            return config;
         });
 
         if (Util.goodPositive($stateParams.id)) {
@@ -34,6 +35,7 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
                         $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = costsheets;
                         $scope.gridOptions.totalItems = Util.goodValue(costsheets.length, 0);
+                        //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                         return config;
                     });
                     return costsheets;
