@@ -2,7 +2,7 @@
 
 angular.module('cost-tracking').controller('CostTracking.MainController', ['$scope', '$translate', 'dashboard', 'Dashboard.DashboardService',
     'UtilService', 'CostTracking.InfoService', 'ConfigService',
-    function($scope, $translate, dashboard, DashboardService, CostTrackingInfoService,ConfigService) {
+    function($scope, $translate, dashboard, DashboardService, Util, CostTrackingInfoService, ConfigService) {
 
         ConfigService.getComponentConfig("cost-tracking", "main").then(function (componentConfig) {
             $scope.config = componentConfig;
@@ -43,7 +43,7 @@ angular.module('cost-tracking').controller('CostTracking.MainController', ['$sco
             } else {
                 //Else use dashboard config and filter.
                 $scope.dashboard.model = angular.fromJson(data.dashboardConfig);
-                $scope.dashboard.costModel = widgetFilter($scope.dashboard.model);
+                $scope.dashboard.costModel = Util.filterWidgets($scope.dashboard.model, $scope.allowedWidgets);
                 $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
 
                 //Cache filtered dashboard model

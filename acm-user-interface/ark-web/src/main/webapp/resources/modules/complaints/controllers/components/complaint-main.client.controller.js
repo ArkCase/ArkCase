@@ -3,9 +3,9 @@
 angular.module('complaints').controller('Complaints.MainController', ['$scope', '$stateParams', '$translate', 'dashboard', 'Dashboard.DashboardService',
     'UtilService', 'ConfigService', 'Complaint.InfoService', 'ObjectService', 'Object.CorrespondenceService', 'Object.NoteService', 'Object.TaskService', 'StoreService'
     , 'Object.AuditService', 'Object.CostService', 'Object.TimeService'
-    , function ($scope, $stateParams, $translate, dashboard, DashboardService,  Util, ConfigService
-        , ComplaintInfoService, ObjectService, ObjectCorrespondenceService, ObjectNoteService, ObjectTaskService
-        , ObjectAuditService, ObjectCostService, ObjectTimeService, Store) {
+    , function ($scope, $stateParams, $translate, dashboard, DashboardService
+        , Util, ConfigService, ComplaintInfoService, ObjectService, ObjectCorrespondenceService, ObjectNoteService, ObjectTaskService, Store
+        , ObjectAuditService, ObjectCostService, ObjectTimeService) {
 
         ConfigService.getModuleConfig("complaints").then(function (moduleConfig) {
             $scope.components = moduleConfig.components;
@@ -54,7 +54,7 @@ angular.module('complaints').controller('Complaints.MainController', ['$scope', 
             } else {
                 //Else use dashboard config and filter.
                 $scope.dashboard.model = angular.fromJson(data.dashboardConfig);
-                $scope.dashboard.complaintModel = widgetFilter($scope.dashboard.model);
+                $scope.dashboard.complaintModel = Util.filterWidgets($scope.dashboard.model, $scope.allowedWidgets);
                 $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
 
                 //Cache filtered dashboard model
