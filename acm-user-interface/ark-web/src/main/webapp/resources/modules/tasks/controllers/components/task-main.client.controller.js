@@ -88,27 +88,27 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', '$statePar
                 cacheDashboardConfig.put("dashboardConfig", model);
         });
 
-        var widgetFilter = function(model) {
-            var taskModel = model;
-            //iterate over rows
-            for(var i = 0; i < taskModel.rows.length; i++) {
-                //iterate over columns
-                for(var j = 0; j < taskModel.rows[i].columns.length; j++) {
-                    //iterate over column widgets
-                    if(taskModel.rows[i].columns[j].widgets){
-                        for(var k = taskModel.rows[i].columns[j].widgets.length; k > 0; k--) {
-                            // var type = taskModel.rows[i].columns[j].widgets[k].type;
-                            var type = taskModel.rows[i].columns[j].widgets[k-1].type;
-                            if(!($scope.allowedWidgets.indexOf(type) > -1)) {
-                                //remove widget from array
-                                taskModel.rows[i].columns[j].widgets.splice(k-1, 1);
-                            }
-                        }
-                    }
-                }
-            }
-            return taskModel;
-        };
+        //var widgetFilter = function(model) {
+        //    var taskModel = model;
+        //    //iterate over rows
+        //    for(var i = 0; i < taskModel.rows.length; i++) {
+        //        //iterate over columns
+        //        for(var j = 0; j < taskModel.rows[i].columns.length; j++) {
+        //            //iterate over column widgets
+        //            if(taskModel.rows[i].columns[j].widgets){
+        //                for(var k = taskModel.rows[i].columns[j].widgets.length; k > 0; k--) {
+        //                    // var type = taskModel.rows[i].columns[j].widgets[k].type;
+        //                    var type = taskModel.rows[i].columns[j].widgets[k-1].type;
+        //                    if(!($scope.allowedWidgets.indexOf(type) > -1)) {
+        //                        //remove widget from array
+        //                        taskModel.rows[i].columns[j].widgets.splice(k-1, 1);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return taskModel;
+        //};
 
         $scope.shallInclude = function (component) {
             if (component.enabled) {

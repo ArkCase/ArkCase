@@ -58,27 +58,27 @@ angular.module('cost-tracking').controller('CostTracking.MainController', ['$sco
                 cacheDashboardConfig.put("dashboardConfig", model);
         });
 
-        var widgetFilter = function(model) {
-            var costModel = model;
-            //iterate over rows
-            for(var i = 0; i < costModel.rows.length; i++) {
-                //iterate over columns
-                for(var j = 0; j < costModel.rows[i].columns.length; j++) {
-                    //iterate over column widgets
-                    if(costModel.rows[i].columns[j].widgets){
-                        for(var k = costModel.rows[i].columns[j].widgets.length; k > 0; k--) {
-                            // var type = costModel.rows[i].columns[j].widgets[k].type;
-                            var type = costModel.rows[i].columns[j].widgets[k-1].type;
-                            if(!($scope.allowedWidgets.indexOf(type) > -1)) {
-                                //remove widget from array
-                                costModel.rows[i].columns[j].widgets.splice(k-1, 1);
-                            }
-                        }
-                    }
-                }
-            }
-            return costModel;
-        };
+        //var widgetFilter = function(model) {
+        //    var costModel = model;
+        //    //iterate over rows
+        //    for(var i = 0; i < costModel.rows.length; i++) {
+        //        //iterate over columns
+        //        for(var j = 0; j < costModel.rows[i].columns.length; j++) {
+        //            //iterate over column widgets
+        //            if(costModel.rows[i].columns[j].widgets){
+        //                for(var k = costModel.rows[i].columns[j].widgets.length; k > 0; k--) {
+        //                    // var type = costModel.rows[i].columns[j].widgets[k].type;
+        //                    var type = costModel.rows[i].columns[j].widgets[k-1].type;
+        //                    if(!($scope.allowedWidgets.indexOf(type) > -1)) {
+        //                        //remove widget from array
+        //                        costModel.rows[i].columns[j].widgets.splice(k-1, 1);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return costModel;
+        //};
 
     }
 ]);
