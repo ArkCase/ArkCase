@@ -126,7 +126,7 @@
   "tasks.userSearch": {
     "id": "userSearch",
     "title": "User Search",
-    "search":{
+    "search": {
       "btn": "Search",
       "placeholder": "Search for the user to assign to this task."
     },
@@ -134,7 +134,7 @@
     "confirmButton": "Confirm",
     "enabled": true,
     "userFacetFilter": "\"Object Type\": USER",
-    "assigneeGridColumns":{
+    "assigneeGridColumns": {
       "name": "Name",
       "type": "Type",
       "title": "Title",
