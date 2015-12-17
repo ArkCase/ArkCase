@@ -1,13 +1,11 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.CalendarController', ['$scope','$timeout', 'uiCalendarConfig', 'Object.CalendarService','Complaint.InfoService',
-    function($scope,$timeout, uiCalendarConfig, CalendarService,ComplaintInfoService) {
+angular.module('complaints').controller('Complaints.CalendarController', ['$scope', 'ConfigService', '$timeout', 'uiCalendarConfig', 'Object.CalendarService','Complaint.InfoService',
+    function($scope, ConfigService, $timeout, uiCalendarConfig, CalendarService,ComplaintInfoService) {
+        ConfigService.getComponentConfig("complaints", "calendar").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
 
-        $scope.$emit('req-component-config', 'calendar');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if (componentId == 'calendar') {
-                $scope.config = config;
-            }
         });
 
         $scope.$on('complaint-updated', function (e, data) {

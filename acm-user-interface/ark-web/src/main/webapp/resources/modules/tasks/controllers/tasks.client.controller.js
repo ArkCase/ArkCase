@@ -42,6 +42,11 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             });
         };
 
+        $scope.linksShown = false;
+        $scope.toggleShowLinks = function () {
+            $scope.linksShown = !$scope.linksShown;
+        };
+
         $scope.progressMsg = $translate.instant("tasks.progressNoTask");
         $scope.$on('req-select-task', function (e, selectedTask) {
             var componentsStore = new Store.Variable("TaskComponentsStore");

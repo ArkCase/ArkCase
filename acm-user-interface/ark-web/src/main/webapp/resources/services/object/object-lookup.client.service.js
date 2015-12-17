@@ -256,7 +256,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
             PRIORITIES: "AcmPriorities"
             , OWNING_GROUPS: "AcmOwningGroups"
             , FILE_TYPES: "AcmFileTypes"
-            , FORM_TYPES: "AcmFormTypes"
+            , FORM_TYPE_MAP: "AcmFormTypeMap"
             , PERSON_TYPES: "AcmPersonTypes"
             , PARTICIPANT_TYPES: "AcmParticipantTypes"
             , PERSON_TITLES: "AcmPersonTitles"
@@ -414,13 +414,18 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @description
          * Query list of plain form types
          *
+         * @param {String} objType  Object type
+         *
          * @returns {Object} An array returned by $resource
          */
-        Service.getFormTypes = function () {
-            var cacheFormTypes = new Store.SessionData(Service.SessionCacheNames.FORM_TYPES);
-            var formTypes = cacheFormTypes.get();
+        Service.getFormTypes = function (objType) {
+            var cacheFormTypeMap = new Store.SessionData(Service.SessionCacheNames.FORM_TYPE_MAP);
+            var formTypeMap = cacheFormTypeMap.get();
+            var formTypes = Util.goodMapValue(formTypeMap, objType, null);
+
             return Util.serviceCall({
                 service: Service._getFormTypes
+                , param: {objType: objType}
                 , result: formTypes
                 , onSuccess: function (data) {
                     if (Service.validatePlainForms(data)) {
@@ -435,7 +440,10 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
                             formType.form = true;
                             formTypes.unshift(formType);
                         });
-                        cacheFormTypes.set(formTypes);
+
+                        formTypeMap = formTypeMap || {};
+                        formTypeMap[objType] = formTypes;
+                        cacheFormTypeMap.set(formTypeMap);
                         return formTypes;
                     }
                 }

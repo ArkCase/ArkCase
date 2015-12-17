@@ -90,7 +90,21 @@
       "icon": "fa fa-tachometer",
       "enabled": false,
       "type": "empty",
-      "editable": false
+      "editable": false,
+      "widgets": [
+        {
+          "id": "details",
+          "type": "component"
+        },
+        {
+          "id": "person",
+          "type": "component"
+        },
+        {
+          "id": "summary",
+          "type": "component"
+        }
+      ]
     },
     {
       "id": "info",
@@ -143,7 +157,7 @@
     },
     {
       "id": "summary",
-      "title": "Cost Summary",
+      "title": "Expenses",
       "icon": "fa fa-money",
       "enabled": true,
       "type": "grid",

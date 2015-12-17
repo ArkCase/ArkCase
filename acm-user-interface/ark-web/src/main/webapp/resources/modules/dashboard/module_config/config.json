@@ -14,7 +14,7 @@
     {
       "id": "news",
       "title": "News Widget",
-      "url": "https://query.yahooapis.com/v1/public/yql",
+      "url": "https:\/\/query.yahooapis.com\/v1\/public\/yql",
       "query": "select * from xml where url = '$1'",
       "format": "json"
     },
@@ -40,7 +40,7 @@
           "displayName": "dashboard.widgets.myCases.table.header.caseId",
           "headerCellFilter": "translate",
           "enableSorting": true,
-          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: \'{{row.entity.object_id_s}}\'})\">{{COL_FIELD}}</a></div>",
+          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a><\/div>",
           "width": 130
         },
         {
@@ -48,7 +48,7 @@
           "displayName": "dashboard.widgets.myCases.table.header.title",
           "headerCellFilter": "translate",
           "enableSorting": true,
-          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}</a></div>"
+          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a><\/div>"
         },
         {
           "name": "status_lcs",
@@ -81,14 +81,14 @@
           "name": "taskId",
           "displayName": "dashboard.widgets.myTasks.table.header.taskId",
           "headerCellFilter": "translate",
-          "cellTemplate:": "<div><a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}</a></div>",
+          "cellTemplate:": "<div><a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}<\/a><\/div>",
           "width": 75
         },
         {
           "name": "title",
           "displayName": "dashboard.widgets.myTasks.table.header.title",
           "headerCellFilter": "translate",
-          "cellTemplate:": "<div><a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}</a></div>"
+          "cellTemplate:": "<div><a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}<\/a><\/div>"
         },
         {
           "name": "priority",
@@ -131,14 +131,14 @@
           "name": "complaintNumber",
           "displayName": "dashboard.widgets.myTasks.table.header.complaintNumber",
           "headerCellFilter": "translate",
-          "cellTemplate:": "'<div class=\"ui-grid-cell-contents\"><a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}</a></div>'",
+          "cellTemplate:": "'<div class=\"ui-grid-cell-contents\"><a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}<\/a><\/div>'",
           "width": 175
         },
         {
           "name": "complaintTitle",
           "displayName": "dashboard.widgets.myTasks.table.header.title",
           "headerCellFilter": "translate",
-          "cellTemplate:": "'<div class=\"ui-grid-cell-contents\"><a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}</a></div>'"
+          "cellTemplate:": "'<div class=\"ui-grid-cell-contents\"><a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}<\/a><\/div>'"
         },
         {
           "name": "priority",
@@ -157,27 +157,6 @@
           "displayName": "dashboard.widgets.myTasks.table.header.status",
           "headerCellFilter": "translate",
           "width": 55
-        }
-      ]
-    },
-    {
-      "id": "details",
-      "title": "Details Widget",
-      "columnDefs": [
-        {
-          "name": "details",
-          "displayName": "dashboard.widgets.details.table.header.details",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "modified",
-          "displayName": "dashboard.widgets.details.table.header.modified",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "modifier",
-          "displayName": "dashboard.widgets.details.table.header.modifier",
-          "headerCellFilter": "translate"
         }
       ]
     },

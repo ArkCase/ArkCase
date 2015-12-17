@@ -34,6 +34,11 @@ angular.module('time-tracking').controller('TimeTrackingController', ['$scope', 
             });
         };
 
+		$scope.linksShown = false;
+		$scope.toggleShowLinks = function () {
+			$scope.linksShown = !$scope.linksShown;
+		};
+
 		$scope.progressMsg = $translate.instant("timeTracking.progressNoTimesheet");
 		$scope.$on('req-select-timesheet', function (e, selectedTimesheet) {
 			$scope.$broadcast('timesheet-selected', selectedTimesheet);
