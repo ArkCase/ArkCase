@@ -69,27 +69,27 @@ angular.module('complaints').controller('Complaints.MainController', ['$scope', 
                 cacheDashboardConfig.put("dashboardConfig", model);
         });
 
-        var widgetFilter = function(model) {
-            var complaintModel = model;
-            //iterate over rows
-            for(var i = 0; i < complaintModel.rows.length; i++) {
-                //iterate over columns
-                for(var j = 0; j < complaintModel.rows[i].columns.length; j++) {
-                    //iterate over column widgets
-                    if(complaintModel.rows[i].columns[j].widgets){
-                        for(var k = complaintModel.rows[i].columns[j].widgets.length; k > 0; k--) {
-                            // var type = complaintModel.rows[i].columns[j].widgets[k].type;
-                            var type = complaintModel.rows[i].columns[j].widgets[k-1].type;
-                            if(!($scope.allowedWidgets.indexOf(type) > -1)) {
-                                //remove widget from array
-                                complaintModel.rows[i].columns[j].widgets.splice(k-1, 1);
-                            }
-                        }
-                    }
-                }
-            }
-            return complaintModel;
-        };
+        //var widgetFilter = function(model) {
+        //    var complaintModel = model;
+        //    //iterate over rows
+        //    for(var i = 0; i < complaintModel.rows.length; i++) {
+        //        //iterate over columns
+        //        for(var j = 0; j < complaintModel.rows[i].columns.length; j++) {
+        //            //iterate over column widgets
+        //            if(complaintModel.rows[i].columns[j].widgets){
+        //                for(var k = complaintModel.rows[i].columns[j].widgets.length; k > 0; k--) {
+        //                    // var type = complaintModel.rows[i].columns[j].widgets[k].type;
+        //                    var type = complaintModel.rows[i].columns[j].widgets[k-1].type;
+        //                    if(!($scope.allowedWidgets.indexOf(type) > -1)) {
+        //                        //remove widget from array
+        //                        complaintModel.rows[i].columns[j].widgets.splice(k-1, 1);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return complaintModel;
+        //};
 
         //$scope.widgetData = {};
         //ComplaintInfoService.getComplaintInfo($stateParams.id).then(function (complaintInfo) {

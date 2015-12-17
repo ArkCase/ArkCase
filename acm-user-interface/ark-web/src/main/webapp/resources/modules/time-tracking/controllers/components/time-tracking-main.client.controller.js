@@ -57,26 +57,26 @@ angular.module('time-tracking').controller('TimeTracking.MainController', ['$sco
                 cacheDashboardConfig.put("dashboardConfig", model);
         });
 
-        var widgetFilter = function(model) {
-            var timeModel = model;
-            //iterate over rows
-            for(var i = 0; i < timeModel.rows.length; i++) {
-                //iterate over columns
-                for(var j = 0; j < timeModel.rows[i].columns.length; j++) {
-                    //iterate over column widgets
-                    if(timeModel.rows[i].columns[j].widgets){
-                        for(var k = timeModel.rows[i].columns[j].widgets.length; k > 0; k--) {
-                            // var type = timeModel.rows[i].columns[j].widgets[k].type;
-                            var type = timeModel.rows[i].columns[j].widgets[k-1].type;
-                            if(!($scope.allowedWidgets.indexOf(type) > -1)) {
-                                //remove widget from array
-                                timeModel.rows[i].columns[j].widgets.splice(k-1, 1);
-                            }
-                        }
-                    }
-                }
-            }
-            return timeModel;
-        };
+        //var widgetFilter = function(model) {
+        //    var timeModel = model;
+        //    //iterate over rows
+        //    for(var i = 0; i < timeModel.rows.length; i++) {
+        //        //iterate over columns
+        //        for(var j = 0; j < timeModel.rows[i].columns.length; j++) {
+        //            //iterate over column widgets
+        //            if(timeModel.rows[i].columns[j].widgets){
+        //                for(var k = timeModel.rows[i].columns[j].widgets.length; k > 0; k--) {
+        //                    // var type = timeModel.rows[i].columns[j].widgets[k].type;
+        //                    var type = timeModel.rows[i].columns[j].widgets[k-1].type;
+        //                    if(!($scope.allowedWidgets.indexOf(type) > -1)) {
+        //                        //remove widget from array
+        //                        timeModel.rows[i].columns[j].widgets.splice(k-1, 1);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return timeModel;
+        //};
     }
 ]);
