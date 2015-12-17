@@ -1,13 +1,20 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.TasksController', ['$scope', '$state', '$stateParams', '$q', '$translate'
-    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService', 'Complaint.InfoService'
     , function ($scope, $state, $stateParams, $q, $translate
-        , Util, ConfigService, HelperUiGridService, ObjectService, ObjectTaskService, TaskWorkflowService) {
+        , Util, ConfigService, HelperUiGridService, ObjectService, ObjectTaskService, TaskWorkflowService, ComplaintInfoService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
         var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
+
+        $scope.$on('complaint-updated', function (e, data) {
+            if (!ComplaintInfoService.validateComplaintInfo(data)) {
+                return;
+            }
+            $scope.complaintInfo = data;
+        });
 
         ConfigService.getComponentConfig("complaints", "tasks").then(function (config) {
             gridHelper.setColumnDefs(config);
@@ -90,7 +97,8 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         };
 
         $scope.addNew = function () {
-            $state.go("tasks.wizard");
+            $state.go("newTaskFromParentObject", {parentType: ObjectService.ObjectTypes.COMPLAINT, parentObject: $scope.complaintInfo.complaintNumber});
+
         };
 
         var completeTask = function (rowEntity) {
