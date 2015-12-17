@@ -1,20 +1,4 @@
 'use strict';
-/*
-angular.module('document-details').controller('DocumentDetailsController', ['$scope', 'ConfigService',
-	function($scope, ConfigService) {
-		$scope.config = ConfigService.getModule({moduleId: 'document-details'});
-		$scope.$on('req-component-config', onConfigRequest);
-
-		function onConfigRequest(e, componentId) {
-			$scope.config.$promise.then(function(config){
-				var componentConfig = _.find(config.components, {id: componentId})
-				$scope.$broadcast('component-config', componentId, componentConfig);
-			});
-		}
-	}
-]);
-
-'use strict';*/
 
 angular.module('document-details').controller('DocumentDetailsController', ['$scope', '$stateParams', '$sce', '$log', '$q'
 	, 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService'
@@ -33,11 +17,6 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
 		$scope.caseInfo = {};
 
 		/**
-		 * @ngdoc method
-		 * @name openSnowboundViewer
-		 * @methodOf controllers:Document.ViewerController
-		 *
-		 * @description
 		 * Builds the snowbound url based on the parameters passed into the controller state and opens the
 		 * specified document in an iframe which points to snowbound
 		 */
