@@ -1,7 +1,9 @@
 <div ng-controller="Tasks.AttachmentsController">
     <div class="panel panel-success panel-grid">
         <div class="panel-heading">
-            <div class="panel-title">{{'tasks.comp.attachments.title' | translate}}</div>
+            <div class="panel-title">
+                <span translate>tasks.comp.attachments.title</span>
+            </div>
         </div>
         <div class="panel-body">
             <doc-tree object-type="objectType" object-id="objectId" tree-control="treeControl" file-types="fileTypes"

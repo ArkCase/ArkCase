@@ -3,26 +3,28 @@
         <div class="checkbox">
             <label>
                 <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)">
-                {{'complaints.comp.actions.restrict' | translate}}
+                <span translate>complaints.comp.actions.restrict</span>
             </label>
         </div>
     </div>
 
     <div class="pull-right">
         <div class="btn-group">
-            <button class="btn btn-sm btn-default" ng-click="createNew()"><i
-                    class="fa fa-edit"></i> {{'complaints.comp.actions.new.button' | translate}}
+            <button class="btn btn-sm btn-default" ng-click="createNew()">
+                <i class="fa fa-edit"></i>
+                <span translate>complaints.comp.actions.new.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-click="close(complaintInfo)"><i class="fa fa-times"></i>
-                {{'complaints.comp.actions.close.button' | translate}}
+            <button class="btn btn-sm btn-default" ng-click="close(complaintInfo)">
+                <i class="fa fa-times"></i>
+                <span translate>complaints.comp.actions.close.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-show="showBtnUnsubscribe" ng-click="unsubscribe(complaintInfo)"><i
-                    class="fa fa-bullhorn"></i>
-                {{'complaints.comp.actions.unsubscribe.button' | translate}}
+            <button class="btn btn-sm btn-default" ng-show="showBtnUnsubscribe" ng-click="unsubscribe(complaintInfo)">
+                <i class="fa fa-bullhorn"></i>
+                <span translate>complaints.comp.actions.unsubscribe.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-show="showBtnSubscribe" ng-click="subscribe(complaintInfo)"><i
-                    class="fa fa-bullhorn"></i>
-                {{'complaints.comp.actions.subscribe.button' | translate}}
+            <button class="btn btn-sm btn-default" ng-show="showBtnSubscribe" ng-click="subscribe(complaintInfo)">
+                <i class="fa fa-bullhorn"></i>
+                <span translate>complaints.comp.actions.subscribe.button</span>
             </button>
         </div>
     </div>
