@@ -43,6 +43,7 @@ angular.module('services').factory('ObjectService', ['$state', '$window', 'UtilS
                         if (found) {
                             var url = Util.goodValue(found.url);
                             url = url.replace(":id", objId);
+                            url = url.replace(":type", objType);
                             $window.location.href = url;
                         }
                         return objectTypes;
