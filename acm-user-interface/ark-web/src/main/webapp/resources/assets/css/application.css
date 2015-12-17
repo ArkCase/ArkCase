@@ -73,7 +73,9 @@ iframe {
     background-color: #177bbb;
 }
 
-
+.fancytree-node {
+  white-space: nowrap;
+}
 
 .ui-fancytree.fancytree-container {
     background: none;
