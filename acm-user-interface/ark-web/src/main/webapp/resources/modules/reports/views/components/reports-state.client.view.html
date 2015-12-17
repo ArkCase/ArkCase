@@ -2,6 +2,6 @@
     <select ng-model="data.stateSelected"
         ng-if="config.resetCaseStateValues.indexOf(data.reportSelected) == -1"
         ng-options="option.id as option.name for option in config.states" class="form-control input-sm">
-        <option value="">{{'reports.selectState.placeholder' | translate}}</option>
+        <option value="" translate>reports.selectState.placeholder</option>
     </select>
 </div>
