@@ -33,7 +33,7 @@
                 },
                 {
                     "name": "userId",
-                    "displayName": "documentDetails.details.comp.eventHistory.table.columns.userId",
+                    "displayName": "documentDetails.comp.eventHistory.table.columns.userId",
                     "headerCellFilter": "translate",
                     "lookup": "userFullNames"
                 }

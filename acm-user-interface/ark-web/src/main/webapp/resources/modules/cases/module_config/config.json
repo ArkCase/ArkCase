@@ -61,7 +61,8 @@
       {
         "desc": "Sort Date Desc",
         "name": "sort-date-desc",
-        "value": "create_tdt DESC"
+        "value": "create_tdt DESC",
+        "default": true
       },
       {
         "desc": "Sort Case ID Asc",
@@ -81,8 +82,7 @@
       {
         "desc": "(No Sort)",
         "name": "",
-        "value": "",
-        "default": true
+        "value": ""
       }
     ],
     "nodeTypes": [
@@ -629,7 +629,6 @@
           "name": "taskId",
           "field": "object_id_s",
           "displayName": "cases.comp.tasks.table.columns.taskId",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.object_id_s}}</a>",
           "headerCellFilter": "translate"
         },
         {
