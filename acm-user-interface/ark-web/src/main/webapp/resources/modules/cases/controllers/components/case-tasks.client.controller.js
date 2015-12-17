@@ -167,5 +167,11 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             gridHelper.showObject(ObjectService.ObjectTypes.TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
         };
 
+        $scope.onClickObjLink = function (event, rowEntity) {
+            event.preventDefault();
+            var targetType = Util.goodMapValue(rowEntity, "object_type_s");
+            var targetId = Util.goodMapValue(rowEntity, "object_id_s");
+            gridHelper.showObject(targetType, targetId);
+        };
     }
 ]);
