@@ -1,7 +1,9 @@
 <div ng-controller="Tasks.NewTaskController" class="module-content">
     <div class="content-body">
         <div class="module-header">
-            <h3 translate>tasks.newTask.title</h3>
+            <h3>
+                <span translate>tasks.newTask.title</span>
+            </h3>
         </div>
 
 
@@ -10,8 +12,7 @@
                 <div class="btn-group">
                     <button class="btn btn-default btn-sm" data-toggle="tooltip" id="chooseAssignee" data-title="Choose assignee">
                         <i class="fa fa-user"></i>
-                        <span>{{ 'tasks.newTask.assignee.button' | translate }}</span>
-                    </button>
+                    <span translate>tasks.newTask.assignee.button</span>
                     <button ng-disabled="!config.data.title || !config.data.taskStartDate || !config.data.dueDate || !saved" ng-click="saveNewTask()" class="btn btn-primary btn-sm" data-toggle="tooltip" id="saveButton" data-title="Save">
                         <i class="fa fa-user"></i>
                         <span translate> tasks.newTask.saveButton </span>
@@ -44,6 +45,7 @@
 			<p class="row">
 				<div class="col-sm-4">
 					<label for="taskStartDate" translate> tasks.newTask.taskStartDate.label </label>
+
 					<div>
 						<p class="input-group">
 							<input type="text" id="taskStartDate" ng-required="true" class="form-control" datepicker-popup="{{config.datepickerPopupFormat}}" ng-model="config.data.taskStartDate" is-open="opened.openedStart" close-on-date-selection="true" show-button-bar="true" on-open-focus="false" close-text="{{ 'tasks.newTask.datepicker.close' | translate }}" />
@@ -64,6 +66,7 @@
 				</div>
 				<div class="col-sm-4">
 					<label for="dueDate" translate> tasks.newTask.dueDate.label </label>
+
 					<div>
 						<p class="input-group">
 							<input type="text" id="dueDate" ng-required="true" class="form-control" datepicker-popup="{{config.datepickerPopupFormat}}" ng-model="config.data.dueDate" is-open="opened.openedEnd" close-on-date-selection="true" show-button-bar="true" on-open-focus="false" close-text="{{ 'tasks.newTask.datepicker.close' | translate }}" />
@@ -94,6 +97,7 @@
 			<p class="row">
 				<div class="col-sm-12">
 					<label translate> tasks.newTask.notes.label </label>
+
 					<summernote config="options" ng-model="config.data.details"></summernote>
 				</div>
 			</p>
