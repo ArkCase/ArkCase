@@ -2,7 +2,9 @@
     <div class="module-content">
         <div class="left-sidebar">
             <div class="module-header">
-                <h3>{{'reports.title' | translate}}</h3>
+                <h3>
+                    <span translate>reports.title</span>
+                </h3>
             </div>
             <div class="well panel">
                 <div class="panel-body">
@@ -14,7 +16,7 @@
                     <div>
                         <button class="btn btn-sm btn-default left-block" ng-click="generateReport()"
                                 ng-disabled="!data.reportSelected">
-                            {{'reports.btn.generateReport'| translate}}
+                            <span translate>reports.btn.generateReport</span>
                         </button>
                     </div>
                 </div>
