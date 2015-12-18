@@ -96,7 +96,7 @@ angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translat
         Service.completeTask = function (taskId) {
             return Util.serviceCall({
                 service: Service._completeTask
-                , param: {id: taskId}
+                , param: {taskId: taskId}
                 , data: {}
                 , onSuccess: function (data) {
                     if (TaskInfoService.validateTaskInfo(data)) {
@@ -161,7 +161,7 @@ angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translat
         Service.deleteTask = function (taskId) {
             return Util.serviceCall({
                 service: Service._deleteTask
-                , param: {id: taskId}
+                , param: {taskId: taskId}
                 , data: {}
                 , onSuccess: function (data) {
                     if (TaskInfoService.validateTaskInfo(data)) {

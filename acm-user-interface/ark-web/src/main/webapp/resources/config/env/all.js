@@ -37,7 +37,8 @@ module.exports = {
                 'lib/angular-dashboard-framework/dist/angular-dashboard-framework.css',
                 'lib/angular-notify/dist/angular-notify.css',
                 'lib/handsontable/dist/handsontable.full.css',
-                'lib/ng-tags-input/ng-tags-input.css'
+                'lib/ng-tags-input/ng-tags-input.css',
+                'lib/fullcalendar/dist/fullcalendar.css'
             ],
             customJs : [
                 'http://internal.armedia.com/jira/s/31413758042897b94fd2d74d89768365-T/en_US9cltp4/6346/2/1.4.16/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?locale=en-US&collectorId=aad5f79b'
@@ -83,7 +84,10 @@ module.exports = {
                 'lib/handsontable/dist/handsontable.full.js',
                 'lib/ngHandsontable/dist/ngHandsontable.js',
                 'lib/ace-builds/src-min-noconflict/ace.js',
-                'lib/angular-ui-ace/ui-ace.min.js'
+                'lib/angular-ui-ace/ui-ace.min.js',
+                'lib/fullcalendar/dist/fullcalendar.min.js',
+                'lib/fullcalendar/dist/gcal.js',
+                'lib/angular-ui-calendar/src/calendar.js'
             ]
         },
         css: [
