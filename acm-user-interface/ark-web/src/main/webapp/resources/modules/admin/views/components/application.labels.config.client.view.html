@@ -3,10 +3,10 @@
         <div class="row">
             <div class="pull-left">
                 <select ng-model="selectedNamespace"
-                        ng-options="option.id as option.name for option in namespacesDropdownOptions">
+                        ng-options="option.id as option.name for option in namespacesDropdownOptions"  ng-disabled="disabledInputs">
                 </select>
                 <select ng-model="selectedLanguage"
-                        ng-options="str as str for str in languagesDropdownOptions">
+                        ng-options="str as str for str in languagesDropdownOptions"  ng-disabled="disabledInputs">
                 </select>
                 <input type="text" ng-model="gridApi.grid.columns[0].filters[0].term"
                        placeholder="{{'admin.application.labels.config.filterBy' | translate}}">
@@ -16,16 +16,16 @@
             <div class="pull-right">
                 <span translate>admin.application.labels.config.defaultLabel</span>
                 <select ng-model="selectedDefaultLanguage"
-                        ng-options="str as str for str in languagesDropdownOptions">
+                        ng-options="str as str for str in languagesDropdownOptions"  ng-disabled="disabledInputs">
                 </select>
 
-                <button class="btn btn-sm btn-default" ng-click="changeDefaultLng()">
+                <button class="btn btn-sm btn-default" ng-click="changeDefaultLng()" ng-disabled="disabledInputs">
                     <span translate>admin.application.labels.config.applyBtn</span>
                 </button>
-                <button class="btn btn-sm btn-default" ng-click="resetCurrentModuleResources()">
+                <button class="btn btn-sm btn-default" ng-click="resetCurrentModuleResources()" ng-disabled="disabledInputs">
                     <span translate>admin.application.labels.config.resetlModule</span>
                 </button>
-                <button class="btn btn-sm btn-default" ng-click="resetAllResources()">
+                <button class="btn btn-sm btn-default" ng-click="resetAllResources()" ng-disabled="disabledInputs">
                     <span translate>admin.application.labels.config.resetAll</span>
                 </button>
             </div>
