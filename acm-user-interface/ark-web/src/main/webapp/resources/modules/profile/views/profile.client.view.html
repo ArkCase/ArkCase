@@ -2,7 +2,9 @@
   <div class="module-content">
     <div class="left-sidebar-lg">
       <div class="module-header">
-        <h3> {{'profile.title' | translate}}</h3>
+        <h3>
+            <span translate>profile.title</span>
+        </h3>
       </div>
       <div class="well-sm">
         <div class="scroll-body" ng-include="'modules/profile/views/components/profile-pic.client.view.html'"> </div>
@@ -14,7 +16,9 @@
         <div class="module-header">
           <div class="pull-right">
             <div class="btn-group">
-              <button class="btn btn-default btn-sm" ng-click="openPasswordDialog()"><i class="fa fa-key"></i> {{'profile.buttons.password' | translate}}</button>
+              <button class="btn btn-default btn-sm" ng-click="openPasswordDialog()"><i class="fa fa-key"></i>
+                  <span translate>profile.buttons.password</span>
+              </button>
             </div>
           </div>
         </div>
