@@ -1,14 +1,15 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.ActionsController', ['$scope', '$state', '$stateParams', '$q', 'UtilService'
-    , 'ObjectService', 'Authentication', 'Object.LookupService', 'Complaint.LookupService', 'Object.SubscriptionService', 'Object.ModelService', 'Complaint.InfoService'
-    , function ($scope, $state, $stateParams, $q, Util, ObjectService, Authentication, ObjectLookupService, ComplaintLookupService, ObjectSubscriptionService, ObjectModelService, ComplaintInfoService) {
+angular.module('complaints').controller('Complaints.ActionsController', ['$scope', '$state', '$stateParams', '$q'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService'
+    , 'Complaint.LookupService', 'Object.SubscriptionService', 'Object.ModelService', 'Complaint.InfoService'
+    , function ($scope, $state, $stateParams, $q
+        , Util, ConfigService, ObjectService, Authentication, ObjectLookupService
+        , ComplaintLookupService, ObjectSubscriptionService, ObjectModelService, ComplaintInfoService) {
 
-        $scope.$emit('req-component-config', 'actions');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('actions' == componentId) {
-                $scope.config = config;
-            }
+        ConfigService.getComponentConfig("complaints", "actions").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
         var promiseQueryUser = Authentication.queryUserInfo();

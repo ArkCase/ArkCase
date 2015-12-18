@@ -1,0 +1,41 @@
+{
+  "documentDetails": {
+    "title": "Document details",
+    "creator": "Creator",
+    "created": "Created",
+    "assignee": "Assignee",
+    "fileType": "File type",
+    "status": "Status",
+    "name": "Name",
+    "comp.eventHistory": {
+      "title": "Event History",
+      "table.columns": {
+        "eventType": "Event Name",
+        "eventDate": "Created",
+        "userId": "User"
+      }
+    },
+    "comp.tags": {
+      "title": "Tags"
+    },
+    "comp.participants": {
+      "title": "Participants"
+    },
+    "comp.notes": {
+      "title": "Notes",
+      "table.columns": {
+        "note": "Note",
+        "created": "Created",
+        "creator": "Author"
+      }
+    },
+    "comp.versionHistory": {
+      "title": "Version History",
+      "table.columns": {
+        "creator": "User",
+        "created": "Created",
+        "versionTag": "Version"
+      }
+    }
+  }
+}

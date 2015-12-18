@@ -1,14 +1,19 @@
 'use strict';
 
-angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'UtilService'
+angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'UtilService', 'ConfigService'
     , 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService'
-    , function ($scope, $stateParams, Util, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService) {
+    , function ($scope, $stateParams, Util, ConfigService
+        , ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService) {
 
-        $scope.$emit('req-component-config', 'info');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ("info" == componentId) {
-                $scope.config = config;
-            }
+        //$scope.$emit('req-component-config', 'info');
+        //$scope.$on('component-config', function (e, componentId, config) {
+        //    if ("info" == componentId) {
+        //        $scope.config = config;
+        //    }
+        //});
+        ConfigService.getComponentConfig("cases", "info").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
         ObjectLookupService.getPriorities().then(
@@ -44,9 +49,9 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        $scope.$on('case-selected', function onSelectedCase(e, selectedCase) {
-            $scope.caseSolr = selectedCase;
-        });
+        //$scope.$on('case-selected', function onSelectedCase(e, selectedCase) {
+        //    $scope.caseSolr = selectedCase;
+        //});
 
         var previousId = null;
         $scope.$on('case-updated', function (e, data) {
@@ -70,6 +75,28 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
                 previousId = $stateParams.id;
             }
         });
+        //var previousId = null;
+        //if (Util.goodPositive($stateParams.id)) {
+        //    CaseInfoService.getCaseInfo($stateParams.id).then(function (caseInfo) {
+        //        $scope.caseInfo = caseInfo;
+        //        $scope.owningGroup = ObjectModelService.getGroup(caseInfo);
+        //        $scope.assignee = ObjectModelService.getAssignee(caseInfo);
+        //        if (previousId != $stateParams.id) {
+        //            CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
+        //                function (approvers) {
+        //                    var options = [];
+        //                    _.each(approvers, function (approver) {
+        //                        options.push({id: approver.userId, name: approver.fullName});
+        //                    });
+        //                    $scope.assignees = options;
+        //                    return approvers;
+        //                }
+        //            );
+        //            previousId = $stateParams.id;
+        //        }
+        //        return caseInfo;
+        //    });
+        //}
 
         /**
          * Persists the updated casefile metadata to the ArkCase database

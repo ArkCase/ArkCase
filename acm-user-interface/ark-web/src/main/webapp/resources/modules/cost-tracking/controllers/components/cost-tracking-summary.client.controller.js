@@ -1,17 +1,14 @@
 'use strict';
 
-angular.module('cost-tracking').controller('CostTracking.SummaryController', ['$scope', 'UtilService', 'Helper.UiGridService',
-    function ($scope, Util, HelperUiGridService) {
+angular.module('cost-tracking').controller('CostTracking.SummaryController', ['$scope', '$stateParams'
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'CostTracking.InfoService'
+    , function ($scope, $stateParams, Util, ConfigService, HelperUiGridService, CostTrackingInfoService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-
-        $scope.$emit('req-component-config', 'summary');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('summary' == componentId) {
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.disableGridScrolling(config);
-            }
+        ConfigService.getComponentConfig("cost-tracking", "summary").then(function (config) {
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            return config;
         });
 
         $scope.$on('costsheet-updated', function (e, data) {
@@ -26,6 +23,20 @@ angular.module('cost-tracking').controller('CostTracking.SummaryController', ['$
             });
             $scope.gridOptions = $scope.gridOptions || {};
             $scope.gridOptions.data = costs;
+        });
+        CostTrackingInfoService.getCostTrackingInfo($stateParams.id).then(function (costsheetInfo) {
+            $scope.costsheetInfo = costsheetInfo;
+            var parentNumber = {parentNumber: $scope.costsheetInfo.parentNumber};
+            var parentType = {parentType: $scope.costsheetInfo.parentType};
+            var parentId = {parentId: $scope.costsheetInfo.parentId};
+
+            var costs = angular.copy($scope.costsheetInfo.costs);
+            costs = costs.map(function (obj) {
+                return angular.extend(obj, parentNumber, parentType, parentId);
+            });
+            $scope.gridOptions = $scope.gridOptions || {};
+            $scope.gridOptions.data = costs;
+            return costsheetInfo;
         });
 
         $scope.onClickObjectType = function (event, rowEntity) {

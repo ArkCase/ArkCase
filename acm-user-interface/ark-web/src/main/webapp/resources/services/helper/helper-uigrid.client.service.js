@@ -48,6 +48,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              */
             , Grid: function (arg) {
                 this.scope = arg.scope;
+                this.scope.gridOptions = this.scope.gridOptions || {};
             }
         };
 
@@ -65,7 +66,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              */
             setBasicOptions: function (config) {
                 var that = this;
-                that.scope.gridOptions = that.scope.gridOptions || {};
+                //that.scope.gridOptions = that.scope.gridOptions || {};
                 that.scope.config = config;
 
                 that.scope.gridOptions.enableColumnResizing = true;

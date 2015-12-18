@@ -27,6 +27,9 @@ angular.module('services').factory('Helper.ConfigService', ['$q',
              * This method asks for config data for a specified component
              */
             requestComponentConfig: function (scope, theComponentId, onConfigAcquired) {
+
+                console.log("HelperConfigService.requestComponentConfig() is phasing out. Please use ConfigService.getComponentConfig() instead");
+
                 var dfd = $q.defer();
                 scope.$emit('req-component-config', theComponentId);
                 scope.$on('component-config', function (e, componentId, config) {

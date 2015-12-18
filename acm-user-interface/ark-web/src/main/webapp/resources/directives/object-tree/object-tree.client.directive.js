@@ -711,6 +711,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 if (!Util.isEmpty(html)) {
                     this.jqUlFilter.html(html);
                     this.jqUlFilter.find("li").on("click", function (e) {
+                        e.preventDefault();
                         var value = $(this).attr("value");
                         Tree.onFilterChanged(value);
                     });
@@ -737,6 +738,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 if (!Util.isEmpty(html)) {
                     this.jqUlSorter.html(html);
                     this.jqUlSorter.find("li").on("click", function (e) {
+                        e.preventDefault();
                         var value = $(this).attr("value");
                         Tree.onSorterChanged(value);
                     });

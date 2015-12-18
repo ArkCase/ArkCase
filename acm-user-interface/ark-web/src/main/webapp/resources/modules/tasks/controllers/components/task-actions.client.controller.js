@@ -1,13 +1,15 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$modal', 'UtilService', 'Authentication',
-    'Task.InfoService', 'Task.WorkflowService','Object.SubscriptionService','ObjectService',
-    function ($scope, $state, $modal, Util, Authentication, TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectService) {
-        $scope.$emit('req-component-config', 'actions');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('actions' == componentId) {
-                $scope.config = config;
-            }
+angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$modal'
+    , 'UtilService', 'ConfigService', 'Authentication'
+    , 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'ObjectService'
+    , function ($scope, $state, $modal
+        , Util, ConfigService, Authentication
+        , TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectService) {
+
+        ConfigService.getComponentConfig("tasks", "actions").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
         Authentication.queryUserInfo().then(
@@ -86,7 +88,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         $scope.delete = function () {
             var taskInfo = Util.omitNg($scope.taskInfo);
             if (TaskInfoService.validateTaskInfo(taskInfo)) {
-                TaskWorkflowService.deleteTask(taskInfo).then(
+                TaskWorkflowService.deleteTask(taskInfo.taskId).then(
                     function (taskInfo) {
                         $scope.$emit("report-task-updated", taskInfo);
                         return taskInfo;

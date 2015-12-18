@@ -93,7 +93,9 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     newGroup.object_sub_type_s = 'ADHOC_GROUP';
                     newGroup.object_id_s = newGroup.name;
                     newGroup.parent_id_s = parent.object_id_s;
-                    newGroup.supervisor = newGroup.supervisor.fullName;
+                    if (newGroup.supervisor) {
+                        newGroup.supervisor = newGroup.supervisor.fullName;
+                    }
 
                     groupsMap[newGroup.object_id_s] = newGroup;
                     if (!groupsMap[newGroup.parent_id_s].child_id_ss) {
@@ -189,7 +191,19 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 }
                 organizationalHierarchyService.saveMembers(group, mappedMembers).then(function (payload) {
                     //saving success
-                    deffered.resolve(payload.data);
+                    //map members
+                    var mappedMembersMap = {};
+                    angular.forEach(mappedMembers, function (memb) {
+                        mappedMembersMap[memb.userId] = memb;
+                    });
+                    var members = payload.data.members;
+                    var unmappedMembers = [];
+                    for (var i = 0; i < members.length; i++) {
+                        var unmappedMember = unMapMember(members[i]);
+                        if (mappedMembersMap[unmappedMember.object_id_s])
+                            unmappedMembers.push(unmappedMember);
+                    }
+                    deffered.resolve(unmappedMembers);
                 }, function (payload) {
                     //saving error
                     deffered.reject();
@@ -260,6 +274,21 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             mapped["userState"] = member.status_lcs;
             mapped["mail"] = member.email_lcs;
             return mapped;
+        }
+
+        function unMapMember(mapped) {
+            var member = {};
+            member.object_id_s = mapped["userId"];
+            member.name = mapped["fullName"];
+            member.first_name_lcs = mapped["firstName"];
+            member.last_name_lcs = mapped["lastName"];
+            member.create_date_tdt = mapped["created"];
+            member.modified_date_tdt = mapped["modified"];
+            member.status_lcs = mapped["userState"];
+            member.email_lcs = mapped["mail"];
+            member.title = member.name;
+            member.isMember = true;
+            return member;
         }
 
         $scope.createGroup = function () {

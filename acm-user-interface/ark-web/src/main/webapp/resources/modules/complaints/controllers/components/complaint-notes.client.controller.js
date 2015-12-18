@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.NotesController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ObjectService', 'Helper.UiGridService', 'Object.NoteService', 'Authentication'
-    , function ($scope, $stateParams, $q, Util, ObjectService, HelperUiGridService, ObjectNoteService, Authentication) {
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Helper.UiGridService', 'Object.NoteService', 'Authentication'
+    , function ($scope, $stateParams, $q, Util, ConfigService, ObjectService, HelperUiGridService, ObjectNoteService, Authentication) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
@@ -14,18 +14,16 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
             }
         );
 
-        $scope.$emit('req-component-config', 'notes');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ("notes" == componentId) {
-                gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.disableGridScrolling(config);
-                gridHelper.setInPlaceEditing(config, $scope.updateRow);
-                gridHelper.setUserNameFilter(promiseUsers);
+        ConfigService.getComponentConfig("complaints", "notes").then(function (config) {
+            gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
+            gridHelper.setInPlaceEditing(config, $scope.updateRow);
+            gridHelper.setUserNameFilter(promiseUsers);
 
-                $scope.retrieveGridData();
-            }
+            $scope.retrieveGridData();
+            return config;
         });
 
 
@@ -36,6 +34,7 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
                     var notes = data[0];
                     $scope.gridOptions.data = notes;
                     $scope.gridOptions.totalItems = notes.length;
+                    //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                 });
             }
         };

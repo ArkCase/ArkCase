@@ -5,6 +5,7 @@ angular.module('frevvo').config(['$stateProvider',
         $stateProvider.
             state('frevvo', {
                 url: '/frevvo',
+                params: {name: '', arg: null},
                 templateUrl: 'modules/frevvo/views/frevvo.client.view.html',
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
