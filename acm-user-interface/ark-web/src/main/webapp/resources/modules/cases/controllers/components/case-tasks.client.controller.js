@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cases').controller('Cases.TasksController', ['$scope', '$state', '$stateParams', '$q', '$translate'
-    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
-    , function ($scope, $state, $stateParams, $q, $translate, Util, ConfigService, HelperUiGridService, ObjectService, ObjectTaskService, TaskWorkflowService) {
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService', 'Case.InfoService'
+    , function ($scope, $state, $stateParams, $q, $translate, Util, ConfigService, HelperUiGridService, ObjectService, ObjectTaskService, TaskWorkflowService, CaseInfoService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
@@ -33,6 +33,14 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
         //        $scope.retrieveGridData();
         //    }
         //});
+
+        $scope.$on('case-updated', function (e, data) {
+            if (!CaseInfoService.validateCaseInfo(data)) {
+                return;
+            }
+            $scope.caseInfo = data;
+        });
+
         ConfigService.getComponentConfig("cases", "tasks").then(function (config) {
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
@@ -114,7 +122,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
         };
 
         $scope.addNew = function () {
-            $state.go("tasks.wizard");
+            $state.go("newTaskFromParentObject", {parentType: ObjectService.ObjectTypes.CASE_FILE, parentObject: $scope.caseInfo.caseNumber});
         };
 
         var completeTask = function (rowEntity) {
