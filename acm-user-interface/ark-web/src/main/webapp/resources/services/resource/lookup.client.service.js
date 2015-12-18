@@ -229,7 +229,7 @@ angular.module('services').factory('LookupService', ['$resource', 'StoreService'
                 , result: config
                 , onSuccess: function (data) {
                     if (Service.validateConfig(data, name)) {
-                        config = data;
+                        config = Util.omitNg(data);
                         configMap = configMap || {};
                         configMap[name] = config;
                         cacheConfigMap.set(configMap);

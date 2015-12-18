@@ -21,7 +21,7 @@
     "type": "TASK",
     "description": "Task",
     "iconName": "i i-checkmark",
-    "url": "#!/tasks/:id/main"
+    "url": "#!/tasks/:type/:id/main"
   },
   {
     "type": "DOCUMENT",
