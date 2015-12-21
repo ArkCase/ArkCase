@@ -1,6 +1,8 @@
 <p class="news">
 <div class="alert alert-info" ng-if="!dashboardNews.feed">
-    <p class="text-center">{{'dashboard.widgets.news.label.insertUrl' | translate}}</p>
+    <p class="text-center">
+        <span translate>dashboard.widgets.news.label.insertUrl</span>
+    </p>
 </div>
 <p>
 <h4><a ng-href="{{dashboardNews.feed.link}}" target="_blank"> {{dashboardNews.feed.title}}</a></h4>
