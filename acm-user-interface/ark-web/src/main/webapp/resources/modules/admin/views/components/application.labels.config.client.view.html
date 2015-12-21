@@ -14,22 +14,19 @@
                        placeholder="{{'admin.application.labels.config.filterByValue' | translate}}">
             </div>
             <div class="pull-right">
-                {{'admin.application.labels.config.defaultLabel' | translate}}
+                <span translate>admin.application.labels.config.defaultLabel</span>
                 <select ng-model="selectedDefaultLanguage"
                         ng-options="str as str for str in languagesDropdownOptions"  ng-disabled="disabledInputs">
                 </select>
 
                 <button class="btn btn-sm btn-default" ng-click="changeDefaultLng()" ng-disabled="disabledInputs">
-                    {{'admin.application.labels.config.applyBtn' |
-                    translate}}
+                    <span translate>admin.application.labels.config.applyBtn</span>
                 </button>
                 <button class="btn btn-sm btn-default" ng-click="resetCurrentModuleResources()" ng-disabled="disabledInputs">
-                    {{'admin.application.labels.config.resetlModule' |
-                    translate}}
+                    <span translate>admin.application.labels.config.resetlModule</span>
                 </button>
                 <button class="btn btn-sm btn-default" ng-click="resetAllResources()" ng-disabled="disabledInputs">
-                    {{'admin.application.labels.config.resetAll' |
-                    translate}}
+                    <span translate>admin.application.labels.config.resetAll</span>
                 </button>
             </div>
         </div>
