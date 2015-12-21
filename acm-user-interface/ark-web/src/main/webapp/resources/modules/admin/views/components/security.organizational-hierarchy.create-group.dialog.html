@@ -1,25 +1,27 @@
 <div>
     <div class="modal-header">
-        <h4 class="modal-title">{{'admin.security.organizationalHierarchy.createGroupDialog.title'| translate}}</h4>
+        <h4 class="modal-title">
+            <span translate>admin.security.organizationalHierarchy.createGroupDialog.title</span>
+        </h4>
     </div>
     <div class="modal-body">
         <div>
 
-            {{'admin.security.organizationalHierarchy.createGroupDialog.name'| translate}}
+            <span translate>admin.security.organizationalHierarchy.createGroupDialog.name</span>
             <input type="text" ng-model="adHocGroup.name" class="form-control" required
                    placeholder="{{'admin.security.organizationalHierarchy.createGroupDialog.namePlaceholder'| translate}}">
 
-            {{'admin.security.organizationalHierarchy.createGroupDialog.description'| translate}}
+            <span translate>admin.security.organizationalHierarchy.createGroupDialog.description</span>
             <textarea type="text" ng-model="adHocGroup.description" class="form-control"
                       placeholder="{{'admin.security.organizationalHierarchy.createGroupDialog.descriptionPlaceholder'| translate}}">
             </textarea>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" ng-click="cancel()">
-                {{'admin.security.organizationalHierarchy.createGroupDialog.btn.cancel'| translate}}
+                <span translate>admin.security.organizationalHierarchy.createGroupDialog.btn.cancel</span>
             </button>
             <button type="button" class="btn btn-default" ng-click="ok()" ng-disabled="inputValid">
-                {{'admin.security.organizationalHierarchy.createGroupDialog.btn.ok' | translate}}
+                <span translate>admin.security.organizationalHierarchy.createGroupDialog.btn.ok</span>
             </button>
         </div>
     </div>
