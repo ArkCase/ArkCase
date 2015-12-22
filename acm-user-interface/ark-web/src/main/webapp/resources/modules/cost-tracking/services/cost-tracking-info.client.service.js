@@ -60,7 +60,7 @@ angular.module('services').factory('CostTracking.InfoService', ['$resource', '$t
 
         /**
          * @ngdoc method
-         * @name getCostTrackingInfo
+         * @name getCostsheetInfo
          * @methodOf service:CostTracking.InfoService
          *
          * @description
@@ -70,7 +70,7 @@ angular.module('services').factory('CostTracking.InfoService', ['$resource', '$t
          *
          * @returns {Object} Promise
          */
-        Service.getCostTrackingInfo =  function (id) {
+        Service.getCostsheetInfo = function (id) {
             return Util.serviceCall({
                 service: Service.get
                 , param: {id: id}

@@ -31,7 +31,7 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
             }
         };
 
-        $scope.$on('task-updated', function (e, data) {
+        $scope.$on('object-updated', function (e, data) {
             if (!TaskInfoService.validateTaskInfo(data)) {
                 return;
             }

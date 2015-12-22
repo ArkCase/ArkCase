@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService'
-    , function ($scope, $stateParams, $modal, Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService) {
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $modal
+        , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService) {
 
         ConfigService.getComponentConfig("tasks", "attachments").then(function (componentConfig) {
             $scope.config = componentConfig;
@@ -17,12 +18,17 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             }
         );
 
-        $scope.objectType = $stateParams.type; //ObjectService.ObjectTypes.TASK;
+        $scope.objectType = $stateParams.type;
         $scope.objectId = $stateParams.id;
-        TaskInfoService.getTaskInfo($stateParams.id).then(function (taskInfo) {
-            $scope.taskInfo = taskInfo;
-            return taskInfo;
-        });
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            TaskInfoService.getTaskInfo(currentObjectId).then(function (taskInfo) {
+                $scope.taskInfo = taskInfo;
+                $scope.objectType = (taskInfo.adhocTask) ? ObjectService.ObjectTypes.ADHOC_TASK : ObjectService.ObjectTypes.TASK;
+                $scope.objectId = taskInfo.taskId;
+                return taskInfo;
+            });
+        }
 
     }
 ]);
