@@ -138,6 +138,11 @@
         "title": "Participants",
         "description": "Displays participant details",
         "noDataMessage": "Currently there are no participant to display"
+      },
+      "references": {
+        "title": "References",
+        "description": "Displays reference details",
+        "noDataMessage": "Currently there are no references to display"
       }
     }
   }
