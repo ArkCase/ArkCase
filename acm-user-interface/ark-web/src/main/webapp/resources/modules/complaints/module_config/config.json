@@ -231,28 +231,44 @@
           "columnDefs": [
             {
               "name": "details",
-              "displayName": "dashboard.widgets.details.table.header.details",
+              "displayName": "complaints.comp.details.table.columns.title",
               "headerCellFilter": "translate"
             },
             {
               "name": "modified",
-              "displayName": "dashboard.widgets.details.table.header.modified",
+              "displayName": "complaints.comp.details.table.columns.modified",
               "headerCellFilter": "translate"
             },
             {
               "name": "modifier",
-              "displayName": "dashboard.widgets.details.table.header.modifier",
+              "displayName": "complaints.comp.details.table.columns.modifier",
               "headerCellFilter": "translate"
             }
           ]
         },
         {
-          "id": "locations",
-          "type": "component"
-        },
-        {
           "id": "people",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "personType",
+              "displayName": "complaints.comp.people.table.columns.type",
+              "headerCellFilter": "translate",
+              "lookup": "personTypes"
+            },
+            {
+              "name": "firstName",
+              "field": "person.givenName",
+              "displayName": "complaints.comp.people.table.columns.firstName",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "lastName",
+              "field": "person.familyName",
+              "displayName": "complaints.comp.people.table.columns.lastName",
+              "headerCellFilter": "translate"
+            }
+          ]
         },
         {
           "id": "documents",
@@ -294,6 +310,10 @@
         },
         {
           "id": "calendar",
+          "type": "component"
+        },
+        {
+          "id": "locations",
           "type": "component"
         }
       ]
