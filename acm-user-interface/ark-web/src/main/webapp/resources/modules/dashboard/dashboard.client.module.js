@@ -14,5 +14,6 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.weather',
     'dashboard.news',
     'dashboard.details',
-    'dashboard.people'
+    'dashboard.people',
+    'dashboard.location'
 ]);

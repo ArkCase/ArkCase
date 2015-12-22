@@ -101,7 +101,9 @@
       "type": "Type",
       "city": "City",
       "state": "State",
-      "zip": "Zip"
+      "zip": "Zip",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
     }
   },
   "complaints.comp.notes": {
