@@ -126,8 +126,9 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
             if (groupName.equals(group) || group == null)
             {
                 AcmGroup acmGroup = getAcmGroupDao().findByName(groupName);
-
-                retval.addAll(acmGroup.getMembers());
+                if(acmGroup != null && !acmGroup.getMembers().isEmpty()){
+                    retval.addAll(acmGroup.getMembers());
+                }
             }
         }
 
