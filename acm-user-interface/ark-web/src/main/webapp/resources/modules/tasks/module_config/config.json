@@ -241,7 +241,7 @@
       "enabled": false,
       "type": "empty",
       "editable": false,
-      "widgetsTask": [
+      "widgets": [
         {
           "id": "details",
           "type": "component",

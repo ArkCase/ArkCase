@@ -213,24 +213,44 @@
           "columnDefs": [
             {
               "name": "details",
-              "displayName": "dashboard.widgets.details.table.header.details",
+              "displayName": "cases.comp.details.table.columns.title",
               "headerCellFilter": "translate"
             },
             {
               "name": "modified",
-              "displayName": "dashboard.widgets.details.table.header.modified",
+              "displayName": "cases.comp.details.table.columns.modified",
               "headerCellFilter": "translate"
             },
             {
               "name": "modifier",
-              "displayName": "dashboard.widgets.details.table.header.modifier",
+              "displayName": "cases.comp.details.table.columns.modifier",
               "headerCellFilter": "translate"
             }
           ]
         },
         {
           "id": "people",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "personType",
+              "displayName": "cases.comp.people.table.columns.type",
+              "headerCellFilter": "translate",
+              "lookup": "personTypes"
+            },
+            {
+              "name": "firstName",
+              "field": "person.givenName",
+              "displayName": "cases.comp.people.table.columns.firstName",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "lastName",
+              "field": "person.familyName",
+              "displayName": "cases.comp.people.table.columns.lastName",
+              "headerCellFilter": "translate"
+            }
+          ]
         },
         {
           "id": "documents",

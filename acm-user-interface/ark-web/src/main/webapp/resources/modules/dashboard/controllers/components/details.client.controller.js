@@ -55,7 +55,7 @@ angular.module('dashboard.details', ['adf.provider'])
                                 }
                                 , function (error) {
                                     $scope.caseInfo = null;
-                                    $scope.progressMsg = $translate.instant("cases.progressError") + " " + id;
+                                    $scope.progressMsg = $translate.instant("complaint.progressError") + " " + id;
                                     return error;
                                 }
                             );
@@ -68,7 +68,7 @@ angular.module('dashboard.details', ['adf.provider'])
                                 }
                                 , function (error) {
                                     $scope.caseInfo = null;
-                                    $scope.progressMsg = $translate.instant("cases.progressError") + " " + id;
+                                    $scope.progressMsg = $translate.instant("task.progressError") + " " + id;
                                     return error;
                                 }
                             );
@@ -81,7 +81,7 @@ angular.module('dashboard.details', ['adf.provider'])
                                 }
                                 , function (error) {
                                     $scope.caseInfo = null;
-                                    $scope.progressMsg = $translate.instant("cases.progressError") + " " + id;
+                                    $scope.progressMsg = $translate.instant("cost.progressError") + " " + id;
                                     return error;
                                 }
                             );
@@ -94,7 +94,7 @@ angular.module('dashboard.details', ['adf.provider'])
                                 }
                                 , function (error) {
                                     $scope.caseInfo = null;
-                                    $scope.progressMsg = $translate.instant("cases.progressError") + " " + id;
+                                    $scope.progressMsg = $translate.instant("time.progressError") + " " + id;
                                     return error;
                                 }
                             );
