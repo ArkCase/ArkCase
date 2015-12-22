@@ -10,7 +10,6 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         Authentication.queryUserInfo().then(
             function (userInfo) {
                 $scope.userId = userInfo.userId;
-                $scope.userName = userInfo.fullName;
                 return userInfo;
             }
         );
