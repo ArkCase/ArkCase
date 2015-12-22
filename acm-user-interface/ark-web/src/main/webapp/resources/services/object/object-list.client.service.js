@@ -34,7 +34,7 @@ angular.module('services').factory('Object.ListService', ['$resource', 'UtilServ
              */
             _queryObjects: {
                 method: 'GET',
-                url: 'proxy/arkcase/api/latest/plugin/search/:objectType?start=:start&n=:n&sort=:sort&filters=:filters',
+                url: 'proxy/arkcase/api/latest/plugin/search/:objectType?start=:start&n=:n&s=:sort&filters=:filters',
                 cache: false,
                 isArray: false
             }
