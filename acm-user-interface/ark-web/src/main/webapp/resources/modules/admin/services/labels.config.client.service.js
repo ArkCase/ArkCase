@@ -75,7 +75,7 @@ angular.module('admin').factory('Admin.LabelsConfigService', ['$resource',
             retrieveResource: {
                 method: "GET",
                 url: "proxy/arkcase/api/latest/plugin/admin/labelconfiguration/admin-resource?lang=:lang&ns=:ns",
-                cache: true,
+                cache: false,
                 isArray: true
             },
 

@@ -4,14 +4,14 @@
             <div class="pull-right">
                 <select ng-model="selectedTarget"
                         ng-options="option.id as option.name for option in formsDropdownOptions">
-                    <option value="">{{'admin.forms.defaultValue' | translate}}</option>
+                    <option value="" translate>admin.forms.defaultValue</option>
                 </select>
 
                 <div class="btn-group">
                     <button ng-disabled="selectedTarget == null" class="btn btn-sm btn-default"
                             ng-disabled="disabledSelectButton" ng-click="openNewFrevvoForm()">
-                        <i class="glyphicon glyphicon-plus-sign"></i>{{'admin.forms.addForm' |
-                        translate}}
+                        <i class="glyphicon glyphicon-plus-sign"></i>
+                        <span translate>admin.forms.addForm</span>
                     </button>
                 </div>
             </div>

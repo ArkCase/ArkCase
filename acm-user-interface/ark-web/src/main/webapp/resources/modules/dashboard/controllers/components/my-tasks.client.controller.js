@@ -15,13 +15,22 @@ angular.module('dashboard.my-tasks', ['adf.provider'])
             }
         );
     })
-    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
-        function ($scope, $translate, Authentication, DashboardService) {
+    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'Helper.UiGridService', 'UtilService',
+        function ($scope, $translate, Authentication, DashboardService, HelperUiGridService, Util) {
+
+            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'myTasks');
             $scope.config = null;
             //var userInfo = null;
+
+            $scope.onClickObjLink = function (event, rowEntity) {
+                event.preventDefault();
+                var targetType = "TASK";
+                var targetId = Util.goodMapValue(rowEntity, "taskId");
+                gridHelper.showObject(targetType, targetId);
+            };
 
             $scope.gridOptions = {
                 enableColumnResizing: true,

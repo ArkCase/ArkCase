@@ -95,7 +95,10 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
         };
 
         $scope.addNew = function () {
-            $state.go("tasks.wizard");
+            $state.go("newTaskFromParentObject", {
+                parentType: ObjectService.ObjectTypes.CASE_FILE,
+                parentObject: $scope.caseInfo.caseNumber
+            });
         };
 
         var completeTask = function (rowEntity) {
