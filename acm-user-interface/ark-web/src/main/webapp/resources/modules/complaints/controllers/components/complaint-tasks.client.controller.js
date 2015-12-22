@@ -95,7 +95,11 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         };
 
         $scope.addNew = function () {
-            $state.go("tasks.wizard");
+            $state.go("newTaskFromParentObject", {
+                parentType: ObjectService.ObjectTypes.COMPLAINT,
+                parentObject: $scope.complaintInfo.complaintNumber
+            });
+
         };
 
         var completeTask = function (rowEntity) {
