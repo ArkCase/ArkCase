@@ -1,18 +1,19 @@
 'use strict';
 
-angular.module('dashboard.people', ['adf.provider'])
+angular.module('dashboard.participants', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('people', {
-                    title: 'People Widget',
-                    description: 'Displays people',
-                    controller: 'Dashboard.PeopleController',
+            .widget('participants', {
+                    title: 'Participants Widget',
+                    description: 'Displays Participants',
+                    controller: 'Dashboard.ParticipantsController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/people.client.view.html'
+                    templateUrl: 'modules/dashboard/views/components/participants-widget.client.view.html'
                 }
             );
     })
-    .controller('Dashboard.PeopleController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService',
+    .controller('Dashboard.ParticipantsController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Case.InfoService'
+        , 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService',
         function ($scope, $translate, $stateParams, Util, CaseInfoService, ComplaintInfoService, Authentication, DashboardService) {
 
             $scope.$on('component-config', applyConfig);
@@ -28,14 +29,14 @@ angular.module('dashboard.people', ['adf.provider'])
             function applyConfig(e, componentId, config) {
                 if (componentId == 'main') {
                     $scope.config = config;
-                    $scope.gridOptions.columnDefs = config.widgets[1].columnDefs; //widget[1] = people
+                    $scope.gridOptions.columnDefs = config.widgets[3].columnDefs; //widget[3] = participants
 
                     //set gridOptions.data
                     if ($stateParams.type) {
                         if ($stateParams.type == "casefile") {
                             CaseInfoService.getCaseInfo($stateParams.id).then(
                                 function (data) {
-                                    $scope.gridOptions.data = data.personAssociations;
+                                    $scope.gridOptions.data = data.participants;
                                     $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
                                 }
                                 , function (error) {
@@ -48,7 +49,7 @@ angular.module('dashboard.people', ['adf.provider'])
                         else if ($stateParams.type == 'complaint') {
                             ComplaintInfoService.getComplaintInfo($stateParams.id).then(
                                 function (data) {
-                                    $scope.gridOptions.data = data.personAssociations;;
+                                    $scope.gridOptions.data = data.participants;
                                     $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
                                 }
                                 , function (error) {
