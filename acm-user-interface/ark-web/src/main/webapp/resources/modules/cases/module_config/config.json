@@ -4,7 +4,7 @@
   "menus": [
     {
       "menuId": "leftnav",
-      "menuItemURL": "cases",
+      "menuItemURL": "cases.main",
       "menuItemTitle": "Case Files",
       "iconClass": "fa fa-folder",
       "position": 50

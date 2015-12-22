@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.PeopleController', ['$scope', '$stateParams', '$q', '$translate'
-    , 'StoreService', 'UtilService', 'ObjectService', 'Helper.UiGridService', 'ConfigService'
-    , 'Complaint.InfoService', 'Object.PersonService', 'LookupService', 'Object.LookupService'
-    , function ($scope, $stateParams, $q, $translate, Store, Util, ObjectService, HelperUiGridService, ConfigService
-        , ComplaintInfoService, ObjectPersonService, LookupService, ObjectLookupService) {
+    , 'StoreService', 'UtilService', 'ObjectService', 'ConfigService', 'LookupService', 'Object.LookupService'
+    , 'Complaint.InfoService', 'Object.PersonService', 'Helper.ObjectBrowserService', 'Helper.UiGridService'
+    , function ($scope, $stateParams, $q, $translate
+        , Store, Util, ObjectService, ConfigService, LookupService, ObjectLookupService
+        , ComplaintInfoService, ObjectPersonService, HelperObjectBrowserService, HelperUiGridService) {
 
         $scope.contactMethods = {gridOptions: {appScopeProvider: $scope}};
         $scope.organizations = {gridOptions: {appScopeProvider: $scope}};
@@ -409,7 +410,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }); //end $q
         };
 
-        //$scope.$on('complaint-updated', function (e, data) {
+        //$scope.$on('object-updated', function (e, data) {
         //    if (!ComplaintInfoService.validateComplaintInfo(data)) {
         //        return;
         //    }
@@ -421,10 +422,13 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
         //        deferPeopleData.set(data);
         //    }
         //});
-        ComplaintInfoService.getComplaintInfo($stateParams.id).then(function (complaintInfo) {
-            updateGridData(complaintInfo);
-            return complaintInfo;
-        });
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
+                updateGridData(complaintInfo);
+                return complaintInfo;
+            });
+        }
 
 
         $scope.addNew = function () {

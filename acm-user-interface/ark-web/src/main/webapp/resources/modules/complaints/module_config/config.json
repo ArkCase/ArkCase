@@ -4,7 +4,7 @@
   "menus": [
     {
       "menuId": "leftnav",
-      "menuItemURL": "complaints",
+      "menuItemURL": "complaints.main",
       "menuItemTitle": "Complaints",
       "iconClass": "fa fa-exclamation-triangle",
       "position": 40
