@@ -276,21 +276,102 @@
         },
         {
           "id": "participants",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "participantType",
+              "displayName": "complaints.comp.participants.table.columns.type",
+              "headerCellFilter": "translate",
+              "lookup": "participantTypes"
+            },
+            {
+              "name": "participantLdapId",
+              "displayName": "complaints.comp.participants.table.columns.name",
+              "headerCellFilter": "translate",
+              "lookup": "participantNames"
+            }
+          ]
         },
         {
           "id": "notes",
           "type": "component",
-          "model": "noteCount"
+          "model": "noteCount",
+          "columnDefs": [
+            {
+              "name": "note",
+              "displayName": "complaints.comp.notes.table.columns.note",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "complaints.comp.notes.table.columns.created",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+              "enableCellEdit": false
+            },
+            {
+              "name": "creator",
+              "displayName": "complaints.comp.notes.table.columns.creator",
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "lookup": "userFullNames"
+            }
+          ]
         },
         {
           "id": "tasks",
           "type": "component",
-          "model": "taskCount"
+          "model": "taskCount",
+          "columnDefs": [
+            {
+              "name": "title",
+              "field": "title_parseable",
+              "displayName": "complaints.comp.tasks.table.columns.title",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "assignee",
+              "field": "assignee_s",
+              "displayName": "complaints.comp.tasks.table.columns.assignee",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            },
+            {
+              "name": "due",
+              "field": "due_tdt",
+              "displayName": "complaints.comp.tasks.table.columns.due",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'medium'}}</div>"
+            }
+          ]
         },
         {
           "id": "references",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "targetName",
+              "displayName": "complaints.comp.references.table.columns.targetName",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetName}}</a>"
+            },
+            {
+              "name": "targetTitle",
+              "displayName": "complaints.comp.references.table.columns.targetTitle",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
+            },
+            {
+              "name": "targetType",
+              "displayName": "complaints.comp.references.table.columns.targetType",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "status",
+              "displayName": "complaints.comp.references.table.columns.status",
+              "headerCellFilter": "translate"
+            }
+          ]
         },
         {
           "id": "history",
@@ -298,7 +379,29 @@
         },
         {
           "id": "correspondence",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "name",
+              "displayName": "complaints.comp.correspondence.table.columns.name",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.name}}</a>"
+            },
+            {
+              "name": "created",
+              "displayName": "complaints.comp.correspondence.table.columns.created",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+              "enableCellEdit": false
+            },
+            {
+              "name": "creator",
+              "displayName": "complaints.comp.correspondence.table.columns.creator",
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "lookup": "userFullNames"
+            }
+          ]
         },
         {
           "id": "time",
