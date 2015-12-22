@@ -52,7 +52,7 @@ angular.module('dashboard.people', ['adf.provider'])
                                     $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
                                 }
                                 , function (error) {
-                                    $scope.caseInfo = null;
+                                    $scope.complaintInfo = null;
                                     $scope.progressMsg = $translate.instant("complaint.progressError") + " " + id;
                                     return error;
                                 }

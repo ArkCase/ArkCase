@@ -314,7 +314,24 @@
         },
         {
           "id": "locations",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "location.fullAddress",
+              "displayName": "complaints.comp.locations.table.columns.address",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "location.modified",
+              "displayName": "complaints.comp.locations.table.columns.modified",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "location.modifier",
+              "displayName": "complaints.comp.locations.table.columns.modifier",
+              "headerCellFilter": "translate"
+            }
+          ]
         }
       ]
     },

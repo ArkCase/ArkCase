@@ -123,6 +123,11 @@
         "title": "People",
         "description": "Displays people details",
         "noDataMessage": "Currently there are no people to display"
+      },
+      "location": {
+        "title": "Location",
+        "description": "Displays location details",
+        "noDataMessage": "Currently there are no locations to display"
       }
     }
   }
