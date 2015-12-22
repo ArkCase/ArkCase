@@ -8,7 +8,7 @@ angular.module('dashboard.location', ['adf.provider'])
                     description: 'Displays location',
                     controller: 'Dashboard.LocationController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/location.client.view.html'
+                    templateUrl: 'modules/dashboard/views/components/location-widget.client.view.html'
                 }
             );
     })

@@ -128,6 +128,16 @@
         "title": "Location",
         "description": "Displays location details",
         "noDataMessage": "Currently there are no locations to display"
+      },
+      "tasks": {
+        "title": "Tasks",
+        "description": "Displays task details",
+        "noDataMessage": "Currently there are no tasks to display"
+      },
+      "participants": {
+        "title": "Participants",
+        "description": "Displays participant details",
+        "noDataMessage": "Currently there are no participant to display"
       }
     }
   }

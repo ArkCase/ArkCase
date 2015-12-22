@@ -16,5 +16,6 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.details',
     'dashboard.people',
     'dashboard.location',
-    'dashboard.participants'
+    'dashboard.participants',
+    'dashboard.tasks'
 ]);
