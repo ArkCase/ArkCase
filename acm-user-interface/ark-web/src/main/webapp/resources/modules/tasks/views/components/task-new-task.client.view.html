@@ -7,7 +7,7 @@
         </div>
 
         <div class="row wrapper">
-        	
+
             <div class="clearfix well-sm">
                 <div class="pull-right">
                     <div class="btn-group">
@@ -15,12 +15,13 @@
                                 data-title="Choose assignee" ng-click="userSearch()">
                             <i class="fa fa-user"></i>
                             <span translate>tasks.newTask.assignee.button</span>
-                            <button ng-disabled="!config.data.title || !config.data.taskStartDate || !config.data.dueDate || !saved"
-                                    ng-click="saveNewTask()" class="btn btn-primary btn-sm" data-toggle="tooltip"
-                                    id="saveButton" data-title="Save">
-                                <i class="fa fa-user"></i>
-                                <span translate> tasks.newTask.saveButton </span>
-                            </button>
+                        </button>
+                        <button ng-disabled="!config.data.title || !config.data.taskStartDate || !config.data.dueDate || saved"
+                                ng-click="saveNewTask()" class="btn btn-primary btn-sm" data-toggle="tooltip"
+                                id="saveButton" data-title="Save">
+                            <i class="fa fa-user"></i>
+                            <span translate> tasks.newTask.saveButton </span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -52,7 +53,7 @@
                 </div>
             </div>
         </div>
-        
+
         </p>
 
         <p class="row">
