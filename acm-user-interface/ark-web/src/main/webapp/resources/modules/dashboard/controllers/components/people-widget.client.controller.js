@@ -8,7 +8,7 @@ angular.module('dashboard.people', ['adf.provider'])
                     description: 'Displays people',
                     controller: 'Dashboard.PeopleController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/people.client.view.html'
+                    templateUrl: 'modules/dashboard/views/components/people-widget.client.view.html'
                 }
             );
     })

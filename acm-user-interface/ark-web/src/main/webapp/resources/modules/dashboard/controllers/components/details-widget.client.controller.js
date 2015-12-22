@@ -8,7 +8,7 @@ angular.module('dashboard.details', ['adf.provider'])
                     description: 'Displays details',
                     controller: 'Dashboard.DetailsController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/details.client.view.html'
+                    templateUrl: 'modules/dashboard/views/components/details-widget.client.view.html'
                 }
             );
     })

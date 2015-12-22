@@ -28,40 +28,11 @@ angular.module('dashboard.tasks', ['adf.provider'])
             function applyConfig(e, componentId, config) {
                 if (componentId == 'main') {
                     $scope.config = config;
-                    $scope.gridOptions.columnDefs = config.widgets[1].columnDefs; //widget[1] = people
+                    $scope.gridOptions.columnDefs = config.widgets[5].columnDefs; //widget[5] = tasks
 
                     //set gridOptions.data
-                    if ($stateParams.type) {
-                        if ($stateParams.type == "casefile") {
-                            CaseInfoService.getCaseInfo($stateParams.id).then(
-                                function (data) {
-                                    $scope.gridOptions.data = data.personAssociations;
-                                    $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
-                                }
-                                , function (error) {
-                                    $scope.caseInfo = null;
-                                    $scope.progressMsg = $translate.instant("cases.progressError") + " " + id;
-                                    return error;
-                                }
-                            );
-                        }
-                        else if ($stateParams.type == 'complaint') {
-                            ComplaintInfoService.getComplaintInfo($stateParams.id).then(
-                                function (data) {
-                                    $scope.gridOptions.data = data.personAssociations;
-                                    $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
-                                }
-                                , function (error) {
-                                    $scope.complaintInfo = null;
-                                    $scope.progressMsg = $translate.instant("complaint.progressError") + " " + id;
-                                    return error;
-                                }
-                            );
-                        }
-                        else {
-                            //do nothing
-                        }
-                    }
+                    $scope.gridOptions.data = {};
+
                 }
             }
         }
