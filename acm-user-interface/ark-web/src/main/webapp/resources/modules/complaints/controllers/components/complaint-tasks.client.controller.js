@@ -42,7 +42,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         });
 
         $scope.retrieveGridData = function () {
-            ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
+            ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.COMPLAINT
                 , $stateParams.id
                 , Util.goodValue($scope.start, 0)
                 , Util.goodValue($scope.pageSize, 10)
@@ -97,7 +97,10 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         };
 
         $scope.addNew = function () {
-            $state.go("newTaskFromParentObject", {parentType: ObjectService.ObjectTypes.COMPLAINT, parentObject: $scope.complaintInfo.complaintNumber});
+            $state.go("newTaskFromParentObject", {
+                parentType: ObjectService.ObjectTypes.COMPLAINT,
+                parentObject: $scope.complaintInfo.complaintNumber
+            });
 
         };
 
@@ -150,6 +153,11 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
             event.preventDefault();
             gridHelper.showObject(ObjectService.ObjectTypes.TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
         };
-
+        $scope.onClickObjLink = function (event, rowEntity) {
+            event.preventDefault();
+            var targetType = Util.goodMapValue(rowEntity, "object_type_s");
+            var targetId = Util.goodMapValue(rowEntity, "object_id_s");
+            gridHelper.showObject(targetType, targetId);
+        };
     }
 ]);
