@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
@@ -54,6 +55,33 @@ public class AcmObjectLockAPIController
             return e.getMessage();
         }
         return "Successfully removed lock";
+    }
+
+    @RequestMapping(value = {"/api/v1/plugin/objects/{objectType}/locked", "/api/latest/plugin/objects/{objectType}/locked"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String listObjectsWithLock(
+            @PathVariable(value = "objectType") String objectType,
+            @RequestParam(value = "firstRow", defaultValue = "0", required = false) int firstRow,
+            @RequestParam(value = "maxRows", defaultValue = "1000", required = false) int maxRows,
+            @RequestParam(value = "sort", defaultValue = "", required = false) String sort,
+            Authentication authentication
+    ) throws MuleException, IOException
+    {
+        return objectLockService.getDocumentsWithLock(objectType, authentication, null, firstRow, maxRows, sort, null);
+    }
+
+    @RequestMapping(value = {"/api/v1/plugin/locks/{objectType}", "/api/latest/plugin/locks/{objectType}"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String listLocks(
+            @PathVariable(value = "objectType") String objectType,
+            @RequestParam(value = "firstRow", defaultValue = "0", required = false) int firstRow,
+            @RequestParam(value = "maxRows", defaultValue = "1000", required = false) int maxRows,
+            @RequestParam(value = "sort", defaultValue = "", required = false) String sort,
+            Authentication authentication
+    ) throws MuleException, IOException
+    {
+        return objectLockService.getObjectLocks(objectType, authentication, null, firstRow, maxRows, sort, null);
+
     }
 
     public void setObjectLockService(AcmObjectLockService objectLockService)

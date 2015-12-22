@@ -89,6 +89,26 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService
         return executeQuery(query.toString(), auth, firstRow, maxRows, sort, fqParams);
     }
 
+    @Override
+    public String getObjectLocks(String parentObjectType, Authentication auth, Authentication lockHeldByUser, int firstRow, int maxRows, String sort, String fqParams) throws MuleException
+    {
+        StringBuilder query = new StringBuilder();
+        query.append("object_type_s:OBJECT_LOCK");
+        if (!StringUtils.isEmpty(parentObjectType))
+        {
+            query.append(" AND ");
+            query.append("parent_type_s").append(":").append(parentObjectType);
+        }
+        if (lockHeldByUser != null && !StringUtils.isEmpty(lockHeldByUser.getName()))
+        {
+            query.append(" AND ");
+            query.append("creator_lcs").append(":").append(lockHeldByUser.getName());
+        }
+        log.debug("executing query for object locks: {}", query.toString());
+
+        return executeQuery(query.toString(), auth, firstRow, maxRows, sort, fqParams);
+    }
+
     private String executeQuery(String query, Authentication auth, int firstRow, int maxRows, String sort, String fqParams) throws MuleException
     {
         if (!StringUtils.isEmpty(fqParams))
