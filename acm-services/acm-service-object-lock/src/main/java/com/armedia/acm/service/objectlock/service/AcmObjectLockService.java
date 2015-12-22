@@ -28,7 +28,7 @@ public interface AcmObjectLockService
     String getDocumentsWithoutLock(String objectType, Authentication auth, int firstRow, int maxRows, String sort, String fqParams) throws MuleException;
 
     /**
-     * queries documents which doesn't have lock.
+     * queries documents which have lock.
      *
      * @param objectType     document object type. Can be null, than returns every document.
      * @param auth           Authentication
@@ -40,7 +40,7 @@ public interface AcmObjectLockService
      * @return return response from solr as String
      * @throws MuleException
      */
-    String getDocumentsWithLock(String objectType, Authentication auth, Authentication lockHeldByUser, int firstRow, int maxRows, String sort, String fqParams) throws MuleException;
+    String getDocumentsWithLock(String objectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows, String sort, String fqParams) throws MuleException;
 
     /**
      * queries documents which holders for object lock
@@ -55,5 +55,5 @@ public interface AcmObjectLockService
      * @return return response from solr as String
      * @throws MuleException
      */
-    String getObjectLocks(String parentObjectType, Authentication auth, Authentication lockHeldByUser, int firstRow, int maxRows, String sort, String fqParams) throws MuleException;
+    String getObjectLocks(String parentObjectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows, String sort, String fqParams) throws MuleException;
 }

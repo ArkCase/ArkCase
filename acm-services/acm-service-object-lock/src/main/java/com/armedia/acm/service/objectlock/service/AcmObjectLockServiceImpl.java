@@ -70,7 +70,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService
 
 
     @Override
-    public String getDocumentsWithLock(String objectType, Authentication auth, Authentication lockHeldByUser, int firstRow, int maxRows, String sort, String fqParams) throws MuleException
+    public String getDocumentsWithLock(String objectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows, String sort, String fqParams) throws MuleException
     {
         StringBuilder query = new StringBuilder();
         query.append("{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK ");
@@ -79,10 +79,10 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService
             query.append(" AND ");
             query.append("parent_type_s").append(":").append(objectType);
         }
-        if (lockHeldByUser != null && !StringUtils.isEmpty(lockHeldByUser.getName()))
+        if (lockHeldByUser != null && !StringUtils.isEmpty(lockHeldByUser))
         {
             query.append(" AND ");
-            query.append("creator_lcs").append(":").append(lockHeldByUser.getName());
+            query.append("creator_lcs").append(":").append(lockHeldByUser);
         }
         log.debug("executing query for documents with lock: {}", query.toString());
 
@@ -90,7 +90,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService
     }
 
     @Override
-    public String getObjectLocks(String parentObjectType, Authentication auth, Authentication lockHeldByUser, int firstRow, int maxRows, String sort, String fqParams) throws MuleException
+    public String getObjectLocks(String parentObjectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows, String sort, String fqParams) throws MuleException
     {
         StringBuilder query = new StringBuilder();
         query.append("object_type_s:OBJECT_LOCK");
@@ -99,10 +99,10 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService
             query.append(" AND ");
             query.append("parent_type_s").append(":").append(parentObjectType);
         }
-        if (lockHeldByUser != null && !StringUtils.isEmpty(lockHeldByUser.getName()))
+        if (lockHeldByUser != null && !StringUtils.isEmpty(lockHeldByUser))
         {
             query.append(" AND ");
-            query.append("creator_lcs").append(":").append(lockHeldByUser.getName());
+            query.append("creator_lcs").append(":").append(lockHeldByUser);
         }
         log.debug("executing query for object locks: {}", query.toString());
 
