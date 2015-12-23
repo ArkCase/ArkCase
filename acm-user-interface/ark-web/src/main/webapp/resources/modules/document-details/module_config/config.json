@@ -110,6 +110,84 @@
                     "lookup": "userFullNames"
                 }
             ]
+        },
+        {
+            "id": "participants",
+            "title": "Participants",
+            "icon": "fa fa-comments",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20,
+            "columnDefs": [
+                {
+                    "name": "participantLdapId",
+                    "displayName": "documentDetails.comp.participants.table.columns.name",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false
+                },
+                {
+                    "name": "participantType",
+                    "displayName": "documentDetails.comp.participants.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false
+                }
+            ]
+        },
+        {
+            "id": "userSearch",
+            "title": "Select users",
+            "enabled": "true",
+            "type": "grid",
+            "enableFiltering": false,
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "documentDetails.userSearch.userGridColumns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "documentDetails.userSearch.userGridColumns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title_parseable",
+                    "displayName": "documentDetails.userSearch.userGridColumns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "parent_number_lcs",
+                    "displayName": "documentDetails.userSearch.userGridColumns.parent",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "assignee_full_name_lcs",
+                    "displayName": "documentDetails.userSearch.userGridColumns.assignee",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modified_date_tdt",
+                    "displayName": "documentDetails.userSearch.userGridColumns.modified",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "date : 'dd/MM/yyyy HH:MM'"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0,
+            "userFacetFilter": "\"Object Type\": USER"
         }
     ]
 }
