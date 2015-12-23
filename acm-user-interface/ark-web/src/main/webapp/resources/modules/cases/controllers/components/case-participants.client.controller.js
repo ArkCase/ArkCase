@@ -7,7 +7,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
         , Store, Util, ConfigService, CaseInfoService, LookupService, ObjectLookupService
         , HelperUiGridService, HelperObjectBrowserService) {
 
-        var deferParticipantData = new Store.Variable("deferCaseParticipantData");    // used to hold grid data before grid config is ready
+        //var deferParticipantData = new Store.Variable("deferCaseParticipantData");    // used to hold grid data before grid config is ready
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
