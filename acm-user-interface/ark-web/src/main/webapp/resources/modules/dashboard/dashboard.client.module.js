@@ -20,5 +20,5 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.tasks',
     'dashboard.references',
     'dashboard.notes',
-    'dashboard.correspondence '
+    'dashboard.correspondence'
 ]);
