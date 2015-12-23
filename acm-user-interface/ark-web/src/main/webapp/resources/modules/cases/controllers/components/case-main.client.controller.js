@@ -55,7 +55,7 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
             } else {
                 //Else use dashboard config and filter.
                 $scope.dashboard.model = angular.fromJson(data.dashboardConfig);
-                $scope.dashboard.caseModel = widgetFilter($scope.dashboard.model);
+                $scope.dashboard.caseModel = Util.filterWidgets($scope.dashboard.model, $scope.allowedWidgets);
                 $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
 
                 //Cache filtered dashboard model
@@ -67,30 +67,30 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
             //Save dashboard model only to cache
             var cacheDashboardConfig = new Store.CacheFifo(CaseInfoService.CacheNames.CASE_INFO);
             if(cacheDashboardConfig)
-             cacheDashboardConfig.put("dashboardConfig", model);
+                cacheDashboardConfig.put("dashboardConfig", model);
         });
 
-        var widgetFilter = function(model) {
-            var caseModel = model;
-            //iterate over rows
-            for(var i = 0; i < caseModel.rows.length; i++) {
-                //iterate over columns
-                for(var j = 0; j < caseModel.rows[i].columns.length; j++) {
-                    //iterate over column widgets
-                    if(caseModel.rows[i].columns[j].widgets){
-                        for(var k = caseModel.rows[i].columns[j].widgets.length; k > 0; k--) {
-                            // var type = caseModel.rows[i].columns[j].widgets[k].type;
-                            var type = caseModel.rows[i].columns[j].widgets[k-1].type;
-                            if(!($scope.allowedWidgets.indexOf(type) > -1)) {
-                                //remove widget from array
-                                caseModel.rows[i].columns[j].widgets.splice(k-1, 1);
-                            }
-                        }
-                    }
-                }
-            }
-            return caseModel;
-        };
+        //var widgetFilter = function(model) {
+        //    var caseModel = model;
+        //    //iterate over rows
+        //    for(var i = 0; i < caseModel.rows.length; i++) {
+        //        //iterate over columns
+        //        for(var j = 0; j < caseModel.rows[i].columns.length; j++) {
+        //            //iterate over column widgets
+        //            if(caseModel.rows[i].columns[j].widgets){
+        //                for(var k = caseModel.rows[i].columns[j].widgets.length; k > 0; k--) {
+        //                    // var type = caseModel.rows[i].columns[j].widgets[k].type;
+        //                    var type = caseModel.rows[i].columns[j].widgets[k-1].type;
+        //                    if(!($scope.allowedWidgets.indexOf(type) > -1)) {
+        //                        //remove widget from array
+        //                        caseModel.rows[i].columns[j].widgets.splice(k-1, 1);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return caseModel;
+        //};
 
         ////$scope.widgetData = {};
         ////$scope.$on('case-updated', function (e, data) {

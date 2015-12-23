@@ -388,7 +388,7 @@ angular.module('services').factory('UtilService', ['$q'
             //
             , omitNg: function (obj) {
                 var copy = _.cloneDeep(obj);
-                 _.cloneDeep(copy, function(v, k, o) {
+                _.cloneDeep(copy, function(v, k, o) {
                     if (_.isString(k)) {
                         if (k.startsWith("$") || k.startsWith("acm$_")) {
                             delete o[k];
@@ -550,6 +550,24 @@ angular.module('services').factory('UtilService', ['$q'
             , getCurrentDay: function() {
                 var d = new Date();
                 return this.dateToString(d);
+            }
+
+            , filterWidgets: function(model, allowedWidgets) {
+                var filteredModel  = model;
+                //Assume that we aren't using more than 1 row
+                var rowLength = filteredModel.rows.length - 1;
+                _.forEach(filteredModel.rows[rowLength].columns, function (col, key) {
+                    _.forEach(col, function(widgets, wKey) {
+                        if(wKey == 'widgets') {
+                            _.remove(widgets, function(widget) {
+                                if(!(_.includes(allowedWidgets, widget.title))){
+                                    return true;
+                                }
+                            });
+                        }
+                    });
+                });
+                return filteredModel;
             }
 
         };
