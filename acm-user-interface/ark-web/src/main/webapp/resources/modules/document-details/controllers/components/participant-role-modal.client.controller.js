@@ -11,10 +11,6 @@ angular.module('document-details').controller('Document.ParticipantRoleControlle
             }
         );
 
-        $q.all([promiseTypes]).then(function (data) {
-
-        });
-
         $scope.ok = function () {
             $modalInstance.close($scope.participantRole);
         };
