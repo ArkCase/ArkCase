@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cost-tracking').controller('CostTracking.MainController', ['$scope', '$translate', 'dashboard', 'Dashboard.DashboardService',
-    'UtilService', 'CostTracking.InfoService', 'ConfigService',
-    function($scope, $translate, dashboard, DashboardService, Util, CostTrackingInfoService, ConfigService) {
+    'UtilService', 'CostTracking.InfoService', 'ConfigService', 'StoreService',
+    function($scope, $translate, dashboard, DashboardService, Util, CostTrackingInfoService, ConfigService, Store) {
 
         $scope.$emit('main-component-started');
 

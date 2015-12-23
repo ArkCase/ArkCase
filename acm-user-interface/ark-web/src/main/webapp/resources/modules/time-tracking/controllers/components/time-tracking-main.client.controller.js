@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTracking.MainController', ['$scope', '$translate', 'TimeTracking.InfoService',
-    'ConfigService', 'dashboard', 'Dashboard.DashboardService', 'StoreService', 'UtilService',
-    function($scope, $translate, dashboard, DashboardService, TimeTrackingInfoService, Store, ConfigService, Util) {
+angular.module('time-tracking').controller('TimeTracking.MainController', ['$scope', '$translate', 'dashboard', 'Dashboard.DashboardService'
+    , 'TimeTracking.InfoService', 'ConfigService', 'StoreService', 'UtilService',
+    function($scope, $translate, dashboard, DashboardService, TimeTrackingInfoService, ConfigService, Store, Util) {
 
         $scope.$emit('main-component-started');
 
@@ -10,7 +10,7 @@ angular.module('time-tracking').controller('TimeTracking.MainController', ['$sco
             $scope.config = componentConfig;
 
             $scope.allowedWidgets = ['details'];
-
+            
             return componentConfig;
         });
 
