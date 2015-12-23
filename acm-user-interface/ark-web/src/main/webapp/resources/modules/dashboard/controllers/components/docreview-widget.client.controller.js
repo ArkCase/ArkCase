@@ -36,8 +36,7 @@ angular.module('dashboard.docreview', ['adf.provider'])
                         if ($stateParams.type == 'task' || $stateParams.type == 'ADHOC') {
                             TaskInfoService.getTaskInfo($stateParams.id).then(
                                 function (data) {
-
-                                    $scope.gridOptions.data = [data];
+                                    $scope.gridOptions.data = data.documentUnderReview;
                                     $scope.gridOptions.totalItems = 1;
                                 }
                                 , function (error) {
