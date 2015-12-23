@@ -21,5 +21,6 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.references',
     'dashboard.notes',
     'dashboard.correspondence',
-    'dashboard.reworkdetails'
+    'dashboard.reworkdetails',
+    'dashboard.docreview'
 ]);
