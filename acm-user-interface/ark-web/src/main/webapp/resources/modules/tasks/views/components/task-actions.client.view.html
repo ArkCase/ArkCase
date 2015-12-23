@@ -29,7 +29,7 @@
             </button>
             <button class="btn btn-sm btn-default" ng-click="onClickOutcome(outcome.name)"
                     ng-repeat="outcome in ::taskInfo.availableOutcomes" ng-show="showBtnOutcomes">
-                <span translate>outcome.description</span>
+                {{outcome.description}}
             </button>
 
 
