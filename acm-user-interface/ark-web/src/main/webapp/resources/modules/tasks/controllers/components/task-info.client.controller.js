@@ -33,7 +33,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         );
 
 
-        $scope.$on('task-updated', function (e, data) {
+        $scope.$on('object-updated', function (e, data) {
             if (TaskInfoService.validateTaskInfo(data)) {
                 $scope.taskInfo = data;
                 $scope.assignee = ObjectModelService.getAssignee(data);
@@ -68,7 +68,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                 TaskInfoService.saveTaskInfo(taskInfo).then(
                     function (taskInfo) {
                         //update tree node tittle
-                        $scope.$emit("report-task-updated", taskInfo);
+                        $scope.$emit("report-object-updated", taskInfo);
                         return taskInfo;
                     }
                     , function (error) {

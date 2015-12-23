@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.ReferencesController', ['$scope', '$stateParams'
-    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'Complaint.InfoService'
-    , function ($scope, $stateParams, Util, ConfigService, HelperUiGridService, ComplaintInfoService) {
+    , 'UtilService', 'ConfigService', 'Complaint.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams
+        , Util, ConfigService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
@@ -13,7 +14,7 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
             return config;
         });
 
-        //$scope.$on('complaint-updated', function (e, data) {
+        //$scope.$on('object-updated', function (e, data) {
         //    if (!ComplaintInfoService.validateComplaintInfo(data)) {
         //        return;
         //    }
@@ -27,18 +28,21 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
         //    $scope.gridOptions.data = references;
         //    gridHelper.hidePagingControlsIfAllDataShown(references.length);
         //});
-        ComplaintInfoService.getComplaintInfo($stateParams.id).then(function (complaintInfo) {
-            $scope.complaintInfo = complaintInfo;
-            var references = [];
-            _.each($scope.complaintInfo.childObjects, function (childObject) {
-                if (ComplaintInfoService.validateReferenceRecord(childObject)) {
-                    references.push(childObject);
-                }
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
+                $scope.complaintInfo = complaintInfo;
+                var references = [];
+                _.each($scope.complaintInfo.childObjects, function (childObject) {
+                    if (ComplaintInfoService.validateReferenceRecord(childObject)) {
+                        references.push(childObject);
+                    }
+                });
+                $scope.gridOptions.data = references;
+                //gridHelper.hidePagingControlsIfAllDataShown(references.length);
+                return complaintInfo;
             });
-            $scope.gridOptions.data = references;
-            //gridHelper.hidePagingControlsIfAllDataShown(references.length);
-            return complaintInfo;
-        });
+        }
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();

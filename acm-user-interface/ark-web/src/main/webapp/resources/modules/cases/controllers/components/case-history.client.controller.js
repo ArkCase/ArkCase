@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('cases').controller('Cases.HistoryController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.AuditService'
-    , function ($scope, $stateParams, $q, Util, ConfigService, HelperUiGridService, ObjectService, ObjectAuditService) {
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.AuditService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $q
+        , Util, ConfigService, ObjectService, ObjectAuditService, HelperUiGridService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
@@ -19,9 +21,10 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
         });
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($stateParams.id)) {
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (Util.goodPositive(currentObjectId, false)) {
                 var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.CASE_FILE
-                    , $stateParams.id
+                    , currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodMapValue($scope.sort, "by")

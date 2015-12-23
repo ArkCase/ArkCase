@@ -52,7 +52,7 @@
     <div class="clearfix" ng-show="'COMPLAINT' == taskInfo.parentObjectType">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a href="#">{{parentComplaintInfo.complaintTitle || "Unknown"}}</a> ({{parentComplaintInfo.status}})
+                <h4><a ng-click="onClickTitle()">{{parentComplaintInfo.complaintTitle || "Unknown"}}</a> ({{parentComplaintInfo.status}})
                 </h4>
             </div>
             <div class="col-xs-6  text-right">

@@ -1,19 +1,27 @@
 'use strict';
 
 angular.module('time-tracking').controller('TimeTracking.ActionsController', ['$scope', '$state', '$translate'
-    , 'UtilService', 'ConfigService', 'TimeTracking.InfoService'
-    , function ($scope, $state, $translate, Util, ConfigService, TimeTrackingInfoService) {
+    , 'UtilService', 'ConfigService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService'
+    , function ($scope, $state, $translate
+        , Util, ConfigService, TimeTrackingInfoService, HelperObjectBrowserService) {
 
         ConfigService.getComponentConfig("time-tracking", "actions").then(function (componentConfig) {
             $scope.config = componentConfig;
             return componentConfig;
         });
 
-        $scope.$on('timesheet-updated', function (e, data) {
+        $scope.$on('object-updated', function (e, data) {
             if (TimeTrackingInfoService.validateTimesheet(data)) {
                 $scope.timesheetInfo = data;
             }
         });
+        //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        //if (Util.goodPositive(currentObjectId, false)) {
+        //    TimeTrackingInfoService.getTimesheetInfo(currentObjectId).then(function (timesheetInfo) {
+        //        $scope.timesheetInfo = timesheetInfo;
+        //        return timesheetInfo;
+        //    });
+        //}
 
         $scope.createNew = function () {
             $state.go("frevvo-new-timesheet", {

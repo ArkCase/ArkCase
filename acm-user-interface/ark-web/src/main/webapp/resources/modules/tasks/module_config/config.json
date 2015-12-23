@@ -4,7 +4,7 @@
   "menus": [
     {
       "menuId": "leftnav",
-      "menuItemURL": "tasks",
+      "menuItemURL": "tasks.main",
       "menuItemTitle": "Tasks",
       "iconClass": "fa fa-check-circle",
       "position": 60
@@ -66,13 +66,13 @@
       {
         "desc": "Sort Create Date Asc",
         "name": "sort-date-asc",
-        "value": "create_tdt ASC",
-        "default": true
+        "value": "create_tdt ASC"
       },
       {
         "desc": "Sort Create Date Desc",
         "name": "sort-date-desc",
-        "value": "create_tdt DESC"
+        "value": "create_tdt DESC",
+        "default": true
       },
       {
         "desc": "Sort Case Name Asc",

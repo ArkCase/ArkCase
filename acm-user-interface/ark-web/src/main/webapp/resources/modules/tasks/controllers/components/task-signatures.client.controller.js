@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.SignaturesController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.SignatureService'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.SignatureService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
     , function ($scope, $stateParams, $q
-        , Util, ConfigService, HelperUiGridService, ObjectService, ObjectSignatureService) {
+        , Util, ConfigService, ObjectService, ObjectSignatureService, HelperUiGridService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
@@ -19,8 +19,9 @@ angular.module('tasks').controller('Tasks.SignaturesController', ['$scope', '$st
         });
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($stateParams.id)) {
-                var promiseQueryAudit = ObjectSignatureService.findSignatures(ObjectService.ObjectTypes.TASK, $stateParams.id);
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (Util.goodPositive(currentObjectId, false)) {
+                var promiseQueryAudit = ObjectSignatureService.findSignatures(ObjectService.ObjectTypes.TASK, currentObjectId);
 
                 $q.all([promiseQueryAudit, promiseUsers]).then(function (data) {
                     var signatures = data[0];
