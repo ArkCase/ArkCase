@@ -50,7 +50,7 @@ angular.module('dashboard.notes', ['adf.provider'])
                                     $scope.gridOptions.totalItems = notes.length;
                                 });
                         }
-                        else if ($stateParams.type == 'task') {
+                        else if ($stateParams.type == 'task' || $stateParams.type == 'ADHOC') {
                             ObjectNoteService.queryNotes(ObjectService.ObjectTypes.TASK, $stateParams.id)
                                 .then(function (data) {
                                     var notes = data[0];

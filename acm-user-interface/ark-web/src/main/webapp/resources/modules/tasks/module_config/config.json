@@ -265,7 +265,24 @@
         },
         {
           "id": "reworkdetails",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "reworkInstructions",
+              "displayName": "tasks.comp.reworkdetails.table.columns.title",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "modified",
+              "displayName": "tasks.comp.reworkdetails.table.columns.modified",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "modifier",
+              "displayName": "tasks.comp.reworkdetails.table.columns.modifier",
+              "headerCellFilter": "translate"
+            }
+          ]
         },
         {
           "id": "docsreview",
