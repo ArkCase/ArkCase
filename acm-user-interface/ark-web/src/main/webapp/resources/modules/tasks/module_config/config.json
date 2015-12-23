@@ -273,12 +273,12 @@
               "headerCellFilter": "translate"
             },
             {
-              "name": "modified",
+              "name": "taskStartDate",
               "displayName": "tasks.comp.reworkdetails.table.columns.modified",
               "headerCellFilter": "translate"
             },
             {
-              "name": "modifier",
+              "name": "assignee",
               "displayName": "tasks.comp.reworkdetails.table.columns.modifier",
               "headerCellFilter": "translate"
             }
@@ -286,7 +286,29 @@
         },
         {
           "id": "docsreview",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "fileName",
+              "displayName": "tasks.comp.docsreview.table.columns.fileName",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "tasks.comp.docsreview.table.columns.created",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "creator",
+              "displayName": "tasks.comp.docsreview.table.columns.creator",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "status",
+              "displayName": "tasks.comp.docsreview.table.columns.status",
+              "headerCellFilter": "translate"
+            }
+          ]
         },
         {
           "id": "attachments",

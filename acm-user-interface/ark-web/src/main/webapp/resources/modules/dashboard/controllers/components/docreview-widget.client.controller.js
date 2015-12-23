@@ -1,18 +1,19 @@
 'use strict';
 
-angular.module('dashboard.reworkdetails', ['adf.provider'])
+angular.module('dashboard.docreview', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('reworkdetails', {
-                    title: 'Rework Details Widget',
-                    description: 'Displays location',
-                    controller: 'Dashboard.LocationController',
+            .widget('docreview', {
+                    title: 'Documents Under Review Widget',
+                    description: 'Displays documents under review',
+                    controller: 'Dashboard.DocReviewController',
                     reload: true,
                     templateUrl: 'modules/dashboard/views/components/location-widget.client.view.html'
                 }
             );
     })
-    .controller('Dashboard.LocationController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Task.InfoService', 'Authentication', 'Dashboard.DashboardService',
+    .controller('Dashboard.DocReviewController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Task.InfoService'
+        , 'Authentication', 'Dashboard.DashboardService',
         function ($scope, $translate, $stateParams, Util, TaskInfoService, Authentication, DashboardService) {
 
             $scope.$on('component-config', applyConfig);
@@ -35,6 +36,7 @@ angular.module('dashboard.reworkdetails', ['adf.provider'])
                         if ($stateParams.type == 'task' || $stateParams.type == 'ADHOC') {
                             TaskInfoService.getTaskInfo($stateParams.id).then(
                                 function (data) {
+
                                     $scope.gridOptions.data = [data];
                                     $scope.gridOptions.totalItems = 1;
                                 }
