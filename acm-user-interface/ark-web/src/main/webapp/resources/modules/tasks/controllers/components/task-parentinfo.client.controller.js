@@ -25,7 +25,9 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
 
         $scope.onClickTitle = function() {
             if ($scope.parentCaseInfo) {
-                ObjectService.gotoUrl($scope.parentCaseInfo.caseType, $scope.parentCaseInfo.id);
+                ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, $scope.parentCaseInfo.id);
+            } else if ($scope.parentComplaintInfo) {
+                ObjectService.gotoUrl(ObjectService.ObjectTypes.COMPLAINT, $scope.parentComplaintInfo.id);
             } else {
                 $log.error('parentCaseInfo is undefined, cannot redirect to the parent case');
             }
