@@ -1,4 +1,12 @@
 <div ng-controller="TimeTracking.MainController">
+    <div class="container-fluid">
+        <adf-dashboard
+                name="{{dashboard.name}}"
+                collapsible="{{dashboard.collapsible}}"
+                maximizable="{{dashboard.maximizable}}"
+                structure="{{dashboard.structure}}"
+                adf-model="dashboard.timeModel"/>
+    </div>
     <!--<div ng-repeat="component in components">-->
     <!--<div ng-if="component.enabled" ng-include="'modules/time-tracking/views/components/time-tracking-'+ component.id  +'.client.view.html'"></div>-->
     <!--</div>-->
