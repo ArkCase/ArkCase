@@ -12,7 +12,7 @@ angular.module('dashboard.location', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.LocationController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService',
+    .controller('Dashboard.LocationController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Complaint.InfoService', 'Authentication', 'Dashboard.DashboardService',
         function ($scope, $translate, $stateParams, Util, ComplaintInfoService, Authentication, DashboardService) {
 
             $scope.$on('component-config', applyConfig);
@@ -32,12 +32,12 @@ angular.module('dashboard.location', ['adf.provider'])
 
                     //set gridOptions.data
                     if ($stateParams.type) {
-                         if ($stateParams.type == 'complaint') {
+                        if ($stateParams.type == 'complaint') {
                             ComplaintInfoService.getComplaintInfo($stateParams.id).then(
                                 function (data) {
-                                    $scope.gridOptions.data = data;
-                                    $scope.gridOptions.data.location.fullAddress = createFullAddress(data.location);
-                                    $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+                                    $scope.gridOptions.data = [data];
+                                    $scope.gridOptions.data[0].location.fullAddress = createFullAddress(data.location);
+                                    $scope.gridOptions.totalItems = 1;
                                 }
                                 , function (error) {
                                     $scope.complaintInfo = null;
@@ -55,17 +55,17 @@ angular.module('dashboard.location', ['adf.provider'])
 
             var createFullAddress = function (location) {
                 var addr = null;
-                if(location) {
+                if (location) {
                     var street = location.streetAddress;
-                    if(location.streetAddress2){
-                        street += " "+ location.streetAddress2
+                    if (location.streetAddress2) {
+                        street += " " + location.streetAddress2
                     }
                     var city = location.city;
                     var state = location.state;
                     var zip = location.zip;
                     var country = "USA";
-                    if(location.country) {
-                       country = location.country;
+                    if (location.country) {
+                        country = location.country;
                     }
                     return street + ", " + city + ", " + state + " " + zip + " " + country;
                 }
