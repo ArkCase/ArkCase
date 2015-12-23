@@ -22,8 +22,5 @@ angular.module('document-details').controller('Document.UserSearchController', [
             $scope.filter = $scope.userSearchConfig.userFacetFilter;
             $scope.modalInstance = $modalInstance;
         });
-
-        $q.all([promiseTypes]).then(function (data) {
-        });
     }
 ]);
