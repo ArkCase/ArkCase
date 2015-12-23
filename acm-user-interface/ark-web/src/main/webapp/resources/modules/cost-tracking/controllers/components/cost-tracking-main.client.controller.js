@@ -8,9 +8,7 @@ angular.module('cost-tracking').controller('CostTracking.MainController', ['$sco
 
         ConfigService.getComponentConfig("cost-tracking", "main").then(function (componentConfig) {
             $scope.config = componentConfig;
-
             $scope.allowedWidgets = ['details'];
-
             return componentConfig;
         });
 
@@ -18,7 +16,6 @@ angular.module('cost-tracking').controller('CostTracking.MainController', ['$sco
             $scope.components = moduleConfig.components;
             return moduleConfig;
         });
-
 
         _.forEach(dashboard.widgets, function (widget, widgetId) {
             widget.title = $translate.instant('dashboard.widgets.' + widgetId + '.title');
