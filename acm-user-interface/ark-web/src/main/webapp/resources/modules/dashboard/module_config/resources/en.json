@@ -153,6 +153,11 @@
         "title": "Correspondence",
         "description": "Displays correspondence details",
         "noDataMessage": "Currently there are no correspondence to display"
+      },
+      "reworkdetails": {
+        "title": "Rework Details",
+        "description": "Shows most recent rework details",
+        "noDataMessage": "Currently there no are no rework details to display"
       }
     }
   }

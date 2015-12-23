@@ -60,7 +60,7 @@ angular.module('dashboard.details', ['adf.provider'])
                                 }
                             );
                         }
-                        else if ($stateParams.type == 'task') {
+                        else if ($stateParams.type == 'task' || $stateParams.type == 'ADHOC') {
                             TaskInfoService.getTaskInfo($stateParams.id).then(
                                 function (data) {
                                     $scope.gridOptions.data = [Util.omitNg(data)];
