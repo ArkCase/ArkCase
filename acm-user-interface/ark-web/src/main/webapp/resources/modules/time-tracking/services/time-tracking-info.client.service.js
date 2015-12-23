@@ -60,7 +60,7 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
 
         /**
          * @ngdoc method
-         * @name getTimeTrackingInfo
+         * @name getTimesheetInfo
          * @methodOf service:TimeTracking.InfoService
          *
          * @description
@@ -70,7 +70,7 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
          *
          * @returns {Object} Promise
          */
-        Service.getTimeTrackingInfo =  function (id) {
+        Service.getTimesheetInfo = function (id) {
             return Util.serviceCall({
                 service: Service.get
                 , param: {id: id}

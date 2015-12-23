@@ -9,7 +9,7 @@
 			<div ng-include="'modules/cost-tracking/views/cost-tracking-list.client.view.html'" />
 		</div>
 
-		<section class="content-body" ng-show="costsheetInfo">
+		<section class="content-body" ng-show="objectInfo">
 			<div class="module-header">
 				<div ng-include="'modules/cost-tracking/views/components/cost-tracking-info.client.view.html'"></div>
 			</div>
@@ -37,7 +37,7 @@
 			</div>
 		</section>
 
-		<section class="content-body" ng-hide="costsheetInfo">
+		<section class="content-body" ng-hide="objectInfo">
 			<div>{{progressMsg}}</div>
 		</section>
 	</div>

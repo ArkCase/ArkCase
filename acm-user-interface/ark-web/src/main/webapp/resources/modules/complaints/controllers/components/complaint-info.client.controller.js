@@ -1,9 +1,11 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', 'UtilService', 'ConfigService'
-    , 'Object.LookupService', 'Complaint.LookupService', 'Complaint.InfoService', 'Object.ModelService'
-    , function ($scope, $stateParams, Util, ConfigService
-        , ObjectLookupService, ComplaintLookupService, ComplaintInfoService, ObjectModelService) {
+angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams'
+    , 'UtilService', 'ConfigService', 'Object.LookupService', 'Complaint.LookupService', 'Complaint.InfoService'
+    , 'Object.ModelService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams
+        , Util, ConfigService, ObjectLookupService, ComplaintLookupService, ComplaintInfoService
+        , ObjectModelService, HelperObjectBrowserService) {
 
         ConfigService.getComponentConfig("complaints", "info").then(function (componentConfig) {
             $scope.config = componentConfig;
@@ -44,12 +46,12 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
         );
 
 
-        //$scope.$on('complaint-selected', function onSelectedComplaint(e, selectedComplaint) {
+        //$scope.$on('object-selected', function onSelectedComplaint(e, selectedComplaint) {
         //    $scope.complaintSolr = selectedComplaint;
         //});
 
         var previousId = null;
-        $scope.$on('complaint-updated', function (e, data) {
+        $scope.$on('object-updated', function (e, data) {
             if (!ComplaintInfoService.validateComplaintInfo(data)) {
                 return;
             }
@@ -70,6 +72,23 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
                 previousId = $stateParams.id;
             }
         });
+        //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        //if (Util.goodPositive(currentObjectId, false)) {
+        //    ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
+        //        $scope.complaintInfo = complaintInfo;
+        //        $scope.assignee = ObjectModelService.getAssignee(complaintInfo);
+        //        $scope.owningGroup = ObjectModelService.getGroup(complaintInfo);
+        //        ComplaintLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function (approvers) {
+        //            var options = [];
+        //            _.each(approvers, function (approver) {
+        //                options.push({id: approver.userId, name: approver.fullName});
+        //            });
+        //            $scope.assignees = options;
+        //            return approvers;
+        //        });
+        //        return complaintInfo;
+        //    });
+        //}
 
         /**
          * Persists the updated complaint metadata to the ArkComplaint data

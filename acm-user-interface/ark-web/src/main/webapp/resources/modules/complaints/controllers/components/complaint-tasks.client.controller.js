@@ -1,20 +1,15 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.TasksController', ['$scope', '$state', '$stateParams', '$q', '$translate'
-    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService', 'Complaint.InfoService'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
     , function ($scope, $state, $stateParams, $q, $translate
-        , Util, ConfigService, HelperUiGridService, ObjectService, ObjectTaskService, TaskWorkflowService, ComplaintInfoService) {
+        , Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService
+        , HelperUiGridService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
         var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
-
-        $scope.$on('complaint-updated', function (e, data) {
-            if (!ComplaintInfoService.validateComplaintInfo(data)) {
-                return;
-            }
-            $scope.complaintInfo = data;
-        });
 
         ConfigService.getComponentConfig("complaints", "tasks").then(function (config) {
             gridHelper.setColumnDefs(config);
@@ -42,58 +37,61 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         });
 
         $scope.retrieveGridData = function () {
-            ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.COMPLAINT
-                , $stateParams.id
-                , Util.goodValue($scope.start, 0)
-                , Util.goodValue($scope.pageSize, 10)
-                , Util.goodValue($scope.sort.by)
-                , Util.goodValue($scope.sort.dir)
-            ).then(
-                function (data) {
-                    $q.all([promiseUsers, promiseMyTasks]).then(function () {
-                        var tasks = data.response.docs;
-                        $scope.gridOptions = $scope.gridOptions || {};
-                        $scope.gridOptions.data = tasks;
-                        $scope.gridOptions.totalItems = data.response.numFound;
-                        //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (Util.goodPositive(currentObjectId, false)) {
+                ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
+                    , currentObjectId
+                    , Util.goodValue($scope.start, 0)
+                    , Util.goodValue($scope.pageSize, 10)
+                    , Util.goodValue($scope.sort.by)
+                    , Util.goodValue($scope.sort.dir)
+                ).then(
+                    function (data) {
+                        $q.all([promiseUsers, promiseMyTasks]).then(function () {
+                            var tasks = data.response.docs;
+                            $scope.gridOptions = $scope.gridOptions || {};
+                            $scope.gridOptions.data = tasks;
+                            $scope.gridOptions.totalItems = data.response.numFound;
+                            //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
 
-                        for (var i = 0; i < tasks.length; i++) {
-                            var task = tasks[i];
-                            task.acm$_taskOutcomes = [{
-                                id: "noop",
-                                value: $translate.instant("common.select.option.none")
-                            }];
-                            task.acm$_taskOutcome = {
-                                id: "noop",
-                                value: $translate.instant("common.select.option.none")
-                            };
-                            task.acm$_taskActionDone = true;
+                            for (var i = 0; i < tasks.length; i++) {
+                                var task = tasks[i];
+                                task.acm$_taskOutcomes = [{
+                                    id: "noop",
+                                    value: $translate.instant("common.select.option.none")
+                                }];
+                                task.acm$_taskOutcome = {
+                                    id: "noop",
+                                    value: $translate.instant("common.select.option.none")
+                                };
+                                task.acm$_taskActionDone = true;
 
-                            var found = _.find($scope.myTasks, {taskId: tasks[i].id});
-                            if (found) {
-                                if (!found.completed && found.adhocTask) {
-                                    task.acm$_taskOutcomes.push({id: "complete", value: "Complete"});
-                                    task.acm$_taskOutcomes.push({id: "delete", value: "Delete"});
-                                    task.acm$_taskActionDone = false;
+                                var found = _.find($scope.myTasks, {taskId: tasks[i].id});
+                                if (found) {
+                                    if (!found.completed && found.adhocTask) {
+                                        task.acm$_taskOutcomes.push({id: "complete", value: "Complete"});
+                                        task.acm$_taskOutcomes.push({id: "delete", value: "Delete"});
+                                        task.acm$_taskActionDone = false;
 
-                                } else if (!found.completed && !found.adhocTask && !Util.isArrayEmpty(found.availableOutcomes)) {
-                                    var availableOutcomes = Util.goodArray(found.availableOutcomes);
-                                    for (var j = 0; j < availableOutcomes.length; j++) {
-                                        var outcome = {
-                                            id: Util.goodValue(availableOutcomes[j].description),
-                                            value: Util.goodValue(availableOutcomes[j].description)
-                                        };
-                                        task.acm$_taskOutcomes.push(outcome);
+                                    } else if (!found.completed && !found.adhocTask && !Util.isArrayEmpty(found.availableOutcomes)) {
+                                        var availableOutcomes = Util.goodArray(found.availableOutcomes);
+                                        for (var j = 0; j < availableOutcomes.length; j++) {
+                                            var outcome = {
+                                                id: Util.goodValue(availableOutcomes[j].description),
+                                                value: Util.goodValue(availableOutcomes[j].description)
+                                            };
+                                            task.acm$_taskOutcomes.push(outcome);
+                                        }
+                                        task.acm$_taskActionDone = (1 >= availableOutcomes.length); //1 for '(Select One)'
                                     }
-                                    task.acm$_taskActionDone = (1 >= availableOutcomes.length); //1 for '(Select One)'
                                 }
                             }
-                        }
-                    }); //end $q
+                        }); //end $q
 
-                    return data;
-                }
-            );
+                        return data;
+                    }
+                ); //end then
+            }
         };
 
         $scope.addNew = function () {

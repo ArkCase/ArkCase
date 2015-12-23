@@ -4,6 +4,8 @@ angular.module('cost-tracking').controller('CostTracking.MainController', ['$sco
     'UtilService', 'CostTracking.InfoService', 'ConfigService',
     function($scope, $translate, dashboard, DashboardService, Util, CostTrackingInfoService, ConfigService) {
 
+        $scope.$emit('main-component-started');
+
         ConfigService.getComponentConfig("cost-tracking", "main").then(function (componentConfig) {
             $scope.config = componentConfig;
 
