@@ -79,7 +79,7 @@ module.exports = function (grunt) {
         var cssFiles = [];
 
         if (process.env.NODE_ENV == 'production') {
-            jsFiles = config.assets.lib.js.concat(config.assets.distJs);
+            jsFiles = config.assets.lib.js.concat(config.assets.distJs, config.assets.lib.customJs);
             cssFiles = configUtil.getCSSAssets();
             //cssFiles = config.assets.lib.css.concat(config.assets.distCss);
         } else {
