@@ -9,6 +9,8 @@
             <list>
                 <ref bean="objectLockPrivilege"/>
                 <ref bean="objectUnLockPrivilege"/>
+                <ref bean="listLockedObjectsPrivilege"/>
+                <ref bean="listLocksDetailsPrivilege"/>
             </list>
         </property>
         <property name="urlPrivileges">
@@ -22,6 +24,16 @@
                     <property name="httpMethod" value="DELETE"/>
                     <property name="url" value="/api/{version}/plugin/{objectType}/{objectId}/lock"/>
                     <property name="requiredPrivilege" ref="objectUnLockPrivilege"/>
+                </bean>
+                <bean id="objectsLockedUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/objects/{objectType}/locked"/>
+                    <property name="requiredPrivilege" ref="listLockedObjectsPrivilege"/>
+                </bean>
+                <bean id="locksDetailsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/locks/{objectType}"/>
+                    <property name="requiredPrivilege" ref="listLocksDetailsPrivilege"/>
                 </bean>
             </list>
         </property>
@@ -52,4 +64,20 @@
         </property>
     </bean>
 
+    <bean id="listLocksDetailsPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="list-locks-details-privilege"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_ADMINISTRATOR</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="listLockedObjectsPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="list-locked-objects-privilege"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_ADMINISTRATOR</value>
+            </list>
+        </property>
+    </bean>
 </beans>
