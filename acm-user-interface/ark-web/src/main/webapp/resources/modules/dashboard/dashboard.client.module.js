@@ -19,5 +19,6 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.participants',
     'dashboard.tasks',
     'dashboard.references',
-    'dashboard.notes'
+    'dashboard.notes',
+    'dashboard.correspondence '
 ]);
