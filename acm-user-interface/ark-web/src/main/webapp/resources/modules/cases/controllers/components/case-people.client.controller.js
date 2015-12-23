@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateParams', '$q', '$translate'
-    , 'StoreService', 'UtilService', 'ObjectService', 'Helper.UiGridService', 'ConfigService'
-    , 'Case.InfoService', 'Object.PersonService', 'LookupService', 'Object.LookupService'
-    , function ($scope, $stateParams, $q, $translate, Store, Util, ObjectService, HelperUiGridService, ConfigService
-        , CaseInfoService, ObjectPersonService, LookupService, ObjectLookupService) {
+    , 'StoreService', 'UtilService', 'ObjectService', 'ConfigService', 'Case.InfoService'
+    , 'Object.PersonService', 'LookupService', 'Object.LookupService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $q, $translate, Store, Util, ObjectService, ConfigService, CaseInfoService
+        , ObjectPersonService, LookupService, ObjectLookupService, HelperUiGridService, HelperObjectBrowserService) {
 
         $scope.contactMethods = {gridOptions: {appScopeProvider: $scope}};
         $scope.organizations = {gridOptions: {appScopeProvider: $scope}};
@@ -425,7 +425,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 }
             }); //end $q
         };
-        //$scope.$on('case-updated', function (e, data) {
+        //$scope.$on('object-updated', function (e, data) {
         //    if (!CaseInfoService.validateCaseInfo(data)) {
         //        return;
         //    }
@@ -437,10 +437,13 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
         //        deferPeopleData.set(data);
         //    }
         //});
-        CaseInfoService.getCaseInfo($stateParams.id).then(function (caseInfo) {
-            updateGridData(caseInfo);
-            return caseInfo;
-        });
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
+                updateGridData(caseInfo);
+                return caseInfo;
+            });
+        }
 
 
         $scope.addNew = function () {

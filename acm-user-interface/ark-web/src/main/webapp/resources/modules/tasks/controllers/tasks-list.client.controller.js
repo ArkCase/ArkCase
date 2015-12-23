@@ -1,16 +1,16 @@
 'use strict';
 
-angular.module('tasks').controller('TasksListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Task.InfoService', 'Task.ListService', 'ConfigService', 'Helper.ObjectTreeService',
-    function ($scope, $state, $stateParams, $translate, Util, ObjectService, TaskInfoService, TaskListService, ConfigService, HelperObjectTreeService) {
-        ConfigService.getModuleConfig("tasks").then(function (config) {
-            $scope.treeConfig = config.tree;
-            $scope.componentsConfig = config.components;
-            return config;
-        });
+angular.module('tasks').controller('TasksListController', ['$scope', '$state', '$stateParams', '$translate'
+    , 'UtilService', 'ObjectService', 'Task.InfoService', 'Task.ListService', 'Helper.ObjectBrowserService'
+    , function ($scope, $state, $stateParams, $translate
+        , Util, ObjectService, TaskInfoService, TaskListService, HelperObjectBrowserService) {
 
-        var treeHelper = new HelperObjectTreeService.Tree({
+        //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper
+        new HelperObjectBrowserService.Tree({
             scope: $scope
-            , nodeId: $stateParams.id
+            , state: $state
+            , stateParams: $stateParams
+            , moduleId: "tasks"
             , getTreeData: function (start, n, sort, filters) {
                 return TaskListService.queryTasksTreeData(start, n, sort, filters);
             }
@@ -27,20 +27,5 @@ angular.module('tasks').controller('TasksListController', ['$scope', '$state', '
                 };
             }
         });
-        $scope.onLoad = function (start, n, sort, filters) {
-            treeHelper.onLoad(start, n, sort, filters);
-        };
-
-
-        $scope.onSelect = function (selectedTask) {
-            $scope.$emit('req-select-task', selectedTask);
-            var components = Util.goodArray(selectedTask.components);
-            var componentType = (1 == components.length) ? components[0] : "main";
-            $state.go('tasks.' + componentType, {
-                type: selectedTask.nodeType
-                , id: selectedTask.nodeId
-            });
-        };
-
     }
 ]);

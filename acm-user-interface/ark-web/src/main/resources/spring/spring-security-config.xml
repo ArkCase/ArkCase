@@ -17,7 +17,7 @@
     <http security="none" pattern="/login" />
     <http security="none" pattern="/assets/css/login.css" />
     <http security="none" pattern="/lib/bootstrap/dist/css/bootstrap.css" />
-    <http security="none" pattern="/assets/img/logo.png" />
+    <http security="none" pattern="/proxy/resources/branding/loginlogo.png" />
 
     <!-- arkCaseAuthenticationProvider is defined in spring-library-surf-connector.xml -->
 

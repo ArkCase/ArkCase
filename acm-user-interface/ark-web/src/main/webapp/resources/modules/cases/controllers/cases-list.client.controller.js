@@ -1,16 +1,17 @@
 'use strict';
 
-angular.module('cases').controller('CasesListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Case.ListService', 'Case.InfoService', 'ConfigService', 'Helper.ObjectTreeService',
-    function ($scope, $state, $stateParams, $translate, Util, ObjectService, CaseListService, CaseInfoService, ConfigService, HelperObjectTreeService) {
-        ConfigService.getModuleConfig("cases").then(function (config) {
-            $scope.treeConfig = config.tree;
-            $scope.componentsConfig = config.components;
-            return config;
-        });
+angular.module('cases').controller('CasesListController', ['$scope', '$state', '$stateParams', '$translate'
+    , 'UtilService', 'ObjectService', 'Case.ListService', 'Case.InfoService', 'Helper.ObjectBrowserService'
+    , function ($scope, $state, $stateParams, $translate
+        , Util, ObjectService, CaseListService, CaseInfoService, HelperObjectBrowserService) {
 
-        var treeHelper = new HelperObjectTreeService.Tree({
+
+        //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper
+        new HelperObjectBrowserService.Tree({
             scope: $scope
-            , nodeId: $stateParams.id
+            , state: $state
+            , stateParams: $stateParams
+            , moduleId: "cases"
             , getTreeData: function (start, n, sort, filters) {
                 return CaseListService.queryCasesTreeData(start, n, sort, filters);
             }
@@ -26,18 +27,5 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
                 };
             }
         });
-        $scope.onLoad = function (start, n, sort, filters) {
-            treeHelper.onLoad(start, n, sort, filters);
-        };
-
-        $scope.onSelect = function (selectedCase) {
-            $scope.$emit('req-select-case', selectedCase);
-            var components = Util.goodArray(selectedCase.components);
-            var componentType = (1 == components.length) ? components[0] : "main";
-            $state.go('cases.' + componentType, {
-                id: selectedCase.nodeId
-            });
-
-        };
     }
 ]);

@@ -8,6 +8,11 @@
   "common.service": {
     "error.invalidData": "Invalid data"
   },
+  "common.objects": {
+    "progressNoData": "[ No data ]",
+    "progressLoading": "Loading data ",
+    "progressError": "Failed to load data "
+  },
   "common.frevvo": {
     "defaultDateFormat": "YYYY-MM-DD"
   },
