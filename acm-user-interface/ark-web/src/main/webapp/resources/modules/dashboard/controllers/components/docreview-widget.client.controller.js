@@ -29,7 +29,7 @@ angular.module('dashboard.docreview', ['adf.provider'])
             function applyConfig(e, componentId, config) {
                 if (componentId == 'main') {
                     $scope.config = config;
-                    $scope.gridOptions.columnDefs = config.widgets[1].columnDefs; //tasks.config.widget[1] = rework
+                    $scope.gridOptions.columnDefs = config.widgets[2].columnDefs; //tasks.config.widget[2] = docsreview
 
                     //set gridOptions.data
                     if ($stateParams.type) {
