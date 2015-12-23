@@ -2,17 +2,11 @@
 
 angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state', '$stateParams', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Case.LookupService'
-    , 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService'
+    , 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Helper.ObjectBrowserService'
     , function ($scope, $state, $stateParams, $q
         , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, CaseLookupService
-        , ObjectSubscriptionService, ObjectModelService, CaseInfoService) {
+        , ObjectSubscriptionService, ObjectModelService, CaseInfoService, HelperObjectBrowserService) {
 
-        //$scope.$emit('req-component-config', 'actions');
-        //$scope.$on('component-config', function (e, componentId, config) {
-        //    if ('actions' == componentId) {
-        //        $scope.config = config;
-        //    }
-        //});
         ConfigService.getComponentConfig("cases", "actions").then(function (componentConfig) {
             $scope.config = componentConfig;
             return componentConfig;
@@ -22,7 +16,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         var promiseGetGroups = ObjectLookupService.getGroups();
 
         var previousId = null;
-        $scope.$on('case-updated', function (e, data) {
+        $scope.$on('object-updated', function (e, data) {
             if (!CaseInfoService.validateCaseInfo(data)) {
                 return;
             }
@@ -56,38 +50,34 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                 previousId = $stateParams.id;
             }
         });
-        //var previousId = null;
-        //if (Util.goodPositive($stateParams.id)) {
-        //    CaseInfoService.getCaseInfo($stateParams.id).then(function (caseInfo) {
+        //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        //if (Util.goodPositive(currentObjectId, false)) {
+        //    CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
         //        $scope.caseInfo = caseInfo;
-        //
         //        var group = ObjectModelService.getGroup(caseInfo);
         //        var assignee = ObjectModelService.getAssignee(caseInfo);
-        //        if (previousId != $stateParams.id) {
-        //            var promiseGetApprovers = CaseLookupService.getApprovers(group, assignee);
-        //            $q.all([promiseQueryUser, promiseGetGroups, promiseGetApprovers]).then(function (data) {
-        //                var userInfo = data[0];
-        //                var groups = data[1];
-        //                var assignees = data[2];
-        //                $scope.restricted = ObjectModelService.checkRestriction(userInfo.userId, assignee, group, assignees, groups);
-        //            });
         //
+        //        var promiseGetApprovers = CaseLookupService.getApprovers(group, assignee);
+        //        $q.all([promiseQueryUser, promiseGetGroups, promiseGetApprovers]).then(function (data) {
+        //            var userInfo = data[0];
+        //            var groups = data[1];
+        //            var assignees = data[2];
+        //            $scope.restricted = ObjectModelService.checkRestriction(userInfo.userId, assignee, group, assignees, groups);
+        //        });
         //
-        //            promiseQueryUser.then(function (userInfo) {
-        //                $scope.userId = userInfo.userId;
-        //                ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (subscriptions) {
-        //                    var found = _.find(subscriptions, {
-        //                        userId: userInfo.userId,
-        //                        subscriptionObjectType: ObjectService.ObjectTypes.CASE_FILE,
-        //                        objectId: $scope.caseInfo.id
-        //                    });
-        //                    $scope.showBtnSubscribe = Util.isEmpty(found);
-        //                    $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
+        //        promiseQueryUser.then(function (userInfo) {
+        //            $scope.userId = userInfo.userId;
+        //            ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (subscriptions) {
+        //                var found = _.find(subscriptions, {
+        //                    userId: userInfo.userId,
+        //                    subscriptionObjectType: ObjectService.ObjectTypes.CASE_FILE,
+        //                    objectId: $scope.caseInfo.id
         //                });
+        //                $scope.showBtnSubscribe = Util.isEmpty(found);
+        //                $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
         //            });
+        //        });
         //
-        //            previousId = $stateParams.id;
-        //        }
         //        return caseInfo;
         //    });
         //}

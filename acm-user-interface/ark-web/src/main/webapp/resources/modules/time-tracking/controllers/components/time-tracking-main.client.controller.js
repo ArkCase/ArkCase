@@ -4,6 +4,8 @@ angular.module('time-tracking').controller('TimeTracking.MainController', ['$sco
     'ConfigService', 'dashboard', 'Dashboard.DashboardService', 'StoreService', 'UtilService',
     function($scope, $translate, dashboard, DashboardService, TimeTrackingInfoService, Store, ConfigService, Util) {
 
+        $scope.$emit('main-component-started');
+
         ConfigService.getComponentConfig("time-tracking", "main").then(function (componentConfig) {
             $scope.config = componentConfig;
 

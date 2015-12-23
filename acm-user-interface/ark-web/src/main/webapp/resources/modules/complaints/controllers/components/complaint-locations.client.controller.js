@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.LocationsController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'Helper.UiGridService', 'ConfigService', 'Complaint.InfoService', 'Object.LookupService'
-    , function ($scope, $stateParams, $q, Util, HelperUiGridService, ConfigService, ComplaintInfoService, ObjectLookupService) {
+    , 'UtilService', 'Helper.UiGridService', 'ConfigService', 'Complaint.InfoService'
+    , 'Object.LookupService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $q, Util, HelperUiGridService, ConfigService, ComplaintInfoService
+        , ObjectLookupService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
@@ -36,12 +38,15 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
             return config;
         });
 
-        ComplaintInfoService.getComplaintInfo($stateParams.id).then(function (complaintInfo) {
-            $scope.complaintInfo = complaintInfo;
-            $scope.gridOptions.data = [Util.goodValue($scope.complaintInfo.location, {})];
-            //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
-            return complaintInfo;
-        });
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
+                $scope.complaintInfo = complaintInfo;
+                $scope.gridOptions.data = [Util.goodValue($scope.complaintInfo.location, {})];
+                //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
+                return complaintInfo;
+            });
+        }
 
 
         $scope.addNew = function () {

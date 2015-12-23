@@ -4,7 +4,7 @@
   "menus": [
     {
       "menuId": "leftnav",
-      "menuItemURL": "cost-tracking",
+      "menuItemURL": "cost-tracking.main",
       "menuItemTitle": "Cost Tracking",
       "iconClass": "fa fa-money",
       "position": 120
