@@ -8,9 +8,7 @@ angular.module('time-tracking').controller('TimeTracking.MainController', ['$sco
 
         ConfigService.getComponentConfig("time-tracking", "main").then(function (componentConfig) {
             $scope.config = componentConfig;
-
             $scope.allowedWidgets = ['details'];
-            
             return componentConfig;
         });
 
