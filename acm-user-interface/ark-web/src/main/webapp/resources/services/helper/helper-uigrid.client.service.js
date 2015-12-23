@@ -358,6 +358,28 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
 
             /**
              * @ngdoc method
+             * @name addEditButton
+             * @methodOf services:Helper.UiGridService
+             *
+             * @param {Object} columnDefs ui-grid column definition
+             * @param {Function} onClickEdit Callback function to response to button click event
+             *
+             * @description
+             * Create a new column with edit button
+             */
+            , addEditButton: function (columnDefs, onClickEdit) {
+                var columnDef = {
+                    name: "edit"
+                    , cellEditableCondition: false
+                    , width: 40
+                    , headerCellTemplate: "<span></span>"
+                    , cellTemplate: "<span><i class='fa fa-pencil fa-lg' style='cursor :pointer' ng-click='" + onClickEdit + "'></i></span>"
+                };
+                columnDefs.push(columnDef);
+            }
+
+            /**
+             * @ngdoc method
              * @name hidePagingControlsIfAllDataShown
              * @methodOf services:Helper.UiGridService
              *
