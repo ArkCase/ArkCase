@@ -1,16 +1,14 @@
 'use strict';
 
 angular.module('cost-tracking').controller('CostTracking.MainController', ['$scope', '$translate', 'dashboard', 'Dashboard.DashboardService',
-    'UtilService', 'CostTracking.InfoService', 'ConfigService',
-    function($scope, $translate, dashboard, DashboardService, Util, CostTrackingInfoService, ConfigService) {
+    'UtilService', 'CostTracking.InfoService', 'ConfigService', 'StoreService',
+    function($scope, $translate, dashboard, DashboardService, Util, CostTrackingInfoService, ConfigService, Store) {
 
         $scope.$emit('main-component-started');
 
         ConfigService.getComponentConfig("cost-tracking", "main").then(function (componentConfig) {
             $scope.config = componentConfig;
-
             $scope.allowedWidgets = ['details'];
-
             return componentConfig;
         });
 
@@ -18,7 +16,6 @@ angular.module('cost-tracking').controller('CostTracking.MainController', ['$sco
             $scope.components = moduleConfig.components;
             return moduleConfig;
         });
-
 
         _.forEach(dashboard.widgets, function (widget, widgetId) {
             widget.title = $translate.instant('dashboard.widgets.' + widgetId + '.title');
