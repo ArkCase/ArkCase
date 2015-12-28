@@ -49,7 +49,7 @@ angular.module('admin').controller('Admin.FormsConfigController', ['$scope', '$s
         }
 
         $scope.editRow = function (rowEntity) {
-            $state.go('frevvo-edit-plainform', {
+            $state.go('frevvo', {
                 name: "edit-plainform"
                 , arg: {
                     formKey: rowEntity.key, formTarget: rowEntity.target, mode: "edit"
@@ -68,7 +68,7 @@ angular.module('admin').controller('Admin.FormsConfigController', ['$scope', '$s
         };
 
         $scope.openNewFrevvoForm = function () {
-            $state.go('frevvo-new-plainform', {
+            $state.go('frevvo', {
                 name: "new-plainform"
                 , arg: {
                     target: $scope.selectedTarget
