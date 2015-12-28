@@ -24,7 +24,7 @@ angular.module('time-tracking').controller('TimeTracking.ActionsController', ['$
         //}
 
         $scope.createNew = function () {
-            $state.go("frevvo-new-timesheet", {
+            $state.go("frevvo", {
                 name: "new-timesheet"
             });
             //$state.go('newTimesheet');
@@ -33,7 +33,7 @@ angular.module('time-tracking').controller('TimeTracking.ActionsController', ['$
         $scope.edit = function (timesheetInfo) {
             var frevvoDateFormat = Util.goodValue($scope.config.frevvoDateFormat, $translate.instant("common.frevvo.defaultDateFormat"));
             var starDate = moment(timesheetInfo.startDate).format(frevvoDateFormat);
-            $state.go("frevvo-edit-timesheet", {
+            $state.go("frevvo", {
                 name: "edit-timesheet",
                 arg: {
                     period: starDate
