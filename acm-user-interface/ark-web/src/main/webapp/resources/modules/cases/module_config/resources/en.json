@@ -175,6 +175,12 @@
       "search.placeholder": "Search for case file.",
       "search.btn": "Search",
       "enabled": true,
-      "clientFacetFilter": "\"Object Type\": CASE_FILE"
+      "clientFacetFilter": "\"Object Type\": CASE_FILE",
+      "table.columns": {
+              "id": "ID",
+              "name": "Name",
+              "assignee": "Assignee",
+              "title": "Title"
+       }
     }
 }
