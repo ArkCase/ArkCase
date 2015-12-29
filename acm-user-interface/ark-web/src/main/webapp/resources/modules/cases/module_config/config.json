@@ -919,7 +919,7 @@
             },
             {
                 "name": "title_parseable",
-                "displayName": "cases.comp.merge.table.columns.phone",
+                "displayName": "cases.comp.merge.table.columns.title",
                 "headerCellFilter": "translate",
                 "width": 75
             }
