@@ -1,12 +1,38 @@
 <div class="modal-header">
-    <h2>The title</h2>
+    <h2>Drag and Drop</h2>
 </div>
 <div class="modal-body">
-    The body of the dialog with the value to pass '{{valuePassed}}'
+    <div class="btn-group" ng-show="showRadioButtons()">
+        <label>
+            <input type="radio" ng-model="result.op" value="Replace">
+            <span>Replace document (If more then one files are dropped, only first one is used) </span>
+        </label>
+        <label>
+            <input type="radio" ng-model="result.op" value="UploadToParent">
+            <span>Create document(s) in parent folder</span>
+        </label>
+        <!--<label>-->
+        <!--<input type="radio" ng-model="op" value="UploadToFolder">-->
+        <!--<span>Create document(s) in folder</span>-->
+        <!--</label>-->
+    </div>
+    <br/>
+
+    <div ng-if="showSelFileTypes()">
+        <label>File Type: </label>
+        <select ng-model="result.fileType"
+                ng-options="option.label for option in fileTypes">
+            <option value="">-- choose color --</option>
+        </select>
+    </div>
 </div>
 <div class="modal-footer">
-    <!--<button class="btn" ng-click="close()">Close</button>-->
     <button type="button" class="btn btn-default" ng-click="onClickCancel()">Cancel</button>
-    <button type="button" class="btn btn-primary" ng-click="onClickOk()" )>OK</button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="disableOk()">OK</button>
 </div>
+
+
+
+
+
 
