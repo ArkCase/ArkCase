@@ -23,6 +23,7 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -157,14 +158,7 @@ public class CloseComplaintRequestService
 
             AcmContainer containerCaseFile = getEcmFileService().getOrCreateContainer(existingCaseFile.getObjectType(), existingCaseFile.getId());
 
-            // Default one
-            String complaintFolderName = ComplaintConstants.OBJECT_TYPE + " (" + updatedComplaint.getComplaintNumber() + ")";
-
-            // If the format is defined in the spring bean, override it
-            if (getComplaintFolderNameFormat() != null && !getComplaintFolderNameFormat().isEmpty())
-            {
-                complaintFolderName = String.format(getComplaintFolderNameFormat(), updatedComplaint.getComplaintNumber());
-            }
+            String complaintFolderName = complaintFolderName = String.format(getComplaintFolderNameFormat(), updatedComplaint.getComplaintNumber());
 
             container.getFolder().setParentFolderId(containerCaseFile.getFolder().getId());
             container.getFolder().setName(complaintFolderName);
@@ -254,30 +248,14 @@ public class CloseComplaintRequestService
 
     private String formatCaseDetails(Complaint updatedComplaint)
     {
-        // Default one - in case format is not defined in the spring bean
-        String details = "This case file is based on Complaint '" + updatedComplaint.getComplaintNumber() + "'.";
-        if (updatedComplaint.getDetails() != null)
+        String complaintDetails = "";
+        if (StringUtils.isNotEmpty(updatedComplaint.getDetails()))
         {
-            // details are displayed as HTML
-            details += "<p/>";
-            details += "Complaint '" + updatedComplaint.getComplaintNumber() + "' had these details: ";
-            details += "<p/>";
-            details += updatedComplaint.getDetails();
+            complaintDetails = String.format(getComplaintDetailsFormat(), updatedComplaint.getComplaintNumber(), updatedComplaint.getDetails());
         }
 
-        // If format is defined in the spring bean, override it
-        if (getCaseFileDetailsFormat() != null && !getCaseFileDetailsFormat().isEmpty())
-        {
-            String complaintDetails = "";
-            if (getComplaintDetailsFormat() != null && !getComplaintDetailsFormat().isEmpty() &&
-                    updatedComplaint.getDetails() != null && !updatedComplaint.getDetails().isEmpty())
-            {
-                complaintDetails = String.format(getComplaintDetailsFormat(), updatedComplaint.getComplaintNumber(), updatedComplaint.getDetails());
-            }
-
-            details = String.format(getCaseFileDetailsFormat(), updatedComplaint.getComplaintNumber(), complaintDetails);
-            details = StringEscapeUtils.unescapeHtml4(details);
-        }
+        String details = String.format(getCaseFileDetailsFormat(), updatedComplaint.getComplaintNumber(), complaintDetails);
+        details = StringEscapeUtils.unescapeHtml4(details);
 
         return details;
     }
