@@ -95,14 +95,14 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
         };
 
         $scope.createNew = function () {
-            $state.go("frevvo-new-complaint", {
+            $state.go("frevvo", {
                 name: "new-complaint"
             });
             //$state.go('newComplaint');
         };
 
         $scope.close = function (complaintInfo) {
-            $state.go("frevvo-close-complaint", {
+            $state.go("frevvo", {
                 name: "close-complaint"
                 , arg: {
                     complaintId: complaintInfo.complaintId
