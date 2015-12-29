@@ -1,15 +1,15 @@
 <div class="modal-header">
-    <h2>Drag and Drop</h2>
+    <h2 translate>common.directive.docTree.dndDialog.title</h2>
 </div>
 <div class="modal-body">
     <div class="btn-group" ng-show="showRadioButtons()">
         <label>
             <input type="radio" ng-model="result.op" value="Replace">
-            <span>Replace document (If more then one files are dropped, only first one is used) </span>
+            <span translate>common.directive.docTree.dndDialog.radReplace.text</span>
         </label>
         <label>
             <input type="radio" ng-model="result.op" value="UploadToParent">
-            <span>Create document(s) in parent folder</span>
+            <span translate>common.directive.docTree.dndDialog.radUploadToParent.text</span>
         </label>
         <!--<label>-->
         <!--<input type="radio" ng-model="op" value="UploadToFolder">-->
@@ -19,16 +19,20 @@
     <br/>
 
     <div ng-if="showSelFileTypes()">
-        <label>File Type: </label>
+        <label translate>common.directive.docTree.dndDialog.selFileTypes.label</label>
         <select ng-model="result.fileType"
                 ng-options="option.label for option in fileTypes">
-            <option value="">-- choose color --</option>
+            <option value="" translate>common.directive.docTree.dndDialog.optFileType.prompt</option>
         </select>
     </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="onClickCancel()">Cancel</button>
-    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="disableOk()">OK</button>
+    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
+        common.directive.docTree.dndDialog.btnCancel.text
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="disableOk()" translate>
+        common.directive.docTree.dndDialog.btnOk.text
+    </button>
 </div>
 
 
