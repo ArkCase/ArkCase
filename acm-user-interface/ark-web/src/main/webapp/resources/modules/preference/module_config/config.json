@@ -1,0 +1,13 @@
+{
+  "id": "preference",
+  "title": "Preference",
+  "menus": [{
+      "menuId": "usermenu",
+      "menuItemURL": "preference",
+      "menuItemTitle": "Preference",
+      "iconClass": "glyphicon glyphicon-asterisk",
+      "position": 120
+    }
+
+  ]
+}
