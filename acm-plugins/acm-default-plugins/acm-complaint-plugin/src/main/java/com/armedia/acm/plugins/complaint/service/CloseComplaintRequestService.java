@@ -22,6 +22,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,6 +46,9 @@ public class CloseComplaintRequestService
     private CaseFileDao caseFileDao;
     private EcmFileDao ecmFileDao;
     private EcmFileService ecmFileService;
+    private String complaintFolderNameFormat;
+    private String caseFileDetailsFormat;
+    private String complaintDetailsFormat;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -153,8 +157,17 @@ public class CloseComplaintRequestService
 
             AcmContainer containerCaseFile = getEcmFileService().getOrCreateContainer(existingCaseFile.getObjectType(), existingCaseFile.getId());
 
+            // Default one
+            String complaintFolderName = ComplaintConstants.OBJECT_TYPE + " (" + updatedComplaint.getComplaintNumber() + ")";
+
+            // If the format is defined in the spring bean, override it
+            if (getComplaintFolderNameFormat() != null && !getComplaintFolderNameFormat().isEmpty())
+            {
+                complaintFolderName = String.format(getComplaintFolderNameFormat(), updatedComplaint.getComplaintNumber());
+            }
+
             container.getFolder().setParentFolderId(containerCaseFile.getFolder().getId());
-            container.getFolder().setName(ComplaintConstants.OBJECT_TYPE + " (" + updatedComplaint.getComplaintNumber() + ")");
+            container.getFolder().setName(complaintFolderName);
 
             if (files != null && files.getChildren() != null)
             {
@@ -241,6 +254,7 @@ public class CloseComplaintRequestService
 
     private String formatCaseDetails(Complaint updatedComplaint)
     {
+        // Default one - in case format is not defined in the spring bean
         String details = "This case file is based on Complaint '" + updatedComplaint.getComplaintNumber() + "'.";
         if (updatedComplaint.getDetails() != null)
         {
@@ -250,6 +264,21 @@ public class CloseComplaintRequestService
             details += "<p/>";
             details += updatedComplaint.getDetails();
         }
+
+        // If format is defined in the spring bean, override it
+        if (getCaseFileDetailsFormat() != null && !getCaseFileDetailsFormat().isEmpty())
+        {
+            String complaintDetails = "";
+            if (getComplaintDetailsFormat() != null && !getComplaintDetailsFormat().isEmpty() &&
+                    updatedComplaint.getDetails() != null && !updatedComplaint.getDetails().isEmpty())
+            {
+                complaintDetails = String.format(getComplaintDetailsFormat(), updatedComplaint.getComplaintNumber(), updatedComplaint.getDetails());
+            }
+
+            details = String.format(getCaseFileDetailsFormat(), updatedComplaint.getComplaintNumber(), complaintDetails);
+            details = StringEscapeUtils.unescapeHtml4(details);
+        }
+
         return details;
     }
 
@@ -371,5 +400,35 @@ public class CloseComplaintRequestService
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
+    }
+
+    public String getComplaintFolderNameFormat()
+    {
+        return complaintFolderNameFormat;
+    }
+
+    public void setComplaintFolderNameFormat(String complaintFolderNameFormat)
+    {
+        this.complaintFolderNameFormat = complaintFolderNameFormat;
+    }
+
+    public String getCaseFileDetailsFormat()
+    {
+        return caseFileDetailsFormat;
+    }
+
+    public void setCaseFileDetailsFormat(String caseFileDetailsFormat)
+    {
+        this.caseFileDetailsFormat = caseFileDetailsFormat;
+    }
+
+    public String getComplaintDetailsFormat()
+    {
+        return complaintDetailsFormat;
+    }
+
+    public void setComplaintDetailsFormat(String complaintDetailsFormat)
+    {
+        this.complaintDetailsFormat = complaintDetailsFormat;
     }
 }
