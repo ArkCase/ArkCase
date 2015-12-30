@@ -39,7 +39,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         $scope.retrieveGridData = function () {
             var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
             if (Util.goodPositive(currentObjectId, false)) {
-                ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
+                ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.COMPLAINT
                     , currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
