@@ -177,7 +177,7 @@
       "enabled": true,
       "clientFacetFilter": "\"Object Type\": CASE_FILE",
       "table.columns": {
-              "incident": "Incident Type",
+              "incident": "Type",
               "name": "Name",
               "assignee": "Assignee",
               "title": "Title",
