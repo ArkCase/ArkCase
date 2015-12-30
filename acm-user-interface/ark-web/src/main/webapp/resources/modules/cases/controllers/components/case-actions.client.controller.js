@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state', '$stateParams', '$q'
+angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state', '$stateParams', '$q', '$modal'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Case.LookupService'
-    , 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Helper.ObjectBrowserService'
-    , function ($scope, $state, $stateParams, $q
+    , 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Helper.ObjectBrowserService', 'Case.MergeSplitService'
+    , function ($scope, $state, $stateParams, $q, $modal
         , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, CaseLookupService
-        , ObjectSubscriptionService, ObjectModelService, CaseInfoService, HelperObjectBrowserService) {
+        , ObjectSubscriptionService, ObjectModelService, CaseInfoService, HelperObjectBrowserService, MergeSplitService) {
 
         ConfigService.getComponentConfig("cases", "actions").then(function (componentConfig) {
             $scope.config = componentConfig;
@@ -148,31 +148,37 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             });
         };
 
-        $scope.merge = function () {
-             $event.preventDefault();
-            var modalInstance = $modal.open({
-                animation: $scope.animationsEnabled,
-                templateUrl: 'modules/cases/views/components/case-merge.client.view.html',
-                controller: 'Cases.MergeController',
-                size: 'lg',
-                resolve: {
-                    $clientInfoScope: function () {
-                      return $scope;
-                    },
-                    $filter: function () {
-                        return $scope.config.clientInfo.clientFacetFilter;
-                    }
-                }
-            });
-
-            modalInstance.result.then(function (selectedCase) {
-                if(selectedCase){
-                    console.log("Code goes here.");
-                }
-            }, function () {
-                // Cancel button was clicked
-            });
-        };
+        $scope.merge = function (caseInfo) { 
+             var modalInstance = $modal.open({ 
+                 animation: $scope.animationsEnabled, 
+                 templateUrl: 'modules/cases/views/components/case-merge.client.view.html', 
+                 controller: 'Cases.MergeController', 
+                 size: 'lg', 
+                 resolve: { 
+                     $clientInfoScope: function () { 
+                       return $scope; 
+                     }, 
+                     $filter: function () { 
+                        return $scope.config.caseInfoFilter; 
+                     } 
+                 } 
+             }); 
+             modalInstance.result.then(function (selectedCase) { 
+                 if(selectedCase){ 
+                     if(selectedCase.parentId != null){ 
+                         //Already Merged 
+                     } 
+                     else{ 
+                         MergeSplitService.mergeCaseFile(caseInfo.id, selectedCase.id).then( 
+                                 function(data) { 
+                                     $state.go('cases.id', {id: data.id}); 
+                                 }); 
+                     } 
+                 } 
+             }, function () { 
+                 // Cancel button was clicked 
+             }); 
+         };
 
         $scope.split = function () {
             console.log('split');
