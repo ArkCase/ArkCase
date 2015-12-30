@@ -3,6 +3,9 @@
 /**
  * @ngdoc service
  * @name services:Case.MergeSplitService
+ *
+ *  {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/services/case-mergesplit.client.service.js modules/cases/services/case-mergesplit.client.service.js}
+ *
  * 
  * @description text  
  *      MergeSplit Service provides functions for merging and splitting case files.
@@ -19,6 +22,9 @@ angular.module('services').factory('Case.MergeSplitService', ['$resource', '$tra
              * 
              * @description
              * Adds selected case to original case.
+             * 
+             * @param {Object} data
+             * @return {Object} Promise
              * 
              */
             _mergeCaseFiles:{
@@ -44,8 +50,8 @@ angular.module('services').factory('Case.MergeSplitService', ['$resource', '$tra
          * @description 
          *  Validates data, merges cases.
          *  
-         * @param {type} sourceId
-         * @param {type} targetId
+         * @param {Object} sourceId
+         * @param {Object} targetId
          * @returns {Object} Promise
          */
         Service.mergeCaseFile= function(sourceId, targetId){
