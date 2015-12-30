@@ -27,7 +27,10 @@ angular.module('complaints').config(['$stateProvider', '$urlRouterProvider',
 
             .state('complaints.main', {
                 url: '/:id/main',
-                templateUrl: 'modules/complaints/views/components/complaint-main.client.view.html'
+                templateUrl: 'modules/complaints/views/components/complaint-main.client.view.html',
+                params: {
+                    "type": "complaint"
+                }
             })
 
             .state('complaints.calendar', {

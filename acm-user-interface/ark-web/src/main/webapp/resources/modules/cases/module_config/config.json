@@ -214,24 +214,44 @@
           "columnDefs": [
             {
               "name": "details",
-              "displayName": "dashboard.widgets.details.table.header.details",
+              "displayName": "cases.comp.details.table.columns.title",
               "headerCellFilter": "translate"
             },
             {
               "name": "modified",
-              "displayName": "dashboard.widgets.details.table.header.modified",
+              "displayName": "cases.comp.details.table.columns.modified",
               "headerCellFilter": "translate"
             },
             {
               "name": "modifier",
-              "displayName": "dashboard.widgets.details.table.header.modifier",
+              "displayName": "cases.comp.details.table.columns.modifier",
               "headerCellFilter": "translate"
             }
           ]
         },
         {
           "id": "people",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "personType",
+              "displayName": "cases.comp.people.table.columns.type",
+              "headerCellFilter": "translate",
+              "lookup": "personTypes"
+            },
+            {
+              "name": "firstName",
+              "field": "person.givenName",
+              "displayName": "cases.comp.people.table.columns.firstName",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "lastName",
+              "field": "person.familyName",
+              "displayName": "cases.comp.people.table.columns.lastName",
+              "headerCellFilter": "translate"
+            }
+          ]
         },
         {
           "id": "documents",
@@ -239,19 +259,100 @@
         },
         {
           "id": "participants",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "participantType",
+              "displayName": "cases.comp.participants.table.columns.type",
+              "headerCellFilter": "translate",
+              "lookup": "participantTypes"
+            },
+            {
+              "name": "participantLdapId",
+              "displayName": "cases.comp.participants.table.columns.name",
+              "headerCellFilter": "translate",
+              "lookup": "participantNames"
+            }
+          ]
         },
         {
           "id": "notes",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "note",
+              "displayName": "cases.comp.notes.table.columns.note",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "cases.comp.notes.table.columns.created",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+              "enableCellEdit": false
+            },
+            {
+              "name": "creator",
+              "displayName": "cases.comp.notes.table.columns.creator",
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "lookup": "userFullNames"
+            }
+          ]
         },
         {
           "id": "tasks",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "title",
+              "field": "title_parseable",
+              "displayName": "cases.comp.tasks.table.columns.title",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "assignee",
+              "field": "assignee_s",
+              "displayName": "cases.comp.tasks.table.columns.assignee",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            },
+            {
+              "name": "due",
+              "field": "due_tdt",
+              "displayName": "cases.comp.tasks.table.columns.due",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'medium'}}</div>"
+            }
+          ]
         },
         {
           "id": "references",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "targetName",
+              "displayName": "cases.comp.references.table.columns.targetName",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetName}}</a>"
+            },
+            {
+              "name": "targetTitle",
+              "displayName": "cases.comp.references.table.columns.targetTitle",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
+            },
+            {
+              "name": "targetType",
+              "displayName": "cases.comp.references.table.columns.targetType",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "status",
+              "displayName": "cases.comp.references.table.columns.status",
+              "headerCellFilter": "translate"
+            }
+          ]
         },
         {
           "id": "history",
@@ -259,7 +360,30 @@
         },
         {
           "id": "correspondence",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "name",
+              "displayName": "cases.comp.correspondence.table.columns.name",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.name}}</a>"
+            },
+            {
+              "name": "created",
+              "displayName": "cases.comp.correspondence.table.columns.created",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+              "enableCellEdit": false
+            },
+            {
+              "name": "creator",
+              "displayName": "cases.comp.correspondence.table.columns.creator",
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "lookup": "userFullNames"
+            }
+          ]
+
         },
         {
           "id": "time",

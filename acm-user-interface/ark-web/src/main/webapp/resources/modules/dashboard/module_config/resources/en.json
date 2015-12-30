@@ -65,18 +65,6 @@
         },
         "noDataMessage": "Currently there are no tasks info"
       },
-      "details": {
-        "title": "Details",
-        "description": "Displays case details",
-        "table": {
-          "header": {
-            "details": "Details",
-            "modified": "Date Last Modified",
-            "modifier": "User Last Modified"
-          }
-        },
-        "noDataMessage": "Currently there are no details"
-      },
       "newComplaints": {
         "title": "New Complaints",
         "description": "Displays new complaints",
@@ -125,6 +113,56 @@
         },
         "title": "News",
         "noDataMessage": "Currently there is no RSS/info"
+      },
+      "details": {
+        "title": "Details",
+        "description": "Displays case details",
+        "noDataMessage": "Currently there are no details"
+      },
+      "people": {
+        "title": "People",
+        "description": "Displays people details",
+        "noDataMessage": "Currently there are no people to display"
+      },
+      "location": {
+        "title": "Location",
+        "description": "Displays location details",
+        "noDataMessage": "Currently there are no locations to display"
+      },
+      "tasks": {
+        "title": "Tasks",
+        "description": "Displays task details",
+        "noDataMessage": "Currently there are no tasks to display"
+      },
+      "participants": {
+        "title": "Participants",
+        "description": "Displays participant details",
+        "noDataMessage": "Currently there are no participant to display"
+      },
+      "references": {
+        "title": "References",
+        "description": "Displays reference details",
+        "noDataMessage": "Currently there are no references to display"
+      },
+      "notes": {
+        "title": "Notes",
+        "description": "Displays note details",
+        "noDataMessage": "Currently there are no notes to display"
+      },
+      "correspondence": {
+        "title": "Correspondence",
+        "description": "Displays correspondence details",
+        "noDataMessage": "Currently there are no correspondence to display"
+      },
+      "reworkdetails": {
+        "title": "Rework Details",
+        "description": "Shows most recent rework details",
+        "noDataMessage": "Currently there no are no rework details to display"
+      },
+      "docreview": {
+        "title": "Documents Under Review",
+        "description": "Shows documents under review",
+        "noDataMessage": "Currently there no are no documents under review to display"
       }
     }
   }
