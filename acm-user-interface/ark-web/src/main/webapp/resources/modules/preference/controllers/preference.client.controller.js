@@ -5,7 +5,7 @@ angular.module('preference').controller('Preference.Controller', ['$scope', 'Con
         $scope.config = ConfigService.getModule({moduleId: 'preference'});
         $scope.$on('req-component-config', onConfigRequest);
 
-        $scope.$on('module-selected', moduleSelected);
+        $scope.$on('req-module-selected', moduleSelected);
 
         function moduleSelected(e, module) {
           $scope.$broadcast('module-selected', module);

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('prefence').controller('Preference.ComponentsListController', ['$scope', '$q', '$state', '$stateParams', 'AdministrationService', 'SchemasService',
+angular.module('preference').controller('Preference.ComponentsListController', ['$scope', '$q', '$state', '$stateParams', 'AdministrationService', 'SchemasService',
     function ($scope, $q, $state, $stateParams, AdministrationService, SchemasService) {
         $scope.schemas = {};
         $scope.components = [];
