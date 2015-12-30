@@ -907,10 +907,12 @@
                 "headerCellFilter": "translate"
             },
             {
-                "name": "assignee_full_name_lcs",
-                "displayName": "cases.comp.merge.table.columns.assignee",
-                "headerCellFilter": "translate"
+                "name": "object_type_s",
+                "displayName": "cases.comp.merge.table.columns.incident",
+                "headerCellFilter": "translate",
+                "width": 75
             },
+            
             {
                 "name": "title_parseable",
                 "displayName": "cases.comp.merge.table.columns.title",
@@ -918,14 +920,13 @@
                 "width": 75
             },
             {
-                "name": "incident_type_lcs",
-                "displayName": "cases.comp.merge.table.columns.incident",
-                "headerCellFilter": "translate",
-                "width": 75
-            },
-            {
                 "name": "parent_type_s",
                 "displayName": "cases.comp.merge.table.columns.parent",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "assignee_full_name_lcs",
+                "displayName": "cases.comp.merge.table.columns.assignee",
                 "headerCellFilter": "translate"
             },
             {
