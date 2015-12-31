@@ -1,18 +1,18 @@
 'use strict';
 
-angular.module('dashboard.docreview', ['adf.provider'])
+angular.module('dashboard.workflow', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('docreview', {
+            .widget('workflow', {
                     title: 'Documents Under Review Widget',
                     description: 'Displays documents under review',
-                    controller: 'Dashboard.DocReviewController',
+                    controller: 'Dashboard.WorkflowOverviewController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/docreview-widget.client.view.html'
+                    templateUrl: 'modules/dashboard/views/components/workflow.client.view.html'
                 }
             );
     })
-    .controller('Dashboard.DocReviewController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Task.InfoService'
+    .controller('Dashboard.WorkflowOverviewController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Task.InfoService'
         , 'Authentication', 'Dashboard.DashboardService',
         function ($scope, $translate, $stateParams, Util, TaskInfoService, Authentication, DashboardService) {
 

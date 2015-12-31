@@ -37,15 +37,15 @@ angular.module('cost-tracking').controller('CostTrackingListController', ['$scop
                 );
                 return dfd.promise;
             }
-            , getNodeData: function (costsheetId) {
-                return CostTrackingInfoService.getCostsheetInfo(costsheetId);
+            , getNodeData: function (costsheetInfo) {
+                return CostTrackingInfoService.getCostsheetInfo(costsheetInfo);
             }
-            , makeTreeNode: function (costsheetId) {
+            , makeTreeNode: function (costsheetInfo) {
                 return {
-                    nodeId: Util.goodValue(costsheetId.id, 0)
+                    nodeId: Util.goodValue(costsheetInfo.id, 0)
                     , nodeType: ObjectService.ObjectTypes.COSTSHEET
-                    , nodeTitle: Util.goodValue(costsheetId.title)
-                    , nodeToolTip: Util.goodValue(costsheetId.title)
+                    , nodeTitle: Util.goodValue(costsheetInfo.title)
+                    , nodeToolTip: Util.goodValue(costsheetInfo.title)
                 };
             }
         });
