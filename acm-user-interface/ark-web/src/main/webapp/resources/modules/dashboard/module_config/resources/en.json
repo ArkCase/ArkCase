@@ -163,6 +163,11 @@
         "title": "Documents Under Review",
         "description": "Shows documents under review",
         "noDataMessage": "Currently there no are no documents under review to display"
+      },
+      "workflow":{
+        "title": "Workflow Overview",
+        "description": "Overview of pending workflows",
+        "noDataMessage": "Currently there are no workflows to display"
       }
     }
   }
