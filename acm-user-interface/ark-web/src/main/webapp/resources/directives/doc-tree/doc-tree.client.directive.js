@@ -959,8 +959,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                             // Any documents which are checked in doctree will be opened in the viewer simultaneously
                             // in addition to the document which is directly opened (double-clicked)
                             var selectedIdsList = "";
-                            $(".fancytree-selected:not('.fancytree-folder')").find(".btn-group a").each(function () {
-                                selectedIdsList += this.innerText.trim() + ",";
+                            _.forEach(selNodes, function(value) {
+                                selectedIdsList += value.data.objectId + ",";
                             });
 
                             // removes trailing comma from the id list
