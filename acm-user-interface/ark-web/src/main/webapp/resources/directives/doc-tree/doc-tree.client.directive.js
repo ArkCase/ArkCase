@@ -960,7 +960,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                             // in addition to the document which is directly opened (double-clicked)
                             var selectedIdsList = "";
                             _.forEach(selNodes, function(value) {
-                                selectedIdsList += value.data.objectId + ",";
+                                if (value.data && value.data.objectId && value.data.objectType) {
+                                    if (value.data.objectType.toLowerCase() != "folder") {
+                                        selectedIdsList += value.data.objectId + ",";
+                                    }
+                                }
                             });
 
                             // removes trailing comma from the id list
