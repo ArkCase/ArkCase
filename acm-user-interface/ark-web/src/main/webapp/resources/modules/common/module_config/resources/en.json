@@ -55,6 +55,15 @@
       "btnCancel.text": "Cancel",
       "btnOk.text": "OK"
     },
+    "emailDialog": {
+      "title": "Email",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Send Email",
+      "gridColumns": {
+        "name": "Name",
+        "email": "Email"
+      }
+    },
     "error": {
       "nodeTitle": "(Error)"
     }
@@ -76,5 +85,12 @@
     "tooltip.move_right": "Move Right",
     "tooltip.move_left": "Move Left",
     "authorized": "Authorized"
+  },
+  "common.directive.searchModal": {
+    "header": "Search",
+    "btnSearch.text": "Search",
+    "btnOk.text": "OK",
+    "btnCancel.text": "Cancel",
+    "edtPlaceholder": "Type in to search"
   }
 }

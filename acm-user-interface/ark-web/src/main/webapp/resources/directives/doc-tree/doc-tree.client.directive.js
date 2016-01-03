@@ -976,12 +976,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                         case "edit":
                             break;
                         case "email":
-                            if (batch) {
-                                DocTree.Email.showEmailDialog(selNodes);
-                            }
-                            else {
-                                DocTree.Email.showEmailDialog(node);
-                            }
+                            Email.openModal();
+
+                            //if (batch) {
+                            //    DocTree.Email.showEmailDialog(selNodes);
+                            //}
+                            //else {
+                            //    DocTree.Email.showEmailDialog(node);
+                            //}
                             break;
                         case "declare":
                             var declareAsRecordData = [];
@@ -3258,7 +3260,26 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
         };
 
         var Email = {
-            sentEmail: function (emailData) {
+            openModal: function () {
+                var params = {};
+
+                var modalInstance = $modal.open({
+                    templateUrl: "directives/doc-tree/doc-tree.email.dialog.html"
+                    , controller: 'directives.DocTreeEmailDialogController'
+                    , resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+                modalInstance.result.then(function (result) {
+                    if (result) {
+                        console.log("sent email");
+                    }
+                });
+            }
+
+            , sentEmail: function (emailData) {
                 var dfd = $.Deferred();
 
                 var failed = "";
@@ -3984,6 +4005,56 @@ angular.module('directives').controller('directives.DocTreeDndDialogController',
                 $modalInstance.close(false);
             };
             $scope.onClickOk = function () {
+                $modalInstance.close($scope.result);
+            };
+
+        }
+    ]
+);
+
+
+angular.module('directives').controller('directives.DocTreeEmailDialogController', ['$scope', '$modalInstance'
+        , 'UtilService', 'params', 'ConfigService'
+        , function ($scope, $modalInstance, Util, params, ConfigService) {
+            $scope.modalInstance = $modalInstance;
+
+            ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+                $scope.config = Util.goodMapValue(moduleConfig, "docTree.emailDialog");
+                //$scope.filter = $scope.config.userFacetFilter;
+                return moduleConfig;
+            });
+
+            //scope.addExistingItem = function () {
+            //    //when the modal is closed, the parent scope gets
+            //    //the selectedItem via the two-way binding
+            //    if (scope.multiSelect === 'true') {
+            //        scope.modalInstance.close(scope.selectedItems);
+            //    } else {
+            //        scope.modalInstance.close(scope.selectedItem);
+            //    }
+            //};
+
+
+            $scope.result = {};
+            $scope.onItemsSelected = function (selectedItems, lastSelectedItems, isSelected) {
+                var a1 = Util.goodMapValue(selectedItems, "[0].name")
+                var a2 = Util.goodMapValue(selectedItems, "[0].email_lcs")
+                console.log("select items");
+            };
+
+            $scope.onClickCancel = function () {
+                $modalInstance.close(false);
+            };
+            $scope.onClickOk = function () {
+                var a0 = $scope;
+                var a4 = this;
+                var a5 = $scope.searchControl;
+
+                var a6 = $scope.searchControl.getSelectedItems();
+                var v7 = _.pick(a6, {});
+                //var a1 = $scope.selectedItem;
+                //var a2 = $scope.selectedItems;
+                //var a3 = $scope.multiSelect;
                 $modalInstance.close($scope.result);
             };
 
