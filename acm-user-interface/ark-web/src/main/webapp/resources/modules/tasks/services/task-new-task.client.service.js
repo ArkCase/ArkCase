@@ -8,8 +8,8 @@
  *
  * Task.NewTaskService provides the functions for creating an Ad Hoc task.
  */
-angular.module('tasks').factory('Task.NewTaskService', ['$resource', 'UtilService',
-    function ($resource, Util) {
+angular.module('tasks').factory('Task.NewTaskService', ['$resource', '$state', 'UtilService', 'Task.InfoService',
+    function ($resource, $state, Util, TaskInfoService) {
         var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
 
             /**
@@ -50,7 +50,7 @@ angular.module('tasks').factory('Task.NewTaskService', ['$resource', 'UtilServic
                 service: Service.createNewTask
                 , data: taskData
                 , onSuccess: function (data) {
-                    if (Service.validateTaskInfo(data)) {
+                    if (TaskInfoService.validateTaskInfo(data)) {
                         $state.go('tasks.main', {type: 'ADHOC', id: data.taskId});
                     }
                 }

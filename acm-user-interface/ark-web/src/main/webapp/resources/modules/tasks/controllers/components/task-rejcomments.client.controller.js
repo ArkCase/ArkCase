@@ -1,9 +1,11 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.NoteService', 'Authentication'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.NoteService', 'Authentication'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
     , function ($scope, $stateParams, $q
-        , Util, ConfigService, HelperUiGridService, ObjectService, ObjectNoteService, Authentication) {
+        , Util, ConfigService, ObjectService, ObjectNoteService, Authentication
+        , HelperUiGridService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
@@ -28,8 +30,9 @@ angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', 
         );
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($stateParams.id)) {
-                var promiseQueryNotes = ObjectNoteService.queryRejectComments(ObjectService.ObjectTypes.TASK, $stateParams.id);
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (Util.goodPositive(currentObjectId, false)) {
+                var promiseQueryNotes = ObjectNoteService.queryRejectComments(ObjectService.ObjectTypes.TASK, currentObjectId);
                 $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions.data = notes;

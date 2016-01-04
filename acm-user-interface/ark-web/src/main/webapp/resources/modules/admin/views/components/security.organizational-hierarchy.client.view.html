@@ -1,7 +1,7 @@
 <panel-view header="{{'admin.security.organizationalHierarchy.title' | translate}}" collapsible="false">
     <div ng-controller="Admin.OrganizationalHierarchyController">
-        <button class="btn btn-default" ng-click="createGroup()">{{'admin.security.organizationalHierarchy.createGroupDialog.title' |
-            translate}}
+        <button class="btn btn-default" ng-click="createGroup()">
+            <span translate>admin.security.organizationalHierarchy.createGroupDialog.title</span>
         </button>
         <tree-table-view tree-data="data" on-lazy-load="onLazyLoad" config="cfg" on-add-members="onAddMembers"
                          on-delete-group="onDeleteGroup" on-delete-members="onDeleteMembers" on-add-sub-group="onAddSubGroup" on-set-supervisor="onSetSupervisor"/>

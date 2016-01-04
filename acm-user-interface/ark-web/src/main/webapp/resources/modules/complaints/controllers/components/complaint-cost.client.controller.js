@@ -1,8 +1,11 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.CostController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'ObjectService', 'Helper.UiGridService', 'ConfigService', 'Object.CostService'
-    , function ($scope, $stateParams, $translate, Util, ObjectService, HelperUiGridService, ConfigService, ObjectCostService) {
+    , 'UtilService', 'ObjectService', 'ConfigService', 'Object.CostService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $translate
+        , Util, ObjectService, ConfigService, ObjectCostService
+        , HelperUiGridService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
@@ -21,8 +24,9 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
             return config;
         });
 
-        if (Util.goodPositive($stateParams.id)) {
-            ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.COMPLAINT, $stateParams.id).then(
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.COMPLAINT, currentObjectId).then(
                 function (costsheets) {
                     promiseConfig.then(function (config) {
                         for (var i = 0; i < costsheets.length; i++) {

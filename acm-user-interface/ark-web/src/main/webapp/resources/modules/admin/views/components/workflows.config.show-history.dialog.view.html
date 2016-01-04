@@ -1,9 +1,13 @@
 <div class="modal-header">
-    <h3>{{'admin.workflows.config.showHistory.dialog.title' | translate}}</h3>
+    <h3>
+        <span translate>admin.workflows.config.showHistory.dialog.title</span>
+    </h3>
 </div>
 
 <div class="modal-body">
-    <div>{{'admin.workflows.config.showHistory.dialog.body' | translate}}</div>
+    <div>
+        <span translate>admin.workflows.config.showHistory.dialog.body</span>
+    </div>
     <div ui-grid="gridOptions"
          ui-grid-resize-columns
          adjust-table-height="gridOptions.data.length"
@@ -12,10 +16,10 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-default" ng-click="cancel()">{{'admin.workflows.config.showHistory.dialog.cancel' |
-        translate}}
+    <button class="btn btn-default" ng-click="cancel()">
+        <span translate>admin.workflows.config.showHistory.dialog.cancel</span>
     </button>
     <button class="btn btn-default" ng-click="activate()" ng-disabled="activateBtnDisabled">
-        {{'admin.workflows.config.showHistory.dialog.activate' | translate}}
+        <span translate>admin.workflows.config.showHistory.dialog.activate</span>
     </button>
 </div>

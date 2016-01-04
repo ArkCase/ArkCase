@@ -1,18 +1,12 @@
 'use strict';
 
-angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state', '$stateParams', '$q'
+angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state', '$stateParams', '$q', '$modal'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Case.LookupService'
-    , 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService'
-    , function ($scope, $state, $stateParams, $q
+    , 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Helper.ObjectBrowserService', 'Case.MergeSplitService'
+    , function ($scope, $state, $stateParams, $q, $modal
         , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, CaseLookupService
-        , ObjectSubscriptionService, ObjectModelService, CaseInfoService) {
+        , ObjectSubscriptionService, ObjectModelService, CaseInfoService, HelperObjectBrowserService, MergeSplitService) {
 
-        //$scope.$emit('req-component-config', 'actions');
-        //$scope.$on('component-config', function (e, componentId, config) {
-        //    if ('actions' == componentId) {
-        //        $scope.config = config;
-        //    }
-        //});
         ConfigService.getComponentConfig("cases", "actions").then(function (componentConfig) {
             $scope.config = componentConfig;
             return componentConfig;
@@ -22,7 +16,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         var promiseGetGroups = ObjectLookupService.getGroups();
 
         var previousId = null;
-        $scope.$on('case-updated', function (e, data) {
+        $scope.$on('object-updated', function (e, data) {
             if (!CaseInfoService.validateCaseInfo(data)) {
                 return;
             }
@@ -56,38 +50,34 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                 previousId = $stateParams.id;
             }
         });
-        //var previousId = null;
-        //if (Util.goodPositive($stateParams.id)) {
-        //    CaseInfoService.getCaseInfo($stateParams.id).then(function (caseInfo) {
+        //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        //if (Util.goodPositive(currentObjectId, false)) {
+        //    CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
         //        $scope.caseInfo = caseInfo;
-        //
         //        var group = ObjectModelService.getGroup(caseInfo);
         //        var assignee = ObjectModelService.getAssignee(caseInfo);
-        //        if (previousId != $stateParams.id) {
-        //            var promiseGetApprovers = CaseLookupService.getApprovers(group, assignee);
-        //            $q.all([promiseQueryUser, promiseGetGroups, promiseGetApprovers]).then(function (data) {
-        //                var userInfo = data[0];
-        //                var groups = data[1];
-        //                var assignees = data[2];
-        //                $scope.restricted = ObjectModelService.checkRestriction(userInfo.userId, assignee, group, assignees, groups);
-        //            });
         //
+        //        var promiseGetApprovers = CaseLookupService.getApprovers(group, assignee);
+        //        $q.all([promiseQueryUser, promiseGetGroups, promiseGetApprovers]).then(function (data) {
+        //            var userInfo = data[0];
+        //            var groups = data[1];
+        //            var assignees = data[2];
+        //            $scope.restricted = ObjectModelService.checkRestriction(userInfo.userId, assignee, group, assignees, groups);
+        //        });
         //
-        //            promiseQueryUser.then(function (userInfo) {
-        //                $scope.userId = userInfo.userId;
-        //                ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (subscriptions) {
-        //                    var found = _.find(subscriptions, {
-        //                        userId: userInfo.userId,
-        //                        subscriptionObjectType: ObjectService.ObjectTypes.CASE_FILE,
-        //                        objectId: $scope.caseInfo.id
-        //                    });
-        //                    $scope.showBtnSubscribe = Util.isEmpty(found);
-        //                    $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
+        //        promiseQueryUser.then(function (userInfo) {
+        //            $scope.userId = userInfo.userId;
+        //            ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (subscriptions) {
+        //                var found = _.find(subscriptions, {
+        //                    userId: userInfo.userId,
+        //                    subscriptionObjectType: ObjectService.ObjectTypes.CASE_FILE,
+        //                    objectId: $scope.caseInfo.id
         //                });
+        //                $scope.showBtnSubscribe = Util.isEmpty(found);
+        //                $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
         //            });
+        //        });
         //
-        //            previousId = $stateParams.id;
-        //        }
         //        return caseInfo;
         //    });
         //}
@@ -103,13 +93,13 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         $scope.createNew = function () {
-            $state.go("frevvo-new-case", {
+            $state.go("frevvo", {
                 name: "new-case"
             });
         };
 
         $scope.edit = function (caseInfo) {
-            $state.go("frevvo-edit-case", {
+            $state.go("frevvo", {
                 name: "edit-case"
                 , arg: {
                     caseId: caseInfo.id
@@ -122,7 +112,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         $scope.changeStatus = function (caseInfo) {
-            $state.go("frevvo-change-case-status", {
+            $state.go("frevvo", {
                 name: "change-case-status"
                 , arg: {
                     caseId: caseInfo.id
@@ -132,7 +122,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             });
         };
         $scope.reinvestigate = function (caseInfo) {
-            $state.go("frevvo-reinvestigate", {
+            $state.go("frevvo", {
                 name: "reinvestigate"
                 , arg: {
                     caseId: caseInfo.id
@@ -158,31 +148,37 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             });
         };
 
-        $scope.merge = function () {
-             $event.preventDefault();
-            var modalInstance = $modal.open({
-                animation: $scope.animationsEnabled,
-                templateUrl: 'modules/cases/views/components/case-merge.client.view.html',
-                controller: 'Cases.MergeController',
-                size: 'lg',
-                resolve: {
-                    $clientInfoScope: function () {
-                      return $scope;
-                    },
-                    $filter: function () {
-                        return $scope.config.clientInfo.clientFacetFilter;
-                    }
-                }
-            });
-
-            modalInstance.result.then(function (selectedCase) {
-                if(selectedCase){
-                    console.log("Code goes here.");
-                }
-            }, function () {
-                // Cancel button was clicked
-            });
-        };
+        $scope.merge = function (caseInfo) { 
+             var modalInstance = $modal.open({ 
+                 animation: $scope.animationsEnabled, 
+                 templateUrl: 'modules/cases/views/components/case-merge.client.view.html', 
+                 controller: 'Cases.MergeController', 
+                 size: 'lg', 
+                 resolve: { 
+                     $clientInfoScope: function () { 
+                       return $scope; 
+                     }, 
+                     $filter: function () { 
+                        return $scope.config.caseInfoFilter; 
+                     } 
+                 } 
+             }); 
+             modalInstance.result.then(function (selectedCase) { 
+                 if(selectedCase){ 
+                     if(selectedCase.parentId != null){ 
+                         //Already Merged 
+                     } 
+                     else{ 
+                         MergeSplitService.mergeCaseFile(caseInfo.id, selectedCase.id).then( 
+                                 function(data) { 
+                                     $state.go('cases.id', {id: data.id}); 
+                                 }); 
+                     } 
+                 } 
+             }, function () { 
+                 // Cancel button was clicked 
+             }); 
+         };
 
         $scope.split = function () {
             console.log('split');

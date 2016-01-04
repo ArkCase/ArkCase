@@ -1,23 +1,22 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.DetailsController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'ConfigService', 'Complaint.InfoService', 'MessageService'
-    , function ($scope, $stateParams, $translate, Util, ConfigService, ComplaintInfoService, MessageService) {
+    , 'UtilService', 'ConfigService', 'Complaint.InfoService', 'MessageService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $translate
+        , Util, ConfigService, ComplaintInfoService, MessageService, HelperObjectBrowserService) {
 
         ConfigService.getComponentConfig("complaints", "details").then(function (componentConfig) {
             $scope.config = componentConfig;
             return componentConfig;
         });
 
-        //$scope.$on('complaint-updated', function (e, data) {
-        //    if (ComplaintInfoService.validateComplaintInfo(data)) {
-        //        $scope.complaintInfo = data;
-        //    }
-        //});
-        ComplaintInfoService.getComplaintInfo($stateParams.id).then(function (complaintInfo) {
-            $scope.complaintInfo = complaintInfo;
-            return complaintInfo;
-        });
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
+                $scope.complaintInfo = complaintInfo;
+                return complaintInfo;
+            });
+        }
 
 
         $scope.options = {

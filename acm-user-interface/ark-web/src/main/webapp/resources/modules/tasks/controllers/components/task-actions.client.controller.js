@@ -19,7 +19,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             }
         );
 
-        $scope.$on('task-updated', function (e, data) {
+        $scope.$on('object-updated', function (e, data) {
             if (!TaskInfoService.validateTaskInfo(data)) {
                 return;
             }
@@ -90,7 +90,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             if (TaskInfoService.validateTaskInfo(taskInfo)) {
                 TaskWorkflowService.deleteTask(taskInfo.taskId).then(
                     function (taskInfo) {
-                        $scope.$emit("report-task-updated", taskInfo);
+                        $scope.$emit("report-object-updated", taskInfo);
                         return taskInfo;
                     }
                 );
@@ -102,7 +102,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             if (Util.goodMapValue($scope.taskInfo, "taskId", false)) {
                 TaskWorkflowService.completeTask($scope.taskInfo.taskId).then(
                     function (taskInfo) {
-                        $scope.$emit("report-task-updated", taskInfo);
+                        $scope.$emit("report-object-updated", taskInfo);
                         return taskInfo;
                     }
                 );
@@ -129,7 +129,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             if (TaskInfoService.validateTaskInfo(taskInfo)) {
                 TaskWorkflowService.completeTaskWithOutcome(taskInfo, name).then(
                     function (taskInfo) {
-                        $scope.$emit("report-task-updated", taskInfo);
+                        $scope.$emit("report-object-updated", taskInfo);
                         return taskInfo;
                     }
                 );

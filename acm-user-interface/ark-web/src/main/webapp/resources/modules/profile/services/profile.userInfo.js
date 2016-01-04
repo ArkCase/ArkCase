@@ -12,7 +12,7 @@ angular.module('profile').service('Profile.UserInfoService', function ($http, $q
                 if(user){
                     var request = $http({
                         method: 'GET',
-                        cache: true,
+                        cache: false,
                         url: 'proxy/arkcase/api/latest/plugin/profile/get/' + user
                     }).then(
                         function successCallback(response) {

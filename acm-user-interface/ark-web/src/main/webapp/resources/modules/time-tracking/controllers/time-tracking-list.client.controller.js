@@ -2,21 +2,18 @@
 
 
 angular.module('time-tracking').controller('TimeTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate'
-    , 'ConfigService', 'Authentication', 'UtilService', 'ObjectService', 'Helper.ObjectTreeService'
+    , 'Authentication', 'UtilService', 'ObjectService', 'Helper.ObjectBrowserService'
     , 'TimeTracking.ListService', 'TimeTracking.InfoService'
     , function ($scope, $state, $stateParams, $q, $translate
-        , ConfigService, Authentication, Util, ObjectService, HelperObjectTreeService
+        , Authentication, Util, ObjectService, HelperObjectBrowserService
         , TimeTrackingListService, TimeTrackingInfoService) {
 
-        ConfigService.getModuleConfig("time-tracking").then(function (config) {
-            $scope.treeConfig = config.tree;
-            $scope.componentsConfig = config.components;
-            return config;
-        });
-
-        var treeHelper = new HelperObjectTreeService.Tree({
+        //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper
+        new HelperObjectBrowserService.Tree({
             scope: $scope
-            , nodeId: $stateParams.id
+            , state: $state
+            , stateParams: $stateParams
+            , moduleId: "time-tracking"
             , getTreeData: function (start, n, sort, filters) {
                 var dfd = $q.defer();
                 Authentication.queryUserInfo().then(
@@ -42,7 +39,7 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
                 return dfd.promise;
             }
             , getNodeData: function (timesheetId) {
-                return TimeTrackingInfoService.getTimeTrackingInfo(timesheetId);
+                return TimeTrackingInfoService.getTimesheetInfo(timesheetId);
             }
             , makeTreeNode: function (timesheetInfo) {
                 return {
@@ -53,17 +50,6 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
                 };
             }
         });
-        $scope.onLoad = function (start, n, sort, filters) {
-            treeHelper.onLoad(start, n, sort, filters);
-        };
 
-        $scope.onSelect = function (selectedTimesheet) {
-            $scope.$emit('req-select-timesheet', selectedTimesheet);
-            var components = Util.goodArray(selectedTimesheet.components);
-            var componentType = (1 == components.length) ? components[0] : "main";
-            $state.go('time-tracking.' + componentType, {
-                id: selectedTimesheet.nodeId
-            });
-        };
     }
 ]);

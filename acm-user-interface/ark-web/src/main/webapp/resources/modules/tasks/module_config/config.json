@@ -4,7 +4,7 @@
   "menus": [
     {
       "menuId": "leftnav",
-      "menuItemURL": "tasks",
+      "menuItemURL": "tasks.main",
       "menuItemTitle": "Tasks",
       "iconClass": "fa fa-check-circle",
       "position": 60
@@ -66,13 +66,13 @@
       {
         "desc": "Sort Create Date Asc",
         "name": "sort-date-asc",
-        "value": "create_tdt ASC",
-        "default": true
+        "value": "create_tdt ASC"
       },
       {
         "desc": "Sort Create Date Desc",
         "name": "sort-date-desc",
-        "value": "create_tdt DESC"
+        "value": "create_tdt DESC",
+        "default": true
       },
       {
         "desc": "Sort Case Name Asc",
@@ -244,7 +244,24 @@
       "widgetsTask": [
         {
           "id": "details",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "details",
+              "displayName": "dashboard.widgets.details.table.header.details",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "modified",
+              "displayName": "dashboard.widgets.details.table.header.modified",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "modifier",
+              "displayName": "dashboard.widgets.details.table.header.modifier",
+              "headerCellFilter": "translate"
+            }
+          ]
         },
         {
           "id": "reworkdetails",
@@ -581,6 +598,54 @@
       ]
     },
     {
+      "id": "userSearch",
+      "title": "Select users",
+      "enabled": "true",
+      "multi": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "tasks.userSearch.assigneeGridColumns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_type_s",
+          "displayName": "tasks.userSearch.assigneeGridColumns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title",
+          "displayName": "tasks.userSearch.assigneeGridColumns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "parent",
+          "displayName": "tasks.userSearch.assigneeGridColumns.parent",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "assignee",
+          "displayName": "tasks.userSearch.assigneeGridColumns.assignee",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified_date_tdt",
+          "displayName": "tasks.userSearch.assigneeGridColumns.modified",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0
+    },
+    {
       "id": "newTask",
       "status": [
         {
@@ -624,6 +689,9 @@
         "taskId": "",
         "taskStartDate": "",
         "title": ""
+      },
+      "userSearch": {
+        "userFacetFilter": "\"Object Type\": USER"
       }
     }
   ]
