@@ -2,14 +2,22 @@
 
 angular.module('complaints').controller('Complaints.TasksController', ['$scope', '$state', '$stateParams', '$q', '$translate'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Complaint.InfoService'
     , function ($scope, $state, $stateParams, $q, $translate
         , Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService
-        , HelperUiGridService, HelperObjectBrowserService) {
+        , HelperUiGridService, HelperObjectBrowserService, ComplaintInfoService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
         var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
+
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
+                $scope.complaintInfo = complaintInfo;
+                return complaintInfo;
+            });
+        }
 
         ConfigService.getComponentConfig("complaints", "tasks").then(function (config) {
             gridHelper.setColumnDefs(config);
@@ -39,7 +47,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         $scope.retrieveGridData = function () {
             var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
             if (Util.goodPositive(currentObjectId, false)) {
-                ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
+                ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.COMPLAINT
                     , currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)

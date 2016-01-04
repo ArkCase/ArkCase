@@ -1,6 +1,7 @@
 {
   "id": "cases",
   "title": "Cases",
+  "caseInfoFilter": "\"Object Type\": CASE_FILE",
   "menus": [
     {
       "menuId": "leftnav",
@@ -892,6 +893,57 @@
       "icon": "fa fa-calendar",
       "enabled": true,
       "type": "empty"
+    },
+    {
+        "id": "merge",
+        "title": "cases.comp.merge.title",
+        "enabled": "true",
+        "type": "grid",
+        "enableFiltering": false,
+        "columnDefs": [
+            {
+                "name": "name",
+                "displayName": "cases.comp.merge.table.columns.name",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "object_type_s",
+                "displayName": "cases.comp.merge.table.columns.incident",
+                "headerCellFilter": "translate",
+                "width": 75
+            },
+            
+            {
+                "name": "title_parseable",
+                "displayName": "cases.comp.merge.table.columns.title",
+                "headerCellFilter": "translate",
+                "width": 75
+            },
+            {
+                "name": "parent_type_s",
+                "displayName": "cases.comp.merge.table.columns.parent",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "assignee_full_name_lcs",
+                "displayName": "cases.comp.merge.table.columns.assignee",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "modified_date_tdt",
+                "displayName": "cases.comp.merge.table.columns.modified",
+                "headerCellFilter": "translate"
+            }
+        ],
+        "paginationPageSizes": [
+            5,
+            10,
+            20,
+            50
+        ],
+        "paginationPageSize": 5,
+        "start": 0,
+        "caseInfoFilter": "\"Object Type\": CASE_FILE"
     }
   ]
 }
