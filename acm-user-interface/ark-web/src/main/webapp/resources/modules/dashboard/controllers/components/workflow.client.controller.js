@@ -29,7 +29,7 @@ angular.module('dashboard.workflow', ['adf.provider'])
             function applyConfig(e, componentId, config) {
                 if (componentId == 'main') {
                     $scope.config = config;
-                    $scope.gridOptions.columnDefs = config.widgets[2].columnDefs; //tasks.config.widget[2] = docsreview
+                    $scope.gridOptions.columnDefs = config.widgets[5].columnDefs; //tasks.config.widget[5] = workflow
 
                     //set gridOptions.data
                     if ($stateParams.type) {
