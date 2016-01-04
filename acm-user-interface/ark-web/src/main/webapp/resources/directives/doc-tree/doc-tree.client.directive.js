@@ -4024,38 +4024,54 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
                 return moduleConfig;
             });
 
-            //scope.addExistingItem = function () {
-            //    //when the modal is closed, the parent scope gets
-            //    //the selectedItem via the two-way binding
-            //    if (scope.multiSelect === 'true') {
-            //        scope.modalInstance.close(scope.selectedItems);
-            //    } else {
-            //        scope.modalInstance.close(scope.selectedItem);
-            //    }
-            //};
-
-
-            $scope.result = {};
+            $scope.recipients = [];
             $scope.onItemsSelected = function (selectedItems, lastSelectedItems, isSelected) {
-                var a1 = Util.goodMapValue(selectedItems, "[0].name")
-                var a2 = Util.goodMapValue(selectedItems, "[0].email_lcs")
-                console.log("select items");
-            };
+                var recipientTokens = Util.goodValue($scope.recipientsStr).split(";");
+                _.each(lastSelectedItems, function (selectedItem) {
+                    var found = _.find($scope.recipients, function (recipient) {
+                        return Util.compare(selectedItem.name, recipient.name) || Util.compare(selectedItem.email_lcs, recipient.email)
+                    });
+                    if (isSelected && !found) {
+                        $scope.recipients.push({
+                            name: Util.goodValue(selectedItem.name)
+                            , email: Util.goodValue(selectedItem.email_lcs)
+                        });
 
+                    } else if (!isSelected && found) {
+                        _.remove($scope.recipients, found);
+                    }
+                });
+
+                $scope.recipientsStr = _.pluck($scope.recipients, "name").join(";");
+            };
+            $scope.onChangeRecipients = function () {
+                var recipientsNew = [];
+                var recipientTokens = Util.goodValue($scope.recipientsStr).split(";");
+                _.each(recipientTokens, function (token) {
+                    token = token.trim();
+                    if (!Util.isEmpty(token)) {
+                        var found = _.find($scope.recipients, function (recipient) {
+                            return (token == recipient.name || token == recipient.email);
+                        });
+                        if (found) {
+                            recipientsNew.push(found);
+                        } else {
+                            var recipientUserTyped = {name: token, email: token};
+                            recipientsNew.push(recipientUserTyped);
+                        }
+                    }
+                });
+                $scope.recipients = recipientsNew;
+            };
             $scope.onClickCancel = function () {
                 $modalInstance.close(false);
             };
             $scope.onClickOk = function () {
-                var a0 = $scope;
-                var a4 = this;
-                var a5 = $scope.searchControl;
-
-                var a6 = $scope.searchControl.getSelectedItems();
-                var v7 = _.pick(a6, {});
-                //var a1 = $scope.selectedItem;
-                //var a2 = $scope.selectedItems;
-                //var a3 = $scope.multiSelect;
-                $modalInstance.close($scope.result);
+                //var a = $scope.searchControl.getSelectedItems();
+                $modalInstance.close($scope.recipients);
+            };
+            $scope.disableOk = function () {
+                return Util.isEmpty($scope.recipientsStr);
             };
 
         }

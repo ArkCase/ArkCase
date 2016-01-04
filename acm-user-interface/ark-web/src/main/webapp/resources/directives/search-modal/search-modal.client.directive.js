@@ -166,7 +166,8 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
 
                             gridApi.selection.on.rowSelectionChanged(scope, function (row) {
                                 scope.selectedItems = gridApi.selection.getSelectedRows();
-                                scope.selectedItem = row.isSelected ? row.entity : null;
+                                //scope.selectedItem = row.isSelected ? row.entity : null;
+                                scope.selectedItem = row.entity;
                                 if (scope.onItemsSelected) {
                                     //scope.onItemsSelected(scope.selectedItems);
                                     scope.onItemsSelected(scope.selectedItems, [scope.selectedItem], row.isSelected);
