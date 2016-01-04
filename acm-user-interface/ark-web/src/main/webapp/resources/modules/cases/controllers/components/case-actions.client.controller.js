@@ -12,6 +12,10 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             return componentConfig;
         });
 
+        ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
+            $scope.caseFileSearchConfig = _.find(moduleConfig.components, {id: "merge"});
+        });
+
         var promiseQueryUser = Authentication.queryUserInfo();
         var promiseGetGroups = ObjectLookupService.getGroups();
 
@@ -148,36 +152,36 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             });
         };
 
-        $scope.merge = function (caseInfo) { 
-             var modalInstance = $modal.open({ 
-                 animation: $scope.animationsEnabled, 
-                 templateUrl: 'modules/cases/views/components/case-merge.client.view.html', 
-                 controller: 'Cases.MergeController', 
-                 size: 'lg', 
-                 resolve: { 
-                     $clientInfoScope: function () { 
-                       return $scope; 
-                     }, 
-                     $filter: function () { 
-                        return $scope.config.caseInfoFilter; 
-                     } 
-                 } 
-             }); 
-             modalInstance.result.then(function (selectedCase) { 
-                 if(selectedCase){ 
-                     if(selectedCase.parentId != null){ 
-                         //Already Merged 
-                     } 
-                     else{ 
-                         MergeSplitService.mergeCaseFile(caseInfo.id, selectedCase.id).then( 
-                                 function(data) { 
-                                     $state.go('cases.id', {id: data.id}); 
-                                 }); 
-                     } 
-                 } 
-             }, function () { 
-                 // Cancel button was clicked 
-             }); 
+        $scope.merge = function (caseInfo) {
+             var modalInstance = $modal.open({
+                 animation: $scope.animationsEnabled,
+                 templateUrl: 'modules/cases/views/components/case-merge.client.view.html',
+                 controller: 'Cases.MergeController',
+                 size: 'lg',
+                 resolve: {
+                     $clientInfoScope: function () {
+                       return $scope.caseFileSearchConfig;
+                     },
+                     $filter: function () {
+                        return $scope.caseFileSearchConfig.caseInfoFilter;
+                     }
+                 }
+             });
+             modalInstance.result.then(function (selectedCase) {
+                 if(selectedCase){
+                     if(selectedCase.parentId != null){
+                         //Already Merged
+                     }
+                     else{
+                         MergeSplitService.mergeCaseFile(caseInfo.id, selectedCase.object_id_s).then(
+                                 function(data) {
+                                     ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, data.id);
+                                 });
+                     }
+                 }
+             }, function () {
+                 // Cancel button was clicked
+             });
          };
 
         $scope.split = function () {
