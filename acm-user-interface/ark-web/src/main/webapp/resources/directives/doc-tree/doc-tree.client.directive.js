@@ -72,6 +72,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
         var promiseGetUserFullName = LookupService.getUserFullNames();
+        var promiseGetEmailParams = LookupService.getConfig("notification").then(function (data) {
+            Email.arkcaseUrl = Util.goodValue(data["arkcase.url"]);
+            Email.arkcasePort = Util.goodValue(data["arkcase.port"]);
+            Email.allowMailFilesAsAttachments = ("true" == Util.goodValue(data["notification.allowMailFilesAsAttachments"], "true"));
+            Email.allowMailFilesToExternalAddresses = ("true" == Util.goodValue(data["notification.allowMailFilesToExternalAddresses"], "true"));
+        });
 
         var DocTree = {
             CLIPBOARD: null
@@ -976,14 +982,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                         case "edit":
                             break;
                         case "email":
-                            Email.openModal();
-
-                            //if (batch) {
-                            //    DocTree.Email.showEmailDialog(selNodes);
-                            //}
-                            //else {
-                            //    DocTree.Email.showEmailDialog(node);
-                            //}
+                            if (batch) {
+                                Email.openModal(selNodes);
+                            }
+                            else {
+                                Email.openModal([node]);
+                            }
                             break;
                         case "declare":
                             var declareAsRecordData = [];
@@ -3260,7 +3264,13 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
         };
 
         var Email = {
-            openModal: function () {
+            arkcaseUrl: "localhost"
+            , arkcasePort: ""
+            , allowMailFilesAsAttachments: true
+            , allowMailFilesToExternalAddresses: true
+            , API_DOWNLOAD_DOCUMENT: "/api/v1/plugin/ecm/download?ecmFileId="
+
+            , openModal: function (nodes) {
                 var params = {};
 
                 var modalInstance = $modal.open({
@@ -3272,18 +3282,80 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                         }
                     }
                 });
-                modalInstance.result.then(function (result) {
-                    if (result) {
-                        console.log("sent email");
+                modalInstance.result.then(function (recipients) {
+                    if (!Util.isArrayEmpty(recipients)) {
+                        var emailAddresses = _.pluck(recipients, "email");
+
+                        //var emailData = Email.makeEmailData(emailAddresses, nodes);
+                        if (Email.allowMailFilesAsAttachments) {
+                            var emailData = Email._makeEmailDataForEmailWithAttachments(emailAddresses, nodes);
+                            Email.sendEmailWithAttachments(emailData);
+                        }
+                        else {
+                            //var emailData = Email._makeEmailDataForEmailWithLinks(emailAddresses, nodes, title);
+                            var emailData = Email._makeEmailDataForEmailWithLinks(emailAddresses, nodes);
+                            Email.sendEmail(emailData);
+                        }
                     }
                 });
             }
 
-            , sentEmail: function (emailData) {
-                var dfd = $.Deferred();
+            //, makeEmailData: function (emailAddresses, nodes, title) {
+            //    if (Email.allowMailFilesAsAttachments) {
+            //        return Email._makeEmailDataForEmailWithAttachments(emailAddresses, nodes);
+            //    } else {
+            //        return Email._makeEmailDataForEmailWithLinks(emailAddresses, nodes, title);
+            //    }
+            //}
+            , _makeEmailDataForEmailWithLinks: function (emailAddresses, nodes, title) {
+                var emailNotifications = [];
+                var emailData = {};
+                emailData.title = Util.goodValue(title, $translate.instant("common.directive.docTree.email.defaultTitle"));
+                emailData.header = $translate.instant("common.directive.docTree.email.headerForLinks");
+                emailData.footer = "\n\n" + $translate.instant("common.directive.docTree.email.footerForLinks");
+                emailData.emailAddresses = emailAddresses;
+                emailData.fileIds = Email._extractFileIds(nodes);
+                emailData.baseUrl = Email._makeBaseUrl();
+                emailNotifications.push(emailData);
+                return emailNotifications;
+            }
+            , _makeEmailDataForEmailWithAttachments: function (emailAddresses, nodes) {
+                var emailData = {};
+                emailData.subject = $translate.instant("common.directive.docTree.email.subjectForAttachment");
+                emailData.body = $translate.instant("common.directive.docTree.email.bodyForAttachment");
+                emailData.header = $translate.instant("common.directive.docTree.email.headerForAttachment");
+                emailData.footer = $translate.instant("common.directive.docTree.email.footerForAttachment");
+                emailData.emailAddresses = emailAddresses;
+                var attachmentIds = [];
+                if (Util.isArray(nodes)) {
+                    for (var i = 0; i < nodes.length; i++) {
+                        attachmentIds.push(Util.goodMapValue(nodes[i], "data.objectId"));
+                    }
+                }
 
+                emailData.attachmentIds = attachmentIds;
+                return emailData;
+            }
+            , _extractFileIds: function (nodes) {
+                var fileIds = [];
+                if (Util.isArray(nodes)) {
+                    for (var i = 0; i < nodes.length; i++) {
+                        fileIds.push(Util.goodMapValue(nodes[i], "data.objectId"));
+                    }
+                }
+                return fileIds;
+            }
+            , _makeBaseUrl: function () {
+                var url = Util.goodValue(Email.arkcaseUrl);
+                if (!Util.isEmpty(Email.arkcasePort)) {
+                    url += ":" + Util.goodValue(Email.arkcasePort);
+                }
+                url += "arkcase" + Email.API_DOWNLOAD_DOCUMENT;
+                return url;
+            }
+            , sentEmail: function (emailData) {
                 var failed = "";
-                Util.serviceCall({
+                return Util.serviceCall({
                     service: Ecm.sentEmail
                     , param: {}
                     , data: emailData
@@ -3302,22 +3374,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                     , onInvalid: function (data) {
                         return failed;
                     }
-                }).then(
-                    function (successData) {
-                    }
-                    , function (errorData) {
-                        dfd.reject(errorData);
-                    }
-                );
-
-                return dfd.promise();
+                });
             }
 
             , sendEmailWithAttachments: function (emailData) {
-                var dfd = $.Deferred();
-
                 var failed = "";
-                Util.serviceCall({
+                return Util.serviceCall({
                     service: Ecm.sendEmailWithAttachments
                     , param: {}
                     , data: emailData
@@ -3326,15 +3388,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                             return data;
                         }
                     }
-                }).then(
-                    function (successData) {
+                    , onInvalid: function (data) {
+                        return failed;
                     }
-                    , function (errorData) {
-                        dfd.reject(errorData);
-                    }
-                );
-
-                return dfd.promise();
+                });
             }
 
         }; // end Email
