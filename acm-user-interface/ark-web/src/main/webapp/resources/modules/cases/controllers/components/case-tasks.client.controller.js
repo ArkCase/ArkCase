@@ -2,7 +2,7 @@
 
 angular.module('cases').controller('Cases.TasksController', ['$scope', '$state', '$stateParams', '$q', '$translate'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'CaseInfoService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.InfoService'
     , function ($scope, $state, $stateParams, $q, $translate
         , Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService
         , HelperUiGridService, HelperObjectBrowserService, CaseInfoService) {
