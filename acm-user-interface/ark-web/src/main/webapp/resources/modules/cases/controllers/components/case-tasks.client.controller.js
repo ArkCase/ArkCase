@@ -2,14 +2,22 @@
 
 angular.module('cases').controller('Cases.TasksController', ['$scope', '$state', '$stateParams', '$q', '$translate'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'CaseInfoService'
     , function ($scope, $state, $stateParams, $q, $translate
         , Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService
-        , HelperUiGridService, HelperObjectBrowserService) {
+        , HelperUiGridService, HelperObjectBrowserService, CaseInfoService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
         var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
+
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
+                $scope.caseInfo = caseInfo;
+                return caseInfo;
+            });
+        }
 
         ConfigService.getComponentConfig("cases", "tasks").then(function (config) {
             gridHelper.setColumnDefs(config);
