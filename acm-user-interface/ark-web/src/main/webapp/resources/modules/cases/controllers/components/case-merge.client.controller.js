@@ -1,18 +1,24 @@
 'use strict';
 
-angular.module('cases').controller('Cases.MergeController', ['$scope', '$modalInstance', '$clientInfoScope','$filter',
-    function ($scope, $modalInstance, $clientInfoScope, $filter) {
+angular.module('cases').controller('Cases.MergeController', ['$scope', '$modalInstance', '$clientInfoScope','$filter', 'ConfigService',
+    function ($scope, $modalInstance, $clientInfoScope, $filter, ConfigService) {
         $scope.filter = $filter;
 
-        $clientInfoScope.$on('component-config', applyConfig);
-        $clientInfoScope.$emit('req-component-config', 'merge');
-
-        $scope.config = null;
+//        $clientInfoScope.$on('component-config', applyConfig);
+//        $clientInfoScope.$emit('req-component-config', 'merge');
+//
+//        $scope.config = null;
+//        function applyConfig(e, componentId, config) {
+//            if (componentId == 'merge') {
+//                $scope.config = config;
+//            }
+//        }
+        
+        
         $scope.modalInstance = $modalInstance;
-        function applyConfig(e, componentId, config) {
-            if (componentId == 'cases.comp.merge') {
-                $scope.config = config;
-            }
-        }
+        ConfigService.getComponentConfig("cases", "merge").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
+        });
     }
 ]);

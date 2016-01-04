@@ -1589,39 +1589,46 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                     var files = e.originalEvent.dataTransfer.files;
                     if (files instanceof FileList) {
                         if (DocTree.isFolderNode(node)) {
-                            DialogDnd.showIfDropToFolderNode(function () {
-                                //var replace = DialogDnd.isCheckedRadReplace();
-                                //var toParent = DialogDnd.isCheckedRadUploadToParent();
-                                var toFolder = DialogDnd.isCheckedRadUploadToFolder();
-                                var fileType = DialogDnd.getValueSelFileType();
-                                if (toFolder && !Util.isEmpty(fileType)) {
-                                    DocTree.uploadToFolderNode = node;
-                                    DocTree.uploadFileType = fileType;
-                                    DocTree.uploadFileNew = true;
-                                    DocTree.doSubmitFormUploadFile(files);
+                            DialogDnd.openModal("folder"
+                                , _.filter(DocTree.fileTypes, function (fileType) {
+                                    return Util.isEmpty(fileType.form);
+                                })
+                                , function (result) {
+                                    var op = result.op;
+                                    var fileType = result.fileType.type;
+                                    if (DialogDnd.OpTypes.OP_UPLOAD_TO_FOLDER == op && !Util.isEmpty(fileType)) {
+                                        DocTree.uploadToFolderNode = node;
+                                        DocTree.uploadFileType = fileType;
+                                        DocTree.uploadFileNew = true;
+                                        DocTree.doSubmitFormUploadFile(files);
+                                    }
                                 }
-                            });
+                            );
+
 
                         } else if (DocTree.isFileNode(node)) {
-                            DialogDnd.showIfDropToFileNode(function () {
-                                var replace = DialogDnd.isCheckedRadReplace();
-                                var toParent = DialogDnd.isCheckedRadUploadToParent();
-                                //var toFolder = DialogDnd.isCheckedRadUploadToFolder();
-                                var fileType = DialogDnd.getValueSelFileType();
-                                if (replace) {
-                                    DocTree.replaceFileNode = node;
-                                    DocTree.uploadToFolderNode = node.parent;
-                                    DocTree.uploadFileType = Util.goodValue(node.data.type);
-                                    DocTree.uploadFileNew = false;
-                                    DocTree.doSubmitFormUploadFile(files);
+                            DialogDnd.openModal("file"
+                                , _.filter(DocTree.fileTypes, function (fileType) {
+                                    return Util.isEmpty(fileType.form);
+                                })
+                                , function (result) {
+                                    var op = result.op;
+                                    var fileType = result.fileType.type;
+                                    if (DialogDnd.OpTypes.OP_REPLACE == op) {
+                                        DocTree.replaceFileNode = node;
+                                        DocTree.uploadToFolderNode = node.parent;
+                                        DocTree.uploadFileType = Util.goodValue(node.data.type);
+                                        DocTree.uploadFileNew = false;
+                                        DocTree.doSubmitFormUploadFile(files);
 
-                                } else if (toParent && !Util.isEmpty(fileType)) {
-                                    DocTree.uploadToFolderNode = node.parent;
-                                    DocTree.uploadFileType = fileType;
-                                    DocTree.uploadFileNew = true;
-                                    DocTree.doSubmitFormUploadFile(files);
+                                    } else if (DialogDnd.OpTypes.OP_UPLOAD_TO_PARENT == op && !Util.isEmpty(fileType)) {
+                                        DocTree.uploadToFolderNode = node.parent;
+                                        DocTree.uploadFileType = fileType;
+                                        DocTree.uploadFileNew = true;
+                                        DocTree.doSubmitFormUploadFile(files);
+                                    }
                                 }
-                            });
+                            );
                         }
                     }
 
@@ -3217,159 +3224,36 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
         };  //end DocTree
 
         var DialogDnd = {
-            create: function (fileTypes) {
-                this.$dlgDocTreeDnd = $("#dlgDocTreeDnd");
-                this.$radOperation = this.$dlgDocTreeDnd.find("input:radio");
-                this.$radOperation.on("click", function (e) {
-                    DialogDnd.onClickRadOperation(e, this);
-                });
-//            this.$radReplace       = this.$radOperation.eq(0);
-//            this.$radUploadParent  = this.$radOperation.eq(1);
-//            this.$radUpload        = this.$radOperation.eq(2);
-
-                this.$selFileTypes = this.$dlgDocTreeDnd.find("select");
-                this.fillSelFileTypes(fileTypes);
-                this.$selFileTypes.on("change", function (e) {
-                    DialogDnd.onChangeFileTypes(e, this);
-                });
-                this.$divFileType = this.$selFileTypes.closest("div");
-                this.$btnOk = this.$dlgDocTreeDnd.find("button.btn-primary");
+            OpTypes: {
+                OP_NOOP: ""
+                , OP_REPLACE: "Replace"
+                , OP_UPLOAD_TO_PARENT: "UploadToParent"
+                , OP_UPLOAD_TO_FOLDER: "UploadToFolder"
             }
 
-            , openModal: function () {
-                Ui.scope.valueToPass = "Hello, world";
+            , openModal: function (nodeType, fileTypes, onClickOk) {
+                var params = {
+                    nodeType: nodeType
+                    , fileTypes: fileTypes
+                };
 
                 var modalInstance = $modal.open({
-                    templateUrl: "directives/doc-tree/doc-tree.dnd.dialog.html",
-                    controller: 'directives.DocTreeDndDialogController',
-                    resolve: {
-                        aValue: function () {
-                            return Ui.scope.valueToPass;
+                    templateUrl: "directives/doc-tree/doc-tree.dnd.dialog.html"
+                    , controller: 'directives.DocTreeDndDialogController'
+                    , resolve: {
+                        OpTypes: function () {
+                            return DialogDnd.OpTypes
+                        }
+                        , params: function () {
+                            return params;
                         }
                     }
                 });
                 modalInstance.result.then(function (result) {
                     if (result) {
-                        console.log("drop action here");
+                        onClickOk(result);
                     }
                 });
-            }
-
-            , onClickRadOperation: function (event, ctrl) {
-                DialogDnd.update();
-            }
-            , onChangeFileTypes: function (event, ctrl) {
-                DialogDnd.update();
-            }
-            , fillSelFileTypes: function (fileTypes) {
-                for (var i = 0; i < fileTypes.length; i++) {
-                    var fileType = fileTypes[i];
-                    if (Util.isEmpty(fileType.form)) {
-                        var $option = $("<option/>")
-                                .val(Util.goodValue(fileType.type))
-                                .text(Util.goodValue(fileType.label))
-                                .appendTo(this.$selFileTypes)
-                            ;
-                    }
-                }
-            }
-            , update: function () {
-                var replace = this.isCheckedRadReplace();
-                var toParent = this.isCheckedRadUploadToParent();
-                var toFolder = this.isCheckedRadUploadToFolder();
-                if (replace) {
-                    this.showDivFileType(false);
-                    this.setEnableBtnOk(true);
-
-                } else if (toParent) {
-                    this.showDivFileType(true);
-                    this.setEnableBtnOk(!Util.isEmpty(this.getValueSelFileType()));
-
-                } else if (toFolder) {
-                    this.showDivFileType(true);
-                    this.setEnableBtnOk(!Util.isEmpty(this.getValueSelFileType()));
-
-                } else {
-                    //console.log("should never get here");
-                    this.showDivFileType(false);
-                    this.setEnableBtnOk(false);
-                }
-            }
-            , showIfDropToFolderNode: function (onClickBtnPrimary) {
-                this.setCheckedRadReplace(false);
-                this.setCheckedRadUploadToParent(false);
-                this.setCheckedRadUploadToFolder(true);
-
-                this.showRadReplace(false);
-                this.showRadUploadToParent(false);
-                this.showRadUploadToFolder(false);
-
-                this.showDivFileType(true);
-                this.setValueSelFileType("");
-                this.setEnableBtnOk(false);
-
-                this.openModal(onClickBtnPrimary);
-                //Ui.dlgModal(this.$dlgDocTreeDnd, onClickBtnPrimary);
-            }
-            , showIfDropToFileNode: function (onClickBtnPrimary) {
-                this.setCheckedRadReplace(false);
-                this.setCheckedRadUploadToParent(false);
-                this.setCheckedRadUploadToFolder(false);
-
-                this.showRadReplace(true);
-                this.showRadUploadToParent(true);
-                this.showRadUploadToFolder(false);
-
-                this.showDivFileType(false);
-                this.setValueSelFileType("");
-                this.setEnableBtnOk(false);
-
-                this.openModal(onClickBtnPrimary);
-                //Ui.dlgModal(this.$dlgDocTreeDnd, onClickBtnPrimary);
-            }
-
-            , isCheckedRadReplace: function () {
-                return Ui.isChecked(this.$radOperation.eq(0));
-            }
-            , setCheckedRadReplace: function (check) {
-                Ui.setChecked(this.$radOperation.eq(0), check);
-            }
-            , showRadReplace: function (show) {
-                Ui.show(this.$radOperation.eq(0).closest("label"), show);
-            }
-
-            , isCheckedRadUploadToParent: function () {
-                return Ui.isChecked(this.$radOperation.eq(1));
-            }
-            , setCheckedRadUploadToParent: function (check) {
-                Ui.setChecked(this.$radOperation.eq(1), check);
-            }
-            , showRadUploadToParent: function (show) {
-                Ui.show(this.$radOperation.eq(1).closest("label"), show);
-            }
-
-            , isCheckedRadUploadToFolder: function () {
-                return Ui.isChecked(this.$radOperation.eq(2));
-            }
-            , setCheckedRadUploadToFolder: function (check) {
-                Ui.setChecked(this.$radOperation.eq(2), check);
-            }
-            , showRadUploadToFolder: function (show) {
-                Ui.show(this.$radOperation.eq(2).closest("label"), show);
-            }
-
-            , getValueSelFileType: function () {
-                return Ui.getSelectValue(this.$selFileTypes);
-            }
-            , setValueSelFileType: function (value) {
-                return Ui.setSelectValue(this.$selFileTypes, value);
-            }
-            , showDivFileType: function (show) {
-                Ui.show(this.$divFileType, show);
-            }
-
-            , setEnableBtnOk: function (enable) {
-                Ui.setEnable(this.$btnOk, enable);
             }
         };
 
@@ -4052,18 +3936,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                 DocTree.makeDownloadDocForm(DocTree.jqTree);
                 DocTree.makeUploadDocForm(DocTree.jqTree);
 
-
-                //scope.$watchGroup(['objectType', 'objectId'], function (newValues, oldValues, scope) {
-                //    var newType = newValues[0];
-                //    var newId = newValues[1];
-                //    console.log("should never see this $watchGroup");
-                //});
                 scope.$watch('fileTypes', function (newValue, oldValue) {
                     if (newValue) {
                         DocTree.fileTypes = newValue;
                         var jqTreeBody = DocTree.jqTree.find("tbody");
                         DocTree.Menu.useContextMenu(jqTreeBody);
-                        DialogDnd.create(DocTree.fileTypes);
+                        //DialogDnd.create(DocTree.fileTypes);
                     }
                 }, true);
             }
@@ -4073,15 +3951,42 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
 ]);
 
 
-angular.module('directives').controller('directives.DocTreeDndDialogController', ['$scope', '$modalInstance', 'aValue',
-        function ($scope, $modalInstance, aValue) {
-            $scope.valuePassed = aValue;
+angular.module('directives').controller('directives.DocTreeDndDialogController', ['$scope', '$modalInstance'
+        , 'UtilService', 'OpTypes', 'params'
+        , function ($scope, $modalInstance, Util, OpTypes, params) {
+
+            $scope.result = {op: OpTypes.OP_NOOP, fileType: null};
+
+            $scope.fileTypes = params.fileTypes;
+            if ("folder" == params.nodeType) {
+                $scope.result.op = OpTypes.OP_UPLOAD_TO_FOLDER;
+            }
+
+            $scope.disableOk = function () {
+                if (OpTypes.OP_UPLOAD_TO_FOLDER == $scope.result.op || OpTypes.OP_UPLOAD_TO_PARENT == $scope.result.op) {
+                    return Util.isEmpty($scope.result.fileType);
+                } else if (OpTypes.OP_REPLACE == $scope.result.op) {
+                    return false;
+                } else {
+                    return true;
+                }
+            };
+
+            $scope.showRadioButtons = function () {
+                return OpTypes.OP_UPLOAD_TO_FOLDER != $scope.result.op;
+            };
+
+            $scope.showSelFileTypes = function () {
+                return OpTypes.OP_UPLOAD_TO_FOLDER == $scope.result.op || OpTypes.OP_UPLOAD_TO_PARENT == $scope.result.op;
+            };
+
             $scope.onClickCancel = function () {
                 $modalInstance.close(false);
             };
             $scope.onClickOk = function () {
-                $modalInstance.close(true);
+                $modalInstance.close($scope.result);
             };
+
         }
     ]
 );
