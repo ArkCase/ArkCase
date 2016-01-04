@@ -1,6 +1,8 @@
 <div class="module-content">
     <div ng-controller="FrevvoController" class="content-body">
-        <p ng-hide="frevvoFormUrl">{{'frevvo.errorForm' | translate}} </p>
+        <p ng-hide="frevvoFormUrl">
+            <span translate>frevvo.errorForm</span>
+        </p>
         <iframe ng-src="{{frevvoFormUrl}}" ng-if="frevvoFormUrl" class="new-iframe">
         </iframe>
     </div>

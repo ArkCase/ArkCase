@@ -1,18 +1,22 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.DetailsController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'ConfigService', 'Task.InfoService', 'MessageService'
-    , function ($scope, $stateParams, $translate, Util, ConfigService, TaskInfoService, MessageService) {
+    , 'UtilService', 'ConfigService', 'Task.InfoService', 'MessageService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $translate
+        , Util, ConfigService, TaskInfoService, MessageService, HelperObjectBrowserService) {
 
         ConfigService.getComponentConfig("tasks", "actions").then(function (componentConfig) {
             $scope.config = componentConfig;
             return componentConfig;
         });
 
-        TaskInfoService.getTaskInfo($stateParams.id).then(function (taskInfo) {
-            $scope.taskInfo = taskInfo;
-            return taskInfo;
-        });
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            TaskInfoService.getTaskInfo(currentObjectId).then(function (taskInfo) {
+                $scope.taskInfo = taskInfo;
+                return taskInfo;
+            });
+        }
 
 
         $scope.options = {
@@ -28,7 +32,7 @@ angular.module('tasks').controller('Tasks.DetailsController', ['$scope', '$state
             var taskInfo = Util.omitNg($scope.taskInfo);
             TaskInfoService.saveTaskInfo(taskInfo).then(
                 function (taskInfo) {
-                    $scope.$emit("report-task-updated", taskInfo);
+                    $scope.$emit("report-object-updated", taskInfo);
                     MessageService.info($translate.instant("tasks.comp.details.informSaved"));
                     return taskInfo;
                 }

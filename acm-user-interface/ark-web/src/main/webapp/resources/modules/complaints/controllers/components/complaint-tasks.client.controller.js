@@ -1,13 +1,23 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.TasksController', ['$scope', '$state', '$stateParams', '$q', '$translate'
-    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Complaint.InfoService'
     , function ($scope, $state, $stateParams, $q, $translate
-        , Util, ConfigService, HelperUiGridService, ObjectService, ObjectTaskService, TaskWorkflowService) {
+        , Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService
+        , HelperUiGridService, HelperObjectBrowserService, ComplaintInfoService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
         var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
+
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
+                $scope.complaintInfo = complaintInfo;
+                return complaintInfo;
+            });
+        }
 
         ConfigService.getComponentConfig("complaints", "tasks").then(function (config) {
             gridHelper.setColumnDefs(config);
@@ -35,62 +45,69 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         });
 
         $scope.retrieveGridData = function () {
-            ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
-                , $stateParams.id
-                , Util.goodValue($scope.start, 0)
-                , Util.goodValue($scope.pageSize, 10)
-                , Util.goodValue($scope.sort.by)
-                , Util.goodValue($scope.sort.dir)
-            ).then(
-                function (data) {
-                    $q.all([promiseUsers, promiseMyTasks]).then(function () {
-                        var tasks = data.response.docs;
-                        $scope.gridOptions = $scope.gridOptions || {};
-                        $scope.gridOptions.data = tasks;
-                        $scope.gridOptions.totalItems = data.response.numFound;
-                        //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (Util.goodPositive(currentObjectId, false)) {
+                ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.COMPLAINT
+                    , currentObjectId
+                    , Util.goodValue($scope.start, 0)
+                    , Util.goodValue($scope.pageSize, 10)
+                    , Util.goodValue($scope.sort.by)
+                    , Util.goodValue($scope.sort.dir)
+                ).then(
+                    function (data) {
+                        $q.all([promiseUsers, promiseMyTasks]).then(function () {
+                            var tasks = data.response.docs;
+                            $scope.gridOptions = $scope.gridOptions || {};
+                            $scope.gridOptions.data = tasks;
+                            $scope.gridOptions.totalItems = data.response.numFound;
+                            //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
 
-                        for (var i = 0; i < tasks.length; i++) {
-                            var task = tasks[i];
-                            task.acm$_taskOutcomes = [{
-                                id: "noop",
-                                value: $translate.instant("common.select.option.none")
-                            }];
-                            task.acm$_taskOutcome = {
-                                id: "noop",
-                                value: $translate.instant("common.select.option.none")
-                            };
-                            task.acm$_taskActionDone = true;
+                            for (var i = 0; i < tasks.length; i++) {
+                                var task = tasks[i];
+                                task.acm$_taskOutcomes = [{
+                                    id: "noop",
+                                    value: $translate.instant("common.select.option.none")
+                                }];
+                                task.acm$_taskOutcome = {
+                                    id: "noop",
+                                    value: $translate.instant("common.select.option.none")
+                                };
+                                task.acm$_taskActionDone = true;
 
-                            var found = _.find($scope.myTasks, {taskId: tasks[i].id});
-                            if (found) {
-                                if (!found.completed && found.adhocTask) {
-                                    task.acm$_taskOutcomes.push({id: "complete", value: "Complete"});
-                                    task.acm$_taskOutcomes.push({id: "delete", value: "Delete"});
-                                    task.acm$_taskActionDone = false;
+                                var found = _.find($scope.myTasks, {taskId: tasks[i].id});
+                                if (found) {
+                                    if (!found.completed && found.adhocTask) {
+                                        task.acm$_taskOutcomes.push({id: "complete", value: "Complete"});
+                                        task.acm$_taskOutcomes.push({id: "delete", value: "Delete"});
+                                        task.acm$_taskActionDone = false;
 
-                                } else if (!found.completed && !found.adhocTask && !Util.isArrayEmpty(found.availableOutcomes)) {
-                                    var availableOutcomes = Util.goodArray(found.availableOutcomes);
-                                    for (var j = 0; j < availableOutcomes.length; j++) {
-                                        var outcome = {
-                                            id: Util.goodValue(availableOutcomes[j].description),
-                                            value: Util.goodValue(availableOutcomes[j].description)
-                                        };
-                                        task.acm$_taskOutcomes.push(outcome);
+                                    } else if (!found.completed && !found.adhocTask && !Util.isArrayEmpty(found.availableOutcomes)) {
+                                        var availableOutcomes = Util.goodArray(found.availableOutcomes);
+                                        for (var j = 0; j < availableOutcomes.length; j++) {
+                                            var outcome = {
+                                                id: Util.goodValue(availableOutcomes[j].description),
+                                                value: Util.goodValue(availableOutcomes[j].description)
+                                            };
+                                            task.acm$_taskOutcomes.push(outcome);
+                                        }
+                                        task.acm$_taskActionDone = (1 >= availableOutcomes.length); //1 for '(Select One)'
                                     }
-                                    task.acm$_taskActionDone = (1 >= availableOutcomes.length); //1 for '(Select One)'
                                 }
                             }
-                        }
-                    }); //end $q
+                        }); //end $q
 
-                    return data;
-                }
-            );
+                        return data;
+                    }
+                ); //end then
+            }
         };
 
         $scope.addNew = function () {
-            $state.go("tasks.wizard");
+            $state.go("newTaskFromParentObject", {
+                parentType: ObjectService.ObjectTypes.COMPLAINT,
+                parentObject: $scope.complaintInfo.complaintNumber
+            });
+
         };
 
         var completeTask = function (rowEntity) {
@@ -142,6 +159,11 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
             event.preventDefault();
             gridHelper.showObject(ObjectService.ObjectTypes.TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
         };
-
+        $scope.onClickObjLink = function (event, rowEntity) {
+            event.preventDefault();
+            var targetType = Util.goodMapValue(rowEntity, "object_type_s");
+            var targetId = Util.goodMapValue(rowEntity, "object_id_s");
+            gridHelper.showObject(targetType, targetId);
+        };
     }
 ]);

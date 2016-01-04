@@ -8,7 +8,7 @@
             </div>
             <div ng-include="'modules/cases/views/cases-list.client.view.html'"/>
         </div>
-        <section class="content-body" ng-show="caseInfo">
+        <section class="content-body" ng-show="objectInfo">
             <div class="module-header">
                 <div ng-include="'modules/cases/views/components/case-info.client.view.html'"></div>
             </div>
@@ -36,7 +36,7 @@
             </div>
         </section>
 
-        <section class="content-body" ng-hide="caseInfo">
+        <section class="content-body" ng-hide="objectInfo">
             <div>{{::progressMsg}}</div>
         </section>
     </div>

@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.CorrespondenceController', ['$scope', '$stateParams', '$q', '$window', '$translate'
-    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'LookupService', 'Object.LookupService'
-    , 'Object.CorrespondenceService', 'Complaint.InfoService'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService'
+    , 'Object.CorrespondenceService', 'Complaint.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
     , function ($scope, $stateParams, $q, $window, $translate
-        , Util, ConfigService, HelperUiGridService, ObjectService, LookupService, ObjectLookupService
-        , ObjectCorrespondenceService, ComplaintInfoService) {
+        , Util, ConfigService, ObjectService, LookupService, ObjectLookupService
+        , ObjectCorrespondenceService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
@@ -41,31 +41,36 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
             }
         );
 
-        //$scope.$on('complaint-updated', function (e, data) {
+        //$scope.$on('object-updated', function (e, data) {
         //    if (ComplaintInfoService.validateComplaintInfo(data)) {
         //        $scope.complaintInfo = data;
         //    }
         //});
-        ComplaintInfoService.getComplaintInfo($stateParams.id).then(function (complaintInfo) {
-            $scope.complaintInfo = complaintInfo;
-            return complaintInfo;
-        });
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        //if (Util.goodPositive(currentObjectId, false)) {
+        //    ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
+        //        $scope.complaintInfo = complaintInfo;
+        //        return complaintInfo;
+        //    });
+        //}
 
         $scope.retrieveGridData = function () {
-            var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.COMPLAINT
-                , $stateParams.id
-                , Util.goodValue($scope.start, 0)
-                , Util.goodValue($scope.pageSize, 10)
-                , Util.goodValue($scope.sort.by)
-                , Util.goodValue($scope.sort.dir)
-            );
+            if (Util.goodPositive(currentObjectId, false)) {
+                var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.COMPLAINT
+                    , currentObjectId
+                    , Util.goodValue($scope.start, 0)
+                    , Util.goodValue($scope.pageSize, 10)
+                    , Util.goodValue($scope.sort.by)
+                    , Util.goodValue($scope.sort.dir)
+                );
 
-            $q.all([promiseCorrespondence, promiseUsers]).then(function (data) {
-                var correspondenceData = data[0];
-                $scope.gridOptions.data = correspondenceData.children;
-                $scope.gridOptions.totalItems = Util.goodValue(correspondenceData.totalChildren, 0);
-                //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
-            });
+                $q.all([promiseCorrespondence, promiseUsers]).then(function (data) {
+                    var correspondenceData = data[0];
+                    $scope.gridOptions.data = correspondenceData.children;
+                    $scope.gridOptions.totalItems = Util.goodValue(correspondenceData.totalChildren, 0);
+                    //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+                });
+            }
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {

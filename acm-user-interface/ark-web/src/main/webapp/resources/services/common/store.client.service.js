@@ -249,6 +249,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              * var data = dataCache.get();                              // data contains value '{greeting: "Hello", who: "World"}'
              */
             , set: function (data) {
+                return; //jwu:  disable as temporary measure
                 var item = (Util.isEmpty(data)) ? null : JSON.stringify(data);
                 sessionStorage.setItem(this.name, item);
             }
@@ -310,6 +311,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              * var data = dataCache.get();                              // data contains value '{greeting: "Hello", who: "World"}'
              */
             , set: function (data) {
+                return; //jwu:  disable as temporary measure
                 var item = (Util.isEmpty(data)) ? null : JSON.stringify(data);
                 localStorage.setItem(this.name, item);
             }
@@ -401,6 +403,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              */
             , put: function (key, item) {
+                return; //jwu:  disable as temporary measure
                 var thisCache = this._getThis();
                 var putAt = -1;
                 for (var i = 0; i < thisCache.size; i++) {

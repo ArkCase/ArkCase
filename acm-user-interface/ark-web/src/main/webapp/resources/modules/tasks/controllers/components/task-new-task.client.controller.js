@@ -1,10 +1,11 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$stateParams', '$sce', '$q', 'ConfigService'
+angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$stateParams', '$sce', '$q', '$modal', 'ConfigService'
     , 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService', 'Authentication'
-    , function ($scope, $stateParams, $sce, $q, ConfigService, Util, TicketService, LookupService, FrevvoFormService, TaskNewTaskService, Authentication) {
+    , function ($scope, $stateParams, $sce, $q, $modal, ConfigService, Util, TicketService, LookupService, FrevvoFormService, TaskNewTaskService, Authentication) {
 
         $scope.config = null;
+        $scope.userSearchConfig = null;
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -16,6 +17,8 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
             $scope.config = _.find(moduleConfig.components, {id: "newTask"});
+
+            $scope.userSearchConfig = _.find(moduleConfig.components, {id: "userSearch"})
 
             $scope.config.data.assignee = $scope.userId;
 
@@ -37,29 +40,35 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         };
 
         $scope.userSearch = function () {
-            $event.preventDefault();
+
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/tasks/views/components/task-user-search.client.view.html',
                 controller: 'Tasks.UserSearchController',
                 size: 'lg',
                 resolve: {
-                    $userSearchScope: function () {
-                        return $scope;
-                    },
                     $filter: function () {
                         return $scope.config.userSearch.userFacetFilter;
+                    },
+                    $config: function () {
+                        return $scope.userSearchConfig;
                     }
                 }
             });
 
             modalInstance.result.then(function (chosenUser) {
                 if (chosenUser) {
-                    console.log("A user was chosen for this task");
+                    $scope.config.data.assignee = chosenUser.object_id_s;
+                    $scope.userName = chosenUser.name;
+
+                    return;
                 }
+
             }, function () {
                 // Cancel button was clicked.
+                return [];
             });
+
         };
     }
 ]);

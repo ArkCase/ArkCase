@@ -10,7 +10,7 @@
             <div ng-include="'modules/complaints/views/complaints-list.client.view.html'" />
         </div>
 
-        <section class="content-body" ng-show="complaintInfo">
+        <section class="content-body" ng-show="objectInfo">
             <div class="module-header">
                 <div ng-include="'modules/complaints/views/components/complaint-info.client.view.html'"></div>
             </div>
@@ -38,7 +38,7 @@
             </div>
         </section>
 
-        <section class="content-body" ng-hide="complaintInfo">
+        <section class="content-body" ng-hide="objectInfo">
             <div>{{progressMsg}}</div>
         </section>
     </div>

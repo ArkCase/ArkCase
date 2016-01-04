@@ -10,7 +10,8 @@
                     <div class="col-lg-6 text-center">
                         <button name="headerLogo" accept="image/png" ng-disabled="uploadingInProgress" ngf-select
                                 data-ng-model="selectedHeaderFile"
-                                class="btn btn-sm btn-default">{{'admin.branding.logo.btn.chooseHeader' | translate}}
+                                class="btn btn-sm btn-default">
+                            <span translate>admin.branding.logo.btn.chooseHeader</span>
                         </button>
                         <div ng-bind="selectedHeaderFile.name"></div>
                     </div>
@@ -23,7 +24,8 @@
                     <div class="col-lg-6 text-center">
                         <button name="loginLogo" accept="image/png" ng-disabled="uploadingInProgress"
                                 ng-model="selectedLoginFile" ngf-select
-                                class="btn btn-sm btn-default">{{'admin.branding.logo.btn.chooseLogin' | translate}}
+                                class="btn btn-sm btn-default">
+                            <span translate>admin.branding.logo.btn.chooseLogin</span>
                         </button>
                         <div>{{selectedLoginFile.name}}</div>
                     </div>
@@ -34,7 +36,7 @@
             <br/>
             <button class="btn btn-sm btn-default" ng-click="saveFiles()"><i
                     class="fa fa-save text"/>
-                {{'admin.branding.logo.btn.saveFiles' | translate}}
+                <span translate>admin.branding.logo.btn.saveFiles</span>
             </button>
         </div>
     </div>

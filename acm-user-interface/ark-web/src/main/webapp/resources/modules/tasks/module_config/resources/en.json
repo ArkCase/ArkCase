@@ -123,15 +123,24 @@
     "notes.label": "Notes",
     "saveButton": "Save"
   },
-  "tasks.comp.userSearch": {
+  "tasks.userSearch": {
     "id": "userSearch",
     "title": "User Search",
-    "cancel.btn": "Cancel",
-    "confirm.btn": "Confirm",
-    "search.placeholder": "Search for the user to assign to this task.",
-    "search.btn": "Search",
+    "search": {
+      "btn": "Search",
+      "placeholder": "Search for the user to assign to this task."
+    },
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
     "enabled": true,
-    "userFacetFilter": "\"Object Type\": USER"
+    "userFacetFilter": "\"Object Type\": USER",
+    "assigneeGridColumns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "parent": "Parent",
+      "assignee": "Assignee",
+      "modified": "Modified"
+    }
   }
 }
-
