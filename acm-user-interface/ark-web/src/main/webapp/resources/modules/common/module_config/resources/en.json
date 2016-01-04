@@ -57,6 +57,7 @@
     },
     "emailDialog": {
       "title": "Email",
+      "recipients": "Recipients:",
       "btnCancel.text": "Cancel",
       "btnOk.text": "Send Email",
       "gridColumns": {
