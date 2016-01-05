@@ -15,7 +15,7 @@ angular.module('services').factory('Case.MergeSplitService', ['$resource', '$tra
     'Object.InfoService', 'Case.InfoService',
     function ($resource, $translate, Store, Util, ObjectInfoService, CaseInfoService) {
         
-        var Service = $resource('proxy/arkcase/api/latest/plugin', {}, {
+        var Service = $resource('proxy/arkcase/api/v1/plugin', {}, {
             /**
              * ngdoc method
              * name _mergeCaseFiles
@@ -28,7 +28,8 @@ angular.module('services').factory('Case.MergeSplitService', ['$resource', '$tra
              * 
              */
             _mergeCaseFiles:{
-                url: '/api/v1/plugin/merge-casefiles',
+                url: 'proxy/arkcase/api/v1/plugin/merge-casefiles',
+                method: 'POST',
                 isArray: false
             }, 
             /**

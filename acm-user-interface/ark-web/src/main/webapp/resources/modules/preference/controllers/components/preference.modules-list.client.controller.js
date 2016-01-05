@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('preference').controller('Preference.ModulesListController', ['$scope', '$state', '$stateParams', 'ConfigService', 'dashboard',
-  function($scope, $state, $stateParams, ConfigService, dashboard) {
-    $scope.modules = ConfigService.queryModules();
+angular.module('preference').controller('Preference.ModulesListController', ['$scope', '$state', '$stateParams', 'ConfigService', 'Preference.PreferenceService', 'dashboard',
+  function($scope, $state, $stateParams, ConfigService, PreferenceService, dashboard) {
+    $scope.modules = PreferenceService.filterModules();
     $scope.selectModule = selectModule;
 
     function selectModule(newActive) {
