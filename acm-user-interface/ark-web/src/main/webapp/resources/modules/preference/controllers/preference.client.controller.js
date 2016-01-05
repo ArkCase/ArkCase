@@ -3,7 +3,7 @@
 angular.module('preference').controller('Preference.Controller', ['$scope', 'ConfigService', '$modal',
     function ($scope, ConfigService, $modal) {
         $scope.config = ConfigService.getModule({moduleId: 'preference'});
-        $scope.$on('req-component-config', onConfigRequest);
+        $scope.$on('req-widget-config', onConfigRequest);
 
         $scope.$on('req-module-selected', moduleSelected);
 
@@ -11,10 +11,10 @@ angular.module('preference').controller('Preference.Controller', ['$scope', 'Con
           $scope.$broadcast('module-selected', module);
         }
 
-        function onConfigRequest(e, componentId) {
+        function onConfigRequest(e, widgetId) {
             $scope.config.$promise.then(function (config) {
-                var componentConfig = _.find(config.components, {id: componentId});
-                $scope.$broadcast('component-config', componentId, componentConfig);
+                var widgetConfig = _.find(config.widgets, {id: widgetId});
+                $scope.$broadcast('widget-config', widgetId, widgetConfig);
             });
         }
     }

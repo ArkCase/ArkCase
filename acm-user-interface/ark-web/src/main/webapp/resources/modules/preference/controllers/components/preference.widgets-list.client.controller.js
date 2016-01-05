@@ -1,17 +1,17 @@
 'use strict';
 
-angular.module('preference').controller('Preference.ComponentsListController', ['$scope', '$q', '$state', '$stateParams', 'AdministrationService', 'SchemasService',
+angular.module('preference').controller('Preference.WidgetsListController', ['$scope', '$q', '$state', '$stateParams', 'AdministrationService', 'SchemasService',
     function ($scope, $q, $state, $stateParams, AdministrationService, SchemasService) {
         $scope.schemas = {};
-        $scope.components = [];
+        $scope.widgets = [];
         $scope.formData = ["*", { "type": "submit", "title": "Save"}];
 
-        $scope.selectComponent = selectComponent;
+        $scope.selectWidget = selectWidget;
         $scope.submitForm = submitForm;
-        $scope.toggleComponent = toggleComponent;
-        $scope.enableComponent = enableComponent;
+        $scope.toggleWidget = toggleWidget;
+        $scope.enableWidget = enableWidget;
 
-        $scope.$on('show-components', showComponents);
+        $scope.$on('show-widgets', showWidgets);
 
 
         function submitForm() {
@@ -19,30 +19,30 @@ angular.module('preference').controller('Preference.ComponentsListController', [
         }
 
         /**
-         * Toggle component panel on header click
-         * @param component
+         * Toggle widget panel on header click
+         * @param widget
          */
-        function toggleComponent($event, component) {
+        function toggleWidget($event, widget) {
             $event.preventDefault();
-            _.forEach($scope.components, function(compIter){
-                if (compIter.id != component.id) {
+            _.forEach($scope.widgets, function(compIter){
+                if (compIter.id != widget.id) {
                     compIter.isCollapsed = true
                 }
             });
-            component.isCollapsed = !component.isCollapsed;
+            widget.isCollapsed = !widget.isCollapsed;
         }
 
-        function enableComponent($event, component, enable) {
+        function enableWidget($event, widget, enable) {
             $event.preventDefault();
-            component.enabled = enable;
+            widget.enabled = enable;
             $scope.$emit('req-save-module');
         }
 
 
-        function showComponents(e, components) {
+        function showWidgets(e, widgets) {
             // Get form schemas
 
-            var requiredSchemas = _.pluck(components, 'type');
+            var requiredSchemas = _.pluck(widgets, 'type');
             requiredSchemas = _.uniq(requiredSchemas);
             var promises = [];
             _.forEach(requiredSchemas, function(schema){
@@ -62,20 +62,20 @@ angular.module('preference').controller('Preference.ComponentsListController', [
             });
 
             // Add collapsed property
-            _.forEach(components, function(component){
-                component.isCollapsed = true;
+            _.forEach(widgets, function(widget){
+                widget.isCollapsed = true;
             });
 
-            $scope.components = components;
+            $scope.widgets = widgets;
         }
 
-        function selectComponent(newActive){
-            var prevActive = _.find($scope.components, {active: true});
+        function selectWidget(newActive){
+            var prevActive = _.find($scope.widgets, {active: true});
             if (prevActive) {
                 prevActive.active = false;
             }
             newActive.active = true;
-            $scope.$emit('req-component-selected', newActive);
+            $scope.$emit('req-widget-selected', newActive);
         }
     }
 ]);
