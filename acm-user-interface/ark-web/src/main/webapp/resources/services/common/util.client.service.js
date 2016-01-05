@@ -533,6 +533,40 @@ angular.module('services').factory('UtilService', ['$q'
                 return (10 > i) ? "0" + i : "" + i;
             }
 
+            /**
+             * @ngdoc method
+             * @name dateToISOString
+             * @methodOf services.service:UtilService
+             *
+             * @description
+             * Converts a date object into an ISO format string
+             *
+             * @param {Date} Date object
+             * @Returns {String} ISO formatted date string YYYY-MM-DDThh:mm:ss.mmm-sTZD
+             */
+            , dateToISOString: function(d) {
+                if (null == d) {
+                    return "";
+                }
+                var month = d.getMonth() + 1;
+                var day = d.getDate();
+                var year = d.getFullYear();
+                var hour = d.getHours();
+                var minute = d.getMinutes();
+                var second = d.getSeconds();
+                var millisecond = d.getMilliseconds();
+                var zoneOffset = d.getTimezoneOffset()/60;
+
+                return year
+                    + '-' + this._padZero(month)
+                    + '-' + this._padZero(day)
+                    + 'T' + this._padZero(hour)
+                    + ':' + this._padZero(minute)
+                    + ':' + this._padZero(second)
+                    + '.' + ('00' + millisecond).substring(('00' + millisecond).length - 3) // need two padding 0's here
+                    + '-' + this._padZero(zoneOffset) + '00';
+            }
+
             //get day string in "yyyy-mm-dd" format
             //parameter d is java Date() format; for some reason getDate() is 1 based while getMonth() is zero based
             , dateToString: function(d) {

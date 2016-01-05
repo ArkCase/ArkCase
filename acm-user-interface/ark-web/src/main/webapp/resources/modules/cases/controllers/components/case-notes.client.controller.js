@@ -44,12 +44,11 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
         };
 
         $scope.addNew = function () {
-            var lastPage = $scope.gridApi.pagination.getTotalPages();
-            $scope.gridApi.pagination.seek(lastPage);
+            gridHelper.gotoLastPage();
             var newRow = {};
             newRow.parentId = $stateParams.id;
             newRow.parentType = ObjectService.ObjectTypes.CASE_FILE;
-            newRow.created = Util.getCurrentDay();
+            newRow.created = new Date(Util.getCurrentDay());
             newRow.creator = $scope.userId;
             $scope.gridOptions.data.push(newRow);
             $scope.gridOptions.totalItems++;
@@ -57,6 +56,11 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
         };
         $scope.updateRow = function (rowEntity) {
             var note = Util.omitNg(rowEntity);
+
+            // The date string needs to be reformatted so that it can be accepted by the backend
+            // It is expected to be in ISO format
+            note.created = Util.dateToISOString(new Date(note.created));
+
             ObjectNoteService.saveNote(note).then(
                 function (noteAdded) {
                     if (Util.isEmpty(rowEntity.id)) {
@@ -72,8 +76,6 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
                 ObjectNoteService.deleteNote(id);
             }
-
         };
-
     }
 ]);
