@@ -147,6 +147,9 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', 'StoreServi
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateSentEmail = function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
             if (Util.isEmpty(data.state)) {
                 return false;
             }
