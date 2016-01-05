@@ -1,0 +1,21 @@
+<div ng-controller="Preference.WidgetsListController">
+  <div class="panel panel-default" ng-repeat="widget in widgets">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#{{widget.id}}" ng-click="toggleWidget($event, widget)">
+          {{widget.title}}
+        </a>
+        <div class="pull-right">
+          <span ng-if="!widget.enabled" class="label label-warning" ng-click="enableWidget($event, widget, true)">Disabled</span>
+          <span ng-if="widget.enabled" class="label label-success" ng-click="enableWidget($event, widget, false)">Enabled</span>
+        </div>
+      </h4>
+    </div>
+    <!--<div id="{{widget.id}}" class="panel-collapse collapse in" collapse="widget.isCollapsed">
+      <div class="panel-body">
+        <form name="widgetForm" sf-schema="schemas[widget.type]" sf-form="formData" sf-model="widget" ng-submit="submitForm()">
+        </form>
+      </div>
+    </div>-->
+  </div>
+</div>
