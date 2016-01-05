@@ -67,8 +67,8 @@
  </example>
  */
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
-    , 'StoreService', 'UtilService', 'Util.DateService', 'LookupService', 'EcmService'
-    , function ($q, $translate, $modal, Store, Util, UtilDateService, LookupService, Ecm) {
+    , 'StoreService', 'UtilService', 'Util.DateService', 'LookupService', 'EcmService', 'Ecm.EmailService'
+    , function ($q, $translate, $modal, Store, Util, UtilDateService, LookupService, Ecm, EcmEmailService) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
         var promiseGetUserFullName = LookupService.getUserFullNames();
@@ -3286,15 +3286,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                     if (!Util.isArrayEmpty(recipients)) {
                         var emailAddresses = _.pluck(recipients, "email");
 
-                        //var emailData = Email.makeEmailData(emailAddresses, nodes);
                         if (Email.allowMailFilesAsAttachments) {
                             var emailData = Email._makeEmailDataForEmailWithAttachments(emailAddresses, nodes);
-                            Email.sendEmailWithAttachments(emailData);
+                            EcmEmailService.sendEmailWithAttachments(emailData);
                         }
                         else {
                             //var emailData = Email._makeEmailDataForEmailWithLinks(emailAddresses, nodes, title);
                             var emailData = Email._makeEmailDataForEmailWithLinks(emailAddresses, nodes);
-                            Email.sendEmail(emailData);
+                            EcmEmailService.sendEmail(emailData);
                         }
                     }
                 });
@@ -3353,46 +3352,46 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                 url += "arkcase" + Email.API_DOWNLOAD_DOCUMENT;
                 return url;
             }
-            , sentEmail: function (emailData) {
-                var failed = "";
-                return Util.serviceCall({
-                    service: Ecm.sentEmail
-                    , param: {}
-                    , data: emailData
-                    , onSuccess: function (data) {
-                        if (Validator.validateSentEmails(data)) {
-                            for (var i = 0; i < data.length; i++) {
-                                if ("NOT_SENT" == data[i].state) {
-                                    failed += data[i].userEmail + ";";
-                                }
-                            }
-                            if (Util.isEmpty(failed)) {
-                                return emailData;
-                            }
-                        }
-                    }
-                    , onInvalid: function (data) {
-                        return failed;
-                    }
-                });
-            }
-
-            , sendEmailWithAttachments: function (emailData) {
-                var failed = "";
-                return Util.serviceCall({
-                    service: Ecm.sendEmailWithAttachments
-                    , param: {}
-                    , data: emailData
-                    , onSuccess: function (data) {
-                        if (Validator.validateSentEmails(data)) {
-                            return data;
-                        }
-                    }
-                    , onInvalid: function (data) {
-                        return failed;
-                    }
-                });
-            }
+            //, sentEmail: function (emailData) {
+            //    var failed = "";
+            //    return Util.serviceCall({
+            //        service: Ecm.sentEmail
+            //        , param: {}
+            //        , data: emailData
+            //        , onSuccess: function (data) {
+            //            if (Validator.validateSentEmails(data)) {
+            //                for (var i = 0; i < data.length; i++) {
+            //                    if ("NOT_SENT" == data[i].state) {
+            //                        failed += data[i].userEmail + ";";
+            //                    }
+            //                }
+            //                if (Util.isEmpty(failed)) {
+            //                    return emailData;
+            //                }
+            //            }
+            //        }
+            //        , onInvalid: function (data) {
+            //            return failed;
+            //        }
+            //    });
+            //}
+            //
+            //, sendEmailWithAttachments: function (emailData) {
+            //    var failed = "";
+            //    return Util.serviceCall({
+            //        service: Ecm.sendEmailWithAttachments
+            //        , param: {}
+            //        , data: emailData
+            //        , onSuccess: function (data) {
+            //            if (Validator.validateSentEmails(data)) {
+            //                return data;
+            //            }
+            //        }
+            //        , onInvalid: function (data) {
+            //            return failed;
+            //        }
+            //    });
+            //}
 
         }; // end Email
 
@@ -3934,26 +3933,26 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                 }
                 return true;
             }
-            , validateSentEmails: function (data) {
-                if (!Util.isArray(data)) {
-                    return false;
-                }
-                for (var i = 0; i < data.length; i++) {
-                    if (!Validator.validateSentEmail(data[i])) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            , validateSentEmail: function (data) {
-                if (Util.isEmpty(data.state)) {
-                    return false;
-                }
-                if (Util.isEmpty(data.userEmail)) {
-                    return false;
-                }
-                return true;
-            }
+            //, validateSentEmails: function (data) {
+            //    if (!Util.isArray(data)) {
+            //        return false;
+            //    }
+            //    for (var i = 0; i < data.length; i++) {
+            //        if (!Validator.validateSentEmail(data[i])) {
+            //            return false;
+            //        }
+            //    }
+            //    return true;
+            //}
+            //, validateSentEmail: function (data) {
+            //    if (Util.isEmpty(data.state)) {
+            //        return false;
+            //    }
+            //    if (Util.isEmpty(data.userEmail)) {
+            //        return false;
+            //    }
+            //    return true;
+            //}
 
         };
 
