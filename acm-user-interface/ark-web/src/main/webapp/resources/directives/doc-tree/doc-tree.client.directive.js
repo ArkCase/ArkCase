@@ -66,9 +66,10 @@
  </file>
  </example>
  */
-angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
-    , 'StoreService', 'UtilService', 'Util.DateService', 'LookupService', 'EcmService', 'Ecm.EmailService'
-    , function ($q, $translate, $modal, Store, Util, UtilDateService, LookupService, Ecm, EcmEmailService) {
+angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', 'StoreService', 'UtilService'
+    , 'Util.DateService', 'LookupService', 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService'
+    , function ($q, $translate, $modal, Store, Util
+        , UtilDateService, LookupService, Ecm, EcmEmailService, EcmRecordService) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
         var promiseGetUserFullName = LookupService.getUserFullNames();
@@ -991,28 +992,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                             break;
                         case "declare":
                             var declareAsRecordData = [];
-                            if (batch) {
-                                for (var i = 0; i < selNodes.length; i++) {
-                                    var declareAsRecord = {};
-                                    declareAsRecord.id = Util.goodValue(selNodes[i].data.objectId);
-                                    declareAsRecord.type = Util.goodValue(selNodes[i].data.objectType.toUpperCase());
-                                    declareAsRecordData.push(declareAsRecord);
-                                }
-                            }
-                            else {
+                            var nodesToDeclare = (batch) ? selNodes : [node];
+                            for (var i = 0; i < nodesToDeclare.length; i++) {
                                 var declareAsRecord = {};
-                                declareAsRecord.id = Util.goodValue(node.data.objectId);
-                                declareAsRecord.type = Util.goodValue(node.data.objectType.toUpperCase());
+                                declareAsRecord.id = Util.goodValue(nodesToDeclare[i].data.objectId);
+                                declareAsRecord.type = Util.goodValue(nodesToDeclare[i].data.objectType.toUpperCase());
                                 declareAsRecordData.push(declareAsRecord);
                             }
-                            if (!Util.isArrayEmpty(declareAsRecordData)) {
-                                if (batch) {
-                                    DocTree.Op.declareAsRecord(batch, selNodes, declareAsRecordData);
-                                }
-                                else {
-                                    DocTree.Op.declareAsRecord(batch, node, declareAsRecordData);
-                                }
 
+                            if (!Util.isArrayEmpty(declareAsRecordData)) {
+                                DocTree.Op.declareAsRecord(nodesToDeclare, declareAsRecordData);
                             }
                             break;
                         case "print":
@@ -2660,35 +2649,25 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                     return dfd.promise();
                 }
 
-                , declareAsRecord: function (batch, node, declareAsRecordData) {
-                    DocTree.declareAsRecord(declareAsRecordData)
-                        .done(function () {
-                            if (batch) {
-                                for (var j = 0; j < node.length; j++) {
-                                    if (DocTree.isFolderNode(node[j])) {
-                                        for (var i = 0; i < node[j].children.length; i++) {
-                                            if (Validator.validateNode(node[j].children[i])) {
-                                                node[j].children[i].data.status = "RECORD";
-                                                node[j].children[i].renderTitle();
-                                            }
-                                        }
-                                    }
-                                    else if (DocTree.isFileNode(node[j])) {
-                                        node[j].data.status = "RECORD";
-                                        node[j].renderTitle();
+                , declareAsRecord: function (nodes, declareAsRecordData) {
+                    var objType = DocTree.getObjType();
+                    var objId = DocTree.getObjId();
+                    EcmRecordService.declareAsRecord(objType, objId, declareAsRecordData).then(function (data) {
+                        for (var j = 0; j < nodes.length; j++) {
+                            if (DocTree.isFolderNode(nodes[j])) {
+                                for (var i = 0; i < nodes[j].children.length; i++) {
+                                    if (Validator.validateNode(nodes[j].children[i])) {
+                                        nodes[j].children[i].data.status = "RECORD";
+                                        nodes[j].children[i].renderTitle();
                                     }
                                 }
+                            } else if (DocTree.isFileNode(nodes[j])) {
+                                nodes[j].data.status = "RECORD";
+                                nodes[j].renderTitle();
                             }
-                            else {
-                                if (DocTree.isFileNode(node)) {
-                                    node.data.status = "RECORD";
-                                    node.renderTitle();
-                                }
-                            }
-                        })
-                        .fail(function (response) {
-                            //fixme: App.View.MessageBoard.show($.t("doctree:error.declare-record"));
-                        });
+                        }
+                        return data;
+                    });
                 }
 
             } // end Op
