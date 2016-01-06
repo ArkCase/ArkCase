@@ -42,11 +42,6 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             }
         );
 
-        $scope.$on('object-updated', function (e, data) {
-            if (CaseInfoService.validateCaseInfo(data)) {
-                $scope.caseInfo = data;
-            }
-        });
         var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         if (Util.goodPositive(currentObjectId, false)) {
             CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
