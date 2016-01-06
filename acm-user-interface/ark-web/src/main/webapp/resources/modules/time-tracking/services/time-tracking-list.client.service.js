@@ -34,7 +34,7 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
              */
             listObjects: {
                 method: 'GET',
-                url: 'proxy/arkcase/api/v1/service/timesheet/user/:userId?start=:start&n=:n&sort=:sort',
+                url: 'proxy/arkcase/api/v1/service/timesheet/user/:userId?start=:start&n=:n&s=:sort',
                 cache: false,
                 isArray: false
             }
