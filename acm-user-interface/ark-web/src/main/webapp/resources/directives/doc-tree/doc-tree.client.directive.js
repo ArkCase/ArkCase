@@ -3035,7 +3035,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         var verCurrent = Util.goodValue(node.data.version, "0");
                         if (verSelected != verCurrent) {
                             if (verSelected < verCurrent) {
-                                Util.Ui.dlgConfirm($translate.instant("common.directive.docTree.confirmVersion")
+                                Ui.dlgConfirm($translate.instant("common.directive.docTree.confirmVersion")
                                     , function (result) {
                                         if (result) {
                                             DocTree.Op.setActiveVersion(node, verSelected);
