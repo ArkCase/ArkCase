@@ -66,12 +66,19 @@
  </file>
  </example>
  */
-angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
-    , 'StoreService', 'UtilService', 'Util.DateService', 'LookupService', 'EcmService'
-    , function ($q, $translate, $modal, Store, Util, UtilDateService, LookupService, Ecm) {
+angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', 'StoreService', 'UtilService'
+    , 'Util.DateService', 'LookupService', 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService'
+    , function ($q, $translate, $modal, Store, Util
+        , UtilDateService, LookupService, Ecm, EcmEmailService, EcmRecordService) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
         var promiseGetUserFullName = LookupService.getUserFullNames();
+        var promiseGetEmailParams = LookupService.getConfig("notification").then(function (data) {
+            Email.arkcaseUrl = Util.goodValue(data["arkcase.url"]);
+            Email.arkcasePort = Util.goodValue(data["arkcase.port"]);
+            Email.allowMailFilesAsAttachments = ("true" == Util.goodValue(data["notification.allowMailFilesAsAttachments"], "true"));
+            Email.allowMailFilesToExternalAddresses = ("true" == Util.goodValue(data["notification.allowMailFilesToExternalAddresses"], "true"));
+        });
 
         var DocTree = {
             CLIPBOARD: null
@@ -981,36 +988,24 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                             break;
                         case "email":
                             if (batch) {
-                                DocTree.Email.showEmailDialog(selNodes);
+                                Email.openModal(selNodes);
                             }
                             else {
-                                DocTree.Email.showEmailDialog(node);
+                                Email.openModal([node]);
                             }
                             break;
                         case "declare":
                             var declareAsRecordData = [];
-                            if (batch) {
-                                for (var i = 0; i < selNodes.length; i++) {
-                                    var declareAsRecord = {};
-                                    declareAsRecord.id = Util.goodValue(selNodes[i].data.objectId);
-                                    declareAsRecord.type = Util.goodValue(selNodes[i].data.objectType.toUpperCase());
-                                    declareAsRecordData.push(declareAsRecord);
-                                }
-                            }
-                            else {
+                            var nodesToDeclare = (batch) ? selNodes : [node];
+                            for (var i = 0; i < nodesToDeclare.length; i++) {
                                 var declareAsRecord = {};
-                                declareAsRecord.id = Util.goodValue(node.data.objectId);
-                                declareAsRecord.type = Util.goodValue(node.data.objectType.toUpperCase());
+                                declareAsRecord.id = Util.goodValue(nodesToDeclare[i].data.objectId);
+                                declareAsRecord.type = Util.goodValue(nodesToDeclare[i].data.objectType.toUpperCase());
                                 declareAsRecordData.push(declareAsRecord);
                             }
-                            if (!Util.isArrayEmpty(declareAsRecordData)) {
-                                if (batch) {
-                                    DocTree.Op.declareAsRecord(batch, selNodes, declareAsRecordData);
-                                }
-                                else {
-                                    DocTree.Op.declareAsRecord(batch, node, declareAsRecordData);
-                                }
 
+                            if (!Util.isArrayEmpty(declareAsRecordData)) {
+                                DocTree.Op.declareAsRecord(nodesToDeclare, declareAsRecordData);
                             }
                             break;
                         case "print":
@@ -2658,35 +2653,25 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                     return dfd.promise();
                 }
 
-                , declareAsRecord: function (batch, node, declareAsRecordData) {
-                    DocTree.declareAsRecord(declareAsRecordData)
-                        .done(function () {
-                            if (batch) {
-                                for (var j = 0; j < node.length; j++) {
-                                    if (DocTree.isFolderNode(node[j])) {
-                                        for (var i = 0; i < node[j].children.length; i++) {
-                                            if (Validator.validateNode(node[j].children[i])) {
-                                                node[j].children[i].data.status = "RECORD";
-                                                node[j].children[i].renderTitle();
-                                            }
-                                        }
-                                    }
-                                    else if (DocTree.isFileNode(node[j])) {
-                                        node[j].data.status = "RECORD";
-                                        node[j].renderTitle();
+                , declareAsRecord: function (nodes, declareAsRecordData) {
+                    var objType = DocTree.getObjType();
+                    var objId = DocTree.getObjId();
+                    EcmRecordService.declareAsRecord(objType, objId, declareAsRecordData).then(function (data) {
+                        for (var j = 0; j < nodes.length; j++) {
+                            if (DocTree.isFolderNode(nodes[j])) {
+                                for (var i = 0; i < nodes[j].children.length; i++) {
+                                    if (Validator.validateNode(nodes[j].children[i])) {
+                                        nodes[j].children[i].data.status = "RECORD";
+                                        nodes[j].children[i].renderTitle();
                                     }
                                 }
+                            } else if (DocTree.isFileNode(nodes[j])) {
+                                nodes[j].data.status = "RECORD";
+                                nodes[j].renderTitle();
                             }
-                            else {
-                                if (DocTree.isFileNode(node)) {
-                                    node.data.status = "RECORD";
-                                    node.renderTitle();
-                                }
-                            }
-                        })
-                        .fail(function (response) {
-                            //fixme: App.View.MessageBoard.show($.t("doctree:error.declare-record"));
-                        });
+                        }
+                        return data;
+                    });
                 }
 
             } // end Op
@@ -3047,7 +3032,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                         var verCurrent = Util.goodValue(node.data.version, "0");
                         if (verSelected != verCurrent) {
                             if (verSelected < verCurrent) {
-                                Util.Ui.dlgConfirm($translate.instant("common.directive.docTree.confirmVersion")
+                                Ui.dlgConfirm($translate.instant("common.directive.docTree.confirmVersion")
                                     , function (result) {
                                         if (result) {
                                             DocTree.Op.setActiveVersion(node, verSelected);
@@ -3262,63 +3247,134 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
         };
 
         var Email = {
-            sentEmail: function (emailData) {
-                var dfd = $.Deferred();
+            arkcaseUrl: "localhost"
+            , arkcasePort: ""
+            , allowMailFilesAsAttachments: true
+            , allowMailFilesToExternalAddresses: true
+            , API_DOWNLOAD_DOCUMENT: "/api/v1/plugin/ecm/download?ecmFileId="
 
-                var failed = "";
-                Util.serviceCall({
-                    service: Ecm.sentEmail
-                    , param: {}
-                    , data: emailData
-                    , onSuccess: function (data) {
-                        if (Validator.validateSentEmails(data)) {
-                            for (var i = 0; i < data.length; i++) {
-                                if ("NOT_SENT" == data[i].state) {
-                                    failed += data[i].userEmail + ";";
-                                }
-                            }
-                            if (Util.isEmpty(failed)) {
-                                return emailData;
-                            }
+            , openModal: function (nodes) {
+                var params = {};
+
+                var modalInstance = $modal.open({
+                    templateUrl: "directives/doc-tree/doc-tree.email.dialog.html"
+                    , controller: 'directives.DocTreeEmailDialogController'
+                    , resolve: {
+                        params: function () {
+                            return params;
                         }
                     }
-                    , onInvalid: function (data) {
-                        return failed;
-                    }
-                }).then(
-                    function (successData) {
-                    }
-                    , function (errorData) {
-                        dfd.reject(errorData);
-                    }
-                );
+                });
+                modalInstance.result.then(function (recipients) {
+                    if (!Util.isArrayEmpty(recipients)) {
+                        var emailAddresses = _.pluck(recipients, "email");
 
-                return dfd.promise();
-            }
-
-            , sendEmailWithAttachments: function (emailData) {
-                var dfd = $.Deferred();
-
-                var failed = "";
-                Util.serviceCall({
-                    service: Ecm.sendEmailWithAttachments
-                    , param: {}
-                    , data: emailData
-                    , onSuccess: function (data) {
-                        if (Validator.validateSentEmails(data)) {
-                            return data;
+                        if (Email.allowMailFilesAsAttachments) {
+                            var emailData = Email._makeEmailDataForEmailWithAttachments(emailAddresses, nodes);
+                            EcmEmailService.sendEmailWithAttachments(emailData);
+                        }
+                        else {
+                            //var emailData = Email._makeEmailDataForEmailWithLinks(emailAddresses, nodes, title);
+                            var emailData = Email._makeEmailDataForEmailWithLinks(emailAddresses, nodes);
+                            EcmEmailService.sendEmail(emailData);
                         }
                     }
-                }).then(
-                    function (successData) {
-                    }
-                    , function (errorData) {
-                        dfd.reject(errorData);
-                    }
-                );
-
-                return dfd.promise();
+                });
             }
+
+            //, makeEmailData: function (emailAddresses, nodes, title) {
+            //    if (Email.allowMailFilesAsAttachments) {
+            //        return Email._makeEmailDataForEmailWithAttachments(emailAddresses, nodes);
+            //    } else {
+            //        return Email._makeEmailDataForEmailWithLinks(emailAddresses, nodes, title);
+            //    }
+            //}
+            , _makeEmailDataForEmailWithLinks: function (emailAddresses, nodes, title) {
+                var emailNotifications = [];
+                var emailData = {};
+                emailData.title = Util.goodValue(title, $translate.instant("common.directive.docTree.email.defaultTitle"));
+                emailData.header = $translate.instant("common.directive.docTree.email.headerForLinks");
+                emailData.footer = "\n\n" + $translate.instant("common.directive.docTree.email.footerForLinks");
+                emailData.emailAddresses = emailAddresses;
+                emailData.fileIds = Email._extractFileIds(nodes);
+                emailData.baseUrl = Email._makeBaseUrl();
+                emailNotifications.push(emailData);
+                return emailNotifications;
+            }
+            , _makeEmailDataForEmailWithAttachments: function (emailAddresses, nodes) {
+                var emailData = {};
+                emailData.subject = $translate.instant("common.directive.docTree.email.subjectForAttachment");
+                emailData.body = $translate.instant("common.directive.docTree.email.bodyForAttachment");
+                emailData.header = $translate.instant("common.directive.docTree.email.headerForAttachment");
+                emailData.footer = $translate.instant("common.directive.docTree.email.footerForAttachment");
+                emailData.emailAddresses = emailAddresses;
+                var attachmentIds = [];
+                if (Util.isArray(nodes)) {
+                    for (var i = 0; i < nodes.length; i++) {
+                        attachmentIds.push(Util.goodMapValue(nodes[i], "data.objectId"));
+                    }
+                }
+
+                emailData.attachmentIds = attachmentIds;
+                return emailData;
+            }
+            , _extractFileIds: function (nodes) {
+                var fileIds = [];
+                if (Util.isArray(nodes)) {
+                    for (var i = 0; i < nodes.length; i++) {
+                        fileIds.push(Util.goodMapValue(nodes[i], "data.objectId"));
+                    }
+                }
+                return fileIds;
+            }
+            , _makeBaseUrl: function () {
+                var url = Util.goodValue(Email.arkcaseUrl);
+                if (!Util.isEmpty(Email.arkcasePort)) {
+                    url += ":" + Util.goodValue(Email.arkcasePort);
+                }
+                url += "arkcase" + Email.API_DOWNLOAD_DOCUMENT;
+                return url;
+            }
+            //, sentEmail: function (emailData) {
+            //    var failed = "";
+            //    return Util.serviceCall({
+            //        service: Ecm.sentEmail
+            //        , param: {}
+            //        , data: emailData
+            //        , onSuccess: function (data) {
+            //            if (Validator.validateSentEmails(data)) {
+            //                for (var i = 0; i < data.length; i++) {
+            //                    if ("NOT_SENT" == data[i].state) {
+            //                        failed += data[i].userEmail + ";";
+            //                    }
+            //                }
+            //                if (Util.isEmpty(failed)) {
+            //                    return emailData;
+            //                }
+            //            }
+            //        }
+            //        , onInvalid: function (data) {
+            //            return failed;
+            //        }
+            //    });
+            //}
+            //
+            //, sendEmailWithAttachments: function (emailData) {
+            //    var failed = "";
+            //    return Util.serviceCall({
+            //        service: Ecm.sendEmailWithAttachments
+            //        , param: {}
+            //        , data: emailData
+            //        , onSuccess: function (data) {
+            //            if (Validator.validateSentEmails(data)) {
+            //                return data;
+            //            }
+            //        }
+            //        , onInvalid: function (data) {
+            //            return failed;
+            //        }
+            //    });
+            //}
 
         }; // end Email
 
@@ -3860,26 +3916,26 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal'
                 }
                 return true;
             }
-            , validateSentEmails: function (data) {
-                if (!Util.isArray(data)) {
-                    return false;
-                }
-                for (var i = 0; i < data.length; i++) {
-                    if (!Validator.validateSentEmail(data[i])) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            , validateSentEmail: function (data) {
-                if (Util.isEmpty(data.state)) {
-                    return false;
-                }
-                if (Util.isEmpty(data.userEmail)) {
-                    return false;
-                }
-                return true;
-            }
+            //, validateSentEmails: function (data) {
+            //    if (!Util.isArray(data)) {
+            //        return false;
+            //    }
+            //    for (var i = 0; i < data.length; i++) {
+            //        if (!Validator.validateSentEmail(data[i])) {
+            //            return false;
+            //        }
+            //    }
+            //    return true;
+            //}
+            //, validateSentEmail: function (data) {
+            //    if (Util.isEmpty(data.state)) {
+            //        return false;
+            //    }
+            //    if (Util.isEmpty(data.userEmail)) {
+            //        return false;
+            //    }
+            //    return true;
+            //}
 
         };
 
@@ -3989,6 +4045,72 @@ angular.module('directives').controller('directives.DocTreeDndDialogController',
             };
             $scope.onClickOk = function () {
                 $modalInstance.close($scope.result);
+            };
+
+        }
+    ]
+);
+
+
+angular.module('directives').controller('directives.DocTreeEmailDialogController', ['$scope', '$modalInstance'
+        , 'UtilService', 'params', 'ConfigService'
+        , function ($scope, $modalInstance, Util, params, ConfigService) {
+            $scope.modalInstance = $modalInstance;
+
+            ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+                $scope.config = Util.goodMapValue(moduleConfig, "docTree.emailDialog");
+                //$scope.filter = $scope.config.userFacetFilter;
+                return moduleConfig;
+            });
+
+            $scope.recipients = [];
+            $scope.onItemsSelected = function (selectedItems, lastSelectedItems, isSelected) {
+                var recipientTokens = Util.goodValue($scope.recipientsStr).split(";");
+                _.each(lastSelectedItems, function (selectedItem) {
+                    var found = _.find($scope.recipients, function (recipient) {
+                        return Util.compare(selectedItem.name, recipient.name) || Util.compare(selectedItem.email_lcs, recipient.email)
+                    });
+                    if (isSelected && !found) {
+                        $scope.recipients.push({
+                            name: Util.goodValue(selectedItem.name)
+                            , email: Util.goodValue(selectedItem.email_lcs)
+                        });
+
+                    } else if (!isSelected && found) {
+                        _.remove($scope.recipients, found);
+                    }
+                });
+
+                $scope.recipientsStr = _.pluck($scope.recipients, "name").join(";");
+            };
+            $scope.onChangeRecipients = function () {
+                var recipientsNew = [];
+                var recipientTokens = Util.goodValue($scope.recipientsStr).split(";");
+                _.each(recipientTokens, function (token) {
+                    token = token.trim();
+                    if (!Util.isEmpty(token)) {
+                        var found = _.find($scope.recipients, function (recipient) {
+                            return (token == recipient.name || token == recipient.email);
+                        });
+                        if (found) {
+                            recipientsNew.push(found);
+                        } else {
+                            var recipientUserTyped = {name: token, email: token};
+                            recipientsNew.push(recipientUserTyped);
+                        }
+                    }
+                });
+                $scope.recipients = recipientsNew;
+            };
+            $scope.onClickCancel = function () {
+                $modalInstance.close(false);
+            };
+            $scope.onClickOk = function () {
+                //var a = $scope.searchControl.getSelectedItems();
+                $modalInstance.close($scope.recipients);
+            };
+            $scope.disableOk = function () {
+                return Util.isEmpty($scope.recipientsStr);
             };
 
         }
