@@ -17,7 +17,7 @@ angular.module('preference').controller('Preference.ModuleInfoController', ['$sc
         }
 
         function moduleSelected(e, newModule) {
-            $scope.module = ConfigService.getModule({moduleId: newModule.id}, function(module){
+            $scope.module = ConfigService.getModule({moduleId: newModule.id}, function (module) {
                 $scope.$broadcast('show-widgets', dashboard.widgets);
             });
         }

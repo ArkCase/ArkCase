@@ -8,7 +8,7 @@ angular.module('preference').controller('Preference.Controller', ['$scope', 'Con
         $scope.$on('req-module-selected', moduleSelected);
 
         function moduleSelected(e, module) {
-          $scope.$broadcast('module-selected', module);
+            $scope.$broadcast('module-selected', module);
         }
 
         function onConfigRequest(e, widgetId) {
