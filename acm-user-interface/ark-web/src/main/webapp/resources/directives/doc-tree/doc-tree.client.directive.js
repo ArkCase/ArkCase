@@ -140,12 +140,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             ;
                         } else if (DocTree.isFileNode(node)) {
                             $tdList.eq(3).text(DocTree.getDocumentTypeDisplayLabel(node.data.type)); // document type is mapped (afdp-1249)
-                            $tdList.eq(4).text(UtilDateService.getDate(node.data.created));
 
-                            promiseGetUserFullName.then(function (userFullNames) {
-                                var found = _.find(userFullNames, {id: Util.goodValue(node.data.creator)});
-                                $tdList.eq(5).text(Util.goodMapValue(found, "name"));
-                            });
+                            var versionDate = UtilDateService.getDate(node.data.created);
+                            var versionUser = Util.goodValue(node.data.creator);
 
                             var $td6 = $("<td/>");
                             var $span = $("<span/>").appendTo($td6);
@@ -165,9 +162,19 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                                     if (Util.goodValue(node.data.version) == versionTag) {
                                         $option.attr("selected", true);
+
+                                        versionDate = UtilDateService.getDate(node.data.versionList[i].created);
+                                        versionUser = Util.goodValue(node.data.versionList[i].creator);
                                     }
                                 }
                             }
+                            $tdList.eq(4).text(versionDate);
+
+                            promiseGetUserFullName.then(function (userFullNames) {
+                                var found = _.find(userFullNames, {id: versionUser});
+                                $tdList.eq(5).text(Util.goodMapValue(found, "name"));
+                            });
+
                             $tdList.eq(6).replaceWith($td6);
 
                             $tdList.eq(7).text(node.data.status);
@@ -482,7 +489,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     //remove tree cache for current obj
                     DocTree.cacheTree.remove(objType + "." + objId);
                     //remove individual folder cache for current obj
-                    var cacheFolderList = DocTree.cacheFolderList.cache;
+                    var cacheFolderList = DocTree.cacheFolderList.cache;    //??????????????????? DocTree.cacheFolderList.cache is not defined
                     if (!Util.isEmpty(cacheFolderList)) {
                         for (var cacheKey in cacheFolderList) {
                             if (cacheFolderList.hasOwnProperty(cacheKey)) {
@@ -2908,7 +2915,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         for (var i = 0; i < fileData.versionList.length; i++) {
                             var version = {};
                             version.versionTag = Util.goodValue(fileData.versionList[i].versionTag);
+                            version.created = Util.goodValue(fileData.versionList[i].created);
+                            version.creator = Util.goodValue(fileData.versionList[i].creator);
+                            version.modified = Util.goodValue(fileData.versionList[i].modified);
+                            version.modifier = Util.goodValue(fileData.versionList[i].modifier);
                             nodeData.data.versionList.push(version);
+
+                            if (!Util.isEmpty(version.versionTag) && version.versionTag == nodeData.data.version) {
+                                nodeData.data.versionDate = Util.goodValue(version.created);
+                                nodeData.data.versionUser = Util.goodValue(version.creator);
+                            }
                         }
                     }
                 }
@@ -3174,6 +3190,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     for (var i = 0; i < fileData.versions.length; i++) {
                         var version = {};
                         version.versionTag = Util.goodValue(fileData.versions[i].versionTag);
+                        version.created = Util.goodValue(fileData.versionList[i].created);
+                        version.creator = Util.goodValue(fileData.versionList[i].creator);
+                        version.modified = Util.goodValue(fileData.versionList[i].modified);
+                        version.modifier = Util.goodValue(fileData.versionList[i].modifier);
                         solrData.versionList.push(version);
                     }
                 }
@@ -3182,6 +3202,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     for (var i = 0; i < fileData.versionList.length; i++) {
                         var version = {};
                         version.versionTag = Util.goodValue(fileData.versionList[i].versionTag);
+                        version.created = Util.goodValue(fileData.versionList[i].created);
+                        version.creator = Util.goodValue(fileData.versionList[i].creator);
+                        version.modified = Util.goodValue(fileData.versionList[i].modified);
+                        version.modifier = Util.goodValue(fileData.versionList[i].modifier);
                         solrData.versionList.push(version);
                     }
                 }
