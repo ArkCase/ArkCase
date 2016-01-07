@@ -2,7 +2,6 @@
 
 angular.module('preference').controller('Preference.WidgetsListController', ['$scope', '$q', '$state', '$stateParams', 'AdministrationService', 'SchemasService',
     function ($scope, $q, $state, $stateParams, AdministrationService, SchemasService) {
-        $scope.schemas = {};
         $scope.widgets = [];
 
         $scope.formData = ["*", {"type": "submit", "title": "Save"}];
