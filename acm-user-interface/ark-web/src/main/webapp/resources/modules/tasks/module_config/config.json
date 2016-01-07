@@ -341,7 +341,40 @@
         },
         {
           "id": "workflow",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "participant",
+              "displayName": "tasks.comp.workflow.table.columns.participant",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "role",
+              "displayName": "tasks.comp.workflow.table.columns.role",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "status",
+              "displayName": "tasks.comp.workflow.table.columns.status",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "startDateTime",
+              "field": "startDate",
+              "displayName": "tasks.comp.workflow.table.columns.startDateTime",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.startDate | date : 'medium'}}</div>",
+              "enableCellEdit": false
+            },
+            {
+              "name": "endDateTime",
+              "field": "endDate",
+              "displayName": "tasks.comp.workflow.table.columns.endDateTime",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.endDate | date : 'medium'}}</div>",
+              "enableCellEdit": false
+            }
+          ]
         },
         {
           "id": "history",
@@ -349,7 +382,23 @@
         },
         {
           "id": "signatures",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "signedDate",
+              "displayName": "tasks.comp.signatures.table.columns.signedDate",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+              "enableCellEdit": false
+            },
+            {
+              "name": "signedBy",
+              "displayName": "tasks.comp.signatures.table.columns.signedBy",
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "lookup": "userFullNames"
+            }
+          ]
         }
       ],
       "widgetsAdhoc": [
@@ -433,7 +482,23 @@
         },
         {
           "id": "signatures",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "signedDate",
+              "displayName": "tasks.comp.signatures.table.columns.signedDate",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+              "enableCellEdit": false
+            },
+            {
+              "name": "signedBy",
+              "displayName": "tasks.comp.signatures.table.columns.signedBy",
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "lookup": "userFullNames"
+            }
+          ]
         }
       ]
     },
