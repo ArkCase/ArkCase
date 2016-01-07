@@ -58,26 +58,6 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
 
 
         function showWidgets(e, widgets) {
-            // Get form schemas
-
-            var requiredSchemas = _.pluck(widgets, 'type');
-            requiredSchemas = _.uniq(requiredSchemas);
-            var promises = [];
-            _.forEach(requiredSchemas, function (schema) {
-                promises.push(
-                    //FIXME there are no schemas so we have all the time some error message, when schemas being used than enable code below
-                    //SchemasService.getSchema({schemaId: schema}).$promise.then(function(schemaData){
-                    //    return schemaData;
-                    //})
-                );
-            });
-
-            $q.all(promises).then(function (schemasDefs) {
-                for (var i = 0; i < requiredSchemas.length; i++) {
-                    $scope.schemas[requiredSchemas[i]] = schemasDefs[i];
-                }
-            });
-
             // Add collapsed property
             _.forEach(widgets, function (widget) {
                 widget.isCollapsed = true;
