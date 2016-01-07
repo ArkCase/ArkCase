@@ -1,18 +1,18 @@
-<div>
-    <div class="modal-header">
-        {{header}}
-    </div>
+<!--<div>-->
+<div class="modal-header" ng-if="showHeaderFooter">
+    {{header}}
+</div>
 
-    <div class="modal-grid">
-        <div class="modal-search">
-            <div class="modal-search-header">
-                <div class="input-group">
-                    <input class="form-control input-md"
-                           autofocus
-                           ng-keydown="keyUp($event)"
-                           ng-model="searchQuery"
-                           placeholder="{{searchPlaceholder}}"
-                    >
+<div class="modal-grid">
+    <div class="modal-search">
+        <div class="modal-search-header">
+            <div class="input-group">
+                <input class="form-control input-md"
+                       autofocus
+                       ng-keydown="keyUp($event)"
+                       ng-model="searchQuery"
+                       placeholder="{{searchPlaceholder}}"
+                        >
                     <span class="input-group-btn">
                         <button class="btn btn-md btn-primary"
                                 type="button"
@@ -21,46 +21,51 @@
                             {{search}}
                         </button>
                     </span>
-                </div>
-                <i ng-show="loadingResults" class="glyphicon glyphicon-refresh"></i>
+            </div>
+            <i ng-show="loadingResults" class="glyphicon glyphicon-refresh"></i>
+        </div>
+
+        <div class="modal-columns">
+            <div class="modal-left">
+                <ul class="list-unstyled">
+                    <li ng-repeat="facet in facets"
+                        ng-if="facet.fields.length && facet.name!='Object Sub Type' && facet.name!= 'Object Type'">
+                        <strong>{{facet.name}}</strong>
+                        <ul class="list-unstyled">
+                            <li ng-repeat="field in facet.fields">
+                                <div class="checkbox" ng-if="field.count > 0">
+                                    <label><input type="checkbox" ng-model="currentFacetSelection[field.name]"
+                                                  ng-click="selectFacet($event.target.checked,facet.name,field.name)"/>{{field.name}}<span
+                                            class="pull-right label label-info">{{field.count}}</span></label>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
 
-            <div class="modal-columns">
-                <div class="modal-left">
-                    <ul class="list-unstyled">
-                        <li ng-repeat="facet in facets" ng-if="facet.fields.length && facet.name!='Object Sub Type' && facet.name!= 'Object Type'"><strong>{{facet.name}}</strong>
-                            <ul class="list-unstyled">
-                                <li ng-repeat="field in facet.fields">
-                                    <div class="checkbox" ng-if="field.count > 0">
-                                        <label><input type="checkbox" ng-model="currentFacetSelection[field.name]" ng-click="selectFacet($event.target.checked,facet.name,field.name)"/>{{field.name}}<span class="pull-right label label-info">{{field.count}}</span></label>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+            <div class="modal-right well-sm">
+                <div ui-grid="gridOptions"
+                     ui-grid-resize-columns
+                     ui-grid-pagination
+                     ui-grid-selection
+                     adjust-table-height="gridOptions.data.length"
+                     ui-grid-auto-resize
+                     class="grid">
                 </div>
-
-                <div class="modal-right well-sm">
-                    <div ui-grid="gridOptions"
-                         ui-grid-resize-columns
-                         ui-grid-pagination
-                         ui-grid-selection
-                         adjust-table-height="gridOptions.data.length"
-                         ui-grid-auto-resize
-                         class="grid">
-                    </div>
-                </div>
-
             </div>
+
         </div>
     </div>
-
-    <div class="modal-footer">
-        <button class="btn btn-sm btn-default pull-left" ng-click="close()">
-            {{cancel}}
-        </button>
-        <button class="btn btn-sm btn-primary pull-right" ng-click="addExistingItem()" ng-disabled="selectedItems.length < 1">
-            {{ok}}
-        </button>
-    </div>
 </div>
+
+<div class="modal-footer" ng-if="showHeaderFooter">
+    <button class="btn btn-sm btn-default pull-left" ng-click="close()">
+        {{cancel}}
+    </button>
+    <button class="btn btn-sm btn-primary pull-right" ng-click="addExistingItem()"
+            ng-disabled="selectedItems.length < 1">
+        {{ok}}
+    </button>
+</div>
+<!--</div>-->
