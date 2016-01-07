@@ -4,17 +4,17 @@ angular.module('dashboard.workflow', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('workflow', {
-                    title: 'Documents Under Review Widget',
-                    description: 'Displays documents under review',
+                    title: 'Workflow Widget',
+                    description: 'Displays workflow',
                     controller: 'Dashboard.WorkflowOverviewController',
                     reload: true,
                     templateUrl: 'modules/dashboard/views/components/workflow.client.view.html'
                 }
             );
     })
-    .controller('Dashboard.WorkflowOverviewController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Task.InfoService'
+    .controller('Dashboard.WorkflowOverviewController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Task.InfoService', 'Task.HistoryService'
         , 'Authentication', 'Dashboard.DashboardService',
-        function ($scope, $translate, $stateParams, Util, TaskInfoService, Authentication, DashboardService) {
+        function ($scope, $translate, $stateParams, Util, TaskInfoService, TaskHistoryService, Authentication, DashboardService) {
 
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'main');
@@ -35,9 +35,14 @@ angular.module('dashboard.workflow', ['adf.provider'])
                     if ($stateParams.type) {
                         if ($stateParams.type == 'task' || $stateParams.type == 'ADHOC') {
                             TaskInfoService.getTaskInfo($stateParams.id).then(
-                                function (data) {
-                                    $scope.gridOptions.data = data.documentUnderReview;
-                                    $scope.gridOptions.totalItems = 1;
+                                function (taskInfo) {
+                                    var promiseQueryTaskHistory = TaskHistoryService.queryTaskHistory(taskInfo);
+                                    $q.all([promiseQueryTaskHistory, promiseUsers]).then(function (data) {
+                                        var taskHistory = data[0];
+                                        $scope.gridOptions.data = taskHistory;
+                                        $scope.gridOptions.totalItems = taskHistory.length;
+                                        //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+                                    });
                                 }
                                 , function (error) {
                                     $scope.complaintInfo = null;

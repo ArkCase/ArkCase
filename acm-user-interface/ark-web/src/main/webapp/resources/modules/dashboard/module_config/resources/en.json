@@ -168,6 +168,11 @@
         "title": "Workflow Overview",
         "description": "Overview of pending workflows",
         "noDataMessage": "Currently there are no workflows to display"
+      },
+      "esignature":{
+        "title": "eSignature",
+        "description": "eSignature widget",
+        "noDataMessage": "Currently there are no eSignatures to display"
       }
     }
   }

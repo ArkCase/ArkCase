@@ -23,5 +23,6 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.correspondence',
     'dashboard.reworkdetails',
     'dashboard.docreview',
-    'dashboard.workflow'
+    'dashboard.workflow',
+    'dashboard.signature'
 ]);
