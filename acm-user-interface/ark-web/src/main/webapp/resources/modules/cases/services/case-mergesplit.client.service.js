@@ -40,7 +40,8 @@ angular.module('services').factory('Case.MergeSplitService', ['$resource', '$tra
              * Creates a new case for selected file.
              */
             _splitCaseFiles:{
-                url:'/api/v1/plugin/copyCaseFile'
+                url:'proxy/arkcase/api/v1/plugin/copyCaseFile',
+                method: 'POST'
             }
         });
         
@@ -67,10 +68,18 @@ angular.module('services').factory('Case.MergeSplitService', ['$resource', '$tra
             });
         };
         
-        Service.splitCaseFile = function(){
-            
+        Service.splitCaseFile = function(targetCase){
+            return Util.serviceCall({
+                service: Service._splitCaseFiles
+                , data: JSON.stringify(targetCase)
+                , onSuccess: function(data){
+                    if(CaseInfoService.validateCaseInfo(data)){
+                        return data;
+                    }
+                }
+            });
         };
         
         return Service;
     }
-]);
+]);            
