@@ -2,11 +2,12 @@
 
 angular.module('complaints').controller('Complaints.NotesController', ['$scope', '$stateParams', '$q'
     , 'UtilService', 'ConfigService', 'Authentication', 'ObjectService', 'Object.NoteService'
-    , 'Helper.ObjectBrowserService', 'Helper.UiGridService'
+    , 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Helper.NoteService'
     , function ($scope, $stateParams, $q
         , Util, ConfigService, Authentication, ObjectService, ObjectNoteService
-        , HelperObjectBrowserService, HelperUiGridService) {
+        , HelperObjectBrowserService, HelperUiGridService, HelperNoteService) {
 
+        var noteHelper = new HelperNoteService.Note();
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
@@ -45,28 +46,13 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
 
         $scope.addNew = function () {
             gridHelper.gotoLastPage();
-            var newRow = {};
-            newRow.parentId = $stateParams.id;
-            newRow.parentType = ObjectService.ObjectTypes.COMPLAINT;
-            newRow.created = new Date(Util.getCurrentDay());
-            newRow.creator = $scope.userId;
+            var newRow = noteHelper.createNote($stateParams.id, ObjectService.ObjectTypes.COMPLAINT, $scope.userId);
             $scope.gridOptions.data.push(newRow);
             $scope.gridOptions.totalItems++;
         };
         $scope.updateRow = function (rowEntity) {
             var note = Util.omitNg(rowEntity);
-
-            // The date string needs to be reformatted so that it can be accepted by the backend
-            // It is expected to be in ISO format
-            note.created = Util.dateToISOString(new Date(note.created));
-
-            ObjectNoteService.saveNote(note).then(
-                function (noteAdded) {
-                    if (Util.isEmpty(rowEntity.id)) {
-                        rowEntity.id = noteAdded.id;
-                    }
-                }
-            );
+            noteHelper.saveNote(note, rowEntity);
         };
         $scope.deleteRow = function (rowEntity) {
             gridHelper.deleteRow(rowEntity);

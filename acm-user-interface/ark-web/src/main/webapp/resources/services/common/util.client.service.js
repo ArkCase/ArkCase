@@ -542,29 +542,13 @@ angular.module('services').factory('UtilService', ['$q'
              * Converts a date object into an ISO format string
              *
              * @param {Date} Date object
-             * @Returns {String} ISO formatted date string YYYY-MM-DDThh:mm:ss.mmm-sTZD
+             * @Returns {String} ISO formatted date string YYYY-MM-DDTHH:mm:ss.SSSZZ
              */
-            , dateToISOString: function(d) {
+            , dateToIsoString: function(d) {
                 if (null == d) {
                     return "";
                 }
-                var month = d.getMonth() + 1;
-                var day = d.getDate();
-                var year = d.getFullYear();
-                var hour = d.getHours();
-                var minute = d.getMinutes();
-                var second = d.getSeconds();
-                var millisecond = d.getMilliseconds();
-                var zoneOffset = d.getTimezoneOffset()/60;
-
-                return year
-                    + '-' + this._padZero(month)
-                    + '-' + this._padZero(day)
-                    + 'T' + this._padZero(hour)
-                    + ':' + this._padZero(minute)
-                    + ':' + this._padZero(second)
-                    + '.' + ('00' + millisecond).substring(('00' + millisecond).length - 3) // need two padding 0's here
-                    + '-' + this._padZero(zoneOffset) + '00';
+                return moment(d).format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
             }
 
             //get day string in "yyyy-mm-dd" format
