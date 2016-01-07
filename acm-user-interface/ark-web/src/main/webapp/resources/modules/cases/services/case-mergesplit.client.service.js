@@ -68,6 +68,17 @@ angular.module('services').factory('Case.MergeSplitService', ['$resource', '$tra
             });
         };
         
+        /**
+         * @ngdoc method
+         * @name splitCaseFile
+         * 
+         * @description 
+         *  Gets the information of the file desired to be split.
+         *  Splits it off and returns the data.
+         *  
+         * @param {Array} targetCase
+         * @returns {Array}
+         */
         Service.splitCaseFile = function(targetCase){
             return Util.serviceCall({
                 service: Service._splitCaseFiles
