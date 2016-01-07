@@ -2,11 +2,12 @@
 
 angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$stateParams', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.NoteService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Helper.NoteService'
     , function ($scope, $stateParams, $q
         , Util, ConfigService, ObjectService, ObjectNoteService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService) {
+        , HelperUiGridService, HelperObjectBrowserService, HelperNoteService) {
 
+        var noteHelper = new HelperNoteService.Note();
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
@@ -43,25 +44,14 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
         };
 
         $scope.addNew = function () {
-            var lastPage = $scope.gridApi.pagination.getTotalPages();
-            $scope.gridApi.pagination.seek(lastPage);
-            var newRow = {};
-            newRow.parentId = $stateParams.id;
-            newRow.parentType = ObjectService.ObjectTypes.TASK;
-            newRow.created = Util.getCurrentDay();
-            newRow.creator = $scope.userId;
+            gridHelper.gotoLastPage();
+            var newRow = noteHelper.createNote($stateParams.id, ObjectService.ObjectTypes.TASK, $scope.userId);
             $scope.gridOptions.data.push(newRow);
             $scope.gridOptions.totalItems++;
         };
         $scope.updateRow = function (rowEntity) {
             var note = Util.omitNg(rowEntity);
-            ObjectNoteService.saveNote(note).then(
-                function (noteAdded) {
-                    if (Util.isEmpty(rowEntity.id)) {
-                        rowEntity.id = noteAdded.id;
-                    }
-                }
-            );
+            noteHelper.saveNote(note, rowEntity);
         };
         $scope.deleteRow = function (rowEntity) {
             gridHelper.deleteRow(rowEntity);
