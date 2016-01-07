@@ -72,11 +72,11 @@ public class CloseComplaintRequestService
 
         if (shouldFullInvestigationBeOpened)
         {
-            CaseFile fullInvestigation = openFullInvestigation(updatedComplaint, user, null);
+            CaseFile fullInvestigation = openFullInvestigation(updatedComplaint, user, null, updatedComplaint.getObjectType());
             log.debug("Opened a full investigation: " + fullInvestigation.getCaseNumber());
 
             // Add CaseFile as Reference to the Complaint
-            addReferenceToComplaint(updatedComplaint, fullInvestigation);
+            addReferenceToComplaint(updatedComplaint, fullInvestigation, fullInvestigation.getObjectType());
         }
 
         boolean shouldComplaintBeAddedToExistingCase = shallWeAddComplaintToExistingCase(updatedRequest);
@@ -90,7 +90,7 @@ public class CloseComplaintRequestService
                 log.debug("Added complaint to existing case file: " + updatedCaseFile.getCaseNumber());
 
                 // Add CaseFile as Reference to the Complaint
-                addReferenceToComplaint(updatedComplaint, updatedCaseFile);
+                addReferenceToComplaint(updatedComplaint, updatedCaseFile, updatedCaseFile.getObjectType());
             }
         }
 
@@ -213,7 +213,7 @@ public class CloseComplaintRequestService
         return "add_exising_case".equals(updatedRequest.getDisposition().getDispositionType());
     }
 
-    public CaseFile openFullInvestigation(Complaint updatedComplaint, String userId, CaseFile caseFile) throws PipelineProcessException
+    public CaseFile openFullInvestigation(Complaint updatedComplaint, String userId, CaseFile caseFile, String objectType) throws PipelineProcessException
     {
         if (caseFile == null)
         {
@@ -229,7 +229,7 @@ public class CloseComplaintRequestService
         caseFile.setPriority(updatedComplaint.getPriority());
         caseFile.setTitle(updatedComplaint.getComplaintTitle());
 
-        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(), updatedComplaint.getComplaintNumber(), "COMPLAINT", updatedComplaint.getComplaintTitle());
+        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(), updatedComplaint.getComplaintNumber(), objectType, updatedComplaint.getComplaintTitle());
         log.debug("reference object title: " + originalComplaint.getTargetTitle());
         caseFile.addChildObject(originalComplaint);
 
@@ -300,11 +300,11 @@ public class CloseComplaintRequestService
         return c;
     }
 
-    public void addReferenceToComplaint(Complaint complaint, CaseFile caseFile)
+    public void addReferenceToComplaint(Complaint complaint, CaseFile caseFile, String objectType)
     {
         if (complaint != null && caseFile != null)
         {
-            ObjectAssociation caseFileObjectAssociation = makeObjectAssociation(caseFile.getId(), caseFile.getCaseNumber(), caseFile.getObjectType(), caseFile.getTitle());
+            ObjectAssociation caseFileObjectAssociation = makeObjectAssociation(caseFile.getId(), caseFile.getCaseNumber(), objectType, caseFile.getTitle());
             complaint.addChildObject(caseFileObjectAssociation);
             getComplaintDao().save(complaint);
         }

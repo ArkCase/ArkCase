@@ -1,10 +1,35 @@
 {
-    "id": "common",
-    "title": "Common settings",
-
-    "notifyMessage": {
-        "duration": 5000,
-        "position": "right",
-        "maximumOpen": 5
+  "id": "common",
+  "title": "Common settings",
+  "notifyMessage": {
+    "duration": 5000,
+    "position": "right",
+    "maximumOpen": 5
+  },
+  "docTree": {
+    "emailDialog": {
+      "enableFiltering": false,
+      "multiSelect": true,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "common.directive.docTree.emailDialog.gridColumns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "email_lcs",
+          "displayName": "common.directive.docTree.emailDialog.gridColumns.email",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0
     }
+  }
 }
