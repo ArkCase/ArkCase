@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('preference').controller('Preference.WidgetsListController', ['$scope', '$q', '$state', '$stateParams', 'AdministrationService', 'SchemasService',
-    function ($scope, $q, $state, $stateParams, AdministrationService, SchemasService) {
+angular.module('preference').controller('Preference.WidgetsListController', ['$scope', '$q', '$state', '$stateParams',
+    function ($scope, $q, $state, $stateParams) {
         $scope.widgets = [];
 
         $scope.formData = ["*", {"type": "submit", "title": "Save"}];
