@@ -49,6 +49,16 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
             , Grid: function (arg) {
                 this.scope = arg.scope;
                 this.scope.gridOptions = this.scope.gridOptions || {};
+
+                // The onRegisterApi handler must be defined immediately,
+                // otherwise angular will never call it and gridApi will never be defined
+                var that = this;
+                var dfd = $q.defer();
+                this.scope.gridOptions.promiseRegisterApi = dfd.promise;
+                this.scope.gridOptions.onRegisterApi = function (gridApi) {
+                    that.scope.gridApi = gridApi;
+                    dfd.resolve(gridApi);
+                };
             }
         };
 
@@ -79,14 +89,6 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 that.scope.gridOptions.paginationPageSize = config.paginationPageSize;
                 that.scope.gridOptions.enableFiltering = config.enableFiltering;
                 that.scope.gridOptions.enableSorting = config.enableSorting;
-
-                var dfd = $q.defer();
-                that.scope.gridOptions.promiseRegisterApi = dfd.promise;
-                that.scope.gridOptions.onRegisterApi = function (gridApi) {
-                    that.scope.gridApi = gridApi;
-                    dfd.resolve(gridApi);
-                };
-                return dfd.promise;
             }
 
             /**
@@ -207,6 +209,21 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 this.scope.gridOptions.promiseRegisterApi.then(function (gridApi) {
                     handler(gridApi);
                 });
+            }
+
+            /**
+             * @ngdoc method
+             * @name gotoLastPage
+             * @methodOf services:Helper.UiGridService
+             *
+             * @description
+             * Loads the last page of data into the ui-grid
+             */
+            , gotoLastPage: function () {
+                if (this.scope && this.scope.gridApi) {
+                    var lastPage = this.scope.gridApi.pagination.getTotalPages();
+                    this.scope.gridApi.pagination.seek(lastPage);
+                }
             }
 
             /**
