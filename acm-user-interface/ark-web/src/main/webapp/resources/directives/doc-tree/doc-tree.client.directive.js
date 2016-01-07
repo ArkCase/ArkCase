@@ -2999,8 +2999,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
             , getSelectedNodes: function () {
                 var nodes = null;
-                if (this.tree) {
-                    nodes = this.tree.getSelectedNodes();
+                if (DocTree.tree) {
+                    nodes = DocTree.tree.getSelectedNodes();
                 }
                 return nodes;
             }
@@ -4016,6 +4016,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                 scope.treeControl = {
                     refreshTree: DocTree.refreshTree
+                    , getSelectedNodes: DocTree.getSelectedNodes
                 };
 
 
