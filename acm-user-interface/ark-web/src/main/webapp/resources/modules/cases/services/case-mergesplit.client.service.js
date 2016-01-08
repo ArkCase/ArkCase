@@ -60,10 +60,13 @@ angular.module('services').factory('Case.MergeSplitService', ['$resource', '$tra
             return Util.serviceCall({
                 service: Service._mergeCaseFiles
                 , data: {sourceCaseFileId: sourceId, targetCaseFileId: targetId}
-                , onSuccess: function(data){
-                    if(CaseInfoService.validateCaseInfo(data)){
-                        return data;
-                    }
+                , onSuccess: function(data){                  
+                        if(CaseInfoService.validateCaseInfo(data)){
+                            return data;
+                        }
+                }
+                , onError: function(errData){
+                    alert("Case can't be merged.");
                 }
             });
         };
