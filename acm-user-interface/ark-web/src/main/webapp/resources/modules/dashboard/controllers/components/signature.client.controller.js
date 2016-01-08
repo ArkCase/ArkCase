@@ -3,7 +3,7 @@
 angular.module('dashboard.signature', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('workflow', {
+            .widget('signature', {
                     title: 'Signature Widget',
                     description: 'Displays Signatures',
                     controller: 'Dashboard.SignatureController',

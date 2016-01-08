@@ -115,11 +115,24 @@
         },
         {
           "id": "person",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "fullName",
+              "displayName": "costTracking.comp.people.table.columns.fullName",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "userId",
+              "displayName": "costTracking.comp.people.table.columns.userId",
+              "headerCellFilter": "translate"
+            }
+          ]
         },
         {
           "id": "summary",
-          "type": "component"
+          "type": "component",
+
         }
       ]
     },

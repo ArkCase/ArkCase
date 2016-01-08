@@ -1,18 +1,18 @@
 'use strict';
 
-angular.module('dashboard.person', ['adf.provider'])
+angular.module('dashboard.summary', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('person', {
-                    title: 'Person Widget',
-                    description: 'Displays person',
-                    controller: 'Dashboard.PersonController',
+            .widget('summary', {
+                    title: 'Summary Widget',
+                    description: 'Displays a summary of hours',
+                    controller: 'Dashboard.SummaryController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/person.client.view.html'
+                    templateUrl: 'modules/dashboard/views/components/summary.client.view.html'
                 }
             );
     })
-    .controller('Dashboard.PersonController', ['$scope', '$translate', '$stateParams', 'UtilService',
+    .controller('Dashboard.SummaryController', ['$scope', '$translate', '$stateParams', 'UtilService',
         , 'Authentication', 'Dashboard.DashboardService',
         function ($scope, $translate, $stateParams, Util, Authentication, DashboardService) {
 
