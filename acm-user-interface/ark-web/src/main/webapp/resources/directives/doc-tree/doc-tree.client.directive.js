@@ -489,7 +489,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     //remove tree cache for current obj
                     DocTree.cacheTree.remove(objType + "." + objId);
                     //remove individual folder cache for current obj
-                    var cacheFolderList = DocTree.cacheFolderList.cache;    //??????????????????? DocTree.cacheFolderList.cache is not defined
+                    var cacheFolderList = DocTree.cacheFolderList.cache;
                     if (!Util.isEmpty(cacheFolderList)) {
                         for (var cacheKey in cacheFolderList) {
                             if (cacheFolderList.hasOwnProperty(cacheKey)) {
