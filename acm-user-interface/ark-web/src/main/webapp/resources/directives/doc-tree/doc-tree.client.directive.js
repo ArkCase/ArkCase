@@ -966,13 +966,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             // Any documents which are checked in doctree will be opened in the viewer simultaneously
                             // in addition to the document which is directly opened (double-clicked)
                             var selectedIdsList = "";
-                            _.forEach(selNodes, function(value) {
+                            _.forEach(selNodes, function (value) {
                                 if (value.data && value.data.objectId && value.data.objectType) {
                                     if (value.data.objectType.toLowerCase() != "folder") {
                                         selectedIdsList += value.data.objectId + ",";
                                     }
                                 }
                             });
+                            //$(".fancytree-selected:not('.fancytree-folder')").find(".btn-group a").each(function () {
+                            //    selectedIdsList += this.innerText.trim() + ",";
+                            //});
 
                             // removes trailing comma from the id list
                             if (selectedIdsList.length > 0)
