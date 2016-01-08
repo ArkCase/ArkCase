@@ -167,17 +167,15 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                             }
                         }
                     });
-                    modalInstance.result.then(function (selectedCase) {
-                        if (selectedCase) {
+                    modalInstance.result.then(function (caseSummary) {
+                        if (caseSummary) {
 
-                            MergeSplitService.mergeCaseFile(caseInfo.id, selectedCase.object_id_s).then(
+                            MergeSplitService.mergeCaseFile(caseInfo.id, caseSummary.object_id_s).then(
                                     function (data) {
                                         ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, data.id);
                                     });
 
                         }
-                    }, function () {
-                        // Cancel button was clicked
                     });
                 };
 
@@ -188,10 +186,10 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                         controller: 'Cases.SplitController',
                         size: 'lg',
                     });
-                    modalInstance.result.then(function (selectedCase) {
-                        if (selectedCase) {
-                            if (selectedCase != null) {
-                                MergeSplitService.splitCaseFile(selectedCase).then(
+                    modalInstance.result.then(function (caseSummary) {
+                        if (caseSummary) {
+                            if (caseSummary != null) {
+                                MergeSplitService.splitCaseFile(caseSummary).then(
                                 function(data){
                                     ObjectService.gotoURL(ObjectService.ObjectTypes.CASE_FILE, data.id);
                                 });
