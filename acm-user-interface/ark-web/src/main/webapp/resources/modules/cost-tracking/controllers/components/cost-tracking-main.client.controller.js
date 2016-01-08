@@ -2,7 +2,7 @@
 
 angular.module('cost-tracking').controller('CostTracking.MainController', ['$scope', '$translate', 'dashboard', 'Dashboard.DashboardService',
     'UtilService', 'CostTracking.InfoService', 'ConfigService', 'StoreService',
-    function($scope, $translate, dashboard, DashboardService, Util, CostTrackingInfoService, ConfigService, Store) {
+    function ($scope, $translate, dashboard, DashboardService, Util, CostTrackingInfoService, ConfigService, Store) {
 
         $scope.$emit('main-component-started');
 
@@ -32,10 +32,10 @@ angular.module('cost-tracking').controller('CostTracking.MainController', ['$sco
         };
 
         DashboardService.getConfig({}, function (data) {
-            var cacheDashboardConfig = new Store.CacheFifo(CostTrackingInfoService.CacheNames.COST_SHEETS);
+            var cacheDashboardConfig = new Store.CacheFifo(CostTrackingInfoService.CacheNames.COSTSHEET_INFO);
             $scope.dashboard.costModel = cacheDashboardConfig.get("dashboardConfig");
 
-            if($scope.dashboard.costModel) {
+            if ($scope.dashboard.costModel) {
                 //If cached, use that model
                 $scope.dashboard.costModel.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
                 $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
@@ -52,9 +52,15 @@ angular.module('cost-tracking').controller('CostTracking.MainController', ['$sco
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {
             //Save dashboard model only to cache
-            var cacheDashboardConfig = new Store.CacheFifo(CostTrackingInfoService.CacheNames.COST_SHEETS);
-            if(cacheDashboardConfig)
+            var cacheDashboardConfig = new Store.CacheFifo(CostTrackingInfoService.CacheNames.COSTSHEET_INFO);
+            if (cacheDashboardConfig)
                 cacheDashboardConfig.put("dashboardConfig", model);
+
+            //jwu:
+            //Todo: fix above cache
+            //XXX_INFO cache is used to save info data, not config data. The right place to save the
+            //dashboard config in cache is when the config is first time retrieved (presumably in a service)
+            //
         });
 
         //var widgetFilter = function(model) {
