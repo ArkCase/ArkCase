@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.LocationsController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'Helper.UiGridService', 'Helper.ConfigService', 'Complaint.InfoService', 'Object.LookupService'
-    , function ($scope, $stateParams, $q, Util, HelperUiGridService, HelperConfigService, ComplaintInfoService, ObjectLookupService) {
+    , 'UtilService', 'Helper.UiGridService', 'ConfigService', 'Complaint.InfoService'
+    , 'Object.LookupService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $q, Util, HelperUiGridService, ConfigService, ComplaintInfoService
+        , ObjectLookupService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
@@ -13,12 +15,12 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
             }
         );
 
-        var promiseConfig = HelperConfigService.requestComponentConfig($scope, "locations", function (config) {
+        var promiseConfig = ConfigService.getComponentConfig("complaints", "locations").then(function (config) {
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
             gridHelper.setInPlaceEditing(config, $scope.updateRow);
-
 
             $q.all([promiseAddressTypes]).then(function (data) {
                 $scope.gridOptions.enableRowSelection = false;    //need to turn off for inline edit
@@ -33,20 +35,22 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
                     }
                 }
             });
+            return config;
         });
 
-        $scope.$on('complaint-updated', function (e, data) {
-            if (ComplaintInfoService.validateComplaintInfo(data)) {
-                $scope.complaintInfo = data;
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
+                $scope.complaintInfo = complaintInfo;
                 $scope.gridOptions.data = [Util.goodValue($scope.complaintInfo.location, {})];
-                gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
-            }
-        });
+                //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
+                return complaintInfo;
+            });
+        }
 
 
         $scope.addNew = function () {
             $scope.gridOptions.data.push({});
-            gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
         };
         $scope.updateRow = function (rowEntity) {
             var complaintInfo = Util.omitNg($scope.complaintInfo);

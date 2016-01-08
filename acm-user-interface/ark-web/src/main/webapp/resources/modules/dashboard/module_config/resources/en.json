@@ -37,7 +37,16 @@
       "myComplaints": {
         "title": "My Complaints",
         "description": "Displays my complaints",
-        "noDataMessage": "Currently there are no complaints info"
+        "table": {
+          "header": {
+            "number": "Complaint Number",
+            "title": "Title",
+            "priority": "Priority",
+            "created": "Created",
+            "status": "Status"
+          },
+          "noDataMessage": "Currently there are no complaints info"
+        }
       },
       "myTasks": {
         "title": "My Tasks",
@@ -55,6 +64,18 @@
           }
         },
         "noDataMessage": "Currently there are no tasks info"
+      },
+      "details": {
+        "title": "Details",
+        "description": "Displays case details",
+        "table": {
+          "header": {
+            "details": "Details",
+            "modified": "Date Last Modified",
+            "modifier": "User Last Modified"
+          }
+        },
+        "noDataMessage": "Currently there are no details"
       },
       "newComplaints": {
         "title": "New Complaints",

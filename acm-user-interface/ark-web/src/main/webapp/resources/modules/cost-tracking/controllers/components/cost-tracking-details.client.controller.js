@@ -1,17 +1,22 @@
 'use strict';
 
-angular.module('cost-tracking').controller('CostTracking.DetailsController', ['$scope', '$translate', 'UtilService', 'CostTracking.InfoService', 'MessageService',
-    function ($scope, $translate, Util, CostTrackingInfoService, MessageService) {
-        $scope.$emit('req-component-config', 'details');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('details' == componentId) {
-                $scope.config = config;
-            }
+angular.module('cost-tracking').controller('CostTracking.DetailsController', ['$scope', '$translate', '$stateParams'
+    , 'UtilService', 'ConfigService', 'CostTracking.InfoService', 'MessageService', 'Helper.ObjectBrowserService'
+    , function ($scope, $translate, $stateParams
+        , Util, ConfigService, CostTrackingInfoService, MessageService, HelperObjectBrowserService) {
+
+        ConfigService.getComponentConfig("cost-tracking", "details").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
-        $scope.$on('costsheet-updated', function (e, data) {
-            $scope.costsheetInfo = data;
-        });
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            CostTrackingInfoService.getCostsheetInfo(currentObjectId).then(function (costsheetInfo) {
+                $scope.costsheetInfo = costsheetInfo;
+                return costsheetInfo;
+            });
+        }
 
         $scope.saveDetails = function() {
             var costsheetInfo = Util.omitNg($scope.costsheetInfo);

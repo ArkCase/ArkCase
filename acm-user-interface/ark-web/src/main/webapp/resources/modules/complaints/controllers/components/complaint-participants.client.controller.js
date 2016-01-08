@@ -1,17 +1,19 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.ParticipantsController', ['$scope', '$stateParams', '$q'
-    , 'StoreService', 'UtilService', 'Helper.UiGridService', 'Helper.ConfigService'
-    , 'Complaint.InfoService', 'LookupService', 'Object.LookupService'
-    , function ($scope, $stateParams, $q, Store, Util, HelperUiGridService, HelperConfigService
-        , ComplaintInfoService, LookupService, ObjectLookupService) {
+    , 'StoreService', 'UtilService', 'ConfigService', 'Complaint.InfoService', 'LookupService'
+    , 'Object.LookupService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $q
+        , Store, Util, ConfigService, ComplaintInfoService, LookupService
+        , ObjectLookupService, HelperUiGridService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        var promiseConfig = HelperConfigService.requestComponentConfig($scope, "participants", function (config) {
+        var promiseConfig = ConfigService.getComponentConfig("complaints", "participants").then(function (config) {
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
             gridHelper.addGridApiHandler(function (gridApi) {
                 $scope.gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef, newValue, oldValue) {
                     if (newValue == oldValue) {
@@ -67,17 +69,10 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                         $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: row.entity.acm$_participantNames:'id':'name'";
                     }
                 }
-
-
-                var deferParticipantData = new Store.Variable("deferComplaintParticipantData");    // used to hold grid data before grid config is ready
-                var complaintInfo = deferParticipantData.get();
-                if (complaintInfo) {
-                    updateGridData(complaintInfo);
-                    deferParticipantData.set(null);
-                }
             });
-        });
 
+            return config;
+        });
 
         var promiseTypes = ObjectLookupService.getParticipantTypes().then(
             function (participantTypes) {
@@ -116,28 +111,35 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                 });
                 $scope.gridOptions.data = participants;
                 $scope.complaintInfo = data;
-                gridHelper.hidePagingControlsIfAllDataShown(participants.length);
+                //gridHelper.hidePagingControlsIfAllDataShown(participants.length);
             });
         };
-        $scope.$on('complaint-updated', function (e, data) {
-            if (!ComplaintInfoService.validateComplaintInfo(data)) {
-                return;
-            }
 
-            if (data.complaintId == $stateParams.id) {
-                updateGridData(data);
-            } else {                      // condition when data comes before state is routed and config is not set
-                var deferParticipantData = new Store.Variable("deferComplaintParticipantData");
-                deferParticipantData.set(data);
-            }
-        });
+        //$scope.$on('object-updated', function (e, data) {
+        //    if (!ComplaintInfoService.validateComplaintInfo(data)) {
+        //        return;
+        //    }
+        //
+        //    if (data.complaintId == $stateParams.id) {
+        //        updateGridData(data);
+        //    } else {                      // condition when data comes before state is routed and config is not set
+        //        var deferParticipantData = new Store.Variable("deferComplaintParticipantData");
+        //        deferParticipantData.set(data);
+        //    }
+        //});
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
+                updateGridData(complaintInfo);
+                return complaintInfo;
+            });
+        }
 
 
         $scope.addNew = function () {
             var lastPage = $scope.gridApi.pagination.getTotalPages();
             $scope.gridApi.pagination.seek(lastPage);
             $scope.gridOptions.data.push({});
-            gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
         };
         $scope.updateRow = function (rowEntity) {
             var complaintInfo = Util.omitNg($scope.complaintInfo);

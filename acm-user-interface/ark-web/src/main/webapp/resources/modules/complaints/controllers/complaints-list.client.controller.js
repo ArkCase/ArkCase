@@ -1,16 +1,16 @@
 'use strict';
 
-angular.module('complaints').controller('ComplaintsListController', ['$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Complaint.ListService', 'Complaint.InfoService', 'ConfigService', 'Helper.ObjectTreeService',
-    function ($scope, $state, $stateParams, $translate, Util, ObjectService, ComplaintListService, ComplaintInfoService, ConfigService, HelperObjectTreeService) {
-        ConfigService.getModuleConfig("complaints").then(function (config) {
-            $scope.treeConfig = config.tree;
-            $scope.componentsConfig = config.components;
-            return config;
-        });
+angular.module('complaints').controller('ComplaintsListController', ['$scope', '$state', '$stateParams', '$translate'
+    , 'UtilService', 'ObjectService', 'Complaint.ListService', 'Complaint.InfoService', 'Helper.ObjectBrowserService'
+    , function ($scope, $state, $stateParams, $translate
+        , Util, ObjectService, ComplaintListService, ComplaintInfoService, HelperObjectBrowserService) {
 
-        var treeHelper = new HelperObjectTreeService.Tree({
+        //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper
+        new HelperObjectBrowserService.Tree({
             scope: $scope
-            , nodeId: $stateParams.id
+            , state: $state
+            , stateParams: $stateParams
+            , moduleId: "complaints"
             , getTreeData: function (start, n, sort, filters) {
                 return ComplaintListService.queryComplaintsTreeData(start, n, sort, filters);
             }
@@ -19,24 +19,13 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
             }
             , makeTreeNode: function (complaintInfo) {
                 return {
-                    nodeId: Util.goodValue(complaintInfo.id, 0)
-                    , nodeType: ObjectService.ObjectTypes.TASK
-                    , nodeTitle: Util.goodValue(complaintInfo.title)
-                    , nodeToolTip: Util.goodValue(complaintInfo.title)
+                    nodeId: Util.goodValue(complaintInfo.complaintId, 0)
+                    , nodeType: ObjectService.ObjectTypes.COMPLAINT
+                    , nodeTitle: Util.goodValue(complaintInfo.complaintTitle)
+                    , nodeToolTip: Util.goodValue(complaintInfo.complaintTitle)
                 };
             }
         });
-        $scope.onLoad = function (start, n, sort, filters) {
-            treeHelper.onLoad(start, n, sort, filters);
-        };
 
-        $scope.onSelect = function (selectedComplaint) {
-            $scope.$emit('req-select-complaint', selectedComplaint);
-            var components = Util.goodArray(selectedComplaint.components);
-            var componentType = (1 == components.length) ? components[0] : "main";
-            $state.go('complaints.' + componentType, {
-                id: selectedComplaint.nodeId
-            });
-        };
     }
 ]);

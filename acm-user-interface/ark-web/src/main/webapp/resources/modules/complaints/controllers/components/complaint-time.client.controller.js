@@ -1,13 +1,16 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.TimeController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'ObjectService', 'Helper.UiGridService', 'Helper.ConfigService', 'Object.TimeService'
-    , function ($scope, $stateParams, $translate, Util, ObjectService, HelperUiGridService, HelperConfigService, ObjectTimeService) {
+    , 'UtilService', 'ObjectService', 'ConfigService', 'Object.TimeService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $translate, Util, ObjectService, ConfigService, ObjectTimeService
+        , HelperUiGridService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-        var promiseConfig = HelperConfigService.requestComponentConfig($scope, "time", function (config) {
+        var promiseConfig = ConfigService.getComponentConfig("complaints", "cost").then(function (config) {
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
 
             for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                 if ("name" == $scope.config.columnDefs[i].name) {
@@ -16,10 +19,13 @@ angular.module('complaints').controller('Complaints.TimeController', ['$scope', 
                     $scope.gridOptions.columnDefs[i].field = "acm$_hours";
                 }
             }
+            return config;
         });
 
-        if (Util.goodPositive($stateParams.id)) {
-            ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.CASE_FILE, $stateParams.id).then(
+
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.CASE_FILE, currentObjectId).then(
                 function (timesheets) {
                     promiseConfig.then(function (config) {
                         for (var i = 0; i < timesheets.length; i++) {
@@ -32,13 +38,14 @@ angular.module('complaints').controller('Complaints.TimeController', ['$scope', 
                         $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = timesheets;
                         $scope.gridOptions.totalItems = Util.goodValue(timesheets.length, 0);
-                        gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+                        //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                         return config;
                     });
                     return timesheets;
                 }
             );
         }
+
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();

@@ -11,8 +11,8 @@
  * Helper.UiGridService has functions for typical usage in ArCase of 'ui-grid' directive
  */
 angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '$translate'
-    , 'UtilService', 'LookupService', 'Object.LookupService', 'ObjectService'
-    , function ($resource, $q, $translate, Util, LookupService, ObjectLookupService, ObjectService) {
+    , 'UtilService', 'LookupService', 'Object.LookupService', 'ObjectService', 'uiGridConstants'
+    , function ($resource, $q, $translate, Util, LookupService, ObjectLookupService, ObjectService, uiGridConstants) {
         var Service = {
             Lookups: {
                 USER_FULL_NAMES: "userFullNames"
@@ -48,6 +48,17 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              */
             , Grid: function (arg) {
                 this.scope = arg.scope;
+                this.scope.gridOptions = this.scope.gridOptions || {};
+
+                // The onRegisterApi handler must be defined immediately,
+                // otherwise angular will never call it and gridApi will never be defined
+                var that = this;
+                var dfd = $q.defer();
+                this.scope.gridOptions.promiseRegisterApi = dfd.promise;
+                this.scope.gridOptions.onRegisterApi = function (gridApi) {
+                    that.scope.gridApi = gridApi;
+                    dfd.resolve(gridApi);
+                };
             }
         };
 
@@ -65,7 +76,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              */
             setBasicOptions: function (config) {
                 var that = this;
-                that.scope.gridOptions = that.scope.gridOptions || {};
+                //that.scope.gridOptions = that.scope.gridOptions || {};
                 that.scope.config = config;
 
                 that.scope.gridOptions.enableColumnResizing = true;
@@ -78,14 +89,23 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 that.scope.gridOptions.paginationPageSize = config.paginationPageSize;
                 that.scope.gridOptions.enableFiltering = config.enableFiltering;
                 that.scope.gridOptions.enableSorting = config.enableSorting;
+            }
 
-                var dfd = $q.defer();
-                that.scope.gridOptions.promiseRegisterApi = dfd.promise;
-                that.scope.gridOptions.onRegisterApi = function (gridApi) {
-                    that.scope.gridApi = gridApi;
-                    dfd.resolve(gridApi);
-                };
-                return dfd.promise;
+            /**
+             * @ngdoc method
+             * @name disableGridScrolling
+             * @methodOf services:Helper.UiGridService
+             *
+             * @param {Object} config Component configuration data with grid options
+             *
+             * @description
+             * Disabling vertical and horizontal scrolling to ui-grid options.
+             */
+            , disableGridScrolling: function(config) {
+                var that = this;
+                that.scope.config = config;
+                that.scope.gridOptions.enableHorizontalScrollbar = uiGridConstants.scrollbars.NEVER;
+                that.scope.gridOptions.enableVerticalScrollbar = uiGridConstants.scrollbars.NEVER;
             }
 
             /**
@@ -189,6 +209,21 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 this.scope.gridOptions.promiseRegisterApi.then(function (gridApi) {
                     handler(gridApi);
                 });
+            }
+
+            /**
+             * @ngdoc method
+             * @name gotoLastPage
+             * @methodOf services:Helper.UiGridService
+             *
+             * @description
+             * Loads the last page of data into the ui-grid
+             */
+            , gotoLastPage: function () {
+                if (this.scope && this.scope.gridApi) {
+                    var lastPage = this.scope.gridApi.pagination.getTotalPages();
+                    this.scope.gridApi.pagination.seek(lastPage);
+                }
             }
 
             /**
@@ -336,6 +371,28 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 if (0 <= idx) {
                     that.scope.gridOptions.data.splice(idx, 1);
                 }
+            }
+
+            /**
+             * @ngdoc method
+             * @name addEditButton
+             * @methodOf services:Helper.UiGridService
+             *
+             * @param {Object} columnDefs ui-grid column definition
+             * @param {Function} onClickEdit Callback function to response to button click event
+             *
+             * @description
+             * Create a new column with edit button
+             */
+            , addEditButton: function (columnDefs, onClickEdit) {
+                var columnDef = {
+                    name: "edit"
+                    , cellEditableCondition: false
+                    , width: 40
+                    , headerCellTemplate: "<span></span>"
+                    , cellTemplate: "<span><i class='fa fa-pencil fa-lg' style='cursor :pointer' ng-click='" + onClickEdit + "'></i></span>"
+                };
+                columnDefs.push(columnDef);
             }
 
             /**

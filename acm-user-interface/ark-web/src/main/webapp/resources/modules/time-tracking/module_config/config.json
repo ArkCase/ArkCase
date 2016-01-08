@@ -1,11 +1,12 @@
 {
     "id": "time-tracking",
     "title": "Time Tracking",
+    "hasOverviewWidgets": true,
     "menus": [
         
         {
             "menuId": "leftnav",
-            "menuItemURL": "time-tracking",
+            "menuItemURL": "time-tracking.main",
             "menuItemTitle": "Time Tracking",
             "iconClass": "fa fa-clock-o",
             "position": 130
@@ -96,7 +97,38 @@
             "icon": "fa fa-tachometer",
             "enabled": false,
             "type": "empty",
-            "editable": false
+            "editable": false,
+            "widgets": [
+                {
+                    "id": "details",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "details",
+                            "displayName": "dashboard.widgets.details.table.header.details",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "modified",
+                            "displayName": "dashboard.widgets.details.table.header.modified",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "modifier",
+                            "displayName": "dashboard.widgets.details.table.header.modifier",
+                            "headerCellFilter": "translate"
+                        }
+                    ]
+                },
+                {
+                    "id": "person",
+                    "type": "component"
+                },
+                {
+                    "id": "summary",
+                    "type": "component"
+                }
+            ]
         },
         {
             "id": "info",

@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>ACM | ArkCase | User Interface</title>
 
@@ -17,7 +17,7 @@
 <body>
 <div class="login-wrapper">
     <div class="logo">
-        <img src="<%= request.getContextPath()%>/assets/img/logo.png" style="max-width: 100%;">
+        <img src="<%= request.getContextPath()%>/proxy/resources/branding/loginlogo.png" style="max-width: 100%;">
     </div>
     <header class="text-center">
         <strong>Enter your username and password.</strong>
@@ -25,7 +25,7 @@
     <p></p>
 
     <c:if test='${not empty sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}'>
-    <div class="alert alert-danger">${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}</div>
+        <div class="alert alert-danger">${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}</div>
     </c:if>
 
     <form id="login-form" action="<%= request.getContextPath()%>/j_spring_security_check" method="post">
@@ -55,7 +55,7 @@
 <footer id="footer">
     <div class="text-center padder">
         <p>
-            <small><span>ArkCase</span><br>&copy;<span>2014, 2015</span></small>
+            <small><span>ArkCase</span><br>&copy;<span>2014, 2015, 2016</span></small>
         </p>
     </div>
 </footer>

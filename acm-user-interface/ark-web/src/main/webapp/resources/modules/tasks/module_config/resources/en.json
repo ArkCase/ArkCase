@@ -103,6 +103,44 @@
       "eventDate": "Date",
       "userId": "User"
     }
+  },
+  "tasks.newTask": {
+    "title": "New Task",
+    "assignee.button": "Choose Assignee",
+    "assignee.label": "Assign To",
+    "assignee.placeholder": "Please choose assignee by clicking the button above",
+    "priority.placeholder": "Select Priority",
+    "priority.label": "Priority",
+    "status.placeholder": "Select Status",
+    "status.label": "Status",
+    "associateNumber.label": "Associate with Complaint or Case",
+    "associateNumber.placeholder": "Complaint or Case #",
+    "subject.label": "Subject",
+    "taskStartDate.label": "Start Date",
+    "dueDate.label": "Due Date",
+    "datepicker.close": "Close",
+    "percentComplete.label": "% Complete",
+    "notes.label": "Notes",
+    "saveButton": "Save"
+  },
+  "tasks.userSearch": {
+    "id": "userSearch",
+    "title": "User Search",
+    "search": {
+      "btn": "Search",
+      "placeholder": "Search for the user to assign to this task."
+    },
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
+    "enabled": true,
+    "userFacetFilter": "\"Object Type\": USER",
+    "assigneeGridColumns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "parent": "Parent",
+      "assignee": "Assignee",
+      "modified": "Modified"
+    }
   }
 }
-

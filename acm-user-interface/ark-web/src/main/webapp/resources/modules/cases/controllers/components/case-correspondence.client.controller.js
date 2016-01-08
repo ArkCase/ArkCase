@@ -1,8 +1,11 @@
 'use strict';
 
 angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', '$stateParams', '$q', '$window', '$translate'
-    , 'UtilService', 'Helper.UiGridService', 'ObjectService', 'LookupService', 'Object.LookupService', 'Object.CorrespondenceService', 'Case.InfoService'
-    , function ($scope, $stateParams, $q, $window, $translate, Util, HelperUiGridService, ObjectService, LookupService, ObjectLookupService, ObjectCorrespondenceService, CaseInfoService) {
+    , 'UtilService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService'
+    , 'Object.CorrespondenceService', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $q, $window, $translate
+        , Util, ConfigService, ObjectService, LookupService, ObjectLookupService
+        , ObjectCorrespondenceService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
@@ -14,16 +17,15 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             }
         );
 
-        $scope.$emit('req-component-config', 'correspondence');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if (componentId == 'correspondence') {
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.setExternalPaging(config, $scope.retrieveGridData);
-                gridHelper.setUserNameFilter(promiseUsers);
+        ConfigService.getComponentConfig("cases", "correspondence").then(function (config) {
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
+            gridHelper.setExternalPaging(config, $scope.retrieveGridData);
+            gridHelper.setUserNameFilter(promiseUsers);
 
-                $scope.retrieveGridData();
-            }
+            $scope.retrieveGridData();
+            return config;
         });
 
 
@@ -40,28 +42,32 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             }
         );
 
-        $scope.$on('case-updated', function (e, data) {
-            if (CaseInfoService.validateCaseInfo(data)) {
-                $scope.caseInfo = data;
-            }
-        });
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
+                $scope.caseInfo = caseInfo;
+                return caseInfo;
+            });
+        }
 
         $scope.retrieveGridData = function () {
-            var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.CASE_FILE
-                , $stateParams.id
-                , Util.goodValue($scope.start, 0)
-                , Util.goodValue($scope.pageSize, 10)
-                , Util.goodValue($scope.sort.by)
-                , Util.goodValue($scope.sort.dir)
-            );
+            if (Util.goodPositive(currentObjectId, false)) {
+                var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.CASE_FILE
+                    , currentObjectId
+                    , Util.goodValue($scope.start, 0)
+                    , Util.goodValue($scope.pageSize, 10)
+                    , Util.goodValue($scope.sort.by)
+                    , Util.goodValue($scope.sort.dir)
+                );
 
-            $q.all([promiseCorrespondence, promiseUsers]).then(function (data) {
-                var correspondenceData = data[0];
-                $scope.gridOptions = $scope.gridOptions || {};
-                $scope.gridOptions.data = correspondenceData.children;
-                $scope.gridOptions.totalItems = Util.goodValue(correspondenceData.totalChildren, 0);
-                gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
-            });
+                $q.all([promiseCorrespondence, promiseUsers]).then(function (data) {
+                    var correspondenceData = data[0];
+                    $scope.gridOptions = $scope.gridOptions || {};
+                    $scope.gridOptions.data = correspondenceData.children;
+                    $scope.gridOptions.totalItems = Util.goodValue(correspondenceData.totalChildren, 0);
+                    //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+                });
+            }
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {
@@ -94,7 +100,6 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
                 correspondence.category = "Correspondence";
                 $scope.gridOptions.data.push(correspondence);
                 $scope.gridOptions.totalItems++;
-                gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
 
                 //var lastPage = $scope.gridApi.pagination.getTotalPages();
                 //$scope.gridApi.pagination.seek(lastPage);

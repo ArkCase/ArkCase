@@ -1,23 +1,26 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ObjectService', 'Helper.UiGridService', 'Object.NoteService', 'Authentication'
-    , function ($scope, $stateParams, $q, Util, ObjectService, HelperUiGridService, ObjectNoteService, Authentication) {
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.NoteService', 'Authentication'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Helper.NoteService'
+    , function ($scope, $stateParams, $q
+        , Util, ConfigService, ObjectService, ObjectNoteService, Authentication
+        , HelperUiGridService, HelperObjectBrowserService, HelperNoteService) {
 
+        var noteHelper = new HelperNoteService.Note();
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        $scope.$emit('req-component-config', 'notes');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ("notes" == componentId) {
-                gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.setInPlaceEditing(config, $scope.updateRow);
-                gridHelper.setUserNameFilter(promiseUsers);
+        ConfigService.getComponentConfig("tasks", "notes").then(function (config) {
+            gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
+            gridHelper.setInPlaceEditing(config, $scope.updateRow);
+            gridHelper.setUserNameFilter(promiseUsers);
 
-                $scope.retrieveGridData();
-            }
+            $scope.retrieveGridData();
+            return config;
         });
 
         Authentication.queryUserInfo().then(
@@ -28,38 +31,27 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
         );
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($stateParams.id)) {
-                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.TASK, $stateParams.id);
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (Util.goodPositive(currentObjectId, false)) {
+                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.TASK, currentObjectId);
                 $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions.data = notes;
                     $scope.gridOptions.totalItems = notes.length;
-                    gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+                    //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
                 });
             }
         };
 
         $scope.addNew = function () {
-            var lastPage = $scope.gridApi.pagination.getTotalPages();
-            $scope.gridApi.pagination.seek(lastPage);
-            var newRow = {};
-            newRow.parentId = $stateParams.id;
-            newRow.parentType = ObjectService.ObjectTypes.TASK;
-            newRow.created = Util.getCurrentDay();
-            newRow.creator = $scope.userId;
+            gridHelper.gotoLastPage();
+            var newRow = noteHelper.createNote($stateParams.id, ObjectService.ObjectTypes.TASK, $scope.userId);
             $scope.gridOptions.data.push(newRow);
             $scope.gridOptions.totalItems++;
-            gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
         };
         $scope.updateRow = function (rowEntity) {
             var note = Util.omitNg(rowEntity);
-            ObjectNoteService.saveNote(note).then(
-                function (noteAdded) {
-                    if (Util.isEmpty(rowEntity.id)) {
-                        rowEntity.id = noteAdded.id;
-                    }
-                }
-            );
+            noteHelper.saveNote(note, rowEntity);
         };
         $scope.deleteRow = function (rowEntity) {
             gridHelper.deleteRow(rowEntity);

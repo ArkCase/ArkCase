@@ -9,6 +9,7 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.my-cases',
     'dashboard.my-complaints',
     'dashboard.my-tasks',
+    'dashboard.details',
     'dashboard.new-complaints',
     'dashboard.team-workload',
     'dashboard.weather',
