@@ -1,6 +1,7 @@
 {
   "id": "complaints",
   "title": "Complaints",
+  "hasOverviewWidgets": true,
   "menus": [
     {
       "menuId": "leftnav",

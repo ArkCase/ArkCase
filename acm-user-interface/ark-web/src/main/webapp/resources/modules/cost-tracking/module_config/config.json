@@ -1,6 +1,7 @@
 {
   "id": "cost-tracking",
   "title": "Cost Tracking",
+  "hasOverviewWidgets": true,
   "menus": [
     {
       "menuId": "leftnav",

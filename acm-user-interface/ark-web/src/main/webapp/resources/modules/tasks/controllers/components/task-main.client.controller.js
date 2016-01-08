@@ -55,6 +55,12 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', '$statePar
             var cacheDashboardConfig = new Store.CacheFifo(TaskInfoService.CacheNames.TASK_INFO);
             if (cacheDashboardConfig)
                 cacheDashboardConfig.put("dashboardConfig", model);
+
+            //jwu:
+            //Todo: fix above cache
+            //XXX_INFO cache is used to save info data, not config data. The right place to save the
+            //dashboard config in cache is when the config is first time retrieved (presumably in a service)
+            //
         });
 
         //var widgetFilter = function(model) {
