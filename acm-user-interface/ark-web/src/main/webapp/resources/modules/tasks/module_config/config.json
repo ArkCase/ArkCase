@@ -1,6 +1,7 @@
 {
   "id": "tasks",
   "title": "Tasks",
+  "hasOverviewWidgets": true,
   "menus": [
     {
       "menuId": "leftnav",
