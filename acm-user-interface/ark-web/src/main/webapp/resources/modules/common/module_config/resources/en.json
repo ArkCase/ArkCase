@@ -1,18 +1,24 @@
 {
   "common": {
-    "select.option.none": "(Select One)"
+    "select.option.none": "(Select One)",
+    "defaultDateFormat": "DD/MM/YYYY",
+    "defaultTimeFormat": "hh:mm:ss",
+    "defaultDatetimeFormat": "DD/MM/YYYY hh:mm"
   },
   "common.service": {
     "error.invalidData": "Invalid data"
   },
+  "common.objects": {
+    "progressNoData": "[ No data ]",
+    "progressLoading": "Loading data ",
+    "progressError": "Failed to load data "
+  },
   "common.frevvo": {
     "defaultDateFormat": "YYYY-MM-DD"
   },
-
   "common.service.messageService": {
     "authorizationError": "You are not authorized to take this action"
   },
-
   "common.directive.docTree": {
     "btnRefresh": "Refresh",
     "waitUploading": "Uploading...",
@@ -23,6 +29,15 @@
     "moreItems": " more items...",
     "moreItemsTooltip": "Load more items",
     "moreItemsBegin": "More items...",
+    "email": {
+      "defaultTitle": "ArkCase Documents",
+      "headerForLinks": "Please follow the links below to view the document(s). Links expire in 3 days.",
+      "footerForLinks": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+      "subjectForAttachment": "Documents from ArkCase",
+      "bodyForAttachment": "Please find attached the documents sent to you from ArkCase.",
+      "headerForAttachment": "Hello,",
+      "footerForAttachment": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+    },
     "menu": {
       "noop": "(Select Item)",
       "newFolder": "New Folder <kbd>Ctrl+N</kbd>",
@@ -39,6 +54,25 @@
       "email": "Email",
       "print": "Print <kbd>Ctrl+P</kbd>",
       "declare": "Declare as Record(s)"
+    },
+    "dndDialog": {
+      "title": "Drag and Drop",
+      "radReplace.text": "Replace document (If more then one files are dropped, only first one is used)",
+      "radUploadToParent.text": "Create document(s) in parent folder",
+      "selFileTypes.label": "File Type:",
+      "optFileType.prompt": "[choose file type]",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "OK"
+    },
+    "emailDialog": {
+      "title": "Email",
+      "recipients": "Recipients:",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Send Email",
+      "gridColumns": {
+        "name": "Name",
+        "email": "Email"
+      }
     },
     "error": {
       "nodeTitle": "(Error)"
@@ -61,5 +95,12 @@
     "tooltip.move_right": "Move Right",
     "tooltip.move_left": "Move Left",
     "authorized": "Authorized"
+  },
+  "common.directive.searchModal": {
+    "header": "Search",
+    "btnSearch.text": "Search",
+    "btnOk.text": "OK",
+    "btnCancel.text": "Cancel",
+    "edtPlaceholder": "Type in to search"
   }
 }

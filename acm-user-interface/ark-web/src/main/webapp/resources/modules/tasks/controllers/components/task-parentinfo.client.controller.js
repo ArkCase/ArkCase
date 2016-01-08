@@ -1,17 +1,39 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams', 'UtilService'
-    , 'ObjectService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService', 'Object.ModelService'
-    , function ($scope, $stateParams, Util, ObjectService, CaseInfoService, ComplaintInfoService, TaskInfoService, ObjectModelService) {
+angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService'
+    , 'Object.ModelService', 'LookupService', '$log'
+    , function ($scope, $stateParams
+        , Util, ConfigService, ObjectService, CaseInfoService, ComplaintInfoService, TaskInfoService
+        , ObjectModelService, LookupService, $log) {
 
-        $scope.$emit('req-component-config', 'parentinfo');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ("parentinfo" == componentId) {
-                $scope.config = config;
-            }
+        ConfigService.getComponentConfig("tasks", "parentinfo").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
-        $scope.$on('task-updated', function (e, data) {
+        LookupService.getUsers().then(
+            function (users) {
+                var options = [];
+                _.each(users, function (user) {
+                    options.push({object_id_s: user.object_id_s, name: user.name});
+                });
+                $scope.assignableUsers = options;
+                return users;
+            }
+        );
+
+        $scope.onClickTitle = function() {
+            if ($scope.parentCaseInfo) {
+                ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, $scope.parentCaseInfo.id);
+            } else if ($scope.parentComplaintInfo) {
+                ObjectService.gotoUrl(ObjectService.ObjectTypes.COMPLAINT, $scope.parentComplaintInfo.complaintId);
+            } else {
+                $log.error('parentCaseInfo is undefined, cannot redirect to the parent case');
+            }
+        };
+
+        $scope.$on('object-updated', function (e, data) {
             if (!TaskInfoService.validateTaskInfo(data)) {
                 return;
             }

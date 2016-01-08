@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateParams', '$q', '$translate'
-    , 'StoreService', 'UtilService', 'ObjectService', 'Helper.UiGridService', 'Helper.ConfigService'
-    , 'Case.InfoService', 'Object.PersonService', 'LookupService', 'Object.LookupService'
-    , function ($scope, $stateParams, $q, $translate, Store, Util, ObjectService, HelperUiGridService, HelperConfigService
-        , CaseInfoService, ObjectPersonService, LookupService, ObjectLookupService) {
+    , 'StoreService', 'UtilService', 'ObjectService', 'ConfigService', 'Case.InfoService'
+    , 'Object.PersonService', 'LookupService', 'Object.LookupService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $q, $translate, Store, Util, ObjectService, ConfigService, CaseInfoService
+        , ObjectPersonService, LookupService, ObjectLookupService, HelperUiGridService, HelperObjectBrowserService) {
 
         $scope.contactMethods = {gridOptions: {appScopeProvider: $scope}};
         $scope.organizations = {gridOptions: {appScopeProvider: $scope}};
@@ -65,22 +65,31 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         );
 
-        var promiseConfig = HelperConfigService.requestComponentConfig($scope, "people", function (config) {
+        //var promiseConfig = HelperConfigService.requestComponentConfig($scope, "people", function (config) {
+        //    configGridMain(config);
+        //    configGridContactMethod(config);
+        //    configGridOrganization(config);
+        //    configGridAddress(config);
+        //    configGridAlias(config);
+        //    configGridSecurityTag(config);
+        //
+        //    $q.all([promisePersonTypes, promiseUsers, promiseContactMethodTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes]).then(function (data) {
+        //        var deferPeopleData = new Store.Variable("deferCasePeopleData");    // used to hold grid data before grid config is ready
+        //        var caseInfo = deferPeopleData.get();
+        //        if (caseInfo) {
+        //            updateGridData(caseInfo);
+        //            deferPeopleData.set(null);
+        //        }
+        //    });
+        //});
+        var promiseConfig = ConfigService.getComponentConfig("cases", "people").then(function (config) {
             configGridMain(config);
             configGridContactMethod(config);
             configGridOrganization(config);
             configGridAddress(config);
             configGridAlias(config);
             configGridSecurityTag(config);
-
-            $q.all([promisePersonTypes, promiseUsers, promiseContactMethodTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes]).then(function (data) {
-                var deferPeopleData = new Store.Variable("deferCasePeopleData");    // used to hold grid data before grid config is ready
-                var caseInfo = deferPeopleData.get();
-                if (caseInfo) {
-                    updateGridData(caseInfo);
-                    deferPeopleData.set(null);
-                }
-            });
+            return config;
         });
 
 
@@ -89,6 +98,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
             gridHelper.setInPlaceEditing(config, $scope.updateRow,
                 function (rowEntity) {
                     return (!Util.isEmpty(rowEntity.personType)
@@ -130,6 +140,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 gridContactMethodHelper.addDeleteButton(config.contactMethods.columnDefs, "grid.appScope.deleteRowContactMethods(row.entity)");
                 gridContactMethodHelper.setColumnDefs(config.contactMethods);
                 gridContactMethodHelper.setBasicOptions(config.contactMethods);
+                gridContactMethodHelper.disableGridScrolling(config.contactMethods);
                 $q.all([promiseContactMethodTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.contactMethods.columnDefs.length; i++) {
                         if (HelperUiGridService.Lookups.CONTACT_METHODS_TYPES == $scope.config.contactMethods.columnDefs[i].lookup) {
@@ -161,6 +172,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 gridOrganizationHelper.addDeleteButton(config.organizations.columnDefs, "grid.appScope.deleteRowOrganizations(row.entity)");
                 gridOrganizationHelper.setColumnDefs(config.organizations);
                 gridOrganizationHelper.setBasicOptions(config.organizations);
+                gridOrganizationHelper.disableGridScrolling(config.organizations);
                 $q.all([promiseOrganizationTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.organizations.columnDefs.length; i++) {
                         if (HelperUiGridService.Lookups.ORGANIZATION_TYPES == $scope.config.organizations.columnDefs[i].lookup) {
@@ -189,6 +201,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 gridAddressHelper.addDeleteButton(config.addresses.columnDefs, "grid.appScope.deleteRowAddresses(row.entity)");
                 gridAddressHelper.setColumnDefs(config.addresses);
                 gridAddressHelper.setBasicOptions(config.addresses);
+                gridAddressHelper.disableGridScrolling(config.addresses);
                 $q.all([promiseAddressTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.addresses.columnDefs.length; i++) {
                         if (HelperUiGridService.Lookups.ADDRESS_TYPES == $scope.config.addresses.columnDefs[i].lookup) {
@@ -217,6 +230,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 gridAliasHelper.addDeleteButton(config.aliases.columnDefs, "grid.appScope.deleteRowAliases(row.entity)");
                 gridAliasHelper.setColumnDefs(config.aliases);
                 gridAliasHelper.setBasicOptions(config.aliases);
+                gridAliasHelper.disableGridScrolling(config.aliases);
                 $q.all([promiseAliasTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.aliases.columnDefs.length; i++) {
                         if (HelperUiGridService.Lookups.ALIAS_TYPES == $scope.config.aliases.columnDefs[i].lookup) {
@@ -245,6 +259,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 gridSecurityTagHelper.addDeleteButton(config.securityTags.columnDefs, "grid.appScope.deleteRowSecurityTags(row.entity)");
                 gridSecurityTagHelper.setColumnDefs(config.securityTags);
                 gridSecurityTagHelper.setBasicOptions(config.securityTags);
+                gridSecurityTagHelper.disableGridScrolling(config.securityTags);
                 $q.all([promiseSecurityTagTypes, promiseUsers]).then(function (data) {
                     for (var i = 0; i < $scope.config.securityTags.columnDefs.length; i++) {
                         if (HelperUiGridService.Lookups.SECURITY_TAG_TYPES == $scope.config.securityTags.columnDefs[i].lookup) {
@@ -299,7 +314,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 $scope.caseInfo = data;
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.caseInfo.personAssociations;
-                gridHelper.hidePagingControlsIfAllDataShown($scope.caseInfo.personAssociations.length);
+                //gridHelper.hidePagingControlsIfAllDataShown($scope.caseInfo.personAssociations.length);
 
                 for (var i = 0; i < $scope.caseInfo.personAssociations.length; i++) {
                     var personAssociation = $scope.caseInfo.personAssociations[i];
@@ -322,7 +337,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                     _.each(personAssociation.acm$_contactMethods.gridOptions.data, function (item) {
                         item.acm$_paId = personAssociation.id;
                     });
-                    gridContactMethodHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_contactMethods.gridOptions.data.length);
+                    //gridContactMethodHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_contactMethods.gridOptions.data.length);
 
 
                     personAssociation.acm$_organizations = {};
@@ -343,7 +358,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                     _.each(personAssociation.acm$_organizations.gridOptions.data, function (item) {
                         item.acm$_paId = personAssociation.id;
                     });
-                    gridOrganizationHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_organizations.gridOptions.data.length);
+                    //gridOrganizationHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_organizations.gridOptions.data.length);
 
 
                     personAssociation.acm$_addresses = {};
@@ -364,7 +379,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                     _.each(personAssociation.acm$_addresses.gridOptions.data, function (item) {
                         item.acm$_paId = personAssociation.id;
                     });
-                    gridAddressHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_addresses.gridOptions.data.length);
+                    //gridAddressHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_addresses.gridOptions.data.length);
 
 
                     personAssociation.acm$_aliases = {};
@@ -385,7 +400,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                     _.each(personAssociation.acm$_aliases.gridOptions.data, function (item) {
                         item.acm$_paId = personAssociation.id;
                     });
-                    gridAliasHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_aliases.gridOptions.data.length);
+                    //gridAliasHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_aliases.gridOptions.data.length);
 
 
                     personAssociation.acm$_securityTags = {};
@@ -406,22 +421,29 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                     _.each(personAssociation.acm$_securityTags.gridOptions.data, function (item) {
                         item.acm$_paId = personAssociation.id;
                     });
-                    gridSecurityTagHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_securityTags.gridOptions.data.length);
+                    //gridSecurityTagHelper.hidePagingControlsIfAllDataShown(personAssociation.acm$_securityTags.gridOptions.data.length);
                 }
             }); //end $q
         };
-        $scope.$on('case-updated', function (e, data) {
-            if (!CaseInfoService.validateCaseInfo(data)) {
-                return;
-            }
-
-            if (data.id == $stateParams.id) {
-                updateGridData(data);
-            } else {                      // condition when data comes before state is routed and config is not set
-                var deferPeopleData = new Store.Variable("deferCasePeopleData");
-                deferPeopleData.set(data);
-            }
-        });
+        //$scope.$on('object-updated', function (e, data) {
+        //    if (!CaseInfoService.validateCaseInfo(data)) {
+        //        return;
+        //    }
+        //
+        //    if (data.id == $stateParams.id) {
+        //        updateGridData(data);
+        //    } else {                      // condition when data comes before state is routed and config is not set
+        //        var deferPeopleData = new Store.Variable("deferCasePeopleData");
+        //        deferPeopleData.set(data);
+        //    }
+        //});
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
+                updateGridData(caseInfo);
+                return caseInfo;
+            });
+        }
 
 
         $scope.addNew = function () {

@@ -1,17 +1,16 @@
 'use strict';
 
 angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal'
-    , 'UtilService', 'ObjectService', 'Object.LookupService', 'Case.InfoService'
-    , function ($scope, $stateParams, $modal, Util, ObjectService, ObjectLookupService, CaseInfoService) {
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $modal
+        , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, HelperObjectBrowserService) {
 
-		$scope.$emit('req-component-config', 'documents');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('documents' == componentId) {
-                $scope.config = config;
-            }
+        ConfigService.getComponentConfig("cases", "documents").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
-        ObjectLookupService.getFormTypes().then(
+        ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE).then(
             function (formTypes) {
                 $scope.fileTypes = $scope.fileTypes || [];
                 $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));
@@ -29,12 +28,20 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
         $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
         $scope.objectId = $stateParams.id;
-        //$scope.containerId = 0;
-        $scope.$on('case-updated', function (e, data) {
-            if (CaseInfoService.validateCaseInfo(data)) {
-                $scope.caseInfo = data;
-            }
-        });
+
+        //$scope.$on('object-updated', function (e, data) {
+        //    if (CaseInfoService.validateCaseInfo(data)) {
+        //        $scope.caseInfo = data;
+        //    }
+        //});
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
+                $scope.caseInfo = caseInfo;
+                $scope.objectId = caseInfo.id;
+                return caseInfo;
+            });
+        }
 
         var silentReplace = function (value, replace, replacement) {
             if (!Util.isEmpty(value) && value.replace) {
@@ -74,5 +81,5 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                 }
             }
         }
-	}
+    }
 ]);

@@ -1,37 +1,44 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.WorkflowOverviewController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'Helper.UiGridService', 'ObjectService', 'Task.HistoryService', 'Task.InfoService'
-    , function ($scope, $stateParams, $q, Util, HelperUiGridService, ObjectService, TaskHistoryService, TaskInfoService) {
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Task.HistoryService', 'Task.InfoService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $q
+        , Util, ConfigService, ObjectService, TaskHistoryService, TaskInfoService
+        , HelperUiGridService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        $scope.$emit('req-component-config', 'workflow');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ('workflow' == componentId) {
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.setUserNameFilter(promiseUsers);
+        ConfigService.getComponentConfig("tasks", "workflow").then(function (config) {
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
+            gridHelper.setUserNameFilter(promiseUsers);
 
-                $scope.retrieveGridData();
-            }
+            $scope.retrieveGridData();
+            return config;
         });
 
-        $scope.$on('task-updated', function (e, data) {
-            if (TaskInfoService.validateTaskInfo(data)) {
-                $scope.taskInfo = data;
-            }
-        });
+        //TaskInfoService.getTaskInfo($stateParams.id).then(function (taskInfo) {
+        //    $scope.taskInfo = taskInfo;
+        //    return taskInfo;
+        //});
 
         $scope.retrieveGridData = function () {
-            if ($scope.taskInfo) {
-                var promiseQueryTaskHistory = TaskHistoryService.queryTaskHistory($scope.taskInfo);
-                $q.all([promiseQueryTaskHistory, promiseUsers]).then(function (data) {
-                    var taskHistory = data[0];
-                    $scope.gridOptions.data = taskHistory;
-                    $scope.gridOptions.totalItems = taskHistory.length;
-                    gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (Util.goodPositive(currentObjectId, false)) {
+                TaskInfoService.getTaskInfo(currentObjectId).then(function (taskInfo) {
+                    $scope.taskInfo = taskInfo;
+
+                    var promiseQueryTaskHistory = TaskHistoryService.queryTaskHistory($scope.taskInfo);
+                    $q.all([promiseQueryTaskHistory, promiseUsers]).then(function (data) {
+                        var taskHistory = data[0];
+                        $scope.gridOptions.data = taskHistory;
+                        $scope.gridOptions.totalItems = taskHistory.length;
+                        //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+                    });
+                    return taskInfo;
                 });
             }
         };

@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', 'UtilService', 'LookupService', 'Object.LookupService', 'Task.InfoService',
-    function ($scope, $stateParams, Util, LookupService, ObjectLookupService, TaskInfoService) {
-        $scope.$emit('req-component-config', 'info');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ("info" == componentId) {
-                $scope.config = config;
-            }
+angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams'
+    , 'UtilService', 'ConfigService', 'LookupService', 'Object.LookupService', 'Task.InfoService', 'Object.ModelService'
+    , function ($scope, $stateParams, Util, ConfigService, LookupService, ObjectLookupService, TaskInfoService, ObjectModelService) {
+
+        ConfigService.getComponentConfig("tasks", "info").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            return componentConfig;
         });
 
 
@@ -33,9 +33,10 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         );
 
 
-        $scope.$on('task-updated', function (e, data) {
+        $scope.$on('object-updated', function (e, data) {
             if (TaskInfoService.validateTaskInfo(data)) {
                 $scope.taskInfo = data;
+                $scope.assignee = ObjectModelService.getAssignee(data);
             }
         });
 
@@ -67,7 +68,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                 TaskInfoService.saveTaskInfo(taskInfo).then(
                     function (taskInfo) {
                         //update tree node tittle
-                        $scope.$emit("report-task-updated", taskInfo);
+                        $scope.$emit("report-object-updated", taskInfo);
                         return taskInfo;
                     }
                     , function (error) {

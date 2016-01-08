@@ -2,7 +2,9 @@
     <div class="module-content">
         <div class="left-sidebar scroll-body" ng-slimscroll="">
             <div class="module-header">
-                <h3>{{'admin.title' | translate}}</h3>
+                <h3>
+                    <span translate>admin.title</span>
+                </h3>
             </div>
             <div ng-include="'modules/admin/views/components/configurations-tree.client.view.html'" />
         </div>

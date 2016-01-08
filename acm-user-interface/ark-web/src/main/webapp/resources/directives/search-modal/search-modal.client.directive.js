@@ -10,22 +10,29 @@
  *
  * The "Search" modal with faceted search functionality
  *
- * @param {String} header - label for the header of the modal box
- * @param {String} search - label for the search button
- * @param {String} cancel - label for the cancel button
- * @param {String} ok - label for the add button
- * @param {String} searchPlaceholder - label for the input placeholder
+ * @param {boolean} multiSelect - multiple rows selection enabled. This parameter is phased out. Specify multiSelect in config file
+ * @param {String} header - (Optional)label for the header of the modal box. If not specified, default value is used
+ * @param {String} search - (Optional)label for the search button. If not specified, default value is used
+ * @param {String} cancel - (Optional)label for the cancel button. If not specified, default value is used
+ * @param {String} ok - (Optional)label for the add button. If not specified, default value is used
+ * @param {String} searchPlaceholder - (Optional)label for the input placeholder. If not specified, default value is used
  * @param {Object} filter - filter required to send to the faceted search by default (e.g. for client : "\"Object Sub Type\":CLIENT")
  * @param {Object} config - config of the parent scope used mostly for the UI-grid and to retrieve other params
- * @param {Object} modalInstance - current modalInstance in the parentScope, required to pass data when modal closes with "Add"
+ * @param {Object} modalInstance - (Optional)current modalInstance in the parentScope, required to pass data when modal closes with "Add".
+ * If not specified, this directive only show the content part of the dialog. Header and footer are not shown. And user has to handle the
+ * dialog closing logic.
+ * @param {Object} search-control - (Optional)Search dialog API for caller:
+ * @param {Function} search-control.getSelectedItems returns list of selected search items
+ * @param {Function} on-items-selected Callback function in response to selected items in search result.
  **/
 
 
-angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'Search.QueryBuilderService',
-    function ($q, SearchService, SearchQueryBuilder) {
+angular.module('directives').directive('searchModal', ['$q', '$translate', 'UtilService', 'SearchService', 'Search.QueryBuilderService',
+    function ($q, $translate, Util, SearchService, SearchQueryBuilder) {
         return {
             restrict: 'E',              //match only element name
             scope: {
+                multiSelect: '@',
                 header: '@',            //@ : text binding (read-only and only strings)
                 search: '@',
                 cancel: '@',
@@ -33,13 +40,41 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                 searchPlaceholder: '@',
                 filter: '@',
                 config: '&',            //& : one way binding (read-only, can return key, value pair via a getter function)
-                modalInstance: '='      //= : two way binding (read-write both, parent scope and directive's isolated scope have two way binding)
+                modalInstance: '=',     //= : two way binding (read-write both, parent scope and directive's isolated scope have two way binding)
+                searchControl: '=',
+                onItemsSelected: '='
             },
 
             link: function (scope) {    //dom operations
+                scope.header = Util.goodValue(scope.header, $translate.instant("common.directive.searchModal.header"));
+                scope.search = Util.goodValue(scope.search, $translate.instant("common.directive.searchModal.btnSearch.text"));
+                scope.ok = Util.goodValue(scope.ok, $translate.instant("common.directive.searchModal.btnOk.text"));
+                scope.cancel = Util.goodValue(scope.cancel, $translate.instant("common.directive.searchModal.btnCancel.text"));
+                scope.searchPlaceholder = Util.goodValue(scope.searchPlaceholder, $translate.instant("common.directive.searchModal.edtPlaceholder"));
+                scope.showHeaderFooter = !Util.isEmpty(scope.modalInstance);
+                scope.searchControl = {
+                    getSelectedItems: function () {
+                        return scope.selectedItems;
+                        //if ("true" == scope.multiSelect) {
+                        //    return scope.selectedItems;
+                        //} else if (scope.selectedItem) {
+                        //    return [scope.selectedItem];
+                        //} else {
+                        //    return [];
+                        //}
+                    }
+                };
+
+                scope.searchQuery = '';
+                scope.minSearchLength = 3;
+                if (scope.multiSelect == undefined || scope.multiSelect == '') {
+                    scope.multiSelect = 'false';
+                }
+
                 scope.facets = [];
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
+                scope.selectedItems = [];
                 scope.queryExistingItems = function () {
                     var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start);
                     if (query) {
@@ -52,21 +87,6 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                                 scope.gridOptions.totalItems = data.response.numFound;
                             });
                     }
-                };
-
-                scope.queryTypeahead = function (typeaheadQuery) {
-                    typeaheadQuery = typeaheadQuery.replace('*', '');
-                    var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery + '*', scope.filters, 10, 0);
-                    var deferred = $q.defer();
-                    if (query) {
-                        SearchService.queryFilteredSearch({
-                            query: query
-                        }, function (res) {
-                            var result = _.pluck(res.response.docs, 'name');
-                            deferred.resolve(result);
-                        });
-                    }
-                    return deferred.promise;
                 };
 
                 function updateFacets(facets) {
@@ -88,7 +108,7 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                             scope.filters += '&fq="' + facet + '":' + field;
                         }
                         else {
-                            scope.filters=""
+                            scope.filters = '';
                             scope.filters += 'fq="' + facet + '":' + field;
                         }
                         scope.queryExistingItems();
@@ -106,7 +126,7 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                 scope.keyUp = function (event) {
                     // Remove wildcard
                     scope.searchQuery = scope.searchQuery.replace('*', '');
-                    if (event.keyCode == 13 && scope.searchQuery) {
+                    if (event.keyCode == 13 && scope.searchQuery.length >= scope.minSearchLength) {
                         scope.queryExistingItems();
                     }
                 };
@@ -114,7 +134,11 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                 scope.addExistingItem = function () {
                     //when the modal is closed, the parent scope gets
                     //the selectedItem via the two-way binding
-                    scope.modalInstance.close(scope.selectedItem);
+                    if (scope.multiSelect === 'true') {
+                        scope.modalInstance.close(scope.selectedItems);
+                    } else {
+                        scope.modalInstance.close(scope.selectedItem);
+                    }
                 };
 
                 scope.close = function () {
@@ -130,7 +154,8 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                         enableRowSelection: true,
                         enableRowHeaderSelection: false,
                         enableFiltering: scope.config().enableFiltering,
-                        multiSelect: false,
+                        //multiSelect: scope.multiSelect === 'true' ? true : false,
+                        multiSelect: scope.config().multiSelect,
                         noUnselect: false,
                         useExternalPagination: true,
                         paginationPageSizes: scope.config().paginationPageSizes,
@@ -140,7 +165,21 @@ angular.module('directives').directive('searchModal', ['$q', 'SearchService', 'S
                             scope.gridApi = gridApi;
 
                             gridApi.selection.on.rowSelectionChanged(scope, function (row) {
-                                scope.selectedItem = row.isSelected ? row.entity : null;
+                                scope.selectedItems = gridApi.selection.getSelectedRows();
+                                //scope.selectedItem = row.isSelected ? row.entity : null;
+                                scope.selectedItem = row.entity;
+                                if (scope.onItemsSelected) {
+                                    //scope.onItemsSelected(scope.selectedItems);
+                                    scope.onItemsSelected(scope.selectedItems, [scope.selectedItem], row.isSelected);
+                                }
+                            });
+
+                            gridApi.selection.on.rowSelectionChangedBatch(scope, function (rows) {
+                                scope.selectedItems = gridApi.selection.getSelectedRows();
+                                if (scope.onItemsSelected) {
+                                    //scope.onItemsSelected(scope.selectedItems);
+                                    scope.onItemsSelected(scope.selectedItems, scope.selectedItems, true);
+                                }
                             });
 
 

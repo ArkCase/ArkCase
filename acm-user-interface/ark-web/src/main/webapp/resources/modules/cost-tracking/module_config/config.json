@@ -1,10 +1,11 @@
 {
   "id": "cost-tracking",
   "title": "Cost Tracking",
+  "hasOverviewWidgets": true,
   "menus": [
     {
       "menuId": "leftnav",
-      "menuItemURL": "cost-tracking",
+      "menuItemURL": "cost-tracking.main",
       "menuItemTitle": "Cost Tracking",
       "iconClass": "fa fa-money",
       "position": 120
@@ -90,7 +91,38 @@
       "icon": "fa fa-tachometer",
       "enabled": false,
       "type": "empty",
-      "editable": false
+      "editable": false,
+      "widgets": [
+        {
+          "id": "details",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "details",
+              "displayName": "dashboard.widgets.details.table.header.details",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "modified",
+              "displayName": "dashboard.widgets.details.table.header.modified",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "modifier",
+              "displayName": "dashboard.widgets.details.table.header.modifier",
+              "headerCellFilter": "translate"
+            }
+          ]
+        },
+        {
+          "id": "person",
+          "type": "component"
+        },
+        {
+          "id": "summary",
+          "type": "component"
+        }
+      ]
     },
     {
       "id": "info",
@@ -143,7 +175,7 @@
     },
     {
       "id": "summary",
-      "title": "Cost Summary",
+      "title": "Expenses",
       "icon": "fa fa-money",
       "enabled": true,
       "type": "grid",

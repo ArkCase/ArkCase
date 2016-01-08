@@ -1,10 +1,11 @@
 {
   "id": "complaints",
   "title": "Complaints",
+  "hasOverviewWidgets": true,
   "menus": [
     {
       "menuId": "leftnav",
-      "menuItemURL": "complaints",
+      "menuItemURL": "complaints.main",
       "menuItemTitle": "Complaints",
       "iconClass": "fa fa-exclamation-triangle",
       "position": 40
@@ -223,7 +224,80 @@
       "icon": "fa fa-tachometer",
       "enabled": false,
       "type": "empty",
-      "editable": false
+      "editable": false,
+      "widgets": [
+        {
+          "id": "details",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "details",
+              "displayName": "dashboard.widgets.details.table.header.details",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "modified",
+              "displayName": "dashboard.widgets.details.table.header.modified",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "modifier",
+              "displayName": "dashboard.widgets.details.table.header.modifier",
+              "headerCellFilter": "translate"
+            }
+          ]
+        },
+        {
+          "id": "locations",
+          "type": "component"
+        },
+        {
+          "id": "people",
+          "type": "component"
+        },
+        {
+          "id": "documents",
+          "type": "component"
+        },
+        {
+          "id": "participants",
+          "type": "component"
+        },
+        {
+          "id": "notes",
+          "type": "component",
+          "model": "noteCount"
+        },
+        {
+          "id": "tasks",
+          "type": "component",
+          "model": "taskCount"
+        },
+        {
+          "id": "references",
+          "type": "component"
+        },
+        {
+          "id": "history",
+          "type": "component"
+        },
+        {
+          "id": "correspondence",
+          "type": "component"
+        },
+        {
+          "id": "time",
+          "type": "component"
+        },
+        {
+          "id": "cost",
+          "type": "component"
+        },
+        {
+          "id": "calendar",
+          "type": "component"
+        }
+      ]
     },
     {
       "id": "info",

@@ -116,6 +116,7 @@ angular.module('services').factory('UtilService', ['$q'
              */
             //
             //todo: consider using lodash impl _.map(obj, 'some.arr[0].name');
+            //todo: also examine _.get()
             //
             , goodMapValue: function (map, key, replacement) {
                 var replacedWith = (undefined === replacement) ? "" : replacement;
@@ -387,7 +388,7 @@ angular.module('services').factory('UtilService', ['$q'
             //
             , omitNg: function (obj) {
                 var copy = _.cloneDeep(obj);
-                 _.cloneDeep(copy, function(v, k, o) {
+                _.cloneDeep(copy, function(v, k, o) {
                     if (_.isString(k)) {
                         if (k.startsWith("$") || k.startsWith("acm$_")) {
                             delete o[k];
@@ -532,6 +533,24 @@ angular.module('services').factory('UtilService', ['$q'
                 return (10 > i) ? "0" + i : "" + i;
             }
 
+            /**
+             * @ngdoc method
+             * @name dateToISOString
+             * @methodOf services.service:UtilService
+             *
+             * @description
+             * Converts a date object into an ISO format string
+             *
+             * @param {Date} Date object
+             * @Returns {String} ISO formatted date string YYYY-MM-DDTHH:mm:ss.SSSZZ
+             */
+            , dateToIsoString: function(d) {
+                if (null == d) {
+                    return "";
+                }
+                return moment(d).format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
+            }
+
             //get day string in "yyyy-mm-dd" format
             //parameter d is java Date() format; for some reason getDate() is 1 based while getMonth() is zero based
             , dateToString: function(d) {
@@ -549,6 +568,24 @@ angular.module('services').factory('UtilService', ['$q'
             , getCurrentDay: function() {
                 var d = new Date();
                 return this.dateToString(d);
+            }
+
+            , filterWidgets: function(model, allowedWidgets) {
+                var filteredModel  = model;
+                //Assume that we aren't using more than 1 row
+                var rowLength = filteredModel.rows.length - 1;
+                _.forEach(filteredModel.rows[rowLength].columns, function (col, key) {
+                    _.forEach(col, function(widgets, wKey) {
+                        if(wKey == 'widgets') {
+                            _.remove(widgets, function(widget) {
+                                if(!(_.includes(allowedWidgets, widget.title))){
+                                    return true;
+                                }
+                            });
+                        }
+                    });
+                });
+                return filteredModel;
             }
 
         };

@@ -1,34 +1,34 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
-    , 'UtilService', 'Helper.UiGridService', 'Task.InfoService'
-    , function ($scope, $q, Util, HelperUiGridService, TaskInfoService) {
+angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q', '$stateParams'
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'Task.InfoService', 'Helper.ObjectBrowserService'
+    , function ($scope, $q, $stateParams, Util, ConfigService, HelperUiGridService, TaskInfoService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        $scope.$emit('req-component-config', 'docsreview');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if ("docsreview" == componentId) {
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.setUserNameFilter(promiseUsers);
+        ConfigService.getComponentConfig("tasks", "docsreview").then(function (config) {
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
+            gridHelper.setUserNameFilter(promiseUsers);
 
-                //$scope.gridOptions.enableFiltering = false;
-            }
+            //$scope.gridOptions.enableFiltering = false;
+            return config;
         });
 
-        $scope.$on('task-updated', function (e, data) {
-            if (!TaskInfoService.validateTaskInfo(data)) {
-                return;
-            }
-            $scope.taskInfo = data;
-            $q.all([promiseUsers]).then(function (data) {
-                var arr = (data.documentUnderReview) ? [data.documentUnderReview] : [];
-                $scope.gridOptions.data = arr;
-                gridHelper.hidePagingControlsIfAllDataShown(1);
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            TaskInfoService.getTaskInfo(currentObjectId).then(function (taskInfo) {
+                $scope.taskInfo = taskInfo;
+                $q.all([promiseUsers]).then(function () {
+                    var arr = (taskInfo.documentUnderReview) ? [taskInfo.documentUnderReview] : [];
+                    $scope.gridOptions.data = arr;
+                    //gridHelper.hidePagingControlsIfAllDataShown(1);
+                });
+                return taskInfo;
             });
-        });
+        }
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();

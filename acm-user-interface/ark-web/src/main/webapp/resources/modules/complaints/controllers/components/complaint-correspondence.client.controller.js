@@ -1,9 +1,11 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.CorrespondenceController', ['$scope', '$stateParams', '$q', '$window', '$translate'
-    , 'UtilService', 'Helper.UiGridService', 'ObjectService', 'LookupService', 'Object.LookupService', 'Object.CorrespondenceService', 'Complaint.InfoService'
-    , function ($scope, $stateParams, $q, $window, $translate, Util, HelperUiGridService, ObjectService, LookupService, ObjectLookupService
-        , ObjectCorrespondenceService, ComplaintInfoService) {
+    , 'UtilService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService'
+    , 'Object.CorrespondenceService', 'Complaint.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $q, $window, $translate
+        , Util, ConfigService, ObjectService, LookupService, ObjectLookupService
+        , ObjectCorrespondenceService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
@@ -15,16 +17,15 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
             }
         );
 
-        $scope.$emit('req-component-config', 'correspondence');
-        $scope.$on('component-config', function (e, componentId, config) {
-            if (componentId == 'correspondence') {
-                gridHelper.setColumnDefs(config);
-                gridHelper.setBasicOptions(config);
-                gridHelper.setExternalPaging(config, $scope.retrieveGridData);
-                gridHelper.setUserNameFilter(promiseUsers);
+        ConfigService.getComponentConfig("complaints", "correspondence").then(function (config) {
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
+            gridHelper.setExternalPaging(config, $scope.retrieveGridData);
+            gridHelper.setUserNameFilter(promiseUsers);
 
-                $scope.retrieveGridData();
-            }
+            $scope.retrieveGridData();
+            return config;
         });
 
         $scope.correspondenceForms = [{"value": "noop", "name": $translate.instant("common.select.option.none")}];
@@ -40,27 +41,36 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
             }
         );
 
-        $scope.$on('complaint-updated', function (e, data) {
-            if (ComplaintInfoService.validateComplaintInfo(data)) {
-                $scope.complaintInfo = data;
-            }
-        });
+        //$scope.$on('object-updated', function (e, data) {
+        //    if (ComplaintInfoService.validateComplaintInfo(data)) {
+        //        $scope.complaintInfo = data;
+        //    }
+        //});
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        //if (Util.goodPositive(currentObjectId, false)) {
+        //    ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
+        //        $scope.complaintInfo = complaintInfo;
+        //        return complaintInfo;
+        //    });
+        //}
 
         $scope.retrieveGridData = function () {
-            var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.COMPLAINT
-                , $stateParams.id
-                , Util.goodValue($scope.start, 0)
-                , Util.goodValue($scope.pageSize, 10)
-                , Util.goodValue($scope.sort.by)
-                , Util.goodValue($scope.sort.dir)
-            );
+            if (Util.goodPositive(currentObjectId, false)) {
+                var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.COMPLAINT
+                    , currentObjectId
+                    , Util.goodValue($scope.start, 0)
+                    , Util.goodValue($scope.pageSize, 10)
+                    , Util.goodValue($scope.sort.by)
+                    , Util.goodValue($scope.sort.dir)
+                );
 
-            $q.all([promiseCorrespondence, promiseUsers]).then(function (data) {
-                var correspondenceData = data[0];
-                $scope.gridOptions.data = correspondenceData.children;
-                $scope.gridOptions.totalItems = Util.goodValue(correspondenceData.totalChildren, 0);
-                gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
-            });
+                $q.all([promiseCorrespondence, promiseUsers]).then(function (data) {
+                    var correspondenceData = data[0];
+                    $scope.gridOptions.data = correspondenceData.children;
+                    $scope.gridOptions.totalItems = Util.goodValue(correspondenceData.totalChildren, 0);
+                    //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+                });
+            }
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {
@@ -93,7 +103,6 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
                 correspondence.category = "Correspondence";
                 $scope.gridOptions.data.push(correspondence);
                 $scope.gridOptions.totalItems++;
-                gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
             });
         };
 

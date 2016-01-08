@@ -12,27 +12,26 @@
  */
 angular.module('services').factory('ConfigService', ['$resource', 'StoreService', 'UtilService',
     function ($resource, Store, Util) {
-        var Service = $resource('api/config/', {
-		},{
-			getModule: {
-				method: 'GET',
-				cache: true,
-				url: 'modules_config/config/modules/:moduleId/config.json',
-				isArray: false
-			},
+        var Service = $resource('api/config/', {}, {
+            getModule: {
+                method: 'GET',
+                cache: true,
+                url: 'modules_config/config/modules/:moduleId/config.json',
+                isArray: false
+            },
 
-			queryModules: {
-				method: 'GET',
-				cache: true,
-				url: 'modules_config/config/modules.json',
-				isArray: true
-			},
+            queryModules: {
+                method: 'GET',
+                cache: true,
+                url: 'modules_config/config/modules.json',
+                isArray: true
+            },
 
-			updateModule: {
-				method: 'PUT',
-				url: 'modules_config/config/modules/:moduleId/config.json',
-				isArray: false
-			}
+            updateModule: {
+                method: 'PUT',
+                url: 'modules_config/config/modules/:moduleId/config.json',
+                isArray: false
+            }
         });
 
         Service.SessionCacheNames = {
@@ -94,12 +93,34 @@ angular.module('services').factory('ConfigService', ['$resource', 'StoreService'
             if (moduleId != Util.goodValue(data.id)) {
                 return false;
             }
-            if (!Util.isArray(data.components)) {
-                return false;
-            }
+            //if (!Util.isArray(data.components)) {
+            //    return false;
+            //}
             return true;
         };
 
+
+        /**
+         * @ngdoc method
+         * @name getComponentConfig
+         * @methodOf services.service:ConfigService
+         *
+         * @description
+         * Query config of a component in a module
+         *
+         * @param {String} moduleId  Module ID
+         * @param {String} componentId  Component ID
+         *
+         * @returns {Object} Promise
+         */
+        Service.getComponentConfig = function (moduleId, componentId) {
+            return Service.getModuleConfig(moduleId).then(function (moduleConfig) {
+                var components = Util.goodMapValue(moduleConfig, "components", []);
+                var componentConfig = _.find(moduleConfig.components, {id: componentId});
+                return componentConfig;
+            });
+        }
+
         return Service;
-	}
+    }
 ]);
