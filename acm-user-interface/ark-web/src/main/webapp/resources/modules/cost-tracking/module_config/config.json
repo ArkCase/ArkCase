@@ -131,8 +131,7 @@
         },
         {
           "id": "summary",
-          "type": "component",
-
+          "type": "component"
         }
       ]
     },

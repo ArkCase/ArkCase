@@ -124,6 +124,11 @@
         "description": "Displays people details",
         "noDataMessage": "Currently there are no people to display"
       },
+      "documents": {
+        "title": "Documents",
+        "description": "Displays chart of documents by folder",
+        "noDataMessage": "Currently there are no documents to display"
+      },
       "location": {
         "title": "Location",
         "description": "Displays location details",
@@ -144,6 +149,11 @@
         "description": "Displays reference details",
         "noDataMessage": "Currently there are no references to display"
       },
+      "history": {
+        "title": "History",
+        "description": "Displays chart of history events",
+        "noDataMessage": "Currently there are no events to display"
+      },
       "notes": {
         "title": "Notes",
         "description": "Displays note details",
@@ -153,6 +163,21 @@
         "title": "Correspondence",
         "description": "Displays correspondence details",
         "noDataMessage": "Currently there are no correspondence to display"
+      },
+      "time": {
+        "title": "Time",
+        "description": "Displays chart for hours per user",
+        "noDataMessage": "Currently there time information to display"
+      },
+      "cost": {
+        "title": "Cost",
+        "description": "Displays chart for cost per user",
+        "noDataMessage": "Currently there is no cost information to display"
+      },
+      "calendar": {
+        "title": "Calendar",
+        "description": "Displays chart of scheduled events per day",
+        "noDataMessage": "Currently there are no documents to display"
       },
       "reworkdetails": {
         "title": "Rework Details",
@@ -164,25 +189,30 @@
         "description": "Shows documents under review",
         "noDataMessage": "Currently there no are no documents under review to display"
       },
-      "workflow":{
+      "workflow": {
         "title": "Workflow Overview",
         "description": "Overview of pending workflows",
         "noDataMessage": "Currently there are no workflows to display"
       },
-      "signature":{
+      "signature": {
         "title": "eSignature",
         "description": "eSignature widget",
         "noDataMessage": "Currently there are no eSignatures to display"
       },
-      "person":{
+      "person": {
         "title": "Person",
         "description": "Person widget for Cost and Time modules",
         "noDataMessage": "Currently there are no persons to display"
       },
-      "summary":{
+      "summary": {
         "title": "Summary",
         "description": "Displays a summary of hours",
         "noDataMessage": "Currently there is no summary to display"
+      },
+      "expenses": {
+        "title": "Expenses",
+        "description": "Displays a cost-to-user graph",
+        "noDataMessage": "Currently no expense data to display"
       }
     }
   }

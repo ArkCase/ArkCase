@@ -15,15 +15,22 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.news',
     'dashboard.details',
     'dashboard.people',
+    //'dashboard.documents',
     'dashboard.location',
     'dashboard.participants',
     'dashboard.tasks',
     'dashboard.references',
+    //'dashboard.history',
     'dashboard.notes',
     'dashboard.correspondence',
+    //'dashboard.time',
+    //'dashboard.cost',
+    //'dashboard.calendar',
     'dashboard.reworkdetails',
     'dashboard.docreview',
     'dashboard.workflow',
     'dashboard.signature',
-    'dashboard.person'
+    'dashboard.person'//,
+    //'dashboard.expenses',
+    //'dashboard.summary'
 ]);
