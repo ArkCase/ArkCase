@@ -50,12 +50,14 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
         //    $scope.complaintSolr = selectedComplaint;
         //});
 
+        $scope.dueDate = null;
         var previousId = null;
         $scope.$on('object-updated', function (e, data) {
             if (!ComplaintInfoService.validateComplaintInfo(data)) {
                 return;
             }
             $scope.complaintInfo = data;
+            $scope.dueDate = ($scope.complaintInfo) ? moment($scope.complaintInfo.dueDate).toDate() : null;
             $scope.assignee = ObjectModelService.getAssignee(data);
             $scope.owningGroup = ObjectModelService.getGroup(data);
             if (previousId != $stateParams.id) {
@@ -130,7 +132,8 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             ObjectModelService.setAssignee($scope.complaintInfo, $scope.assignee);
             saveComplaint();
         };
-        $scope.updateDueDate = function () {
+        $scope.updateDueDate = function (dueDate) {
+            $scope.complaintInfo.dueDate = (dueDate) ? moment(dueDate).format($scope.config.dateFormat): null;
             saveComplaint();
         };
 
