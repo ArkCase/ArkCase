@@ -1,9 +1,13 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.NotesController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Helper.UiGridService', 'Object.NoteService', 'Authentication'
-    , function ($scope, $stateParams, $q, Util, ConfigService, ObjectService, HelperUiGridService, ObjectNoteService, Authentication) {
+    , 'UtilService', 'ConfigService', 'Authentication', 'ObjectService', 'Object.NoteService'
+    , 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Helper.NoteService'
+    , function ($scope, $stateParams, $q
+        , Util, ConfigService, Authentication, ObjectService, ObjectNoteService
+        , HelperObjectBrowserService, HelperUiGridService, HelperNoteService) {
 
+        var noteHelper = new HelperNoteService.Note();
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
@@ -28,8 +32,9 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
 
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($stateParams.id)) {
-                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.COMPLAINT, $stateParams.id);
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (Util.goodPositive(currentObjectId, false)) {
+                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.COMPLAINT, currentObjectId);
                 $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions.data = notes;
@@ -40,25 +45,14 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
         };
 
         $scope.addNew = function () {
-            var lastPage = $scope.gridApi.pagination.getTotalPages();
-            $scope.gridApi.pagination.seek(lastPage);
-            var newRow = {};
-            newRow.parentId = $stateParams.id;
-            newRow.parentType = ObjectService.ObjectTypes.COMPLAINT;
-            newRow.created = Util.getCurrentDay();
-            newRow.creator = $scope.userId;
+            gridHelper.gotoLastPage();
+            var newRow = noteHelper.createNote($stateParams.id, ObjectService.ObjectTypes.COMPLAINT, $scope.userId);
             $scope.gridOptions.data.push(newRow);
             $scope.gridOptions.totalItems++;
         };
         $scope.updateRow = function (rowEntity) {
             var note = Util.omitNg(rowEntity);
-            ObjectNoteService.saveNote(note).then(
-                function (noteAdded) {
-                    if (Util.isEmpty(rowEntity.id)) {
-                        rowEntity.id = noteAdded.id;
-                    }
-                }
-            );
+            noteHelper.saveNote(note, rowEntity);
         };
         $scope.deleteRow = function (rowEntity) {
             gridHelper.deleteRow(rowEntity);

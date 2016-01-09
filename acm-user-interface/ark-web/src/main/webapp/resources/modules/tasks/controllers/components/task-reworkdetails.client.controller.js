@@ -27,7 +27,7 @@ angular.module('tasks').controller('Tasks.ReworkDetailsController', ['$scope', '
             var taskInfo = Util.omitNg($scope.taskInfo);
             TaskInfoService.saveTaskInfo(taskInfo).then(
                 function (taskInfo) {
-                    $scope.$emit("report-task-updated", taskInfo);
+                    $scope.$emit("report-object-updated", taskInfo);
                     MessageService.info($translate.instant("tasks.comp.details.informSaved"));
                     return taskInfo;
                 }

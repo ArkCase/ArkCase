@@ -10,8 +10,8 @@
 
  * TimeTracking.InfoService provides functions for Timesheet database data
  */
-angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$translate', 'UtilService',
-    function ($resource, $translate, Util) {
+angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$translate', 'StoreService', 'UtilService',
+    function ($resource, $translate, Store, Util) {
         var Service = $resource('proxy/arkcase/api/v1/service/timesheet', {}, {
 
             /**
@@ -58,9 +58,13 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
             }
         });
 
+        Service.CacheNames = {
+            TIMESHEET_INFO: "TimesheetInfo"
+        };
+
         /**
          * @ngdoc method
-         * @name getTimeTrackingInfo
+         * @name getTimesheetInfo
          * @methodOf service:TimeTracking.InfoService
          *
          * @description
@@ -70,12 +74,16 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
          *
          * @returns {Object} Promise
          */
-        Service.getTimeTrackingInfo =  function (id) {
+        Service.getTimesheetInfo = function (id) {
+            var cacheTimesheetInfo = new Store.CacheFifo(Service.CacheNames.TIMESHEET_INFO);
+            var timesheetInfo = cacheTimesheetInfo.get(id);
             return Util.serviceCall({
                 service: Service.get
                 , param: {id: id}
+                , result: timesheetInfo
                 , onSuccess: function (data) {
                     if (Service.validateTimesheet(data)) {
+                        cacheTimesheetInfo.put(id, data);
                         return data;
                     }
                 }
@@ -103,6 +111,9 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
                 , data: timesheetInfo
                 , onSuccess: function (data) {
                     if (Service.validateTimesheet(data)) {
+                        var timesheetInfo = data;
+                        var cacheTimesheetInfo = new Store.CacheFifo(Service.CacheNames.TIMESHEET_INFO);
+                        cacheTimesheetInfo.put(timesheetInfo.id, timesheetInfo);
                         return data;
                     }
                 }
@@ -121,7 +132,7 @@ angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$t
          *
          * @returns {Boolean} Return true if data is valid
          */
-        Service.validateTimesheet = function(data) {
+        Service.validateTimesheet = function (data) {
             if (Util.isEmpty(data)) {
                 return false;
             }

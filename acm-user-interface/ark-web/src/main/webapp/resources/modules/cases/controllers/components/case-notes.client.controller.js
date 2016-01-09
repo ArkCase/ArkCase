@@ -1,9 +1,13 @@
 'use strict';
 
 angular.module('cases').controller('Cases.NotesController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Helper.UiGridService', 'Object.NoteService', 'Authentication'
-    , function ($scope, $stateParams, $q, Util, ConfigService, ObjectService, HelperUiGridService, ObjectNoteService, Authentication) {
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.NoteService', 'Authentication'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Helper.NoteService'
+    , function ($scope, $stateParams, $q
+        , Util, ConfigService, ObjectService, ObjectNoteService, Authentication
+        , HelperUiGridService, HelperObjectBrowserService, HelperNoteService) {
 
+        var noteHelper = new HelperNoteService.Note();
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
@@ -27,8 +31,9 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
         });
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($stateParams.id)) {
-                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.CASE_FILE, $stateParams.id);
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (Util.goodPositive(currentObjectId, false)) {
+                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.CASE_FILE, currentObjectId);
                 $q.all([promiseQueryNotes, promiseUsers, promiseConfig]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
@@ -40,26 +45,15 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
         };
 
         $scope.addNew = function () {
-            var lastPage = $scope.gridApi.pagination.getTotalPages();
-            $scope.gridApi.pagination.seek(lastPage);
-            var newRow = {};
-            newRow.parentId = $stateParams.id;
-            newRow.parentType = ObjectService.ObjectTypes.CASE_FILE;
-            newRow.created = Util.getCurrentDay();
-            newRow.creator = $scope.userId;
+            gridHelper.gotoLastPage();
+            var newRow = noteHelper.createNote($stateParams.id, ObjectService.ObjectTypes.CASE_FILE, $scope.userId);
             $scope.gridOptions.data.push(newRow);
             $scope.gridOptions.totalItems++;
             //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
         };
         $scope.updateRow = function (rowEntity) {
             var note = Util.omitNg(rowEntity);
-            ObjectNoteService.saveNote(note).then(
-                function (noteAdded) {
-                    if (Util.isEmpty(rowEntity.id)) {
-                        rowEntity.id = noteAdded.id;
-                    }
-                }
-            );
+            noteHelper.saveNote(note, rowEntity);
         };
         $scope.deleteRow = function (rowEntity) {
             gridHelper.deleteRow(rowEntity);
@@ -68,8 +62,6 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
                 ObjectNoteService.deleteNote(id);
             }
-
         };
-
     }
 ]);

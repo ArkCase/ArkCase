@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.TimeController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'ObjectService', 'Helper.UiGridService', 'ConfigService', 'Object.TimeService'
-    , function ($scope, $stateParams, $translate, Util, ObjectService, HelperUiGridService, ConfigService, ObjectTimeService) {
+    , 'UtilService', 'ObjectService', 'ConfigService', 'Object.TimeService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $translate, Util, ObjectService, ConfigService, ObjectTimeService
+        , HelperUiGridService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseConfig = ConfigService.getComponentConfig("complaints", "cost").then(function (config) {
@@ -20,8 +22,10 @@ angular.module('complaints').controller('Complaints.TimeController', ['$scope', 
             return config;
         });
 
-        if (Util.goodPositive($stateParams.id)) {
-            ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.CASE_FILE, $stateParams.id).then(
+
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.CASE_FILE, currentObjectId).then(
                 function (timesheets) {
                     promiseConfig.then(function (config) {
                         for (var i = 0; i < timesheets.length; i++) {
@@ -41,6 +45,7 @@ angular.module('complaints').controller('Complaints.TimeController', ['$scope', 
                 }
             );
         }
+
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();

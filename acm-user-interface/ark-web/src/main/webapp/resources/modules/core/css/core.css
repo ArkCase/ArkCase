@@ -49,7 +49,7 @@ body {
 }
 
 .navbar-arkcase .navbar-header a {
-    background-image: url("../../../assets/img/logo.png");
+    background-image: url("../../../proxy/arkcase/branding/headerlogo.png");
     background-size: 135px;
     background-repeat: no-repeat;
     background-position: 30px 10px;
