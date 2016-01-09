@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q', '$stateParams'
-    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'Task.InfoService'
-    , function ($scope, $q, $stateParams, Util, ConfigService, HelperUiGridService, TaskInfoService) {
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'Task.InfoService', 'Helper.ObjectBrowserService'
+    , function ($scope, $q, $stateParams, Util, ConfigService, HelperUiGridService, TaskInfoService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
@@ -17,15 +17,18 @@ angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
             return config;
         });
 
-        TaskInfoService.getTaskInfo($stateParams.id).then(function (taskInfo) {
-            $scope.taskInfo = taskInfo;
-            $q.all([promiseUsers]).then(function () {
-                var arr = (taskInfo.documentUnderReview) ? [taskInfo.documentUnderReview] : [];
-                $scope.gridOptions.data = arr;
-                //gridHelper.hidePagingControlsIfAllDataShown(1);
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            TaskInfoService.getTaskInfo(currentObjectId).then(function (taskInfo) {
+                $scope.taskInfo = taskInfo;
+                $q.all([promiseUsers]).then(function () {
+                    var arr = (taskInfo.documentUnderReview) ? [taskInfo.documentUnderReview] : [];
+                    $scope.gridOptions.data = arr;
+                    //gridHelper.hidePagingControlsIfAllDataShown(1);
+                });
+                return taskInfo;
             });
-            return taskInfo;
-        });
+        }
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();

@@ -9,7 +9,7 @@
 			<div ng-include="'modules/time-tracking/views/time-tracking-list.client.view.html'" />
 		</div>
 
-		<section class="content-body" ng-show="timesheetInfo">
+		<section class="content-body" ng-show="objectInfo">
 			<div class="module-header">
 				<div ng-include="'modules/time-tracking/views/components/time-tracking-info.client.view.html'"></div>
 			</div>
@@ -37,7 +37,7 @@
 			</div>
 		</section>
 
-		<section class="content-body" ng-hide="timesheetInfo">
+		<section class="content-body" ng-hide="objectInfo">
 			<div>{{progressMsg}}</div>
 		</section>
 	</div>

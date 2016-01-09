@@ -175,6 +175,19 @@
       "search.placeholder": "Search for case file.",
       "search.btn": "Search",
       "enabled": true,
-      "clientFacetFilter": "\"Object Type\": CASE_FILE"
+      "clientFacetFilter": "\"Object Type\": CASE_FILE",
+      "table.columns": {
+              "incident": "Type",
+              "name": "Name",
+              "assignee": "Assignee",
+              "title": "Title",
+              "parent": "Parent",
+              "modified": "Modified"
+       }
+    },
+    "cases.comp.split":{
+        "title": "Split",
+        "cancel": "Cancel",
+        "split": "Split"
     }
 }

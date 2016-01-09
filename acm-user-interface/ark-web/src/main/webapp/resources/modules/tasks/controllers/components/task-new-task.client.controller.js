@@ -21,6 +21,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.userSearchConfig = _.find(moduleConfig.components, {id: "userSearch"})
 
             $scope.config.data.assignee = $scope.userId;
+            $scope.config.data.taskStartDate = new Date();
 
             if (!Util.isEmpty($stateParams.parentObject) && !Util.isEmpty($stateParams.parentType)) {
                 $scope.config.data.attachedToObjectName = $stateParams.parentObject;

@@ -1,28 +1,35 @@
 'use strict';
 
 angular.module('cost-tracking').controller('CostTracking.ActionsController', ['$scope', '$state'
-    , 'ConfigService', 'CostTracking.InfoService'
-    , function ($scope, $state, ConfigService, CostTrackingInfoService) {
+    , 'UtilService', 'ConfigService', 'CostTracking.InfoService', 'Helper.ObjectBrowserService'
+    , function ($scope, $state, Util, ConfigService, CostTrackingInfoService, HelperObjectBrowserService) {
 
         ConfigService.getComponentConfig("cost-tracking", "actions").then(function (componentConfig) {
             $scope.config = componentConfig;
             return componentConfig;
         });
 
-        $scope.$on('costsheet-updated', function (e, data) {
+        $scope.$on('object-updated', function (e, data) {
             if (CostTrackingInfoService.validateCostsheet(data)) {
                 $scope.costsheetInfo = data;
             }
         });
+        //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        //if (Util.goodPositive(currentObjectId, false)) {
+        //    CostTrackingInfoService.getCostsheetInfo(currentObjectId).then(function (costsheetInfo) {
+        //        $scope.costsheetInfo = costsheetInfo;
+        //        return costsheetInfo;
+        //    });
+        //}
 
         $scope.createNew = function () {
-            $state.go("frevvo-new-costsheet", {
+            $state.go("frevvo", {
                 name: "new-costsheet"
             });
         };
 
         $scope.edit = function (costsheetInfo) {
-            $state.go("frevvo-edit-costsheet", {
+            $state.go("frevvo", {
                 name: "edit-costsheet",
                 arg: {
                     id: costsheetInfo.id

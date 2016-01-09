@@ -22,6 +22,8 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,6 +47,9 @@ public class CloseComplaintRequestService
     private CaseFileDao caseFileDao;
     private EcmFileDao ecmFileDao;
     private EcmFileService ecmFileService;
+    private String complaintFolderNameFormat;
+    private String caseFileDetailsFormat;
+    private String complaintDetailsFormat;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -67,11 +72,11 @@ public class CloseComplaintRequestService
 
         if (shouldFullInvestigationBeOpened)
         {
-            CaseFile fullInvestigation = openFullInvestigation(updatedComplaint, user, null);
+            CaseFile fullInvestigation = openFullInvestigation(updatedComplaint, user, null, updatedComplaint.getObjectType());
             log.debug("Opened a full investigation: " + fullInvestigation.getCaseNumber());
 
             // Add CaseFile as Reference to the Complaint
-            addReferenceToComplaint(updatedComplaint, fullInvestigation);
+            addReferenceToComplaint(updatedComplaint, fullInvestigation, fullInvestigation.getObjectType());
         }
 
         boolean shouldComplaintBeAddedToExistingCase = shallWeAddComplaintToExistingCase(updatedRequest);
@@ -85,7 +90,7 @@ public class CloseComplaintRequestService
                 log.debug("Added complaint to existing case file: " + updatedCaseFile.getCaseNumber());
 
                 // Add CaseFile as Reference to the Complaint
-                addReferenceToComplaint(updatedComplaint, updatedCaseFile);
+                addReferenceToComplaint(updatedComplaint, updatedCaseFile, updatedCaseFile.getObjectType());
             }
         }
 
@@ -153,8 +158,10 @@ public class CloseComplaintRequestService
 
             AcmContainer containerCaseFile = getEcmFileService().getOrCreateContainer(existingCaseFile.getObjectType(), existingCaseFile.getId());
 
+            String complaintFolderName = complaintFolderName = String.format(getComplaintFolderNameFormat(), updatedComplaint.getComplaintNumber());
+
             container.getFolder().setParentFolderId(containerCaseFile.getFolder().getId());
-            container.getFolder().setName(ComplaintConstants.OBJECT_TYPE + " (" + updatedComplaint.getComplaintNumber() + ")");
+            container.getFolder().setName(complaintFolderName);
 
             if (files != null && files.getChildren() != null)
             {
@@ -206,7 +213,7 @@ public class CloseComplaintRequestService
         return "add_exising_case".equals(updatedRequest.getDisposition().getDispositionType());
     }
 
-    public CaseFile openFullInvestigation(Complaint updatedComplaint, String userId, CaseFile caseFile) throws PipelineProcessException
+    public CaseFile openFullInvestigation(Complaint updatedComplaint, String userId, CaseFile caseFile, String objectType) throws PipelineProcessException
     {
         if (caseFile == null)
         {
@@ -222,7 +229,7 @@ public class CloseComplaintRequestService
         caseFile.setPriority(updatedComplaint.getPriority());
         caseFile.setTitle(updatedComplaint.getComplaintTitle());
 
-        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(), updatedComplaint.getComplaintNumber(), "COMPLAINT", updatedComplaint.getComplaintTitle());
+        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(), updatedComplaint.getComplaintNumber(), objectType, updatedComplaint.getComplaintTitle());
         log.debug("reference object title: " + originalComplaint.getTargetTitle());
         caseFile.addChildObject(originalComplaint);
 
@@ -241,15 +248,15 @@ public class CloseComplaintRequestService
 
     private String formatCaseDetails(Complaint updatedComplaint)
     {
-        String details = "This case file is based on Complaint '" + updatedComplaint.getComplaintNumber() + "'.";
-        if (updatedComplaint.getDetails() != null)
+        String complaintDetails = "";
+        if (StringUtils.isNotEmpty(updatedComplaint.getDetails()))
         {
-            // details are displayed as HTML
-            details += "<p/>";
-            details += "Complaint '" + updatedComplaint.getComplaintNumber() + "' had these details: ";
-            details += "<p/>";
-            details += updatedComplaint.getDetails();
+            complaintDetails = String.format(getComplaintDetailsFormat(), updatedComplaint.getComplaintNumber(), updatedComplaint.getDetails());
         }
+
+        String details = String.format(getCaseFileDetailsFormat(), updatedComplaint.getComplaintNumber(), complaintDetails);
+        details = StringEscapeUtils.unescapeHtml4(details);
+
         return details;
     }
 
@@ -293,11 +300,11 @@ public class CloseComplaintRequestService
         return c;
     }
 
-    public void addReferenceToComplaint(Complaint complaint, CaseFile caseFile)
+    public void addReferenceToComplaint(Complaint complaint, CaseFile caseFile, String objectType)
     {
         if (complaint != null && caseFile != null)
         {
-            ObjectAssociation caseFileObjectAssociation = makeObjectAssociation(caseFile.getId(), caseFile.getCaseNumber(), caseFile.getObjectType(), caseFile.getTitle());
+            ObjectAssociation caseFileObjectAssociation = makeObjectAssociation(caseFile.getId(), caseFile.getCaseNumber(), objectType, caseFile.getTitle());
             complaint.addChildObject(caseFileObjectAssociation);
             getComplaintDao().save(complaint);
         }
@@ -371,5 +378,35 @@ public class CloseComplaintRequestService
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
+    }
+
+    public String getComplaintFolderNameFormat()
+    {
+        return complaintFolderNameFormat;
+    }
+
+    public void setComplaintFolderNameFormat(String complaintFolderNameFormat)
+    {
+        this.complaintFolderNameFormat = complaintFolderNameFormat;
+    }
+
+    public String getCaseFileDetailsFormat()
+    {
+        return caseFileDetailsFormat;
+    }
+
+    public void setCaseFileDetailsFormat(String caseFileDetailsFormat)
+    {
+        this.caseFileDetailsFormat = caseFileDetailsFormat;
+    }
+
+    public String getComplaintDetailsFormat()
+    {
+        return complaintDetailsFormat;
+    }
+
+    public void setComplaintDetailsFormat(String complaintDetailsFormat)
+    {
+        this.complaintDetailsFormat = complaintDetailsFormat;
     }
 }

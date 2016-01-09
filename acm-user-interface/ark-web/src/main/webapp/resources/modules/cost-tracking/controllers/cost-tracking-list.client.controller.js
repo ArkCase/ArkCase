@@ -1,21 +1,18 @@
 'use strict';
 
 angular.module('cost-tracking').controller('CostTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate'
-    , 'ConfigService', 'Authentication', 'UtilService', 'ObjectService', 'Helper.ObjectTreeService'
+    , 'Authentication', 'UtilService', 'ObjectService', 'Helper.ObjectBrowserService'
     , 'CostTracking.ListService', 'CostTracking.InfoService'
     , function ($scope, $state, $stateParams, $q, $translate
-        , ConfigService, Authentication, Util, ObjectService, HelperObjectTreeService
+        , Authentication, Util, ObjectService, HelperObjectBrowserService
         , CostTrackingListService, CostTrackingInfoService) {
 
-        ConfigService.getModuleConfig("cost-tracking").then(function (config) {
-            $scope.treeConfig = config.tree;
-            $scope.componentsConfig = config.components;
-            return config;
-        });
-
-        var treeHelper = new HelperObjectTreeService.Tree({
+        //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper
+        new HelperObjectBrowserService.Tree({
             scope: $scope
-            , nodeId: $stateParams.id
+            , state: $state
+            , stateParams: $stateParams
+            , moduleId: "cost-tracking"
             , getTreeData: function (start, n, sort, filters) {
                 var dfd = $q.defer();
                 Authentication.queryUserInfo().then(
@@ -40,30 +37,18 @@ angular.module('cost-tracking').controller('CostTrackingListController', ['$scop
                 );
                 return dfd.promise;
             }
-            , getNodeData: function (costsheetId) {
-                return CostTrackingInfoService.getCostTrackingInfo(costsheetId);
+            , getNodeData: function (costsheetInfo) {
+                return CostTrackingInfoService.getCostsheetInfo(costsheetInfo);
             }
-            , makeTreeNode: function (costsheetId) {
+            , makeTreeNode: function (costsheetInfo) {
                 return {
-                    nodeId: Util.goodValue(costsheetId.id, 0)
+                    nodeId: Util.goodValue(costsheetInfo.id, 0)
                     , nodeType: ObjectService.ObjectTypes.COSTSHEET
-                    , nodeTitle: Util.goodValue(costsheetId.title)
-                    , nodeToolTip: Util.goodValue(costsheetId.title)
+                    , nodeTitle: Util.goodValue(costsheetInfo.title)
+                    , nodeToolTip: Util.goodValue(costsheetInfo.title)
                 };
             }
         });
 
-        $scope.onLoad = function (start, n, sort, filters) {
-            treeHelper.onLoad(start, n, sort, filters);
-        };
-
-        $scope.onSelect = function (selectedCostsheet) {
-            $scope.$emit('req-select-costsheet', selectedCostsheet);
-            var components = Util.goodArray(selectedCostsheet.components);
-            var componentType = (1 == components.length) ? components[0] : "main";
-            $state.go('cost-tracking.' + componentType, {
-                id: selectedCostsheet.nodeId
-            });
-        };
     }
 ]);

@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.ParticipantsController', ['$scope', '$stateParams', '$q'
-    , 'StoreService', 'UtilService', 'Helper.UiGridService', 'ConfigService'
-    , 'Complaint.InfoService', 'LookupService', 'Object.LookupService'
-    , function ($scope, $stateParams, $q, Store, Util, HelperUiGridService, ConfigService
-        , ComplaintInfoService, LookupService, ObjectLookupService) {
+    , 'StoreService', 'UtilService', 'ConfigService', 'Complaint.InfoService', 'LookupService'
+    , 'Object.LookupService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $q
+        , Store, Util, ConfigService, ComplaintInfoService, LookupService
+        , ObjectLookupService, HelperUiGridService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
@@ -68,14 +69,6 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                         $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: row.entity.acm$_participantNames:'id':'name'";
                     }
                 }
-
-
-                //var deferParticipantData = new Store.Variable("deferComplaintParticipantData");    // used to hold grid data before grid config is ready
-                //var complaintInfo = deferParticipantData.get();
-                //if (complaintInfo) {
-                //    updateGridData(complaintInfo);
-                //    deferParticipantData.set(null);
-                //}
             });
 
             return config;
@@ -122,7 +115,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
             });
         };
 
-        //$scope.$on('complaint-updated', function (e, data) {
+        //$scope.$on('object-updated', function (e, data) {
         //    if (!ComplaintInfoService.validateComplaintInfo(data)) {
         //        return;
         //    }
@@ -134,10 +127,13 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
         //        deferParticipantData.set(data);
         //    }
         //});
-        ComplaintInfoService.getComplaintInfo($stateParams.id).then(function (complaintInfo) {
-            updateGridData(complaintInfo);
-            return complaintInfo;
-        });
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        if (Util.goodPositive(currentObjectId, false)) {
+            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
+                updateGridData(complaintInfo);
+                return complaintInfo;
+            });
+        }
 
 
         $scope.addNew = function () {

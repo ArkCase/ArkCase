@@ -70,6 +70,14 @@
                 <endpoint-url>http://localhost:8080/acm</endpoint-url>
             </endpoint>
 
+            <endpoint>
+                <id>resources</id>
+                <name>ArkCase - Unsecure access</name>
+                <description>Request to resources not needed to be authenticated</description>
+                <connector-id>http</connector-id>
+                <endpoint-url>http://localhost:8080/acm</endpoint-url>
+            </endpoint>
+            
             <!-- The default endpoint -->
             <default-endpoint-id>arkcase</default-endpoint-id>
 
