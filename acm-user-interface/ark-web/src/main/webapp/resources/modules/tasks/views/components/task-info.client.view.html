@@ -33,15 +33,20 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-date="taskStartDate" onaftersave="updateStartDate(taskStartDate)">
-                        {{taskStartDate | date: "MM/dd/yyyy" || 'Unknown' }}</a>
+                    <a href="#"
+                       editable-date="taskStartDate"
+                       onaftersave="updateStartDate(taskStartDate)">
+                        {{ (taskStartDate | date: "MM/dd/yyyy") || 'Unknown' }}
+                    </a>
                 </div>
                 <small class="text-muted">Start Date</small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-date="dueDate" onaftersave="updateDueDate(dueDate)">
-                        {{ dueDate | date: "MM/dd/yyyy" || 'Unknown' }}
+                    <a href="#"
+                       editable-date="dueDate"
+                       onaftersave="updateDueDate(dueDate)">
+                        {{ (dueDate | date: "MM/dd/yyyy") || 'Unknown' }}
                     </a>
                 </div>
                 <small class="text-muted">Due Date</small>
