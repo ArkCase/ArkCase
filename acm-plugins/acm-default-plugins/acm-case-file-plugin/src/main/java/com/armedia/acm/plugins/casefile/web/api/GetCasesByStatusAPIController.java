@@ -23,27 +23,31 @@ import java.util.List;
  */
 @Controller
 @RequestMapping({"/api/v1/plugin/casebystatus", "/api/latest/plugin/casebystatus"})
-public class GetCasesByStatusAPIController {
+public class GetCasesByStatusAPIController
+{
 
     private final Logger log = LoggerFactory.getLogger(getClass());
     private CaseFileDao caseFileDao;
 
     @RequestMapping(
             value = "/{timePeriod}",
-            method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+            method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public List<CaseByStatusDto> getCasesByStatus(
             @PathVariable("timePeriod") String timePeriod,
             Authentication authentication,
             HttpSession session
-    ) throws AcmListObjectsFailedException {
-        if (log.isInfoEnabled()){
+    ) throws AcmListObjectsFailedException
+    {
+        if (log.isInfoEnabled())
+        {
             log.info("Getting cases grouped by status in a time period");
         }
         String ipAddress = (String) session.getAttribute("acm_ip_address");
         String user = authentication.getName();
         List<CaseByStatusDto> retval = null;
-        switch (CasesByStatusAndTimePeriod.getTimePeriod(timePeriod)) {
+        switch (CasesByStatusAndTimePeriod.getTimePeriod(timePeriod))
+        {
             case ALL:
                 retval = getCaseFileDao().getAllCasesByStatus();
                 break;
@@ -64,11 +68,13 @@ public class GetCasesByStatusAPIController {
 
     }
 
-    public CaseFileDao getCaseFileDao() {
+    public CaseFileDao getCaseFileDao()
+    {
         return caseFileDao;
     }
 
-    public void setCaseFileDao(CaseFileDao caseFileDao) {
+    public void setCaseFileDao(CaseFileDao caseFileDao)
+    {
         this.caseFileDao = caseFileDao;
     }
 }
