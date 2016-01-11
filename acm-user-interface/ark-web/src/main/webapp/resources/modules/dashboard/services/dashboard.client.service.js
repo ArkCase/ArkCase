@@ -23,6 +23,13 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
                 data: ''
             },
 
+            queryNewComplaints: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/v1/plugin/complaint/list/lastMonth',
+                isArray: true,
+                data: ''
+            },
+
             queryMyTasks: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/v1/plugin/task/forUser/:userId',
