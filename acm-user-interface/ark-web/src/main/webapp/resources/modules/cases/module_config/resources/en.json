@@ -93,6 +93,19 @@
     "table.columns": {
       "type": "Type",
       "name": "Name"
+    },
+    "dialogUserPicker": {
+      "header": "Choose User",
+      "table.columns": {
+        "name": "Name",
+        "id": "ID"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "Choose Group",
+      "table.columns": {
+        "name": "Name"
+      }
     }
   },
   "cases.comp.notes": {
@@ -175,7 +188,7 @@
       "search.placeholder": "Search for case file.",
       "search.btn": "Search",
       "enabled": true,
-      "clientFacetFilter": "\"Object Type\": CASE_FILE",
+      "___xxx__clientFacetFilter": "\"Object Type\": CASE_FILE",
       "table.columns": {
               "incident": "Type",
               "name": "Name",

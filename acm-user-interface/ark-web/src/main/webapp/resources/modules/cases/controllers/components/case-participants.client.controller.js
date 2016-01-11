@@ -1,13 +1,11 @@
 'use strict';
 
-angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$stateParams', '$q'
+angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$stateParams', '$q', '$translate', '$modal'
     , 'StoreService', 'UtilService', 'ConfigService', 'Case.InfoService', 'LookupService', 'Object.LookupService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, $q
+    , function ($scope, $stateParams, $q, $translate, $modal
         , Store, Util, ConfigService, CaseInfoService, LookupService, ObjectLookupService
         , HelperUiGridService, HelperObjectBrowserService) {
-
-        //var deferParticipantData = new Store.Variable("deferCaseParticipantData");    // used to hold grid data before grid config is ready
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
@@ -89,7 +87,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                         //$scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
                         //$scope.gridOptions.columnDefs[i].editDropdownRowEntityOptionsArrayPath = "acm$_participantNames";
                         //$scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: row.entity.acm$_participantNames:'id':'name'";
-                        $scope.gridOptions.columnDefs[i].cellTemplate = "<div class='ui-grid-cell-contents' ng-click='grid.appScope.pickUser(row.entity)'>{{row.entity[col.field] | mapKeyValue: row.entity.acm$_participantNames:'id':'name'}}</div>";
+                        $scope.gridOptions.columnDefs[i].cellTemplate = "<div class='ui-grid-cell-contents' ng-click='grid.appScope.pickParticipant(row.entity)'>{{row.entity[col.field] | mapKeyValue: row.entity.acm$_participantNames:'id':'name'}}</div>";
                     }
                 }
             });
@@ -97,64 +95,38 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             return config;
         });
 
-        $scope.pickUser = function (rowEntity) {
-            alert("pickUser");
+        $scope.pickParticipant = function (rowEntity) {
             var params = {};
+            if (rowEntity.acm$_participantNames == $scope.participantUsers) {
+                params.header = $translate.instant("cases.comp.participants.dialogUserPicker.header");
+                params.filter = '"Object Type": USER';
+                params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
+
+            } else if (rowEntity.acm$_participantNames == $scope.participantGroups) {
+                params.header = $translate.instant("cases.comp.participants.dialogGroupPicker.header");
+                params.filter = '"Object Type": GROUP';
+                params.config = Util.goodMapValue($scope.config, "dialogGroupPicker");
+
+            } else { //if ("*" == Util.goodValue(rowEntity.participantType)) {
+                return;
+            }
 
             var modalInstance = $modal.open({
-                templateUrl: "directives/doc-tree/doc-tree.email.dialog.html"
-                , controller: 'directives.DocTreeEmailDialogController'
+                templateUrl: "modules/cases/views/components/case-participant-picker.dialog.html"
+                , controller: 'Cases.ParticipantPickerController'
+                , animation: true
+                , size: 'lg'
                 , resolve: {
                     params: function () {
                         return params;
                     }
                 }
             });
-            modalInstance.result.then(function (recipients) {
-                if (!Util.isArrayEmpty(recipients)) {
-                    var emailAddresses = _.pluck(recipients, "email");
-
-                    if (Email.allowMailFilesAsAttachments) {
-                        var emailData = Email._makeEmailDataForEmailWithAttachments(emailAddresses, nodes);
-                        EcmEmailService.sendEmailWithAttachments(emailData);
-                    }
-                    else {
-                        //var emailData = Email._makeEmailDataForEmailWithLinks(emailAddresses, nodes, title);
-                        var emailData = Email._makeEmailDataForEmailWithLinks(emailAddresses, nodes);
-                        EcmEmailService.sendEmail(emailData);
-                    }
+            modalInstance.result.then(function (selected) {
+                if (!Util.isEmpty(selected)) {
+                    rowEntity.participantLdapId = selected.object_id_s;
+                    $scope.updateRow(rowEntity);
                 }
-            });
-        };
-        $scope.merge = function (caseInfo) {
-            var modalInstance = $modal.open({
-                animation: $scope.animationsEnabled,
-                templateUrl: 'modules/cases/views/components/case-merge.client.view.html',
-                controller: 'Cases.MergeController',
-                size: 'lg',
-                resolve: {
-                    $clientInfoScope: function () {
-                        return $scope.caseFileSearchConfig;
-                    },
-                    $filter: function () {
-                        return $scope.caseFileSearchConfig.caseInfoFilter;
-                    }
-                }
-            });
-            modalInstance.result.then(function (selectedCase) {
-                if (selectedCase) {
-                    if (selectedCase.parentId != null) {
-                        //Already Merged
-                    }
-                    else {
-                        MergeSplitService.mergeCaseFile(caseInfo.id, selectedCase.object_id_s).then(
-                            function (data) {
-                                ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, data.id);
-                            });
-                    }
-                }
-            }, function () {
-                // Cancel button was clicked
             });
         };
 
@@ -237,70 +209,12 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
 ]);
 
 
-angular.module('directives').controller('Cases.ParticipantPickerController', ['$scope', '$modalInstance'
-        , 'UtilService', 'params', 'ConfigService'
-        , function ($scope, $modalInstance, Util, params, ConfigService) {
+angular.module('directives').controller('Cases.ParticipantPickerController', ['$scope', '$modalInstance', 'params'
+        , function ($scope, $modalInstance, params) {
             $scope.modalInstance = $modalInstance;
-
-            ConfigService.getModuleConfig("common").then(function (moduleConfig) {
-                $scope.config = Util.goodMapValue(moduleConfig, "docTree.emailDialog");
-                //$scope.filter = $scope.config.userFacetFilter;
-                return moduleConfig;
-            });
-
-            $scope.header = "User";
-            $scope.filter = '"Object Type": USER';
-
-            $scope.recipients = [];
-            $scope.onItemsSelected = function (selectedItems, lastSelectedItems, isSelected) {
-                var recipientTokens = Util.goodValue($scope.recipientsStr).split(";");
-                _.each(lastSelectedItems, function (selectedItem) {
-                    var found = _.find($scope.recipients, function (recipient) {
-                        return Util.compare(selectedItem.name, recipient.name) || Util.compare(selectedItem.email_lcs, recipient.email)
-                    });
-                    if (isSelected && !found) {
-                        $scope.recipients.push({
-                            name: Util.goodValue(selectedItem.name)
-                            , email: Util.goodValue(selectedItem.email_lcs)
-                        });
-
-                    } else if (!isSelected && found) {
-                        _.remove($scope.recipients, found);
-                    }
-                });
-
-                $scope.recipientsStr = _.pluck($scope.recipients, "name").join(";");
-            };
-            $scope.onChangeRecipients = function () {
-                var recipientsNew = [];
-                var recipientTokens = Util.goodValue($scope.recipientsStr).split(";");
-                _.each(recipientTokens, function (token) {
-                    token = token.trim();
-                    if (!Util.isEmpty(token)) {
-                        var found = _.find($scope.recipients, function (recipient) {
-                            return (token == recipient.name || token == recipient.email);
-                        });
-                        if (found) {
-                            recipientsNew.push(found);
-                        } else {
-                            var recipientUserTyped = {name: token, email: token};
-                            recipientsNew.push(recipientUserTyped);
-                        }
-                    }
-                });
-                $scope.recipients = recipientsNew;
-            };
-            $scope.onClickCancel = function () {
-                $modalInstance.close(false);
-            };
-            $scope.onClickOk = function () {
-                //var a = $scope.searchControl.getSelectedItems();
-                $modalInstance.close($scope.recipients);
-            };
-            $scope.disableOk = function () {
-                return Util.isEmpty($scope.recipientsStr);
-            };
-
+            $scope.header = params.header;
+            $scope.filter = params.filter;
+            $scope.config = params.config;
         }
     ]
 );

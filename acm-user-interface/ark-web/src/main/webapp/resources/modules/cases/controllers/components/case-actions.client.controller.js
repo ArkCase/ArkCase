@@ -154,17 +154,19 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
 
         $scope.merge = function (caseInfo) {
              var modalInstance = $modal.open({
-                 animation: $scope.animationsEnabled,
                  templateUrl: 'modules/cases/views/components/case-merge.client.view.html',
                  controller: 'Cases.MergeController',
+                 //animation: $scope.animationsEnabled,
+                 animation: true,
                  size: 'lg',
                  resolve: {
-                     $clientInfoScope: function () {
+                     config: function () {
                        return $scope.caseFileSearchConfig;
-                     },
-                     $filter: function () {
-                        return $scope.caseFileSearchConfig.caseInfoFilter;
                      }
+                     //,
+                     //filter: function () {
+                     //   return $scope.caseFileSearchConfig.caseInfoFilter;
+                     //}
                  }
              });
              modalInstance.result.then(function (selectedCase) {
