@@ -1,8 +1,10 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTracking.MainController', ['$scope', '$translate', 'dashboard', 'Dashboard.DashboardService'
-    , 'TimeTracking.InfoService', 'ConfigService', 'StoreService', 'UtilService',
-    function($scope, $translate, dashboard, DashboardService, TimeTrackingInfoService, ConfigService, Store, Util) {
+angular.module('time-tracking').controller('TimeTracking.MainController', ['$scope', '$translate'
+    , 'StoreService', 'UtilService', 'dashboard', 'Dashboard.DashboardService'
+    , 'TimeTracking.InfoService', 'ConfigService'
+    , function ($scope, $translate, Store, Util, dashboard, DashboardService
+        , TimeTrackingInfoService, ConfigService) {
 
         $scope.$emit('main-component-started');
 
@@ -32,10 +34,10 @@ angular.module('time-tracking').controller('TimeTracking.MainController', ['$sco
         };
 
         DashboardService.getConfig({}, function (data) {
-            var cacheDashboardConfig = new Store.CacheFifo(TimeTrackingInfoService.CacheNames.TIME_SHEETS);
+            var cacheDashboardConfig = new Store.CacheFifo(TimeTrackingInfoService.CacheNames.TIMESHEET_INFO);
             $scope.dashboard.timeModel = cacheDashboardConfig.get("dashboardConfig");
 
-            if($scope.dashboard.timeModel) {
+            if ($scope.dashboard.timeModel) {
                 //If cached, use that model
                 $scope.dashboard.timeModel.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
                 $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
@@ -52,9 +54,15 @@ angular.module('time-tracking').controller('TimeTracking.MainController', ['$sco
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {
             //Save dashboard model only to cache
-            var cacheDashboardConfig = new Store.CacheFifo(TimeTrackingInfoService.CacheNames.TIME_SHEETS);
-            if(cacheDashboardConfig)
+            var cacheDashboardConfig = new Store.CacheFifo(TimeTrackingInfoService.CacheNames.TIMESHEET_INFO);
+            if (cacheDashboardConfig)
                 cacheDashboardConfig.put("dashboardConfig", model);
+
+            //jwu:
+            //Todo: fix above cache
+            //XXX_INFO cache is used to save info data, not config data. The right place to save the
+            //dashboard config in cache is when the config is first time retrieved (presumably in a service)
+            //
         });
 
         //var widgetFilter = function(model) {

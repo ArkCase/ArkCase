@@ -10,8 +10,8 @@
 
  * CostTracking.InfoService provides functions for Costsheet database data
  */
-angular.module('services').factory('CostTracking.InfoService', ['$resource', '$translate', 'UtilService',
-    function ($resource, $translate, Util) {
+angular.module('services').factory('CostTracking.InfoService', ['$resource', '$translate', 'StoreService', 'UtilService',
+    function ($resource, $translate, Store, Util) {
         var Service = $resource('proxy/arkcase/api/v1/service/costsheet', {}, {
 
             /**
@@ -58,6 +58,10 @@ angular.module('services').factory('CostTracking.InfoService', ['$resource', '$t
             }
         });
 
+        Service.CacheNames = {
+            COSTSHEET_INFO: "CostsheetInfo"
+        };
+
         /**
          * @ngdoc method
          * @name getCostsheetInfo
@@ -71,11 +75,15 @@ angular.module('services').factory('CostTracking.InfoService', ['$resource', '$t
          * @returns {Object} Promise
          */
         Service.getCostsheetInfo = function (id) {
+            var cacheCostsheetInfo = new Store.CacheFifo(Service.CacheNames.COSTSHEET_INFO);
+            var costsheetInfo = cacheCostsheetInfo.get(id);
             return Util.serviceCall({
                 service: Service.get
                 , param: {id: id}
+                , result: costsheetInfo
                 , onSuccess: function (data) {
                     if (Service.validateCostsheet(data)) {
+                        cacheCostsheetInfo.put(id, data);
                         return data;
                     }
                 }
@@ -103,6 +111,9 @@ angular.module('services').factory('CostTracking.InfoService', ['$resource', '$t
                 , data: costsheetInfo
                 , onSuccess: function (data) {
                     if (Service.validateCostsheet(data)) {
+                        var costsheetInfo = data;
+                        var cacheCostsheetInfo = new Store.CacheFifo(Service.CacheNames.COSTSHEET_INFO);
+                        cacheCostsheetInfo.put(costsheetInfo.id, costsheetInfo);
                         return data;
                     }
                 }
@@ -121,7 +132,7 @@ angular.module('services').factory('CostTracking.InfoService', ['$resource', '$t
          *
          * @returns {Boolean} Return true if data is valid
          */
-        Service.validateCostsheet = function(data) {
+        Service.validateCostsheet = function (data) {
             if (Util.isEmpty(data)) {
                 return false;
             }
