@@ -205,6 +205,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             }
 
         };
+
     }
 ]);
 

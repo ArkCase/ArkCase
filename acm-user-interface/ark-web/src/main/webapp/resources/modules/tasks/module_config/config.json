@@ -2,6 +2,7 @@
   "id": "tasks",
   "title": "Tasks",
   "initialLinksShown": true,
+  "hasOverviewWidgets": true,
   "menus": [
     {
       "menuId": "leftnav",
