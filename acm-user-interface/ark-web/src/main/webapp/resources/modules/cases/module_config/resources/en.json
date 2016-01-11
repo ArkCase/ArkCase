@@ -197,5 +197,10 @@
               "parent": "Parent",
               "modified": "Modified"
        }
+    },
+    "cases.comp.split":{
+        "title": "Split",
+        "cancel": "Cancel",
+        "split": "Split"
     }
 }

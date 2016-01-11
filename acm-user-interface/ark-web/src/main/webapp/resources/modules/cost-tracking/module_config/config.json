@@ -2,6 +2,7 @@
   "id": "cost-tracking",
   "title": "Cost Tracking",
   "initialLinksShown": true,
+  "hasOverviewWidgets": true,
   "menus": [
     {
       "menuId": "leftnav",
