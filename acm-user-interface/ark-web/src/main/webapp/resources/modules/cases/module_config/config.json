@@ -1,6 +1,7 @@
 {
   "id": "cases",
   "title": "Cases",
+  "hasOverviewWidgets": true,
   "caseInfoFilter": "\"Object Type\": CASE_FILE",
   "menus": [
     {
