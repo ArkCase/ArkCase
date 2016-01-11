@@ -40,7 +40,8 @@ angular.module('services').factory('Case.MergeSplitService', ['$resource', '$tra
              * Creates a new case for selected file.
              */
             _splitCaseFiles:{
-                url:'/api/v1/plugin/copyCaseFile'
+                url:'proxy/arkcase/api/v1/plugin/copyCaseFile',
+                method: 'POST'
             }
         });
         
@@ -59,6 +60,32 @@ angular.module('services').factory('Case.MergeSplitService', ['$resource', '$tra
             return Util.serviceCall({
                 service: Service._mergeCaseFiles
                 , data: {sourceCaseFileId: sourceId, targetCaseFileId: targetId}
+                , onSuccess: function(data){                  
+                        if(CaseInfoService.validateCaseInfo(data)){
+                            return data;
+                        }
+                }
+                , onError: function(errData){
+                    alert("Case can't be merged.");
+                }
+            });
+        };
+        
+        /**
+         * @ngdoc method
+         * @name splitCaseFile
+         * 
+         * @description 
+         *  Gets the information of the file desired to be split.
+         *  Splits it off and returns the data.
+         *  
+         * @param {Array} targetCase
+         * @returns {Array}
+         */
+        Service.splitCaseFile = function(targetCase){
+            return Util.serviceCall({
+                service: Service._splitCaseFiles
+                , data: JSON.stringify(targetCase)
                 , onSuccess: function(data){
                     if(CaseInfoService.validateCaseInfo(data)){
                         return data;
@@ -67,10 +94,6 @@ angular.module('services').factory('Case.MergeSplitService', ['$resource', '$tra
             });
         };
         
-        Service.splitCaseFile = function(){
-            
-        };
-        
         return Service;
     }
-]);
+]);            
