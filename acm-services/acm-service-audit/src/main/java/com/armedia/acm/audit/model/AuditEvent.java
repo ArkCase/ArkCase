@@ -1,11 +1,29 @@
 package com.armedia.acm.audit.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 @Entity
 @Table(name = "acm_audit_log")
 public class AuditEvent {
+
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+
+    static
+    {
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+    }
 
     @Id
     @TableGenerator(name = "acm_audit_log_gen",
@@ -134,5 +152,13 @@ public class AuditEvent {
             return getFullEventType().substring(lastDot + 1, getFullEventType().length());
         }
         return getFullEventType();
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Event date/time: " + sdf.format(getEventDate()) + " | Originating IP address: " + getIpAddress() + " | User: " + getUserId() +
+                " | Event type: " + getFullEventType() + " | Event result: " + getEventResult() + " | Object type: " + getObjectType() +
+                " | Object Id: " + getObjectId() + " | Status: " + getStatus();
     }
 }
