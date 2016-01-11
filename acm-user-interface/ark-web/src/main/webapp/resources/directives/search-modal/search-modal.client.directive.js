@@ -32,7 +32,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
         return {
             restrict: 'E',              //match only element name
             scope: {
-                multiSelect: '@',
+                //multiSelect: '@',
                 header: '@',            //@ : text binding (read-only and only strings)
                 search: '@',
                 cancel: '@',
@@ -52,24 +52,23 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.cancel = Util.goodValue(scope.cancel, $translate.instant("common.directive.searchModal.btnCancel.text"));
                 scope.searchPlaceholder = Util.goodValue(scope.searchPlaceholder, $translate.instant("common.directive.searchModal.edtPlaceholder"));
                 scope.showHeaderFooter = !Util.isEmpty(scope.modalInstance);
-                scope.searchControl = {
-                    getSelectedItems: function () {
-                        return scope.selectedItems;
-                        //if ("true" == scope.multiSelect) {
-                        //    return scope.selectedItems;
-                        //} else if (scope.selectedItem) {
-                        //    return [scope.selectedItem];
-                        //} else {
-                        //    return [];
-                        //}
-                    }
-                };
 
                 scope.searchQuery = '';
                 scope.minSearchLength = 3;
-                if (scope.multiSelect == undefined || scope.multiSelect == '') {
-                    scope.multiSelect = 'false';
-                }
+                //if (scope.multiSelect == undefined || scope.multiSelect == '') {
+                //    scope.multiSelect = 'false';
+                //}
+                scope.multiSelect = Util.goodValue(scope.config().multiSelect, false);
+                scope.searchControl = {
+                    getSelectedItems: function () {
+                        //return scope.selectedItems;
+                        if (scope.multiSelect) {
+                            return scope.selectedItems;
+                        } else {
+                            return scope.selectedItem;
+                        }
+                    }
+                };
 
                 scope.facets = [];
                 scope.currentFacetSelection = [];
@@ -131,17 +130,17 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                     }
                 };
 
-                scope.addExistingItem = function () {
+                scope.onClickOk = function () {
                     //when the modal is closed, the parent scope gets
                     //the selectedItem via the two-way binding
-                    if (scope.multiSelect === 'true') {
+                    if (scope.multiSelect) {
                         scope.modalInstance.close(scope.selectedItems);
                     } else {
                         scope.modalInstance.close(scope.selectedItem);
                     }
                 };
 
-                scope.close = function () {
+                scope.onClickCancel = function () {
                     scope.modalInstance.dismiss('cancel')
                 };
 
@@ -155,7 +154,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                         enableRowHeaderSelection: false,
                         enableFiltering: scope.config().enableFiltering,
                         //multiSelect: scope.multiSelect === 'true' ? true : false,
-                        multiSelect: scope.config().multiSelect,
+                        multiSelect: scope.multiSelect,
                         noUnselect: false,
                         useExternalPagination: true,
                         paginationPageSizes: scope.config().paginationPageSizes,

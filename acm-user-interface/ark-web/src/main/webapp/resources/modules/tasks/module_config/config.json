@@ -1,6 +1,7 @@
 {
   "id": "tasks",
   "title": "Tasks",
+  "initialLinksShown": true,
   "menus": [
     {
       "menuId": "leftnav",
