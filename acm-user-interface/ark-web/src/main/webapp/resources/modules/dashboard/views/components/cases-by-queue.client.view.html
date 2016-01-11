@@ -1,9 +1,13 @@
 <div>
-    <div ng-if="chartConfig">
-        <highchart config="chartConfig"></highchart>
+    <div ng-if="casesByQueue.showChart">
+        </br>
+        <canvas id="bar" class="chart chart-bar" chart-data="casesByQueue.data" chart-labels="casesByQueue.labels"
+                chart-series="casesByQueue.series"
+                chart-responsive="true"
+                chart-legend="true"></canvas>
     </div>
 
-    <div class="alert alert-info" ng-if="!chartConfig">
+    <div class="alert alert-info" ng-if="!casesByQueue.showChart">
         <p class="text-center">
             <span translate>dashboard.widgets.casesByQueue.noDataMessage</span>
         </p>
