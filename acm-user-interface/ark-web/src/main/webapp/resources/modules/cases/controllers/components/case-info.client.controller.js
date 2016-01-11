@@ -54,7 +54,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
                 return;
             }
             $scope.caseInfo = data;
-            $scope.dueDate = ($scope.caseInfo) ? moment($scope.caseInfo.dueDate).toDate() : null;
+            $scope.dueDate = ($scope.caseInfo.dueDate) ? moment($scope.caseInfo.dueDate).toDate() : null;
             $scope.owningGroup = ObjectModelService.getGroup(data);
             $scope.assignee = ObjectModelService.getAssignee(data);
             if (previousId != $stateParams.id) {

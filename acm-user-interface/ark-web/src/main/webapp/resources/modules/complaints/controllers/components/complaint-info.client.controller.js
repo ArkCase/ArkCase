@@ -57,7 +57,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
                 return;
             }
             $scope.complaintInfo = data;
-            $scope.dueDate = ($scope.complaintInfo) ? moment($scope.complaintInfo.dueDate).toDate() : null;
+            $scope.dueDate = ($scope.complaintInfo.dueDate) ? moment($scope.complaintInfo.dueDate).toDate() : null;
             $scope.assignee = ObjectModelService.getAssignee(data);
             $scope.owningGroup = ObjectModelService.getGroup(data);
             if (previousId != $stateParams.id) {

@@ -39,7 +39,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         $scope.$on('object-updated', function (e, data) {
             if (TaskInfoService.validateTaskInfo(data)) {
                 $scope.taskInfo = data;
-                $scope.dueDate = ($scope.taskInfo) ? moment($scope.taskInfo.dueDate).toDate() : null;
+                $scope.dueDate = ($scope.taskInfo.dueDate) ? moment($scope.taskInfo.dueDate).toDate() : null;
                 $scope.taskStartDate = ($scope.taskInfo.taskStartDate) ? moment($scope.taskInfo.taskStartDate).toDate() : null;
                 $scope.assignee = ObjectModelService.getAssignee(data);
             }
