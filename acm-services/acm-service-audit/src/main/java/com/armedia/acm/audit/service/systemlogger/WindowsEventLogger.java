@@ -38,7 +38,7 @@ public class WindowsEventLogger implements ISystemLogger
             Runtime.getRuntime().exec(command);
         } catch (IOException e)
         {
-            log.error("Error writing to Windows Even Log!", e);
+            log.error("Error writing to Windows Event Log!", e);
         }
     }
 

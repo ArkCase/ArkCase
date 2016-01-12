@@ -1,5 +1,8 @@
 package com.armedia.acm.audit.model;
 
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,20 +13,13 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 @Entity
 @Table(name = "acm_audit_log")
 public class AuditEvent {
 
-    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-
-    static
-    {
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-    }
+    private static DateTimeFormatter dtf = ISODateTimeFormat.dateTime();
 
     @Id
     @TableGenerator(name = "acm_audit_log_gen",
@@ -157,8 +153,9 @@ public class AuditEvent {
     @Override
     public String toString()
     {
-        return "Event date/time: " + sdf.format(getEventDate()) + " | Originating IP address: " + getIpAddress() + " | User: " + getUserId() +
-                " | Event type: " + getFullEventType() + " | Event result: " + getEventResult() + " | Object type: " + getObjectType() +
-                " | Object Id: " + getObjectId() + " | Status: " + getStatus();
+        return "Event date/time: " + dtf.print(getEventDate().getTime()) + " | Originating IP address: " + getIpAddress()
+                + " | Track Id: " + getTrackId() + " | User: " + getUserId() + " | Event type: " + getFullEventType()
+                + " | Event result: " + getEventResult() + " | Object type: " + getObjectType()
+                + " | Object Id: " + getObjectId() + " | Status: " + getStatus();
     }
 }
