@@ -3,7 +3,6 @@
 ApplicationConfiguration.registerModule('dashboard', [
     'adf',
     'adf.provider',
-    'highcharts-ng',
     'dashboard.cases-by-queue',
     'dashboard.cases-by-status',
     'dashboard.my-cases',
@@ -33,4 +32,5 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.person'//,
     //'dashboard.expenses',
     //'dashboard.summary'
+    'chart.js'
 ]);
