@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:task="http://www.springframework.org/schema/task"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
     <bean id="auditWriter" class="com.armedia.acm.audit.AuditWriter">
         <property name="auditService" ref="auditService"/>
@@ -14,7 +11,7 @@
 
 
     <bean id="auditConfigurer" class="com.armedia.acm.audit.AuditConfigurer"
-            destroy-method="closeBean">
+          destroy-method="closeBean">
         <property name="auditConfigFilename" value="/audit.xml"/>
     </bean>
 
@@ -40,26 +37,53 @@
         <property name="localOverride" value="false"/>
         <property name="properties">
             <props>
+                <prop key="audit.database.enabled">true</prop>
+                <prop key="audit.systemlog.enabled">false</prop>
                 <prop key="audit.batch.run">true</prop>
                 <prop key="audit.purge.days">30</prop>
                 <prop key="audit.batch.frequency">3600000</prop>
+                <prop key="audit.systemlog.syslog.protocol">UDP</prop>
+                <prop key="audit.systemlog.syslog.host">localhost</prop>
+                <prop key="audit.systemlog.syslog.port">514</prop>
+                <prop key="audit.systemlog.windows.eventlog.eventId">100</prop>
             </props>
         </property>
     </bean>
 
     <!-- Task Scheduler - once a day -->
-	<task:scheduler id="auditTaskScheduler" pool-size="1"/>
+    <task:scheduler id="auditTaskScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="auditTaskScheduler">
         <task:scheduled
                 ref="auditService"
                 method="purgeBatchRun"
                 fixed-delay="${audit.batch.frequency}"/>
     </task:scheduled-tasks>
-    
-    <bean id="auditService" class="com.armedia.acm.audit.service.AuditServiceImpl">
-    	<property name="batchRun" value="${audit.batch.run}"/>
-    	<property name="purgeDays" value="${audit.purge.days}"/>
-    	<property name="auditDao" ref="auditDao"/>
+
+    <bean id="auditSyslogLogger" class="com.armedia.acm.audit.service.systemlogger.SyslogLogger">
+        <property name="protocol" value="${audit.systemlog.syslog.protocol}"/>
+        <property name="host" value="${audit.systemlog.syslog.host}"/>
+        <property name="port" value="${audit.systemlog.syslog.port}"/>
+        <property name="acmApplication" ref="acmApplication"/>
     </bean>
 
+    <bean id="auditWindowsEventLogger" class="com.armedia.acm.audit.service.systemlogger.WindowsEventLogger">
+        <property name="acmApplication" ref="acmApplication"/>
+        <property name="eventId" value="${audit.systemlog.windows.eventlog.eventId}"/>
+    </bean>
+
+    <bean id="auditSystemLoggerFactory" class="com.armedia.acm.audit.service.systemlogger.SystemLoggerFactory">
+        <property name="syslogLogger" ref="auditSyslogLogger"/>
+        <property name="windowsEventLogger" ref="auditWindowsEventLogger"/>
+    </bean>
+
+    <bean id="auditSystemLogger" factory-bean="auditSystemLoggerFactory" factory-method="getSystemLogger"/>
+
+    <bean id="auditService" class="com.armedia.acm.audit.service.AuditServiceImpl">
+        <property name="databaseLoggerEnabled" value="${audit.database.enabled}"/>
+        <property name="systemLogLoggerEnabled" value="${audit.systemlog.enabled}"/>
+        <property name="batchRun" value="${audit.batch.run}"/>
+        <property name="purgeDays" value="${audit.purge.days}"/>
+        <property name="auditDao" ref="auditDao"/>
+        <property name="systemLogger" ref="auditSystemLogger"/>
+    </bean>
 </beans>
