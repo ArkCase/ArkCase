@@ -32,7 +32,7 @@ angular.module('dashboard.details', ['adf.provider'])
                 return module.name == $stateParams.type;
             });
             if (module) {
-                promiseConfig = ConfigService.getComponentConfig(module.configName);
+                promiseConfig = ConfigService.getModuleConfig(module.configName);
                 promiseInfo = module.getInfo($stateParams.id);
 
                 $q.all([promiseConfig, promiseInfo]).then(function (data) {
