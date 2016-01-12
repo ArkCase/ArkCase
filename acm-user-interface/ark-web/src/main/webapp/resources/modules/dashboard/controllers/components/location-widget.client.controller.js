@@ -12,8 +12,9 @@ angular.module('dashboard.locations', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.LocationsController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Complaint.InfoService', 'Authentication', 'Dashboard.DashboardService',
-        function ($scope, $translate, $stateParams, Util, ComplaintInfoService, Authentication, DashboardService) {
+    .controller('Dashboard.LocationsController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService', 'Complaint.InfoService'
+        , 'Authentication', 'Dashboard.DashboardService', 'ConfigService',
+        function ($scope, $translate, $stateParams, $q, Util, ComplaintInfoService, Authentication, DashboardService, ConfigService) {
 
             $scope.gridOptions = {
                 enableColumnResizing: true,
@@ -23,12 +24,7 @@ angular.module('dashboard.locations', ['adf.provider'])
             var promiseConfig;
             var promiseInfo;
             var modules = [
-                {name: "CASE_FILE", configName: "cases", getInfo: CaseInfoService.getCaseInfo}
-                , {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
-                , {name: "COSTSHEET", configName: "cost-tracking", getInfo: CostTrackingInfoService.getCostsheetInfo}
-                , {name: "TIMESHEET", configName: "time-tracking", getInfo: TimeTrackingInfoService.getTimesheetInfo}
-                , {name: "TASK", configName: "tasks", getInfo: TaskInfoService.getTaskInfo}
-                , {name: "ADHOC", configName: "tasks", getInfo: TaskInfoService.getTaskInfo}
+                {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
             ]
 
             var module = _.find(modules, function (module) {
@@ -48,7 +44,7 @@ angular.module('dashboard.locations', ['adf.provider'])
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
                         $scope.gridOptions.data = [info];
-                        $scope.gridOptions.data[0].location.fullAddress = createFullAddress(data.location);
+                        $scope.gridOptions.data[0].location.fullAddress = createFullAddress(info.location);
                         $scope.gridOptions.totalItems = 1;
                     },
                     function (err) {
