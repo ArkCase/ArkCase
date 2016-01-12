@@ -21,7 +21,7 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.participants',
     'dashboard.tasks',
     'dashboard.references',
-    //'dashboard.history',
+    'dashboard.history',
     'dashboard.notes',
     'dashboard.correspondence',
     //'dashboard.time',

@@ -5,88 +5,55 @@ angular.module('dashboard.history', ['adf.provider'])
         dashboardProvider
             .widget('history', {
                 title: 'History',
-                description: 'Displays cases files by queue',
+                description: 'Displays a pie chart showing the number of each history event type',
                 controller: 'Dashboard.HistoryController',
                 reload: true,
                 templateUrl: 'modules/dashboard/views/components/history.client.view.html'
             });
     })
-    .controller('Dashboard.HistoryController', ['$scope', 'config', '$state', '$translate', 'Dashboard.DashboardService',
-        function ($scope, config, $state, $translate, DashboardService) {
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'history');
+    .controller('Dashboard.HistoryController', ['$scope', 'config', '$state', '$stateParams', '$translate', 'Dashboard.DashboardService', 'Object.AuditService', 'Helper.ObjectBrowserService', 'UtilService',
+        function ($scope, config, $state, $stateParams, $translate, DashboardService, ObjectAuditService, HelperObjectBrowserService, Util) {
 
-            $scope.config = null;
-            $scope.chartConfig = null;
+            var vm = this;
 
-            function onBarClick(e) {
-                if ($scope.config.redirectSettings) {
-                    var redirectObj = $scope.config.redirectSettings[this.name];
-                    if (redirectObj) {
-                        $state.go(redirectObj.state, redirectObj.params)
-                    }
-                }
-            }
+            var promiseQueryAudit;
 
-            function applyConfig(e, componentId, config) {
-                if (componentId == 'main') {
-                    $scope.config = config;
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (Util.goodPositive(currentObjectId, false)) {
+                var promiseQueryAudit = ObjectAuditService.queryAudit($stateParams.type, currentObjectId, Util.goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10), Util.goodMapValue($scope.sort, "by"), Util.goodMapValue($scope.sort, "dir")).then(function (data) {
+                    var results = data.resultPage;
+                    var eventsList = [];
 
-                    // Load Cost info and render chart
-                    /****************************************************
-                     *Change this with correct calls for cost stuff
-                     ****************************************************/
-                    DashboardService.queryCasesByQueue(function (cases) {
-
-                        var data = [];
-
-                        _.forEach(cases, function (value, key) {
-                            if (key.length > 0 && key[0] != '$') {
-                                data.push({
-                                    name: _.get($scope.config, 'redirectSettings[' + key + '].title') || key,
-                                    y: value,
-                                    drilldown: key
-                                });
-                            }
-                        });
-
-                        $scope.chartConfig = {
-                            chart: {
-                                type: 'column'
-                            },
-                            title: {
-                                text: ' '
-                            },
-                            noData: $translate.instant('dashboard.widgets.history.noDataMessage'),
-                            xAxis: {
-                                type: 'category',
-                                title: {
-                                    text: $translate.instant('dashboard.widgets.history.xAxis')
+                    results.forEach(function (result) {
+                        var eventType = result.fullEventType;
+                        if (eventsList.length === 0) {
+                            eventsList.push({'eventName': eventType, 'count': 1});
+                        } else {
+                            angular.forEach(eventsList, function (value, key) {
+                                if (angular.equals(eventType, value.eventName)) {
+                                    value.count++;
+                                } else {
+                                    eventsList.push({'eventName': eventType, 'count': 1});
                                 }
-                            },
-                            yAxis: {
-                                title: {
-                                    text: $translate.instant('dashboard.widgets.history.yAxis')
-                                }
-                            },
-                            series: [{
-                                type: 'column',
-                                dataLabels: {
-                                    enabled: true,
-                                    format: '{point.y}'
-                                },
-                                name: $translate.instant('dashboard.widgets.history.title'),
-                                data: data,
-                                cursor: 'pointer',
-                                point: {
-                                    events: {
-                                        click: onBarClick
-                                    }
-                                }
-                            }]
+                            })
                         }
                     });
-                }
+
+                    if (eventsList.length > 0) {
+                        var data = [];
+                        var labels = [];
+
+                        angular.forEach(eventsList, function (eventIter) {
+                            labels.push(eventIter.eventName);
+                            data.push(eventIter.count);
+                        })
+                        history.showChart = data.length > 0 ? true : false;
+                        history.data = data;
+                        history.labels = labels;
+                        history.chartTitle = "chartTitle";
+                    }
+                });
             }
+
         }
     ]);

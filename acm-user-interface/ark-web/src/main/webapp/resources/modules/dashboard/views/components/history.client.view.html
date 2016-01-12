@@ -1,8 +1,17 @@
 <div>
-    <div ng-if="chartConfig">
-        <highchart config="chartConfig"></highchart>
+    <div ng-if="history.showChart"><div class="panel-body">
+        <div>
+            <p class="text-center h2">{{history.chartTitle}}</p>
+        </div>
+        <div class="chart-container">
+            <canvas id="pie" class="chart chart-pie" chart-data="history.data"
+                    chart-labels="history.labels"
+                    chart-responsive="true"
+                    chart-legend="true"></canvas>
+        </div>
     </div>
-    <div class="alert alert-info" ng-if="!chartConfig">
+    </div>
+    <div class="alert alert-info" ng-if="!history.showChart">
         <p class="text-center">
             <span translate>dashboard.widgets.history.noDataMessage</span>
         </p>
