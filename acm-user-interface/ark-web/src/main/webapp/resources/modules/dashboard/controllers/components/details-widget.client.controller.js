@@ -25,16 +25,18 @@ angular.module('dashboard.details', ['adf.provider'])
             var promiseConfig;
             var promiseInfo;
             var modules = [
-                    {name: "CASE_FILE", getInfo: CaseInfoService.getCaseInfo}
-                   ,{name: "complaint", getInfo: ComplaintInfoService.getCaseInfo}
+                    {name: "CASE_FILE", configName: "cases", getInfo: CaseInfoService.getCaseInfo}
+                ,   {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getCaseInfo}
             ];
-            var module = modules[0]// _.find(modules, $stateParams.type);
+            var module = _.find(modules, function (module) {
+                return module.name == $stateParams.type;
+            });
             if (module) {
-                promiseConfig = ConfigService.getComponentConfig(module.name, "main");
+                promiseConfig = ConfigService.getComponentConfig(module.configName);
                 promiseInfo = module.getInfo($stateParams.id);
 
                 $q.all([promiseConfig, promiseInfo]).then(function (data) {
-                        var config = data[0];
+                        var config = _.find(data[0], {id: "main"});
                         var info = data[1];
                         var widgetInfo = _.find(config.widgets, function(widget){
                             return widget.id === "details";
@@ -49,7 +51,6 @@ angular.module('dashboard.details', ['adf.provider'])
                     }
                 );
             }
-
             //-------------
 
             $scope.$on('component-config', applyConfig);
