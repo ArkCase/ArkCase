@@ -3286,6 +3286,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 var modalInstance = $modal.open({
                     templateUrl: "directives/doc-tree/doc-tree.email.dialog.html"
                     , controller: 'directives.DocTreeEmailDialogController'
+                    , animation: true
+                    , size: 'lg'
                     , resolve: {
                         params: function () {
                             return params;
