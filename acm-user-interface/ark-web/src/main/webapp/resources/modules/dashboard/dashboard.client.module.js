@@ -14,6 +14,10 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.team-workload',
     'dashboard.weather',
     'dashboard.news',
+<<<<<<< HEAD
+=======
+    'dashboard.details',
+>>>>>>> 8a632b622b859df1e3ca87c7a383217504f8979d
     'dashboard.people',
     //'dashboard.documents',
     'dashboard.location',
@@ -33,4 +37,8 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.person'//,
     //'dashboard.expenses',
     //'dashboard.summary'
+<<<<<<< HEAD
+=======
+    'chart.js'
+>>>>>>> 8a632b622b859df1e3ca87c7a383217504f8979d
 ]);

@@ -12,20 +12,51 @@ angular.module('dashboard.details', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.DetailsController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Case.InfoService'
-        , 'Complaint.InfoService', 'Task.InfoService', 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Authentication', 'Dashboard.DashboardService',
-        function ($scope, $translate, $stateParams, Util, CaseInfoService, ComplaintInfoService, TaskInfoService
-            , CostTrackingInfoService, TimeTrackingInfoService, Authentication, DashboardService) {
+    .controller('Dashboard.DetailsController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService', 'Case.InfoService'
+        , 'Complaint.InfoService', 'Task.InfoService', 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Authentication'
+        , 'Dashboard.DashboardService', 'ConfigService',
+        function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, TaskInfoService
+            , CostTrackingInfoService, TimeTrackingInfoService, Authentication, DashboardService, ConfigService) {
+
+            $scope.gridOptions = {
+                enableColumnResizing: true,
+                columnDefs: []
+            };
+            var promiseConfig;
+            var promiseInfo;
+            var modules = [
+                    {name: "CASE_FILE", getInfo: CaseInfoService.getCaseInfo}
+                   ,{name: "complaint", getInfo: ComplaintInfoService.getCaseInfo}
+            ];
+            var module = modules[0]// _.find(modules, $stateParams.type);
+            if (module) {
+                promiseConfig = ConfigService.getComponentConfig(module.name, "main");
+                promiseInfo = module.getInfo($stateParams.id);
+
+                $q.all([promiseConfig, promiseInfo]).then(function (data) {
+                        var config = data[0];
+                        var info = data[1];
+                        var widgetInfo = _.find(config.widgets, function(widget){
+                            return widget.id === "details";
+                        });
+                        $scope.config = config;
+                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+                        $scope.gridOptions.data = [Util.omitNg(info)];
+                        $scope.gridOptions.totalItems = 1;
+                    },
+                    function (err) {
+                        console.log("screwed");
+                    }
+                );
+            }
+
+            //-------------
 
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'main');
             $scope.config = null;
             //var userInfo = null;
 
-            $scope.gridOptions = {
-                enableColumnResizing: true,
-                columnDefs: []
-            };
 
             function applyConfig(e, componentId, config) {
                 if (componentId == 'main') {
