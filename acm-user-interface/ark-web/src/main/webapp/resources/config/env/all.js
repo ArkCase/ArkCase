@@ -38,16 +38,16 @@ module.exports = {
                 'lib/angular-notify/dist/angular-notify.css',
                 'lib/handsontable/dist/handsontable.full.css',
                 'lib/ng-tags-input/ng-tags-input.css',
-                'lib/fullcalendar/dist/fullcalendar.css'
+                'lib/fullcalendar/dist/fullcalendar.css',
+                'lib/angular-chart.js/dist/angular-chart.css'
             ],
-            customJs : [
+            customJs: [
                 'http://internal.armedia.com/jira/s/31413758042897b94fd2d74d89768365-T/en_US9cltp4/6346/2/1.4.16/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?locale=en-US&collectorId=aad5f79b'
             ],
             js: [
                 'lib/jquery/dist/jquery.js',
                 'lib/jquery-ui/jquery-ui.js',
                 'lib/bootstrap/dist/js/bootstrap.js',
-                'lib/highcharts/highcharts.js',
                 'lib/lodash/lodash.js',
                 'lib/moment/moment.js',
                 'lib/multi-download/browser.js',
@@ -73,7 +73,6 @@ module.exports = {
                 'lib/fancytree/dist/src/jquery.fancytree.gridnav.js',
                 'lib/fancytree/dist/src/jquery.fancytree.edit.js',
                 'lib/fancytree/dist/src/jquery.fancytree.dnd.js',
-                'lib/highcharts-ng/dist/highcharts-ng.js',
                 'lib/ng-file-upload/ng-file-upload.js',
                 'lib/ng-file-upload-shim/ng-file-upload-shim.js',
                 'lib/ng-tags-input/ng-tags-input.js',
@@ -87,7 +86,10 @@ module.exports = {
                 'lib/angular-ui-ace/ui-ace.min.js',
                 'lib/fullcalendar/dist/fullcalendar.min.js',
                 'lib/fullcalendar/dist/gcal.js',
-                'lib/angular-ui-calendar/src/calendar.js'
+                'lib/angular-ui-calendar/src/calendar.js',
+                'lib/Chart.js/Chart.js',
+                'lib/angular-chart.js/dist/angular-chart.js'
+
             ]
         },
         css: [
