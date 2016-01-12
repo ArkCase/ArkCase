@@ -68,7 +68,7 @@ public class SearchObjectByTypeAPIController {
             }
 
             if (activeOnly) {
-                query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
+                query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:CLOSE";
             }
             if (log.isDebugEnabled()) {
                 log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
