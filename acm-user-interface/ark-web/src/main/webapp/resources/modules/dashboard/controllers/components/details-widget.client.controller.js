@@ -36,7 +36,7 @@ angular.module('dashboard.details', ['adf.provider'])
                 promiseInfo = module.getInfo($stateParams.id);
 
                 $q.all([promiseConfig, promiseInfo]).then(function (data) {
-                        var config = _.find(data[0], {id: "main"});
+                        var config = _.find(data[0].components, {id: "main"});
                         var info = data[1];
                         var widgetInfo = _.find(config.widgets, function(widget){
                             return widget.id === "details";
