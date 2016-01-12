@@ -1,7 +1,7 @@
 'use strict';
 
 // Init the application configuration module for AngularJS application
-var ApplicationConfiguration = (function() {
+var ApplicationConfiguration = (function () {
     // Init module configuration options
     var applicationModuleName = 'ArkCase';
     var applicationModuleVendorDependencies = [
@@ -34,7 +34,7 @@ var ApplicationConfiguration = (function() {
     ];
 
     // Add a new vertical module
-    var registerModule = function(moduleName, dependencies) {
+    var registerModule = function (moduleName, dependencies) {
         // Create angular module
         angular.module(moduleName, dependencies || []);
 
