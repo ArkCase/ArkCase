@@ -129,8 +129,8 @@
         "description": "Displays chart of documents by folder",
         "noDataMessage": "Currently there are no documents to display"
       },
-      "location": {
-        "title": "Location",
+      "locations": {
+        "title": "Locations",
         "description": "Displays location details",
         "noDataMessage": "Currently there are no locations to display"
       },
