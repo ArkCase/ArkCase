@@ -12,10 +12,11 @@ angular.module('dashboard.notes', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.NotesController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Case.InfoService'
-        , 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ObjectService', 'Object.NoteService',
-        function ($scope, $translate, $stateParams, Util, CaseInfoService, ComplaintInfoService, Authentication, DashboardService
-        , ObjectService, ObjectNoteService) {
+    .controller('Dashboard.NotesController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
+        , 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ObjectService'
+        , 'Object.NoteService', 'ConfigService',
+        function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication, DashboardService
+            , ObjectService, ObjectNoteService, ConfigService) {
 
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'main');
@@ -26,6 +27,37 @@ angular.module('dashboard.notes', ['adf.provider'])
                 enableColumnResizing: true,
                 columnDefs: []
             };
+
+            var promiseConfig;
+            var promiseInfo;
+            var modules = [
+                {name: "CASE_FILE", configName: "cases", getInfo: ObjectNoteService.queryNotes, ObjectType: ObjectService.ObjectTypes.CASE_FILE}
+            ];
+
+            var module = _.find(modules, function (module) {
+                return module.name == $stateParams.type;
+            });
+
+            if (module) {
+                promiseConfig = ConfigService.getModuleConfig(module.configName);
+                promiseInfo = module.getInfo(module.ObjectType, $stateParams.id);
+
+                $q.all([promiseConfig, promiseInfo]).then(function (data) {
+                        var config = _.find(data[0].components, {id: "main"});
+                        var info = data[1];
+                        var widgetInfo = _.find(config.widgets, function (widget) {
+                            return widget.id === "notes";
+                        });
+                        $scope.config = config;
+                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+                        $scope.gridOptions.data = info[0];
+                        $scope.gridOptions.totalItems = 1;
+                    },
+                    function (err) {
+
+                    }
+                );
+            }
 
             function applyConfig(e, componentId, config) {
                 if (componentId == 'main') {
