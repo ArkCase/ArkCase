@@ -28,8 +28,8 @@ angular.module('dashboard.details', ['adf.provider'])
                   {name: "CASE_FILE", configName: "cases", getInfo: CaseInfoService.getCaseInfo}
                 , {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
                 , {name: "COST_TRACKING", configName: "cost-tracking", getInfo: CostTrackingInfoService.getCostsheetInfo}
-                , {name: "TIME_TRACKING", configName: "tiume-tracking", getInfo: TimeTrackingInfoService.getTimesheetInfo}
-                , {name: "TASK", configName: "tasks", getInfo: TaskInfo.getTaskInfo}
+                , {name: "TIME_TRACKING", configName: "time-tracking", getInfo: TimeTrackingInfoService.getTimesheetInfo}
+                , {name: "TASK", configName: "tasks", getInfo: TaskInfoService.getTaskInfo}
             ];
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
