@@ -24,8 +24,9 @@ import java.util.List;
  * Created by marst on 8/16/14.
  */
 @Controller
-@RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
-public class ListAllTasksAPIController {
+@RequestMapping({"/api/v1/plugin/task", "/api/latest/plugin/task"})
+public class ListAllTasksAPIController
+{
 
     private TaskDao taskDao;
     private TaskEventPublisher taskEventPublisher;
@@ -38,58 +39,68 @@ public class ListAllTasksAPIController {
             @PathVariable("due") String due,
             Authentication authentication,
             HttpSession session
-    ) throws AcmListObjectsFailedException {
+    ) throws AcmListObjectsFailedException
+    {
         String ipAddress = (String) session.getAttribute("acm_ip_address");
-        try {
+        try
+        {
             List<AcmTask> retval = null;
-            switch (AcmTasksForAPeriod.getTasksForPeriodByText(due)){
+            switch (AcmTasksForAPeriod.getTasksForPeriodByText(due))
+            {
                 case ALL:
-                    if ( log.isInfoEnabled()) {
+                    if (log.isInfoEnabled())
+                    {
                         log.info("Finding tasks assigned to all users ");
                     }
                     retval = getTaskDao().allTasks();
                     break;
                 case PAST_DUE:
-                     retval = getTaskDao().pastDueTasks();
-                     break;
+                    retval = getTaskDao().pastDueTasks();
+                    break;
                 case DUE_TOMORROW:
-                     retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.ONE_DAY);
-                     break;
+                    retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.ONE_DAY);
+                    break;
                 case DUE_IN_7_DAYS:
-                     retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.SEVEN_DAYS);
-                     break;
+                    retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.SEVEN_DAYS);
+                    break;
                 case DUE_IN_30_DAYS:
-                     retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.THIRTY_DAYS);
-                     break;
+                    retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.THIRTY_DAYS);
+                    break;
                 default:
                     retval = getTaskDao().allTasks();
                     break;
             }
 
-            for ( AcmTask task : retval ) {
+            for (AcmTask task : retval)
+            {
                 AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(task, "searchResult",
                         authentication.getName(), true, ipAddress);
                 getTaskEventPublisher().publishTaskEvent(event);
             }
             return retval;
-        }
-        catch (Exception e) {
+        } catch (Exception e)
+        {
             throw new AcmListObjectsFailedException("task", e.getMessage(), e);
         }
     }
-    public TaskDao getTaskDao() {
+
+    public TaskDao getTaskDao()
+    {
         return taskDao;
     }
 
-    public void setTaskDao(TaskDao taskDao) {
+    public void setTaskDao(TaskDao taskDao)
+    {
         this.taskDao = taskDao;
     }
 
-    public TaskEventPublisher getTaskEventPublisher() {
+    public TaskEventPublisher getTaskEventPublisher()
+    {
         return taskEventPublisher;
     }
 
-    public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher) {
+    public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)
+    {
         this.taskEventPublisher = taskEventPublisher;
     }
 }
