@@ -1,29 +1,57 @@
 'use strict';
 
-angular.module('dashboard.location', ['adf.provider'])
+angular.module('dashboard.locations', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('location', {
-                    title: 'Location Widget',
-                    description: 'Displays location',
-                    controller: 'Dashboard.LocationController',
+            .widget('locations', {
+                    title: 'Locations Widget',
+                    description: 'Displays locations',
+                    controller: 'Dashboard.LocationsController',
                     reload: true,
                     templateUrl: 'modules/dashboard/views/components/location-widget.client.view.html'
                 }
             );
     })
-    .controller('Dashboard.LocationController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Complaint.InfoService', 'Authentication', 'Dashboard.DashboardService',
-        function ($scope, $translate, $stateParams, Util, ComplaintInfoService, Authentication, DashboardService) {
-
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'main');
-            $scope.config = null;
-            //var userInfo = null;
+    .controller('Dashboard.LocationsController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService', 'Complaint.InfoService'
+        , 'Authentication', 'Dashboard.DashboardService', 'ConfigService',
+        function ($scope, $translate, $stateParams, $q, Util, ComplaintInfoService, Authentication, DashboardService, ConfigService) {
 
             $scope.gridOptions = {
                 enableColumnResizing: true,
                 columnDefs: []
             };
+
+            var promiseConfig;
+            var promiseInfo;
+            var modules = [
+                {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
+            ]
+
+            var module = _.find(modules, function (module) {
+                return module.name == $stateParams.type;
+            });
+
+            if (module) {
+                promiseConfig = ConfigService.getModuleConfig(module.configName);
+                promiseInfo = module.getInfo($stateParams.id);
+
+                $q.all([promiseConfig, promiseInfo]).then(function (data) {
+                        var config = _.find(data[0].components, {id: "main"});
+                        var info = data[1];
+                        var widgetInfo = _.find(config.widgets, function (widget) {
+                            return widget.id === "locations";
+                        });
+                        $scope.config = config;
+                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+                        $scope.gridOptions.data = [info];
+                        $scope.gridOptions.data[0].location.fullAddress = createFullAddress(info.location);
+                        $scope.gridOptions.totalItems = 1;
+                    },
+                    function (err) {
+
+                    }
+                );
+            }
 
             function applyConfig(e, componentId, config) {
                 if (componentId == 'main') {
