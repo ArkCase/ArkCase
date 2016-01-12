@@ -34,7 +34,7 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.docreview',
     'dashboard.workflow',
     'dashboard.signature',
-    'dashboard.person'//,
+    'dashboard.person',
     //'dashboard.expenses',
     //'dashboard.summary'
 <<<<<<< HEAD
