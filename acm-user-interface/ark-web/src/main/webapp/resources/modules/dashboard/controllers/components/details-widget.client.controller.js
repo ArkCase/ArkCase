@@ -25,8 +25,11 @@ angular.module('dashboard.details', ['adf.provider'])
             var promiseConfig;
             var promiseInfo;
             var modules = [
-                    {name: "CASE_FILE", configName: "cases", getInfo: CaseInfoService.getCaseInfo}
-                ,   {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getCaseInfo}
+                  {name: "CASE_FILE", configName: "cases", getInfo: CaseInfoService.getCaseInfo}
+                , {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
+                , {name: "COST_TRACKING", configName: "cost-tracking", getInfo: CostTrackingInfoService.getCostsheetInfo}
+                , {name: "TIME_TRACKING", configName: "tiume-tracking", getInfo: TimeTrackingInfoService.getTimesheetInfo}
+                , {name: "TASK", configName: "tasks", getInfo: TaskInfo.getTaskInfo}
             ];
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
@@ -106,7 +109,7 @@ angular.module('dashboard.details', ['adf.provider'])
                             );
                         }
                         else if ($stateParams.type == 'cost') {
-                            CostTrackingInfoService.getCostTrackingInfo($stateParams.id).then(
+                            CostTrackingInfoService.getCostsheetInfo($stateParams.id).then(
                                 function (data) {
                                     $scope.gridOptions.data = [Util.omitNg(data)];
                                     $scope.gridOptions.totalItems = 1;
@@ -119,7 +122,7 @@ angular.module('dashboard.details', ['adf.provider'])
                             );
                         }
                         else if ($stateParams.type == 'time') {
-                            TimeTrackingInfoService.getTimeTrackingInfo($stateParams.id).then(
+                            TimeTrackingInfoService.getTimesheetInfo($stateParams.id).then(
                                 function (data) {
                                     $scope.gridOptions.data = [Util.omitNg(data)];
                                     $scope.gridOptions.totalItems = 1;
