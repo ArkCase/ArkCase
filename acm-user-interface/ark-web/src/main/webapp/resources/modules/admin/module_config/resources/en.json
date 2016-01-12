@@ -225,6 +225,11 @@
       "upload.success": "Custom logo files updated. Refresh browser page to see result.",
       "upload.error": "Error uploading custom logo files."
     },
+
+    "branding.logo.header.title": "Header",
+    "branding.logo.login.title": "Login Page",
+    "branding.logo.warningMessage": "Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+
     "branding.logo.btn": {
       "chooseHeader": "Choose Header logo",
       "chooseLogin": "Choose Login logo",
