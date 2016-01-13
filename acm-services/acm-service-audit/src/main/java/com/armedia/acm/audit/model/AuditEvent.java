@@ -1,11 +1,25 @@
 package com.armedia.acm.audit.model;
 
-import javax.persistence.*;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import java.util.Date;
 
 @Entity
 @Table(name = "acm_audit_log")
 public class AuditEvent {
+
+    private static DateTimeFormatter dtf = ISODateTimeFormat.dateTime();
 
     @Id
     @TableGenerator(name = "acm_audit_log_gen",
@@ -134,5 +148,14 @@ public class AuditEvent {
             return getFullEventType().substring(lastDot + 1, getFullEventType().length());
         }
         return getFullEventType();
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Event date/time: " + dtf.print(getEventDate().getTime()) + " | Originating IP address: " + getIpAddress()
+                + " | Track Id: " + getTrackId() + " | User: " + getUserId() + " | Event type: " + getFullEventType()
+                + " | Event result: " + getEventResult() + " | Object type: " + getObjectType()
+                + " | Object Id: " + getObjectId() + " | Status: " + getStatus();
     }
 }

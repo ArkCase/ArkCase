@@ -109,6 +109,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                     that.scope.config = config;
                     that.scope.componentLinks = that.initComponentLinks(config);
                     that.scope.activeLinkId = "main";
+                    that.scope.linksShown = Util.goodValue(config.initialLinksShown, true);
                     return config;
                 });
 
@@ -130,7 +131,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                     that.state.go(arg.moduleId + "." + linkId, params);
                 };
 
-                that.scope.linksShown = false;
+                that.scope.linksShown = true;
                 that.scope.toggleShowLinks = function () {
                     that.scope.linksShown = !that.scope.linksShown;
                 };
