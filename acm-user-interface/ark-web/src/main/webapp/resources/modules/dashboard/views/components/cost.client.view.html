@@ -1,8 +1,17 @@
 <div>
-    <div ng-if="chartConfig">
-        <highchart config="chartConfig"></highchart>
+    <div ng-if="cost.showChart">
+        <div class="panel-body">
+            </br>
+            <div class="chart-container">
+                <canvas id="bar" class="chart chart-bar" chart-data="cost.data"
+                        chart-labels="cost.labels"
+                        chart-series="cost.series"
+                        chart-responsive="true"
+                        chart-legend="true"></canvas>
+            </div>
+        </div>
     </div>
-    <div class="alert alert-info" ng-if="!chartConfig">
+    <div class="alert alert-info" ng-if="!cost.showChart">
         <p class="text-center">
             <span translate>dashboard.widgets.cost.noDataMessage</span>
         </p>

@@ -7,86 +7,40 @@ angular.module('dashboard.time', ['adf.provider'])
                 title: 'Time',
                 description: 'Displays cases files by queue',
                 controller: 'Dashboard.TimeController',
+                controllerAs: 'time',
                 reload: true,
                 templateUrl: 'modules/dashboard/views/components/time.client.view.html'
             });
     })
-    .controller('Dashboard.TimeController', ['$scope', 'config', '$state', '$translate', 'Dashboard.DashboardService',
-        function ($scope, config, $state, $translate, DashboardService) {
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'time');
+    .controller('Dashboard.TimeController', ['$scope', 'config', '$state', '$stateParams', '$translate', 'Dashboard.DashboardService', 'Helper.ObjectBrowserService', 'UtilService', 'Object.TimeService',
+        function ($scope, config, $state, $stateParams, $translate, DashboardService, HelperObjectBrowserService, Util, ObjectTimeService) {
 
-            $scope.config = null;
-            $scope.chartConfig = null;
+            var vm = this;
 
-            function onBarClick(e) {
-                if ($scope.config.redirectSettings) {
-                    var redirectObj = $scope.config.redirectSettings[this.name];
-                    if (redirectObj) {
-                        $state.go(redirectObj.state, redirectObj.params)
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            ObjectTimeService.queryTimesheets($stateParams.type, currentObjectId).then(
+                function (timesheets) {
+                    for (var i = 0; i < timesheets.length; i++) {
+                        timesheets[i].acm$_formName = $translate.instant("cases.comp.time.formNamePrefix") + " " + Util.goodValue(timesheets[i].startDate) + " - " + Util.goodValue(timesheets[i].endDate);
+                        timesheets[i].acm$_hours = _.reduce(Util.goodArray(timesheets[i].times), function (total, n) {
+                            return total + Util.goodValue(n.value, 0);
+                        }, 0);
                     }
+
+                    var data = {};
+                    var chartData = []
+                    var labels = [];
+
+                    angular.forEach(timesheets, function (timeIter) {
+                        labels.push(timeIter.user.fullName);
+                        chartData.push(timeIter.acm$_hours);
+                    })
+
+                    vm.showChart = chartData.length > 0 ? true : false;
+                    vm.data = [chartData];
+                    vm.labels = labels;
                 }
-            }
-
-            function applyConfig(e, componentId, config) {
-                if (componentId == 'main') {
-                    $scope.config = config;
-
-                    // Load Cost info and render chart
-                    /****************************************************
-                     *Change this with correct calls for cost stuff
-                     ****************************************************/
-                    DashboardService.queryCasesByQueue(function (cases) {
-
-                        var data = [];
-
-                        _.forEach(cases, function (value, key) {
-                            if (key.length > 0 && key[0] != '$') {
-                                data.push({
-                                    name: _.get($scope.config, 'redirectSettings[' + key + '].title') || key,
-                                    y: value,
-                                    drilldown: key
-                                });
-                            }
-                        });
-
-                        $scope.chartConfig = {
-                            chart: {
-                                type: 'column'
-                            },
-                            title: {
-                                text: ' '
-                            },
-                            noData: $translate.instant('dashboard.widgets.time.noDataMessage'),
-                            xAxis: {
-                                type: 'category',
-                                title: {
-                                    text: $translate.instant('dashboard.widgets.time.xAxis')
-                                }
-                            },
-                            yAxis: {
-                                title: {
-                                    text: $translate.instant('dashboard.widgets.time.yAxis')
-                                }
-                            },
-                            series: [{
-                                type: 'column',
-                                dataLabels: {
-                                    enabled: true,
-                                    format: '{point.y}'
-                                },
-                                name: $translate.instant('dashboard.widgets.time.title'),
-                                data: data,
-                                cursor: 'pointer',
-                                point: {
-                                    events: {
-                                        click: onBarClick
-                                    }
-                                }
-                            }]
-                        }
-                    });
-                }
-            }
+            );
         }
+
     ]);
