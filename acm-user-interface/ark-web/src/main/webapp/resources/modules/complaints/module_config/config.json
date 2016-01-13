@@ -1,6 +1,8 @@
 {
   "id": "complaints",
   "title": "Complaints",
+  "initialLinksShown": true,
+  "hasOverviewWidgets": true,
   "menus": [
     {
       "menuId": "leftnav",
@@ -303,7 +305,8 @@
       "title": "Info",
       "enabled": false,
       "type": "empty",
-      "editable": false
+      "editable": false,
+      "dateFormat": "YYYY-MM-DDTHH:mm:ss.SSSZZ"
     },
     {
       "id": "actions",
@@ -634,7 +637,50 @@
           "headerCellFilter": "translate",
           "lookup": "participantNames"
         }
-      ]
+      ],
+      "dialogUserPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "complaints.comp.participants.dialogUserPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "object_id_s",
+            "displayName": "complaints.comp.participants.dialogUserPicker.table.columns.id",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      },
+      "dialogGroupPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "complaints.comp.participants.dialogGroupPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      }
     },
     {
       "id": "notes",

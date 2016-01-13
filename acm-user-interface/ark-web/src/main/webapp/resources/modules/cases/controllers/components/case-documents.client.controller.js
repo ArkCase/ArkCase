@@ -81,5 +81,5 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                 }
             }
         }
-	}
+    }
 ]);

@@ -153,40 +153,53 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         $scope.merge = function (caseInfo) {
-             var modalInstance = $modal.open({
-                 animation: $scope.animationsEnabled,
-                 templateUrl: 'modules/cases/views/components/case-merge.client.view.html',
-                 controller: 'Cases.MergeController',
-                 size: 'lg',
-                 resolve: {
-                     $clientInfoScope: function () {
-                       return $scope.caseFileSearchConfig;
-                     },
-                     $filter: function () {
-                        return $scope.caseFileSearchConfig.caseInfoFilter;
-                     }
-                 }
-             });
-             modalInstance.result.then(function (selectedCase) {
-                 if(selectedCase){
-                     if(selectedCase.parentId != null){
-                         //Already Merged
-                     }
-                     else{
-                         MergeSplitService.mergeCaseFile(caseInfo.id, selectedCase.object_id_s).then(
-                                 function(data) {
-                                     ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, data.id);
-                                 });
-                     }
-                 }
-             }, function () {
-                 // Cancel button was clicked
-             });
-         };
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/cases/views/components/case-merge.client.view.html',
+                controller: 'Cases.MergeController',
+                size: 'lg',
+                resolve: {
+                    config: function () {
+                        return $scope.caseFileSearchConfig;
+                    },
+                    //filter: function () {
+                    //    return $scope.caseFileSearchConfig.caseInfoFilter;
+                    //}
+                }
+            });
+            modalInstance.result.then(function (caseSummary) {
+                if (caseSummary) {
+
+                    MergeSplitService.mergeCaseFile(caseInfo.id, caseSummary.object_id_s).then(
+                        function (data) {
+                            ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, data.id);
+                        });
+
+                }
+            });
+        };
 
         $scope.split = function () {
-            console.log('split');
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/cases/views/components/case-split.client.view.html',
+                controller: 'Cases.SplitController',
+                size: 'lg',
+            });
+            modalInstance.result.then(function (caseSummary) {
+                if (caseSummary) {
+                    if (caseSummary != null) {
+                        MergeSplitService.splitCaseFile(caseSummary).then(
+                            function (data) {
+                                ObjectService.gotoURL(ObjectService.ObjectTypes.CASE_FILE, data.id);
+                            });
+                    }
+                }
+            });
         };
 
     }
+
 ]);
+
+
