@@ -6,6 +6,9 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
             getConfig: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/v1/plugin/dashboard/get',
+                params: {
+                    moduleName : "@moduleName"
+                },
                 data: ''
             },
 
@@ -62,7 +65,10 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
 
             saveConfig: {
                 method: 'POST',
-                url: 'proxy/arkcase/api/v1/plugin/dashboard/set'
+                url: 'proxy/arkcase/api/v1/plugin/dashboard/set',
+                params: {
+                    moduleName: "@moduleName"
+                }
             }
         })
     }
