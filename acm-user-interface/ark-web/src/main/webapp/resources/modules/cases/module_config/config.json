@@ -2,6 +2,7 @@
   "id": "cases",
   "title": "Cases",
   "hasOverviewWidgets": true,
+  "initialLinksShown": true,
   "caseInfoFilter": "\"Object Type\": CASE_FILE",
   "menus": [
     {
@@ -575,7 +576,50 @@
           "headerCellFilter": "translate",
           "lookup": "participantNames"
         }
-      ]
+      ],
+      "dialogUserPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "cases.comp.participants.dialogUserPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "object_id_s",
+            "displayName": "cases.comp.participants.dialogUserPicker.table.columns.id",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      },
+      "dialogGroupPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "cases.comp.participants.dialogGroupPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      }
     },
     {
       "id": "notes",
@@ -945,7 +989,7 @@
         ],
         "paginationPageSize": 5,
         "start": 0,
-        "caseInfoFilter": "\"Object Type\": CASE_FILE"
+      "__xxx__caseInfoFilter": "\"Object Type\": CASE_FILE"
     }
   ]
 }
