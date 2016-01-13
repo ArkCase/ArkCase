@@ -17,16 +17,6 @@ angular.module('dashboard.workflow', ['adf.provider'])
         function ($scope, $translate, $stateParams, $q, Util, TaskInfoService, TaskHistoryService, Authentication
             , DashboardService, ConfigService) {
 
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'main');
-            $scope.config = null;
-            //var userInfo = null;
-
-            $scope.gridOptions = {
-                enableColumnResizing: true,
-                columnDefs: []
-            };
-
             var promiseConfig;
             var promiseTaskInfo;
             var promiseQueryTaskHistory;
@@ -39,6 +29,11 @@ angular.module('dashboard.workflow', ['adf.provider'])
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
             });
+
+            $scope.gridOptions = {
+                enableColumnResizing: true,
+                columnDefs: []
+            };
 
             if (module) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
@@ -65,38 +60,6 @@ angular.module('dashboard.workflow', ['adf.provider'])
 
                     }
                 );
-            }
-
-            function applyConfig(e, componentId, config) {
-                if (componentId == 'main') {
-                    $scope.config = config;
-                    $scope.gridOptions.columnDefs = config.widgets[5].columnDefs; //tasks.config.widget[5] = workflow
-
-                    //set gridOptions.data
-                    if ($stateParams.type) {
-                        if ($stateParams.type == 'task' || $stateParams.type == 'ADHOC') {
-                            TaskInfoService.getTaskInfo($stateParams.id).then(
-                                function (taskInfo) {
-                                    var promiseQueryTaskHistory = TaskHistoryService.queryTaskHistory(taskInfo);
-                                    $q.all([promiseQueryTaskHistory, promiseUsers]).then(function (data) {
-                                        var taskHistory = data[0];
-                                        $scope.gridOptions.data = taskHistory;
-                                        $scope.gridOptions.totalItems = taskHistory.length;
-                                        //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
-                                    });
-                                }
-                                , function (error) {
-                                    $scope.complaintInfo = null;
-                                    $scope.progressMsg = $translate.instant("tasks.progressError") + " " + id;
-                                    return error;
-                                }
-                            );
-                        }
-                        else {
-                            //do nothing
-                        }
-                    }
-                }
             }
         }
     ]);

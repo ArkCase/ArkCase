@@ -18,26 +18,21 @@ angular.module('dashboard.correspondence', ['adf.provider'])
         function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ObjectCorrespondenceService, ObjectService
             , Authentication, DashboardService, ConfigService) {
 
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'main');
-            $scope.config = null;
-            //var userInfo = null;
-
-            $scope.gridOptions = {
-                enableColumnResizing: true,
-                columnDefs: []
-            };
-
             var promiseConfig;
             var promiseInfo;
             var modules = [
                 {name: "CASE_FILE", configName: "cases", getInfo: ObjectCorrespondenceService.queryCorrespondences, objectType: ObjectService.ObjectTypes.CASE_FILE}
                 , {name: "COMPLAINT", configName: "complaints", getInfo: ObjectCorrespondenceService.queryCorrespondences, objectType: ObjectService.ObjectTypes.COMPLAINT}
-            ]
+            ];
 
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
             });
+
+            $scope.gridOptions = {
+                enableColumnResizing: true,
+                columnDefs: []
+            };
 
             if (module) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
@@ -61,44 +56,6 @@ angular.module('dashboard.correspondence', ['adf.provider'])
 
                     }
                 );
-            }
-
-            function applyConfig(e, componentId, config) {
-                if (componentId == 'main') {
-                    $scope.config = config;
-                    $scope.gridOptions.columnDefs = config.widgets[1].columnDefs; //widget[1] = people
-
-                    //set gridOptions.data
-                    if ($stateParams.type) {
-                        if ($stateParams.type == "casefile") {
-                            ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.CASE_FILE
-                                , $stateParams.id
-                                , 0
-                                , 5
-                            ).then(function(data) {
-                                var correspondenceData = data[0];
-                                $scope.gridOptions = $scope.gridOptions || {};
-                                $scope.gridOptions.data = correspondenceData.children;
-                                $scope.gridOptions.totalItems = Util.goodValue(correspondenceData.totalChildren, 0);
-                            });
-                        }
-                        else if ($stateParams.type == 'complaint') {
-                            ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.COMPLAINT
-                                , $stateParams.id
-                                , 0
-                                , 5
-                            ).then(function(data) {
-                                var correspondenceData = data[0];
-                                $scope.gridOptions = $scope.gridOptions || {};
-                                $scope.gridOptions.data = correspondenceData.children;
-                                $scope.gridOptions.totalItems = Util.goodValue(correspondenceData.totalChildren, 0);
-                            });
-                        }
-                        else {
-                            //do nothing
-                        }
-                    }
-                }
             }
         }
     ]);

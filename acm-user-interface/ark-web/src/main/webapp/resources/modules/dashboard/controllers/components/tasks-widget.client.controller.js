@@ -18,16 +18,6 @@ angular.module('dashboard.tasks', ['adf.provider'])
         function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
             , DashboardService, ObjectService, ObjectTaskService, ConfigService) {
 
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'main');
-            $scope.config = null;
-            //var userInfo = null;
-
-            $scope.gridOptions = {
-                enableColumnResizing: true,
-                columnDefs: []
-            };
-
             var promiseConfig;
             var promiseInfo;
             var modules = [
@@ -38,6 +28,11 @@ angular.module('dashboard.tasks', ['adf.provider'])
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
             });
+
+            $scope.gridOptions = {
+                enableColumnResizing: true,
+                columnDefs: []
+            };
 
             if (module) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
@@ -60,43 +55,6 @@ angular.module('dashboard.tasks', ['adf.provider'])
 
                     }
                 );
-            }
-
-            function applyConfig(e, componentId, config) {
-                if (componentId == 'main') {
-                    $scope.config = config;
-                    $scope.gridOptions.columnDefs = config.widgets[5].columnDefs; //widget[5] = tasks
-
-                    //set gridOptions.data
-                    // See case-tasks.client.controller.js
-                    if ($stateParams.type) {
-                        if ($stateParams.type == "casefile") {
-                            ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
-                                , $stateParams.id
-                                , 0
-                                , 5
-                            ).then(function (data) {
-                                var tasks = data.response.docs;
-                                $scope.gridOptions.data = tasks;
-                                $scope.gridOptions.totalItems = data.response.numFound;
-                            });
-                        }
-                        else if ($stateParams.type == 'complaint') {
-                            ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.COMPLAINT
-                                , $stateParams.id
-                                , 0
-                                , 5
-                            ).then(function (data) {
-                                var tasks = data.response.docs;
-                                $scope.gridOptions.data = tasks;
-                                $scope.gridOptions.totalItems = data.response.numFound;
-                            });
-                        }
-                        else {
-                            //do nothing
-                        }
-                    }
-                }
             }
         }
     ]);
