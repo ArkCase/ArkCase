@@ -1,6 +1,8 @@
 {
     "id": "time-tracking",
     "title": "Time Tracking",
+    "initialLinksShown": true,
+    "hasOverviewWidgets": true,
     "menus": [
         
         {

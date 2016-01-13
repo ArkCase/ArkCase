@@ -26,7 +26,8 @@ import java.util.List;
 
 @Controller
 @RequestMapping({"api/v1/plugin/complaint", "api/latest/plugin/complaint"})
-public class ListComplaintsAPIController {
+public class ListComplaintsAPIController
+{
 
     private ComplaintDao complaintDao;
     private ComplaintEventPublisher eventPublisher;
@@ -39,17 +40,20 @@ public class ListComplaintsAPIController {
             @PathVariable("timePeriod") String timePeriod,
             Authentication authentication,
             HttpSession session
-    ) throws AcmListObjectsFailedException{
+    ) throws AcmListObjectsFailedException
+    {
 
         String ipAddress = (String) session.getAttribute("acm_ip_address");
-        try {
+        try
+        {
             List<ComplaintListView> complaints = null;
-            switch (ComplaintsByTimePeriod.getTimePeriod(timePeriod)){
+            switch (ComplaintsByTimePeriod.getTimePeriod(timePeriod))
+            {
                 case LAST_WEEK:
                     complaints = getComplaintDao().listComplaintsByTimePeriod(TimePeriod.SEVEN_DAYS);
                     break;
                 case LAST_MONTH:
-                        complaints = getComplaintDao().listComplaintsByTimePeriod(TimePeriod.THIRTY_DAYS);
+                    complaints = getComplaintDao().listComplaintsByTimePeriod(TimePeriod.THIRTY_DAYS);
                     break;
                 case LAST_THREE_MONTH:
                     complaints = getComplaintDao().listComplaintsByTimePeriod(TimePeriod.TRHEE_MONTHS);
@@ -65,30 +69,36 @@ public class ListComplaintsAPIController {
                     break;
             }
 
-            for ( ComplaintListView clv : complaints ) {
+            for (ComplaintListView clv : complaints)
+            {
                 getEventPublisher().publishComplaintSearchResultEvent(clv, authentication, ipAddress);
             }
+
             return complaints;
-        }
-        catch (PersistenceException e) {
+        } catch (PersistenceException e)
+        {
             log.error("Could not list complaints: " + e.getMessage(), e);
             throw new AcmListObjectsFailedException("complaint", e.getMessage(), e);
         }
     }
 
-    public ComplaintEventPublisher getEventPublisher() {
+    public ComplaintEventPublisher getEventPublisher()
+    {
         return eventPublisher;
     }
 
-    public void setEventPublisher(ComplaintEventPublisher eventPublisher) {
+    public void setEventPublisher(ComplaintEventPublisher eventPublisher)
+    {
         this.eventPublisher = eventPublisher;
     }
 
-    public ComplaintDao getComplaintDao() {
+    public ComplaintDao getComplaintDao()
+    {
         return complaintDao;
     }
 
-    public void setComplaintDao(ComplaintDao complaintDao) {
+    public void setComplaintDao(ComplaintDao complaintDao)
+    {
         this.complaintDao = complaintDao;
     }
 

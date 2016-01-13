@@ -1,6 +1,8 @@
 {
   "id": "tasks",
   "title": "Tasks",
+  "initialLinksShown": true,
+  "hasOverviewWidgets": true,
   "menus": [
     {
       "menuId": "leftnav",
@@ -328,7 +330,8 @@
       "title": "Info",
       "enabled": false,
       "type": "empty",
-      "editable": false
+      "editable": false,
+      "dateFormat": "YYYY-MM-DDTHH:mm:ss.SSSZZ"
     },
     {
       "id": "parentinfo",
