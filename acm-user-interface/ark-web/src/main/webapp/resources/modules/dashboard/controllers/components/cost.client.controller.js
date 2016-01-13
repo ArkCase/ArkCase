@@ -7,86 +7,40 @@ angular.module('dashboard.cost', ['adf.provider'])
                 title: 'Cost',
                 description: 'Displays cases files by queue',
                 controller: 'Dashboard.CostController',
+                controllerAs: 'cost',
                 reload: true,
                 templateUrl: 'modules/dashboard/views/components/cost.client.view.html'
             });
     })
-    .controller('Dashboard.CostController', ['$scope', 'config', '$state', '$translate', 'Dashboard.DashboardService',
-        function ($scope, config, $state, $translate, DashboardService) {
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'cost');
+    .controller('Dashboard.CostController', ['$scope', 'config', '$state', '$stateParams', '$translate', 'Dashboard.DashboardService', 'Helper.ObjectBrowserService', 'UtilService', 'Object.CostService',
+        function ($scope, config, $state, $stateParams, $translate, DashboardService, HelperObjectBrowserService, Util, ObjectCostService) {
 
-            $scope.config = null;
-            $scope.chartConfig = null;
+            var vm = this;
 
-            function onBarClick(e) {
-                if ($scope.config.redirectSettings) {
-                    var redirectObj = $scope.config.redirectSettings[this.name];
-                    if (redirectObj) {
-                        $state.go(redirectObj.state, redirectObj.params)
-                    }
-                }
-            }
-
-            function applyConfig(e, componentId, config) {
-                if (componentId == 'main') {
-                    $scope.config = config;
-
-                    // Load Cost info and render chart
-                    /****************************************************
-                     *Change this with correct calls for cost stuff
-                     ****************************************************/
-                    DashboardService.queryCasesByQueue(function (cases) {
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (Util.goodPositive(currentObjectId, false)) {
+                ObjectCostService.queryCostsheets($stateParams.type, currentObjectId).then(
+                    function (costsheets) {
+                        for (var i = 0; i < costsheets.length; i++) {
+                            costsheets[i].acm$_formName = $translate.instant("cases.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
+                            costsheets[i].acm$_costs = _.reduce(Util.goodArray(costsheets[i].costs), function (total, n) {
+                                return total + Util.goodValue(n.value, 0);
+                            }, 0);
+                        }
 
                         var data = [];
+                        var labels = [];
 
-                        _.forEach(cases, function (value, key) {
-                            if (key.length > 0 && key[0] != '$') {
-                                data.push({
-                                    name: _.get($scope.config, 'redirectSettings[' + key + '].title') || key,
-                                    y: value,
-                                    drilldown: key
-                                });
-                            }
-                        });
+                        angular.forEach(costsheets, function (costIter) {
+                            labels.push(costIter.user.fullName);
+                            data.push(costIter.acm$_costs);
+                        })
 
-                        $scope.chartConfig = {
-                            chart: {
-                                type: 'column'
-                            },
-                            title: {
-                                text: ' '
-                            },
-                            noData: $translate.instant('dashboard.widgets.cost.noDataMessage'),
-                            xAxis: {
-                                type: 'category',
-                                title: {
-                                    text: $translate.instant('dashboard.widgets.cost.xAxis')
-                                }
-                            },
-                            yAxis: {
-                                title: {
-                                    text: $translate.instant('dashboard.widgets.cost.yAxis')
-                                }
-                            },
-                            series: [{
-                                type: 'column',
-                                dataLabels: {
-                                    enabled: true,
-                                    format: '{point.y}'
-                                },
-                                name: $translate.instant('dashboard.widgets.cost.title'),
-                                data: data,
-                                cursor: 'pointer',
-                                point: {
-                                    events: {
-                                        click: onBarClick
-                                    }
-                                }
-                            }]
-                        }
-                    });
-                }
+                        vm.showChart = data.length > 0 ? true : false;
+                        vm.data = data;
+                        vm.labels = labels;
+                    }
+                );
             }
         }
     ]);
