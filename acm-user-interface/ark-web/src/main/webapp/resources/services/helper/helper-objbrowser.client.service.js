@@ -43,6 +43,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                 that.state = arg.state;
                 that.stateParams = arg.stateParams;
                 that.moduleId = arg.moduleId;
+                that.resetTreeData = arg.resetTreeData;
                 that.getTreeData = arg.getTreeData;
                 that.getNodeData = arg.getNodeData;
                 that.makeTreeNode = arg.makeTreeNode;
@@ -56,12 +57,19 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
 
                 that.nodeId = Service.getCurrentObjectId();
 
+                that.scope.onReset = function () {
+                    that.onReset();
+                };
+
                 that.scope.onLoad = function (start, n, sort, filters) {
                     that.onLoad(start, n, sort, filters);
                 };
 
                 that.scope.onSelect = function (selectedObject) {
                     that.onSelect(selectedObject);
+                };
+                that.scope.onReset2 = function () {
+                    that.onReset2();
                 };
             }
 
@@ -194,6 +202,13 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
         };
 
         Service.Tree.prototype = {
+            onReset: function () {
+                var that = this;
+                that.resetTreeData();
+                that.firstLoad = true;
+                that.scope.treeData = null;
+            }
+
             /**
              * @ngdoc method
              * @name onLoad
@@ -207,7 +222,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
              * @description
              * A callback function to respond object tree events to load tree data of a given page
              */
-            onLoad: function (start, n, sort, filters) {
+            , onLoad: function (start, n, sort, filters) {
                 var that = this;
                 if (that.firstLoad && that.nodeId) {
                     that.scope.treeData = null;
