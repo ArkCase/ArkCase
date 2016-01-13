@@ -55,10 +55,10 @@ angular.module('dashboard.workflow', ['adf.provider'])
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
-                        promiseQueryTaskHistory = module.getHistory(info).then( function (taskHistory){
-                            var taskHistory = data[0];
-                            $scope.gridOptions.data = taskHistory;
-                            $scope.gridOptions.totalItems = taskHistory.length;
+                        promiseQueryTaskHistory = module.getHistory(info).then( function (taskHistoryInfo){
+                            var taskHistory = taskHistoryInfo[0];
+                            $scope.gridOptions.data = [taskHistory];
+                            $scope.gridOptions.totalItems = taskHistoryInfo.length;
                         });
                     },
                     function (err) {
