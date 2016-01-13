@@ -20,7 +20,7 @@ angular.module('dashboard').controller('DashboardController', ['$scope', '$trans
             }
         };
 
-        DashboardService.getConfig({}, function (data) {
+        DashboardService.getConfig({moduleName: "DASHBOARD"}, function (data) {
             $scope.dashboard.model = angular.fromJson(data.dashboardConfig);
 
             // Set Dashboard custom title
@@ -29,7 +29,8 @@ angular.module('dashboard').controller('DashboardController', ['$scope', '$trans
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {
             DashboardService.saveConfig({
-                dashboardConfig: angular.toJson(model)
+                dashboardConfig: angular.toJson(model),
+                moduleName: "DASHBOARD"
             });
         });
 
