@@ -11,6 +11,9 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
             , state: $state
             , stateParams: $stateParams
             , moduleId: "complaints"
+            , resetTreeData: function () {
+                return ComplaintListService.resetComplaintsTreeData();
+            }
             , getTreeData: function (start, n, sort, filters) {
                 return ComplaintListService.queryComplaintsTreeData(start, n, sort, filters);
             }
