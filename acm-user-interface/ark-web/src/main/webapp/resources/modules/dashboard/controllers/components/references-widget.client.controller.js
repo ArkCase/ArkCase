@@ -12,8 +12,10 @@ angular.module('dashboard.references', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.ReferencesController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService',
-        function ($scope, $translate, $stateParams, Util, CaseInfoService, ComplaintInfoService, Authentication, DashboardService) {
+    .controller('Dashboard.ReferencesController', ['$scope', '$translate', '$stateParams', '$q','UtilService'
+        , 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ConfigService',
+        function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
+            , DashboardService, ConfigService) {
 
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'main');
@@ -25,6 +27,38 @@ angular.module('dashboard.references', ['adf.provider'])
                 columnDefs: []
             };
 
+            var promiseConfig;
+            var promiseInfo;
+            var modules = [
+                {name: "CASE_FILE", configName: "cases", getInfo: CaseInfoService.getCaseInfo}
+                , {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
+            ]
+
+            var module = _.find(modules, function (module) {
+                return module.name == $stateParams.type;
+            });
+
+            if (module) {
+                promiseConfig = ConfigService.getModuleConfig(module.configName);
+                promiseInfo = module.getInfo($stateParams.id);
+
+                $q.all([promiseConfig, promiseInfo]).then(function (data) {
+                        var config = _.find(data[0].components, {id: "main"});
+                        var info = data[1];
+                        var widgetInfo = _.find(config.widgets, function (widget) {
+                            return widget.id === "references";
+                        });
+                        $scope.config = config;
+                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+
+                        $scope.gridOptions.data = info.references;
+                        $scope.gridOptions.totalItems = info.references ? $scope.gridOptions.data.length : 0;
+                    },
+                    function (err) {
+
+                    }
+                );
+            }
             function applyConfig(e, componentId, config) {
                 if (componentId == 'main') {
                     $scope.config = config;

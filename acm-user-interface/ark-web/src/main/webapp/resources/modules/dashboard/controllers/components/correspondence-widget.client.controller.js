@@ -12,9 +12,11 @@ angular.module('dashboard.correspondence', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.CorrespondenceController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Case.InfoService'
-        , 'Object.CorrespondenceService', 'ObjectService', 'Authentication', 'Dashboard.DashboardService',
-        function ($scope, $translate, $stateParams, Util, CaseInfoService, ObjectCorrespondenceService, ObjectService, Authentication, DashboardService) {
+    .controller('Dashboard.CorrespondenceController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
+        , 'Case.InfoService', 'Object.CorrespondenceService', 'ObjectService', 'Authentication', 'Dashboard.DashboardService'
+        , 'ConfigService',
+        function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ObjectCorrespondenceService, ObjectService
+            , Authentication, DashboardService, ConfigService) {
 
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'main');
@@ -25,6 +27,41 @@ angular.module('dashboard.correspondence', ['adf.provider'])
                 enableColumnResizing: true,
                 columnDefs: []
             };
+
+            var promiseConfig;
+            var promiseInfo;
+            var modules = [
+                {name: "CASE_FILE", configName: "cases", getInfo: ObjectCorrespondenceService.queryCorrespondences, objectType: ObjectService.ObjectTypes.CASE_FILE}
+                , {name: "COMPLAINT", configName: "complaints", getInfo: ObjectCorrespondenceService.queryCorrespondences, objectType: ObjectService.ObjectTypes.COMPLAINT}
+            ]
+
+            var module = _.find(modules, function (module) {
+                return module.name == $stateParams.type;
+            });
+
+            if (module) {
+                promiseConfig = ConfigService.getModuleConfig(module.configName);
+                promiseInfo = module.getInfo(module.objectType, $stateParams.id, 0, 5);
+
+                $q.all([promiseConfig, promiseInfo]).then(function (data) {
+                        var config = _.find(data[0].components, {id: "main"});
+                        var info = data[1];
+                        var widgetInfo = _.find(config.widgets, function (widget) {
+                            return widget.id === "tasks";
+                        });
+                        $scope.config = config;
+                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+
+                        var correspondenceData = info[0];
+                        $scope.gridOptions = $scope.gridOptions || {};
+                        $scope.gridOptions.data = correspondenceData.children;
+                        $scope.gridOptions.totalItems = Util.goodValue(correspondenceData.totalChildren, 0);
+                    },
+                    function (err) {
+
+                    }
+                );
+            }
 
             function applyConfig(e, componentId, config) {
                 if (componentId == 'main') {

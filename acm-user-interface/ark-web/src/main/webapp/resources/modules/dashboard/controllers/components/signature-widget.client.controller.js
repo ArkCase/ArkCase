@@ -12,9 +12,10 @@ angular.module('dashboard.signature', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.SignatureController', ['$scope', '$translate', '$stateParams', 'UtilService', 'Task.InfoService'
-        , 'Authentication', 'Dashboard.DashboardService',
-        function ($scope, $translate, $stateParams, Util, TaskInfoService, Authentication, DashboardService) {
+    .controller('Dashboard.SignatureController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService', 'Task.InfoService'
+        , 'Authentication', 'Dashboard.DashboardService', 'Object.SignatureService', 'ObjectService', 'ConfigService',
+        function ($scope, $translate, $stateParams, $q, Util, TaskInfoService, Authentication, DashboardService, ObjectSignatureService
+        , ObjectService, ConfigService) {
 
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'main');
@@ -26,6 +27,39 @@ angular.module('dashboard.signature', ['adf.provider'])
                 columnDefs: []
             };
 
+            var promiseConfig;
+            var promiseInfo;
+            var modules = [
+                {name: "TASK", configName: "tasks", getInfo: ObjectSignatureService.findSignatures, objectType: ObjectService.ObjectTypes.TASK}
+                , {name: "ADHOC", configName: "tasks", getInfo: ObjectSignatureService.findSignatures, objectType: ObjectService.ObjectTypes.TASK}
+            ]
+
+            var module = _.find(modules, function (module) {
+                return module.name == $stateParams.type;
+            });
+
+            if (module) {
+                promiseConfig = ConfigService.getModuleConfig(module.configName);
+                promiseInfo = module.getInfo(module.objectType, $stateParams.id);
+
+                $q.all([promiseConfig, promiseInfo]).then(function (data) {
+                        var config = _.find(data[0].components, {id: "main"});
+                        var info = data[1];
+                        var widgetInfo = _.find(config.widgets, function (widget) {
+                            return widget.id === "signatures";
+                        });
+                        $scope.config = config;
+                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+
+                        var signatures = info[0];
+                        $scope.gridOptions.data = signatures;
+                        $scope.gridOptions.totalItems = signatures.length;
+                    },
+                    function (err) {
+
+                    }
+                );
+            }
             function applyConfig(e, componentId, config) {
                 if (componentId == 'main') {
                     $scope.config = config;
