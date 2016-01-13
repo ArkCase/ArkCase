@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.dashboard.web.api;
 import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
 import com.armedia.acm.plugins.dashboard.model.DashboardDto;
+import com.armedia.acm.plugins.dashboard.model.ModuleName;
 import com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -101,8 +102,8 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
         Capture<Dashboard> publishedDashboard = new Capture<>();
 
         expect(mockUserDao.findByUserId(userId)).andReturn(user);
-        expect(mockDashboardDao.getDashboardConfigForUser(user)).andReturn(dashboard);
-        expect(mockDashboardDao.setDasboardConfigForUser(eq(user), capture(savedDashboardDto))).andReturn(1);
+        expect(mockDashboardDao.getDashboardConfigForUserAndModuleName(user, ModuleName.DASHBOARD)).andReturn(dashboard);
+        expect(mockDashboardDao.setDasboardConfigForUserAndModule(eq(user), capture(savedDashboardDto), eq(ModuleName.DASHBOARD))).andReturn(1);
 
         mockDashboardEventPublisher.publishDashboardEvent(capture(publishedDashboard), eq(mockAuthentication), eq(false), eq(true));
 
@@ -146,10 +147,10 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
         Capture<Dashboard> publishedDashboard = new Capture<>();
 
         expect(mockUserDao.findByUserId(userId)).andReturn(user);
-        expect(mockDashboardDao.getDashboardConfigForUser(user)).andReturn(dashboard);
+        expect(mockDashboardDao.getDashboardConfigForUserAndModuleName(user, ModuleName.DASHBOARD)).andReturn(dashboard);
 
         // With upgrading spring version, bad JSON is not the problem for entering the execution in the controller
-        expect(mockDashboardDao.setDasboardConfigForUser(eq(user), capture(savedDashboardDto))).andThrow(new RuntimeException());
+        expect(mockDashboardDao.setDasboardConfigForUserAndModule(eq(user), capture(savedDashboardDto), eq(ModuleName.DASHBOARD))).andThrow(new RuntimeException());
         mockDashboardEventPublisher.publishDashboardEvent(capture(publishedDashboard), eq(mockAuthentication), eq(false), eq(false));
 
         // MVC test classes must call getName() somehow
