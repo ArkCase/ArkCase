@@ -7,6 +7,7 @@ angular.module('dashboard.history', ['adf.provider'])
                 title: 'History',
                 description: 'Displays a pie chart showing the number of each history event type',
                 controller: 'Dashboard.HistoryController',
+                controllerAs: 'history',
                 reload: true,
                 templateUrl: 'modules/dashboard/views/components/history.client.view.html'
             });
@@ -26,16 +27,20 @@ angular.module('dashboard.history', ['adf.provider'])
 
                     results.forEach(function (result) {
                         var eventType = result.fullEventType;
-                        if (eventsList.length === 0) {
-                            eventsList.push({'eventName': eventType, 'count': 1});
-                        } else {
-                            angular.forEach(eventsList, function (value, key) {
-                                if (angular.equals(eventType, value.eventName)) {
-                                    value.count++;
+                        if (eventType === "") {
+                            //Do nothing
+                        }
+                        else {
+                            if (eventsList.length === 0) {
+                                eventsList.push({'eventName': eventType, 'count': 1});
+                            } else {
+                                if (_.find(eventsList, _.matchesProperty('eventName', eventType))) {
+                                    var foundEvent = _.find(eventsList, _.matchesProperty('eventName', eventType));
+                                    foundEvent.count++;
                                 } else {
                                     eventsList.push({'eventName': eventType, 'count': 1});
                                 }
-                            })
+                            }
                         }
                     });
 
@@ -47,10 +52,10 @@ angular.module('dashboard.history', ['adf.provider'])
                             labels.push(eventIter.eventName);
                             data.push(eventIter.count);
                         })
-                        history.showChart = data.length > 0 ? true : false;
-                        history.data = data;
-                        history.labels = labels;
-                        history.chartTitle = "chartTitle";
+                        vm.showChart = data.length > 0 ? true : false;
+                        vm.data = data;
+                        vm.labels = labels;
+                        vm.chartTitle = "";
                     }
                 });
             }
