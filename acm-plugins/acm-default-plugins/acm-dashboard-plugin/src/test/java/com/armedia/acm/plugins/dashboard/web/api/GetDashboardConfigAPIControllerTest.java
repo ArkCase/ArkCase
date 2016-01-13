@@ -4,6 +4,7 @@ import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
 import com.armedia.acm.plugins.dashboard.model.DashboardDto;
+import com.armedia.acm.plugins.dashboard.model.ModuleName;
 import com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -107,7 +108,7 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport
         Map<String, Object> prop = new HashMap<String, Object>();
         prop.put("key", "value");
 
-        expect(mockDashboardDao.getDashboardConfigForUser(user)).andReturn(ret);
+        expect(mockDashboardDao.getDashboardConfigForUserAndModuleName(user, ModuleName.DASHBOARD)).andReturn(ret);
         expect(mockUserDao.findByUserId(userId)).andReturn(user);
         expect(mockDashboardPlugin.getPluginProperties()).andReturn(prop).anyTimes();
         mockDashboardEventPublisher.publishGetDashboardByUserIdEvent(

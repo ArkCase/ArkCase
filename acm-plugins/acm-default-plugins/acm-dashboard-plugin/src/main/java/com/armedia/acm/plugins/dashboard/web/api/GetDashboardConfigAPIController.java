@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmDashboardException;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
 import com.armedia.acm.plugins.dashboard.model.DashboardDto;
+import com.armedia.acm.plugins.dashboard.model.ModuleName;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
@@ -42,6 +44,7 @@ public class GetDashboardConfigAPIController
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public DashboardDto getDashboardConfig(
+            @RequestParam(value = "moduleName", required = false, defaultValue = "dashboard") String moduleName,
             Authentication authentication,
             HttpSession session
     ) throws AcmDashboardException, AcmObjectNotFoundException
@@ -78,7 +81,7 @@ public class GetDashboardConfigAPIController
                     }
                 }
             }
-            retval = getDashboardDao().getDashboardConfigForUser(owner);
+            retval = getDashboardDao().getDashboardConfigForUserAndModuleName(owner, ModuleName.getModuleName(moduleName));
             raiseGetEvent(authentication, session, retval, true);
             dashboardDto = prepareDashboardDto(retval, inserted);
             return dashboardDto;
