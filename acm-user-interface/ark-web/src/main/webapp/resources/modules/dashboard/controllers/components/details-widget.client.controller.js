@@ -18,10 +18,6 @@ angular.module('dashboard.details', ['adf.provider'])
         function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, TaskInfoService
             , CostTrackingInfoService, TimeTrackingInfoService, Authentication, DashboardService, ConfigService) {
 
-            $scope.gridOptions = {
-                enableColumnResizing: true,
-                columnDefs: []
-            };
             var promiseConfig;
             var promiseInfo;
             var modules = [
@@ -31,11 +27,16 @@ angular.module('dashboard.details', ['adf.provider'])
                 , {name: "TIMESHEET", configName: "time-tracking", getInfo: TimeTrackingInfoService.getTimesheetInfo}
                 , {name: "TASK", configName: "tasks", getInfo: TaskInfoService.getTaskInfo}
                 , {name: "ADHOC", configName: "tasks", getInfo: TaskInfoService.getTaskInfo}
-            ]
+            ];
 
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
             });
+
+            $scope.gridOptions = {
+                enableColumnResizing: true,
+                columnDefs: []
+            };
 
             if (module) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
@@ -49,6 +50,7 @@ angular.module('dashboard.details', ['adf.provider'])
                         });
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+
                         $scope.gridOptions.data = [Util.omitNg(info)];
                         $scope.gridOptions.totalItems = 1;
                     },
@@ -57,91 +59,5 @@ angular.module('dashboard.details', ['adf.provider'])
                     }
                 );
             }
-            //-------------
-            //
-            //$scope.$on('component-config', applyConfig);
-            //$scope.$emit('req-component-config', 'main');
-            //$scope.config = null;
-            ////var userInfo = null;
-            //
-            //
-            //function applyConfig(e, componentId, config) {
-            //    if (componentId == 'main') {
-            //        $scope.config = config;
-            //        $scope.gridOptions.columnDefs = config.widgets[0].columnDefs; //widgets[0] = details
-            //
-            //        //set gridOptions.data
-            //        if ($stateParams.type) {
-            //            if ($stateParams.type == "casefile") {
-            //                CaseInfoService.getCaseInfo($stateParams.id).then(
-            //                    function (data) {
-            //                        $scope.gridOptions.data = [Util.omitNg(data)];
-            //                        $scope.gridOptions.totalItems = 1;
-            //                    }
-            //                    , function (error) {
-            //                        $scope.caseInfo = null;
-            //                        $scope.progressMsg = $translate.instant("cases.progressError") + " " + id;
-            //                        return error;
-            //                    }
-            //                );
-            //            }
-            //            else if ($stateParams.type == 'complaint') {
-            //                ComplaintInfoService.getComplaintInfo($stateParams.id).then(
-            //                    function (data) {
-            //                        $scope.gridOptions.data = [Util.omitNg(data)];
-            //                        $scope.gridOptions.totalItems = 1;
-            //                    }
-            //                    , function (error) {
-            //                        $scope.complaintInfo = null;
-            //                        $scope.progressMsg = $translate.instant("complaint.progressError") + " " + id;
-            //                        return error;
-            //                    }
-            //                );
-            //            }
-            //            else if ($stateParams.type == 'task' || $stateParams.type == 'ADHOC') {
-            //                TaskInfoService.getTaskInfo($stateParams.id).then(
-            //                    function (data) {
-            //                        $scope.gridOptions.data = [Util.omitNg(data)];
-            //                        $scope.gridOptions.totalItems = 1;
-            //                    }
-            //                    , function (error) {
-            //                        $scope.taskInfo = null;
-            //                        $scope.progressMsg = $translate.instant("task.progressError") + " " + id;
-            //                        return error;
-            //                    }
-            //                );
-            //            }
-            //            else if ($stateParams.type == 'cost') {
-            //                CostTrackingInfoService.getCostsheetInfo($stateParams.id).then(
-            //                    function (data) {
-            //                        $scope.gridOptions.data = [Util.omitNg(data)];
-            //                        $scope.gridOptions.totalItems = 1;
-            //                    }
-            //                    , function (error) {
-            //                        $scope.costsheetInfo = null;
-            //                        $scope.progressMsg = $translate.instant("cost.progressError") + " " + id;
-            //                        return error;
-            //                    }
-            //                );
-            //            }
-            //            else if ($stateParams.type == 'time') {
-            //                TimeTrackingInfoService.getTimesheetInfo($stateParams.id).then(
-            //                    function (data) {
-            //                        $scope.gridOptions.data = [Util.omitNg(data)];
-            //                        $scope.gridOptions.totalItems = 1;
-            //                    }
-            //                    , function (error) {
-            //                        $scope.timesheetInfo = null;
-            //                        $scope.progressMsg = $translate.instant("time.progressError") + " " + id;
-            //                        return error;
-            //                    }
-            //                );
-            //            }
-            //            else {
-            //                //do nothing
-            //            }
-            //        }
-            //    }
-            //}
         }
     ]);

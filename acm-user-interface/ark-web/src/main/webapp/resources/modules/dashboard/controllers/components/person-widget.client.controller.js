@@ -1,31 +1,33 @@
 'use strict';
 
-angular.module('dashboard.docreview', ['adf.provider'])
+angular.module('dashboard.person', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('docreview', {
-                    title: 'Documents Under Review Widget',
-                    description: 'Displays documents under review',
-                    controller: 'Dashboard.DocReviewController',
+            .widget('person', {
+                    title: 'Person Widget',
+                    description: 'Displays person',
+                    controller: 'Dashboard.PersonController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/docreview-widget.client.view.html'
+                    templateUrl: 'modules/dashboard/views/components/person.client.view.html'
                 }
             );
     })
-    .controller('Dashboard.DocReviewController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService', 'Task.InfoService'
-        , 'Authentication', 'Dashboard.DashboardService', 'ConfigService',
-        function ($scope, $translate, $stateParams, $q, Util, TaskInfoService, Authentication, DashboardService, ConfigService) {
+    .controller('Dashboard.PersonController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
+        , 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'CostTracking.InfoService', 'TimeTracking.InfoService',
+        function ($scope, $translate, $stateParams, $q, Util, Authentication, DashboardService, ConfigService, CostTrackingInfoService
+        , TimeTrackingInfoService) {
 
             var promiseConfig;
             var promiseInfo;
             var modules = [
-                {name: "TASK", configName: "tasks", getInfo: TaskInfoService.getTaskInfo}
-                , {name: "ADHOC", configName: "tasks", getInfo: TaskInfoService.getTaskInfo}
+                {name: "COSTSHEET", configName: "cost-tracking", getInfo: CostTrackingInfoService.getCostsheetInfo}
+                , {name: "TIMESHEET", configName: "time-tracking", getInfo: TimeTrackingInfoService.getTimesheetInfo}
             ];
 
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
             });
+
 
             $scope.gridOptions = {
                 enableColumnResizing: true,
@@ -40,13 +42,13 @@ angular.module('dashboard.docreview', ['adf.provider'])
                         var config = _.find(data[0].components, {id: "main"});
                         var info = data[1];
                         var widgetInfo = _.find(config.widgets, function (widget) {
-                            return widget.id === "docsreview";
+                            return widget.id === "person";
                         });
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
-                        $scope.gridOptions.data = info.documentUnderReview;
-                        $scope.gridOptions.totalItems = $scope.gridOptions.data ? 1 : 0;
+                        $scope.gridOptions = $scope.gridOptions || {};
+                        $scope.gridOptions.data = [$scope.costsheetInfo.user];
                     },
                     function (err) {
 

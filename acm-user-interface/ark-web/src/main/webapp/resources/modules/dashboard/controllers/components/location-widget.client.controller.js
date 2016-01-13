@@ -12,24 +12,24 @@ angular.module('dashboard.locations', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.LocationsController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService', 'Complaint.InfoService'
-        , 'Authentication', 'Dashboard.DashboardService', 'ConfigService',
+    .controller('Dashboard.LocationsController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
+        , 'Complaint.InfoService', 'Authentication', 'Dashboard.DashboardService', 'ConfigService',
         function ($scope, $translate, $stateParams, $q, Util, ComplaintInfoService, Authentication, DashboardService, ConfigService) {
-
-            $scope.gridOptions = {
-                enableColumnResizing: true,
-                columnDefs: []
-            };
 
             var promiseConfig;
             var promiseInfo;
             var modules = [
                 {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
-            ]
+            ];
 
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
             });
+
+            $scope.gridOptions = {
+                enableColumnResizing: true,
+                columnDefs: []
+            };
 
             if (module) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
@@ -43,6 +43,7 @@ angular.module('dashboard.locations', ['adf.provider'])
                         });
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+
                         $scope.gridOptions.data = [info];
                         $scope.gridOptions.data[0].location.fullAddress = createFullAddress(info.location);
                         $scope.gridOptions.totalItems = 1;
@@ -51,34 +52,6 @@ angular.module('dashboard.locations', ['adf.provider'])
 
                     }
                 );
-            }
-
-            function applyConfig(e, componentId, config) {
-                if (componentId == 'main') {
-                    $scope.config = config;
-                    $scope.gridOptions.columnDefs = config.widgets[12].columnDefs; //widget[12] = locations
-
-                    //set gridOptions.data
-                    if ($stateParams.type) {
-                        if ($stateParams.type == 'complaint') {
-                            ComplaintInfoService.getComplaintInfo($stateParams.id).then(
-                                function (data) {
-                                    $scope.gridOptions.data = [data];
-                                    $scope.gridOptions.data[0].location.fullAddress = createFullAddress(data.location);
-                                    $scope.gridOptions.totalItems = 1;
-                                }
-                                , function (error) {
-                                    $scope.complaintInfo = null;
-                                    $scope.progressMsg = $translate.instant("complaint.progressError") + " " + id;
-                                    return error;
-                                }
-                            );
-                        }
-                        else {
-                            //do nothing
-                        }
-                    }
-                }
             }
 
             var createFullAddress = function (location) {
