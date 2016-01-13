@@ -13,30 +13,25 @@ angular.module('dashboard.people', ['adf.provider'])
             );
     })
     .controller('Dashboard.PeopleController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
-        , 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ConfigService',
+        , 'Case.InfoService', 'Complaint.InfoService', 'Authentication', 'Dashboard.DashboardService', 'ConfigService',
         function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
             , DashboardService, ConfigService) {
-
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'main');
-            $scope.config = null;
-            //var userInfo = null;
-
-            $scope.gridOptions = {
-                enableColumnResizing: true,
-                columnDefs: []
-            };
 
             var promiseConfig;
             var promiseInfo;
             var modules = [
                 {name: "CASE_FILE", configName: "cases", getInfo: CaseInfoService.getCaseInfo}
-                ,   {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
+                , {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
             ];
 
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
             });
+
+            $scope.gridOptions = {
+                enableColumnResizing: true,
+                columnDefs: []
+            };
 
             if (module) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
@@ -50,6 +45,7 @@ angular.module('dashboard.people', ['adf.provider'])
                         });
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+
                         $scope.gridOptions.data = info.personAssociations;
                         $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
                     },
@@ -57,46 +53,6 @@ angular.module('dashboard.people', ['adf.provider'])
 
                     }
                 );
-            }
-
-            function applyConfig(e, componentId, config) {
-                if (componentId == 'main') {
-                    $scope.config = config;
-                    $scope.gridOptions.columnDefs = config.widgets[1].columnDefs; //widget[1] = people
-
-                    //set gridOptions.data
-                    if ($stateParams.type) {
-                        if ($stateParams.type == "casefile") {
-                            CaseInfoService.getCaseInfo($stateParams.id).then(
-                                function (data) {
-                                    $scope.gridOptions.data = data.personAssociations;
-                                    $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
-                                }
-                                , function (error) {
-                                    $scope.caseInfo = null;
-                                    $scope.progressMsg = $translate.instant("cases.progressError") + " " + id;
-                                    return error;
-                                }
-                            );
-                        }
-                        else if ($stateParams.type == 'complaint') {
-                            ComplaintInfoService.getComplaintInfo($stateParams.id).then(
-                                function (data) {
-                                    $scope.gridOptions.data = data.personAssociations;
-                                    $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
-                                }
-                                , function (error) {
-                                    $scope.complaintInfo = null;
-                                    $scope.progressMsg = $translate.instant("complaint.progressError") + " " + id;
-                                    return error;
-                                }
-                            );
-                        }
-                        else {
-                            //do nothing
-                        }
-                    }
-                }
             }
         }
     ]);
