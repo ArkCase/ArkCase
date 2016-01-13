@@ -31,7 +31,7 @@ angular.module('cost-tracking').controller('CostTracking.MainController', ['$sco
             }
         };
 
-        DashboardService.getConfig({}, function (data) {
+        DashboardService.getConfig({moduleName: "COST_TRACKING"}, function (data) {
             var cacheDashboardConfig = new Store.CacheFifo(CostTrackingInfoService.CacheNames.COSTSHEET_INFO);
             $scope.dashboard.costModel = cacheDashboardConfig.get("dashboardConfig");
 
