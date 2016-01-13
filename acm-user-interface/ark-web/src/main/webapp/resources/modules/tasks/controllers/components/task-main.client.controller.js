@@ -31,7 +31,7 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', '$statePar
             }
         };
 
-        DashboardService.getConfig({}, function (data) {
+        DashboardService.getConfig({moduleName: "TASK"}, function (data) {
             var cacheDashboardConfig = new Store.CacheFifo(TaskInfoService.CacheNames.TASK_INFO);
             $scope.dashboard.taskModel = cacheDashboardConfig.get("dashboardConfig");
 

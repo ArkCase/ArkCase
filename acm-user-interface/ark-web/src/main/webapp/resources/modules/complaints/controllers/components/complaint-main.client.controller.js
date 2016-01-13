@@ -29,7 +29,7 @@ angular.module('complaints').controller('Complaints.MainController', ['$scope', 
             }
         };
 
-        DashboardService.getConfig({}, function (data) {
+        DashboardService.getConfig({moduleName: "COMPLAINT"}, function (data) {
             var cacheDashboardConfig = new Store.CacheFifo(ComplaintInfoService.CacheNames.COMPLAINT_INFO);
             $scope.dashboard.complaintModel = cacheDashboardConfig.get("dashboardConfig");
 

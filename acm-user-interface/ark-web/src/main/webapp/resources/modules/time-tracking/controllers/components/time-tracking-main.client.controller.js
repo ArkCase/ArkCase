@@ -33,7 +33,7 @@ angular.module('time-tracking').controller('TimeTracking.MainController', ['$sco
             }
         };
 
-        DashboardService.getConfig({}, function (data) {
+        DashboardService.getConfig({moduleName: "TIME_TRACKING"}, function (data) {
             var cacheDashboardConfig = new Store.CacheFifo(TimeTrackingInfoService.CacheNames.TIMESHEET_INFO);
             $scope.dashboard.timeModel = cacheDashboardConfig.get("dashboardConfig");
 

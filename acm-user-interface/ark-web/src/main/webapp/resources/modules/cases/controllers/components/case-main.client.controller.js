@@ -31,7 +31,7 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
             }
         };
 
-        DashboardService.getConfig({}, function (data) {
+        DashboardService.getConfig({moduleName: "CASEFILE"}, function (data) {
             var cacheDashboardConfig = new Store.CacheFifo(CaseInfoService.CacheNames.CASE_INFO);
             $scope.dashboard.caseModel = cacheDashboardConfig.get("dashboardConfig");
 
