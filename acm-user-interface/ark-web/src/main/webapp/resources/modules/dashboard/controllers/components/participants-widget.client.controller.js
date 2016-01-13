@@ -17,16 +17,6 @@ angular.module('dashboard.participants', ['adf.provider'])
         function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
             , DashboardService, ConfigService) {
 
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'main');
-            $scope.config = null;
-            //var userInfo = null;
-
-            $scope.gridOptions = {
-                enableColumnResizing: true,
-                columnDefs: []
-            };
-
             var promiseConfig;
             var promiseInfo;
             var modules = [
@@ -50,6 +40,7 @@ angular.module('dashboard.participants', ['adf.provider'])
                         });
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+
                         $scope.gridOptions.data = info.participants;
                         $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
                     },
@@ -57,45 +48,6 @@ angular.module('dashboard.participants', ['adf.provider'])
 
                     }
                 );
-            }
-            function applyConfig(e, componentId, config) {
-                if (componentId == 'main') {
-                    $scope.config = config;
-                    $scope.gridOptions.columnDefs = config.widgets[3].columnDefs; //widget[3] = participants
-
-                    //set gridOptions.data
-                    if ($stateParams.type) {
-                        if ($stateParams.type == "casefile") {
-                            CaseInfoService.getCaseInfo($stateParams.id).then(
-                                function (data) {
-                                    $scope.gridOptions.data = data.participants;
-                                    $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
-                                }
-                                , function (error) {
-                                    $scope.caseInfo = null;
-                                    $scope.progressMsg = $translate.instant("cases.progressError") + " " + id;
-                                    return error;
-                                }
-                            );
-                        }
-                        else if ($stateParams.type == 'complaint') {
-                            ComplaintInfoService.getComplaintInfo($stateParams.id).then(
-                                function (data) {
-                                    $scope.gridOptions.data = data.participants;
-                                    $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
-                                }
-                                , function (error) {
-                                    $scope.complaintInfo = null;
-                                    $scope.progressMsg = $translate.instant("complaint.progressError") + " " + id;
-                                    return error;
-                                }
-                            );
-                        }
-                        else {
-                            //do nothing
-                        }
-                    }
-                }
             }
         }
     ]);
