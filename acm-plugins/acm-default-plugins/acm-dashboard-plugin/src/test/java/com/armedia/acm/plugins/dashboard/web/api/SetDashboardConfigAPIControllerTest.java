@@ -158,11 +158,15 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
         Capture<DashboardDto> savedDashboardDto = new Capture<>();
         Capture<Dashboard> publishedDashboard = new Capture<>();
 
+        List<String> retList = new ArrayList<>();
+        retList.add(DashboardConstants.DASHBOARD_MODULE_NAME);
+
+        expect(mockDashboardPropertyReader.getModuleNameList()).andReturn(retList);
         expect(mockUserDao.findByUserId(userId)).andReturn(user);
-        expect(mockDashboardDao.getDashboardConfigForUserAndModuleName(user, "DASHBOARD")).andReturn(dashboard);
+        expect(mockDashboardDao.getDashboardConfigForUserAndModuleName(user, DashboardConstants.DASHBOARD_MODULE_NAME)).andReturn(dashboard);
 
         // With upgrading spring version, bad JSON is not the problem for entering the execution in the controller
-        expect(mockDashboardDao.setDasboardConfigForUserAndModule(eq(user), capture(savedDashboardDto), eq("DASHBOARD"))).andThrow(new RuntimeException());
+        expect(mockDashboardDao.setDasboardConfigForUserAndModule(eq(user), capture(savedDashboardDto), eq(DashboardConstants.DASHBOARD_MODULE_NAME))).andThrow(new RuntimeException());
         mockDashboardEventPublisher.publishDashboardEvent(capture(publishedDashboard), eq(mockAuthentication), eq(false), eq(false));
 
         // MVC test classes must call getName() somehow
