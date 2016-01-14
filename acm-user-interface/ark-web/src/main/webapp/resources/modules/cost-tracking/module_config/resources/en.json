@@ -20,7 +20,12 @@
   },
   "costTracking.comp.details": {
     "title": "Details",
-    "informSaved": "Costsheet details saved"
+    "informSaved": "Costsheet details saved",
+    "table.columns": {
+      "title": "Details",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
+    }
   },
   "costTracking.comp.people": {
     "title": "Person",
