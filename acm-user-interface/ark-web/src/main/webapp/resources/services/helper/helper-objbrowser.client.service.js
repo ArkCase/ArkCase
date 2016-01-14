@@ -43,6 +43,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                 that.state = arg.state;
                 that.stateParams = arg.stateParams;
                 that.moduleId = arg.moduleId;
+                that.resetTreeData = arg.resetTreeData;
                 that.getTreeData = arg.getTreeData;
                 that.getNodeData = arg.getNodeData;
                 that.makeTreeNode = arg.makeTreeNode;
@@ -56,6 +57,10 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
 
                 that.nodeId = Service.getCurrentObjectId();
 
+                that.scope.onReset = function () {
+                    that.onReset();
+                };
+
                 that.scope.onLoad = function (start, n, sort, filters) {
                     that.onLoad(start, n, sort, filters);
                 };
@@ -63,6 +68,10 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                 that.scope.onSelect = function (selectedObject) {
                     that.onSelect(selectedObject);
                 };
+
+                that.scope.$on('refresh-content', function (e, selectedObject) {
+                    console.log("helper.Tree: refresh-content");
+                });
             }
 
 
@@ -93,6 +102,8 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                 that.state = arg.state;
                 that.stateParams = arg.stateParams;
                 that.moduleId = arg.moduleId;
+
+                that.resetContent = arg.resetContent;
                 that.getObjectInfo = arg.getObjectInfo;
                 that.updateObjectInfo = arg.updateObjectInfo;
                 that.initComponentLinks = arg.initComponentLinks;
@@ -109,6 +120,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                     that.scope.config = config;
                     that.scope.componentLinks = that.initComponentLinks(config);
                     that.scope.activeLinkId = "main";
+                    that.scope.linksShown = Util.goodValue(config.initialLinksShown, true);
                     return config;
                 });
 
@@ -130,7 +142,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                     that.state.go(arg.moduleId + "." + linkId, params);
                 };
 
-                that.scope.linksShown = false;
+                that.scope.linksShown = true;
                 that.scope.toggleShowLinks = function () {
                     that.scope.linksShown = !that.scope.linksShown;
                 };
@@ -139,6 +151,14 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                 that.scope.$on('main-component-started', function (e) {
                     that.scope.activeLinkId = "main";
                     Service.updateObjectSetting(that.moduleId, "main"); //don't update objectId/Type; only set linkId = "main"
+                });
+
+                that.scope.$on('refresh-content', function (e, selectedObject) {
+                    console.log("helper.Content: refresh-content");
+                    //that.resetContent();
+
+                    //simulate a tree node selection
+                    //that.scope.$emit('req-select-object', selectedObject);
                 });
 
                 that.scope.$on('report-object-updated', function (e, objectInfo) {
@@ -193,6 +213,13 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
         };
 
         Service.Tree.prototype = {
+            onReset: function () {
+                var that = this;
+                that.resetTreeData();
+                that.firstLoad = true;
+                that.scope.treeData = null;
+            }
+
             /**
              * @ngdoc method
              * @name onLoad
@@ -206,7 +233,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
              * @description
              * A callback function to respond object tree events to load tree data of a given page
              */
-            onLoad: function (start, n, sort, filters) {
+            , onLoad: function (start, n, sort, filters) {
                 var that = this;
                 if (that.firstLoad && that.nodeId) {
                     that.scope.treeData = null;
