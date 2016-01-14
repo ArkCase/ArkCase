@@ -39,7 +39,7 @@ angular.module('cost-tracking').controller('CostTracking.MainController', ['$sco
         $scope.$on('adfDashboardChanged', function (event, name, model) {
             DashboardService.saveConfig({
                 dashboardConfig: angular.toJson(model),
-                moduleName: "COST"
+                module: "COST"
             });
         });
     }

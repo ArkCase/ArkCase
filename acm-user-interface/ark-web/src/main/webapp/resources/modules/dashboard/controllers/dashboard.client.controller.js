@@ -30,7 +30,7 @@ angular.module('dashboard').controller('DashboardController', ['$scope', '$trans
         $scope.$on('adfDashboardChanged', function (event, name, model) {
             DashboardService.saveConfig({
                 dashboardConfig: angular.toJson(model),
-                moduleName: "DASHBOARD"
+                module: "DASHBOARD"
             });
         });
 

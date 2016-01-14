@@ -37,7 +37,7 @@ angular.module('complaints').controller('Complaints.MainController', ['$scope', 
         $scope.$on('adfDashboardChanged', function (event, name, model) {
             DashboardService.saveConfig({
                 dashboardConfig: angular.toJson(model),
-                moduleName: "COMPLAINT"
+                module: "COMPLAINT"
             });
         });
 
