@@ -13,7 +13,12 @@
   },
   "timeTracking.comp.details": {
     "title": "Details",
-    "informSaved": "Timesheet details saved"
+    "informSaved": "Timesheet details saved",
+    "table.columns": {
+      "title": "Details",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
+    }
   },
   "timeTracking.comp.people": {
     "title": "Person",

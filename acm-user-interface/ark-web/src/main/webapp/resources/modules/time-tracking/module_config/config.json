@@ -123,7 +123,18 @@
                 },
                 {
                     "id": "person",
-                    "type": "component"
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "fullName",
+                            "displayName": "timeTracking.comp.people.table.columns.fullName",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "userId",
+                            "displayName": "timeTracking.comp.people.table.columns.userId",
+                            "headerCellFilter": "translate"
+                        }
                 },
                 {
                     "id": "summary",
