@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('preference').controller('Preference.WidgetsListController', ['$scope', '$q', '$state', '$stateParams',
-    function ($scope, $q, $state, $stateParams) {
+angular.module('preference').controller('Preference.WidgetsListController', ['$scope', '$q', '$state', '$stateParams'
+    , 'Preference.PreferenceService',
+    function ($scope, $q, $state, $stateParams, PreferenceService) {
         $scope.widgets = [];
 
         $scope.formData = ["*", {"type": "submit", "title": "Save"}];
@@ -41,25 +42,24 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
         }
 
         function enableWidget($event, widget, enable) {
-            // $event.preventDefault();
             widget.enabled = enable;
-            // $scope.$emit('req-save-module');
-
-            /**
-             * Save Widget
-             */
-            if (enable) {
-                console.log("Widget: " + widget.title + " enabled");
-            } else {
-                console.log("Widget: " + widget.title + " disabled");
-            }
+            PreferenceService.updateWidgetStatus({
+                widget : widget,
+                enable: enable
+            });
         }
 
 
         function showWidgets(e, widgets) {
             // Add collapsed property
-            _.forEach(widgets, function (widget) {
-                widget.isCollapsed = true;
+            // Get enabled widgets -> loop through enabled widgets
+            // -> enable corresponding widget in widgets (widget.enabled = true)
+
+            var promiseEnabledWidgets = PreferenceService.getEnabledWidgets().then(function (enabledWidgets) {
+                _.forEach(widgets, function (widget) {
+                    widget.isCollapsed = true;
+                    widget.enabled = _.includes(enabledWidgets, widget);
+                });
             });
 
             $scope.widgets = widgets;
