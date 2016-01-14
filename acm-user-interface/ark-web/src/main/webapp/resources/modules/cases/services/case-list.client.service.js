@@ -21,6 +21,21 @@ angular.module('services').factory('Case.ListService', ['$resource', '$translate
 
         /**
          * @ngdoc method
+         * @name resetCasesTreeData
+         * @methodOf services:Case.ListService
+         *
+         * @description
+         * Reset tree to initial state, including empty tree data
+         *
+         * @returns None
+         */
+        Service.resetCasesTreeData = function () {
+            var cacheCaseList = new Store.CacheFifo(Service.CacheNames.CASE_LIST);
+            cacheCaseList.reset();
+        };
+
+        /**
+         * @ngdoc method
          * @name queryCasesTreeData
          * @methodOf services:Case.ListService
          *

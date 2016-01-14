@@ -10,9 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.List;
 
 /**
@@ -22,36 +19,35 @@ import java.util.List;
 public class DashboardDao extends AcmAbstractDao<Dashboard>
 {
 
-
-    public Dashboard getDashboardConfigForUser(AcmUser user) throws AcmDashboardException, AcmObjectNotFoundException
+    public Dashboard getDashboardConfigForUserAndModuleName(AcmUser user, String moduleName) throws AcmDashboardException, AcmObjectNotFoundException
     {
-        CriteriaBuilder builder = getEm().getCriteriaBuilder();
-        CriteriaQuery<Dashboard> query = builder.createQuery(Dashboard.class);
-        Root<Dashboard> d = query.from(Dashboard.class);
+        String queryString = "SELECT d FROM Dashboard d WHERE  d.dashboardOwner = :dashboardOwner AND d.moduleName = :moduleName ";
 
-        query.select(d).where(builder.equal(d.get("dashboardOwner"), user));
-        TypedQuery<Dashboard> dbQuery = getEm().createQuery(query);
-        List<Dashboard> results = null;
+        TypedQuery<Dashboard> query = getEm().createQuery(queryString, Dashboard.class);
 
-        results = dbQuery.getResultList();
+        query.setParameter("dashboardOwner", user);
+        query.setParameter("moduleName", moduleName);
+
+        List<Dashboard> results;
+        results = query.getResultList();
 
         if (results.isEmpty())
         {
             throw new AcmObjectNotFoundException("dashboard", null, "Object not found", null);
         }
-
         return results.get(0);
     }
 
     @Transactional
-    public int setDasboardConfigForUser(AcmUser user, DashboardDto newDashboardDto)
+    public int setDasboardConfigForUserAndModule(AcmUser user, DashboardDto newDashboardDto, String moduleName)
     {
         Query updateStatusQuery = getEm().createQuery(
                 "UPDATE Dashboard " +
                         "SET dashboardConfig = :dashboardConfig " +
-                        "WHERE dashboardOwner = :dashboardOwner");
+                        "WHERE dashboardOwner = :dashboardOwner AND moduleName = :moduleName");
         updateStatusQuery.setParameter("dashboardConfig", newDashboardDto.getDashboardConfig());
         updateStatusQuery.setParameter("dashboardOwner", user);
+        updateStatusQuery.setParameter("moduleName", moduleName);
 
         return updateStatusQuery.executeUpdate();
     }

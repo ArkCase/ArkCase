@@ -10,8 +10,9 @@
 
  * TimeTracking.ListService provides functions for Timesheet database data
  */
-angular.module('services').factory('TimeTracking.ListService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ObjectService', 'Object.ListService',
-    function ($resource, $translate, Store, Util, ObjectService, ObjectListService) {
+angular.module('services').factory('TimeTracking.ListService', ['$resource', '$translate'
+    , 'StoreService', 'UtilService', 'ObjectService', 'Object.ListService'
+    , function ($resource, $translate, Store, Util, ObjectService, ObjectListService) {
         var Service = $resource('proxy/arkcase/api/v1/service/timesheet', {}, {
 
             /**
@@ -40,6 +41,25 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
             }
         });
 
+        Service.CacheNames = {
+            TIMESHEET_LIST: "TimesheetList"
+        };
+
+        /**
+         * @ngdoc method
+         * @name resetTimeTrackingTreeData
+         * @methodOf services:TimeTracking.ListService
+         *
+         * @description
+         * Reset tree to initial state, including empty tree data
+         *
+         * @returns None
+         */
+        Service.resetTimeTrackingTreeData = function () {
+            var cacheTimesheetList = new Store.CacheFifo(Service.CacheNames.TIMESHEET_LIST);
+            cacheTimesheetList.reset();
+        };
+
         /**
          * @ngdoc method
          * @name queryTimeTrackingTreeData
@@ -57,7 +77,9 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
          * @returns {Object} Promise
          */
         Service.queryTimeTrackingTreeData = function (userId, start, n, sort) {
-            var treeData = null;
+            var cacheTimesheetList = new Store.CacheFifo(Service.CacheNames.TIMESHEET_LIST);
+            var cacheKey = userId + "." + start + "." + n + "." + sort;
+            var treeData = cacheTimesheetList.get(cacheKey);
 
             var param = {};
             param.userId = userId;
@@ -68,6 +90,7 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
             return Util.serviceCall({
                 service: Service.listObjects
                 , param: param
+                , result: treeData
                 , onSuccess: function (data) {
                     if (Service.validateTimesheetList(data)) {
                         treeData = {docs: [], total: data.response.numFound};
@@ -80,6 +103,7 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
                                 , nodeToolTip: Util.goodValue(doc.name)
                             });
                         });
+                        cacheTimesheetList.put(cacheKey, treeData);
                         return treeData;
                     }
                 }

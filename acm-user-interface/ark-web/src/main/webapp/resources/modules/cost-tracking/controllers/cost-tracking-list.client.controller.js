@@ -13,6 +13,9 @@ angular.module('cost-tracking').controller('CostTrackingListController', ['$scop
             , state: $state
             , stateParams: $stateParams
             , moduleId: "cost-tracking"
+            , resetTreeData: function () {
+                return CostTrackingListService.resetCostTrackingTreeData();
+            }
             , getTreeData: function (start, n, sort, filters) {
                 var dfd = $q.defer();
                 Authentication.queryUserInfo().then(
