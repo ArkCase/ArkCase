@@ -13,6 +13,7 @@
  *
  * @param {Expression} tree-config Configuration for tree
  * @param {Expression} tree-data Data structure used to render the top level tree nodes of the current page
+ * @param {Function} on-reset Callback function to reset tree to initial state.
  * @param {Function} on-select Callback function in response to selected tree item.
  * @param {Function} on-load Callback function to load list of objects.
  * @param {Object} tree-control Tree API functions exposed to user. Following is the list:
@@ -22,7 +23,7 @@
  * @example
  <example>
  <file name="index.html">
- <object-tree tree-config="treeConfig" tree-data="treeData" on-load="onLoad" on-select="onSelect">
+ <object-tree tree-config="treeConfig" tree-data="treeData" on-reset="onReset" on-load="onLoad" on-select="onSelect">
  </object-tree>
  </file>
  <file name="app.js">
@@ -695,14 +696,16 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
         }; //Tree
 
         var Filter = {
-            buildFilter: function (filters) {
+            defaultFilter: ""
+            , buildFilter: function (filters) {
                 var treeInfo = Tree.Info.getTreeInfo();
                 var oldFilter = treeInfo.filter;
 
                 var html = "";
                 _.each(filters, function (filter) {
                     if (filter.default) {
-                        treeInfo.filter = Util.goodValue(filter.name);
+                        Filter.defaultFilter = Util.goodValue(filter.name);
+                        treeInfo.filter = Filter.defaultFilter;
                     }
                     html += "<li value='" + Util.goodValue(filter.name)
                         + "'><a href='#'>" + Util.goodValue(filter.desc) + "</a></li>";
@@ -722,14 +725,16 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
         }; //Filter
 
         var Sorter = {
-            buildSorter: function (sorters) {
+            defaultSort: ""
+            , buildSorter: function (sorters) {
                 var treeInfo = Tree.Info.getTreeInfo();
                 var oldSorter = treeInfo.sorter;
 
                 var html = "";
                 _.each(sorters, function (sorter) {
                     if (sorter.default) {
-                        treeInfo.sorter = Util.goodValue(sorter.name);
+                        Sorter.defaultSort = Util.goodValue(sorter.name);
+                        treeInfo.sorter = Sorter.defaultSort;
                     }
                     html += "<li value='" + Util.goodValue(sorter.name)
                         + "'><a href='#'>" + Util.goodValue(sorter.desc) + "</a></li>";
@@ -755,6 +760,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
             , scope: {
                 treeConfig: '='
                 , treeData: '='
+                , onReset: '&'
                 , onLoad: '&'
                 , onSelect: '&'
                 , treeControl: '='
@@ -767,6 +773,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 Tree.reset();
                 Tree.scope = scope;
                 Tree.jqDivTree = $(element).find(".tree");
+                Tree.onReset = scope.onReset;
                 Tree.onLoad = scope.onLoad;
                 Tree.onSelect = scope.onSelect;
                 Tree.treeConfig = null; //scope.treeConfig;
@@ -818,6 +825,16 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
 
                     }
                 });
+
+                scope.onClickRefresh = function () {
+                    Tree.onReset()();
+                    Tree.reset();
+
+                    var treeInfo = Tree.Info.getTreeInfo();
+                    treeInfo.sorter = Sorter.defaultSort;
+                    treeInfo.filter = Sorter.defaultFilter;
+                    Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter);
+                };
             }
         };
     }

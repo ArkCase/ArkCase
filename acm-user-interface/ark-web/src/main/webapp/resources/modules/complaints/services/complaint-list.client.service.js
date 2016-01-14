@@ -21,6 +21,21 @@ angular.module('services').factory('Complaint.ListService', ['$resource', '$tran
 
         /**
          * @ngdoc method
+         * @name resetComplaintsTreeData
+         * @methodOf services:Complaint.ListService
+         *
+         * @description
+         * Reset tree to initial state, including empty tree data
+         *
+         * @returns None
+         */
+        Service.resetComplaintsTreeData = function () {
+            var cacheComplaintList = new Store.CacheFifo(Service.CacheNames.COMPLAINT_LIST);
+            cacheComplaintList.reset();
+        };
+
+        /**
+         * @ngdoc method
          * @name queryComplaintsTreeData
          * @methodOf services:Complaint.ListService
          *
