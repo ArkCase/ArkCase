@@ -106,17 +106,17 @@
                     "columnDefs": [
                         {
                             "name": "details",
-                            "displayName": "dashboard.widgets.details.table.header.details",
+                            "displayName": "timeTracking.comp.details.table.columns.title",
                             "headerCellFilter": "translate"
                         },
                         {
                             "name": "modified",
-                            "displayName": "dashboard.widgets.details.table.header.modified",
+                            "displayName": "timeTracking.comp.details.table.columns.modified",
                             "headerCellFilter": "translate"
                         },
                         {
                             "name": "modifier",
-                            "displayName": "dashboard.widgets.details.table.header.modifier",
+                            "displayName": "timeTracking.comp.details.table.columns.modified",
                             "headerCellFilter": "translate"
                         }
                     ]
