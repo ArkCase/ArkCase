@@ -21,6 +21,21 @@ angular.module('services').factory('Case.InfoService', ['$resource', '$translate
 
         /**
          * @ngdoc method
+         * @name resetCaseInfo
+         * @methodOf services:Case.InfoService
+         *
+         * @description
+         * Reset case info
+         *
+         * @returns None
+         */
+        Service.resetCaseInfo = function () {
+            var cacheCaseInfo = new Store.CacheFifo(Service.CacheNames.CASE_INFO);
+            cacheCaseInfo.reset();
+        };
+
+        /**
+         * @ngdoc method
          * @name updateCaseInfo
          * @methodOf services:Case.InfoService
          *

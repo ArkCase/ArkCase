@@ -71,6 +71,10 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                 that.scope.onReset2 = function () {
                     that.onReset2();
                 };
+
+                that.scope.$on('refresh-content', function (e, selectedObject) {
+                    console.log("helper.Tree: refresh-content");
+                });
             }
 
 
@@ -101,6 +105,8 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                 that.state = arg.state;
                 that.stateParams = arg.stateParams;
                 that.moduleId = arg.moduleId;
+
+                that.resetContent = arg.resetContent;
                 that.getObjectInfo = arg.getObjectInfo;
                 that.updateObjectInfo = arg.updateObjectInfo;
                 that.initComponentLinks = arg.initComponentLinks;
@@ -148,6 +154,14 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                 that.scope.$on('main-component-started', function (e) {
                     that.scope.activeLinkId = "main";
                     Service.updateObjectSetting(that.moduleId, "main"); //don't update objectId/Type; only set linkId = "main"
+                });
+
+                that.scope.$on('refresh-content', function (e, selectedObject) {
+                    console.log("helper.Content: refresh-content");
+                    //that.resetContent();
+
+                    //simulate a tree node selection
+                    //that.scope.$emit('req-select-object', selectedObject);
                 });
 
                 that.scope.$on('report-object-updated', function (e, objectInfo) {
@@ -203,10 +217,11 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
 
         Service.Tree.prototype = {
             onReset: function () {
-                var that = this;
-                that.resetTreeData();
-                that.firstLoad = true;
-                that.scope.treeData = null;
+                console.log("helper.Content, onReset");
+                //var that = this;
+                //that.resetTreeData();
+                //that.firstLoad = true;
+                //that.scope.treeData = null;
             }
 
             /**
