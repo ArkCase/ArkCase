@@ -7,9 +7,9 @@ import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmDashboardException;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
 import com.armedia.acm.plugins.dashboard.model.DashboardDto;
-import com.armedia.acm.plugins.dashboard.model.ModuleName;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher;
+import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * Created by marst on 7/29/14.
@@ -35,7 +36,7 @@ public class GetDashboardConfigAPIController
 
     private UserDao userDao;
     private AcmPlugin dashboardPlugin;
-    private AcmPlugin eventTypePlugin;
+    private DashboardPropertyReader dashboardPropertyReader;
     private DashboardDao dashboardDao;
     private WidgetDao widgetDao;
     private DashboardEventPublisher eventPublisher;
@@ -44,7 +45,7 @@ public class GetDashboardConfigAPIController
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public DashboardDto getDashboardConfig(
-            @RequestParam(value = "moduleName", required = false, defaultValue = "dashboard") String moduleName,
+            @RequestParam(value = "moduleName", required = false, defaultValue = "DASHBOARD") String moduleName,
             Authentication authentication,
             HttpSession session
     ) throws AcmDashboardException, AcmObjectNotFoundException
@@ -64,26 +65,27 @@ public class GetDashboardConfigAPIController
         boolean inserted = false;
         try
         {
-            String newWidgetsString = (String) dashboardPlugin.getPluginProperties().get("acm.new.widgets");
+
             boolean isNewWidgetForAdding = Boolean.valueOf((String) dashboardPlugin.getPluginProperties().get("acm.add.widget"));
-            String[] newWidgetsNames = null;
+            List<String> modules = dashboardPropertyReader.getModuleNameList();
 
             if (isNewWidgetForAdding)
             {
-                if (!"".equals(newWidgetsString))
+                List<Widget> widgetList = dashboardPropertyReader.readWidgetNamesAndCreateWidgetList();
+                for (Widget w : widgetList)
                 {
-                    newWidgetsNames = newWidgetsString.split(",");
-                    for (String widgetName : newWidgetsNames)
-                    {
-                        Widget widget = new Widget();
-                        widget.setWidgetName(widgetName.trim());
-                        getWidgetDao().saveWidget(widget);
-                    }
+                    widgetDao.saveWidget(w);
                 }
             }
-            retval = getDashboardDao().getDashboardConfigForUserAndModuleName(owner, ModuleName.getModuleName(moduleName));
+
+            if (!modules.contains(moduleName.trim()))
+            {
+                throw new AcmDashboardException("Module name:" + moduleName + " does  not exist");
+            }
+
+            retval = getDashboardDao().getDashboardConfigForUserAndModuleName(owner, moduleName);
             raiseGetEvent(authentication, session, retval, true);
-            dashboardDto = prepareDashboardDto(retval, inserted);
+            dashboardDto = prepareDashboardDto(retval, inserted, moduleName);
             return dashboardDto;
         } catch (AcmObjectNotFoundException e)
         {
@@ -101,7 +103,7 @@ public class GetDashboardConfigAPIController
                 log.info("User '" + userId + "'is logged in for the first time and default dashboard is inserted into the DB");
             }
             raiseGetEvent(authentication, session, retval, true);
-            dashboardDto = prepareDashboardDto(retval, inserted);
+            dashboardDto = prepareDashboardDto(retval, inserted, moduleName);
             return dashboardDto;
         } catch (Exception e1)
         {
@@ -113,12 +115,13 @@ public class GetDashboardConfigAPIController
         }
     }
 
-    private DashboardDto prepareDashboardDto(Dashboard dashboard, boolean inserted)
+    private DashboardDto prepareDashboardDto(Dashboard dashboard, boolean inserted, String module)
     {
         DashboardDto dashboardDto = new DashboardDto();
         dashboardDto.setUserId(dashboard.getDashboardOwner().getUserId());
         dashboardDto.setDashboardConfig(removeHashKeyValues(dashboard.getDashboardConfig()));
         dashboardDto.setInserted(inserted);
+        dashboardDto.setModule(module);
         return dashboardDto;
     }
 
@@ -202,5 +205,15 @@ public class GetDashboardConfigAPIController
     public void setWidgetDao(WidgetDao widgetDao)
     {
         this.widgetDao = widgetDao;
+    }
+
+    public DashboardPropertyReader getDashboardPropertyReader()
+    {
+        return dashboardPropertyReader;
+    }
+
+    public void setDashboardPropertyReader(DashboardPropertyReader dashboardPropertyReader)
+    {
+        this.dashboardPropertyReader = dashboardPropertyReader;
     }
 }
