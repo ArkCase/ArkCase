@@ -7,86 +7,43 @@ angular.module('dashboard.expenses', ['adf.provider'])
                 title: 'Expenses',
                 description: 'Displays cases files by queue',
                 controller: 'Dashboard.ExpensesController',
+                controllerAs: 'expenses',
                 reload: true,
                 templateUrl: 'modules/dashboard/views/components/expenses.client.view.html'
             });
     })
-    .controller('Dashboard.ExpensesController', ['$scope', 'config', '$state', '$translate', 'Dashboard.DashboardService',
-        function ($scope, config, $state, $translate, DashboardService) {
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'expenses');
+    .controller('Dashboard.ExpensesController', ['$scope', 'config', '$state', '$translate', 'UtilService', 'Dashboard.DashboardService', 'CostTracking.InfoService', 'Helper.ObjectBrowserService',
+        function ($scope, config, $state, $translate, Util, DashboardService, CostTrackingInfoService, HelperObjectBrowserService) {
 
-            $scope.config = null;
-            $scope.chartConfig = null;
+            var vm = this;
 
-            function onBarClick(e) {
-                if ($scope.config.redirectSettings) {
-                    var redirectObj = $scope.config.redirectSettings[this.name];
-                    if (redirectObj) {
-                        $state.go(redirectObj.state, redirectObj.params)
-                    }
-                }
-            }
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (Util.goodPositive(currentObjectId, false)) {
+                CostTrackingInfoService.getCostsheetInfo(currentObjectId).then(
+                    function (costsheetInfo) {
 
-            function applyConfig(e, componentId, config) {
-                if (componentId == 'main') {
-                    $scope.config = config;
-
-                    // Load Cost info and render chart
-                    /****************************************************
-                     *Change this with correct calls for cost stuff
-                     ****************************************************/
-                    DashboardService.queryCasesByQueue(function (cases) {
-
-                        var data = [];
-
-                        _.forEach(cases, function (value, key) {
-                            if (key.length > 0 && key[0] != '$') {
-                                data.push({
-                                    name: _.get($scope.config, 'redirectSettings[' + key + '].title') || key,
-                                    y: value,
-                                    drilldown: key
-                                });
-                            }
+                        var parentNumber = {parentNumber: costsheetInfo.parentNumber};
+                        var parentType = {parentType: costsheetInfo.parentType};
+                        var parentId = {parentId: costsheetInfo.parentId};
+                        var costs = angular.copy(costsheetInfo.costs);
+                        costs = costs.map(function (obj) {
+                            return angular.extend(obj, parentNumber, parentType, parentId);
                         });
 
-                        $scope.chartConfig = {
-                            chart: {
-                                type: 'column'
-                            },
-                            title: {
-                                text: ' '
-                            },
-                            noData: $translate.instant('dashboard.widgets.expenses.noDataMessage'),
-                            xAxis: {
-                                type: 'category',
-                                title: {
-                                    text: $translate.instant('dashboard.widgets.expenses.xAxis')
-                                }
-                            },
-                            yAxis: {
-                                title: {
-                                    text: $translate.instant('dashboard.widgets.expenses.yAxis')
-                                }
-                            },
-                            series: [{
-                                type: 'column',
-                                dataLabels: {
-                                    enabled: true,
-                                    format: '{point.y}'
-                                },
-                                name: $translate.instant('dashboard.widgets.expenses.title'),
-                                data: data,
-                                cursor: 'pointer',
-                                point: {
-                                    events: {
-                                        click: onBarClick
-                                    }
-                                }
-                            }]
-                        }
-                    });
-                }
+                        var data = {};
+                        var chartData = []
+                        var labels = [];
+
+                        angular.forEach(costs, function (costIter) {
+                            labels.push(costIter.title);
+                            chartData.push(costIter.value);
+                        })
+
+                        vm.showChart = chartData.length > 0 ? true : false;
+                        vm.data = [chartData];
+                        vm.labels = labels;
+                    }
+                );
             }
         }
     ]);
