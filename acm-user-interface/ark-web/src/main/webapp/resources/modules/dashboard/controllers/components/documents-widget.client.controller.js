@@ -8,7 +8,7 @@ angular.module('dashboard.documents', ['adf.provider'])
                 description: 'Displays cases files by queue',
                 controller: 'Dashboard.DocumentsController',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/documents.client.view.html'
+                templateUrl: 'modules/dashboard/views/components/documents-widget.client.view.html'
             });
     })
     .controller('Dashboard.DocumentsController', ['$scope', 'config', '$state', '$translate', 'Dashboard.DashboardService',
