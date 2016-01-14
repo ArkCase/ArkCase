@@ -9,7 +9,7 @@ angular.module('dashboard.expenses', ['adf.provider'])
                 controller: 'Dashboard.ExpensesController',
                 controllerAs: 'expenses',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/expenses.client.view.html'
+                templateUrl: 'modules/dashboard/views/components/expenses-widget.client.view.html'
             });
     })
     .controller('Dashboard.ExpensesController', ['$scope', 'config', '$state', '$translate', 'UtilService', 'Dashboard.DashboardService', 'CostTracking.InfoService', 'Helper.ObjectBrowserService',
@@ -22,13 +22,7 @@ angular.module('dashboard.expenses', ['adf.provider'])
                 CostTrackingInfoService.getCostsheetInfo(currentObjectId).then(
                     function (costsheetInfo) {
 
-                        var parentNumber = {parentNumber: costsheetInfo.parentNumber};
-                        var parentType = {parentType: costsheetInfo.parentType};
-                        var parentId = {parentId: costsheetInfo.parentId};
                         var costs = angular.copy(costsheetInfo.costs);
-                        costs = costs.map(function (obj) {
-                            return angular.extend(obj, parentNumber, parentType, parentId);
-                        });
 
                         var data = {};
                         var chartData = []

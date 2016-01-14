@@ -9,7 +9,7 @@ angular.module('dashboard.summary', ['adf.provider'])
                 controller: 'Dashboard.SummaryController',
                 controllerAs: 'summary',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/summary.client.view.html'
+                templateUrl: 'modules/dashboard/views/components/hours-summary-widget.client.view.html'
             });
     })
     .controller('Dashboard.SummaryController', ['$scope', '$translate', '$stateParams', 'UtilService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService',

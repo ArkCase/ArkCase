@@ -9,7 +9,7 @@ angular.module('dashboard.time', ['adf.provider'])
                 controller: 'Dashboard.TimeController',
                 controllerAs: 'time',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/time.client.view.html'
+                templateUrl: 'modules/dashboard/views/components/time-widget.client.view.html'
             });
     })
     .controller('Dashboard.TimeController', ['$scope', 'config', '$state', '$stateParams', '$translate', 'Dashboard.DashboardService', 'Helper.ObjectBrowserService', 'UtilService', 'Object.TimeService',

@@ -11,7 +11,7 @@ angular.module('dashboard.calendar', ['adf.provider'])
                 description: 'Displays cases files by queue',
                 controller: 'Dashboard.CalendarController',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/calendar.client.view.html'
+                templateUrl: 'modules/dashboard/views/components/calendar-widget.client.view.html'
             });
     })
     .controller('Dashboard.CalendarController', ['$scope', 'config', '$state', '$translate', 'Dashboard.DashboardService',
