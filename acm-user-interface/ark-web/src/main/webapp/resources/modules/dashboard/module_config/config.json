@@ -129,36 +129,42 @@
       "columnDefs": [
         {
           "name": "complaintNumber",
-          "displayName": "dashboard.widgets.myTasks.table.header.complaintNumber",
+          "displayName": "dashboard.widgets.myComplaints.table.header.number",
           "headerCellFilter": "translate",
-          "cellTemplate:": "'<div class=\"ui-grid-cell-contents\"><a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}<\/a><\/div>'",
+          "cellTemplate:": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.complaintId}}</a>",
           "width": 175
         },
         {
           "name": "complaintTitle",
-          "displayName": "dashboard.widgets.myTasks.table.header.title",
+          "displayName": "dashboard.widgets.myComplaints.table.header.title",
           "headerCellFilter": "translate",
-          "cellTemplate:": "'<div class=\"ui-grid-cell-contents\"><a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}<\/a><\/div>'"
+          "cellTemplate:": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.complaintId}}</a>"
         },
         {
           "name": "priority",
-          "displayName": "dashboard.widgets.myTasks.table.header.priority",
+          "displayName": "dashboard.widgets.myComplaints.table.header.priority",
           "headerCellFilter": "translate",
-          "width": 55
+          "width": 75
         },
         {
           "name": "created",
-          "displayName": "dashboard.widgets.myTasks.table.header.created",
+          "displayName": "dashboard.widgets.myComplaints.table.header.created",
           "headerCellFilter": "translate",
-          "width": 55
+          "width": 70
         },
         {
           "name": "status",
-          "displayName": "dashboard.widgets.myTasks.table.header.status",
+          "displayName": "dashboard.widgets.myComplaints.table.header.status",
           "headerCellFilter": "translate",
-          "width": 55
+          "width": 100
         }
       ]
+    },
+    {
+      "id": "newComplaints",
+      "title": "New Complaints",
+      "redirectSettings": {
+      }
     },
     {
       "id": "casesByQueue",

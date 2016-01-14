@@ -305,7 +305,8 @@
       "title": "Info",
       "enabled": false,
       "type": "empty",
-      "editable": false
+      "editable": false,
+      "dateFormat": "YYYY-MM-DDTHH:mm:ss.SSSZZ"
     },
     {
       "id": "actions",

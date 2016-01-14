@@ -1,8 +1,18 @@
 <div>
-    <div ng-if="chartConfig">
-        <highchart config="chartConfig"></highchart>
+    <div ng-if="casesByStatus.showChart">
+        <div class="panel-body">
+            <div>
+                <p class="text-center h2">{{casesByStatus.chartTitle}}</p>
+            </div>
+            <div class="chart-container">
+                <canvas id="pie" class="chart chart-pie" chart-data="casesByStatus.data"
+                        chart-labels="casesByStatus.labels"
+                        chart-responsive="true"
+                        chart-legend="true"></canvas>
+            </div>
+        </div>
     </div>
-    <div class="alert alert-info" ng-if="!chartConfig">
+    <div class="alert alert-info" ng-if="!casesByStatus.showChart">
         <p class="text-center">
             <span translate>dashboard.widgets.casesByStatus.noDataMessage</span>
         </p>
