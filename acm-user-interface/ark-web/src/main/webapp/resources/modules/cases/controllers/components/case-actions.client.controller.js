@@ -19,6 +19,10 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         var promiseQueryUser = Authentication.queryUserInfo();
         var promiseGetGroups = ObjectLookupService.getGroups();
 
+        $scope.$on('req-select-object', function (e, selectedCase) {
+            $scope.caseSolr = selectedCase;
+        });
+
         var previousId = null;
         $scope.$on('object-updated', function (e, data) {
             if (!CaseInfoService.validateCaseInfo(data)) {
@@ -198,6 +202,15 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             });
         };
 
+        $scope.refresh = function () {
+            console.log("action button: refresh-content");
+
+            $scope.$emit('refresh-content', $scope.caseSolr);
+        };
+
+        $scope.$on('refresh-content', function (e, selectedObject) {
+            console.log("action: refresh-content");
+        });
     }
 
 ]);

@@ -683,7 +683,12 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                     , organizations: []
                 }
             };
-        }
+        };
+
+
+        $scope.$on('refresh-content', function (e, selectedObject) {
+            console.log("people: refresh-content");
+        });
     }
 ])
 
