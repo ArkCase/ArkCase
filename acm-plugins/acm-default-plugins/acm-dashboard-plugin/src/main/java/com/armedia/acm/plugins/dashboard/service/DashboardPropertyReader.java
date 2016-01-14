@@ -18,7 +18,17 @@ public class DashboardPropertyReader
     private AcmPlugin dashboardPlugin;
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    public List<String> getModuleNameList()
+    private List<String> moduleNameList;
+    private List<Widget> widgetList;
+
+    private void init()
+    {
+        this.moduleNameList = getModuleNamesAndCreateList();
+        this.widgetList = readWidgetNamesAndCreateWidgetList();
+    }
+
+
+    private List<String> getModuleNamesAndCreateList()
     {
         String modulesString = (String) dashboardPlugin.getPluginProperties().get("acm.modules");
         String[] modules;
@@ -36,7 +46,7 @@ public class DashboardPropertyReader
         return moduleList;
     }
 
-    public List<Widget> readWidgetNamesAndCreateWidgetList()
+    private List<Widget> readWidgetNamesAndCreateWidgetList()
     {
         String newWidgetsString = (String) dashboardPlugin.getPluginProperties().get("acm.new.widgets");
         String[] newWidgetsNames;
@@ -63,5 +73,25 @@ public class DashboardPropertyReader
     public void setDashboardPlugin(AcmPlugin dashboardPlugin)
     {
         this.dashboardPlugin = dashboardPlugin;
+    }
+
+    public List<String> getModuleNameList()
+    {
+        return moduleNameList;
+    }
+
+    public void setModuleNameList(List<String> moduleNameList)
+    {
+        this.moduleNameList = moduleNameList;
+    }
+
+    public List<Widget> getWidgetList()
+    {
+        return widgetList;
+    }
+
+    public void setWidgetList(List<Widget> widgetList)
+    {
+        this.widgetList = widgetList;
     }
 }

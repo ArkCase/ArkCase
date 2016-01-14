@@ -71,7 +71,7 @@ public class GetDashboardConfigAPIController
 
             if (isNewWidgetForAdding)
             {
-                List<Widget> widgetList = dashboardPropertyReader.readWidgetNamesAndCreateWidgetList();
+                List<Widget> widgetList = dashboardPropertyReader.getWidgetList();
                 widgetList.stream().forEach(widget -> widgetDao.saveWidget(widget));
             }
 
