@@ -217,11 +217,10 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
 
         Service.Tree.prototype = {
             onReset: function () {
-                console.log("helper.Content, onReset");
-                //var that = this;
-                //that.resetTreeData();
-                //that.firstLoad = true;
-                //that.scope.treeData = null;
+                var that = this;
+                that.resetTreeData();
+                that.firstLoad = true;
+                that.scope.treeData = null;
             }
 
             /**
