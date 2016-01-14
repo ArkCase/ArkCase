@@ -3190,10 +3190,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     for (var i = 0; i < fileData.versions.length; i++) {
                         var version = {};
                         version.versionTag = Util.goodValue(fileData.versions[i].versionTag);
-                        version.created = Util.goodValue(fileData.versionList[i].created);
-                        version.creator = Util.goodValue(fileData.versionList[i].creator);
-                        version.modified = Util.goodValue(fileData.versionList[i].modified);
-                        version.modifier = Util.goodValue(fileData.versionList[i].modifier);
+                        version.created = Util.goodValue(fileData.versions[i].created);
+                        version.creator = Util.goodValue(fileData.versions[i].creator);
+                        version.modified = Util.goodValue(fileData.versions[i].modified);
+                        version.modifier = Util.goodValue(fileData.versions[i].modifier);
                         solrData.versionList.push(version);
                     }
                 }
