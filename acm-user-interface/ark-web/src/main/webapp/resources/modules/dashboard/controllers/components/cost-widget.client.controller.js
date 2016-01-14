@@ -28,16 +28,17 @@ angular.module('dashboard.cost', ['adf.provider'])
                             }, 0);
                         }
 
-                        var data = [];
+                        var data = {};
+                        var chartData = [];
                         var labels = [];
 
                         angular.forEach(costsheets, function (costIter) {
                             labels.push(costIter.user.fullName);
-                            data.push(costIter.acm$_costs);
+                            chartData.push(costIter.acm$_costs);
                         })
 
-                        vm.showChart = data.length > 0 ? true : false;
-                        vm.data = data;
+                        vm.showChart = chartData.length > 0 ? true : false;
+                        vm.data = [chartData];
                         vm.labels = labels;
                     }
                 );

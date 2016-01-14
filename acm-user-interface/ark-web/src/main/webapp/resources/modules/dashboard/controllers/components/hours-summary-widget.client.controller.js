@@ -1,18 +1,18 @@
 'use strict';
 
-angular.module('dashboard.summary', ['adf.provider'])
+angular.module('dashboard.hourssummary', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('summary', {
-                title: 'Summary Widget',
+            .widget('hourssummary', {
+                title: 'Hours Summary Widget',
                 description: 'Displays a summary of hours',
-                controller: 'Dashboard.SummaryController',
-                controllerAs: 'summary',
+                controller: 'Dashboard.HoursSummaryController',
+                controllerAs: 'hourssummary',
                 reload: true,
                 templateUrl: 'modules/dashboard/views/components/hours-summary-widget.client.view.html'
             });
     })
-    .controller('Dashboard.SummaryController', ['$scope', '$translate', '$stateParams', 'UtilService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService',
+    .controller('Dashboard.HoursSummaryController', ['$scope', '$translate', '$stateParams', 'UtilService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService',
         function ($scope, $translate, $stateParams, Util, TimeTrackingInfoService, HelperObjectBrowserService) {
 
             var vm = this;
@@ -28,7 +28,7 @@ angular.module('dashboard.summary', ['adf.provider'])
 
                         var times = [];
                         var i = 0;
-                        if (timesheetInfo.length > 7) {
+                        if (timesheetInfo.times.length > 7) {
                             var i = timesheetInfo.times.length - 7;
                         }
                         for (i; i < timesheetInfo.times.length; i++) {
