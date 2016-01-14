@@ -47,6 +47,7 @@ angular.module('dashboard.person', ['adf.provider'])
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
+                        $scope.costsheetInfo = info;
                         $scope.gridOptions = $scope.gridOptions || {};
                         $scope.gridOptions.data = [$scope.costsheetInfo.user];
                     },
