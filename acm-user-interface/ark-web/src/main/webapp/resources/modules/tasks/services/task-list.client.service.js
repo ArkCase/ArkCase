@@ -21,6 +21,21 @@ angular.module('tasks').factory('Task.ListService', ['$resource', '$translate', 
 
         /**
          * @ngdoc method
+         * @name resetTasksTreeData
+         * @methodOf services:Task.ListService
+         *
+         * @description
+         * Reset tree to initial state, including empty tree data
+         *
+         * @returns None
+         */
+        Service.resetTasksTreeData = function () {
+            var cacheTaskList = new Store.CacheFifo(Service.CacheNames.TASK_LIST);
+            cacheTaskList.reset();
+        };
+
+        /**
+         * @ngdoc method
          * @name queryTasksTreeData
          * @methodOf tasks.service:Task.ListService
          *
