@@ -4,43 +4,56 @@ angular.module('dashboard.summary', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('summary', {
-                    title: 'Summary Widget',
-                    description: 'Displays a summary of hours',
-                    controller: 'Dashboard.SummaryController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/summary.client.view.html'
-                }
-            );
+                title: 'Summary Widget',
+                description: 'Displays a summary of hours',
+                controller: 'Dashboard.SummaryController',
+                controllerAs: 'summary',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/summary.client.view.html'
+            });
     })
-    .controller('Dashboard.SummaryController', ['$scope', '$translate', '$stateParams', 'UtilService',
-        , 'Authentication', 'Dashboard.DashboardService',
-        function ($scope, $translate, $stateParams, Util, Authentication, DashboardService) {
+    .controller('Dashboard.SummaryController', ['$scope', '$translate', '$stateParams', 'UtilService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService',
+        function ($scope, $translate, $stateParams, Util, TimeTrackingInfoService, HelperObjectBrowserService) {
 
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'main');
-            $scope.config = null;
-            //var userInfo = null;
+            var vm = this;
 
-            $scope.gridOptions = {
-                enableColumnResizing: true,
-                columnDefs: []
-            };
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (Util.goodPositive(currentObjectId, false)) {
+                TimeTrackingInfoService.getTimesheetInfo(currentObjectId).then(
+                    function (timesheetInfo) {
 
-            function applyConfig(e, componentId, config) {
-                if (componentId == 'main') {
-                    $scope.config = config;
-                    $scope.gridOptions.columnDefs = config.widgets[7].columnDefs; //tasks.config.widget[7] = signature
+                        var data = {};
+                        var chartData = [];
+                        var labels = [];
 
-                    //set gridOptions.data
-                    if ($stateParams.type) {
-                        //if ($stateParams.type == 'task' || $stateParams.type == 'ADHOC') {
-                        //
-                        //}
-                        //else {
-                        //    //do nothing
-                        //}
+                        var times = [];
+                        var i = 0;
+                        if (timesheetInfo.length > 7) {
+                            var i = timesheetInfo.times.length - 7;
+                        }
+                        for (i; i < timesheetInfo.times.length; i++) {
+                            times.push(timesheetInfo.times[i]);
+                        }
+
+                        angular.forEach(times, function (timeIter) {
+                            //reformat date to MM-DD-YYYY from (example) "2016-01-10T00:00:00.000-0500"
+                            var date = timeIter.date.substring(0, 10);
+                            //date = YYYY-MM-DD
+                            var year = date.substring(0, 4);
+                            var month = date.substring(5, 7);
+                            var day = date.substring(8, 10);
+
+                            date = month + "-" + day + "-" + year;
+
+                            labels.push(date);
+                            chartData.push(timeIter.value);
+                        })
+
+                        vm.showChart = chartData.length > 0 ? true : false;
+                        vm.data = [chartData];
+                        vm.labels = labels;
                     }
-                }
+                );
             }
         }
     ]);

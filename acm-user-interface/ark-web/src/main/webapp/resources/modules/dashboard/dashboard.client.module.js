@@ -32,6 +32,6 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.workflow',
     'dashboard.signature',
     'dashboard.person',
-    //'dashboard.expenses',
-    //'dashboard.summary'
+    'dashboard.expenses',
+    'dashboard.summary'
 ]);
