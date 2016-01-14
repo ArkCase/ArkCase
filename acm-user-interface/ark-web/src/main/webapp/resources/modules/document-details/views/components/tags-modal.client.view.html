@@ -1,0 +1,43 @@
+<div class="modal-header">
+    <h3>
+        <span translate>documentDetails.comp.tags.modal.title</span>
+    </h3>
+
+</div>
+
+<div class="modal-body">
+    <form name="tagForm">
+        <div>
+            <span translate>documentDetails.comp.tags.modal.name</span>
+        </div>
+        <input type="text" ng-model="tag.name" required>
+
+        <div>
+            <span translate>documentDetails.comp.tags.modal.description</span>
+        </div>
+        <input type="text" ng-model="tag.description" required>
+
+        <div>
+            <span translate>documentDetails.comp.tags.modal.text</span>
+        </div>
+
+        <input type="text" ng-model="tag.text" required>
+    </form>
+    <div>
+        <select class="form-control" ng-model="selectedTag"
+                ng-options="option.tagName for option in tags track by option.id">
+            <option value="" translate>
+                documentDetails.comp.tags.modal.dropdownLabel
+            </option>
+        </select>
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="cancel()">
+        <span translate>documentDetails.comp.tags.modal.buttons.cancel</span>
+    </button>
+    <button class="btn btn-default" ng-click="ok()" ng-disabled="tagForm.$invalid && !selectedTag">
+        <span translate>documentDetails.comp.tags.modal.buttons.ok</span>
+    </button>
+</div>
