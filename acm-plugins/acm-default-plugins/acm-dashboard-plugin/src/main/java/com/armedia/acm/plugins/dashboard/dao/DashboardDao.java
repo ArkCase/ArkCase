@@ -5,7 +5,6 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmDashboardException;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
 import com.armedia.acm.plugins.dashboard.model.DashboardDto;
-import com.armedia.acm.plugins.dashboard.model.ModuleName;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,14 +19,14 @@ import java.util.List;
 public class DashboardDao extends AcmAbstractDao<Dashboard>
 {
 
-    public Dashboard getDashboardConfigForUserAndModuleName(AcmUser user, ModuleName moduleName) throws AcmDashboardException, AcmObjectNotFoundException
+    public Dashboard getDashboardConfigForUserAndModuleName(AcmUser user, String moduleName) throws AcmDashboardException, AcmObjectNotFoundException
     {
         String queryString = "SELECT d FROM Dashboard d WHERE  d.dashboardOwner = :dashboardOwner AND d.moduleName = :moduleName ";
 
         TypedQuery<Dashboard> query = getEm().createQuery(queryString, Dashboard.class);
 
         query.setParameter("dashboardOwner", user);
-        query.setParameter("moduleName", moduleName.getModuleNameValue());
+        query.setParameter("moduleName", moduleName);
 
         List<Dashboard> results;
         results = query.getResultList();
@@ -40,7 +39,7 @@ public class DashboardDao extends AcmAbstractDao<Dashboard>
     }
 
     @Transactional
-    public int setDasboardConfigForUserAndModule(AcmUser user, DashboardDto newDashboardDto, ModuleName moduleName)
+    public int setDasboardConfigForUserAndModule(AcmUser user, DashboardDto newDashboardDto, String moduleName)
     {
         Query updateStatusQuery = getEm().createQuery(
                 "UPDATE Dashboard " +
@@ -48,7 +47,7 @@ public class DashboardDao extends AcmAbstractDao<Dashboard>
                         "WHERE dashboardOwner = :dashboardOwner AND moduleName = :moduleName");
         updateStatusQuery.setParameter("dashboardConfig", newDashboardDto.getDashboardConfig());
         updateStatusQuery.setParameter("dashboardOwner", user);
-        updateStatusQuery.setParameter("moduleName", moduleName.getModuleNameValue());
+        updateStatusQuery.setParameter("moduleName", moduleName);
 
         return updateStatusQuery.executeUpdate();
     }
