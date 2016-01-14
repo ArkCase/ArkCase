@@ -18,6 +18,9 @@ public class DashboardPropertyReader
     private AcmPlugin dashboardPlugin;
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    private String newWidgetsString = (String) dashboardPlugin.getPluginProperties().get("acm.new.widgets");
+
+
     public List<String> getModuleNameList()
     {
         String modulesString = (String) dashboardPlugin.getPluginProperties().get("acm.modules");
@@ -27,6 +30,7 @@ public class DashboardPropertyReader
         if (!"".equals(modulesString))
         {
             modules = modulesString.split(",");
+            
             for (String m : modules)
             {
                 m.trim();
