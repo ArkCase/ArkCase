@@ -41,7 +41,7 @@ angular.module('time-tracking').controller('TimeTracking.MainController', ['$sco
         $scope.$on('adfDashboardChanged', function (event, name, model) {
             DashboardService.saveConfig({
                 dashboardConfig: angular.toJson(model),
-                moduleName: "TIME"
+                module: "TIME"
             });
         });
     }

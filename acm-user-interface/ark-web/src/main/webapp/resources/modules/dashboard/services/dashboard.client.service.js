@@ -65,10 +65,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
 
             saveConfig: {
                 method: 'POST',
-                url: 'proxy/arkcase/api/v1/plugin/dashboard/set',
-                params: {
-                    moduleName: "@moduleName"
-                }
+                url: 'proxy/arkcase/api/v1/plugin/dashboard/set'
             }
         })
     }

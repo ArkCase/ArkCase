@@ -40,7 +40,7 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
         $scope.$on('adfDashboardChanged', function (event, name, model) {
             DashboardService.saveConfig({
                 dashboardConfig: angular.toJson(model),
-                moduleName: "CASE"
+                module: "CASE"
             });
         });
     }

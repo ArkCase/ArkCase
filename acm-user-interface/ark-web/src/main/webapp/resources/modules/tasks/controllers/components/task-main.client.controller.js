@@ -39,7 +39,7 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', '$statePar
         $scope.$on('adfDashboardChanged', function (event, name, model) {
             DashboardService.saveConfig({
                 dashboardConfig: angular.toJson(model),
-                moduleName: "TASK"
+                module: "TASK"
             });
         });
 
