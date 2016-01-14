@@ -4,6 +4,9 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
     , 'UtilService', 'ConfigService', 'LookupService', 'Object.LookupService', 'Task.InfoService', 'Object.ModelService'
     , function ($scope, $stateParams, Util, ConfigService, LookupService, ObjectLookupService, TaskInfoService, ObjectModelService) {
 
+        $scope.dueDate = null;
+        $scope.taskStartDate = null;
+
         ConfigService.getComponentConfig("tasks", "info").then(function (componentConfig) {
             $scope.config = componentConfig;
             return componentConfig;
@@ -36,6 +39,8 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         $scope.$on('object-updated', function (e, data) {
             if (TaskInfoService.validateTaskInfo(data)) {
                 $scope.taskInfo = data;
+                $scope.dueDate = ($scope.taskInfo.dueDate) ? moment($scope.taskInfo.dueDate).toDate() : null;
+                $scope.taskStartDate = ($scope.taskInfo.taskStartDate) ? moment($scope.taskInfo.taskStartDate).toDate() : null;
                 $scope.assignee = ObjectModelService.getAssignee(data);
             }
         });
@@ -55,10 +60,12 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         $scope.updatePriority = function () {
             saveTask();
         };
-        $scope.updateStartDate = function () {
+        $scope.updateStartDate = function (taskStartDate) {
+            $scope.taskInfo.taskStartDate = (taskStartDate) ? moment(taskStartDate).format($scope.config.dateFormat): null;
             saveTask();
         };
-        $scope.updateDueDate = function () {
+        $scope.updateDueDate = function (dueDate) {
+            $scope.taskInfo.dueDate = (dueDate) ? moment(dueDate).format($scope.config.dateFormat): null;
             saveTask();
         };
 

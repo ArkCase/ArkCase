@@ -47,12 +47,14 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
         //    $scope.caseSolr = selectedCase;
         //});
 
+        $scope.dueDate = null;
         var previousId = null;
         $scope.$on('object-updated', function (e, data) {
             if (!CaseInfoService.validateCaseInfo(data)) {
                 return;
             }
             $scope.caseInfo = data;
+            $scope.dueDate = ($scope.caseInfo.dueDate) ? moment($scope.caseInfo.dueDate).toDate() : null;
             $scope.owningGroup = ObjectModelService.getGroup(data);
             $scope.assignee = ObjectModelService.getAssignee(data);
             if (previousId != $stateParams.id) {
@@ -136,7 +138,8 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             ObjectModelService.setAssignee($scope.caseInfo, $scope.assignee);
             saveCase();
         };
-        $scope.updateDueDate = function() {
+        $scope.updateDueDate = function(dueDate) {
+            $scope.caseInfo.dueDate = (dueDate) ? moment(dueDate).format($scope.config.dateFormat): null;
             saveCase();
         };
 
