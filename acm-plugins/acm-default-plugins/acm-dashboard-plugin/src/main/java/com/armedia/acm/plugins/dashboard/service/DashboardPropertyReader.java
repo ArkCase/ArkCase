@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.dashboard.service;
 
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
+import com.armedia.acm.plugins.dashboard.exception.AcmDashboardException;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,18 +24,53 @@ public class DashboardPropertyReader
 
     private void init()
     {
-        this.moduleNameList = getModuleNamesAndCreateList();
-        this.widgetList = readWidgetNamesAndCreateWidgetList();
+        if (log.isInfoEnabled())
+        {
+            log.info("Initializing - setting moduleNameList and widgetList in the  DashboardPropertyReader bean");
+        }
+        try
+        {
+            this.moduleNameList = getModuleNamesAndCreateList();
+        } catch (AcmDashboardException e)
+        {
+            if (log.isErrorEnabled())
+            {
+                log.error("Module name list was not populated, error occurred: " + e.getMessage(), e);
+            }
+        }
+        try
+        {
+            this.widgetList = readWidgetNamesAndCreateWidgetList();
+        } catch (AcmDashboardException e)
+        {
+            if (log.isErrorEnabled())
+            {
+                log.error("Widgets list was not populated, error occurred: " + e.getMessage(), e);
+            }
+        }
     }
 
 
-    private List<String> getModuleNamesAndCreateList()
+    private List<String> getModuleNamesAndCreateList() throws AcmDashboardException
     {
-        String modulesString = (String) dashboardPlugin.getPluginProperties().get("acm.modules");
+        String modulesString;
+        try
+        {
+            if (log.isInfoEnabled())
+            {
+                log.info("Fetching all module names from the property file");
+            }
+            modulesString = (String) dashboardPlugin.getPluginProperties().get("acm.modules");
+        } catch (Exception e)
+        {
+            throw new AcmDashboardException("Error occurred while fetching module names " + e.getMessage(), e);
+        }
+
+
         String[] modules;
         List<String> moduleList = new ArrayList<>();
 
-        if (!"".equals(modulesString))
+        if (!"".equals(modulesString) && modulesString.contains(","))
         {
             modules = modulesString.split(",");
             for (String m : modules)
@@ -46,9 +82,18 @@ public class DashboardPropertyReader
         return moduleList;
     }
 
-    private List<Widget> readWidgetNamesAndCreateWidgetList()
+    private List<Widget> readWidgetNamesAndCreateWidgetList() throws AcmDashboardException
     {
-        String newWidgetsString = (String) dashboardPlugin.getPluginProperties().get("acm.new.widgets");
+        String newWidgetsString;
+        try
+        {
+            newWidgetsString = (String) dashboardPlugin.getPluginProperties().get("acm.new.widgets");
+        } catch (Exception e)
+        {
+            throw new AcmDashboardException("Error occured while fetching widget names " + e.getMessage(), e);
+        }
+
+
         String[] newWidgetsNames;
         List<Widget> widgetList = new ArrayList<>();
         if (!"".equals(newWidgetsString))
