@@ -20,7 +20,7 @@
             <column name="cm_dashboard_config" type="VARCHAR(3900)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
             </column>
-                <column name="cm_dashboard_owner" type="VARCHAR(${cmUserIdLength})">
+            <column name="cm_dashboard_owner" type="VARCHAR(${cmUserIdLength})">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -81,6 +81,5 @@
             </column>
         </addColumn>
     </changeSet>
-
 </databaseChangeLog>
 
