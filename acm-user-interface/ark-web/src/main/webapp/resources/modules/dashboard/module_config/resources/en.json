@@ -204,9 +204,9 @@
         "description": "Person widget for Cost and Time modules",
         "noDataMessage": "Currently there are no persons to display"
       },
-      "summary": {
-        "title": "Summary",
-        "description": "Displays a summary of hours",
+      "hourssummary": {
+        "title": "Hours Summary",
+        "description": "Displays a summary of hours worked",
         "noDataMessage": "Currently there is no summary to display"
       },
       "expenses": {

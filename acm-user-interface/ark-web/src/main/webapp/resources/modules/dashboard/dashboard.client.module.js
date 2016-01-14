@@ -33,5 +33,5 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.signature',
     'dashboard.person',
     'dashboard.expenses',
-    'dashboard.summary'
+    'dashboard.hourssummary'
 ]);

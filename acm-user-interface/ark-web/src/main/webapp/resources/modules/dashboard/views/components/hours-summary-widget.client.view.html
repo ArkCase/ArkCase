@@ -1,19 +1,19 @@
 <div>
-    <div ng-if="summary.showChart">
+    <div ng-if="hourssummery.showChart">
         <div class="panel-body">
             </br>
             <div class="chart-container">
-                <canvas id="bar" class="chart chart-bar" chart-data="summary.data"
-                        chart-labels="summary.labels"
-                        chart-series="summary.series"
+                <canvas id="bar" class="chart chart-bar" chart-data="hourssummery.data"
+                        chart-labels="hourssummery.labels"
+                        chart-series="hourssummery.series"
                         chart-responsive="true"
                         chart-legend="true"></canvas>
             </div>
         </div>
     </div>
-    <div class="alert alert-info" ng-if="!summary.showChart">
+    <div class="alert alert-info" ng-if="!hourssummery.showChart">
         <p class="text-center">
-            <span translate>dashboard.widgets.summary.noDataMessage</span>
+            <span translate>dashboard.widgets.hourssummery.noDataMessage</span>
         </p>
     </div>
 </div>
