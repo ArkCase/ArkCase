@@ -135,6 +135,7 @@
                             "displayName": "timeTracking.comp.people.table.columns.userId",
                             "headerCellFilter": "translate"
                         }
+                    ]
                 },
                 {
                     "id": "summary",
