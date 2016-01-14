@@ -24,8 +24,7 @@ angular.module('services').factory('Authentication', ['$resource', 'StoreService
              */
             _queryUserInfo: {
                 method: 'GET',
-                url: 'proxy/arkcase/api/v1/users/info',
-                cache: true
+                url: 'proxy/arkcase/api/v1/users/info'
             }
             , queryUserInfo_tmp: {
                 method: 'GET',

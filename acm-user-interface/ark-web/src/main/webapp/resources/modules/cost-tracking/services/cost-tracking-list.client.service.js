@@ -10,8 +10,9 @@
 
  * CostTracking.ListService provides functions for Costsheet database data
  */
-angular.module('services').factory('CostTracking.ListService', ['$resource', '$translate', 'UtilService', 'ObjectService', 'Object.ListService',
-    function ($resource, $translate, Util, ObjectService, ObjectListService) {
+angular.module('services').factory('CostTracking.ListService', ['$resource', '$translate'
+    , 'StoreService', 'UtilService', 'ObjectService', 'Object.ListService'
+    , function ($resource, $translate, Store, Util, ObjectService, ObjectListService) {
         var Service = $resource('proxy/arkcase/api/v1/service/costsheet', {}, {
 
             /**
@@ -40,6 +41,25 @@ angular.module('services').factory('CostTracking.ListService', ['$resource', '$t
             }
         });
 
+        Service.CacheNames = {
+            COSTSHEET_LIST: "CostsheetList"
+        };
+
+        /**
+         * @ngdoc method
+         * @name resetCostTrackingTreeData
+         * @methodOf services:CostTracking.ListService
+         *
+         * @description
+         * Reset tree to initial state, including empty tree data
+         *
+         * @returns None
+         */
+        Service.resetCostTrackingTreeData = function () {
+            var cacheCostTrackingList = new Store.CacheFifo(Service.CacheNames.COSTSHEET_LIST);
+            cacheCostTrackingList.reset();
+        };
+
         /**
          * @ngdoc method
          * @name queryCostTrackingTreeData
@@ -57,7 +77,9 @@ angular.module('services').factory('CostTracking.ListService', ['$resource', '$t
          * @returns {Object} Promise
          */
         Service.queryCostTrackingTreeData = function (userId, start, n, sort) {
-            var treeData = null;
+            var cacheCostTrackingList = new Store.CacheFifo(Service.CacheNames.COSTSHEET_LIST);
+            var cacheKey = userId + "." + start + "." + n + "." + sort;
+            var treeData = cacheCostTrackingList.get(cacheKey);
 
             var param = {};
             param.userId = userId;
@@ -68,6 +90,7 @@ angular.module('services').factory('CostTracking.ListService', ['$resource', '$t
             return Util.serviceCall({
                 service: Service.listObjects
                 , param: param
+                , result: treeData
                 , onSuccess: function (data) {
                     if (Service.validateCostsheetList(data)) {
                         treeData = {docs: [], total: data.response.numFound};
@@ -80,6 +103,7 @@ angular.module('services').factory('CostTracking.ListService', ['$resource', '$t
                                 , nodeToolTip: Util.goodValue(doc.name)
                             });
                         });
+                        cacheCostTrackingList.put(cacheKey, treeData);
                         return treeData;
                     }
                 }

@@ -11,6 +11,13 @@ angular.module('dashboard.my-complaints')
             vm.config = null;
             var userInfo = null;
 
+            $scope.onClickObjLink = function (event, rowEntity) {
+                event.preventDefault();
+                var targetType = "COMPLAINT";
+                var targetId = Util.goodMapValue(rowEntity, "complaintId");
+                gridHelper.showObject(targetType, targetId);
+            };
+
             var paginationOptions = {
                 pageNumber: 1,
                 pageSize: 5,
