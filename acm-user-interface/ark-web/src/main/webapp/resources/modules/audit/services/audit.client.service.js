@@ -33,7 +33,14 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce',
              * @returns {String} Builded url for audit report url that will be shown in iframe
              */
             getUrl: function (pentahoHost, pentahoPort, auditReportUri, startDate, endDate, objectType, objectId, dateFormat) {
-                var reportUrl = pentahoHost + ':' + pentahoPort + auditReportUri
+                var amendedPentahoPort = "";
+                if (pentahoPort && pentahoPort.length > 0) {
+                    amendedPentahoPort = pentahoPort;
+                    if (pentahoPort.charAt(0) != ':' && pentahoHost.charAt(pentahoHost.length - 1) != ':') {
+                        amendedPentahoPort = ':' + amendedPentahoPort;
+                    }
+                }
+                var reportUrl = pentahoHost + amendedPentahoPort + auditReportUri
                     + "&startDate=" + startDate
                     + "&endDate=" + endDate
                     + "&objectType=" + objectType
