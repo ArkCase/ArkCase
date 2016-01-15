@@ -7,7 +7,7 @@ angular.module('document-details').controller('Document.TagsController', ['$scop
         $scope.selectedTag = {};
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        var promiseTypes = ObjectTagsService.retrieveAllTags().then(
+        var promiseTypes = ObjectTagsService.getTags().then(
             function (tags) {
                 $scope.createdTags = tags;
                 return tags;
@@ -25,7 +25,7 @@ angular.module('document-details').controller('Document.TagsController', ['$scop
 
         $scope.retrieveGridData = function () {
             if (Util.goodPositive($stateParams.id)) {
-                var promiseQueryTags = ObjectTagsService.retrieveAssociatedTags($stateParams.id, ObjectService.ObjectTypes.FILE);
+                var promiseQueryTags = ObjectTagsService.getAssociateTags($stateParams.id, ObjectService.ObjectTypes.FILE);
                 $q.all([promiseQueryTags, promiseConfig]).then(function (data) {
                     $scope.tags = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
@@ -42,7 +42,7 @@ angular.module('document-details').controller('Document.TagsController', ['$scop
                 controller: 'Document.TagsModalController',
                 size: 'lg',
                 resolve: {
-                    $scopeTag: function () {
+                    scopeTag: function () {
                         return $scope;
                     }
                 }
@@ -54,7 +54,7 @@ angular.module('document-details').controller('Document.TagsController', ['$scop
                         return tag.id == $scope.selectedTag.id;
                     });
                     if (tagsFound.length == 0) {
-                        ObjectTagsService.associateNewTag($stateParams.id, ObjectService.ObjectTypes.FILE, $scope.selectedTag.id).then(
+                        ObjectTagsService.associateTag($stateParams.id, ObjectService.ObjectTypes.FILE, $scope.selectedTag.id).then(
                             function () {
                                 $scope.tags.push($scope.selectedTag);
                                 $scope.gridOptions.data = $scope.tags;
@@ -72,9 +72,9 @@ angular.module('document-details').controller('Document.TagsController', ['$scop
                             || tag.tagText == data.tag.text;
                     });
                     if (tagsCreated.length == 0) {
-                        ObjectTagsService.createNewTag(data.tag.name, data.tag.description, data.tag.text).then(
+                        ObjectTagsService.createTag(data.tag.name, data.tag.description, data.tag.text).then(
                             function (tagCreated) {
-                                ObjectTagsService.associateNewTag($stateParams.id, ObjectService.ObjectTypes.FILE, tagCreated.id).then(
+                                ObjectTagsService.associateTag($stateParams.id, ObjectService.ObjectTypes.FILE, tagCreated.id).then(
                                     function () {
                                         $scope.tags.push(tagCreated);
                                         $scope.gridOptions.data = $scope.tags;
@@ -95,7 +95,7 @@ angular.module('document-details').controller('Document.TagsController', ['$scop
         };
 
         $scope.deleteRow = function (rowEntity) {
-            ObjectTagsService.removeAssociatedTag($stateParams.id, ObjectService.ObjectTypes.FILE, rowEntity.id).then(function () {
+            ObjectTagsService.removeAssociateTag($stateParams.id, ObjectService.ObjectTypes.FILE, rowEntity.id).then(function () {
                 gridHelper.deleteRow(rowEntity);
                 messageService.info($translate.instant('documentDetails.comp.tags.message.delete.success'));
             }, function () {
