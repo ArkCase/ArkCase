@@ -31,7 +31,7 @@ angular.module('dashboard.expenses', ['adf.provider'])
                         angular.forEach(costs, function (costIter) {
                             labels.push(costIter.title);
                             chartData.push(costIter.value);
-                        })
+                        });
 
                         vm.showChart = chartData.length > 0 ? true : false;
                         vm.data = [chartData];
