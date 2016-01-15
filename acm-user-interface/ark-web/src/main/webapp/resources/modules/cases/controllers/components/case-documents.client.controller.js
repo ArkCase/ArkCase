@@ -43,6 +43,11 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             });
         }
 
+        $scope.$on('object-refreshed', function (e, caseInfo) {
+            $scope.caseInfo = caseInfo;
+            $scope.objectId = caseInfo.id;
+        });
+
         var silentReplace = function (value, replace, replacement) {
             if (!Util.isEmpty(value) && value.replace) {
                 value = value.replace(replace, replacement);

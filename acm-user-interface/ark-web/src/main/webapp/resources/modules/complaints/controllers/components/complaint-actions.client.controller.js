@@ -128,5 +128,12 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
             });
         };
 
+        $scope.refresh = function () {
+            console.log("action button: report-object-refreshed");
+            var a1 = $scope.caseInfo.id;
+            var a2 = $stateParams.id;
+            $scope.$emit('report-object-refreshed', $stateParams.id);
+        };
+
     }
 ]);

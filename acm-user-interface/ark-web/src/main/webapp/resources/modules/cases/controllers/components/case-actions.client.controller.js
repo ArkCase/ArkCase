@@ -19,12 +19,17 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         var promiseQueryUser = Authentication.queryUserInfo();
         var promiseGetGroups = ObjectLookupService.getGroups();
 
-        $scope.$on('req-select-object', function (e, selectedCase) {
-            $scope.caseSolr = selectedCase;
-        });
-
         var previousId = null;
         $scope.$on('object-updated', function (e, data) {
+            updateData(data);
+        });
+
+        $scope.$on('object-refreshed', function (e, data) {
+            var previousId = null;
+            updateData(data);
+        });
+
+        var updateData = function (data) {
             if (!CaseInfoService.validateCaseInfo(data)) {
                 return;
             }
@@ -57,38 +62,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
 
                 previousId = $stateParams.id;
             }
-        });
-        //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        //if (Util.goodPositive(currentObjectId, false)) {
-        //    CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
-        //        $scope.caseInfo = caseInfo;
-        //        var group = ObjectModelService.getGroup(caseInfo);
-        //        var assignee = ObjectModelService.getAssignee(caseInfo);
-        //
-        //        var promiseGetApprovers = CaseLookupService.getApprovers(group, assignee);
-        //        $q.all([promiseQueryUser, promiseGetGroups, promiseGetApprovers]).then(function (data) {
-        //            var userInfo = data[0];
-        //            var groups = data[1];
-        //            var assignees = data[2];
-        //            $scope.restricted = ObjectModelService.checkRestriction(userInfo.userId, assignee, group, assignees, groups);
-        //        });
-        //
-        //        promiseQueryUser.then(function (userInfo) {
-        //            $scope.userId = userInfo.userId;
-        //            ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (subscriptions) {
-        //                var found = _.find(subscriptions, {
-        //                    userId: userInfo.userId,
-        //                    subscriptionObjectType: ObjectService.ObjectTypes.CASE_FILE,
-        //                    objectId: $scope.caseInfo.id
-        //                });
-        //                $scope.showBtnSubscribe = Util.isEmpty(found);
-        //                $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
-        //            });
-        //        });
-        //
-        //        return caseInfo;
-        //    });
-        //}
+        };
 
         $scope.restricted = false;
         $scope.onClickRestrict = function ($event) {
@@ -203,14 +177,11 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         $scope.refresh = function () {
-            console.log("action button: refresh-content");
-
-            $scope.$emit('refresh-content', $scope.caseSolr);
+            console.log("action button: report-object-refreshed");
+            var a1 = $scope.caseInfo.id;
+            var a2 = $stateParams.id;
+            $scope.$emit('report-object-refreshed', $stateParams.id);
         };
-
-        $scope.$on('refresh-content', function (e, selectedObject) {
-            console.log("action: refresh-content");
-        });
     }
 
 ]);
