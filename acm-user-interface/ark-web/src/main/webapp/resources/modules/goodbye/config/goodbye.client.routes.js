@@ -1,14 +1,14 @@
 'use strict';
 
-angular.module('welcome').config(['$stateProvider',
+angular.module('goodbye').config(['$stateProvider',
     function ($stateProvider) {
         $stateProvider.
-            state('welcome', {
-                url: '/welcome',
-                templateUrl: 'modules/welcome/views/welcome.client.view.html',
+            state('goodbye', {
+                url: '/goodbye',
+                templateUrl: 'modules/goodbye/views/goodbye.client.view.html',
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                        $translatePartialLoader.addPart('welcome');
+                        $translatePartialLoader.addPart('goodbye');
                         return $translate.refresh();
                     }]
                 }
