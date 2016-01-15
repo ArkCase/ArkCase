@@ -12,12 +12,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             return componentConfig;
         });
 
-        Authentication.queryUserInfo().then(
-            function (userInfo) {
-                $scope.userId = userInfo.userId;
-                return userInfo;
-            }
-        );
+        var promiseQueryUser = Authentication.queryUserInfo();
 
         $scope.$on('object-updated', function (e, data) {
             if (!TaskInfoService.validateTaskInfo(data)) {
@@ -54,12 +49,25 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                     }
                 }
             }
+
+            promiseQueryUser.then(function (userInfo) {
+                $scope.userId = userInfo.userId;
+                ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.TASK, $scope.taskInfo.taskId).then(function (subscriptions) {
+                    var found = _.find(subscriptions, {
+                        userId: userInfo.userId,
+                        subscriptionObjectType: ObjectService.ObjectTypes.TASK,
+                        objectId: $scope.taskInfo.taskId
+                    });
+                    $scope.showBtnSubscribe = Util.isEmpty(found);
+                    $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
+                });
+                return userInfo;
+            });
         });
 
         //$scope.availableOutcomes0 = [{name: "APPROVE", description: "Approve Document", fields: ["value", "message"]}
         //    , {name: "SEND_FOR_REWORK", description: "Send for Rework", fields: ["reworkInstructions"]}
         //];
-
 
 
         $scope.sign = function () {
@@ -85,6 +93,15 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                 return data;
             });
         };
+
+        $scope.unsubscribe = function () {
+            ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.TASK, $scope.taskInfo.taskId).then(function (data) {
+                $scope.showBtnSubscribe = true;
+                $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
+                return data;
+            });
+        };
+
         $scope.delete = function () {
             var taskInfo = Util.omitNg($scope.taskInfo);
             if (TaskInfoService.validateTaskInfo(taskInfo)) {
