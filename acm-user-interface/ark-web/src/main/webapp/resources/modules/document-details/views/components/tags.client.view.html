@@ -1,13 +1,21 @@
-<panel-view header="{{'documentDetails.comp.tags.title' | translate}}" collapsible="true" collapsed="false">
-    <div ng-controller="Document.TagsController">
-        <form name="tags">
+<div ng-controller="Document.TagsController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>documentDetails.comp.tags.title</span>
+
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
             <div ui-grid="gridOptions"
                  ng-if="gridOptions.data.length"
                  ui-grid-selection
                  ui-grid-auto-resize
                  ui-grid-pagination
-                 class="grid">
-            </div>
-        </form>
+                 class="grid"></div>
+        </div>
     </div>
-</panel-view>
+</div>
