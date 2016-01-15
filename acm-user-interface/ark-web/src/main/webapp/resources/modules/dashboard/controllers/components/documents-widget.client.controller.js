@@ -7,86 +7,114 @@ angular.module('dashboard.documents', ['adf.provider'])
                 title: 'Documents',
                 description: 'Displays cases files by queue',
                 controller: 'Dashboard.DocumentsController',
+                controllerAs: 'documents',
                 reload: true,
                 templateUrl: 'modules/dashboard/views/components/documents-widget.client.view.html'
             });
     })
-    .controller('Dashboard.DocumentsController', ['$scope', 'config', '$state', '$translate', 'Dashboard.DashboardService',
-        function ($scope, config, $state, $translate, DashboardService) {
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'documents');
+    .controller('Dashboard.DocumentsController', ['$scope', 'config', '$stateParams', '$translate', 'Dashboard.DashboardService'
+        , 'Helper.ObjectBrowserService', 'EcmService', 'Case.InfoService', 'ObjectService', 'Complaint.InfoService'
+        , 'Task.InfoService',
+        function ($scope, config, $stateParams, $translate, DashboardService, HelperObjectBrowserService, Ecm, CaseInfoService
+        , ObjectService, ComplaintInfoService, TaskInfoService) {
 
-            $scope.config = null;
-            $scope.chartConfig = null;
+            var vm = this;
 
-            function onBarClick(e) {
-                if ($scope.config.redirectSettings) {
-                    var redirectObj = $scope.config.redirectSettings[this.name];
-                    if (redirectObj) {
-                        $state.go(redirectObj.state, redirectObj.params)
-                    }
-                }
-            }
+            var modules = [
+                {name: "CASE_FILE", configName: "cases", getInfo: CaseInfoService.getCaseInfo, objectType: ObjectService.ObjectTypes.CASE_FILE}
+                , {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo, objectType: ObjectService.ObjectTypes.COMPLAINT}
+                , {name: "TASK", configName: "tasks", getInfo: TaskInfoService.getTaskInfo, objectType: ObjectService.ObjectTypes.TASK}
+                , {name: "ADHOC", configName: "tasks", getInfo: TaskInfoService.getTaskInfo, objectType: ObjectService.ObjectTypes.ADHOC_TASK}
+            ];
 
-            function applyConfig(e, componentId, config) {
-                if (componentId == 'main') {
-                    $scope.config = config;
+            var module = _.find(modules, function (module) {
+                return module.name == $stateParams.type;
+            });
 
-                    // Load Cost info and render chart
-                    /****************************************************
-                     *Change this with correct calls for cost stuff
-                     ****************************************************/
-                    DashboardService.queryCasesByQueue(function (cases) {
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (Util.goodPositive(currentObjectId, false)) {
 
-                        var data = [];
 
-                        _.forEach(cases, function (value, key) {
-                            if (key.length > 0 && key[0] != '$') {
-                                data.push({
-                                    name: _.get($scope.config, 'redirectSettings[' + key + '].title') || key,
-                                    y: value,
-                                    drilldown: key
+                var chartData = [];
+                var labels = [];
+                var params;
+                module.getInfo(currentObjectId)
+                    .then(function (data) {
+                        params.objId = data.id;
+                        params.objType = module.objectType;
+                        params.start = 0;
+                        params.start = 16;
+                        return params;
+                    })
+                    .then(function (params) {
+                        Ecm.retrieveFolderList(params, function (folderList) {
+                            var folderData = [{name:  'base', count: 0}];
+                            var folders = [];
+                            if(folderList.children && folderList.children.length) {
+                                _.forEach(folderList.children, function(child) {
+                                    if(child.objectType == 'folder'){
+                                        var folder = {};
+                                        folder.name = child.name;
+                                        folder.objectId = child.objectId;
+                                        folders.push(folder);
+                                    } else {
+                                        folderData[0].count++;
+                                    }
+                                });
+                                _.forEach(folders, function(folder) {
+                                    //findDocumentCount
+                                    var documentCount = findDocumentCount(folder, params);
+                                    //add document count and name of folder to folderData
+                                    var folderInfo = {};
+                                    folderInfo.name = folder.name;
+                                    folderInfo.count = documentCount;
+                                    folderData.push(folderInfo);
                                 });
                             }
-                        });
 
-                        $scope.chartConfig = {
-                            chart: {
-                                type: 'column'
-                            },
-                            title: {
-                                text: ' '
-                            },
-                            noData: $translate.instant('dashboard.widgets.documents.noDataMessage'),
-                            xAxis: {
-                                type: 'category',
-                                title: {
-                                    text: $translate.instant('dashboard.widgets.documents.xAxis')
-                                }
-                            },
-                            yAxis: {
-                                title: {
-                                    text: $translate.instant('dashboard.widgets.documents.yAxis')
-                                }
-                            },
-                            series: [{
-                                type: 'column',
-                                dataLabels: {
-                                    enabled: true,
-                                    format: '{point.y}'
-                                },
-                                name: $translate.instant('dashboard.widgets.documents.title'),
-                                data: data,
-                                cursor: 'pointer',
-                                point: {
-                                    events: {
-                                        click: onBarClick
-                                    }
-                                }
-                            }]
-                        }
+                            $scope.folderData = folderData;
+                        },
+                        function(error) {
+
+                        });
                     });
-                }
+
+                //$scope.folderData has structure:
+                // [
+                //  {name: $nameOfFolder, count: $numberOfDocuments},
+                //  {name: $nameOfFolder, count: $numberOfDocuments}
+                //]
+
+                vm.showChart = chartData.length > 0 ? true : false;
+                vm.data = [chartData];
+                vm.labels = labels;
             }
+
+            var findDocumentCount = function (folder, params) {
+                params.folderId = folder.objectId;
+                var count = 0;
+                Ecm.retrieveFolderList(params, function (folderList) {
+                        if (folderList.children && folderList.children.length) {
+                            _.forEach(folderList.children, function (child) {
+                                if (child.objectType == 'folder') {
+                                    var folder = {};
+                                    folder.name = child.name;
+                                    folder.objectId = child.objectId;
+                                    folders.push(folder);
+                                } else {
+                                    count++;
+                                }
+                            });
+                            _.forEach(folder, function (folder) {
+                                count += findDocumentCount(folder, params);
+                            });
+                        }
+                    },
+                    function (error) {
+
+                    });
+                return count;
+            }
+
         }
     ]);
