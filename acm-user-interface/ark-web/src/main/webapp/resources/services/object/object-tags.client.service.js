@@ -16,7 +16,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
 
             /**
              * @ngdoc method
-             * @name getTags
+             * @name _getTags
              * @methodOf services:Object.TagsService
              *
              * @description
@@ -28,7 +28,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
              *
              * @returns {Object} Object returned by $resource
              */
-            getTags: {
+            _getTags: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/latest/service/tag',
                 isArray: true
@@ -36,7 +36,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
 
             /**
              * @ngdoc method
-             * @name getAssociatedTags
+             * @name _getAssociateTags
              * @methodOf services:Object.TagsService
              *
              * @description
@@ -50,7 +50,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
              *
              * @returns {Object} Object returned by $resource
              */
-            getAssociatedTags: {
+            _getAssociateTags: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/latest/service/tag/:objectId/:objectType',
                 isArray: true
@@ -58,7 +58,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
 
             /**
              * @ngdoc method
-             * @name associateTag
+             * @name _associateTag
              * @methodOf services:Object.TagsService
              *
              * @description
@@ -73,14 +73,14 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
              *
              * @returns {Object} Object returned by $resource
              */
-            associateTag: {
+            _associateTag: {
                 method: 'PUT',
                 url: 'proxy/arkcase/api/latest/service/tag/:objectId/:objectType/:tagId'
             },
 
             /**
              * @ngdoc method
-             * @name createTag
+             * @name _createTag
              * @methodOf services:Object.TagsService
              *
              * @description
@@ -95,14 +95,14 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
              *
              * @returns {Object} Object returned by $resource
              */
-            createTag: {
+            _createTag: {
                 method: 'PUT',
                 url: 'proxy/arkcase/api/latest/service/tag?name=:tagName&desc=:tagDesc&text=:tagText'
             },
 
             /**
              * @ngdoc method
-             * @name removeTag
+             * @name _removeTag
              * @methodOf services:Object.TagsService
              *
              * @description
@@ -117,7 +117,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
              *
              * @returns {Object} Object returned by $resource
              */
-            removeTag: {
+            _removeTag: {
                 method: 'DELETE',
                 url: 'proxy/arkcase/api/latest/service/tag/:objectId/:objectType/:tagId'
             }
@@ -126,7 +126,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
 
         /**
          * @ngdoc method
-         * @name retrieveAllTags
+         * @name getTags
          * @methodOf services:Object.TagsService
          *
          * @description
@@ -135,9 +135,9 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
          *
          * @returns {Object} Promise
          */
-        Service.retrieveAllTags = function () {
+        Service.getTags  = function () {
             return Util.serviceCall({
-                service: Service.getTags
+                service: Service._getTags
                 , onSuccess: function (data) {
                     if (Service.validateTags(data)) {
                         return data;
@@ -148,7 +148,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
 
         /**
          * @ngdoc method
-         * @name retrieveAssociatedTags
+         * @name getAssociateTags
          * @methodOf services:Object.TagsService
          *
          * @description
@@ -159,9 +159,9 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
          *
          * @returns {Object} Promise
          */
-        Service.retrieveAssociatedTags = function (objectId, objectType) {
+        Service.getAssociateTags = function (objectId, objectType) {
             return Util.serviceCall({
-                service: Service.getAssociatedTags
+                service: Service._getAssociateTags
                 , param: {
                     objectId: objectId,
                     objectType: objectType
@@ -177,7 +177,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
 
         /**
          * @ngdoc method
-         * @name associateNewTag
+         * @name associateTag
          * @methodOf services:Object.TagsService
          *
          * @description
@@ -189,9 +189,9 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
          *
          * @returns {Object} Promise
          */
-        Service.associateNewTag = function (objectId, objectType, tagId) {
+        Service.associateTag = function (objectId, objectType, tagId) {
             return Util.serviceCall({
-                service: Service.associateTag
+                service: Service._associateTag
                 , param: {
                     objectId: objectId,
                     objectType: objectType,
@@ -208,7 +208,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
 
         /**
          * @ngdoc method
-         * @name createNewTag
+         * @name createTag
          * @methodOf services:Object.TagsService
          *
          * @description
@@ -220,9 +220,9 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
          *
          * @returns {Object} Promise
          */
-        Service.createNewTag = function (tagName, tagDesc, tagText) {
+        Service.createTag = function (tagName, tagDesc, tagText) {
             return Util.serviceCall({
-                service: Service.createTag
+                service: Service._createTag
                 , param: {
                     tagName: tagName,
                     tagDesc: tagDesc,
@@ -239,7 +239,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
 
         /**
          * @ngdoc method
-         * @name removeAssociatedTag
+         * @name removeAssociateTag
          * @methodOf services:Object.TagsService
          *
          * @description
@@ -251,9 +251,9 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
          *
          * @returns {Object} Promise
          */
-        Service.removeAssociatedTag = function (objectId, objectType, tagId) {
+        Service.removeAssociateTag = function (objectId, objectType, tagId) {
             return Util.serviceCall({
-                service: Service.removeTag
+                service: Service._removeTag
                 , param: {
                     objectId: objectId,
                     objectType: objectType,

@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('document-details').controller('Document.TagsModalController', ['$scope', '$q', '$modalInstance', 'ConfigService', '$scopeTag', 'Object.TagsService',
-    function ($scope, $q, $modalInstance, ConfigService, $scopeTag, ObjectTagsService) {
+angular.module('document-details').controller('Document.TagsModalController', ['$scope', '$q', '$modalInstance', 'ConfigService', 'scopeTag', 'Object.TagsService',
+    function ($scope, $q, $modalInstance, ConfigService, scopeTag, ObjectTagsService) {
 
-        var promiseTypes = ObjectTagsService.retrieveAllTags().then(
+        var promiseTypes = ObjectTagsService.getTags().then(
             function (tags) {
                 $scope.tags = tags;
                 return tags;
@@ -11,13 +11,13 @@ angular.module('document-details').controller('Document.TagsModalController', ['
         );
 
         $scope.$watchCollection('selectedTag', function (newValue, oldValue) {
-            $scopeTag.selectedTag = $scope.selectedTag;
+            scopeTag.selectedTag = $scope.selectedTag;
         });
 
-        $scope.ok = function () {
+        $scope.onClickOk = function () {
             $modalInstance.close({tag: $scope.tag});
         };
-        $scope.cancel = function () {
+        $scope.onClickCancel = function () {
             $modalInstance.dismiss('cancel');
         }
     }
