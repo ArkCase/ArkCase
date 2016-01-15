@@ -203,7 +203,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         $scope.refresh = function () {
-            console.log("helper.Tree: refresh-content");
+            console.log("action button: refresh-content");
 
             $scope.$emit('refresh-content', $scope.caseSolr);
         };
