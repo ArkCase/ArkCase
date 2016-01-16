@@ -10,86 +10,129 @@ angular.module('dashboard.calendar', ['adf.provider'])
                 title: 'Calendar',
                 description: 'Displays cases files by queue',
                 controller: 'Dashboard.CalendarController',
+                controllerAs: 'calendar',
                 reload: true,
                 templateUrl: 'modules/dashboard/views/components/calendar-widget.client.view.html'
             });
     })
-    .controller('Dashboard.CalendarController', ['$scope', 'config', '$state', '$translate', 'Dashboard.DashboardService',
-        function ($scope, config, $state, $translate, DashboardService) {
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'calendar');
+    .controller('Dashboard.CalendarController', ['$scope', 'config', '$stateParams', '$translate', 'Dashboard.DashboardService'
+        , 'Helper.ObjectBrowserService', 'UtilService', 'Object.CalendarService',
+        function ($scope, config, $stateParams, $translate, DashboardService, CaseInfoService, ComplaintInfoService
+            , ObjectService, HelperObjectBrowserService, Util, CalendarService) {
 
-            $scope.config = null;
-            $scope.chartConfig = null;
+            var vm = this;
 
-            function onBarClick(e) {
-                if ($scope.config.redirectSettings) {
-                    var redirectObj = $scope.config.redirectSettings[this.name];
-                    if (redirectObj) {
-                        $state.go(redirectObj.state, redirectObj.params)
-                    }
-                }
-            }
+            var modules = [
+                {name: "CASE_FILE", configName: "cases", getInfo: CaseInfoService.getCaseInfo, objectType: ObjectService.ObjectTypes.CASE_FILE}
+                , {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo, objectType: ObjectService.ObjectTypes.COMPLAINT}
+            ];
 
-            function applyConfig(e, componentId, config) {
-                if (componentId == 'main') {
-                    $scope.config = config;
+            var module = _.find(modules, function (module) {
+                return module.name == $stateParams.type;
+            });
 
-                    // Load Cost info and render chart
-                    /****************************************************
-                     *Change this with correct calls for cost stuff
-                     ****************************************************/
-                    DashboardService.queryCasesByQueue(function (cases) {
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (Util.goodPositive(currentObjectId, false)) {
 
-                        var data = [];
+                var chartData = [];
+                var labels = [];
 
-                        _.forEach(cases, function (value, key) {
-                            if (key.length > 0 && key[0] != '$') {
-                                data.push({
-                                    name: _.get($scope.config, 'redirectSettings[' + key + '].title') || key,
-                                    y: value,
-                                    drilldown: key
-                                });
-                            }
-                        });
-
-                        $scope.chartConfig = {
-                            chart: {
-                                type: 'column'
-                            },
-                            title: {
-                                text: ' '
-                            },
-                            noData: $translate.instant('dashboard.widgets.calendar.noDataMessage'),
-                            xAxis: {
-                                type: 'category',
-                                title: {
-                                    text: $translate.instant('dashboard.widgets.calendar.xAxis')
-                                }
-                            },
-                            yAxis: {
-                                title: {
-                                    text: $translate.instant('dashboard.widgets.calendar.yAxis')
-                                }
-                            },
-                            series: [{
-                                type: 'column',
-                                dataLabels: {
-                                    enabled: true,
-                                    format: '{point.y}'
-                                },
-                                name: $translate.instant('dashboard.widgets.calendar.title'),
-                                data: data,
-                                cursor: 'pointer',
-                                point: {
-                                    events: {
-                                        click: onBarClick
+                module.getInfo(currentObjectId)
+                    .then(function (data) {
+                        var calendarFolderId = data.container.calendarFolderId;
+                        return calendarFolderId;
+                    })
+                    .then(function (calendarFolderId) {
+                        CalendarService.queryCalendarEvents(calendarFolderId)
+                            .then(function (calendarEvents) {
+                                var events = [];
+                                if (calendarEvents.items) {
+                                    for (var i = 0; i < calendarEvents.items.length; i++) {
+                                        var calendarEvent = {};
+                                        calendarEvent.id = calendarEvents.items[i].id;
+                                        calendarEvent.title = calendarEvents.items[i].subject;
+                                        calendarEvent.start = calendarEvents.items[i].startDate;
+                                        calendarEvent.end = calendarEvents.items[i].endDate;
+                                        events.push(calendarEvent);
                                     }
+
+                                    /**
+                                     * create initial data
+                                     */
+                                    $scope.calendarChartData = [];
+                                    var today = new Date();
+                                    var targetDays = getRange(today, today + 7);
+                                    _.forEach(targetDays, function (day) {
+                                        $scope.calendarChartData.push({day: day, count: 0})
+                                    });
+
+                                    /**
+                                     * For each of the days we want to look at:
+                                     * 1. Check if any of the dates of the event are our target dates
+                                     * 2. If they are, add to count for that day
+                                     *
+                                     * TODO: Woefully inefficient, should invert the logic to be:
+                                     * TODO: 1. Get range of days for calendar event
+                                     * TODO: 2. Loop through range and add to our target date if the days are the same
+                                     * TODO: This would make it so you only have to loop through range for every event once,
+                                     * TODO: but for short events it doesn't matter. This was just
+                                     * TODO: the quick and dirty way to do it with the amount of time I had.
+                                     */
+                                    _.forEach($scope.calendarChartData, function (dataPoint, index) {
+                                        var dayTime = dataPoint.day.getTime();
+                                        var count = dataPoint.count;
+                                        _.forEach(events, function (event) {
+                                            var rangeOfEvent = getRange(event.start, event.end);
+                                            _.forEach(rangeOfEvent, function (day) {
+                                                if (dayTime === day.getTime()) {
+                                                    count++;
+                                                }
+                                            });
+                                        });
+
+                                        $scope.calendarChartData[index].count = count;
+                                    });
                                 }
-                            }]
-                        }
+                                return $scope.calendarChartData ? $scope.calendarChartData : null;
+                            })
+                            .then(function (calendarChartData) {
+                                if (calendarChartData) {
+                                    //TODO: Populate chart data with 'calendarChartData'
+                                    /** Structure of end data will be:
+                                     * [
+                                     *  {day: $day1, count:  $count},
+                                     *  ...
+                                     *  {day: $day7, count: $count}
+                                     * ]
+                                     **/
+                                }
+                            });
+
                     });
-                }
+
+                vm.showChart = chartData.length > 0;
+                vm.data = [chartData];
+                vm.labels = labels;
             }
+
+            /**
+             * credit: http://stackoverflow.com/a/4413991
+             */
+            var getRange = function (startDate, endDate, addFn, interval) {
+
+                addFn = addFn || Date.prototype.addDays;
+                interval = interval || 1;
+
+                var retVal = [];
+                var current = new Date(startDate);
+
+                while (current <= endDate) {
+                    retVal.push(new Date(current));
+                    current = addFn.call(current, interval);
+                }
+
+                return retVal;
+
+            };
         }
     ]);

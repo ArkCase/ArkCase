@@ -67,7 +67,7 @@ angular.module('dashboard.documents', ['adf.provider'])
                  * use $scope.folderData to populate chart data
                  **/
 
-                vm.showChart = chartData.length > 0 ? true : false;
+                vm.showChart = chartData.length > 0;
                 vm.data = [chartData];
                 vm.labels = labels;
             }
