@@ -37,7 +37,7 @@ angular.module('dashboard.documents', ['adf.provider'])
 
                 var chartData = [];
                 var labels = [];
-                var params;
+                var params = {};
                 module.getInfo(currentObjectId)
                     .then(function (data) {
                         params.objId = data.id;
