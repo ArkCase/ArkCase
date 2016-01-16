@@ -139,7 +139,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                 resolve: {
                     config: function () {
                         return $scope.caseFileSearchConfig;
-                    },
+                    }
                     //filter: function () {
                     //    return $scope.caseFileSearchConfig.caseInfoFilter;
                     //}
@@ -162,14 +162,14 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/cases/views/components/case-split.client.view.html',
                 controller: 'Cases.SplitController',
-                size: 'lg',
+                size: 'lg'
             });
             modalInstance.result.then(function (caseSummary) {
                 if (caseSummary) {
                     if (caseSummary != null) {
                         MergeSplitService.splitCaseFile(caseSummary).then(
                             function (data) {
-                                ObjectService.gotoURL(ObjectService.ObjectTypes.CASE_FILE, data.id);
+                                ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, data.id);
                             });
                     }
                 }
