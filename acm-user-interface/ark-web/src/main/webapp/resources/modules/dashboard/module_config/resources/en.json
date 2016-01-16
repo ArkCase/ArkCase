@@ -177,7 +177,7 @@
       "calendar": {
         "title": "Calendar",
         "description": "Displays chart of scheduled events per day",
-        "noDataMessage": "Currently there are no documents to display"
+        "noDataMessage": "Currently there are no events to display"
       },
       "reworkdetails": {
         "title": "Rework Details",
