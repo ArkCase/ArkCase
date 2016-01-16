@@ -12,7 +12,8 @@ angular.module('dashboard.expenses', ['adf.provider'])
                 templateUrl: 'modules/dashboard/views/components/expenses-widget.client.view.html'
             });
     })
-    .controller('Dashboard.ExpensesController', ['$scope', 'config', '$state', '$translate', 'UtilService', 'Dashboard.DashboardService', 'CostTracking.InfoService', 'Helper.ObjectBrowserService',
+    .controller('Dashboard.ExpensesController', ['$scope', 'config', '$state', '$translate', 'UtilService'
+        , 'Dashboard.DashboardService', 'CostTracking.InfoService', 'Helper.ObjectBrowserService',
         function ($scope, config, $state, $translate, Util, DashboardService, CostTrackingInfoService, HelperObjectBrowserService) {
 
             var vm = this;
@@ -22,18 +23,19 @@ angular.module('dashboard.expenses', ['adf.provider'])
                 CostTrackingInfoService.getCostsheetInfo(currentObjectId).then(
                     function (costsheetInfo) {
 
+                        //TODO: Use _.clone/_.cloneDeep instead here? Not familiar with angular.copy,
+                        //TODO: but _.clone/_.cloneDeep is supposed to be faster
                         var costs = angular.copy(costsheetInfo.costs);
 
-                        var data = {};
-                        var chartData = []
+                        var chartData = [];
                         var labels = [];
 
-                        angular.forEach(costs, function (costIter) {
+                        _.forEach(costs, function (costIter) {
                             labels.push(costIter.title);
                             chartData.push(costIter.value);
                         });
 
-                        vm.showChart = chartData.length > 0 ? true : false;
+                        vm.showChart = chartData.length > 0;
                         vm.data = [chartData];
                         vm.labels = labels;
                     }

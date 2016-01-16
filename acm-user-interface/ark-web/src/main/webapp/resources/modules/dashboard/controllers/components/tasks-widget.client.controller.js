@@ -23,7 +23,7 @@ angular.module('dashboard.tasks', ['adf.provider'])
             var modules = [
                 {name: "CASE_FILE", configName: "cases", getInfo: ObjectTaskService.queryChildTasks, objectType: ObjectService.ObjectTypes.CASE_FILE}
                 , {name: "COMPLAINT", configName: "complaints", getInfo: ObjectTaskService.queryChildTasks, objectType: ObjectService.ObjectTypes.COMPLAINT}
-            ]
+            ];
 
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;

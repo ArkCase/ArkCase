@@ -21,7 +21,7 @@ angular.module('dashboard.reworkdetails', ['adf.provider'])
             var modules = [
                 {name: "TASK", configName: "tasks", getInfo: TaskInfoService.getTaskInfo}
                 , {name: "ADHOC", configName: "tasks", getInfo: TaskInfoService.getTaskInfo}
-            ]
+            ];
 
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;

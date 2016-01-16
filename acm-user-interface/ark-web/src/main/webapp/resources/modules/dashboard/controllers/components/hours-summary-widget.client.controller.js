@@ -12,7 +12,8 @@ angular.module('dashboard.hourssummary', ['adf.provider'])
                 templateUrl: 'modules/dashboard/views/components/hours-summary-widget.client.view.html'
             });
     })
-    .controller('Dashboard.HoursSummaryController', ['$scope', '$translate', '$stateParams', 'UtilService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService',
+    .controller('Dashboard.HoursSummaryController', ['$scope', '$translate', '$stateParams', 'UtilService'
+        , 'TimeTracking.InfoService', 'Helper.ObjectBrowserService',
         function ($scope, $translate, $stateParams, Util, TimeTrackingInfoService, HelperObjectBrowserService) {
 
             var vm = this;
@@ -22,20 +23,19 @@ angular.module('dashboard.hourssummary', ['adf.provider'])
                 TimeTrackingInfoService.getTimesheetInfo(currentObjectId).then(
                     function (timesheetInfo) {
 
-                        var data = {};
                         var chartData = [];
                         var labels = [];
 
                         var times = [];
                         var i = 0;
                         if (timesheetInfo.times.length > 7) {
-                            var i = timesheetInfo.times.length - 7;
+                            i = timesheetInfo.times.length - 7;
                         }
                         for (i; i < timesheetInfo.times.length; i++) {
                             times.push(timesheetInfo.times[i]);
                         }
 
-                        angular.forEach(times, function (timeIter) {
+                        _.forEach(times, function (timeIter) {
                             //reformat date to MM-DD-YYYY from (example) "2016-01-10T00:00:00.000-0500"
                             var date = timeIter.date.substring(0, 10);
                             //date = YYYY-MM-DD
@@ -47,9 +47,9 @@ angular.module('dashboard.hourssummary', ['adf.provider'])
 
                             labels.push(date);
                             chartData.push(timeIter.value);
-                        })
+                        });
 
-                        vm.showChart = chartData.length > 0 ? true : false;
+                        vm.showChart = chartData.length > 0;
                         vm.data = [chartData];
                         vm.labels = labels;
                     }

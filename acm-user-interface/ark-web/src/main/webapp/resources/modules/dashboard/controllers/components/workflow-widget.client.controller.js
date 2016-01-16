@@ -24,7 +24,7 @@ angular.module('dashboard.workflow', ['adf.provider'])
             var modules = [
                 {name: "TASK", configName: "tasks", getInfo: TaskInfoService.getTaskInfo, getHistory : TaskHistoryService.queryTaskHistory}
                 , {name: "ADHOC", configName: "tasks", getInfo: TaskInfoService.getTaskInfo, getHistory : TaskHistoryService.queryTaskHistory}
-            ]
+            ];
 
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;

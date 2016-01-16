@@ -22,7 +22,7 @@ angular.module('dashboard.references', ['adf.provider'])
             var modules = [
                 {name: "CASE_FILE", configName: "cases", getInfo: CaseInfoService.getCaseInfo}
                 , {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
-            ]
+            ];
 
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
