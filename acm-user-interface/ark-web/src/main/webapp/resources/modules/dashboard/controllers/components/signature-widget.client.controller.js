@@ -22,7 +22,7 @@ angular.module('dashboard.signature', ['adf.provider'])
             var modules = [
                 {name: "TASK", configName: "tasks", getInfo: ObjectSignatureService.findSignatures, objectType: ObjectService.ObjectTypes.TASK}
                 , {name: "ADHOC", configName: "tasks", getInfo: ObjectSignatureService.findSignatures, objectType: ObjectService.ObjectTypes.TASK}
-            ]
+            ];
 
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;

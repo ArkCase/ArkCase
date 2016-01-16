@@ -12,8 +12,10 @@ angular.module('dashboard.time', ['adf.provider'])
                 templateUrl: 'modules/dashboard/views/components/time-widget.client.view.html'
             });
     })
-    .controller('Dashboard.TimeController', ['$scope', 'config', '$state', '$stateParams', '$translate', 'Dashboard.DashboardService', 'Helper.ObjectBrowserService', 'UtilService', 'Object.TimeService',
-        function ($scope, config, $state, $stateParams, $translate, DashboardService, HelperObjectBrowserService, Util, ObjectTimeService) {
+    .controller('Dashboard.TimeController', ['$scope', 'config', '$state', '$stateParams', '$translate'
+        , 'Dashboard.DashboardService', 'Helper.ObjectBrowserService', 'UtilService', 'Object.TimeService',
+        function ($scope, config, $state, $stateParams, $translate, DashboardService, HelperObjectBrowserService
+            , Util, ObjectTimeService) {
 
             var vm = this;
 
@@ -21,22 +23,23 @@ angular.module('dashboard.time', ['adf.provider'])
             ObjectTimeService.queryTimesheets($stateParams.type, currentObjectId).then(
                 function (timesheets) {
                     for (var i = 0; i < timesheets.length; i++) {
-                        timesheets[i].acm$_formName = $translate.instant("cases.comp.time.formNamePrefix") + " " + Util.goodValue(timesheets[i].startDate) + " - " + Util.goodValue(timesheets[i].endDate);
+                        timesheets[i].acm$_formName = $translate.instant("cases.comp.time.formNamePrefix")
+                            + " " + Util.goodValue(timesheets[i].startDate) + " - " + Util.goodValue(timesheets[i].endDate);
                         timesheets[i].acm$_hours = _.reduce(Util.goodArray(timesheets[i].times), function (total, n) {
                             return total + Util.goodValue(n.value, 0);
                         }, 0);
                     }
 
                     var data = {};
-                    var chartData = []
+                    var chartData = [];
                     var labels = [];
 
-                    angular.forEach(timesheets, function (timeIter) {
+                    _.forEach(timesheets, function (timeIter) {
                         labels.push(timeIter.user.fullName);
                         chartData.push(timeIter.acm$_hours);
-                    })
+                    });
 
-                    vm.showChart = chartData.length > 0 ? true : false;
+                    vm.showChart = chartData.length > 0;
                     vm.data = [chartData];
                     vm.labels = labels;
                 }

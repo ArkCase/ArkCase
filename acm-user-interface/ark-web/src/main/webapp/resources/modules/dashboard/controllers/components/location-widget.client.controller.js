@@ -55,7 +55,6 @@ angular.module('dashboard.locations', ['adf.provider'])
             }
 
             var createFullAddress = function (location) {
-                var addr = null;
                 if (location) {
                     var street = location.streetAddress;
                     if (location.streetAddress2) {
@@ -70,6 +69,7 @@ angular.module('dashboard.locations', ['adf.provider'])
                     }
                     return street + ", " + city + ", " + state + " " + zip + " " + country;
                 }
+                return undefined;
             };
         }
     ]);

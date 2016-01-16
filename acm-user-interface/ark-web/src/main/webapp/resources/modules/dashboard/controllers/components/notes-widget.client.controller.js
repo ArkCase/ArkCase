@@ -15,8 +15,8 @@ angular.module('dashboard.notes', ['adf.provider'])
     .controller('Dashboard.NotesController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
         , 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ObjectService'
         , 'Object.NoteService', 'ConfigService',
-        function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication, DashboardService
-            , ObjectService, ObjectNoteService, ConfigService) {
+        function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
+            , DashboardService, ObjectService, ObjectNoteService, ConfigService) {
 
             var promiseConfig;
             var promiseInfo;

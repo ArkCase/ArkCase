@@ -12,8 +12,10 @@ angular.module('dashboard.cost', ['adf.provider'])
                 templateUrl: 'modules/dashboard/views/components/cost-widget.client.view.html'
             });
     })
-    .controller('Dashboard.CostController', ['$scope', 'config', '$state', '$stateParams', '$translate', 'Dashboard.DashboardService', 'Helper.ObjectBrowserService', 'UtilService', 'Object.CostService',
-        function ($scope, config, $state, $stateParams, $translate, DashboardService, HelperObjectBrowserService, Util, ObjectCostService) {
+    .controller('Dashboard.CostController', ['$scope', 'config', '$state', '$stateParams', '$translate'
+        , 'Dashboard.DashboardService', 'Helper.ObjectBrowserService', 'UtilService', 'Object.CostService',
+        function ($scope, config, $state, $stateParams, $translate, DashboardService, HelperObjectBrowserService, Util
+            , ObjectCostService) {
 
             var vm = this;
 
@@ -28,16 +30,15 @@ angular.module('dashboard.cost', ['adf.provider'])
                             }, 0);
                         }
 
-                        var data = {};
                         var chartData = [];
                         var labels = [];
 
-                        angular.forEach(costsheets, function (costIter) {
+                        _.forEach(costsheets, function (costIter) {
                             labels.push(costIter.user.fullName);
                             chartData.push(costIter.acm$_costs);
-                        })
+                        });
 
-                        vm.showChart = chartData.length > 0 ? true : false;
+                        vm.showChart = chartData.length > 0;
                         vm.data = [chartData];
                         vm.labels = labels;
                     }
