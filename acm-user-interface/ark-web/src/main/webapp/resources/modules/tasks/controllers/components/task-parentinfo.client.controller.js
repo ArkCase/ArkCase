@@ -34,6 +34,14 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
         };
 
         $scope.$on('object-updated', function (e, data) {
+            updateData(data);
+        });
+
+        $scope.$on('object-refreshed', function (e, taskInfo) {
+            updateData(taskInfo);
+        });
+
+        var updateData = function (data) {
             if (!TaskInfoService.validateTaskInfo(data)) {
                 return;
             }
@@ -68,7 +76,7 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
                     }
                 );
             }
-        });
+        };
 
     }
 ]);

@@ -17,19 +17,21 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
         var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         if (Util.goodPositive(currentObjectId, false)) {
             CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
-                $scope.caseInfo = caseInfo;
-                $scope.gridOptions = $scope.gridOptions || {};
-                $scope.gridOptions.data = $scope.caseInfo.references;
-                //gridHelper.hidePagingControlsIfAllDataShown($scope.caseInfo.references.length);
+                updateData(caseInfo);
                 return caseInfo;
             });
         }
 
         $scope.$on('object-refreshed', function (e, caseInfo) {
+            updateData(caseInfo);
+        });
+
+        var updateData = function (caseInfo) {
             $scope.caseInfo = caseInfo;
             $scope.gridOptions = $scope.gridOptions || {};
             $scope.gridOptions.data = $scope.caseInfo.references;
-        });
+            //gridHelper.hidePagingControlsIfAllDataShown($scope.caseInfo.references.length);
+        };
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();

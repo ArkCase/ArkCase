@@ -43,10 +43,6 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        //$scope.$on('object-selected', function onSelectedCase(e, selectedCase) {
-        //    $scope.caseSolr = selectedCase;
-        //});
-
         $scope.dueDate = null;
         var previousId = null;
         $scope.$on('object-updated', function (e, caseInfo) {

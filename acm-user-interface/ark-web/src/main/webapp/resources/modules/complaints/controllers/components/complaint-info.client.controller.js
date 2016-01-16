@@ -45,14 +45,18 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             }
         );
 
-
-        //$scope.$on('object-selected', function onSelectedComplaint(e, selectedComplaint) {
-        //    $scope.complaintSolr = selectedComplaint;
-        //});
-
         $scope.dueDate = null;
         var previousId = null;
         $scope.$on('object-updated', function (e, data) {
+            updateData(data);
+        });
+
+        $scope.$on('object-refreshed', function (e, complaintInfo) {
+            previousId = null;
+            updateData(complaintInfo);
+        });
+
+        var updateData = function (data) {
             if (!ComplaintInfoService.validateComplaintInfo(data)) {
                 return;
             }
@@ -73,24 +77,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
                 );
                 previousId = $stateParams.id;
             }
-        });
-        //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        //if (Util.goodPositive(currentObjectId, false)) {
-        //    ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
-        //        $scope.complaintInfo = complaintInfo;
-        //        $scope.assignee = ObjectModelService.getAssignee(complaintInfo);
-        //        $scope.owningGroup = ObjectModelService.getGroup(complaintInfo);
-        //        ComplaintLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function (approvers) {
-        //            var options = [];
-        //            _.each(approvers, function (approver) {
-        //                options.push({id: approver.userId, name: approver.fullName});
-        //            });
-        //            $scope.assignees = options;
-        //            return approvers;
-        //        });
-        //        return complaintInfo;
-        //    });
-        //}
+        };
 
         /**
          * Persists the updated complaint metadata to the ArkComplaint data

@@ -14,11 +14,10 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             }
         );
 
-
         ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
             $scope.config = _.find(moduleConfig.components, {id: "newTask"});
 
-            $scope.userSearchConfig = _.find(moduleConfig.components, {id: "userSearch"})
+            $scope.userSearchConfig = _.find(moduleConfig.components, {id: "userSearch"});
 
             $scope.config.data.assignee = $scope.userId;
             $scope.config.data.taskStartDate = new Date();
