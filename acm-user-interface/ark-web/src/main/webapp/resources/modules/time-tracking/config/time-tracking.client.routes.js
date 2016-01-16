@@ -24,7 +24,7 @@ angular.module('time-tracking').config(['$stateProvider',
 				url: '/:id/main',
 				templateUrl: 'modules/time-tracking/views/components/time-tracking-main.client.view.html',
 				params: {
-					"type": "cost"
+					"type": "TIMESHEET"
 				}
 			})
 

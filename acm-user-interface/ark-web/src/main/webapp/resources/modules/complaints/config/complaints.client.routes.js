@@ -29,7 +29,7 @@ angular.module('complaints').config(['$stateProvider', '$urlRouterProvider',
                 url: '/:id/main',
                 templateUrl: 'modules/complaints/views/components/complaint-main.client.view.html',
                 params: {
-                    "type": "complaint"
+                    "type": "COMPLAINT"
                 }
             })
 
