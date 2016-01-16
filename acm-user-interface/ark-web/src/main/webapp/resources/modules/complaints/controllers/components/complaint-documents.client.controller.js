@@ -41,9 +41,9 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             });
         }
 
-        $scope.$on('object-refreshed', function (e, caseInfo) {
-            $scope.caseInfo = caseInfo;
-            $scope.objectId = caseInfo.id;
+        $scope.$on('object-refreshed', function (e, complaintInfo) {
+            $scope.complaintInfo = complaintInfo;
+            $scope.objectId = complaintInfo.complaintId;
         });
 
         var silentReplace = function (value, replace, replacement) {
