@@ -29,7 +29,7 @@ angular.module('cases').config(['$stateProvider', '$urlRouterProvider',
                 url: '/:id/main',
                 templateUrl: 'modules/cases/views/components/case-main.client.view.html',
                 params: {
-                    "type": "casefile"
+                    "type": "CASE_FILE"
                 }
             })
 

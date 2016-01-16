@@ -29,7 +29,7 @@ angular.module('tasks').config(['$stateProvider', '$urlRouterProvider',
                 url: '/:type/:id/main',
                 templateUrl: 'modules/tasks/views/components/task-main.client.view.html',
                 params: {
-                    "type": "task"
+                    "type": "TASK"
                 }
             })
 

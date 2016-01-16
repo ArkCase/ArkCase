@@ -19,7 +19,7 @@ angular.module('cost-tracking').config(['$stateProvider',
 				url: '/:id/main',
 				templateUrl: 'modules/cost-tracking/views/components/cost-tracking-main.client.view.html',
 				params: {
-					"type": "cost"
+					"type": "COSTSHEET"
 				}
 			})
 
