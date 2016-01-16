@@ -14,9 +14,9 @@ angular.module('dashboard.documents', ['adf.provider'])
     })
     .controller('Dashboard.DocumentsController', ['$scope', 'config', '$stateParams', '$translate', 'Dashboard.DashboardService'
         , 'Helper.ObjectBrowserService', 'EcmService', 'Case.InfoService', 'ObjectService', 'Complaint.InfoService'
-        , 'Task.InfoService',
+        , 'Task.InfoService', 'UtilService',
         function ($scope, config, $stateParams, $translate, DashboardService, HelperObjectBrowserService, Ecm, CaseInfoService
-            , ObjectService, ComplaintInfoService, TaskInfoService) {
+            , ObjectService, ComplaintInfoService, TaskInfoService, Util) {
 
             var vm = this;
 
