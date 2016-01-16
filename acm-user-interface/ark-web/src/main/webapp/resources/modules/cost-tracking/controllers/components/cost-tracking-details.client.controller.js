@@ -18,6 +18,10 @@ angular.module('cost-tracking').controller('CostTracking.DetailsController', ['$
             });
         }
 
+        $scope.$on('object-refreshed', function (e, costsheetInfo) {
+            $scope.costsheetInfo = costsheetInfo;
+        });
+
         $scope.saveDetails = function() {
             var costsheetInfo = Util.omitNg($scope.costsheetInfo);
             CostTrackingInfoService.saveCostsheetInfo(costsheetInfo).then(

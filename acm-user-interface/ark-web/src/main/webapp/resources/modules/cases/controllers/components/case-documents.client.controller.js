@@ -29,11 +29,6 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
         $scope.objectId = $stateParams.id;
 
-        //$scope.$on('object-updated', function (e, data) {
-        //    if (CaseInfoService.validateCaseInfo(data)) {
-        //        $scope.caseInfo = data;
-        //    }
-        //});
         var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         if (Util.goodPositive(currentObjectId, false)) {
             CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {

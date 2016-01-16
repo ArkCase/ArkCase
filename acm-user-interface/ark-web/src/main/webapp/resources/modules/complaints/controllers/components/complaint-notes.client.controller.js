@@ -31,8 +31,8 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
         });
 
 
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         $scope.retrieveGridData = function () {
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
             if (Util.goodPositive(currentObjectId, false)) {
                 var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.COMPLAINT, currentObjectId);
                 $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
