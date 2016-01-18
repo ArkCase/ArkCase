@@ -3,15 +3,15 @@
 angular.module('preference').factory('Preference.PreferenceService', ['$resource',
     function ($resource) {
         return $resource('', {}, {
-            getEnabledWidgets: {
+            getPreferredWidgets: {
                 method: 'GET',
-                url: 'proxy/arkcase/api/v1/plugin/dashboard/get',
+                url: 'proxy/arkcase/api/latest/plugin/dashboard/widgets/preferred/{moduleName}',
                 data: ''
             },
 
-            updateWidgetStatus: {
+            setPreferredWidgets: {
                 method: 'POST',
-                url: 'proxy/arkcase/api/v1/plugin/casefile/number/by/queue'
+                url: 'proxy/arkcase/api/latest/plugin/dashboard/widgets/preferred'
             }
         })
     }

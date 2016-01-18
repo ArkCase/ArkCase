@@ -1,14 +1,13 @@
 'use strict';
 
 angular.module('preference').controller('Preference.WidgetsListController', ['$scope', '$q', '$state', '$stateParams'
-    , 'Preference.PreferenceService',
-    function ($scope, $q, $state, $stateParams, PreferenceService) {
+    , 'Preference.PreferenceService', 'Dashboard.DashboardService',
+    function ($scope, $q, $state, $stateParams, PreferenceService, DashboardService) {
         $scope.widgets = [];
 
         $scope.formData = ["*", {"type": "submit", "title": "Save"}];
 
         $scope.selectWidget = selectWidget;
-        $scope.submitForm = submitForm;
         $scope.toggleWidget = toggleWidget;
         $scope.enableWidget = enableWidget;
 
@@ -18,15 +17,13 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
 
         $scope.$on('show-widgets', showWidgets);
 
-        function toggleDefaultView($event) {
-            //          $event.preventDefault();
-            console.log("Default view toggled");
+        function toggleDefaultView() {
+            DashboardService.saveConfig({
+                dashboardConfig: angular.toJson($scope.preferenceDashboardConfig),
+                module: $scope.moduleName,
+                isCollapsed: $scope.defaultViewExpand
+            });
         }
-
-        function submitForm() {
-            $scope.$emit('req-save-module');
-        }
-
         /**
          * Toggle widget panel on header click
          * @param widget
@@ -43,24 +40,36 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
 
         function enableWidget($event, widget, enable) {
             widget.enabled = enable;
-            PreferenceService.updateWidgetStatus({
-                widget : widget,
-                enable: enable
+            var preferredWidgets = getEnabledWidgets();
+            PreferenceService.setPreferredWidgets({
+                widgets: preferredWidgets
             });
         }
+        var getEnabledWidgets = function() {
+            var enabledWidgets = [];
+            _.forEach($scope.widgets, function (widget) {
+                if(widget.enabled) {
+                    enabledWidgets.push(widget);
+                }
 
+            });
+            return enabledWidgets;
+        };
 
-        function showWidgets(e, widgets) {
-            // Add collapsed property
-            // Get enabled widgets -> loop through enabled widgets
-            // -> enable corresponding widget in widgets (widget.enabled = true)
+        function showWidgets(e, widgets, moduleName, config) {
+            $scope.preferenceDashboardConfig = config;
+            $scope.moduleName = moduleName;
+            $scope.defaultViewExpand = config.isCollapsed ? 'true' : 'false';
 
-            var promiseEnabledWidgets = PreferenceService.getEnabledWidgets().then(function (enabledWidgets) {
+            PreferenceService.getPreferredWidgets({moduleName: moduleName}, function (preferredWidgets) {
                 _.forEach(widgets, function (widget) {
                     widget.isCollapsed = true;
-                    widget.enabled = _.includes(enabledWidgets, widget);
+                    //assuming service returns camelCase widget names
+                    widget.enabled = _.includes(preferredWidgets, widget.controllerAs);
                 });
-            });
+             }, function(error) {
+
+             });
 
             $scope.widgets = widgets;
             $scope.showDefaultForm = true;
