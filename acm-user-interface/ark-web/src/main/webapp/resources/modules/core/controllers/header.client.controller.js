@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus', '$state',
-    function ($scope, Authentication, Menus, $state) {
+angular.module('core').controller('HeaderController', ['$scope', '$rootScope', 'Authentication', 'Menus', '$state',
+    function ($scope, $rootScope, Authentication, Menus, $state) {
         $scope.$emit('req-component-config', 'header');
         $scope.authentication = Authentication;
         $scope.isCollapsed = false;
@@ -19,6 +19,16 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
                 $scope.count = config.searchParams.n;
             }
         }
+
+        $rootScope.$on("rootScope:servcomm", function (e, selectedObject) {
+            console.log("HeaderController, rootScope:servcomm");
+            //set up listener to server comm
+        });
+
+        //$scope.$on("rootScope:servcomm", function (e, selectedObject) {
+        //    console.log("HeaderController, rootScope:servcomm - scope");
+        //});
+
 
         $scope.toggleCollapsibleMenu = function () {
             $scope.isCollapsed = !$scope.isCollapsed;

@@ -75,9 +75,12 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         $scope.createNew = function () {
-            $state.go("frevvo", {
-                name: "new-case"
-            });
+            //$state.go("frevvo", {
+            //    name: "new-case"
+            //});
+
+            $scope.$emit("rootScope:servcomm", {request: "new-case", data: "new case data"});
+
         };
 
         $scope.edit = function (caseInfo) {
