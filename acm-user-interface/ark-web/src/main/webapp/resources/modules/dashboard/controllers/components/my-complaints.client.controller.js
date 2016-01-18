@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('dashboard.my-complaints')
-    .controller('Dashboard.MyComplaintsController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
-        function ($scope, $translate, Authentication, DashboardService) {
+    .controller('Dashboard.MyComplaintsController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'Helper.UiGridService', 'UtilService', 'ObjectService',
+        function ($scope, $translate, Authentication, DashboardService, HelperUiGridService, Util, ObjectService) {
 
             var vm = this;
+            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'myComplaints');
@@ -13,7 +14,7 @@ angular.module('dashboard.my-complaints')
 
             $scope.onClickObjLink = function (event, rowEntity) {
                 event.preventDefault();
-                var targetType = "COMPLAINT";
+                var targetType = ObjectService.ObjectTypes.COMPLAINT;
                 var targetId = Util.goodMapValue(rowEntity, "complaintId");
                 gridHelper.showObject(targetType, targetId);
             };
