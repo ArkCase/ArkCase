@@ -18,6 +18,10 @@ angular.module('complaints').controller('Complaints.DetailsController', ['$scope
             });
         }
 
+        $scope.$on('object-refreshed', function (e, complaintInfo) {
+            $scope.complaintInfo = complaintInfo;
+        });
+
 
         $scope.options = {
             focus: true

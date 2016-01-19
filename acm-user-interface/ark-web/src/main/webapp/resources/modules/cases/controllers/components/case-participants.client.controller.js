@@ -150,17 +150,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                 //gridHelper.hidePagingControlsIfAllDataShown(participants.length);
             });
         };
-        //$scope.$on('object-updated', function (e, data) {
-        //    if (!CaseInfoService.validateCaseInfo(data)) {
-        //        return;
-        //    }
-        //
-        //    if (data.id == $stateParams.id) {
-        //        updateGridData(data);
-        //    } else {                      // condition when data comes before state is routed and config is not set
-        //        deferParticipantData.set(data);
-        //    }
-        //});
+
         var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         if (Util.goodPositive(currentObjectId, false)) {
             CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
@@ -168,6 +158,10 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                 return caseInfo;
             });
         }
+
+        $scope.$on('object-refreshed', function (e, caseInfo) {
+            updateGridData(caseInfo);
+        });
 
 
         $scope.addNew = function () {

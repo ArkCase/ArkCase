@@ -20,10 +20,6 @@ angular.module('tasks').controller('Tasks.WorkflowOverviewController', ['$scope'
             return config;
         });
 
-        //TaskInfoService.getTaskInfo($stateParams.id).then(function (taskInfo) {
-        //    $scope.taskInfo = taskInfo;
-        //    return taskInfo;
-        //});
 
         $scope.retrieveGridData = function () {
             var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();

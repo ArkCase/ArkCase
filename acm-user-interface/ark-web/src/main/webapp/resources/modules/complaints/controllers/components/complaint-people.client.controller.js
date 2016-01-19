@@ -410,18 +410,6 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }); //end $q
         };
 
-        //$scope.$on('object-updated', function (e, data) {
-        //    if (!ComplaintInfoService.validateComplaintInfo(data)) {
-        //        return;
-        //    }
-        //
-        //    if (data.complaintId == $stateParams.id) {
-        //        updateGridData(data);
-        //    } else {                      // condition when data comes before state is routed and config is not set
-        //        var deferPeopleData = new Store.Variable("deferComplaintPeopleData");
-        //        deferPeopleData.set(data);
-        //    }
-        //});
         var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         if (Util.goodPositive(currentObjectId, false)) {
             ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
@@ -429,6 +417,10 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 return complaintInfo;
             });
         }
+
+        $scope.$on('object-refreshed', function (e, complaintInfo) {
+            updateGridData(complaintInfo);
+        });
 
 
         $scope.addNew = function () {
