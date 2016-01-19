@@ -40,7 +40,7 @@
           "displayName": "dashboard.widgets.myCases.table.header.caseId",
           "headerCellFilter": "translate",
           "enableSorting": true,
-          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a><\/div>",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.name}}</a>",
           "width": 130
         },
         {
@@ -131,14 +131,14 @@
           "name": "complaintNumber",
           "displayName": "dashboard.widgets.myComplaints.table.header.number",
           "headerCellFilter": "translate",
-          "cellTemplate:": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.complaintId}}</a>",
+          "cellTemplate:": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.complaintNumber}}</a>",
           "width": 175
         },
         {
           "name": "complaintTitle",
           "displayName": "dashboard.widgets.myComplaints.table.header.title",
           "headerCellFilter": "translate",
-          "cellTemplate:": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.complaintId}}</a>"
+          "cellTemplate:": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.complaintTitle}}</a>"
         },
         {
           "name": "priority",
