@@ -7,7 +7,7 @@
         <property name="pluginName" value="Dashboard Plugin"/>
         <property name="privileges">
             <list>
-                <ref bean="acmDashboardModulePrivilege" />
+                <ref bean="acmDashboardModulePrivilege"/>
                 <ref bean="dashboardPrivilege"/>
             </list>
         </property>
@@ -50,6 +50,19 @@
                     <property name="url" value="/api/{version}/plugin/dashboard/widgets/set"/>
                     <property name="requiredPrivilege" ref="dashboardPrivilege"/>
                 </bean>
+
+                <bean id="preferredWidgets" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/dashboard/widgets/preferred/{moduleName}"/>
+                    <property name="requiredPrivilege" ref="dashboardPrivilege"/>
+                </bean>
+
+                <bean id="preferredWidgets" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/{version}/plugin/dashboard/widgets/preferred"/>
+                    <property name="requiredPrivilege" ref="dashboardPrivilege"/>
+                </bean>
+
             </list>
         </property>
     </bean>

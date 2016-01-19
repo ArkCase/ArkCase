@@ -2,14 +2,13 @@ package com.armedia.acm.plugins.dashboard.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmDashboardException;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
 import com.armedia.acm.plugins.dashboard.model.DashboardConstants;
 import com.armedia.acm.plugins.dashboard.model.DashboardDto;
 import com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher;
 import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +31,7 @@ import java.util.List;
 @RequestMapping({"/api/v1/plugin/dashboard", "/api/latest/plugin/dashboard"})
 public class SetDashboardConfigAPIController
 {
-
-    private UserDao userDao;
-    private DashboardDao dashboardDao;
+    private DashboardService dashboardService;
     private DashboardPropertyReader dashboardPropertyReader;
     private DashboardEventPublisher eventPublisher;
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -47,10 +44,10 @@ public class SetDashboardConfigAPIController
             HttpSession session
     ) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmDashboardException
     {
-        String userId = (String) authentication.getName();
-        AcmUser user = userDao.findByUserId(userId);
+        String userId = authentication.getName();
+        AcmUser user = dashboardService.getUserByUserId(userId);
         List<String> modules = dashboardPropertyReader.getModuleNameList();
-        String moduleName = null;
+        String moduleName;
         if (updateDashboardDto.getModule() != null)
         {
             moduleName = updateDashboardDto.getModule().trim();
@@ -71,8 +68,8 @@ public class SetDashboardConfigAPIController
         try
         {
             //retval is the number of entities (dashboards) updated or deleted
-            d = dashboardDao.getDashboardConfigForUserAndModuleName(user, moduleName);
-            int retval = getDashboardDao().setDasboardConfigForUserAndModule(user, updateDashboardDto, moduleName);
+            d = dashboardService.getDashboardConfigForUserAndModuleName(user, moduleName);
+            int retval = dashboardService.setDashboardConfigForUserAndModule(user, updateDashboardDto, moduleName);
             if (retval != 1)
             {
                 if (log.isErrorEnabled())
@@ -86,15 +83,6 @@ public class SetDashboardConfigAPIController
                 updateDashboardDto.setUpdated(true);
                 return updateDashboardDto;
             }
-        } catch (AcmDashboardException de)
-        {
-            //This should never happen because if this code is executed that means that  user is already
-            // authenticated and present into system,  so this situation is anomaly
-            if (log.isErrorEnabled())
-            {
-                log.error("Unable to update dashboard config because user: " + userId + "is not found");
-            }
-            throw new AcmObjectNotFoundException("dashboard", null, "Object not found", de);
         } catch (Exception e)
         {
             getEventPublisher().publishDashboardEvent(d, authentication, false, false);
@@ -102,15 +90,6 @@ public class SetDashboardConfigAPIController
         }
     }
 
-    public DashboardDao getDashboardDao()
-    {
-        return dashboardDao;
-    }
-
-    public void setDashboardDao(DashboardDao dashboardDao)
-    {
-        this.dashboardDao = dashboardDao;
-    }
 
     public DashboardEventPublisher getEventPublisher()
     {
@@ -122,16 +101,6 @@ public class SetDashboardConfigAPIController
         this.eventPublisher = eventPublisher;
     }
 
-    public UserDao getUserDao()
-    {
-        return userDao;
-    }
-
-    public void setUserDao(UserDao userDao)
-    {
-        this.userDao = userDao;
-    }
-
     public DashboardPropertyReader getDashboardPropertyReader()
     {
         return dashboardPropertyReader;
@@ -140,6 +109,16 @@ public class SetDashboardConfigAPIController
     public void setDashboardPropertyReader(DashboardPropertyReader dashboardPropertyReader)
     {
         this.dashboardPropertyReader = dashboardPropertyReader;
+    }
+
+    public DashboardService getDashboardService()
+    {
+        return dashboardService;
+    }
+
+    public void setDashboardService(DashboardService dashboardService)
+    {
+        this.dashboardService = dashboardService;
     }
 }
 
