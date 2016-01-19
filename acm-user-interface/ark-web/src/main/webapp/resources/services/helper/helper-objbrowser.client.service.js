@@ -68,9 +68,6 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                 that.scope.onSelect = function (selectedObject) {
                     that.onSelect(selectedObject);
                 };
-                that.scope.onReset2 = function () {
-                    that.onReset2();
-                };
 
                 that.scope.$on('refresh-content', function (e, selectedObject) {
                     console.log("helper.Tree: refresh-content");
