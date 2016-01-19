@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$modal'
+angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'Authentication'
     , 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'ObjectService'
-    , function ($scope, $state, $modal
+    , function ($scope, $state, $stateParams, $modal
         , Util, ConfigService, Authentication
         , TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectService) {
 
@@ -15,6 +15,14 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         var promiseQueryUser = Authentication.queryUserInfo();
 
         $scope.$on('object-updated', function (e, data) {
+            updateData(data);
+        });
+
+        $scope.$on('object-refreshed', function (e, data) {
+            updateData(data);
+        });
+
+        var updateData = function (data) {
             if (!TaskInfoService.validateTaskInfo(data)) {
                 return;
             }
@@ -50,6 +58,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                 }
             }
 
+
             promiseQueryUser.then(function (userInfo) {
                 $scope.userId = userInfo.userId;
                 ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.TASK, $scope.taskInfo.taskId).then(function (subscriptions) {
@@ -63,7 +72,8 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                 });
                 return userInfo;
             });
-        });
+        };
+
 
         //$scope.availableOutcomes0 = [{name: "APPROVE", description: "Approve Document", fields: ["value", "message"]}
         //    , {name: "SEND_FOR_REWORK", description: "Send for Rework", fields: ["reworkInstructions"]}
@@ -151,6 +161,10 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                     }
                 );
             }
+        };
+
+        $scope.refresh = function () {
+            $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
     }

@@ -14,35 +14,29 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
             return config;
         });
 
-        //$scope.$on('object-updated', function (e, data) {
-        //    if (!ComplaintInfoService.validateComplaintInfo(data)) {
-        //        return;
-        //    }
-        //    $scope.complaintInfo = data;
-        //    var references = [];
-        //    _.each($scope.complaintInfo.childObjects, function (childObject) {
-        //        if (ComplaintInfoService.validateReferenceRecord(childObject)) {
-        //            references.push(childObject);
-        //        }
-        //    });
-        //    $scope.gridOptions.data = references;
-        //    gridHelper.hidePagingControlsIfAllDataShown(references.length);
-        //});
         var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         if (Util.goodPositive(currentObjectId, false)) {
             ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
-                $scope.complaintInfo = complaintInfo;
-                var references = [];
-                _.each($scope.complaintInfo.childObjects, function (childObject) {
-                    if (ComplaintInfoService.validateReferenceRecord(childObject)) {
-                        references.push(childObject);
-                    }
-                });
-                $scope.gridOptions.data = references;
-                //gridHelper.hidePagingControlsIfAllDataShown(references.length);
+                updateData(complaintInfo);
                 return complaintInfo;
             });
         }
+
+        $scope.$on('object-refreshed', function (e, complaintInfo) {
+            updateData(complaintInfo);
+        });
+
+        var updateData = function (complaintInfo) {
+            $scope.complaintInfo = complaintInfo;
+            var references = [];
+            _.each($scope.complaintInfo.childObjects, function (childObject) {
+                if (ComplaintInfoService.validateReferenceRecord(childObject)) {
+                    references.push(childObject);
+                }
+            });
+            $scope.gridOptions.data = references;
+            //gridHelper.hidePagingControlsIfAllDataShown(references.length);
+        };
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();

@@ -1,0 +1,10 @@
+{
+  "core": {
+    "userInfo": {
+      "addedMenu": {
+        "help": "Help",
+        "logout": "Logout"
+      }
+    }
+  }
+}

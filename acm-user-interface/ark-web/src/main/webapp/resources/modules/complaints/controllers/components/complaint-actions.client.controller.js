@@ -18,6 +18,15 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
 
         var previousId = null;
         $scope.$on('object-updated', function (e, data) {
+            updateData(data);
+        });
+
+        $scope.$on('object-refreshed', function (e, data) {
+            var previousId = null;
+            updateData(data);
+        });
+
+        var updateData = function (data) {
             if (!ComplaintInfoService.validateComplaintInfo(data)) {
                 return;
             }
@@ -50,39 +59,7 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
 
                 previousId = $stateParams.id;
             }
-        });
-        //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        //if (Util.goodPositive(currentObjectId, false)) {
-        //    ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
-        //        $scope.complaintInfo = complaintInfo;
-        //
-        //        var group = ObjectModelService.getGroup(complaintInfo);
-        //        var assignee = ObjectModelService.getAssignee(complaintInfo);
-        //        var promiseGetApprovers = ComplaintLookupService.getApprovers(group, assignee);
-        //        $q.all([promiseQueryUser, promiseGetGroups, promiseGetApprovers]).then(function (data) {
-        //            var userInfo = data[0];
-        //            var groups = data[1];
-        //            var assignees = data[2];
-        //            $scope.restricted = ObjectModelService.checkRestriction(userInfo.userId, assignee, group, assignees, groups);
-        //        });
-        //
-        //
-        //        promiseQueryUser.then(function (userInfo) {
-        //            $scope.userId = userInfo.userId;
-        //            ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.COMPLAINT, $scope.complaintInfo.complaintId).then(function (subscriptions) {
-        //                var found = _.find(subscriptions, {
-        //                    userId: userInfo.userId,
-        //                    subscriptionObjectType: ObjectService.ObjectTypes.COMPLAINT,
-        //                    objectId: $scope.complaintInfo.complaintId
-        //                });
-        //                $scope.showBtnSubscribe = Util.isEmpty(found);
-        //                $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
-        //            });
-        //        });
-        //
-        //        return complaintInfo;
-        //    });
-        //}
+        };
 
         $scope.restricted = false;
         $scope.onClickRestrict = function ($event) {
@@ -98,7 +75,6 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
             $state.go("frevvo", {
                 name: "new-complaint"
             });
-            //$state.go('newComplaint');
         };
 
         $scope.close = function (complaintInfo) {
@@ -110,7 +86,6 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
                     , mode: "create"
                 }
             });
-            //$state.go('closeComplaint');
         };
 
         $scope.subscribe = function (complaintInfo) {
@@ -126,6 +101,10 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
                 $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 return data;
             });
+        };
+
+        $scope.refresh = function () {
+            $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
     }
