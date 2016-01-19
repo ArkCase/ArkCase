@@ -21,13 +21,14 @@ angular.module('dashboard.my-cases', ['adf.provider'])
                 templateUrl: 'modules/dashboard/views/components/my-cases.client.view.html'
             });
     })
-    .controller('Dashboard.MyCasesController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
-        function ($scope, $translate, Authentication, DashboardService) {
+    .controller('Dashboard.MyCasesController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'Helper.UiGridService', 'UtilService', 'ObjectService',
+        function ($scope, $translate, Authentication, DashboardService, HelperUiGridService, Util, ObjectService) {
 
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'myCases');
             $scope.config = null;
             var userInfo = null;
+            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
             var paginationOptions = {
                 pageNumber: 1,
@@ -119,5 +120,12 @@ angular.module('dashboard.my-cases', ['adf.provider'])
                     }
                 );
             }
+
+            $scope.onClickObjLink = function (event, rowEntity) {
+                event.preventDefault();
+                var targetType = ObjectService.ObjectTypes.CASE_FILE;
+                var targetId = Util.goodMapValue(rowEntity, "object_id_s");
+                gridHelper.showObject(targetType, targetId);
+            };
         }
     ]);
