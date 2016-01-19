@@ -71,6 +71,12 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
                 previousId = $stateParams.id;
             }
         });
+
+
+        $scope.$on('refresh-content', function (e, selectedObject) {
+            console.log("info: refresh-content");
+        });
+
         //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         //if (Util.goodPositive(currentObjectId, false)) {
         //    CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {

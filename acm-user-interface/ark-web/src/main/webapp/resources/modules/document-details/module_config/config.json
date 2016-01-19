@@ -188,6 +188,29 @@
             "paginationPageSize": 10,
             "start": 0,
             "userFacetFilter": "\"Object Type\": USER"
+        },
+        {
+            "id": "tags",
+            "title": "Tags",
+            "icon": "fa fa-tags",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20,
+            "columnDefs": [
+                {
+                    "name": "tagName",
+                    "displayName": "documentDetails.comp.tags.table.columns.name",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false
+                }
+            ]
         }
     ]
 }
