@@ -1,7 +1,12 @@
 package com.armedia.acm.plugins.dashboard.service;
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
+import com.armedia.acm.plugins.dashboard.dao.ModuleDao;
+import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmDashboardException;
+import com.armedia.acm.plugins.dashboard.model.DashboardConstants;
+import com.armedia.acm.plugins.dashboard.model.module.Module;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,13 +22,20 @@ import java.util.List;
 public class DashboardPropertyReader
 {
     private AcmPlugin dashboardPlugin;
+    private ModuleDao moduleDao;
+    private WidgetDao widgetDao;
+    private ModuleEventPublisher moduleEventPublisher;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private List<String> moduleNameList;
     private List<Widget> widgetList;
+    private boolean isNewWidgetForAdding = false;
 
     private void init()
     {
+        isNewWidgetForAdding = Boolean.valueOf((String) dashboardPlugin.getPluginProperties().
+                get(DashboardConstants.IS_NEW_DASHBOARD_WIDGETS_FOR_ADDING));
+
         if (log.isInfoEnabled())
         {
             log.info("Initializing - setting moduleNameList and widgetList in the  DashboardPropertyReader bean");
@@ -48,6 +60,13 @@ public class DashboardPropertyReader
                 log.error("Widgets list was not populated, error occurred: " + e.getMessage(), e);
             }
         }
+
+        if (isNewWidgetForAdding)
+        {
+            addNewWidgets();
+        }
+
+        updateModuleTable();
     }
 
 
@@ -60,7 +79,7 @@ public class DashboardPropertyReader
             {
                 log.info("Fetching all module names from the property file");
             }
-            modulesString = (String) dashboardPlugin.getPluginProperties().get("acm.modules");
+            modulesString = (String) dashboardPlugin.getPluginProperties().get(DashboardConstants.MODULES_STRING);
         } catch (Exception e)
         {
             throw new AcmDashboardException("Error occurred while fetching module names " + e.getMessage(), e);
@@ -87,12 +106,11 @@ public class DashboardPropertyReader
         String newWidgetsString;
         try
         {
-            newWidgetsString = (String) dashboardPlugin.getPluginProperties().get("acm.new.widgets");
+            newWidgetsString = (String) dashboardPlugin.getPluginProperties().get(DashboardConstants.WIDGETS_STRING);
         } catch (Exception e)
         {
-            throw new AcmDashboardException("Error occured while fetching widget names " + e.getMessage(), e);
+            throw new AcmDashboardException("Error occurred while fetching widget names " + e.getMessage(), e);
         }
-
 
         String[] newWidgetsNames;
         List<Widget> widgetList = new ArrayList<>();
@@ -104,10 +122,45 @@ public class DashboardPropertyReader
                 Widget widget = new Widget();
                 widget.setWidgetName(widgetName.trim());
                 widgetList.add(widget);
-
             }
         }
         return widgetList;
+    }
+
+    private void updateModuleTable()
+    {
+        moduleNameList.stream().forEach(module -> {
+            try
+            {
+                moduleDao.getModuleByName(module);
+            } catch (AcmObjectNotFoundException e)
+            {
+                Module m = new Module();
+                m.setModuleName(module);
+                try
+                {
+                    moduleDao.save(m);
+                    if (log.isInfoEnabled())
+                    {
+                        log.info("Module with module name: " + m.getModuleId() + " added!");
+                    }
+                    moduleEventPublisher.publishModuleCreated(m, null, null, true);
+                } catch (Exception e1)
+                {
+                    if (log.isErrorEnabled())
+                    {
+                        log.error("Persisting new module name failed due to error: " + e1.getMessage(), e1);
+                    }
+                    moduleEventPublisher.publishModuleCreated(m, null, "", true);
+                }
+            }
+        });
+    }
+
+    private void addNewWidgets()
+    {
+        List<Widget> widgetList = getWidgetList();
+        widgetList.stream().forEach(widget -> widgetDao.saveWidget(widget));
     }
 
     public AcmPlugin getDashboardPlugin()
@@ -138,5 +191,35 @@ public class DashboardPropertyReader
     public void setWidgetList(List<Widget> widgetList)
     {
         this.widgetList = widgetList;
+    }
+
+    public ModuleDao getModuleDao()
+    {
+        return moduleDao;
+    }
+
+    public void setModuleDao(ModuleDao moduleDao)
+    {
+        this.moduleDao = moduleDao;
+    }
+
+    public WidgetDao getWidgetDao()
+    {
+        return widgetDao;
+    }
+
+    public void setWidgetDao(WidgetDao widgetDao)
+    {
+        this.widgetDao = widgetDao;
+    }
+
+    public ModuleEventPublisher getModuleEventPublisher()
+    {
+        return moduleEventPublisher;
+    }
+
+    public void setModuleEventPublisher(ModuleEventPublisher moduleEventPublisher)
+    {
+        this.moduleEventPublisher = moduleEventPublisher;
     }
 }
