@@ -6,7 +6,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -26,7 +25,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
@@ -67,13 +66,12 @@ public class SetUserPreferredWidgetsPerModuleTest extends EasyMockSupport
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
 
-    @Ignore
     @Test
     public void setPreferredWidgets() throws Exception
     {
         String userId = "user";
         String moduleName = "newModule";
-        String ipAddr = "localhost";
+        String ipAddr = "127.0.0.1";
 
         List<String> widgetList = new ArrayList<>();
         widgetList.add("newWidget");
@@ -93,13 +91,15 @@ public class SetUserPreferredWidgetsPerModuleTest extends EasyMockSupport
 
         Capture<PreferredWidgetsDto> savedPreferredWidgetsDto = new Capture<>();
 
+        mockHttpSession.setAttribute("acm_ip_address", "127.0.0.1");
 
-        expect(mockUserPreferenceService.updateUserPreferenceWidgets(userId, preferredWidgetsDto, ipAddr)).andReturn(preferredWidgetsDto);
+        expect(mockUserPreferenceService.updateUserPreferenceWidgets(eq(userId), capture(savedPreferredWidgetsDto), eq(ipAddr))).andReturn(preferredWidgetsDto);
 
         replayAll();
 
         MvcResult result = mockMvc.perform(
                 put("/api/v1/plugin/dashboard/widgets/preferred")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .session(mockHttpSession)
                         .principal(mockAuthentication)

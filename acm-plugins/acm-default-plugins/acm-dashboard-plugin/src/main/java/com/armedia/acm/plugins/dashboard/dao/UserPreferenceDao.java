@@ -34,7 +34,7 @@ public class UserPreferenceDao extends AcmAbstractDao<UserPreference>
         return results;
     }
 
-    public List<UserPreference> getUserPreferenceLsitByUserModuleName(String user, String moduleName) throws AcmObjectNotFoundException
+    public List<UserPreference> getUserPreferenceListByUserModuleName(String user, String moduleName) throws AcmObjectNotFoundException
     {
         String queryString = "SELECT up FROM UserPreference up  WHERE  up.user.userId = :user AND up.module.moduleName = :moduleName";
 
