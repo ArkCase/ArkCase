@@ -151,7 +151,7 @@ public class DashboardPropertyReader
                     {
                         log.error("Persisting new module name failed due to error: " + e1.getMessage(), e1);
                     }
-                    moduleEventPublisher.publishModuleCreated(m, null, "", true);
+                    moduleEventPublisher.publishModuleCreated(m, null, null, false);
                 }
             }
         });

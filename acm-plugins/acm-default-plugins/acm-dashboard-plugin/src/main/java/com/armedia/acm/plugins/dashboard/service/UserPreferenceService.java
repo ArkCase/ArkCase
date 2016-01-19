@@ -122,7 +122,7 @@ public class UserPreferenceService
 
     private List<UserPreference> getUserPreferenceListByUserAndModule(AcmUser user, Module module) throws AcmObjectNotFoundException
     {
-        return userPreferenceDao.getUserPreferenceLsitByUserModuleName(user.getUserId(), module.getModuleName());
+        return userPreferenceDao.getUserPreferenceListByUserModuleName(user.getUserId(), module.getModuleName());
     }
 
     private void saveNewUserPreference(AcmUser user, List<Widget> widgetList, Module module, String ipAddress)
