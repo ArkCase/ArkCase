@@ -8,7 +8,13 @@ angular.module('complaints').controller('Complaints.CalendarController', ['$scop
 
         });
 
-        $scope.$on('complaint-updated', function (e, data) {
+        $scope.$on('object-updated', function (e, data) {
+            if (ComplaintInfoService.validateComplaintInfo(data)) {
+                $scope.complaintInfo = data;
+            }
+        });
+
+        $scope.$on('object-refreshed', function (e, caseInfo) {
             if (ComplaintInfoService.validateComplaintInfo(data)) {
                 $scope.complaintInfo = data;
             }

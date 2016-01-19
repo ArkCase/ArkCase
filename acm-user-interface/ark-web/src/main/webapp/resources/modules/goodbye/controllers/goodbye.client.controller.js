@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('welcome').controller('WelcomeController', ['$scope', '$q', '$state', 'StoreService', 'Authentication'
+angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', '$q', '$state', 'StoreService', 'Authentication'
     , 'ConfigService', 'LookupService', 'Object.LookupService', 'Case.LookupService', 'Complaint.LookupService'
-    , function ($scope, $q, $state, Store, Authentication
+    , function ($scope, $window, $q, $state, Store, Authentication
         , ConfigService, LookupService, ObjectLookupService, CaseLookupService, ComplaintLookupService) {
 
         var sessionCacheNamesList = [
@@ -22,6 +22,6 @@ angular.module('welcome').controller('WelcomeController', ['$scope', '$q', '$sta
         }
 
 
-        $state.go("dashboard");
+        $window.location.href = "/arkcase/logout";
     }
 ]);

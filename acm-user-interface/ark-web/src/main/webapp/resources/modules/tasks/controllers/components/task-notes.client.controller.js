@@ -30,8 +30,8 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
             }
         );
 
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         $scope.retrieveGridData = function () {
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
             if (Util.goodPositive(currentObjectId, false)) {
                 var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.TASK, currentObjectId);
                 $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {

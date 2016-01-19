@@ -64,6 +64,21 @@ angular.module('services').factory('Complaint.InfoService', ['$resource', '$tran
 
         /**
          * @ngdoc method
+         * @name resetComplaintInfo
+         * @methodOf services:Complaint.InfoService
+         *
+         * @description
+         * Reset Complaint info
+         *
+         * @returns None
+         */
+        Service.resetComplaintInfo = function () {
+            var cacheInfo = new Store.CacheFifo(Service.CacheNames.COMPLAINT_INFO);
+            cacheInfo.reset();
+        };
+
+        /**
+         * @ngdoc method
          * @name updateComplaintInfo
          * @methodOf services:Complaint.InfoService
          *

@@ -35,7 +35,9 @@
                     ng-repeat="outcome in ::taskInfo.availableOutcomes" ng-show="showBtnOutcomes">
                 {{outcome.description}}
             </button>
-
+            <button class="btn btn-sm btn-default" ng-click="refresh()">
+                <i class="fa fa-refresh"></i>
+            </button>
 
         </div>
     </div>
