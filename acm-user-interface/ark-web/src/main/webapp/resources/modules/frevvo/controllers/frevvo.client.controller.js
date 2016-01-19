@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('frevvo').controller('FrevvoController', ['$scope', '$stateParams', '$sce', '$q'
-    , 'UtilService', 'ConfigService', 'TicketService', 'LookupService', 'Frevvo.FormService'
-    , function ($scope, $stateParams, $sce, $q, Util, ConfigService, TicketService, LookupService, FrevvoFormService) {
+    , 'UtilService', 'ConfigService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'ServCommService'
+    , function ($scope, $stateParams, $sce, $q
+        , Util, ConfigService, TicketService, LookupService, FrevvoFormService, ServCommService) {
 
         var promiseConfig = ConfigService.getModuleConfig("frevvo");
         var promiseTicket = TicketService.getArkCaseTicket();
@@ -17,6 +18,10 @@ angular.module('frevvo').controller('FrevvoController', ['$scope', '$stateParams
                 var formType = Util.goodValue($scope.acmFormsProperties[found.formKey], found.formDefault);
                 var formUrl = FrevvoFormService.buildFrevvoUrl($scope.acmFormsProperties, formType, $scope.acmTicket, $stateParams.arg);
                 $scope.frevvoFormUrl = $sce.trustAsResourceUrl(formUrl);
+
+                var z = 1;
+                //$scope.$emit("rootScope:servcomm-request", {request: "new-case", data: "new case data"});
+                //ServCommService.request("frevvo", "new-case", "data");
             }
         });
     }

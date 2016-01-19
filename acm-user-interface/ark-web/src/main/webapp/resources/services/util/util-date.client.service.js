@@ -85,7 +85,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
 
             /**
              * @ngdoc method
-             * @name getDate
+             * @name getDatetime
              * @methodOf services:Util.DateService
              *
              * @param {String} isoDateTime Date time as ISO8601 format, yyyy-MM-dd'T'HH:mm:ss.SSSZZ
@@ -95,8 +95,10 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              * Extract datetime from an ISO Datetime in default format.
              */
             , getDatetime: function (isoDatetime, replacement) {
-                format = format || Service.defaultDatetimeFormat;
-                return moment(isoDatetime).format(format);
+                //format = format || Service.defaultDatetimeFormat;
+                //return moment(isoDatetime).format(format);
+                var dt = moment(isoDatetime);
+                return (dt.isValid()) ? dt.format(Service.defaultDatetimeFormat) : replacement;
             }
 
 

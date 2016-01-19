@@ -75,13 +75,17 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         };
 
         $scope.createNew = function () {
-            //$state.go("frevvo", {
-            //    name: "new-case"
-            //});
+            $state.go("frevvo", {
+                name: "new-case"
+            });
 
-            $scope.$emit("rootScope:servcomm", {request: "new-case", data: "new case data"});
+            //$scope.$emit("rootScope:servcomm-request", {request: "new-case", data: "new case data"});
 
         };
+
+        //$scope.$on('rootScope:servcomm-response', function (event, data) {
+        //    console.log("Action, rootScope:servcomm-response");
+        //});
 
         $scope.edit = function (caseInfo) {
             $state.go("frevvo", {
