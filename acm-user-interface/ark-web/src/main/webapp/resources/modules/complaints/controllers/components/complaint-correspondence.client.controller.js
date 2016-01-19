@@ -41,11 +41,6 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
             }
         );
 
-        //$scope.$on('object-updated', function (e, data) {
-        //    if (ComplaintInfoService.validateComplaintInfo(data)) {
-        //        $scope.complaintInfo = data;
-        //    }
-        //});
         var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         //if (Util.goodPositive(currentObjectId, false)) {
         //    ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {

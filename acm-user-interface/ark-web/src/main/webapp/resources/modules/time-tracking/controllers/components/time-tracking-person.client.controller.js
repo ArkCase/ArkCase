@@ -16,12 +16,20 @@ angular.module('time-tracking').controller('TimeTracking.PersonController', ['$s
         var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         if (Util.goodPositive(currentObjectId, false)) {
             TimeTrackingInfoService.getTimesheetInfo(currentObjectId).then(function (timesheetInfo) {
-                $scope.timesheetInfo = timesheetInfo;
-                $scope.gridOptions = $scope.gridOptions || {};
-                $scope.gridOptions.data = [$scope.timesheetInfo.user];
+                updateData(timesheetInfo);
                 return timesheetInfo;
             });
         }
+
+        $scope.$on('object-refreshed', function (e, timesheetInfo) {
+            updateData(timesheetInfo);
+        });
+
+        var updateData = function (timesheetInfo) {
+            $scope.timesheetInfo = timesheetInfo;
+            $scope.gridOptions = $scope.gridOptions || {};
+            $scope.gridOptions.data = [$scope.timesheetInfo.user];
+        };
 
     }
 ]);
