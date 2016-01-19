@@ -12,6 +12,9 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
             , state: $state
             , stateParams: $stateParams
             , moduleId: "cases"
+            , resetTreeData: function () {
+                return CaseListService.resetCasesTreeData();
+            }
             , getTreeData: function (start, n, sort, filters) {
                 return CaseListService.queryCasesTreeData(start, n, sort, filters);
             }
