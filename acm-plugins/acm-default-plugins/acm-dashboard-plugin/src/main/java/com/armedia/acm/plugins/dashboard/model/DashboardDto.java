@@ -8,6 +8,7 @@ public class DashboardDto
     String userId;
     String dashboardConfig;
     String module;
+    boolean collapsed = false;
     boolean updated = false;
     boolean inserted = false;
 
@@ -59,5 +60,15 @@ public class DashboardDto
     public void setModule(String module)
     {
         this.module = module;
+    }
+
+    public boolean isCollapsed()
+    {
+        return collapsed;
+    }
+
+    public void setCollapsed(boolean collapsed)
+    {
+        this.collapsed = collapsed;
     }
 }
