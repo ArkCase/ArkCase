@@ -9,7 +9,8 @@ angular.module('dashboard.cost', ['adf.provider'])
                 controller: 'Dashboard.CostController',
                 controllerAs: 'cost',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/cost-widget.client.view.html'
+                templateUrl: 'modules/dashboard/views/components/cost-widget.client.view.html',
+                commonName: 'cost'
             });
     })
     .controller('Dashboard.CostController', ['$scope', 'config', '$state', '$stateParams', '$translate'

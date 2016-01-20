@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('preference').controller('Preference.WidgetsListController', ['$scope', '$q', '$state', '$stateParams'
-    , 'Preference.PreferenceService', 'Dashboard.DashboardService',
-    function ($scope, $q, $state, $stateParams, PreferenceService, DashboardService) {
+    , 'Preference.PreferenceService', 'Dashboard.DashboardService', 'dashboard',
+    function ($scope, $q, $state, $stateParams, PreferenceService, DashboardService, dashboard) {
         $scope.widgets = [];
 
         $scope.formData = ["*", {"type": "submit", "title": "Save"}];
@@ -10,18 +10,44 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
         $scope.selectWidget = selectWidget;
         $scope.toggleWidget = toggleWidget;
         $scope.enableWidget = enableWidget;
-
+        $scope.removeNonObjectWidgets = removeNonObjectWidgets;
+        $scope.preferenceDashboardCopy = _.cloneDeep(dashboard);
         $scope.showDefaultForm = false;
         $scope.toggleDefaultView = toggleDefaultView;
         $scope.defaultViewExpand = "";
+        $scope.objectWidgets = [
+            "calendar",
+            "correspondence",
+            "cost",
+            "details",
+            "docreview",
+            "documents",
+            "expenses",
+            "history",
+            "hourssummary",
+            "locations",
+            "notes",
+            "participants",
+            "people",
+            "person",
+            "references",
+            "reworkdetails",
+            "signature",
+            "tasks",
+            "time",
+            "workflow"
+        ];
 
         $scope.$on('show-widgets', showWidgets);
 
         function toggleDefaultView() {
-            DashboardService.saveConfig({
-                dashboardConfig: angular.toJson($scope.preferenceDashboardConfig),
-                module: $scope.moduleName,
-                isCollapsed: $scope.defaultViewExpand
+            DashboardService.getConfig({moduleName: $scope.moduleName}, function(config) {
+                console.log("break");
+                DashboardService.saveConfig({
+                    dashboardConfig: angular.toJson(config.dashboardConfig),
+                    module: $scope.moduleName,
+                    collapsed: !!$scope.defaultViewExpand
+                });
             });
         }
         /**
@@ -38,41 +64,70 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
             widget.isCollapsed = !widget.isCollapsed;
         }
 
-        function enableWidget($event, widget, enable) {
-            widget.enabled = enable;
-            var enabledWidgets = getEnabledWidgets();
-            var preferredWidgets = {moduleName: $scope.moduleName, widgets: enabledWidgets};
-            PreferenceService.setPreferredWidgets({preferredWidgets: preferredWidgets});
+        function removeNonObjectWidgets(arrayOfWidgets) {
+            var retval = arrayOfWidgets;
+            _.remove(retval, function(widgetName) {
+                if(!_.includes($scope.objectWidgets, widgetName)) {
+                    return true;
+                }
+            });
+            return retval;
         }
-        var getEnabledWidgets = function() {
-            var enabledWidgets = [];
-            _.forEach($scope.widgets, function (widget) {
-                if(widget.enabled) {
-                    enabledWidgets.push(widget.title);
+
+        function enableWidget($event, widget, enable) {
+            PreferenceService.getPreferredWidgets({moduleName: $scope.moduleName}, function (preferredWidgets) {
+                if(enable) {
+                    if(!_.includes(preferredWidgets.preferredWidgets, widget.commonName)) {
+                        preferredWidgets.preferredWidgets.push(widget.commonName);
+                    }
+                } else {
+                    _.remove(preferredWidgets.preferredWidgets, function(prefWidget) {
+                        return prefWidget == widget.commonName;
+                    });
                 }
 
+                var enabledWidgets = preferredWidgets.preferredWidgets;
+                PreferenceService.setPreferredWidgets({moduleName: $scope.moduleName, preferredWidgets: enabledWidgets});
+                widget.enabled = enable;
+
+                //set appropriate dashboardConfig to make note of appropriate widget
+                DashboardService.getConfig({moduleName: $scope.moduleName}, function (config) {
+                    var model = angular.fromJson(config.dashboardConfig);
+                    model.rows[0].columns[0].widgets = [];
+                    _.forEach(enabledWidgets, function(widgetName) {
+                        var widgetToInsert = {};
+                        var widgetInfo = _.find($scope.preferenceDashboardCopy.widgets, {commonName: widgetName});
+                        widgetToInsert.type = widgetInfo.commonName;
+                        widgetToInsert.config = {};
+                        widgetToInsert.title = widgetInfo.title;
+                        widgetToInsert.titleTemplateUrl = "../src/templates/widget-title.html";
+                        model.rows[0].columns[0].widgets.push(widgetToInsert);
+                    });
+                    console.log("break");
+                    DashboardService.saveConfig({
+                        dashboardConfig: angular.toJson(model),
+                        module: $scope.moduleName
+                    });
+
+                })
             });
-            return enabledWidgets;
-        };
+
+        }
 
         function showWidgets(e, widgets, moduleName, config) {
             $scope.preferenceDashboardConfig = config;
             $scope.moduleName = config.module;
-            $scope.defaultViewExpand = config.isCollapsed ? 'true' : 'false';
-
-            var configObject = angular.fromJson(config.dashboardConfig);
-            if(configObject.rows[0].columns[0].widgets) {
-                PreferenceService.setPrefer
-            }
+            $scope.defaultViewExpand = (!config.collapsed).toString();
 
             PreferenceService.getPreferredWidgets({moduleName: $scope.moduleName}, function (preferredWidgets) {
+                preferredWidgets.preferredWidgets = removeNonObjectWidgets(preferredWidgets.preferredWidgets);
                 _.forEach(widgets, function (widget) {
                     widget.isCollapsed = true;
-                    //assuming service returns camelCase widget names
-                    widget.enabled = _.includes(preferredWidgets, widget.controllerAs);
+                    widget.enabled = _.includes(preferredWidgets.preferredWidgets, widget.commonName);
                 });
+                $scope.widgets = widgets;
             }, function(error) {
-
+                console.log("error");
             });
 
             $scope.widgets = widgets;

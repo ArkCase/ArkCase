@@ -12,7 +12,8 @@ angular.module('dashboard.calendar', ['adf.provider'])
                 controller: 'Dashboard.CalendarController',
                 controllerAs: 'calendar',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/calendar-widget.client.view.html'
+                templateUrl: 'modules/dashboard/views/components/calendar-widget.client.view.html',
+                commonName: 'calendar'
             });
     })
     .controller('Dashboard.CalendarController', ['$scope', 'config', '$stateParams', '$translate', 'Dashboard.DashboardService'

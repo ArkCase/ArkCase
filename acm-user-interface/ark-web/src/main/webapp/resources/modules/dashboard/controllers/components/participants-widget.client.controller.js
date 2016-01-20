@@ -4,11 +4,12 @@ angular.module('dashboard.participants', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('participants', {
-                    title: 'Participants Widget',
+                    title: 'Participants',
                     description: 'Displays Participants',
                     controller: 'Dashboard.ParticipantsController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/participants-widget.client.view.html'
+                    templateUrl: 'modules/dashboard/views/components/participants-widget.client.view.html',
+                    commonName: 'participants'
                 }
             );
     })
@@ -27,6 +28,11 @@ angular.module('dashboard.participants', ['adf.provider'])
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
             });
+
+            $scope.gridOptions = {
+                enableColumnResizing: true,
+                columnDefs: []
+            };
 
             if (module) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);

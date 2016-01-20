@@ -9,7 +9,8 @@ angular.module('dashboard.expenses', ['adf.provider'])
                 controller: 'Dashboard.ExpensesController',
                 controllerAs: 'expenses',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/expenses-widget.client.view.html'
+                templateUrl: 'modules/dashboard/views/components/expenses-widget.client.view.html',
+                commonName: 'expenses'
             });
     })
     .controller('Dashboard.ExpensesController', ['$scope', 'config', '$state', '$translate', 'UtilService'
