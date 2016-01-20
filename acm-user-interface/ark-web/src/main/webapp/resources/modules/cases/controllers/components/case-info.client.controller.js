@@ -43,13 +43,18 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        //$scope.$on('object-selected', function onSelectedCase(e, selectedCase) {
-        //    $scope.caseSolr = selectedCase;
-        //});
-
         $scope.dueDate = null;
         var previousId = null;
-        $scope.$on('object-updated', function (e, data) {
+        $scope.$on('object-updated', function (e, caseInfo) {
+            updateData(caseInfo);
+        });
+
+        $scope.$on('object-refreshed', function (e, caseInfo) {
+            previousId = null;
+            updateData(caseInfo);
+        });
+
+        var updateData = function (data) {
             if (!CaseInfoService.validateCaseInfo(data)) {
                 return;
             }
@@ -70,12 +75,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
                 );
                 previousId = $stateParams.id;
             }
-        });
-
-
-        $scope.$on('refresh-content', function (e, selectedObject) {
-            console.log("info: refresh-content");
-        });
+        };
 
         //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         //if (Util.goodPositive(currentObjectId, false)) {

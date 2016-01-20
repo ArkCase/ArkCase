@@ -10,9 +10,7 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
             , state: $state
             , stateParams: $stateParams
             , moduleId: "cases"
-            , resetContent: function () {
-                CaseInfoService.resetCaseInfo();
-            }
+            , resetObjectInfo: CaseInfoService.resetCaseInfo
             , getObjectInfo: CaseInfoService.getCaseInfo
             , updateObjectInfo: CaseInfoService.updateCaseInfo
             , initComponentLinks: function (config) {

@@ -29,11 +29,6 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
         $scope.objectId = $stateParams.id;
 
-        //$scope.$on('object-updated', function (e, data) {
-        //    if (CaseInfoService.validateCaseInfo(data)) {
-        //        $scope.caseInfo = data;
-        //    }
-        //});
         var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         if (Util.goodPositive(currentObjectId, false)) {
             CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
@@ -42,6 +37,11 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                 return caseInfo;
             });
         }
+
+        $scope.$on('object-refreshed', function (e, caseInfo) {
+            $scope.caseInfo = caseInfo;
+            $scope.objectId = caseInfo.id;
+        });
 
         var silentReplace = function (value, replace, replacement) {
             if (!Util.isEmpty(value) && value.replace) {

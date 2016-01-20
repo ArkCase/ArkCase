@@ -15,8 +15,8 @@ angular.module('dashboard.my-tasks', ['adf.provider'])
             }
         );
     })
-    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'Helper.UiGridService', 'UtilService',
-        function ($scope, $translate, Authentication, DashboardService, HelperUiGridService, Util) {
+    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'Helper.UiGridService', 'UtilService', 'ObjectService',
+        function ($scope, $translate, Authentication, DashboardService, HelperUiGridService, Util, ObjectService) {
 
             var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
@@ -27,7 +27,7 @@ angular.module('dashboard.my-tasks', ['adf.provider'])
 
             $scope.onClickObjLink = function (event, rowEntity) {
                 event.preventDefault();
-                var targetType = "TASK";
+                var targetType = ObjectService.ObjectTypes.TASK;
                 var targetId = Util.goodMapValue(rowEntity, "taskId");
                 gridHelper.showObject(targetType, targetId);
             };

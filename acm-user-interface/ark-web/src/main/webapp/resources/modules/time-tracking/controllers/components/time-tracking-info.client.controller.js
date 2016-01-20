@@ -9,22 +9,13 @@ angular.module('time-tracking').controller('TimeTracking.InfoController', ['$sco
             return componentConfig;
         });
 
-        //$scope.timesheetSolr = null;
-        //$scope.timesheetInfo = null;
-        //$scope.$on('timesheet-selected', function onSelectedCase(e, selectedTimesheet) {
-        //    $scope.timesheetSolr = selectedTimesheet;
-        //});
-
         $scope.$on('object-updated', function (e, data) {
                 $scope.timesheetInfo = data;
 
         });
-        //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        //if (Util.goodPositive(currentObjectId, false)) {
-        //    TimeTrackingInfoService.getTimesheetInfo(currentObjectId).then(function (timesheetInfo) {
-        //        $scope.timesheetInfo = timesheetInfo;
-        //        return timesheetInfo;
-        //    });
-        //}
+
+        $scope.$on('object-refreshed', function (e, timesheetInfo) {
+            $scope.timesheetInfo = timesheetInfo;
+        });
     }
 ]);
