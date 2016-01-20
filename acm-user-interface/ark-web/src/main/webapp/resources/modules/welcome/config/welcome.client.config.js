@@ -2,11 +2,11 @@
 
 angular.module('welcome').run(['Menus', 'ConfigService',
 	function(Menus, ConfigService){
-		var config = ConfigService.getModule({moduleId: 'welcome'});
-		config.$promise.then(function(config){
+		var config = ConfigService.getModuleConfig("welcome").then(function (config) {
 			if (config.menus) {
 				Menus.addMenuItems(config.menus);
 			}
+			return config;
 		});
 	}
 ]);

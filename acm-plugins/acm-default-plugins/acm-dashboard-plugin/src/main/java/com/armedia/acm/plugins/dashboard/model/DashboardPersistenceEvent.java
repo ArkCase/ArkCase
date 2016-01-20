@@ -11,9 +11,8 @@ import java.util.Date;
 public class DashboardPersistenceEvent extends AcmEvent
 {
 
-    private static final String OBJECT_TYPE = "DASHBOARD";
-
-    public DashboardPersistenceEvent(Dashboard source) {
+    public DashboardPersistenceEvent(Dashboard source)
+    {
         super(source);
         setObjectId(source.getDashboardId());
         setEventDate(new Date());
@@ -23,7 +22,7 @@ public class DashboardPersistenceEvent extends AcmEvent
     @Override
     public String getObjectType()
     {
-        return OBJECT_TYPE;
+        return DashboardConstants.OBJECT_TYPE;
     }
 
 }

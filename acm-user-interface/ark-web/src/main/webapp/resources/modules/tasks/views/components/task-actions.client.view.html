@@ -11,9 +11,13 @@
                 <i class="fa fa-certificate"></i>
                 <span translate>tasks.comp.actions.eSignature.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-click="subscribe()">
+            <button class="btn btn-sm btn-default" ng-show="showBtnSubscribe" ng-click="subscribe()">
                 <i class="fa fa-bullhorn"></i>
                 <span translate>tasks.comp.actions.subscribe.button</span>
+            </button>
+            <button class="btn btn-sm btn-default" ng-show="showBtnUnsubscribe" ng-click="unsubscribe()">
+                <i class="fa fa-bullhorn"></i>
+                <span translate>tasks.comp.actions.unsubscribe.button</span>
             </button>
             <button class="btn btn-sm btn-default" ng-click="delete()" ng-show="showBtnDelete">
                 <i class="fa fa-times"></i>
@@ -31,7 +35,9 @@
                     ng-repeat="outcome in ::taskInfo.availableOutcomes" ng-show="showBtnOutcomes">
                 {{outcome.description}}
             </button>
-
+            <button class="btn btn-sm btn-default" ng-click="refresh()">
+                <i class="fa fa-refresh"></i>
+            </button>
 
         </div>
     </div>

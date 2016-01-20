@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('cost-tracking').controller('CostTracking.ActionsController', ['$scope', '$state'
+angular.module('cost-tracking').controller('CostTracking.ActionsController', ['$scope', '$state', '$stateParams'
     , 'UtilService', 'ConfigService', 'CostTracking.InfoService', 'Helper.ObjectBrowserService'
-    , function ($scope, $state, Util, ConfigService, CostTrackingInfoService, HelperObjectBrowserService) {
+    , function ($scope, $state, $stateParams, Util, ConfigService, CostTrackingInfoService, HelperObjectBrowserService) {
 
         ConfigService.getComponentConfig("cost-tracking", "actions").then(function (componentConfig) {
             $scope.config = componentConfig;
@@ -14,13 +14,12 @@ angular.module('cost-tracking').controller('CostTracking.ActionsController', ['$
                 $scope.costsheetInfo = data;
             }
         });
-        //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        //if (Util.goodPositive(currentObjectId, false)) {
-        //    CostTrackingInfoService.getCostsheetInfo(currentObjectId).then(function (costsheetInfo) {
-        //        $scope.costsheetInfo = costsheetInfo;
-        //        return costsheetInfo;
-        //    });
-        //}
+
+        $scope.$on('object-refreshed', function (e, data) {
+            if (CostTrackingInfoService.validateCostsheet(data)) {
+                $scope.costsheetInfo = data;
+            }
+        });
 
         $scope.createNew = function () {
             $state.go("frevvo", {
@@ -35,6 +34,10 @@ angular.module('cost-tracking').controller('CostTracking.ActionsController', ['$
                     id: costsheetInfo.id
                 }
             });
+        };
+
+        $scope.refresh = function () {
+            $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
     }

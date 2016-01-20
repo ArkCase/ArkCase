@@ -31,4 +31,29 @@
                                  initiallyDeferred="${initially.deferred}"/>
 
     </changeSet>
+
+    <changeSet id="03-user-preference-contraints" author="marst">
+        <addForeignKeyConstraint baseTableName="acm_user_preference"
+                                 baseColumnNames="cm_user"
+                                 constraintName="fk_user_preference_user"
+                                 referencedTableName="acm_user"
+                                 referencedColumnNames="cm_user_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_user_preference"
+                                 baseColumnNames="cm_widget"
+                                 constraintName="fk_user_preference_widget"
+                                 referencedTableName="acm_widget"
+                                 referencedColumnNames="cm_widget_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_user_preference"
+                                 baseColumnNames="cm_module"
+                                 constraintName="fk_user_preference_module"
+                                 referencedTableName="acm_module"
+                                 referencedColumnNames="cm_module_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+
+    </changeSet>
 </databaseChangeLog>
