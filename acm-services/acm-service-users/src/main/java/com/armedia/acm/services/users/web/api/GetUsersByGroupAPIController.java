@@ -31,6 +31,9 @@ public class GetUsersByGroupAPIController
     {
         log.debug("Getting users for group {}", group);
 
+        if(group.contains(" ")){
+            group = "\"" + group + "\"";
+        }
         StringBuilder query = new StringBuilder();
         query.append("object_type_s").append(":").append("USER");
         query.append(" AND ").append("groups_id_ss").append(":").append(group);
