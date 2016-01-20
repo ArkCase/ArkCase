@@ -28,14 +28,18 @@ angular.module('time-tracking').controller('TimeTracking.MainController', ['$sco
             structure: '6-6',
             collapsible: false,
             maximizable: false,
-            model: {
-                titleTemplateUrl: 'modules/dashboard/views/dashboard-title.client.view.html'
+            timeModel: {
+                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
             }
         };
 
         DashboardService.getConfig({moduleName: "TIME"}, function (data) {
-                $scope.dashboard.timeModel = angular.fromJson(data.dashboardConfig);
-                $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
+            var retModel = angular.fromJson(data.dashboardConfig);
+            retModel.titleTemplateUrl = $scope.dashboard.timeModel.titleTemplateUrl;
+            retModel.title = "";
+            retModel.structure = $scope.dashboard.structure;
+
+            $scope.dashboard.timeModel = retModel;
         });
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {

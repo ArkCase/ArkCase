@@ -24,14 +24,18 @@ angular.module('complaints').controller('Complaints.MainController', ['$scope', 
             structure: '6-6',
             collapsible: false,
             maximizable: false,
-            model: {
-                titleTemplateUrl: 'modules/dashboard/views/dashboard-title.client.view.html'
+            complaintModel: {
+                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
             }
         };
 
         DashboardService.getConfig({moduleName: "COMPLAINT"}, function (data) {
-            $scope.dashboard.complaintModel = angular.fromJson(data.dashboardConfig);
-            $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
+            var retModel = angular.fromJson(data.dashboardConfig);
+            retModel.titleTemplateUrl = $scope.dashboard.complaintModel.titleTemplateUrl;
+            retModel.title = "";
+            retModel.structure = $scope.dashboard.structure;
+
+            $scope.dashboard.complaintModel = retModel;
         });
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {

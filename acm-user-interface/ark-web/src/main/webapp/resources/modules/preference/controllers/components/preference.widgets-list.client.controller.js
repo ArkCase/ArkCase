@@ -40,16 +40,15 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
 
         function enableWidget($event, widget, enable) {
             widget.enabled = enable;
-            var preferredWidgets = getEnabledWidgets();
-            PreferenceService.setPreferredWidgets({
-                widgets: preferredWidgets
-            });
+            var enabledWidgets = getEnabledWidgets();
+            var preferredWidgets = {moduleName: $scope.moduleName, widgets: enabledWidgets};
+            PreferenceService.setPreferredWidgets({preferredWidgets: preferredWidgets});
         }
         var getEnabledWidgets = function() {
             var enabledWidgets = [];
             _.forEach($scope.widgets, function (widget) {
                 if(widget.enabled) {
-                    enabledWidgets.push(widget);
+                    enabledWidgets.push(widget.title);
                 }
 
             });
@@ -58,18 +57,23 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
 
         function showWidgets(e, widgets, moduleName, config) {
             $scope.preferenceDashboardConfig = config;
-            $scope.moduleName = moduleName;
+            $scope.moduleName = config.module;
             $scope.defaultViewExpand = config.isCollapsed ? 'true' : 'false';
 
-            PreferenceService.getPreferredWidgets({moduleName: moduleName}, function (preferredWidgets) {
+            var configObject = angular.fromJson(config.dashboardConfig);
+            if(configObject.rows[0].columns[0].widgets) {
+                PreferenceService.setPrefer
+            }
+
+            PreferenceService.getPreferredWidgets({moduleName: $scope.moduleName}, function (preferredWidgets) {
                 _.forEach(widgets, function (widget) {
                     widget.isCollapsed = true;
                     //assuming service returns camelCase widget names
                     widget.enabled = _.includes(preferredWidgets, widget.controllerAs);
                 });
-             }, function(error) {
+            }, function(error) {
 
-             });
+            });
 
             $scope.widgets = widgets;
             $scope.showDefaultForm = true;

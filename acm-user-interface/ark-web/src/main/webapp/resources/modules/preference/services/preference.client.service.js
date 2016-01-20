@@ -5,12 +5,12 @@ angular.module('preference').factory('Preference.PreferenceService', ['$resource
         return $resource('', {}, {
             getPreferredWidgets: {
                 method: 'GET',
-                url: 'proxy/arkcase/api/latest/plugin/dashboard/widgets/preferred/{moduleName}',
+                url: 'proxy/arkcase/api/latest/plugin/dashboard/widgets/preferred/:moduleName',
                 data: ''
             },
 
             setPreferredWidgets: {
-                method: 'POST',
+                method: 'PUT',
                 url: 'proxy/arkcase/api/latest/plugin/dashboard/widgets/preferred'
             }
         })
