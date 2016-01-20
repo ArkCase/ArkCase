@@ -9,7 +9,8 @@ angular.module('dashboard.history', ['adf.provider'])
                 controller: 'Dashboard.HistoryController',
                 controllerAs: 'history',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/history-widget.client.view.html'
+                templateUrl: 'modules/dashboard/views/components/history-widget.client.view.html',
+                commonName: 'history'
             });
     })
     .controller('Dashboard.HistoryController', ['$scope', 'config', '$state', '$stateParams', '$translate'

@@ -4,12 +4,13 @@ angular.module('dashboard.hourssummary', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('hourssummary', {
-                title: 'Hours Summary Widget',
+                title: 'Hours Summary',
                 description: 'Displays a summary of hours',
                 controller: 'Dashboard.HoursSummaryController',
                 controllerAs: 'hourssummary',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/hours-summary-widget.client.view.html'
+                templateUrl: 'modules/dashboard/views/components/hours-summary-widget.client.view.html',
+                commonName: 'hourssummary'
             });
     })
     .controller('Dashboard.HoursSummaryController', ['$scope', '$translate', '$stateParams', 'UtilService'

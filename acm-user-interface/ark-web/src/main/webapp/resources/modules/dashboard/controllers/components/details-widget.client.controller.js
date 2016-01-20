@@ -4,11 +4,12 @@ angular.module('dashboard.details', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('details', {
-                    title: 'Details Widget',
+                    title: 'Details',
                     description: 'Displays details',
                     controller: 'Dashboard.DetailsController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/details-widget.client.view.html'
+                    templateUrl: 'modules/dashboard/views/components/details-widget.client.view.html',
+                    commonName: 'details'
                 }
             );
     })

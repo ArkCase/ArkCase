@@ -4,11 +4,12 @@ angular.module('dashboard.docreview', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('docreview', {
-                    title: 'Documents Under Review Widget',
+                    title: 'Documents Under Review',
                     description: 'Displays documents under review',
                     controller: 'Dashboard.DocReviewController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/docreview-widget.client.view.html'
+                    templateUrl: 'modules/dashboard/views/components/docreview-widget.client.view.html',
+                    commonName: 'docreview'
                 }
             );
     })

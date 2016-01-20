@@ -4,11 +4,12 @@ angular.module('dashboard.correspondence', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('correspondence', {
-                    title: 'Correspondence Widget',
+                    title: 'Correspondence',
                     description: 'Displays correspondence',
                     controller: 'Dashboard.CorrespondenceController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/correspondence-widget.client.view.html'
+                    templateUrl: 'modules/dashboard/views/components/correspondence-widget.client.view.html',
+                    commonName: 'correspondence'
                 }
             );
     })

@@ -4,11 +4,12 @@ angular.module('dashboard.reworkdetails', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('reworkdetails', {
-                    title: 'Rework Details Widget',
+                    title: 'Rework Details',
                     description: 'Displays location',
                     controller: 'Dashboard.LocationController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/location-widget.client.view.html'
+                    templateUrl: 'modules/dashboard/views/components/location-widget.client.view.html',
+                    commonName: 'reworkdetails'
                 }
             );
     })
@@ -26,7 +27,7 @@ angular.module('dashboard.reworkdetails', ['adf.provider'])
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
             });
-
+            
             $scope.gridOptions = {
                 enableColumnResizing: true,
                 columnDefs: []

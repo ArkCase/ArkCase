@@ -4,11 +4,12 @@ angular.module('dashboard.references', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('references', {
-                    title: 'References Widget',
+                    title: 'References',
                     description: 'Displays references',
                     controller: 'Dashboard.ReferencesController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/references-widget.client.view.html'
+                    templateUrl: 'modules/dashboard/views/components/references-widget.client.view.html',
+                    commonName: 'references'
                 }
             );
     })

@@ -4,11 +4,12 @@ angular.module('dashboard.tasks', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('tasks', {
-                    title: 'Tasks Widget',
+                    title: 'Tasks',
                     description: 'Displays Tasks',
                     controller: 'Dashboard.TasksController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/tasks-widget.client.view.html'
+                    templateUrl: 'modules/dashboard/views/components/tasks-widget.client.view.html',
+                    commonName: 'tasks'
                 }
             );
     })

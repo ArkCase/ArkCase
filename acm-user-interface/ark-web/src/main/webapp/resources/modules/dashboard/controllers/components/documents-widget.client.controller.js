@@ -9,7 +9,8 @@ angular.module('dashboard.documents', ['adf.provider'])
                 controller: 'Dashboard.DocumentsController',
                 controllerAs: 'documents',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/documents-widget.client.view.html'
+                templateUrl: 'modules/dashboard/views/components/documents-widget.client.view.html',
+                commonName: 'documents'
             });
     })
     .controller('Dashboard.DocumentsController', ['$scope', 'config', '$stateParams', '$translate', 'Dashboard.DashboardService'

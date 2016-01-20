@@ -4,11 +4,12 @@ angular.module('dashboard.people', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('people', {
-                    title: 'People Widget',
+                    title: 'People',
                     description: 'Displays people',
                     controller: 'Dashboard.PeopleController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/people-widget.client.view.html'
+                    templateUrl: 'modules/dashboard/views/components/people-widget.client.view.html',
+                    commonName: 'people'
                 }
             );
     })
