@@ -64,6 +64,21 @@ angular.module('tasks').factory('Task.InfoService', ['$resource', '$translate', 
 
         /**
          * @ngdoc method
+         * @name resetTaskInfo
+         * @methodOf services:Task.InfoService
+         *
+         * @description
+         * Reset Task info
+         *
+         * @returns None
+         */
+        Service.resetTaskInfo = function () {
+            var cacheInfo = new Store.CacheFifo(Service.CacheNames.TASK_INFO);
+            cacheInfo.reset();
+        };
+
+        /**
+         * @ngdoc method
          * @name updateTaskInfo
          * @methodOf tasks.service:Task.InfoService
          *

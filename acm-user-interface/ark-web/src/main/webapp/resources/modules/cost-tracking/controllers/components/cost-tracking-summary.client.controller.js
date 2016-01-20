@@ -15,20 +15,28 @@ angular.module('cost-tracking').controller('CostTracking.SummaryController', ['$
         var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         if (Util.goodPositive(currentObjectId, false)) {
             CostTrackingInfoService.getCostsheetInfo(currentObjectId).then(function (costsheetInfo) {
-                $scope.costsheetInfo = costsheetInfo;
-                var parentNumber = {parentNumber: $scope.costsheetInfo.parentNumber};
-                var parentType = {parentType: $scope.costsheetInfo.parentType};
-                var parentId = {parentId: $scope.costsheetInfo.parentId};
-
-                var costs = angular.copy($scope.costsheetInfo.costs);
-                costs = costs.map(function (obj) {
-                    return angular.extend(obj, parentNumber, parentType, parentId);
-                });
-                $scope.gridOptions = $scope.gridOptions || {};
-                $scope.gridOptions.data = costs;
+                updateData(costsheetInfo);
                 return costsheetInfo;
             });
         }
+
+        $scope.$on('object-refreshed', function (e, costsheetInfo) {
+            updateData(costsheetInfo);
+        });
+
+        var updateData = function (costsheetInfo) {
+            $scope.costsheetInfo = costsheetInfo;
+            var parentNumber = {parentNumber: $scope.costsheetInfo.parentNumber};
+            var parentType = {parentType: $scope.costsheetInfo.parentType};
+            var parentId = {parentId: $scope.costsheetInfo.parentId};
+
+            var costs = angular.copy($scope.costsheetInfo.costs);
+            costs = costs.map(function (obj) {
+                return angular.extend(obj, parentNumber, parentType, parentId);
+            });
+            $scope.gridOptions = $scope.gridOptions || {};
+            $scope.gridOptions.data = costs;
+        };
 
         $scope.onClickObjectType = function (event, rowEntity) {
             event.preventDefault();

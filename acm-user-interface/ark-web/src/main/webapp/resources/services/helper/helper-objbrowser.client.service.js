@@ -103,7 +103,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                 that.stateParams = arg.stateParams;
                 that.moduleId = arg.moduleId;
 
-                that.resetContent = arg.resetContent;
+                that.resetObjectInfo = arg.resetObjectInfo;
                 that.getObjectInfo = arg.getObjectInfo;
                 that.updateObjectInfo = arg.updateObjectInfo;
                 that.initComponentLinks = arg.initComponentLinks;
@@ -153,12 +153,21 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                     Service.updateObjectSetting(that.moduleId, "main"); //don't update objectId/Type; only set linkId = "main"
                 });
 
-                that.scope.$on('refresh-content', function (e, selectedObject) {
-                    console.log("helper.Content: refresh-content");
-                    //that.resetContent();
+                that.scope.$on('report-object-refreshed', function (e, objectId) {
+                    that.resetObjectInfo();
 
-                    //simulate a tree node selection
-                    //that.scope.$emit('req-select-object', selectedObject);
+                    that.getObjectInfo(objectId).then(
+                        function (objectInfo) {
+                            that.scope.objectInfo = objectInfo;
+                            that.scope.$broadcast('object-refreshed', objectInfo);
+                            return objectInfo;
+                        }
+                        , function (error) {
+                            that.scope.objectInfo = null;
+                            //todo: display error
+                            return error;
+                        }
+                    );
                 });
 
                 that.scope.$on('report-object-updated', function (e, objectInfo) {
