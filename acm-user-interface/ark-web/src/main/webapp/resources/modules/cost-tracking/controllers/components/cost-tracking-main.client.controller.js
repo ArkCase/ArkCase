@@ -31,59 +31,16 @@ angular.module('cost-tracking').controller('CostTracking.MainController', ['$sco
             }
         };
 
-        DashboardService.getConfig({}, function (data) {
-            var cacheDashboardConfig = new Store.CacheFifo(CostTrackingInfoService.CacheNames.COSTSHEET_INFO);
-            $scope.dashboard.costModel = cacheDashboardConfig.get("dashboardConfig");
-
-            if ($scope.dashboard.costModel) {
-                //If cached, use that model
-                $scope.dashboard.costModel.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
+        DashboardService.getConfig({moduleName: "COST"}, function (data) {
+                $scope.dashboard.costModel = angular.fromJson(data.dashboardConfig);
                 $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
-            } else {
-                //Else use dashboard config and filter.
-                $scope.dashboard.model = angular.fromJson(data.dashboardConfig);
-                $scope.dashboard.costModel = Util.filterWidgets($scope.dashboard.model, $scope.allowedWidgets);
-                $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
-
-                //Cache filtered dashboard model
-                cacheDashboardConfig.put("dashboardConfig", $scope.dashboard.costModel);
-            }
         });
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {
-            //Save dashboard model only to cache
-            var cacheDashboardConfig = new Store.CacheFifo(CostTrackingInfoService.CacheNames.COSTSHEET_INFO);
-            if (cacheDashboardConfig)
-                cacheDashboardConfig.put("dashboardConfig", model);
-
-            //jwu:
-            //Todo: fix above cache
-            //XXX_INFO cache is used to save info data, not config data. The right place to save the
-            //dashboard config in cache is when the config is first time retrieved (presumably in a service)
-            //
+            DashboardService.saveConfig({
+                dashboardConfig: angular.toJson(model),
+                module: "COST"
+            });
         });
-
-        //var widgetFilter = function(model) {
-        //    var costModel = model;
-        //    //iterate over rows
-        //    for(var i = 0; i < costModel.rows.length; i++) {
-        //        //iterate over columns
-        //        for(var j = 0; j < costModel.rows[i].columns.length; j++) {
-        //            //iterate over column widgets
-        //            if(costModel.rows[i].columns[j].widgets){
-        //                for(var k = costModel.rows[i].columns[j].widgets.length; k > 0; k--) {
-        //                    // var type = costModel.rows[i].columns[j].widgets[k].type;
-        //                    var type = costModel.rows[i].columns[j].widgets[k-1].type;
-        //                    if(!($scope.allowedWidgets.indexOf(type) > -1)) {
-        //                        //remove widget from array
-        //                        costModel.rows[i].columns[j].widgets.splice(k-1, 1);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return costModel;
-        //};
-
     }
 ]);

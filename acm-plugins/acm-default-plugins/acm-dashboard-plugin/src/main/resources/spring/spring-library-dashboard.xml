@@ -24,6 +24,10 @@
 
     <bean id="acmWidgetDao" class="com.armedia.acm.plugins.dashboard.dao.WidgetDao"/>
 
+    <bean id="moduleDao" class="com.armedia.acm.plugins.dashboard.dao.ModuleDao"/>
+
+    <bean id="userPreferenceDao" class="com.armedia.acm.plugins.dashboard.dao.UserPreferenceDao"/>
+
     <bean id="dashboardPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Dashboard Plugin"/>
         <property name="pluginProperties" ref="dashboardPluginProperties"/>
@@ -31,6 +35,12 @@
 
 
     <bean id="dashboardEventPublisher" class="com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher"/>
+
     <bean id="widgetEventPublisher" class="com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher"/>
+
+    <bean id="userPreferenceEventPublisher"
+          class="com.armedia.acm.plugins.dashboard.service.UserPreferenceEventPublisher"/>
+
+    <bean id="moduleEventPublisher" class="com.armedia.acm.plugins.dashboard.service.ModuleEventPublisher"/>
 
 </beans>

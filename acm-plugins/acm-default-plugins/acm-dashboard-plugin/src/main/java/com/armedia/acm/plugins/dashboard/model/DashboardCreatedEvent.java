@@ -3,10 +3,10 @@ package com.armedia.acm.plugins.dashboard.model;
 /**
  * Created by marst on 7/31/14.
  */
-public class DashboardUpdatedEvent extends DashboardPersistenceEvent
+public class DashboardCreatedEvent extends DashboardPersistenceEvent
 {
 
-    public DashboardUpdatedEvent(Dashboard source)
+    public DashboardCreatedEvent(Dashboard source)
     {
         super(source);
     }
@@ -14,6 +14,6 @@ public class DashboardUpdatedEvent extends DashboardPersistenceEvent
     @Override
     public String getEventType()
     {
-        return DashboardConstants.EVENT_TYPE_DASHBOARD_UPDATED;
+        return DashboardConstants.EVENT_TYPE_DASHBOARD_CREATED;
     }
 }
