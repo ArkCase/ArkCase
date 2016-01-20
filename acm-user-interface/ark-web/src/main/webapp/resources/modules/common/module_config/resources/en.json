@@ -3,7 +3,7 @@
     "select.option.none": "(Select One)",
     "defaultDateFormat": "MM/DD/YYYY",
     "defaultTimeFormat": "hh:mm:ss",
-    "defaultDatetimeFormat": "MM/DD/YYYY hh:mm"
+    "defaultDateTimeFormat": "MM/DD/YYYY hh:mm"
   },
   "common.service": {
     "error.invalidData": "Invalid data"

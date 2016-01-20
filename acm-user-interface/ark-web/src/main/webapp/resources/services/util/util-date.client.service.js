@@ -16,7 +16,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
         var Service = {
             defaultDateFormat: $translate.instant("common.defaultDateFormat")
             , defaultTimeFormat: $translate.instant("common.defaultTimeFormat")
-            , defaultDatetimeFormat: $translate.instant("common.defaultDatetimeFormat")
+            , defaultDateTimeFormat: $translate.instant("common.defaultDateTimeFormat")
 
             /**
              * @ngdoc method
@@ -95,10 +95,10 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              * Extract datetime from an ISO Datetime in default format.
              */
             , getDatetime: function (isoDatetime, replacement) {
-                //format = format || Service.defaultDatetimeFormat;
+                //format = format || Service.defaultDateTimeFormat;
                 //return moment(isoDatetime).format(format);
                 var dt = moment(isoDatetime);
-                return (dt.isValid()) ? dt.format(Service.defaultDatetimeFormat) : replacement;
+                return (dt.isValid()) ? dt.format(Service.defaultDateTimeFormat) : replacement;
             }
 
 
