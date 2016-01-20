@@ -81,5 +81,53 @@
             </column>
         </addColumn>
     </changeSet>
+
+    <changeSet id="06-create-module-and-user-preference-tables" author="marst">
+
+        <addColumn tableName="acm_dashboard">
+            <column name="cm_module_config_collapsed" type="VARCHAR(16)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <createTable tableName="acm_module">
+            <column name="cm_module_id" type="${idType}">
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_module"/>
+            </column>
+            <column name="cm_module_name" type="VARCHAR(255)"/>
+        </createTable>
+
+        <createTable tableName="acm_module_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_module_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_module"></column>
+        </insert>
+
+        <createTable tableName="acm_user_preference">
+            <column name="cm_user_preference_id" type="${idType}">
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_user_preference"/>
+            </column>
+            <column name="cm_user" type="VARCHAR(${cmUserIdLength})"/>
+            <column name="cm_module" type="${idType}"/>
+            <column name="cm_widget" type="${idType}"/>
+        </createTable>
+
+        <createTable tableName="acm_user_preference_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_user_preference_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_user_preference"></column>
+        </insert>
+
+    </changeSet>
 </databaseChangeLog>
 

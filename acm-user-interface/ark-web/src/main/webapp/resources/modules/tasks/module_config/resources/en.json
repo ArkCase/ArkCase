@@ -35,6 +35,7 @@
   "tasks.comp.actions": {
     "eSignature.button": "Sign",
     "subscribe.button": "Subscribe",
+    "unsubscribe.button": "Unsubscribe",
     "reject.button": "Reject",
     "delete.button": "Delete",
     "complete.button": "Complete",

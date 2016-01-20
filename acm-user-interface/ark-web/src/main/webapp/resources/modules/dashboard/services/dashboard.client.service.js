@@ -6,6 +6,9 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
             getConfig: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/v1/plugin/dashboard/get',
+                params: {
+                    moduleName : "@moduleName"
+                },
                 data: ''
             },
 
