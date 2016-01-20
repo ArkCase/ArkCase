@@ -21,18 +21,17 @@ angular.module('cases').controller('Cases.SplitController', ['$scope', '$statePa
             
             var attachments = [];
             var selNodes = $scope.treeControl.getSelectedNodes();
-            if (!Util.isEmptyArray(selNodes)) {
+            if (!Util.isArrayEmpty(selNodes)) {
                 for (var i = 0; i < selNodes.length; i++) {
-                    if (DocTree.View.isFolderNode(selNodes[i])) {
+                    if (Util.goodValue(selNodes[i].folder, false)) {
                         attachments.push({"id": selNodes[i].data.objectId, "type": "folder"});
-                    } else if (DocTree.View.isFileNode(selNodes[i])) {
+                    } else { // file node
                         attachments.push({"id": selNodes[i].data.objectId, "type": "document"});
                     }
                 }
             }
             
             var summary = {};
-            var attachments = this.getAttachments();
             summary.caseFileId =  $scope.selectedItem;
             summary.attachments = attachments;
             summary.preserveFolderStructure = true;

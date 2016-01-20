@@ -18,6 +18,10 @@ angular.module('tasks').controller('Tasks.DetailsController', ['$scope', '$state
             });
         }
 
+        $scope.$on('object-refreshed', function (e, taskInfo) {
+            $scope.taskInfo = taskInfo;
+        });
+
 
         $scope.options = {
             focus: true

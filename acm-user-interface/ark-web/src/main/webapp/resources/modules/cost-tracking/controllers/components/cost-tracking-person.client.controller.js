@@ -15,12 +15,20 @@ angular.module('cost-tracking').controller('CostTracking.PersonController', ['$s
         var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         if (Util.goodPositive(currentObjectId, false)) {
             CostTrackingInfoService.getCostsheetInfo(currentObjectId).then(function (costsheetInfo) {
-                $scope.costsheetInfo = costsheetInfo;
-                $scope.gridOptions = $scope.gridOptions || {};
-                $scope.gridOptions.data = [$scope.costsheetInfo.user];
+                updateData(costsheetInfo);
                 return costsheetInfo;
             });
         }
+
+        $scope.$on('object-refreshed', function (e, costsheetInfo) {
+            updateData(costsheetInfo);
+        });
+
+        var updateData = function (costsheetInfo) {
+            $scope.costsheetInfo = costsheetInfo;
+            $scope.gridOptions = $scope.gridOptions || {};
+            $scope.gridOptions.data = [$scope.costsheetInfo.user];
+        };
 
 
 
