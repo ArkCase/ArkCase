@@ -1,13 +1,13 @@
 'use strict';
 
-angular.module('preference').controller('Preference.WidgetsListController', ['$scope', '$q', '$state', '$stateParams',
-    function ($scope, $q, $state, $stateParams) {
+angular.module('preference').controller('Preference.WidgetsListController', ['$scope', '$q', '$state', '$stateParams'
+    , 'Preference.PreferenceService', 'Dashboard.DashboardService',
+    function ($scope, $q, $state, $stateParams, PreferenceService, DashboardService) {
         $scope.widgets = [];
 
         $scope.formData = ["*", {"type": "submit", "title": "Save"}];
 
         $scope.selectWidget = selectWidget;
-        $scope.submitForm = submitForm;
         $scope.toggleWidget = toggleWidget;
         $scope.enableWidget = enableWidget;
 
@@ -17,15 +17,13 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
 
         $scope.$on('show-widgets', showWidgets);
 
-        function toggleDefaultView($event) {
-            //          $event.preventDefault();
-            console.log("Default view toggled");
+        function toggleDefaultView() {
+            DashboardService.saveConfig({
+                dashboardConfig: angular.toJson($scope.preferenceDashboardConfig),
+                module: $scope.moduleName,
+                isCollapsed: $scope.defaultViewExpand
+            });
         }
-
-        function submitForm() {
-            $scope.$emit('req-save-module');
-        }
-
         /**
          * Toggle widget panel on header click
          * @param widget
@@ -41,26 +39,37 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
         }
 
         function enableWidget($event, widget, enable) {
-            // $event.preventDefault();
             widget.enabled = enable;
-            // $scope.$emit('req-save-module');
-
-            /**
-             * Save Widget
-             */
-            if (enable) {
-                console.log("Widget: " + widget.title + " enabled");
-            } else {
-                console.log("Widget: " + widget.title + " disabled");
-            }
-        }
-
-
-        function showWidgets(e, widgets) {
-            // Add collapsed property
-            _.forEach(widgets, function (widget) {
-                widget.isCollapsed = true;
+            var preferredWidgets = getEnabledWidgets();
+            PreferenceService.setPreferredWidgets({
+                widgets: preferredWidgets
             });
+        }
+        var getEnabledWidgets = function() {
+            var enabledWidgets = [];
+            _.forEach($scope.widgets, function (widget) {
+                if(widget.enabled) {
+                    enabledWidgets.push(widget);
+                }
+
+            });
+            return enabledWidgets;
+        };
+
+        function showWidgets(e, widgets, moduleName, config) {
+            $scope.preferenceDashboardConfig = config;
+            $scope.moduleName = moduleName;
+            $scope.defaultViewExpand = config.isCollapsed ? 'true' : 'false';
+
+            PreferenceService.getPreferredWidgets({moduleName: moduleName}, function (preferredWidgets) {
+                _.forEach(widgets, function (widget) {
+                    widget.isCollapsed = true;
+                    //assuming service returns camelCase widget names
+                    widget.enabled = _.includes(preferredWidgets, widget.controllerAs);
+                });
+             }, function(error) {
+
+             });
 
             $scope.widgets = widgets;
             $scope.showDefaultForm = true;
