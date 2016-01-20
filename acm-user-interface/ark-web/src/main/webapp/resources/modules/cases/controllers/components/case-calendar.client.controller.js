@@ -8,9 +8,15 @@ angular.module('cases').controller('Cases.CalendarController', ['$scope', 'Confi
 			return componentConfig;
 		});
 
-		$scope.$on('case-updated', function (e, data) {
+		$scope.$on('object-updated', function (e, data) {
 			if (CaseInfoService.validateCaseInfo(data)) {
 				$scope.caseInfo = data;
+			}
+		});
+
+		$scope.$on('object-refreshed', function (e, caseInfo) {
+			if (CaseInfoService.validateCaseInfo(caseInfo)) {
+				$scope.caseInfo = caseInfo;
 			}
 		});
 
