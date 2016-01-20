@@ -15,8 +15,18 @@ angular.module('preference').controller('Preference.ModuleInfoController', ['$sc
              var config = data[1];
              $scope.$broadcast('show-widgets', dashboard.widgets, module.id, config);
              }); */
+            var modules = [
+                {name: "CASE", configName: "cases"}
+                , {name: "COMPLAINT", configName: "complaints"}
+                , {name: "COST", configName: "cost-tracking"}
+                , {name: "TIME", configName: "time-tracking"}
+                , {name: "TASK", configName: "tasks"}
+            ];
+            var selectedModule = _.find(modules, function (module) {
+                return module.configName == newModule.id;
+            });
             ConfigService.getModule({moduleId: newModule.id}, function (module) {
-                DashboardService.getConfig({module: module.id}, function(config) {
+                DashboardService.getConfig({moduleName: selectedModule.name}, function(config) {
                     $scope.$broadcast('show-widgets', dashboard.widgets, module.id, config);
                 })
             });

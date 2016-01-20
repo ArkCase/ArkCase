@@ -26,14 +26,18 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', '$statePar
             structure: '6-6',
             collapsible: false,
             maximizable: false,
-            model: {
-                titleTemplateUrl: 'modules/dashboard/views/dashboard-title.client.view.html'
+            taskModel: {
+                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
             }
         };
 
         DashboardService.getConfig({moduleName: "TASK"}, function (data) {
-                $scope.dashboard.taskModel = angular.fromJson(data.dashboardConfig);
-                $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
+            var retModel = angular.fromJson(data.dashboardConfig);
+            retModel.titleTemplateUrl = $scope.dashboard.taskModel.titleTemplateUrl;
+            retModel.title = "";
+            retModel.structure = $scope.dashboard.structure;
+
+            $scope.dashboard.taskModel = retModel;
         });
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {

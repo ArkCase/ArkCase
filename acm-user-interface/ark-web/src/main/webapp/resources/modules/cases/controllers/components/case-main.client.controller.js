@@ -26,15 +26,18 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
             structure: '6-6',
             collapsible: false,
             maximizable: false,
-            model: {
-                titleTemplateUrl: 'modules/dashboard/views/dashboard-title.client.view.html'
+            caseModel: {
+                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
             }
         };
 
         DashboardService.getConfig({moduleName: "CASE"}, function (data) {
-            $scope.dashboard.caseModel = angular.fromJson(data.dashboardConfig);
-            $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
+            var retModel = angular.fromJson(data.dashboardConfig);
+            retModel.titleTemplateUrl = $scope.dashboard.caseModel.titleTemplateUrl;
+            retModel.title = "";
+            retModel.structure = $scope.dashboard.structure;
 
+            $scope.dashboard.caseModel = retModel;
         });
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {
