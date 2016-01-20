@@ -9,12 +9,15 @@ import com.armedia.acm.plugins.dashboard.model.userPreference.PreferredWidgetsDt
 import com.armedia.acm.plugins.dashboard.model.userPreference.UserPreference;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by marjan.stefanoski on 18.01.2016.
@@ -26,6 +29,7 @@ public class UserPreferenceService
     private WidgetDao widgetDao;
     private ModuleDao moduleDao;
     private UserPreferenceEventPublisher userPreferenceEventPublisher;
+    private DashboardPropertyReader dashboardPropertyReader;
     private Logger log = LoggerFactory.getLogger(getClass());
 
 
@@ -107,17 +111,67 @@ public class UserPreferenceService
 
     public PreferredWidgetsDto getPreferredWidgetsByUserAndModule(String userId, String moduleName) throws AcmObjectNotFoundException
     {
+        if (!dashboardPropertyReader.getModuleNameList().contains(moduleName))
+        {
+            if (log.isErrorEnabled())
+            {
+                log.error("Module with name: " + moduleName + " is not found!");
+            }
+            throw new AcmObjectNotFoundException("User Preference", null, "Module not found!", null);
+        }
         PreferredWidgetsDto preferredWidgetsDto = new PreferredWidgetsDto();
         List<Widget> widgetList;
         List<String> widgetNamesList = new ArrayList<>();
 
-        widgetList = userPreferenceDao.getUserPreferredListOfWidgetsByUserAndModuleName(userId, moduleName);
+        try
+        {
+            widgetList = userPreferenceDao.getUserPreferredListOfWidgetsByUserAndModuleName(userId, moduleName);
+        } catch (AcmObjectNotFoundException e)
+        {
+            if (log.isInfoEnabled())
+            {
+                log.info("No preferred widgets for user: " + userId + " and module: " + moduleName);
+            }
+            widgetList = getAllAllowedWidgetsForUser(userId);
+        }
         widgetList.stream().forEach(widget -> widgetNamesList.add(widget.getWidgetName()));
-
         preferredWidgetsDto.setModuleName(moduleName);
         preferredWidgetsDto.setPreferredWidgets(widgetNamesList);
 
         return preferredWidgetsDto;
+    }
+
+    private List<Widget> getAllAllowedWidgetsForUser(String userId) throws AcmObjectNotFoundException
+    {
+        List<Widget> result;
+        List<AcmRole> roles = getUserDao().findAllRolesByUser(userId);
+        try
+        {
+            result = onlyUniqueValues(widgetDao.getAllWidgetsByRoles(roles));
+            if (log.isInfoEnabled() && !result.isEmpty())
+            {
+                log.info("All allowed widgets for the user: " + userId + " will be returned!");
+            }
+        } catch (AcmObjectNotFoundException e)
+        {
+            if (log.isErrorEnabled())
+            {
+                log.error("No widgets are allowed for the user: " + userId + "! " + e.getMessage(), e);
+            }
+            throw e;
+        }
+        return result;
+    }
+
+    private List<Widget> onlyUniqueValues(List<Widget> widgets)
+    {
+        Set<Widget> widgetSet = new HashSet<>();
+        List<Widget> result = new ArrayList<>();
+
+        widgets.stream().forEach(widget -> widgetSet.add(widget));
+        widgetSet.stream().forEach(widget -> result.add(widget));
+
+        return result;
     }
 
     private List<UserPreference> getUserPreferenceListByUserAndModule(AcmUser user, Module module) throws AcmObjectNotFoundException
@@ -215,5 +269,15 @@ public class UserPreferenceService
     public void setUserPreferenceEventPublisher(UserPreferenceEventPublisher userPreferenceEventPublisher)
     {
         this.userPreferenceEventPublisher = userPreferenceEventPublisher;
+    }
+
+    public DashboardPropertyReader getDashboardPropertyReader()
+    {
+        return dashboardPropertyReader;
+    }
+
+    public void setDashboardPropertyReader(DashboardPropertyReader dashboardPropertyReader)
+    {
+        this.dashboardPropertyReader = dashboardPropertyReader;
     }
 }
