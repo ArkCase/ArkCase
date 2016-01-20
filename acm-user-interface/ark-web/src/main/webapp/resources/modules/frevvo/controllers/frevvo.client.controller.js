@@ -19,9 +19,8 @@ angular.module('frevvo').controller('FrevvoController', ['$scope', '$stateParams
                 var formUrl = FrevvoFormService.buildFrevvoUrl($scope.acmFormsProperties, formType, $scope.acmTicket, $stateParams.arg);
                 $scope.frevvoFormUrl = $sce.trustAsResourceUrl(formUrl);
 
-                var z = 1;
-                //$scope.$emit("rootScope:servcomm-request", {request: "new-case", data: "new case data"});
-                //ServCommService.request("frevvo", "new-case", "data");
+                //$scope.$emit("rootScope:servcomm-request", {channel: "frevvo", topic: $stateParams.name, data: found});
+                ServCommService.request($scope, "frevvo", $stateParams.name, found);
             }
         });
     }

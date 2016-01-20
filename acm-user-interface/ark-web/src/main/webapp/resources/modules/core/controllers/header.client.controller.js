@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus', '$state', '$rootScope', '$timeout',
-    function ($scope, Authentication, Menus, $state, $rootScope, $timeout) {
+angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus', '$state', 'ServCommService'
+    , function ($scope, Authentication, Menus, $state, ServCommService) {
         $scope.$emit('req-component-config', 'header');
         $scope.authentication = Authentication;
         $scope.isCollapsed = false;
@@ -18,20 +18,9 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
                 $scope.start = config.searchParams.start;
                 $scope.count = config.searchParams.n;
             }
-        }
+        };
 
-        $rootScope.$on("rootScope:servcomm-request", function (e, request) {
-            console.log("HeaderController, rootScope:servcomm-request");
-
-            //set up listener to server comm
-
-            $timeout(function () {
-                $rootScope.$broadcast("rootScope:servcomm-response", {
-                    request: "new-case",
-                    data: "new case response data"
-                });
-            }, 5000);
-        });
+        ServCommService.handleRequest();
 
 
         $scope.toggleCollapsibleMenu = function () {

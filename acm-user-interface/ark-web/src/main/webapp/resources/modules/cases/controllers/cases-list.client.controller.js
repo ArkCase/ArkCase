@@ -1,10 +1,22 @@
 'use strict';
 
 angular.module('cases').controller('CasesListController', ['$scope', '$state', '$stateParams', '$translate'
-    , 'UtilService', 'ObjectService', 'Case.ListService', 'Case.InfoService', 'Helper.ObjectBrowserService'
+    , 'UtilService', 'ObjectService', 'Case.ListService', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ServCommService'
     , function ($scope, $state, $stateParams, $translate
-        , Util, ObjectService, CaseListService, CaseInfoService, HelperObjectBrowserService) {
+        , Util, ObjectService, CaseListService, CaseInfoService, HelperObjectBrowserService, ServCommService) {
 
+        //
+        // Check to see if complaint page is shown as a result returned by Frevvo
+        // Reset the tree cache so that new entry created by Frevvo can be shown.
+        // This is a temporary solution until UI and backend communication is implemented
+        //
+        var topics = ["new-case", "edit-case", "change-case-status", "reinvestigate"];
+        _.each(topics, function (topic) {
+            var data = ServCommService.popRequest("frevvo", topic);
+            if (data) {
+                CaseListService.resetCasesTreeData();
+            }
+        });
 
         //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper
         new HelperObjectBrowserService.Tree({
