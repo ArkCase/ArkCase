@@ -18,6 +18,10 @@ angular.module('time-tracking').controller('TimeTracking.DetailsController', ['$
             });
         }
 
+        $scope.$on('object-refreshed', function (e, timesheetInfo) {
+            $scope.timesheetInfo = timesheetInfo;
+        });
+
         $scope.saveDetails = function() {
             var timesheetInfo = Util.omitNg($scope.timesheetInfo);
            TimeTrackingInfoService.saveTimesheetInfo(timesheetInfo).then(

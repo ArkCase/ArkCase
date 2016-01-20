@@ -22,20 +22,6 @@ angular.module('welcome').controller('WelcomeController', ['$scope', '$q', '$sta
         }
 
 
-        //var promiseGetModuleConfig = ConfigService.getModuleConfig("welcome").then(function (config) {
-        //    $scope.config = config;
-        //    return config;
-        //});
-        //$scope.$on('req-component-config', function (e, componentId) {
-        //    promiseGetModuleConfig.then(function (config) {
-        //        var componentConfig = _.find(config.components, {id: componentId});
-        //        $scope.$broadcast('component-config', componentId, componentConfig);
-        //    });
-        //});
-        //$q.all([promiseGetModuleConfig]).then(function(data) {
-        //    $state.go("dashboard");
-        //});
-
         $state.go("dashboard");
     }
 ]);

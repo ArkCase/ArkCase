@@ -64,6 +64,21 @@ angular.module('services').factory('CostTracking.InfoService', ['$resource', '$t
 
         /**
          * @ngdoc method
+         * @name resetCaseInfo
+         * @methodOf services:CostTracking.InfoService
+         *
+         * @description
+         * Reset CostTracking info
+         *
+         * @returns None
+         */
+        Service.resetCostsheetInfo = function () {
+            var cacheInfo = new Store.CacheFifo(Service.CacheNames.COSTSHEET_INFO);
+            cacheInfo.reset();
+        };
+
+        /**
+         * @ngdoc method
          * @name getCostsheetInfo
          * @methodOf service:CostTracking.InfoService
          *

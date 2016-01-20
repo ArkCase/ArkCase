@@ -1,3 +1,5 @@
+/* @override http://sharecaredev.armedianet.com/arkcase/modules/core/css/core.css */
+
 /* @override http://10.21.4.149/arkcase/modules/core/css/core.css
 	http://sharecaredev.armedianet.com/arkcase/modules/core/css/core.css */
 
@@ -375,8 +377,8 @@ body {
     vertical-align: top;
     padding-left: 0px;
     padding-right: 0px;
-    padding-top: 140px;
-    padding-bottom: 60px;
+    top: 132px;
+    padding-bottom: 190px;
     width: 500px;
     height: 100% !important;
     -webkit-overflow-scrolling: touch;

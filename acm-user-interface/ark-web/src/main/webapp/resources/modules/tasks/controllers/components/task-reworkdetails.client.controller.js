@@ -14,6 +14,10 @@ angular.module('tasks').controller('Tasks.ReworkDetailsController', ['$scope', '
             return taskInfo;
         });
 
+        $scope.$on('object-refreshed', function (e, taskInfo) {
+            $scope.taskInfo = taskInfo;
+        });
+
         $scope.options = {
             focus: true
             //,height: 120

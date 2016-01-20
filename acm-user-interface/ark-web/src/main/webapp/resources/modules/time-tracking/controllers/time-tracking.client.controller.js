@@ -10,6 +10,7 @@ angular.module('time-tracking').controller('TimeTrackingController', ['$scope', 
             , state: $state
             , stateParams: $stateParams
             , moduleId: "time-tracking"
+            , resetObjectInfo: TimeTrackingInfoService.resetTimesheetInfo
             , getObjectInfo: TimeTrackingInfoService.getTimesheetInfo
             , updateObjectInfo: TimeTrackingInfoService.saveTimesheetInfo
             , initComponentLinks: function (config) {
