@@ -30,8 +30,8 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             return config;
         });
 
+        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         $scope.retrieveGridData = function () {
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
             if (Util.goodPositive(currentObjectId, false)) {
                 var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.CASE_FILE, currentObjectId);
                 $q.all([promiseQueryNotes, promiseUsers, promiseConfig]).then(function (data) {

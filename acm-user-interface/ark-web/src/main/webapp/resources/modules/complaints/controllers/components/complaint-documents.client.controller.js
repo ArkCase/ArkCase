@@ -32,11 +32,6 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
         $scope.objectId = $stateParams.id;
 
-        //$scope.$on('object-updated', function (e, data) {
-        //    if (ComplaintInfoService.validateComplaintInfo(data)) {
-        //        $scope.complaintInfo = data;
-        //    }
-        //});
         var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         if (Util.goodPositive(currentObjectId, false)) {
             ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
@@ -45,6 +40,11 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
                 return complaintInfo;
             });
         }
+
+        $scope.$on('object-refreshed', function (e, complaintInfo) {
+            $scope.complaintInfo = complaintInfo;
+            $scope.objectId = complaintInfo.complaintId;
+        });
 
         var silentReplace = function (value, replace, replacement) {
             if (!Util.isEmpty(value) && value.replace) {

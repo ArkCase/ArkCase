@@ -18,6 +18,10 @@ angular.module('cases').controller('Cases.DetailsController', ['$scope', '$state
             });
         }
 
+        $scope.$on('object-refreshed', function (e, caseInfo) {
+            $scope.caseInfo = caseInfo;
+        });
+
 
         $scope.options = {
             focus: true

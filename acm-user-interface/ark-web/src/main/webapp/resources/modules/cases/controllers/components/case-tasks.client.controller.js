@@ -45,7 +45,6 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
         });
 
         $scope.retrieveGridData = function () {
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
             if (Util.goodPositive(currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
                     , currentObjectId
