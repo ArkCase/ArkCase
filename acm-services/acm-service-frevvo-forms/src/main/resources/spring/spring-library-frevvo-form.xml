@@ -8,11 +8,6 @@
     <bean id="frevvoApplicationEventPublisher" factory-bean="frevvoApplicationEventPublisherAware"
           factory-method="getApplicationEventPublisher"/>
 
-    <bean id="plainFormPropertiesConfigurer"
-          class="net.unicon.springframework.addons.properties.ReloadingPropertyPlaceholderConfigurer">
-        <property name="properties" ref="plainFormProperties"/>
-    </bean>
-
     <!-- TODO: So far, only CaseFileService is re-written on this way. On time, we should do for all other services -->
     <bean id="frevvoFormServices" class="java.util.HashMap">
         <constructor-arg>
