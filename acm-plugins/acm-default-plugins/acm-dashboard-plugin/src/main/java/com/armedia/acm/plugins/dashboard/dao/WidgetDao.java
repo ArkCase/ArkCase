@@ -2,9 +2,11 @@ package com.armedia.acm.plugins.dashboard.dao;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.plugins.dashboard.exception.AcmWidgetException;
-import com.armedia.acm.plugins.dashboard.model.Dashboard;
-import com.armedia.acm.plugins.dashboard.model.widget.*;
+import com.armedia.acm.plugins.dashboard.model.widget.RolesGroupByWidgetDto;
+import com.armedia.acm.plugins.dashboard.model.widget.Widget;
+import com.armedia.acm.plugins.dashboard.model.widget.WidgetRole;
+import com.armedia.acm.plugins.dashboard.model.widget.WidgetRoleName;
+import com.armedia.acm.plugins.dashboard.model.widget.WidgetRolePrimaryKey;
 import com.armedia.acm.services.users.model.AcmRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +21,8 @@ import java.util.List;
 /**
  * Created by marjan.stefanoski on 9/19/2014.
  */
-public class WidgetDao extends AcmAbstractDao<Widget> {
+public class WidgetDao extends AcmAbstractDao<Widget>
+{
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -27,34 +30,43 @@ public class WidgetDao extends AcmAbstractDao<Widget> {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional
-    public Widget saveWidget(Widget in) {
+    public Widget saveWidget(Widget in)
+    {
         Widget existing;
-        if(in.getWidgetId()!=null) {
+        if (in.getWidgetId() != null)
+        {
             existing = getEntityManager().find(Widget.class, in.getWidgetId());
-        } else {
-            try {
+        } else
+        {
+            try
+            {
                 existing = getWidgetByWidgetName(in.getWidgetName());
-            } catch (AcmObjectNotFoundException e) {
+            } catch (AcmObjectNotFoundException e)
+            {
                 existing = null;
             }
         }
-        if ( existing == null ) {
+        if (existing == null)
+        {
             in = getEntityManager().merge(in);
             getEntityManager().flush();
-        } else {
+        } else
+        {
             in = existing;
         }
         return in;
     }
 
     @Transactional
-    public WidgetRole saveWidgetRole(WidgetRole widgetRole) {
+    public WidgetRole saveWidgetRole(WidgetRole widgetRole)
+    {
         WidgetRolePrimaryKey key = new WidgetRolePrimaryKey();
         key.setRoleName(widgetRole.getRoleName());
         key.setWidgetId(widgetRole.getWidgetId());
         WidgetRole existing = getEntityManager().find(WidgetRole.class, key);
 
-        if ( existing == null ) {
+        if (existing == null)
+        {
             getEntityManager().persist(widgetRole);
             getEntityManager().flush();
             return widgetRole;
@@ -63,28 +75,32 @@ public class WidgetDao extends AcmAbstractDao<Widget> {
         return existing;
     }
 
-    public Widget getWidgetByWidgetName(String widgetName) throws AcmObjectNotFoundException {
+    public Widget getWidgetByWidgetName(String widgetName) throws AcmObjectNotFoundException
+    {
         Query widgetsByRoles = getEntityManager().createQuery(
                 "SELECT widget FROM Widget widget WHERE widget.widgetName=:widgetName");
         widgetsByRoles.setParameter("widgetName", widgetName);
         List<Widget> retval = widgetsByRoles.getResultList();
-        if(retval.isEmpty()) {
-            throw new AcmObjectNotFoundException("dashboard",null, "Widgets not found for these roles",null);
+        if (retval.isEmpty())
+        {
+            throw new AcmObjectNotFoundException("dashboard", null, "Widgets not found for these roles", null);
         }
         return retval.get(0);
     }
 
-    public List<Widget> getAllWidgets() {
+    public List<Widget> getAllWidgets()
+    {
         String queryText = "SELECT widget FROM Widget widget";
         Query allWidgets = getEntityManager().createQuery(queryText);
         List<Widget> result = allWidgets.getResultList();
         return result;
     }
 
-    public List<RolesGroupByWidgetDto> getRolesGroupByWidget() throws AcmObjectNotFoundException{
+    public List<RolesGroupByWidgetDto> getRolesGroupByWidget() throws AcmObjectNotFoundException
+    {
         String queryText = "SELECT widget.widgetName, wrole.roleName " +
-                "FROM Widget widget,WidgetRole wrole " +
-                "WHERE widget.widgetId=wrole.widgetId " +
+                "FROM Widget widget LEFT OUTER JOIN WidgetRole wrole " +
+                "ON widget.widgetId=wrole.widgetId " +
                 "ORDER BY widget.widgetName";
         Query rolesByWidget = getEntityManager().createQuery(queryText);
 
@@ -95,16 +111,20 @@ public class WidgetDao extends AcmAbstractDao<Widget> {
         RolesGroupByWidgetDto rolesPerW = new RolesGroupByWidgetDto();
         String widgetN = null;
         String roleN = null;
-        for(Object[] roleWidget : rolesPerWidget){
-            widgetN = (String)roleWidget[0];
-            roleN = (String)roleWidget[1];
-            if(rolesPerW.getWidgetName()==null) {
+        for (Object[] roleWidget : rolesPerWidget)
+        {
+            widgetN = (String) roleWidget[0];
+            roleN = (String) roleWidget[1];
+            if (rolesPerW.getWidgetName() == null)
+            {
                 //only for the first widget in the list
-                 rolesPerW.setWidgetName(widgetN);
-                 roles.add(new WidgetRoleName(roleN));
-            } else if(widgetN.equals(rolesPerW.getWidgetName())){
-                roles.add(new WidgetRoleName(roleN));
-            } else {
+                rolesPerW.setWidgetName(widgetN);
+                addRoleNameIfNotNull(roles, roleN);
+            } else if (widgetN.equals(rolesPerW.getWidgetName()))
+            {
+                addRoleNameIfNotNull(roles, roleN);
+            } else
+            {
                 //all roles for the widget will be added to dto and
                 // the dto will be added to the result list.
                 rolesPerW.setWidgetAuthorizedRoles(roles);
@@ -113,65 +133,85 @@ public class WidgetDao extends AcmAbstractDao<Widget> {
                 rolesPerW = new RolesGroupByWidgetDto();
                 roles = new ArrayList<WidgetRoleName>();
                 rolesPerW.setWidgetName(widgetN);
-                roles.add(new WidgetRoleName(roleN));
+                addRoleNameIfNotNull(roles, roleN);
             }
         }
-        //add the last row into the result collection
-        rolesPerW.setWidgetAuthorizedRoles(roles);
-        result.add(rolesPerW);
+        //add the last row into the result collection... only if there were any results.
+        if (!rolesPerWidget.isEmpty())
+        {
+            rolesPerW.setWidgetAuthorizedRoles(roles);
+            result.add(rolesPerW);
+        }
 
-        if( result.isEmpty()){
-            throw new AcmObjectNotFoundException("dashboard",null, "Roles not found for all widgets",null);
+        if (result.isEmpty())
+        {
+            throw new AcmObjectNotFoundException("dashboard", null, "Roles not found for all widgets", null);
         }
         return result;
     }
 
-    public List<Widget> getAllWidgetsByRoles(List<AcmRole> roles) throws AcmObjectNotFoundException {
+    private void addRoleNameIfNotNull(List<WidgetRoleName> roles, String roleN)
+    {
+        if (roleN != null)
+        {
+            roles.add(new WidgetRoleName(roleN));
+        }
+    }
+
+    public List<Widget> getAllWidgetsByRoles(List<AcmRole> roles) throws AcmObjectNotFoundException
+    {
         List<String> roleNames = new ArrayList<String>();
-        for(AcmRole role : roles){
+        for (AcmRole role : roles)
+        {
             roleNames.add(role.getRoleName());
         }
         Query widgetsByRoles = getEntityManager().createQuery(
                 "SELECT widget FROM Widget widget, WidgetRole widgetRole " +
-                "WHERE widget.widgetId = widgetRole.widgetId " +
-                "AND widgetRole.roleName IN :roleNames ");
+                        "WHERE widget.widgetId = widgetRole.widgetId " +
+                        "AND widgetRole.roleName IN :roleNames ");
         widgetsByRoles.setParameter("roleNames", roleNames);
         List<Widget> retval = widgetsByRoles.getResultList();
-        if( retval.isEmpty()){
-            throw new AcmObjectNotFoundException("dashboard",null, "Widgets not found for these roles",null);
+        if (retval.isEmpty())
+        {
+            throw new AcmObjectNotFoundException("dashboard", null, "Widgets not found for these roles", null);
         }
         return retval;
     }
 
-    public WidgetRole addWidgetToARole(Widget widget, AcmRole role){
-              WidgetRole widgetRole = new WidgetRole();
-              widgetRole.setRoleName(role.getRoleName());
-              widgetRole.setWidgetId(widget.getWidgetId());
+    public WidgetRole addWidgetToARole(Widget widget, AcmRole role)
+    {
+        WidgetRole widgetRole = new WidgetRole();
+        widgetRole.setRoleName(role.getRoleName());
+        widgetRole.setWidgetId(widget.getWidgetId());
         return saveWidgetRole(widgetRole);
     }
 
 
-    public void deleteWidgetRole(WidgetRole widgetRole){
+    public void deleteWidgetRole(WidgetRole widgetRole)
+    {
         getEntityManager().remove(widgetRole);
     }
 
     @Transactional
-    public int deleteAllWidgetRolesByWidgetName(String widgetName) {
+    public int deleteAllWidgetRolesByWidgetName(String widgetName)
+    {
         Query deleteAllRolesPerWidget = getEntityManager().createQuery(
                 "DELETE FROM WidgetRole wrole WHERE wrole.widgetId IN " +
-                "(SELECT widget.widgetId FROM Widget widget " +
-                "WHERE widget.widgetName=:widgetName)");
+                        "(SELECT widget.widgetId FROM Widget widget " +
+                        "WHERE widget.widgetName=:widgetName)");
 
-        deleteAllRolesPerWidget.setParameter("widgetName",widgetName);
+        deleteAllRolesPerWidget.setParameter("widgetName", widgetName);
         int i = deleteAllRolesPerWidget.executeUpdate();
         return i;
     }
 
-    public EntityManager getEntityManager() {
+    public EntityManager getEntityManager()
+    {
         return entityManager;
     }
 
-    public void setEntityManager(EntityManager entityManager) {
+    public void setEntityManager(EntityManager entityManager)
+    {
         this.entityManager = entityManager;
     }
 
