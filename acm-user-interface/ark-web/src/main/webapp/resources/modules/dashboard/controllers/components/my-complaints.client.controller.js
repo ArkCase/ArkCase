@@ -1,23 +1,15 @@
 'use strict';
 
 angular.module('dashboard.my-complaints')
-    .controller('Dashboard.MyComplaintsController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'Helper.UiGridService', 'UtilService', 'ObjectService',
-        function ($scope, $translate, Authentication, DashboardService, HelperUiGridService, Util, ObjectService) {
+    .controller('Dashboard.MyComplaintsController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
+        function ($scope, $translate, Authentication, DashboardService) {
 
             var vm = this;
-            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'myComplaints');
             vm.config = null;
             var userInfo = null;
-
-            $scope.onClickObjLink = function (event, rowEntity) {
-                event.preventDefault();
-                var targetType = ObjectService.ObjectTypes.COMPLAINT;
-                var targetId = Util.goodMapValue(rowEntity, "complaintId");
-                gridHelper.showObject(targetType, targetId);
-            };
 
             var paginationOptions = {
                 pageNumber: 1,
@@ -26,6 +18,7 @@ angular.module('dashboard.my-complaints')
                 sortDir: 'desc'
             };
             vm.gridOptions = {
+                appScopeProvider: vm,
                 enableColumnResizing: true,
                 enableRowSelection: true,
                 enableSelectAll: false,
