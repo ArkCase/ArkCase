@@ -56,6 +56,7 @@
         <property name="userPreferenceDao" ref="userPreferenceDao"/>
         <property name="widgetDao" ref="acmWidgetDao"/>
         <property name="userPreferenceEventPublisher" ref="userPreferenceEventPublisher"/>
+        <property name="dashboardPropertyReader" ref="dashboardPropertyReader"/>
     </bean>
 
     <bean id="dashboardService" class="com.armedia.acm.plugins.dashboard.service.DashboardService">
