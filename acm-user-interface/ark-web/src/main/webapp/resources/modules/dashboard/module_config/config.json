@@ -131,14 +131,14 @@
           "name": "complaintNumber",
           "displayName": "dashboard.widgets.myComplaints.table.header.number",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.complaintNumber}}</a>",
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}<\/a>",
           "width": 175
         },
         {
           "name": "complaintTitle",
           "displayName": "dashboard.widgets.myComplaints.table.header.title",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.complaintTitle}}</a>"
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "priority",
