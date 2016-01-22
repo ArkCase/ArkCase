@@ -64,6 +64,7 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
                 }
 
                 var enabledWidgets = preferredWidgets.preferredWidgets;
+                enabledWidgets = removeNonObjectWidgets(enabledWidgets);
                 PreferenceService.setPreferredWidgets({moduleName: $scope.moduleName, preferredWidgets: enabledWidgets});
                 widget.enabled = enable;
 
