@@ -1,0 +1,19 @@
+<div>
+    <div ng-if="time.showChart">
+        <div class="panel-body">
+            </br>
+            <div class="chart-container">
+                <canvas id="bar" class="chart chart-bar" chart-data="time.data"
+                        chart-labels="time.labels"
+                        chart-series="time.series"
+                        chart-responsive="true"
+                        chart-legend="true"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-info" ng-if="!time.showChart">
+        <p class="text-center">
+            <span translate>dashboard.widgets.time.noDataMessage</span>
+        </p>
+    </div>
+</div>

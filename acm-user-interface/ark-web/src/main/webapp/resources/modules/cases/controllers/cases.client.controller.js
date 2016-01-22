@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('cases').controller('CasesController', ['$scope', '$stateParams', '$state', '$translate'
-    , 'UtilService', 'ConfigService', 'Case.InfoService', 'ObjectService', 'Helper.ObjectBrowserService'
+    , 'UtilService', 'ConfigService', 'Case.InfoService', 'ObjectService', 'Helper.ObjectBrowserService', 'Dashboard.DashboardService'
     , function ($scope, $stateParams, $state, $translate
-        , Util, ConfigService, CaseInfoService, ObjectService, HelperObjectBrowserService) {
+        , Util, ConfigService, CaseInfoService, ObjectService, HelperObjectBrowserService, DashboardService) {
 
         new HelperObjectBrowserService.Content({
             scope: $scope
@@ -18,5 +18,8 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
             }
         });
 
-	}
+        $scope.$on("collapsed", function(event, collapsed) {
+            $scope.linksShown = !collapsed;
+        });
+    }
 ]);
