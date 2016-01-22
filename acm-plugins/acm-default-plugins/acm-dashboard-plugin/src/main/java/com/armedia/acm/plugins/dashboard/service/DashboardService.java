@@ -62,7 +62,14 @@ public class DashboardService
         d.setCollapsed(new Boolean(false));
         if (!dashboardPlugin.getPluginProperties().isEmpty())
         {
-            d.setDashboardConfig((String) dashboardPlugin.getPluginProperties().get(DashboardConstants.DEFAULT_DASHBOARD));
+            if(moduleName.equals(DashboardConstants.DEFAULT_DASHBOARD_NAME)) {
+                d.setDashboardConfig((String) dashboardPlugin.getPluginProperties().get(DashboardConstants.DEFAULT_DASHBOARD));
+            } else {
+                String defaultModuleDashboardConfig = (String) dashboardPlugin.getPluginProperties().get(DashboardConstants.DEFAULT_MODULE_DASHBOARD);
+                if(defaultModuleDashboardConfig != null) {
+                    d.setDashboardConfig(defaultModuleDashboardConfig);
+                }
+            }
         } else
         {
             // to add <prop key="acm.deafultDashbolard">"some default long dashboard string"</prop> under

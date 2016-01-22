@@ -1,0 +1,19 @@
+<div>
+    <div ng-if="calendar.showChart">
+        <div class="panel-body">
+            </br>
+            <div class="chart-container">
+                <canvas id="bar" class="chart chart-bar" chart-data="calendar.data"
+                        chart-labels="calendar.labels"
+                        chart-series="calendar.series"
+                        chart-responsive="true"
+                        chart-legend="true"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-info" ng-if="!calendar.showChart">
+        <p class="text-center">
+            <span translate>dashboard.widgets.calendar.noDataMessage</span>
+        </p>
+    </div>
+</div>

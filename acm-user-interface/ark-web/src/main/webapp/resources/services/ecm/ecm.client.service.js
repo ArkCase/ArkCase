@@ -97,6 +97,12 @@ angular.module('services').factory('EcmService', ['$resource', 'StoreService', '
                 url: 'proxy/arkcase/api/v1/service/participant/FILE/:fileId',
                 isArray: true
             }
+            , getFolderDocumentCounts: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/latest/service/ecm/folder/counts/:objType/:objId/?start=:start&n=:n&s=:sortBy&dir=:sortDir',
+                cache: false,
+                isArray: false
+            }
         });
 
         return Service;
