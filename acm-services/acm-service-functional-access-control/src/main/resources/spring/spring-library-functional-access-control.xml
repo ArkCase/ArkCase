@@ -9,10 +9,6 @@
 		<property name="location" value="file:${user.home}/.acm/applicationRoles.properties"/>
 	</bean>
 	
-	<bean id="rolesPropertyConfigurer" class="net.unicon.springframework.addons.properties.ReloadingPropertyPlaceholderConfigurer">
-		<property name="properties" ref="acm-roles-properties"/>
-	</bean>
-	
 	<bean id="functionalAccessEventPublisher" class="com.armedia.acm.services.functionalaccess.service.FunctionalAccessEventPublisher" />
 	
 	<bean id="functionalAccessService" class="com.armedia.acm.services.functionalaccess.service.FunctionalAccessServiceImpl">

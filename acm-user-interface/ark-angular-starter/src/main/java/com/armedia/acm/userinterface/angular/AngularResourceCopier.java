@@ -64,16 +64,16 @@ public class AngularResourceCopier implements ServletContextAware
             ServletContextResourcePatternResolver resolver = new ServletContextResourcePatternResolver(servletContext);
 
             Resource modulesRoot = resolver.getResource(AngularResourceConstants.WAR_ANGULAR_RESOURCE_PATH);
-            log.info("modulesRoot: {}", modulesRoot);
+            log.debug("modulesRoot: {}", modulesRoot);
             String rootPath = modulesRoot.getFile().getCanonicalPath();
 
             for (String oldDeployFolder : getOldDeployFoldersToBeRemovedBeforeBuild())
             {
                 File oldFolder = new File(tmpDir.getCanonicalPath() + oldDeployFolder);
-                log.info("Old folder path: {}", oldFolder.getCanonicalPath());
+                log.debug("Old folder path: {}", oldFolder.getCanonicalPath());
                 if (oldFolder.exists())
                 {
-                    log.info("Removing old folder {}", oldFolder.getCanonicalPath());
+                    log.debug("Removing old folder {}", oldFolder.getCanonicalPath());
                     FileSystemUtils.deleteRecursively(oldFolder);
                 }
             }
@@ -120,7 +120,7 @@ public class AngularResourceCopier implements ServletContextAware
 
     public void createFolderStructure(File folder) throws IOException
     {
-        log.info("Creating folder {}", folder.getCanonicalPath());
+        log.debug("Creating folder {}", folder.getCanonicalPath());
         if (!folder.exists())
         {
             boolean foldersCreated = folder.mkdirs();
@@ -217,7 +217,7 @@ public class AngularResourceCopier implements ServletContextAware
             resources = resolver.getResources(AngularResourceConstants.WAR_ANGULAR_RESOURCE_PATH + "/" + moduleRoot + "/**");
         } catch (FileNotFoundException fe)
         {
-            log.info("Not copying resources under {}, since no such resources exist.",
+            log.debug("Not copying resources under {}, since no such resources exist.",
                     AngularResourceConstants.WAR_ANGULAR_RESOURCE_PATH + "/" + moduleRoot);
             return;
         }
@@ -236,7 +236,7 @@ public class AngularResourceCopier implements ServletContextAware
 
             if (targetFile != null)
             {
-                log.info("Copying file {}", targetFile.getCanonicalPath());
+                log.debug("Copying file {}", targetFile.getCanonicalPath());
                 createFolderStructure(targetFile.getParentFile());
                 FileCopyUtils.copy(r.getInputStream(), new FileOutputStream(targetFile));
             }
@@ -283,11 +283,11 @@ public class AngularResourceCopier implements ServletContextAware
         String resourceFullPath = r.getFile().getCanonicalPath();
         String relativePath = resourceFullPath.replace(rootPath, "");
 
-        log.info("relative path: {}", relativePath);
+        log.debug("relative path: {}", relativePath);
 
         relativePath = relativePath.replaceFirst(moduleRoot, targetRoot);
 
-        log.info("new relative path: {}", relativePath);
+        log.debug("new relative path: {}", relativePath);
 
         return new File(tmpDir, relativePath);
     }

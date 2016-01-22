@@ -22,10 +22,6 @@
         </property>
     </bean>
 
-    <bean id="notificationPropertiesConfigurer"
-          class="net.unicon.springframework.addons.properties.ReloadingPropertyPlaceholderConfigurer">
-        <property name="properties" ref="notificationProperties"/>
-    </bean>
 
     <!-- Notification Service is defined under $HOME/.acm/spring folder -->
 
