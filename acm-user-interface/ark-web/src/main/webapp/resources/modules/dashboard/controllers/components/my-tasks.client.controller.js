@@ -1,23 +1,15 @@
 'use strict';
 
 angular.module('dashboard.my-tasks')
-    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'Helper.UiGridService', 'UtilService', 'ObjectService',
-        function ($scope, $translate, Authentication, DashboardService, HelperUiGridService, Util, ObjectService) {
+    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
+        function ($scope, $translate, Authentication, DashboardService) {
 
             var vm = this;
-            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'myTasks');
+
             vm.config = null;
-
-
-            $scope.onClickObjLink = function (event, rowEntity) {
-                event.preventDefault();
-                var targetType = ObjectService.ObjectTypes.TASK;
-                var targetId = Util.goodMapValue(rowEntity, "taskId");
-                gridHelper.showObject(targetType, targetId);
-            };
 
             vm.gridOptions = {
                 enableColumnResizing: true,
