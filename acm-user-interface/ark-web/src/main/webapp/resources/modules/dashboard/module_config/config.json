@@ -172,5 +172,49 @@
       "redirectSettings": {
       }
     }
+  ],
+  "modules": [
+    {
+      "name": "CASE",
+      "configName": "cases"
+    },
+    {
+      "name": "COMPLAINT",
+      "configName": "complaints"
+    },
+    {
+      "name": "COST",
+      "configName": "cost-tracking"
+    },
+    {
+      "name": "TIME",
+      "configName": "time-tracking"
+    },
+    {
+      "name": "TASK",
+      "configName": "tasks"
+    }
+  ],
+  "objectWidgets": [
+    "calendar",
+    "correspondence",
+    "cost",
+    "details",
+    "docreview",
+    "documents",
+    "expenses",
+    "history",
+    "hoursSummary",
+    "locations",
+    "notes",
+    "participants",
+    "people",
+    "person",
+    "references",
+    "reworkdetails",
+    "signature",
+    "tasks",
+    "time",
+    "workflow"
   ]
 }

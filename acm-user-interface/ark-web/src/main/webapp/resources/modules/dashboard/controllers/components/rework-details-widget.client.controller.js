@@ -1,15 +1,15 @@
 'use strict';
 
-angular.module('dashboard.reworkdetails', ['adf.provider'])
+angular.module('dashboard.reworkDetails', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('reworkdetails', {
+            .widget('reworkDetails', {
                     title: 'Rework Details',
                     description: 'Displays location',
                     controller: 'Dashboard.LocationController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/location-widget.client.view.html',
-                    commonName: 'reworkdetails'
+                    templateUrl: 'modules/dashboard/views/components/rework-details-widget.client.view.html',
+                    commonName: 'reworkDetails'
                 }
             );
     })

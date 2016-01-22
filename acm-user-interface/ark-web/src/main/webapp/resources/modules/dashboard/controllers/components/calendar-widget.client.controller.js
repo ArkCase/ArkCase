@@ -40,8 +40,7 @@ angular.module('dashboard.calendar', ['adf.provider'])
 
                 module.getInfo(currentObjectId)
                     .then(function (data) {
-                        var calendarFolderId = data.container.calendarFolderId;
-                        return calendarFolderId;
+                        return data.container.calendarFolderId;
                     })
                     .then(function (calendarFolderId) {
                         CalendarService.queryCalendarEvents(calendarFolderId)
@@ -60,11 +59,11 @@ angular.module('dashboard.calendar', ['adf.provider'])
                                     /**
                                      * create initial data
                                      */
-                                    $scope.calendarChartData = [];
+                                    var calendarChartData = [];
                                     var today = new Date();
                                     var targetDays = getRange(today, today + 7);
                                     _.forEach(targetDays, function (day) {
-                                        $scope.calendarChartData.push({day: day, count: 0})
+                                        calendarChartData.push({day: day, count: 0})
                                     });
 
                                     /**
@@ -79,7 +78,7 @@ angular.module('dashboard.calendar', ['adf.provider'])
                                      * TODO: but for short events it doesn't matter. This was just
                                      * TODO: the quick and dirty way to do it with the amount of time I had.
                                      */
-                                    _.forEach($scope.calendarChartData, function (dataPoint, index) {
+                                    _.forEach(calendarChartData, function (dataPoint, index) {
                                         var dayTime = dataPoint.day.getTime();
                                         var count = dataPoint.count;
                                         _.forEach(events, function (event) {
@@ -91,10 +90,10 @@ angular.module('dashboard.calendar', ['adf.provider'])
                                             });
                                         });
 
-                                        $scope.calendarChartData[index].count = count;
+                                        calendarChartData[index].count = count;
                                     });
                                 }
-                                return $scope.calendarChartData ? $scope.calendarChartData : null;
+                                return calendarChartData ? calendarChartData : null;
                             })
                             .then(function (calendarChartData) {
                                 if (calendarChartData) {

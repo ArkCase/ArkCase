@@ -12,7 +12,6 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
         var promiseConfig = ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
             $scope.components = moduleConfig.components;
             $scope.config = _.find(moduleConfig.components, {id: "main"});
-            $scope.allowedWidgets = ['details'];
             return moduleConfig;
         });
 
@@ -32,12 +31,9 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
         };
 
         DashboardService.getConfig({moduleName: "CASE"}, function (data) {
-            var retModel = angular.fromJson(data.dashboardConfig);
-            retModel.titleTemplateUrl = $scope.dashboard.caseModel.titleTemplateUrl;
-            retModel.title = "";
-            retModel.structure = $scope.dashboard.structure;
-
-            $scope.dashboard.caseModel = retModel;
+            $scope.dashboard.caseModel = angular.fromJson(data.dashboardConfig);
+            $scope.dashboard.caseModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
+            $scope.$emit("collapsed", data.collapsed);
         });
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {

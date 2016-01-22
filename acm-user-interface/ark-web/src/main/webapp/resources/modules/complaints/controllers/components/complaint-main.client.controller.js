@@ -30,12 +30,9 @@ angular.module('complaints').controller('Complaints.MainController', ['$scope', 
         };
 
         DashboardService.getConfig({moduleName: "COMPLAINT"}, function (data) {
-            var retModel = angular.fromJson(data.dashboardConfig);
-            retModel.titleTemplateUrl = $scope.dashboard.complaintModel.titleTemplateUrl;
-            retModel.title = "";
-            retModel.structure = $scope.dashboard.structure;
-
-            $scope.dashboard.complaintModel = retModel;
+            $scope.dashboard.complaintModel = angular.fromJson(data.dashboardConfig);
+            $scope.dashboard.complaintModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
+            $scope.$emit("collapsed", data.collapsed);
         });
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {

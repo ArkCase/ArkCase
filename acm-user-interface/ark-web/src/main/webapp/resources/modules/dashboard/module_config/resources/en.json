@@ -179,12 +179,12 @@
         "description": "Displays chart of scheduled events per day",
         "noDataMessage": "Currently there are no events to display"
       },
-      "reworkdetails": {
+      "reworkDetails": {
         "title": "Rework Details",
         "description": "Shows most recent rework details",
         "noDataMessage": "Currently there no are no rework details to display"
       },
-      "docreview": {
+      "docReview": {
         "title": "Documents Under Review",
         "description": "Shows documents under review",
         "noDataMessage": "Currently there no are no documents under review to display"
@@ -204,7 +204,7 @@
         "description": "Person widget for Cost and Time modules",
         "noDataMessage": "Currently there are no persons to display"
       },
-      "hourssummary": {
+      "hoursSummary": {
         "title": "Hours Summary",
         "description": "Displays a summary of hours worked",
         "noDataMessage": "Currently there is no summary to display"
