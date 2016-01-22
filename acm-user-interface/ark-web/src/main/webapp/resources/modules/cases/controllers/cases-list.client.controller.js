@@ -15,6 +15,9 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
             var data = ServCommService.popRequest("frevvo", topic);
             if (data) {
                 CaseListService.resetCasesTreeData();
+                if ("change-case-status" == topic) {
+
+                }
             }
         });
 
@@ -27,8 +30,8 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
             , resetTreeData: function () {
                 return CaseListService.resetCasesTreeData();
             }
-            , getTreeData: function (start, n, sort, filters) {
-                return CaseListService.queryCasesTreeData(start, n, sort, filters);
+            , getTreeData: function (start, n, sort, filters, query) {
+                return CaseListService.queryCasesTreeData(start, n, sort, filters, query);
             }
             , getNodeData: function (caseId) {
                 return CaseInfoService.getCaseInfo(caseId);
