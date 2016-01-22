@@ -7,8 +7,10 @@ angular.module('preference').controller('Preference.Controller', ['$scope', 'Con
 
         $scope.$on('req-module-selected', moduleSelected);
 
-        function moduleSelected(e, module) {
-            $scope.$broadcast('module-selected', module);
+        function moduleSelected(e, moduleId) {
+            ConfigService.getModuleConfig('dashboard').then(function(dashboardConfig){
+                $scope.$broadcast('module-selected', moduleId, dashboardConfig);
+            });
         }
 
         function onConfigRequest(e, widgetId) {

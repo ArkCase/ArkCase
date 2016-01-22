@@ -9,11 +9,10 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', '$statePar
 
         $scope.$emit('main-component-started');
 
-        var promiseConfig = ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
+        ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
             $scope.components = moduleConfig.components;
             $scope.config = _.find(moduleConfig.components, {id: "main"});
 
-            $scope.allowedWidgets = ['details'];
             return moduleConfig;
         });
 
@@ -26,14 +25,15 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', '$statePar
             structure: '6-6',
             collapsible: false,
             maximizable: false,
-            model: {
-                titleTemplateUrl: 'modules/dashboard/views/dashboard-title.client.view.html'
+            taskModel: {
+                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
             }
         };
 
         DashboardService.getConfig({moduleName: "TASK"}, function (data) {
-                $scope.dashboard.taskModel = angular.fromJson(data.dashboardConfig);
-                $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
+            $scope.dashboard.taskModel = angular.fromJson(data.dashboardConfig);
+            $scope.dashboard.taskModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
+            $scope.$emit("collapsed", data.collapsed);
         });
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {

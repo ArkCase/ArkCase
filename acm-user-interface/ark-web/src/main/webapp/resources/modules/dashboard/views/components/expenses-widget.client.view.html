@@ -1,0 +1,19 @@
+<div>
+    <div ng-if="expenses.showChart">
+        <div class="panel-body">
+            </br>
+            <div class="chart-container">
+                <canvas id="bar" class="chart chart-bar" chart-data="expenses.data"
+                        chart-labels="expenses.labels"
+                        chart-series="expenses.series"
+                        chart-responsive="true"
+                        chart-legend="true"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-info" ng-if="!expenses.showChart">
+        <p class="text-center">
+            <span translate>dashboard.widgets.expenses.noDataMessage</span>
+        </p>
+    </div>
+</div>
