@@ -39,24 +39,19 @@ angular.module('dashboard.documents', ['adf.provider'])
                 var chartData = [];
                 var labels = [];
                 var params = {};
-                module.getInfo(currentObjectId)
-                    .then(function (data) {
-                        params.objId = data.id;
-                        params.objType = module.objectType;
-                        params.start = 0;
-                        params.start = 16;
-                        return params;
-                    })
-                    .then(function (params) {
-                        Ecm.getFolderDocumentCounts(params,
-                            function(data) {
-                                $scope.folderData = data;
-                            },
-                            function(error){
 
-                            }
-                        );
-                    });
+                params.objId = $stateParams.id;
+                params.objType = module.objectType;
+                
+                Ecm.getFolderDocumentCounts(params,
+                    function (data) {
+                        $scope.folderData = data;
+                    },
+                    function (error) {
+
+                    }
+                );
+
 
                 /**
                  * $scope.folderData has structure:
