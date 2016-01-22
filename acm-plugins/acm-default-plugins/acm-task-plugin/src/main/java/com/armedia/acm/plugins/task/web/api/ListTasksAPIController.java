@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
-@RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
+@RequestMapping({"/api/v1/plugin/task", "/api/latest/plugin/task"})
 public class ListTasksAPIController
 {
     private TaskDao taskDao;
@@ -35,7 +35,7 @@ public class ListTasksAPIController
             HttpSession session
     ) throws AcmListObjectsFailedException
     {
-        if ( log.isInfoEnabled() )
+        if (log.isInfoEnabled())
         {
             log.info("Finding tasks assigned to user '" + user + "'");
         }
@@ -46,14 +46,14 @@ public class ListTasksAPIController
         {
             List<AcmTask> retval = getTaskDao().tasksForUser(user);
             //to do: we also should get back the tasks that owner by this user
-            for ( AcmTask task : retval )
+            for (AcmTask task : retval)
             {
                 AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(task, "searchResult",
                         authentication.getName(), true, ipAddress);
                 getTaskEventPublisher().publishTaskEvent(event);
-                
+
             }
-            
+
             return retval;
         }
         catch (Exception e)
