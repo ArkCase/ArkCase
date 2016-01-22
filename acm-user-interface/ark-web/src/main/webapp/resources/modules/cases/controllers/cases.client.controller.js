@@ -18,8 +18,8 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
             }
         });
 
-        DashboardService.getConfig({moduleName: "CASE"}, function(dashboardConfig) {
-            $scope.linksShown = !dashboardConfig.collapsed;
+        $scope.$on("collapsed", function(event, collapsed) {
+            $scope.linksShown = !collapsed;
         });
     }
 ]);

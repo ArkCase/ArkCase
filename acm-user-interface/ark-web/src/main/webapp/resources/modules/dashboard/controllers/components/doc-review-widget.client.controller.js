@@ -1,15 +1,15 @@
 'use strict';
 
-angular.module('dashboard.docreview', ['adf.provider'])
+angular.module('dashboard.docReview', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('docreview', {
+            .widget('docReview', {
                     title: 'Documents Under Review',
                     description: 'Displays documents under review',
                     controller: 'Dashboard.DocReviewController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/docreview-widget.client.view.html',
-                    commonName: 'docreview'
+                    templateUrl: 'modules/dashboard/views/components/doc-review-widget.client.view.html',
+                    commonName: 'docReview'
                 }
             );
     })

@@ -46,7 +46,9 @@ angular.module('dashboard.locations', ['adf.provider'])
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
                         $scope.gridOptions.data = [info];
-                        $scope.gridOptions.data[0].location.fullAddress = createFullAddress(info.location);
+
+                        var fullAddress = createFullAddress(info.location);
+                        $scope.gridOptions.data[0].location.fullAddress = fullAddress ? fullAddress : "Error creating full address";
                         $scope.gridOptions.totalItems = 1;
                     },
                     function (err) {
@@ -58,16 +60,11 @@ angular.module('dashboard.locations', ['adf.provider'])
             var createFullAddress = function (location) {
                 if (location) {
                     var street = location.streetAddress;
-                    if (location.streetAddress2) {
-                        street += " " + location.streetAddress2
-                    }
+                    street += location.streetAddress2 ? " " + location.streetAddress2 : "";
                     var city = location.city;
                     var state = location.state;
                     var zip = location.zip;
-                    var country = "USA";
-                    if (location.country) {
-                        country = location.country;
-                    }
+                    var country = location.country ? location.country : "USA";
                     return street + ", " + city + ", " + state + " " + zip + " " + country;
                 }
                 return undefined;

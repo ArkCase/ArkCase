@@ -6,30 +6,17 @@ angular.module('preference').controller('Preference.ModuleInfoController', ['$sc
         $scope.module = null;
         $scope.$on('module-selected', moduleSelected);
 
-        function moduleSelected(e, newModule) {
-            var promiseModule = ConfigService.getModule({moduleId: newModule.id});
-            var promiseDashboardConfig = DashboardService.getConfig({module: newModule.id});
-
-            /*  $q.all([promiseModule, promiseDashboardConfig]).then(function(data) {
-             var module = data[0];
-             var config = data[1];
-             $scope.$broadcast('show-widgets', dashboard.widgets, module.id, config);
-             }); */
-            var modules = [
-                {name: "CASE", configName: "cases"}
-                , {name: "COMPLAINT", configName: "complaints"}
-                , {name: "COST", configName: "cost-tracking"}
-                , {name: "TIME", configName: "time-tracking"}
-                , {name: "TASK", configName: "tasks"}
-            ];
+        function moduleSelected(e, newModuleId, dashboardConfig) {
+            var objectWidgets = dashboardConfig.objectWidgets;
+            var modules = dashboardConfig.modules;
             var selectedModule = _.find(modules, function (module) {
-                return module.configName == newModule.id;
+                return module.configName == newModuleId;
             });
-            ConfigService.getModule({moduleId: newModule.id}, function (module) {
-                DashboardService.getConfig({moduleName: selectedModule.name}, function(config) {
-                    $scope.$broadcast('show-widgets', dashboard.widgets, module.id, config);
-                })
-            });
+
+            DashboardService.getConfig({moduleName: selectedModule.name}, function(moduleDashboardConfig) {
+                $scope.$broadcast('show-widgets', dashboard.widgets, moduleDashboardConfig, objectWidgets);
+            })
+
         }
     }
 ]);

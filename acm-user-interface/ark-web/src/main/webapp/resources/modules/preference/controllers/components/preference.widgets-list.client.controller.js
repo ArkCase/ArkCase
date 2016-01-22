@@ -11,38 +11,15 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
         $scope.toggleWidget = toggleWidget;
         $scope.enableWidget = enableWidget;
         $scope.removeNonObjectWidgets = removeNonObjectWidgets;
-        $scope.preferenceDashboardCopy = _.cloneDeep(dashboard);
+        $scope.preferenceDashboardWidgetsCopy = _.cloneDeep(dashboard.widgets);
         $scope.showDefaultForm = false;
         $scope.toggleDefaultView = toggleDefaultView;
         $scope.defaultViewExpand = "";
-        $scope.objectWidgets = [
-            "calendar",
-            "correspondence",
-            "cost",
-            "details",
-            "docreview",
-            "documents",
-            "expenses",
-            "history",
-            "hourssummary",
-            "locations",
-            "notes",
-            "participants",
-            "people",
-            "person",
-            "references",
-            "reworkdetails",
-            "signature",
-            "tasks",
-            "time",
-            "workflow"
-        ];
 
         $scope.$on('show-widgets', showWidgets);
 
         function toggleDefaultView() {
             DashboardService.getConfig({moduleName: $scope.moduleName}, function(config) {
-                console.log("break");
                 DashboardService.saveConfig({
                     dashboardConfig: angular.toJson(config.dashboardConfig),
                     module: $scope.moduleName,
@@ -96,14 +73,13 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
                     model.rows[0].columns[0].widgets = [];
                     _.forEach(enabledWidgets, function(widgetName) {
                         var widgetToInsert = {};
-                        var widgetInfo = _.find($scope.preferenceDashboardCopy.widgets, {commonName: widgetName});
+                        var widgetInfo = _.find($scope.preferenceDashboardWidgetsCopy, {commonName: widgetName});
                         widgetToInsert.type = widgetInfo.commonName;
                         widgetToInsert.config = {};
                         widgetToInsert.title = widgetInfo.title;
                         widgetToInsert.titleTemplateUrl = "../src/templates/widget-title.html";
                         model.rows[0].columns[0].widgets.push(widgetToInsert);
                     });
-                    console.log("break");
                     DashboardService.saveConfig({
                         dashboardConfig: angular.toJson(model),
                         module: $scope.moduleName
@@ -114,10 +90,10 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
 
         }
 
-        function showWidgets(e, widgets, moduleName, config) {
-            $scope.preferenceDashboardConfig = config;
-            $scope.moduleName = config.module;
-            $scope.defaultViewExpand = (!config.collapsed).toString();
+        function showWidgets(e, widgets, moduleDashboardConfig, objectWidgets) {
+            $scope.objectWidgets = objectWidgets;
+            $scope.moduleName = moduleDashboardConfig.module;
+            $scope.defaultViewExpand = (!moduleDashboardConfig.collapsed).toString();
 
             PreferenceService.getPreferredWidgets({moduleName: $scope.moduleName}, function (preferredWidgets) {
                 preferredWidgets.preferredWidgets = removeNonObjectWidgets(preferredWidgets.preferredWidgets);
@@ -127,7 +103,7 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
                 });
                 $scope.widgets = widgets;
             }, function(error) {
-                console.log("error");
+
             });
 
             $scope.widgets = widgets;

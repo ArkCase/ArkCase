@@ -34,12 +34,9 @@ angular.module('time-tracking').controller('TimeTracking.MainController', ['$sco
         };
 
         DashboardService.getConfig({moduleName: "TIME"}, function (data) {
-            var retModel = angular.fromJson(data.dashboardConfig);
-            retModel.titleTemplateUrl = $scope.dashboard.timeModel.titleTemplateUrl;
-            retModel.title = "";
-            retModel.structure = $scope.dashboard.structure;
-
-            $scope.dashboard.timeModel = retModel;
+            $scope.dashboard.timeModel = angular.fromJson(data.dashboardConfig);
+            $scope.dashboard.timeModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
+            $scope.$emit("collapsed", data.collapsed);
         });
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {

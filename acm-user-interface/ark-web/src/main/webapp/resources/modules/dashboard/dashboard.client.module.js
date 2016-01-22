@@ -26,12 +26,12 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.correspondence',
     'dashboard.time',
     'dashboard.cost',
-    //'dashboard.calendar',
-    'dashboard.reworkdetails',
-    'dashboard.docreview',
+    'dashboard.calendar',
+    'dashboard.reworkDetails',
+    'dashboard.docReview',
     'dashboard.workflow',
     'dashboard.signature',
     'dashboard.person',
     'dashboard.expenses',
-    'dashboard.hourssummary'
+    'dashboard.hoursSummary'
 ]);

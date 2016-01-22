@@ -23,10 +23,7 @@ angular.module('dashboard.expenses', ['adf.provider'])
             if (Util.goodPositive(currentObjectId, false)) {
                 CostTrackingInfoService.getCostsheetInfo(currentObjectId).then(
                     function (costsheetInfo) {
-
-                        //TODO: Use _.clone/_.cloneDeep instead here? Not familiar with angular.copy,
-                        //TODO: but _.clone/_.cloneDeep is supposed to be faster
-                        var costs = angular.copy(costsheetInfo.costs);
+                        var costs = _.cloneDeep.copy(costsheetInfo.costs);
 
                         var chartData = [];
                         var labels = [];
