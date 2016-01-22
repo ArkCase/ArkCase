@@ -2,10 +2,10 @@
 
 angular.module('complaints').controller('Complaints.ActionsController', ['$scope', '$state', '$stateParams', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Complaint.LookupService'
-    , 'Object.SubscriptionService', 'Object.ModelService', 'Complaint.InfoService', 'Helper.ObjectBrowserService'
+    , 'Object.SubscriptionService', 'Object.ModelService', 'Complaint.InfoService'
     , function ($scope, $state, $stateParams, $q
         , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, ComplaintLookupService
-        , ObjectSubscriptionService, ObjectModelService, ComplaintInfoService, HelperObjectBrowserService) {
+        , ObjectSubscriptionService, ObjectModelService, ComplaintInfoService) {
 
         ConfigService.getComponentConfig("complaints", "actions").then(function (componentConfig) {
             $scope.config = componentConfig;
