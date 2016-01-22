@@ -22,7 +22,7 @@ angular.module('preference').controller('Preference.ModulesListController', ['$s
 
             $scope.modules = modules;
             return modules;
-        }
+        };
 
         ConfigService.queryModules().$promise.then($scope.filterModules);
 
@@ -36,7 +36,7 @@ angular.module('preference').controller('Preference.ModulesListController', ['$s
                 prevActive.active = false;
             }
             newActive.active = true;
-            $scope.$emit('req-module-selected', newActive);
+            $scope.$emit('req-module-selected', newActive.id);
         }
     }
 ]);
