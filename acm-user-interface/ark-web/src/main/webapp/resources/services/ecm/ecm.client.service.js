@@ -99,7 +99,7 @@ angular.module('services').factory('EcmService', ['$resource', 'StoreService', '
             }
             , getFolderDocumentCounts: {
                 method: 'GET',
-                url: 'proxy/arkcase/api/latest/service/ecm/folder/counts/:objType/:objId/?start=:start&n=:n&s=:sortBy&dir=:sortDir',
+                url: 'proxy/arkcase/api/latest/service/ecm/folder/counts/:objType/:objId/',
                 cache: false,
                 isArray: false
             }
