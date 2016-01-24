@@ -35,12 +35,5 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
             $scope.dashboard.caseModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
             $scope.$emit("collapsed", data.collapsed);
         });
-
-        $scope.$on('adfDashboardChanged', function (event, name, model) {
-            DashboardService.saveConfig({
-                dashboardConfig: angular.toJson(model),
-                module: "CASE"
-            });
-        });
     }
 ]);
