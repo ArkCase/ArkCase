@@ -22,7 +22,7 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
         });
 
         $scope.dashboard = {
-            structure: '6-6',
+            structure: '12',
             collapsible: false,
             maximizable: false,
             caseModel: {

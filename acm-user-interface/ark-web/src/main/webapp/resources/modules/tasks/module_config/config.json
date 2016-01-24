@@ -250,17 +250,17 @@
           "columnDefs": [
             {
               "name": "details",
-              "displayName": "dashboard.widgets.details.table.header.details",
+              "displayName": "tasks.comp.details.table.columns.details",
               "headerCellFilter": "translate"
             },
             {
               "name": "modified",
-              "displayName": "dashboard.widgets.details.table.header.modified",
+              "displayName": "tasks.comp.details.table.columns.modified",
               "headerCellFilter": "translate"
             },
             {
               "name": "modifier",
-              "displayName": "dashboard.widgets.details.table.header.modifier",
+              "displayName": "tasks.comp.details.table.columns.modifier",
               "headerCellFilter": "translate"
             }
           ]
