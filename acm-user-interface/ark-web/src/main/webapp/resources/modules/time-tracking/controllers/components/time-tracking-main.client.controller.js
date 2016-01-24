@@ -25,7 +25,7 @@ angular.module('time-tracking').controller('TimeTracking.MainController', ['$sco
         });
 
         $scope.dashboard = {
-            structure: '6-6',
+            structure: '12',
             collapsible: false,
             maximizable: false,
             timeModel: {
@@ -37,13 +37,6 @@ angular.module('time-tracking').controller('TimeTracking.MainController', ['$sco
             $scope.dashboard.timeModel = angular.fromJson(data.dashboardConfig);
             $scope.dashboard.timeModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
             $scope.$emit("collapsed", data.collapsed);
-        });
-
-        $scope.$on('adfDashboardChanged', function (event, name, model) {
-            DashboardService.saveConfig({
-                dashboardConfig: angular.toJson(model),
-                module: "TIME"
-            });
         });
     }
 ]);
