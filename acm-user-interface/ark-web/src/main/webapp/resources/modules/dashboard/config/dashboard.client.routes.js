@@ -6,11 +6,18 @@ angular.module('dashboard').config(['$stateProvider', 'dashboardProvider',
         // TODO: Find way to init dashboardProvider by values from config.json
         dashboardProvider
             .structure("6-6", {
-               rows: [{
+                rows: [{
                     columns: [{
                         styleClass: "col-md-6"
                     }, {
                         styleClass: "col-md-6"
+                    }]
+                }]
+            })
+            .structure("12", {
+                rows: [{
+                    columns: [{
+                        styleClass: "col-md-12"
                     }]
                 }]
             })
@@ -49,16 +56,15 @@ angular.module('dashboard').config(['$stateProvider', 'dashboardProvider',
             });
 
 
-        $stateProvider.
-            state('dashboard', {
-                url: '/dashboard',
-                templateUrl: 'modules/dashboard/views/dashboard.client.view.html',
-                resolve: {
-                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                        $translatePartialLoader.addPart('dashboard');
-                        return $translate.refresh();
-                    }]
-                }
-            });
+        $stateProvider.state('dashboard', {
+            url: '/dashboard',
+            templateUrl: 'modules/dashboard/views/dashboard.client.view.html',
+            resolve: {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('dashboard');
+                    return $translate.refresh();
+                }]
+            }
+        });
     }
 ]);
