@@ -1,10 +1,14 @@
 <div>
     <div ng-if="casesByQueue.showChart">
         </br>
-        <canvas id="bar" class="chart chart-bar" chart-data="casesByQueue.data" chart-labels="casesByQueue.labels"
+        <canvas class="chart chart-bar"
+                chart-data="casesByQueue.data"
+                chart-labels="casesByQueue.labels"
                 chart-series="casesByQueue.series"
                 chart-responsive="true"
-                chart-legend="true"></canvas>
+                chart-legend="false"
+                chart-click="casesByQueue.chartClick">
+        </canvas>
     </div>
 
     <div class="alert alert-info" ng-if="!casesByQueue.showChart">
