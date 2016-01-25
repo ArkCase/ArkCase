@@ -40,7 +40,7 @@
           "displayName": "dashboard.widgets.myCases.table.header.caseId",
           "headerCellFilter": "translate",
           "enableSorting": true,
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.name}}</a>",
+          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
           "width": 130
         },
         {
@@ -48,7 +48,7 @@
           "displayName": "dashboard.widgets.myCases.table.header.title",
           "headerCellFilter": "translate",
           "enableSorting": true,
-          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a><\/div>"
+          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "status_lcs",
@@ -81,14 +81,14 @@
           "name": "taskId",
           "displayName": "dashboard.widgets.myTasks.table.header.taskId",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.taskId}}</a>",
+          "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}<\/a>",
           "width": 75
         },
         {
           "name": "title",
           "displayName": "dashboard.widgets.myTasks.table.header.title",
           "headerCellFilter": "translate",
-          "cellTemplate:": "<div><a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}<\/a><\/div>"
+          "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "priority",
@@ -131,14 +131,14 @@
           "name": "complaintNumber",
           "displayName": "dashboard.widgets.myComplaints.table.header.number",
           "headerCellFilter": "translate",
-          "cellTemplate:": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.complaintNumber}}</a>",
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}<\/a>",
           "width": 175
         },
         {
           "name": "complaintTitle",
           "displayName": "dashboard.widgets.myComplaints.table.header.title",
           "headerCellFilter": "translate",
-          "cellTemplate:": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.complaintTitle}}</a>"
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "priority",
@@ -172,5 +172,49 @@
       "redirectSettings": {
       }
     }
+  ],
+  "modules": [
+    {
+      "name": "CASE",
+      "configName": "cases"
+    },
+    {
+      "name": "COMPLAINT",
+      "configName": "complaints"
+    },
+    {
+      "name": "COST",
+      "configName": "cost-tracking"
+    },
+    {
+      "name": "TIME",
+      "configName": "time-tracking"
+    },
+    {
+      "name": "TASK",
+      "configName": "tasks"
+    }
+  ],
+  "objectWidgets": [
+    "calendar",
+    "correspondence",
+    "cost",
+    "details",
+    "docReview",
+    "documents",
+    "expenses",
+    "history",
+    "hoursSummary",
+    "locations",
+    "notes",
+    "participants",
+    "people",
+    "person",
+    "references",
+    "reworkDetails",
+    "signature",
+    "tasks",
+    "time",
+    "workflow"
   ]
 }

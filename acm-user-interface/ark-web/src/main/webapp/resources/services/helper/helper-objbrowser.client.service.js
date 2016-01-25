@@ -12,8 +12,8 @@
  * Tree part uses 'object-tree' directive. Content part includes component links and data loading.
  */
 angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', '$translate'
-    , 'StoreService', 'UtilService', 'ConfigService'
-    , function ($resource, $translate, Store, Util, ConfigService) {
+    , 'StoreService', 'UtilService', 'ConfigService', 'ServCommService'
+    , function ($resource, $translate, Store, Util, ConfigService, ServCommService) {
 
         var Service = {
             VariableNames: {
@@ -191,6 +191,11 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                     loadObject(objectId);
                 });
 
+                ServCommService.handleResponse(that.scope);
+                //that.scope.$on('rootScope:servcomm-response', function (event, data) {
+                //    console.log("Help.objbrowser, rootScope:servcomm-response");
+                //    //that.scope.$emit('report-object-refreshed', that.stateParams.id);
+                //});
 
                 that.scope.progressMsg = $translate.instant("common.objects.progressNoData");
                 var loadObject = function (id) {

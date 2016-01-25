@@ -42,12 +42,12 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
         );
 
         var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        //if (Util.goodPositive(currentObjectId, false)) {
-        //    ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
-        //        $scope.complaintInfo = complaintInfo;
-        //        return complaintInfo;
-        //    });
-        //}
+        if (Util.goodPositive(currentObjectId, false)) {
+            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
+                $scope.complaintInfo = complaintInfo;
+                return complaintInfo;
+            });
+        }
 
         $scope.retrieveGridData = function () {
             if (Util.goodPositive(currentObjectId, false)) {
@@ -61,6 +61,7 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
 
                 $q.all([promiseCorrespondence, promiseUsers]).then(function (data) {
                     var correspondenceData = data[0];
+                    $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = correspondenceData.children;
                     $scope.gridOptions.totalItems = Util.goodValue(correspondenceData.totalChildren, 0);
                     //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
@@ -82,7 +83,7 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
         };
 
         $scope.addNew = function () {
-            var complaintId = Util.goodValue($scope.complaintInfo.id, 0);
+            var complaintId = Util.goodValue($scope.complaintInfo.complaintId, 0);
             var folderId = Util.goodMapValue($scope.complaintInfo, "container.folder.cmisFolderId", "");
             var template = $scope.correspondenceForm.value;
             var promiseCreateCorrespondence = ObjectCorrespondenceService.createCorrespondence(template, ObjectService.ObjectTypes.COMPLAINT, $stateParams.id, folderId);

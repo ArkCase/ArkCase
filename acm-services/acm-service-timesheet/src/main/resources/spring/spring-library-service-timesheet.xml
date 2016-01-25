@@ -10,10 +10,6 @@
         <property name="ignoreResourceNotFound" value="true"/>
     </bean>
     
-    <bean id="timePropertyConfigurer" class="net.unicon.springframework.addons.properties.ReloadingPropertyPlaceholderConfigurer">
-		<property name="properties" ref="timeProperties"/>
-	</bean>
-    
     <bean id="startWorkflowEventsForTimesheet" class="java.util.ArrayList">
 		<constructor-arg>
 			<list>

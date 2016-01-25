@@ -10,10 +10,6 @@
         <property name="ignoreResourceNotFound" value="true"/>
     </bean>
     
-    <bean id="costPropertyConfigurer" class="net.unicon.springframework.addons.properties.ReloadingPropertyPlaceholderConfigurer">
-		<property name="properties" ref="costProperties"/>
-	</bean>
-    
     <bean id="startWorkflowEventsForCostsheet" class="java.util.ArrayList">
 		<constructor-arg>
 			<list>

@@ -1,25 +1,22 @@
 'use strict';
 
-angular.module('preference').controller('Preference.ModuleInfoController', ['$scope', '$state', '$stateParams', 'ConfigService', 'dashboard',
-    function ($scope, $state, $stateParams, ConfigService, dashboard) {
+angular.module('preference').controller('Preference.ModuleInfoController', ['$scope', '$state', '$stateParams'
+    , '$q', 'ConfigService', 'dashboard', 'Preference.PreferenceService', 'Dashboard.DashboardService',
+    function ($scope, $state, $stateParams, $q, ConfigService, dashboard, PreferenceService, DashboardService) {
         $scope.module = null;
         $scope.$on('module-selected', moduleSelected);
-        $scope.$on('req-save-module', saveModule);
 
-
-        function saveModule() {
-            //ConfigService.updateModule({
-            //    moduleId: $scope.module.id
-            //}, $scope.module, function(){
-            //    // Indicate that module was saved
-            //});
-            console.log("module saved placeholder");
-        }
-
-        function moduleSelected(e, newModule) {
-            $scope.module = ConfigService.getModule({moduleId: newModule.id}, function (module) {
-                $scope.$broadcast('show-widgets', dashboard.widgets);
+        function moduleSelected(e, newModuleId, dashboardConfig) {
+            var objectWidgets = dashboardConfig.objectWidgets;
+            var modules = dashboardConfig.modules;
+            var selectedModule = _.find(modules, function (module) {
+                return module.configName == newModuleId;
             });
+
+            DashboardService.getConfig({moduleName: selectedModule.name}, function(moduleDashboardConfig) {
+                $scope.$broadcast('show-widgets', dashboard.widgets, moduleDashboardConfig, objectWidgets);
+            })
+
         }
     }
 ]);
