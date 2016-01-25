@@ -22,7 +22,10 @@ angular.module('time-tracking').config(['$stateProvider',
 
 			.state('time-tracking.main', {
 				url: '/:id/main',
-				templateUrl: 'modules/time-tracking/views/components/time-tracking-main.client.view.html'
+				templateUrl: 'modules/time-tracking/views/components/time-tracking-main.client.view.html',
+				params: {
+					"type": "TIMESHEET"
+				}
 			})
 
 			.state('time-tracking.details', {
