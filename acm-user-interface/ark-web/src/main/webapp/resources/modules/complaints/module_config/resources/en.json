@@ -19,7 +19,12 @@
   },
   "complaints.comp.details": {
     "title": "Details",
-    "informSaved": "Complaint details saved"
+    "informSaved": "Complaint details saved",
+    "table.columns": {
+      "title": "Details",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
+    }
   },
   "complaints.comp.documents": {
     "title": "Documents"
@@ -109,7 +114,9 @@
       "type": "Type",
       "city": "City",
       "state": "State",
-      "zip": "Zip"
+      "zip": "Zip",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
     }
   },
   "complaints.comp.notes": {

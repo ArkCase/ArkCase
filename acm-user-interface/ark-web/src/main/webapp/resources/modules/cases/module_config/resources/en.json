@@ -25,7 +25,12 @@
   },
   "cases.comp.details": {
     "title": "Details",
-    "informSaved": "Case details saved"
+    "informSaved": "Case details saved",
+    "table.columns": {
+      "title": "Details",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
+    }
   },
   "cases.comp.documents": {
     "title": "Documents"
