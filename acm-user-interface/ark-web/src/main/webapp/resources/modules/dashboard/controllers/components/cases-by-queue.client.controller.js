@@ -6,11 +6,16 @@ angular.module('dashboard.cases-by-queue')
 
             var vm = this;
 
+            vm.chartClick = chartClick;
+            var config = null;
+
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'casesByQueue');
 
-            function applyConfig(e, componentId, config) {
+
+            function applyConfig(e, componentId, cfg) {
                 if (componentId == 'casesByQueue') {
+                    config = cfg;
                     // Load Cases info and render chart
                     DashboardService.queryCasesByQueue(function (cases) {
 
@@ -25,10 +30,26 @@ angular.module('dashboard.cases-by-queue')
                         });
 
                         vm.showChart = data.length > 0 ? true : false;
-                        vm.data = data;
+                        vm.data = [data];
                         vm.labels = labels;
-                        vm.series = [config.title];
+                        vm.series = [cfg.title];
                     });
                 }
             }
-        }]);
+
+
+            /**
+             * Redirect application to another state, if redirectSettings contains information
+             * @param bars
+             */
+            function chartClick(bars) {
+                if (config.redirectSettings && bars.length  > 0) {
+                    var label = bars[0].label;
+                    var redirectObject = config.redirectSettings[label];
+                    if (redirectObject) {
+                        $state.go(redirectObject.state, redirectObject.params)
+                    }
+                }
+            }
+        }
+    ]);
