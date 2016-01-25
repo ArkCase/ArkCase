@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.dashboard.web.api;
 
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
+import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
@@ -32,7 +33,6 @@ import java.util.List;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -44,7 +44,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         "classpath:/spring/spring-web-acm-web.xml",
         "classpath:/spring/spring-library-dashboard-plugin-test.xml"
 })
-public class GetWidgetsByUserRolesAPIControllerTest extends EasyMockSupport {
+public class GetWidgetsByUserRolesAPIControllerTest extends EasyMockSupport
+{
 
     private MockMvc mockMvc;
     private MockHttpSession mockHttpSession;
@@ -55,6 +56,7 @@ public class GetWidgetsByUserRolesAPIControllerTest extends EasyMockSupport {
     private UserDao mockUserDao;
     private WidgetEventPublisher mockWidgetEventPublisher;
     private Authentication mockAuthentication;
+    private DashboardPropertyReader mockDashboardPropertyReader;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -69,6 +71,7 @@ public class GetWidgetsByUserRolesAPIControllerTest extends EasyMockSupport {
         mockWidgetEventPublisher = createMock(WidgetEventPublisher.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
+        mockDashboardPropertyReader = createMock(DashboardPropertyReader.class);
 
 
         unit = new GetWidgetsByUserRolesAPIController();
@@ -76,9 +79,11 @@ public class GetWidgetsByUserRolesAPIControllerTest extends EasyMockSupport {
         unit.setWidgetDao(mockWidgetDao);
         unit.setEventPublisher(mockWidgetEventPublisher);
         unit.setUserDao(mockUserDao);
+        unit.setDashboardPropertyReader(mockDashboardPropertyReader);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
+
     @Test
     public void getAllWidgetsByRole() throws Exception
     {
@@ -105,6 +110,7 @@ public class GetWidgetsByUserRolesAPIControllerTest extends EasyMockSupport {
                 eq(mockAuthentication),
                 eq(ipAddress),
                 eq(true));
+        expect(mockDashboardPropertyReader.getDashboardWidgetsOnly()).andReturn(Arrays.asList(returned));
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("ann-acm").atLeastOnce();
