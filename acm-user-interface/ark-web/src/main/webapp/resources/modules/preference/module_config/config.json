@@ -10,5 +10,71 @@
       "position": 120
     }
   ],
-  "timeFormat": "MM-DD-YYYY"
+  "timeFormat": "MM-DD-YYYY",
+  "moduleWidgetPreferences": [
+    {
+      "name": "CASE",
+      "allowedWidgets": [
+        "details",
+        "people",
+        "documents",
+        "participants",
+        "notes",
+        "tasks",
+        "references",
+        "history",
+        "correspondence",
+        "time",
+        "cost",
+        "calendar"
+      ]
+    },
+    {
+      "name": "COMPLAINT",
+      "allowedWidgets": [
+        "details",
+        "locations",
+        "people",
+        "documents",
+        "participants",
+        "notes",
+        "tasks",
+        "references",
+        "history",
+        "correspondence",
+        "time",
+        "cost",
+        "calendar"
+      ]
+    },
+    {
+      "name": "TASK",
+      "allowedWidgets": [
+        "details",
+        "documents",
+        "notes",
+        "history",
+        "reworkDetails",
+        "docReview",
+        "workflow",
+        "signature"
+      ]
+    },
+    {
+      "name": "COST",
+      "allowedWidgets": [
+        "details",
+        "person",
+        "expenses"
+      ]
+    },
+    {
+      "name": "TIME",
+      "allowedWidgets": [
+        "details",
+        "person",
+        "hoursSummary"
+      ]
+    }
+  ]
 }
