@@ -21,6 +21,7 @@
         <property name="widgetDao" ref="acmWidgetDao"/>
         <property name="dashboardPlugin" ref="dashboardPlugin"/>
         <property name="userDao" ref="acmUserDao"/>
+        <property name="dashboardPropertyReader" ref="dashboardPropertyReader"/>
         <property name="eventPublisher" ref="widgetEventPublisher"/>
     </bean>
 
