@@ -14,6 +14,56 @@ module.exports = _.extend(
 );
 
 /**
+ * Process properties like 'property[0]' to add item into array
+ * @param obj
+ */
+var processMergedProperties = function(obj) {
+    _.forIn(obj, function (val, key) {
+
+        // If property contains index like prop[3] then put this property into arary 'prop'
+        // If 'prop' array is absent then crete this array
+
+        if (key.match(/\[\s*[0-9]+\s*\]$/)) {
+            var index = key.match(/\[\s*([0-9])+\s*\]$/)[1];
+
+            var arrPropertyName = key.replace(/\[\s*[0-9]+\s*\]$/, '');
+            if (_.isArray(obj[arrPropertyName])) {
+                if (_.isObject(obj[arrPropertyName][index]) && _.isObject(val)) {
+                    _.merge(obj[arrPropertyName][index], val)
+                } else {
+                    obj[arrPropertyName][index] = val;
+                }
+                delete obj[key];
+            }
+            key = arrPropertyName;
+            val = obj[arrPropertyName][index];
+        }
+
+        if (_.isArray(val)) {
+            val.forEach(function(el) {
+                if (_.isObject(el)) {
+                    processMergedProperties(el);
+                }
+            });
+        }
+        if (_.isObject(val)) {
+            processMergedProperties(obj[key]);
+        }
+    });
+};
+
+
+/**
+ * Recursively merges 2 configuration files
+ * @param src
+ * @param obj
+ */
+module.exports.mergeConfigFiles = function(src, obj) {
+    _.merge(src, obj);
+    processMergedProperties(src);
+};
+
+/**
  * Get files by glob patterns
  */
 module.exports.getGlobbedFiles = function (globPatterns, removeRoot) {
@@ -74,7 +124,6 @@ module.exports.getModulesJavaScriptAssets = function(){
         item = 'custom_modules/' + item;
         arr[index] = item;
     });
-
 
     output = output.concat(jsModules);
     output = output.concat(jsCustomModules);
