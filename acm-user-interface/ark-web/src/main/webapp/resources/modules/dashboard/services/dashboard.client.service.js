@@ -67,7 +67,6 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
                 method: 'GET',
                 url: 'proxy/arkcase/api/latest/plugin/dashboard/widgets/get',
                 isArray: true,
-                data: ''
             },
 
             saveConfig: {
