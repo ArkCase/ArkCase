@@ -17,5 +17,9 @@ angular.module('time-tracking').controller('TimeTrackingController', ['$scope', 
                 return HelperObjectBrowserService.createComponentLinks(config, ObjectService.ObjectTypes.TIMESHEET);
             }
         });
+
+        $scope.$on("collapsed", function(event, collapsed) {
+            $scope.linksShown = !collapsed;
+        });
 	}
 ]);

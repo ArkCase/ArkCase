@@ -9,5 +9,6 @@
       "iconClass": "glyphicon glyphicon-asterisk",
       "position": 120
     }
-  ]
+  ],
+  "timeFormat": "MM-DD-YYYY"
 }
