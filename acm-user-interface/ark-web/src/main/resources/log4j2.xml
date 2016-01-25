@@ -28,7 +28,7 @@
             <AppenderRef ref="file-log" level="debug"/>
         </Logger>
         <Logger name="com.armedia.acm.userinterface.angular.AngularResourceCopier" level="debug" additivity="false">
-            <AppenderRef ref="Console" level="debug"/>
+            <AppenderRef ref="Console" level="info"/>
             <AppenderRef ref="file-log" level="debug"/>
         </Logger>
         <Root level="info" additivity="false">

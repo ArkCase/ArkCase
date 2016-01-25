@@ -2,10 +2,10 @@
 
 angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state', '$stateParams', '$q', '$modal'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Case.LookupService'
-    , 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Helper.ObjectBrowserService', 'Case.MergeSplitService'
+    , 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Case.MergeSplitService'
     , function ($scope, $state, $stateParams, $q, $modal
         , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, CaseLookupService
-        , ObjectSubscriptionService, ObjectModelService, CaseInfoService, HelperObjectBrowserService, MergeSplitService) {
+        , ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService) {
 
         ConfigService.getComponentConfig("cases", "actions").then(function (componentConfig) {
             $scope.config = componentConfig;

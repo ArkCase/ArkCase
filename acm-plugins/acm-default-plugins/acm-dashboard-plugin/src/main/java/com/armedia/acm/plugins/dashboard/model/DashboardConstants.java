@@ -16,6 +16,8 @@ public interface DashboardConstants
     String EVENT_TYPE_DASHBOARD_CREATED = "com.armedia.acm.dashboard.created";
 
     String DEFAULT_DASHBOARD = "acm.defaultDashboard";
+    String DEFAULT_DASHBOARD_NAME = "DASHBOARD";
+    String DEFAULT_MODULE_DASHBOARD = "acm.moduleDefaultDashboard";
 
 
 }

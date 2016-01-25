@@ -77,7 +77,10 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
                 scope.queryExistingItems = function () {
-                    if (scope.searchQuery && scope.pageSize >= 0 && scope.start >= 0) {
+                    if (scope.searchQuery === undefined || scope.searchQuery === null) {
+                        scope.searchQuery = "";
+                    }
+                    if (scope.pageSize >= 0 && scope.start >= 0) {
                         var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*", scope.filters, scope.pageSize, scope.start);
                         if (query) {
                             SearchService.queryFilteredSearch({
@@ -85,7 +88,6 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                 },
                                 function (data) {
                                     updateFacets(data.facet_counts.facet_fields);
-                                    scope.searchQuery = scope.searchQuery.replace('*', '');
                                     scope.gridOptions.data = data.response.docs;
                                     scope.gridOptions.totalItems = data.response.numFound;
                                 }

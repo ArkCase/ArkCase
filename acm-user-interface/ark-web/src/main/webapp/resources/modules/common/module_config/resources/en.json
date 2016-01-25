@@ -1,9 +1,9 @@
 {
   "common": {
     "select.option.none": "(Select One)",
-    "defaultDateFormat": "DD/MM/YYYY",
+    "defaultDateFormat": "MM/DD/YYYY",
     "defaultTimeFormat": "hh:mm:ss",
-    "defaultDatetimeFormat": "DD/MM/YYYY hh:mm"
+    "defaultDateTimeFormat": "MM/DD/YYYY hh:mm"
   },
   "common.service": {
     "error.invalidData": "Invalid data"
