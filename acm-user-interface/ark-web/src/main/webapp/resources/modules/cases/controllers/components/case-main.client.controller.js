@@ -22,7 +22,7 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
         });
 
         $scope.dashboard = {
-            structure: '6-6',
+            structure: '12',
             collapsible: false,
             maximizable: false,
             caseModel: {
@@ -34,13 +34,6 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
             $scope.dashboard.caseModel = angular.fromJson(data.dashboardConfig);
             $scope.dashboard.caseModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
             $scope.$emit("collapsed", data.collapsed);
-        });
-
-        $scope.$on('adfDashboardChanged', function (event, name, model) {
-            DashboardService.saveConfig({
-                dashboardConfig: angular.toJson(model),
-                module: "CASE"
-            });
         });
     }
 ]);
