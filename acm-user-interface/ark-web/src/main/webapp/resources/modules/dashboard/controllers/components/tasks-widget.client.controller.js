@@ -15,9 +15,9 @@ angular.module('dashboard.tasks', ['adf.provider'])
     })
     .controller('Dashboard.TasksController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService', 'Case.InfoService'
         , 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ObjectService', 'Object.TaskService'
-        , 'ConfigService',
+        , 'ConfigService', 'Helper.ObjectBrowserService',
         function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
-            , DashboardService, ObjectService, ObjectTaskService, ConfigService) {
+            , DashboardService, ObjectService, ObjectTaskService, ConfigService, HelperObjectBrowserService) {
 
             var promiseConfig;
             var promiseInfo;
@@ -35,9 +35,10 @@ angular.module('dashboard.tasks', ['adf.provider'])
                 columnDefs: []
             };
 
-            if (module) {
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseInfo = module.getInfo(module.objectType, $stateParams.id, 0, 5);
+                promiseInfo = module.getInfo(module.objectType, currentObjectId, 0, 5);
 
                 $q.all([promiseConfig, promiseInfo]).then(function (data) {
                         var config = _.find(data[0].components, {id: "main"});

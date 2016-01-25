@@ -14,9 +14,10 @@ angular.module('dashboard.person', ['adf.provider'])
             );
     })
     .controller('Dashboard.PersonController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
-        , 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'CostTracking.InfoService', 'TimeTracking.InfoService',
+        , 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'CostTracking.InfoService', 'TimeTracking.InfoService'
+        , 'Helper.ObjectBrowserService',
         function ($scope, $translate, $stateParams, $q, Util, Authentication, DashboardService, ConfigService, CostTrackingInfoService
-        , TimeTrackingInfoService) {
+        , TimeTrackingInfoService, HelperObjectBrowserService) {
 
             var promiseConfig;
             var promiseInfo;
@@ -35,9 +36,10 @@ angular.module('dashboard.person', ['adf.provider'])
                 columnDefs: []
             };
 
-            if (module) {
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseInfo = module.getInfo($stateParams.id);
+                promiseInfo = module.getInfo(currentObjectId);
 
                 $q.all([promiseConfig, promiseInfo]).then(function (data) {
                         var config = _.find(data[0].components, {id: "main"});

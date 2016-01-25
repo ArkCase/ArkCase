@@ -254,19 +254,19 @@
               "headerCellFilter": "translate"
             },
             {
-              "name": "modified",
+              "name": "createDate",
               "displayName": "tasks.comp.details.table.columns.modified",
               "headerCellFilter": "translate"
             },
             {
-              "name": "modifier",
+              "name": "assignee",
               "displayName": "tasks.comp.details.table.columns.modifier",
               "headerCellFilter": "translate"
             }
           ]
         },
         {
-          "id": "reworkdetails",
+          "id": "reworkDetails",
           "type": "component",
           "columnDefs": [
             {
@@ -287,7 +287,7 @@
           ]
         },
         {
-          "id": "docsreview",
+          "id": "docsReview",
           "type": "component",
           "columnDefs": [
             {
