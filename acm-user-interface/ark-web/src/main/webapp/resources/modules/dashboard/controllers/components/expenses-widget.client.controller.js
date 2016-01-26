@@ -23,7 +23,7 @@ angular.module('dashboard.expenses', ['adf.provider'])
             if (Util.goodPositive(currentObjectId, false)) {
                 CostTrackingInfoService.getCostsheetInfo(currentObjectId).then(
                     function (costsheetInfo) {
-                        var costs = _.cloneDeep.copy(costsheetInfo.costs);
+                        var costs = _.cloneDeep(costsheetInfo.costs);
 
                         var chartData = [];
                         var labels = [];
