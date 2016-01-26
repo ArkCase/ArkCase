@@ -15,9 +15,9 @@ angular.module('dashboard.references', ['adf.provider'])
     })
     .controller('Dashboard.ReferencesController', ['$scope', '$translate', '$stateParams', '$q','UtilService'
         , 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ConfigService'
-        , 'Helper.ObjectBrowserService',
+        , 'Helper.ObjectBrowserService', 'ObjectService',
         function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
-            , DashboardService, ConfigService, HelperObjectBrowserService) {
+            , DashboardService, ConfigService, HelperObjectBrowserService, ObjectService) {
 
             var promiseConfig;
             var promiseInfo;
@@ -49,8 +49,23 @@ angular.module('dashboard.references', ['adf.provider'])
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
-                        $scope.gridOptions.data = info.references;
-                        $scope.gridOptions.totalItems = info.references ? $scope.gridOptions.data.length : 0;
+                        /**
+                         * Complaints and CaseFiles return their references in a different way.
+                         */
+                        var references = [];
+                        if(module.name == ObjectService.ObjectTypes.COMPLAINT){
+                            _.forEach(info.childObjects, function (childObject) {
+                                if (ComplaintInfoService.validateReferenceRecord(childObject)) {
+                                    references.push(childObject);
+                                }
+                            });
+                            $scope.gridOptions.data = references ? references : [];
+                            $scope.gridOptions.totalItems = references ? references.length : 0;
+                        } else {
+                            references = info.references;
+                            $scope.gridOptions.data = references ? references : [];
+                            $scope.gridOptions.totalItems = references ? references.length : 0;
+                        }
                     },
                     function (err) {
 
