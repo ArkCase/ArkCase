@@ -14,9 +14,10 @@ angular.module('dashboard.workflow', ['adf.provider'])
             );
     })
     .controller('Dashboard.WorkflowOverviewController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
-        , 'Task.InfoService', 'Task.HistoryService', 'Authentication', 'Dashboard.DashboardService', 'ConfigService',
+        , 'Task.InfoService', 'Task.HistoryService', 'Authentication', 'Dashboard.DashboardService', 'ConfigService'
+        , 'Helper.ObjectBrowserService',
         function ($scope, $translate, $stateParams, $q, Util, TaskInfoService, TaskHistoryService, Authentication
-            , DashboardService, ConfigService) {
+            , DashboardService, ConfigService, HelperObjectBrowserService) {
 
             var promiseConfig;
             var promiseTaskInfo;
@@ -36,9 +37,10 @@ angular.module('dashboard.workflow', ['adf.provider'])
                 columnDefs: []
             };
 
-            if (module) {
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseTaskInfo = module.getInfo($stateParams.id);
+                promiseTaskInfo = module.getInfo(currentObjectId);
 
 
                 $q.all([promiseConfig, promiseTaskInfo]).then(function (data) {
