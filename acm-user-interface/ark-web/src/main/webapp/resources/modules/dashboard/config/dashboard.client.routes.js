@@ -32,7 +32,7 @@ angular.module('dashboard').config(['$stateProvider', 'dashboardProvider',
                     }]
                 }]
             })
-            .structure("    4-8", {
+            .structure("4-8", {
                 rows: [{
                     columns: [{
                         styleClass: "col-md-4",
