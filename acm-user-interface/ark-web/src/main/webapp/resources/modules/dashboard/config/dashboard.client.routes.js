@@ -32,7 +32,7 @@ angular.module('dashboard').config(['$stateProvider', 'dashboardProvider',
                     }]
                 }]
             })
-            .structure("4-8", {
+            .structure("    4-8", {
                 rows: [{
                     columns: [{
                         styleClass: "col-md-4",
@@ -59,6 +59,7 @@ angular.module('dashboard').config(['$stateProvider', 'dashboardProvider',
         $stateProvider.state('dashboard', {
             url: '/dashboard',
             templateUrl: 'modules/dashboard/views/dashboard.client.view.html',
+            controller: 'DashboardController',
             resolve: {
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('dashboard');
