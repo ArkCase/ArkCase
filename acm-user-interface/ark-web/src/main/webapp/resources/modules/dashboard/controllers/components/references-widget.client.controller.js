@@ -14,9 +14,10 @@ angular.module('dashboard.references', ['adf.provider'])
             );
     })
     .controller('Dashboard.ReferencesController', ['$scope', '$translate', '$stateParams', '$q','UtilService'
-        , 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ConfigService',
+        , 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ConfigService'
+        , 'Helper.ObjectBrowserService', 'ObjectService',
         function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
-            , DashboardService, ConfigService) {
+            , DashboardService, ConfigService, HelperObjectBrowserService, ObjectService) {
 
             var promiseConfig;
             var promiseInfo;
@@ -34,9 +35,10 @@ angular.module('dashboard.references', ['adf.provider'])
                 columnDefs: []
             };
 
-            if (module) {
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseInfo = module.getInfo($stateParams.id);
+                promiseInfo = module.getInfo(currentObjectId);
 
                 $q.all([promiseConfig, promiseInfo]).then(function (data) {
                         var config = _.find(data[0].components, {id: "main"});
@@ -47,8 +49,23 @@ angular.module('dashboard.references', ['adf.provider'])
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
-                        $scope.gridOptions.data = info.references;
-                        $scope.gridOptions.totalItems = info.references ? $scope.gridOptions.data.length : 0;
+                        /**
+                         * Complaints and CaseFiles return their references in a different way.
+                         */
+                        var references = [];
+                        if(module.name == ObjectService.ObjectTypes.COMPLAINT){
+                            _.forEach(info.childObjects, function (childObject) {
+                                if (ComplaintInfoService.validateReferenceRecord(childObject)) {
+                                    references.push(childObject);
+                                }
+                            });
+                            $scope.gridOptions.data = references ? references : [];
+                            $scope.gridOptions.totalItems = references ? references.length : 0;
+                        } else {
+                            references = info.references;
+                            $scope.gridOptions.data = references ? references : [];
+                            $scope.gridOptions.totalItems = references ? references.length : 0;
+                        }
                     },
                     function (err) {
 
