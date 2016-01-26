@@ -6,7 +6,7 @@ angular.module('preference').controller('Preference.ModuleInfoController', ['$sc
         $scope.module = null;
         $scope.$on('module-selected', moduleSelected);
 
-        function moduleSelected(e, newModuleId, dashboardConfig) {
+        function moduleSelected(e, newModuleId, dashboardConfig, preferenceConfig) {
             var objectWidgets = dashboardConfig.objectWidgets;
             var modules = dashboardConfig.modules;
             var selectedModule = _.find(modules, function (module) {
@@ -14,7 +14,7 @@ angular.module('preference').controller('Preference.ModuleInfoController', ['$sc
             });
 
             DashboardService.getConfig({moduleName: selectedModule.name}, function(moduleDashboardConfig) {
-                $scope.$broadcast('show-widgets', dashboard.widgets, moduleDashboardConfig, objectWidgets);
+                $scope.$broadcast('show-widgets', dashboard.widgets, moduleDashboardConfig, objectWidgets, preferenceConfig);
             })
 
         }

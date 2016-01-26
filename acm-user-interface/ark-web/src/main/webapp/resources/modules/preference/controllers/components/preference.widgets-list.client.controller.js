@@ -19,11 +19,12 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
         $scope.$on('show-widgets', showWidgets);
 
         function toggleDefaultView() {
+            var collapsed = ($scope.defaultViewExpand === 'true');
             DashboardService.getConfig({moduleName: $scope.moduleName}, function(config) {
                 DashboardService.saveConfig({
-                    dashboardConfig: angular.toJson(config.dashboardConfig),
+                    dashboardConfig: config.dashboardConfig,
                     module: $scope.moduleName,
-                    collapsed: !!$scope.defaultViewExpand
+                    collapsed: collapsed
                 });
             });
         }
@@ -46,6 +47,18 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
             _.remove(retval, function(widgetName) {
                 if(!_.includes($scope.objectWidgets, widgetName)) {
                     return true;
+                }
+            });
+            return retval;
+        }
+        function filterObjectWidgetsByModule(preferenceConfig, widgets) {
+            var retval = [];
+            var allowedWidgets = (_.find(preferenceConfig.moduleWidgetPreferences, {name: $scope.moduleName})).allowedWidgets;
+            _.forEach(widgets, function(widget) {
+                if(widget.commonName) {
+                    if(_.includes(allowedWidgets, widget.commonName)){
+                        retval.push(widget);
+                    }
                 }
             });
             return retval;
@@ -85,16 +98,15 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
                         dashboardConfig: angular.toJson(model),
                         module: $scope.moduleName
                     });
-
                 })
             });
-
         }
 
-        function showWidgets(e, widgets, moduleDashboardConfig, objectWidgets) {
+        function showWidgets(e, widgets, moduleDashboardConfig, objectWidgets, preferenceConfig) {
             $scope.objectWidgets = objectWidgets;
             $scope.moduleName = moduleDashboardConfig.module;
-            $scope.defaultViewExpand = (!moduleDashboardConfig.collapsed).toString();
+            $scope.defaultViewExpand = (moduleDashboardConfig.collapsed).toString();
+            widgets = filterObjectWidgetsByModule(preferenceConfig, widgets);
 
             PreferenceService.getPreferredWidgets({moduleName: $scope.moduleName}, function (preferredWidgets) {
                 preferredWidgets.preferredWidgets = removeNonObjectWidgets(preferredWidgets.preferredWidgets);
