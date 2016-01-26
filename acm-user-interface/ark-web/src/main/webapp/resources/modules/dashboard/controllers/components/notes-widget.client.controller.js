@@ -15,9 +15,9 @@ angular.module('dashboard.notes', ['adf.provider'])
     })
     .controller('Dashboard.NotesController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
         , 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ObjectService'
-        , 'Object.NoteService', 'ConfigService',
+        , 'Object.NoteService', 'ConfigService', 'Helper.ObjectBrowserService',
         function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
-            , DashboardService, ObjectService, ObjectNoteService, ConfigService) {
+            , DashboardService, ObjectService, ObjectNoteService, ConfigService, HelperObjectBrowserService) {
 
             var promiseConfig;
             var promiseInfo;
@@ -37,9 +37,10 @@ angular.module('dashboard.notes', ['adf.provider'])
                 columnDefs: []
             };
 
-            if (module) {
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseInfo = module.getInfo(module.objectType, $stateParams.id);
+                promiseInfo = module.getInfo(module.objectType, currentObjectId);
 
                 $q.all([promiseConfig, promiseInfo]).then(function (data) {
                         var config = _.find(data[0].components, {id: "main"});
@@ -50,7 +51,7 @@ angular.module('dashboard.notes', ['adf.provider'])
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
-                        var notes = info[0];
+                        var notes = info;
                         $scope.gridOptions.data = notes;
                         $scope.gridOptions.totalItems = notes ? notes.length : 0;
                     },

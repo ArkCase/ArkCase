@@ -167,7 +167,7 @@
       "time": {
         "title": "Time",
         "description": "Displays chart for hours per user",
-        "noDataMessage": "Currently there time information to display"
+        "noDataMessage": "Currently there is no time information to display"
       },
       "cost": {
         "title": "Cost",
