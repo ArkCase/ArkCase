@@ -7,7 +7,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
                 method: 'GET',
                 url: 'proxy/arkcase/api/v1/plugin/dashboard/get',
                 params: {
-                    moduleName : "@moduleName"
+                    moduleName: "@moduleName"
                 },
                 data: ''
             },
@@ -61,6 +61,12 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
                 url: 'proxy/arkcase/api/v1/plugin/task/list/:due',
                 isArray: true,
                 data: ''
+            },
+
+            getWidgetsPerRoles: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/latest/plugin/dashboard/widgets/get',
+                isArray: true,
             },
 
             saveConfig: {

@@ -30,6 +30,7 @@ public class DashboardPropertyReader
     private List<String> moduleNameList;
     private List<Widget> widgetList;
     private boolean isNewWidgetForAdding = false;
+    private List<Widget> dashboardWidgetsOnly;
 
     private void init()
     {
@@ -61,6 +62,16 @@ public class DashboardPropertyReader
             }
         }
 
+        try
+        {
+            this.dashboardWidgetsOnly = getDashboardWidgets();
+        } catch (AcmDashboardException e)
+        {
+            if (log.isErrorEnabled())
+            {
+                log.error("Dashboard Widgets list was not populated, error occurred: " + e.getMessage(), e);
+            }
+        }
         if (isNewWidgetForAdding)
         {
             addNewWidgets();
@@ -112,19 +123,37 @@ public class DashboardPropertyReader
             throw new AcmDashboardException("Error occurred while fetching widget names " + e.getMessage(), e);
         }
 
-        String[] newWidgetsNames;
-        List<Widget> widgetList = new ArrayList<>();
-        if (!"".equals(newWidgetsString))
+        return transformWidgetNamesArrayToWidgetList(newWidgetsString);
+    }
+
+    private List<Widget> getDashboardWidgets() throws AcmDashboardException
+    {
+        String dashboardWidgetsString;
+        try
         {
-            newWidgetsNames = newWidgetsString.split(",");
-            for (String widgetName : newWidgetsNames)
+            dashboardWidgetsString = (String) dashboardPlugin.getPluginProperties().get("acm.modules.dashboard.widgets");
+        } catch (Exception e)
+        {
+            throw new AcmDashboardException("Error occurred while fetching dashboard widget names " + e.getMessage(), e);
+        }
+        return getDashboardWidgetsFromDB(dashboardWidgetsString);
+    }
+
+    private List<Widget> transformWidgetNamesArrayToWidgetList(String widgetNamesString)
+    {
+        List<Widget> widgets = new ArrayList<>();
+        String[] widgetsNames;
+        if (!"".equals(widgetNamesString))
+        {
+            widgetsNames = widgetNamesString.split(",");
+            for (String widgetName : widgetsNames)
             {
                 Widget widget = new Widget();
                 widget.setWidgetName(widgetName.trim());
-                widgetList.add(widget);
+                widgets.add(widget);
             }
         }
-        return widgetList;
+        return widgets;
     }
 
     private void updateModuleTable()
@@ -163,6 +192,31 @@ public class DashboardPropertyReader
         widgetList.stream().forEach(widget -> widgetDao.saveWidget(widget));
     }
 
+    private List<Widget> getDashboardWidgetsFromDB(String dashboardWidgets)
+    {
+        List<Widget> widgetList = new ArrayList<>();
+        String[] widgetNames = dashboardWidgets.split(",");
+        List<String> widgetNamesList = new ArrayList<>();
+        for (String widgetName : widgetNames)
+        {
+            widgetNamesList.add(widgetName);
+        }
+
+        widgetNamesList.stream().forEach(widget -> {
+            try
+            {
+                widgetList.add(widgetDao.getWidgetByWidgetName(widget));
+            } catch (AcmObjectNotFoundException e)
+            {
+                if (log.isErrorEnabled())
+                {
+                    log.error("Fetching widget with widget name: " + widget + " failed! " + e.getMessage(), e);
+                }
+            }
+        });
+        return widgetList;
+    }
+
     public AcmPlugin getDashboardPlugin()
     {
         return dashboardPlugin;
@@ -191,6 +245,16 @@ public class DashboardPropertyReader
     public void setWidgetList(List<Widget> widgetList)
     {
         this.widgetList = widgetList;
+    }
+
+    public List<Widget> getDashboardWidgetsOnly()
+    {
+        return dashboardWidgetsOnly;
+    }
+
+    public void setDashboardWidgetsOnly(List<Widget> dashboardWidgetsOnly)
+    {
+        this.dashboardWidgetsOnly = dashboardWidgetsOnly;
     }
 
     public ModuleDao getModuleDao()
@@ -222,4 +286,5 @@ public class DashboardPropertyReader
     {
         this.moduleEventPublisher = moduleEventPublisher;
     }
+
 }
