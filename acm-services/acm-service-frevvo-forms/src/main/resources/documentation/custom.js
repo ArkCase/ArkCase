@@ -312,12 +312,12 @@ var userPickerString = '<div class="modal fade" id="dlgObjectPicker" tabindex="-
 									'</header>' +
 									'<div class="modal-body">' +
 										'<div class="row">' +
-											'<div class="col-xs-3">' +
+											'<div class="col-xs-3 hidden">' +
 												'<div class="facets" id="divPoFacets">' +
 						
 												'</div>' +
 											'</div>' +
-											'<div class="col-xs-9">' +
+											'<div class="full-width">' +
 												'<section class="panel panel-default">' +
 													'<div class="table-responsive" id="divPoResults">' +
 														
