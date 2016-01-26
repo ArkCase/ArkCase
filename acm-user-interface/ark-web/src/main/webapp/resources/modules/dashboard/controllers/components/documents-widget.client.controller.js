@@ -22,10 +22,30 @@ angular.module('dashboard.documents', ['adf.provider'])
             var vm = this;
 
             var modules = [
-                {name: "CASE_FILE", configName: "cases", getInfo: CaseInfoService.getCaseInfo, objectType: ObjectService.ObjectTypes.CASE_FILE}
-                , {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo, objectType: ObjectService.ObjectTypes.COMPLAINT}
-                , {name: "TASK", configName: "tasks", getInfo: TaskInfoService.getTaskInfo, objectType: ObjectService.ObjectTypes.TASK}
-                , {name: "ADHOC", configName: "tasks", getInfo: TaskInfoService.getTaskInfo, objectType: ObjectService.ObjectTypes.ADHOC_TASK}
+                {
+                    name: "CASE_FILE",
+                    configName: "cases",
+                    getInfo: CaseInfoService.getCaseInfo,
+                    objectType: ObjectService.ObjectTypes.CASE_FILE
+                }
+                , {
+                    name: "COMPLAINT",
+                    configName: "complaints",
+                    getInfo: ComplaintInfoService.getComplaintInfo,
+                    objectType: ObjectService.ObjectTypes.COMPLAINT
+                }
+                , {
+                    name: "TASK",
+                    configName: "tasks",
+                    getInfo: TaskInfoService.getTaskInfo,
+                    objectType: ObjectService.ObjectTypes.TASK
+                }
+                , {
+                    name: "ADHOC",
+                    configName: "tasks",
+                    getInfo: TaskInfoService.getTaskInfo,
+                    objectType: ObjectService.ObjectTypes.ADHOC_TASK
+                }
             ];
 
             var module = _.find(modules, function (module) {
@@ -34,38 +54,32 @@ angular.module('dashboard.documents', ['adf.provider'])
 
             var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
             if (Util.goodPositive(currentObjectId, false)) {
-
-
-                var chartData = [];
-                var labels = [];
                 var params = {};
 
                 params.objId = $stateParams.id;
                 params.objType = module.objectType;
-                
+
                 Ecm.getFolderDocumentCounts(params,
                     function (data) {
-                        $scope.folderData = data;
+                        var chartData = [];
+                        var labels = [];
+                        var folderData = Util.omitNg(data);
+                        _.forEach(folderData, function (value, label) {
+                            if(label == "base") {
+                                label = "Root (/)";
+                            }
+                            chartData.push(value);
+                            labels.push(label);
+                        });
+                        vm.showChart = chartData.length > 0;
+                        vm.data = [chartData];
+                        vm.labels = labels;
+                        vm.series = ["Number of Documents"];
                     },
                     function (error) {
 
                     }
                 );
-
-
-                /**
-                 * $scope.folderData has structure:
-                 *[
-                 * {name: $nameOfFolder, count: $numberOfDocuments},
-                 * {name: $nameOfFolder, count: $numberOfDocuments}
-                 *]
-                 * "base" folder corresponds to "/" folder in doc-tree
-                 * use $scope.folderData to populate chart data
-                 **/
-
-                vm.showChart = chartData.length > 0;
-                vm.data = [chartData];
-                vm.labels = labels;
             }
         }
     ]);
