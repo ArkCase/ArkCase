@@ -10,6 +10,33 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
         var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
+        var promiseConfig = ConfigService.getComponentConfig("complaints", "tasks");
+
+        $q.all([promiseConfig, promiseMyTasks]).then(function (data) {
+            var config = data[0];
+
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);
+            gridHelper.setExternalPaging(config, $scope.retrieveGridData);
+            gridHelper.setUserNameFilter(promiseUsers);
+
+            for (var i = 0; i < $scope.gridOptions.columnDefs.length; i++) {
+                if ("taskId" == $scope.gridOptions.columnDefs[i].name) {
+                    $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.object_id_s}}</a>";
+
+                } else if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
+                    $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
+                        + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
+                        + ' ng-model="row.entity.acm$_taskOutcome">'
+                        + ' </select>'
+                        + ' <span ng-hide="\'noop\'==row.entity.acm$_taskOutcome.id"><i class="fa fa-gear fa-lg" ng-click="grid.appScope.action(row.entity)"></i></span></span>';
+                }
+            }
+
+            $scope.retrieveGridData();
+        });
+
 
         var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         if (Util.goodPositive(currentObjectId, false)) {
@@ -18,32 +45,6 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                 return complaintInfo;
             });
         }
-
-        ConfigService.getComponentConfig("complaints", "tasks").then(function (config) {
-            gridHelper.setColumnDefs(config);
-            gridHelper.setBasicOptions(config);
-            gridHelper.disableGridScrolling(config);
-            gridHelper.setExternalPaging(config, $scope.retrieveGridData);
-            gridHelper.setUserNameFilter(promiseUsers);
-
-            promiseMyTasks.then(function (data) {
-                for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                    if ("taskId" == $scope.config.columnDefs[i].name) {
-                        $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.object_id_s}}</a>";
-                    } else if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
-                        $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
-                            + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
-                            + ' ng-model="row.entity.acm$_taskOutcome">'
-                            + ' </select>'
-                            + ' <span ng-hide="\'noop\'==row.entity.acm$_taskOutcome.id"><i class="fa fa-gear fa-lg" ng-click="grid.appScope.action(row.entity)"></i></span></span>';
-                    }
-                }
-            });
-
-            $scope.retrieveGridData();
-            return config;
-        });
-
         $scope.retrieveGridData = function () {
             if (Util.goodPositive(currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.COMPLAINT
@@ -154,10 +155,10 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                 completeTaskWithOutcome(rowEntity);
             }
         };
-        $scope.showUrl = function (event, rowEntity) {
-            event.preventDefault();
-            gridHelper.showObject(ObjectService.ObjectTypes.TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
-        };
+        //$scope.showUrl = function (event, rowEntity) {
+        //    event.preventDefault();
+        //    gridHelper.showObject(ObjectService.ObjectTypes.TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
+        //};
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();
             var targetType = Util.goodMapValue(rowEntity, "object_type_s");
