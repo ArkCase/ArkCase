@@ -23,24 +23,18 @@ angular.module('cost-tracking').controller('CostTracking.MainController', ['$sco
         });
 
         $scope.dashboard = {
-            structure: '6-6',
+            structure: '12',
             collapsible: false,
             maximizable: false,
-            model: {
-                titleTemplateUrl: 'modules/dashboard/views/dashboard-title.client.view.html'
+            costModel: {
+                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
             }
         };
 
         DashboardService.getConfig({moduleName: "COST"}, function (data) {
-                $scope.dashboard.costModel = angular.fromJson(data.dashboardConfig);
-                $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
-        });
-
-        $scope.$on('adfDashboardChanged', function (event, name, model) {
-            DashboardService.saveConfig({
-                dashboardConfig: angular.toJson(model),
-                module: "COST"
-            });
+            $scope.dashboard.costModel = angular.fromJson(data.dashboardConfig);
+            $scope.dashboard.costModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
+            $scope.$emit("collapsed", data.collapsed);
         });
     }
 ]);

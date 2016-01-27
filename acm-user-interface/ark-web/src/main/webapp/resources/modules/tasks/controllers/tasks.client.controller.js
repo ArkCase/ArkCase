@@ -31,5 +31,9 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             }
         });
 
+        $scope.$on("collapsed", function(event, collapsed) {
+            $scope.linksShown = !collapsed;
+        });
+
     }
 ]);
