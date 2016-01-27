@@ -551,6 +551,26 @@ angular.module('services').factory('UtilService', ['$q'
                 return moment(d).format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
             }
 
+            ,getCurrentDayInternal: function() {
+                var d = new Date();
+                var month = d.getMonth()+1;
+                var day = d.getDate();
+                var year = d.getFullYear();
+                var hour = d.getHours();
+                var minute = d.getMinutes();
+                var second = d.getSeconds();
+                var ms = d.getMilliseconds();
+                return year
+                    + "-" + this._padZero(month)
+                    + "-" + this._padZero(day)
+                    + "T" + this._padZero(hour)
+                    + ":" + this._padZero(minute)
+                    + ":" + this._padZero(second)
+                    + "." + this._padZero(ms)
+                    + "+0000"
+                    ;
+            }
+
             //get day string in "yyyy-mm-dd" format
             //parameter d is java Date() format; for some reason getDate() is 1 based while getMonth() is zero based
             , dateToString: function(d) {

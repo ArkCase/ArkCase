@@ -41,12 +41,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by armdev on 4/4/14.
@@ -111,10 +106,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     @Column(name = "cm_complaint_status")
     private String status;
 
-    // the same person could originate many complaints, but each complaint is originated by
-    // only one person, so a ManyToOne mapping makes sense here.
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cm_originator_id")
+    @Transient
     private PersonAssociation originator;
 
     /**
@@ -377,12 +369,31 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
 
     public PersonAssociation getOriginator()
     {
+        if (getPersonAssociations() == null)
+        {
+            return null;
+        }
+
+        Optional<PersonAssociation> found = getPersonAssociations().stream().filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
+
+        if (found != null && found.isPresent())
+        {
+            originator = found.get();
+        }
+
         return originator;
     }
 
     public void setOriginator(PersonAssociation originator)
     {
         this.originator = originator;
+
+        if (getPersonAssociations() == null)
+        {
+            setPersonAssociations(new ArrayList<>());
+        }
+
+        getPersonAssociations().add(originator);
     }
 
     public String getEcmFolderPath()
