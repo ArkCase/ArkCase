@@ -31,7 +31,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
 
         $scope.correspondenceForms = [{"value": "noop", "name": $translate.instant("common.select.option.none")}];
         $scope.correspondenceForm = {"value": "noop", "name": $translate.instant("common.select.option.none")};
-        var promiseCorrespondenceForms = ObjectLookupService.getCorrespondenceForms().then(
+        var promiseCorrespondenceForms = ObjectLookupService.getCaseFileCorrespondenceForms().then(
             function (correspondenceForms) {
                 $scope.correspondenceForms = correspondenceForms;
                 $scope.correspondenceForms.unshift({
