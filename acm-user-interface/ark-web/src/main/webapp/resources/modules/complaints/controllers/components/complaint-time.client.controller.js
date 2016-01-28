@@ -7,14 +7,14 @@ angular.module('complaints').controller('Complaints.TimeController', ['$scope', 
         , HelperUiGridService, HelperObjectBrowserService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-        var promiseConfig = ConfigService.getComponentConfig("complaints", "cost").then(function (config) {
+        var promiseConfig = ConfigService.getComponentConfig("complaints", "time").then(function (config) {
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
 
             for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                 if ("name" == $scope.config.columnDefs[i].name) {
-                    $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.acm$_formName}}</a>";
+                    $scope.gridOptions.columnDefs[i].cellTemplate = "<a data-ui-sref=\"time-tracking.main({id: row.entity.id})\">{{row.entity.acm$_formName}}</a>";
                 } else if ("tally" == $scope.config.columnDefs[i].name) {
                     $scope.gridOptions.columnDefs[i].field = "acm$_hours";
                 }
@@ -25,7 +25,7 @@ angular.module('complaints').controller('Complaints.TimeController', ['$scope', 
 
         var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         if (Util.goodPositive(currentObjectId, false)) {
-            ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.CASE_FILE, currentObjectId).then(
+            ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.COMPLAINT, currentObjectId).then(
                 function (timesheets) {
                     promiseConfig.then(function (config) {
                         for (var i = 0; i < timesheets.length; i++) {
@@ -45,12 +45,5 @@ angular.module('complaints').controller('Complaints.TimeController', ['$scope', 
                 }
             );
         }
-
-
-        $scope.onClickObjLink = function (event, rowEntity) {
-            event.preventDefault();
-            gridHelper.showObject(ObjectService.ObjectTypes.TIMESHEET, Util.goodMapValue(rowEntity, "id", 0));
-        };
-
     }
 ]);
