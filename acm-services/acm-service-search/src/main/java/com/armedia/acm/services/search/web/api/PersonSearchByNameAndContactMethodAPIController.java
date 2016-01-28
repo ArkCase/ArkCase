@@ -46,8 +46,8 @@ public class PersonSearchByNameAndContactMethodAPIController
         // given value.
         final String encodedContactMethodJoin = URLEncoder.encode("{!join from=id to=contact_method_ss}", "UTF-8");
 
-        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode(personName, "UTF-8") + " AND " +
-                encodedContactMethodJoin + "value_parseable:" + URLEncoder.encode(contactMethod, "UTF-8");
+        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode(processSearchArgument(personName), "UTF-8") + " AND " +
+                encodedContactMethodJoin + "value_parseable:" + URLEncoder.encode(processSearchArgument(contactMethod), "UTF-8");
         String sort = "last_name_lcs ASC, first_name_lcs ASC";
 
         query = query.replaceAll(" ", "+");
@@ -60,6 +60,36 @@ public class PersonSearchByNameAndContactMethodAPIController
 
         return results;
 
+    }
+
+    private String processSearchArgument(String searchArgument)
+    {
+        if (searchArgument.isEmpty())
+        {
+            return "*";
+        } else
+        {
+            StringBuilder builder = new StringBuilder();
+            String[] args = searchArgument.split("\\s");
+            for (String arg : args)
+            {
+                if (!arg.startsWith("*"))
+                {
+                    builder.append("*");
+                }
+                builder.append(arg);
+                if (!arg.endsWith("*"))
+                {
+                    builder.append("*");
+                }
+                builder.append(' ');
+            }
+            if (builder.charAt(builder.length() - 1) == ' ')
+            {
+                builder.setLength(builder.length() - 1);
+            }
+            return builder.toString();
+        }
     }
 
     public ExecuteSolrQuery getExecuteSolrQuery()

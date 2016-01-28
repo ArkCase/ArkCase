@@ -21,10 +21,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.net.URLEncoder;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -67,8 +68,8 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
         String solrResponse = "{ \"solrResponse\": \"this is a test response.\" }";
 
         final String encodedContactMethodJoin = URLEncoder.encode("{!join from=id to=contact_method_ss}");
-        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode(name) + " AND " +
-                encodedContactMethodJoin + "value_parseable:" + URLEncoder.encode(contactMethod);
+        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode("*test* *name*") + " AND " +
+                encodedContactMethodJoin + "value_parseable:" + URLEncoder.encode("*contact* *method*");
         String sort = "last_name_lcs ASC, first_name_lcs ASC";
 
         query = query.replaceAll(" ", "+");
@@ -108,8 +109,8 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
         String contactMethod = "contact method";
 
         final String encodedContactMethodJoin = URLEncoder.encode("{!join from=id to=contact_method_ss}");
-        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode(name) + " AND " +
-                encodedContactMethodJoin + "value_parseable:" + URLEncoder.encode(contactMethod);
+        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode("*test* *name*") + " AND " +
+                encodedContactMethodJoin + "value_parseable:" + URLEncoder.encode("*contact* *method*");
         String sort = "last_name_lcs ASC, first_name_lcs ASC";
         query = query.replaceAll(" ", "+");
         sort = sort.replaceAll(" ", "+");
