@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import javax.persistence.QueryTimeoutException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -31,14 +30,13 @@ import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 /**
  * Created by marjan.stefanoski on 8/20/2014.
  */
-public class ListAllTasksAPIControllerTest extends EasyMockSupport {
+public class ListAllTasksAPIControllerTest extends EasyMockSupport
+{
 
     private MockMvc mockMvc;
     private MockHttpSession mockHttpSession;
@@ -71,10 +69,12 @@ public class ListAllTasksAPIControllerTest extends EasyMockSupport {
     }
 
     @Test
-    public  void dueInAMonthTasksTest()  throws Exception  {
+    public void dueInAMonthTasksTest() throws Exception
+    {
         String user = "user";
 
         AcmTask userTask = new AcmTask();
+        userTask.setAssignee(user);
         userTask.setTaskId(500L);
         userTask.setDueDate(new Date());
         String ipAddress = "ipAddress";
@@ -118,10 +118,12 @@ public class ListAllTasksAPIControllerTest extends EasyMockSupport {
     }
 
     @Test
-    public  void dueInAWeekTasksTest()  throws Exception  {
+    public void dueInAWeekTasksTest() throws Exception
+    {
         String user = "user";
 
         AcmTask userTask = new AcmTask();
+        userTask.setAssignee(user);
         userTask.setTaskId(500L);
         userTask.setDueDate(new Date());
         String ipAddress = "ipAddress";
@@ -165,10 +167,12 @@ public class ListAllTasksAPIControllerTest extends EasyMockSupport {
     }
 
     @Test
-    public  void dueTomorrowTasksTest()  throws Exception  {
+    public void dueTomorrowTasksTest() throws Exception
+    {
         String user = "user";
 
         AcmTask userTask = new AcmTask();
+        userTask.setAssignee(user);
         userTask.setTaskId(500L);
         userTask.setDueDate(new Date());
         String ipAddress = "ipAddress";
@@ -212,10 +216,12 @@ public class ListAllTasksAPIControllerTest extends EasyMockSupport {
     }
 
     @Test
-    public void pastDueTasksTest() throws Exception  {
+    public void pastDueTasksTest() throws Exception
+    {
         String user = "user";
 
         AcmTask userTask = new AcmTask();
+        userTask.setAssignee(user);
         userTask.setTaskId(500L);
         userTask.setDueDate(new Date());
         String ipAddress = "ipAddress";
@@ -264,6 +270,7 @@ public class ListAllTasksAPIControllerTest extends EasyMockSupport {
         String user = "user";
 
         AcmTask userTask = new AcmTask();
+        userTask.setAssignee(user);
         userTask.setTaskId(500L);
         userTask.setDueDate(new Date());
         String ipAddress = "ipAddress";
