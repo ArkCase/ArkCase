@@ -27,6 +27,7 @@ angular.module('services').factory('Object.ListService', ['$resource', 'UtilServ
              * @param {Number} params.n max Number of list to return
              * @param {String} params.sort  Sort value. Allowed choice is based on backend specification
              * @param {String} params.filters  Filter value. Allowed choice is based on backend specification
+             * @param {String} params.query  Search term for tree entry to match
              * @param {Function} onSuccess (Optional)Callback function of success query
              * @param {Function} onError (Optional) Callback function when fail
              *
@@ -34,11 +35,37 @@ angular.module('services').factory('Object.ListService', ['$resource', 'UtilServ
              */
             _queryObjects: {
                 method: 'GET',
-                url: 'proxy/arkcase/api/latest/plugin/search/:objectType?start=:start&n=:n&s=:sort&filters=:filters',
+                url: 'proxy/arkcase/api/latest/plugin/search/:objectType?start=:start&n=:n&s=:sort&filters=:filters&searchQuery=:query',
                 cache: false,
                 isArray: false
             }
 
+            /**
+             * @ngdoc method
+             * @name _queryUserObjects
+             * @methodOf services:Object.ListService
+             *
+             * @description
+             * Get list of all costsheets from SOLR.
+             *
+             * @param {Object} params Map of input parameter.
+             * @param {String} params.dataType  Object data type. Currently it supports 'timesheet' and 'costsheet'
+             * @param {String} params.userId  String that contains userId for logged user. List of costsheets are generated depending on this userId
+             * @param {Number} params.start  Zero based index of result starts from
+             * @param {Number} params.n max Number of list to return
+             * @param {String} params.sort  Sort value. Allowed choice is based on backend specification
+             * @param {String} params.query  Search term for tree entry to match
+             * @param {Function} onSuccess (Optional)Callback function of success query
+             * @param {Function} onError (Optional) Callback function when fail
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            , _queryUserObjects: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/v1/service/:dataType/user/:userId?start=:start&n=:n&s=:sort&searchQuery=:query',
+                cache: false,
+                isArray: false
+            }
         });
 
 
