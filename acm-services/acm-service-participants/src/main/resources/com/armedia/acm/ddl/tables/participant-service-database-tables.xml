@@ -107,4 +107,13 @@
         </insert>
     </changeSet>
 
+     <!--adding discriminator column, needed for extensibility-->
+    <changeSet id="10-add-discriminator-column-extensibility" author="maksud.sharif">
+        <addColumn tableName="acm_participant">
+            <column name="cm_class_name" type="VARCHAR(400)" defaultValue="com.armedia.acm.services.participants.model.AcmParticipant">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
