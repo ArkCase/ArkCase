@@ -255,28 +255,26 @@ public class PdfServiceImpl implements PdfService
         if (!inputPdf.exists())
             throw new IllegalArgumentException(inputPdf.getAbsolutePath() + " doesn't exists");
 
-        log.debug("Reading pdf from file path {}", outputTiff.getPath());
-        PDDocument document = PDDocument.loadNonSeq(inputPdf, null);
-        List<PDPage> pdPages = document.getDocumentCatalog().getAllPages();
-
-        log.debug("Preparing to generate multi image tiff.");
-        ImageOutputStream ios = ImageIO.createImageOutputStream(outputTiff);
-        ImageWriter writer = ImageIO.getImageWritersByFormatName("TIFF").next();
-        writer.setOutput(ios);
-        writer.prepareWriteSequence(null);
-        log.debug("Pdf contains {} pages.", pdPages.size());
-        int page = 0;
-        for (PDPage pdPage : pdPages)
+        try (ImageOutputStream ios = ImageIO.createImageOutputStream(outputTiff); PDDocument document = PDDocument.loadNonSeq(inputPdf, null))
         {
-            page++;
-            BufferedImage bim = pdPage.convertToImage(BufferedImage.TYPE_INT_RGB, 300);
-            IIOImage image = new IIOImage(bim, null, null);
-            writer.writeToSequence(image, null);
-            log.debug("Successfully written one image to the sequence, {} more to go.", pdPages.size() - page);
+            log.debug("Reading pdf from file path {}", outputTiff.getPath());
+            List<PDPage> pdPages = document.getDocumentCatalog().getAllPages();
+            ImageWriter writer = ImageIO.getImageWritersByFormatName("TIFF").next();
+            log.debug("Preparing to generate multi image tiff.");
+            writer.setOutput(ios);
+            writer.prepareWriteSequence(null);
+            log.debug("Pdf contains {} pages.", pdPages.size());
+            int page = 0;
+            for (PDPage pdPage : pdPages)
+            {
+                page++;
+                BufferedImage bim = pdPage.convertToImage(BufferedImage.TYPE_INT_RGB, 300);
+                IIOImage image = new IIOImage(bim, null, null);
+                writer.writeToSequence(image, null);
+                log.debug("Successfully written one image to the sequence, {} more to go.", pdPages.size() - page);
+            }
+            ios.flush();
         }
-        ios.flush();
-        ios.close();
-        document.close();
         log.debug("Successfully written tiff sequence into file {}.", outputTiff.getPath());
     }
 
