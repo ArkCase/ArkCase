@@ -10,11 +10,16 @@ import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.util.PDFMergerUtility;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -23,6 +28,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
+import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -237,6 +244,40 @@ public class PdfServiceImpl implements PdfService
             throw new PdfServiceException(e);
         }
         return append(pdDocument, is, pdfMergerUtility);
+    }
+
+    @Override
+    /**
+     * {@inheritDoc}
+     */
+    public void generateTiffFromPdf(File inputPdf, File outputTiff) throws IOException
+    {
+        if (!inputPdf.exists())
+            throw new IllegalArgumentException(inputPdf.getAbsolutePath() + " doesn't exists");
+
+        log.debug("Reading pdf from file path {}", outputTiff.getPath());
+        PDDocument document = PDDocument.loadNonSeq(inputPdf, null);
+        List<PDPage> pdPages = document.getDocumentCatalog().getAllPages();
+
+        log.debug("Preparing to generate multi image tiff.");
+        ImageOutputStream ios = ImageIO.createImageOutputStream(outputTiff);
+        ImageWriter writer = ImageIO.getImageWritersByFormatName("TIFF").next();
+        writer.setOutput(ios);
+        writer.prepareWriteSequence(null);
+        log.debug("Pdf contains {} pages.", pdPages.size());
+        int page = 0;
+        for (PDPage pdPage : pdPages)
+        {
+            page++;
+            BufferedImage bim = pdPage.convertToImage(BufferedImage.TYPE_INT_RGB, 300);
+            IIOImage image = new IIOImage(bim, null, null);
+            writer.writeToSequence(image, null);
+            log.debug("Successfully written one image to the sequence, {} more to go.", pdPages.size() - page);
+        }
+        ios.flush();
+        ios.close();
+        document.close();
+        log.debug("Successfully written tiff sequence into file {}.", outputTiff.getPath());
     }
 
     public EcmFileService getEcmFileService()
