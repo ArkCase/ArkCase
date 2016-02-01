@@ -501,7 +501,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                     var lastPage = gridApi.pagination.getTotalPages();
                     gridApi.pagination.seek(lastPage);
                     var contactMethod = {};
-                    contactMethod.created = Util.getCurrentDayInternal();
+                    contactMethod.created = Util.dateToIsoString(new Date());
                     contactMethod.creator = $scope.userId;
                     $scope.gridOptions.data[idxPa].acm$_contactMethods.gridOptions.data.push(contactMethod);
                 }
@@ -549,7 +549,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 gridApi.pagination.seek(lastPage);
                 var organizations = {};
                 organizations.className = Util.goodValue($scope.config.organizations.className);
-                organizations.created = Util.getCurrentDayInternal();
+                organizations.created = Util.dateToIsoString(new Date());
                 organizations.creator = $scope.userId;
                 $scope.gridOptions.data[idx].acm$_organizations.gridOptions.data.push(organizations);
             }
@@ -597,7 +597,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 var lastPage = gridApi.pagination.getTotalPages();
                 gridApi.pagination.seek(lastPage);
                 var addresses = {};
-                addresses.created = Util.getCurrentDayInternal();
+                addresses.created = Util.dateToIsoString(new Date());
                 addresses.creator = $scope.userId;
                 $scope.gridOptions.data[idx].acm$_addresses.gridOptions.data.push(addresses);
             }
@@ -643,7 +643,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 var lastPage = gridApi.pagination.getTotalPages();
                 gridApi.pagination.seek(lastPage);
                 var aliases = {};
-                aliases.created = Util.getCurrentDayInternal();
+                aliases.created = Util.dateToIsoString(new Date());
                 aliases.creator = $scope.userId;
                 $scope.gridOptions.data[idx].acm$_aliases.gridOptions.data.push(aliases);
             }
