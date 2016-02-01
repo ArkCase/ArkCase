@@ -373,14 +373,27 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
             , onSelect: function (selectedObject) {
                 var that = this;
                 that.scope.$emit('req-select-object', selectedObject);
+
+
+                //var a1 = that.state.current.name;
+                //var stateName = ServCommService.getStateToGo();
+                //if (stateName) {
+                //    ServCommService.setStateToGo(null);
+                //} else {
+                //    var components = Util.goodArray(selectedObject.components);
+                //    var componentType = (1 == components.length) ? components[0] : "main";
+                //    stateName = that.moduleId + "." + componentType;
+                //}
                 var components = Util.goodArray(selectedObject.components);
                 var componentType = (1 == components.length) ? components[0] : "main";
+                var stateName = that.moduleId + "." + componentType;
+
                 var params = {
                     id: selectedObject.nodeId
                     , type: selectedObject.nodeType
                 };
 
-                that.state.go(that.moduleId + "." + componentType, params);
+                that.state.go(stateName, params);
             }
 
             , findByNodeId: function (docs, nodeId) {
