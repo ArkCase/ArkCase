@@ -20,7 +20,7 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
-        "classpath:spring-library-audit-test.xml"
+        "/spring-library-audit-test.xml"
 })
 public class AuditDaoIT
 {
@@ -52,7 +52,7 @@ public class AuditDaoIT
         String objectType = "TASK";
         Long objectId = 100L;   // just want to make sure the query executes, doesn't have to return data
 
-        List<AuditEvent> events = dao.findPagedResults(objectId,objectType,startRow,maxRows);
+        List<AuditEvent> events = dao.findPagedResults(objectId, objectType, startRow, maxRows);
 
         assertNotNull(events);
 

@@ -12,24 +12,13 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
         // Reset the tree cache so that new entry created by Frevvo can be shown.
         // This is a temporary solution until UI and backend communication is implemented
         //
-        var goAnother = false;
         var topics = ["new-complaint", "close-complaint"];
         _.each(topics, function (topic) {
             var data = ServCommService.popRequest("frevvo", topic);
             if (data) {
                 ComplaintListService.resetComplaintsTreeData();
-                if ("close-complaint" == topic) {
-                    //ServCommService.setStateToGo("complaints.tasks");
-
-                    //    var params = {id: $stateParams, type: "COMPLAINTS"};
-                    //    $state.go("complaints.tasks", params);
-                    //    goAnother = true;
-                }
             }
         });
-        //if (goAnother) {
-        //    return;
-        //}
 
 
         //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper
@@ -41,8 +30,8 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
             , resetTreeData: function () {
                 return ComplaintListService.resetComplaintsTreeData();
             }
-            , getTreeData: function (start, n, sort, filters) {
-                return ComplaintListService.queryComplaintsTreeData(start, n, sort, filters);
+            , getTreeData: function (start, n, sort, filters, query) {
+                return ComplaintListService.queryComplaintsTreeData(start, n, sort, filters, query);
             }
             , getNodeData: function (complaintId) {
                 return ComplaintInfoService.getComplaintInfo(complaintId);

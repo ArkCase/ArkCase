@@ -46,20 +46,22 @@ angular.module('services').factory('Case.ListService', ['$resource', '$translate
          * @param {Number} n max Number of list to return
          * @param {String} sort  Sort value. Allowed choice is based on backend specification
          * @param {String} filters  Filter value. Allowed choice is based on backend specification
+         * @param {String} query  Search term for tree entry to match
          *
          * @returns {Object} Promise
          */
-        Service.queryCasesTreeData = function (start, n, sort, filters) {
-            var cacheCaseList = new Store.CacheFifo(Service.CacheNames.CASE_LIST);
-            var cacheKey = start + "." + n + "." + sort + "." + filters;
-            var treeData = cacheCaseList.get(cacheKey);
-
+        Service.queryCasesTreeData = function (start, n, sort, filters, query) {
             var param = {};
             param.objectType = "CASE_FILE";
-            param.start = start;
-            param.n = n;
-            param.sort = sort;
-            param.filters = filters;
+            param.start = Util.goodValue(start, 0);
+            param.n = Util.goodValue(n, 32);
+            param.sort = Util.goodValue(sort);
+            param.filters = Util.goodValue(filters);
+            param.query = Util.goodValue(query);
+            var cacheCaseList = new Store.CacheFifo(Service.CacheNames.CASE_LIST);
+            var cacheKey = param.start + "." + param.n + "." + param.sort + "." + param.filters + "." + param.query;
+            var treeData = cacheCaseList.get(cacheKey);
+
             return Util.serviceCall({
                 service: ObjectListService._queryObjects
                 , param: param
