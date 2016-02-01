@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by marst on 8/16/14.
@@ -77,7 +78,9 @@ public class ListAllTasksAPIController
                         authentication.getName(), true, ipAddress);
                 getTaskEventPublisher().publishTaskEvent(event);
             }
-            return retval;
+
+            //return only tasks that are assigned to someone.
+            return retval.stream().filter(task -> !"".equals(task.getAssignee()) && task.getAssignee() != null).collect(Collectors.toList());
         } catch (Exception e)
         {
             throw new AcmListObjectsFailedException("task", e.getMessage(), e);

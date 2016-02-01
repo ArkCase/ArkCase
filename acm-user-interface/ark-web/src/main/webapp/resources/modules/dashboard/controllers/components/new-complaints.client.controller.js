@@ -1,7 +1,6 @@
 'use strict';
 
-angular.module('dashboard.new-complaints').
-controller('Dashboard.NewComplaintsController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
+angular.module('dashboard.new-complaints').controller('Dashboard.NewComplaintsController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
     function ($scope, $translate, Authentication, DashboardService) {
 
         var vm = this;
@@ -33,8 +32,8 @@ controller('Dashboard.NewComplaintsController', ['$scope', '$translate', 'Authen
 
                     vm.showChart = labels.length > 0 && chartData.length > 0 ? true : false;
 
-                    vm.labels = labels;
-                    vm.data = [chartData];
+                    vm.labels = labels.reverse();
+                    vm.data = [chartData.reverse()];
                     vm.series = [config.title];
                 })
             }

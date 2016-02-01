@@ -46,20 +46,23 @@ angular.module('services').factory('Complaint.ListService', ['$resource', '$tran
          * @param {Number} n max Number of list to return
          * @param {String} sort  Sort value. Allowed choice is based on backend specification
          * @param {String} filters  Filter value. Allowed choice is based on backend specification
+         * @param {String} query  Search term for tree entry to match
          *
          * @returns {Object} Promise
          */
-        Service.queryComplaintsTreeData = function (start, n, sort, filters) {
-            var cacheComplaintList = new Store.CacheFifo(Service.CacheNames.COMPLAINT_LIST);
-            var cacheKey = start + "." + n + "." + sort + "." + filters;
-            var treeData = cacheComplaintList.get(cacheKey);
-
+        Service.queryComplaintsTreeData = function (start, n, sort, filters, query) {
             var param = {};
             param.objectType = "COMPLAINT";
-            param.start = start;
-            param.n = n;
-            param.sort = sort;
-            param.filters = filters;
+            param.start = Util.goodValue(start, 0);
+            param.n = Util.goodValue(n, 32);
+            param.sort = Util.goodValue(sort);
+            param.filters = Util.goodValue(filters);
+            param.query = Util.goodValue(query);
+
+            var cacheComplaintList = new Store.CacheFifo(Service.CacheNames.COMPLAINT_LIST);
+            var cacheKey = param.start + "." + param.n + "." + param.sort + "." + param.filters + "." + param.query;
+            var treeData = cacheComplaintList.get(cacheKey);
+
             return Util.serviceCall({
                 service: ObjectListService._queryObjects
                 , param: param
