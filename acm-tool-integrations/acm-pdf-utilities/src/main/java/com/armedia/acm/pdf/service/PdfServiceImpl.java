@@ -246,14 +246,20 @@ public class PdfServiceImpl implements PdfService
         return append(pdDocument, is, pdfMergerUtility);
     }
 
-    @Override
     /**
-     * {@inheritDoc}
+     * Generates multipage TIFF from PDF file
+     * <p/>
+     * <p/>
+     * Can throw IllegalArgumentException if inputPdf file not exists
+     *
+     * @param inputPdf   pdf file to be processed
+     * @param outputTiff location where generated TIFF to be saved
      */
-    public void generateTiffFromPdf(File inputPdf, File outputTiff) throws IOException
+    @Override
+    public void generateTiffFromPdf(File inputPdf, File outputTiff) throws PdfServiceException
     {
         if (!inputPdf.exists())
-            throw new IllegalArgumentException(inputPdf.getAbsolutePath() + " doesn't exists");
+            throw new PdfServiceException(inputPdf.getAbsolutePath() + " doesn't exists");
 
         try (ImageOutputStream ios = ImageIO.createImageOutputStream(outputTiff); PDDocument document = PDDocument.loadNonSeq(inputPdf, null))
         {
@@ -274,6 +280,9 @@ public class PdfServiceImpl implements PdfService
                 log.debug("Successfully written one image to the sequence, {} more to go.", pdPages.size() - page);
             }
             ios.flush();
+        } catch (IOException e)
+        {
+            throw new PdfServiceException(e);
         }
         log.debug("Successfully written tiff sequence into file {}.", outputTiff.getPath());
     }

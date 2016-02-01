@@ -7,7 +7,6 @@ import org.apache.pdfbox.util.PDFMergerUtility;
 
 import javax.xml.transform.Source;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -102,11 +101,11 @@ public interface PdfService
     /**
      * Generates multipage TIFF from PDF file
      * <p/>
-     *
-     *  Can throw IllegalArgumentException if inputPdf file not exists
+     * <p/>
+     * Can throw IllegalArgumentException if inputPdf file not exists
      *
      * @param inputPdf   pdf file to be processed
      * @param outputTiff location where generated TIFF to be saved
      */
-    void generateTiffFromPdf(File inputPdf, File outputTiff) throws IOException;
+    void generateTiffFromPdf(File inputPdf, File outputTiff) throws PdfServiceException;
 }
