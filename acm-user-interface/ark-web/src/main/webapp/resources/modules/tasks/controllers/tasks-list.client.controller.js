@@ -14,8 +14,8 @@ angular.module('tasks').controller('TasksListController', ['$scope', '$state', '
             , resetTreeData: function () {
                 return TaskListService.resetTasksTreeData();
             }
-            , getTreeData: function (start, n, sort, filters) {
-                return TaskListService.queryTasksTreeData(start, n, sort, filters);
+            , getTreeData: function (start, n, sort, filters, query) {
+                return TaskListService.queryTasksTreeData(start, n, sort, filters, query);
             }
             , getNodeData: function (taskId) {
                 return TaskInfoService.getTaskInfo(taskId);

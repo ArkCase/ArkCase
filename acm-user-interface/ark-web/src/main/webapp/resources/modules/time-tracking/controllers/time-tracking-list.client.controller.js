@@ -31,12 +31,12 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
             , resetTreeData: function () {
                 return TimeTrackingListService.resetTimeTrackingTreeData();
             }
-            , getTreeData: function (start, n, sort, filters) {
+            , getTreeData: function (start, n, sort, filters, query) {
                 var dfd = $q.defer();
                 Authentication.queryUserInfo().then(
                     function (userInfo) {
                         var userId = userInfo.userId;
-                        TimeTrackingListService.queryTimeTrackingTreeData(userId, start, n, sort, filters).then(
+                        TimeTrackingListService.queryTimeTrackingTreeData(userId, start, n, sort, filters, query).then(
                             function (treeData) {
                                 dfd.resolve(treeData);
                                 return treeData;

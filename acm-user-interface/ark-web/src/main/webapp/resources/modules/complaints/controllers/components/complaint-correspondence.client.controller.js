@@ -45,7 +45,7 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
 
         $scope.correspondenceForms = [{"value": "noop", "name": $translate.instant("common.select.option.none")}];
         $scope.correspondenceForm = {"value": "noop", "name": $translate.instant("common.select.option.none")};
-        var promiseCorrespondenceForms = ObjectLookupService.getCorrespondenceForms().then(
+        var promiseCorrespondenceForms = ObjectLookupService.getComplaintCorrespondenceForms().then(
             function (correspondenceForms) {
                 $scope.correspondenceForms = correspondenceForms;
                 $scope.correspondenceForms.unshift({
