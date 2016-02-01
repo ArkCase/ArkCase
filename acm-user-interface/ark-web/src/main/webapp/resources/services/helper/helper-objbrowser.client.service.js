@@ -61,8 +61,8 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                     that.onReset();
                 };
 
-                that.scope.onLoad = function (start, n, sort, filters) {
-                    that.onLoad(start, n, sort, filters);
+                that.scope.onLoad = function (start, n, sort, filters, query) {
+                    that.onLoad(start, n, sort, filters, query);
                 };
 
                 that.scope.onSelect = function (selectedObject) {
@@ -243,17 +243,18 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
              * @param {Number} n Max number of tree data records
              * @param {String} sort Sort parameter for tree data query
              * @param {String} filters Filter parameter for tree data query
+             * @param {String} query  Search term for tree entry to match
              *
              * @description
              * A callback function to respond object tree events to load tree data of a given page
              */
-            , onLoad: function (start, n, sort, filters) {
+            , onLoad: function (start, n, sort, filters, query) {
                 var that = this;
                 if (that.firstLoad && that.nodeId) {
                     that.scope.treeData = null;
                 }
 
-                that.getTreeData(start, n, sort, filters).then(
+                that.getTreeData(start, n, sort, filters, query).then(
                     function (treeData) {
                         if (that.firstLoad) {
                             if (that.nodeId) {

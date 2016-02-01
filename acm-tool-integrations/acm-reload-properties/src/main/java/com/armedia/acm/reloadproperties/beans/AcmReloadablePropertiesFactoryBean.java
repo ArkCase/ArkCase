@@ -12,7 +12,7 @@ import net.unicon.springframework.addons.properties.ReloadablePropertiesFactoryB
  * @author riste.tutureski
  *
  */
-public class AcmReloadablePropertiesFactoryBean extends ReloadablePropertiesFactoryBean {	
+public class AcmReloadablePropertiesFactoryBean extends ReloadablePropertiesFactoryBean {
 	
 	 public AcmReloadablePropertiesFactoryBean() {
 		super();

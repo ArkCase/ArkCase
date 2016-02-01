@@ -46,20 +46,23 @@ angular.module('tasks').factory('Task.ListService', ['$resource', '$translate', 
          * @param {Number} n max Number of list to return
          * @param {String} sort  Sort value. Allowed choice is based on backend specification
          * @param {String} filters  Filter value. Allowed choice is based on backend specification
+         * @param {String} query  Search term for tree entry to match
          *
          * @returns {Object} Promise
          */
-        Service.queryTasksTreeData = function (start, n, sort, filters) {
-            var cacheTaskList = new Store.CacheFifo(Service.CacheNames.TASK_LIST);
-            var cacheKey = start + "." + n + "." + sort + "." + filters;
-            var treeData = cacheTaskList.get(cacheKey);
-
+        Service.queryTasksTreeData = function (start, n, sort, filters, query) {
             var param = {};
             param.objectType = "TASK";
-            param.start = start;
-            param.n = n;
-            param.sort = sort;
-            param.filters = filters;
+            param.start = Util.goodValue(start, 0);
+            param.n = Util.goodValue(n, 32);
+            param.sort = Util.goodValue(sort);
+            param.filters = Util.goodValue(filters);
+            param.query = Util.goodValue(query);
+
+            var cacheTaskList = new Store.CacheFifo(Service.CacheNames.TASK_LIST);
+            var cacheKey = param.start + "." + param.n + "." + param.sort + "." + param.filters + "." + param.query;
+            var treeData = cacheTaskList.get(cacheKey);
+
             return Util.serviceCall({
                 service: ObjectListService._queryObjects
                 , param: param

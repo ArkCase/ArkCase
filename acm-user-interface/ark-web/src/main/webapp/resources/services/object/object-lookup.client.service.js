@@ -146,7 +146,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
                 url: "modules_config/config/modules/cases/resources/contactMethodTypes.json"
                 , method: "GET"
                 , cache: true
-                , isArray : true
+                , isArray: true
             }
 
             /**
@@ -236,16 +236,33 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
 
             /**
              * @ngdoc method
-             * @name getCorrespondenceForms
+             * @name _getCaseFileCorrespondenceForms
              * @methodOf services:Object.LookupService
              *
              * @description
-             * Query list of correspondence forms
+             * Query list of correspondence forms for use in the case file module
              *
              * @returns {Object} An array returned by $resource
              */
-            , _getCorrespondenceForms: {
+            , _getCaseFileCorrespondenceForms: {
                 url: "modules_config/config/modules/cases/resources/correspondenceForms.json"
+                , method: "GET"
+                , cache: true
+                , isArray: true
+            }
+
+            /**
+             * @ngdoc method
+             * @name _getComplaintCorrespondenceForms
+             * @methodOf services:Object.LookupService
+             *
+             * @description
+             * Query list of correspondence forms for use in the complaints module
+             *
+             * @returns {Object} An array returned by $resource
+             */
+            , _getComplaintCorrespondenceForms: {
+                url: "modules_config/config/modules/complaints/resources/correspondenceForms.json"
                 , method: "GET"
                 , cache: true
                 , isArray: true
@@ -267,6 +284,8 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
             , SECURITY_TAG_TYPES: "AcmSecurityTagTypes"
             , OBJECT_TYPES: "AcmObjectTypes"
             , CORRESPONDENCE_FORMS: "AcmCorrespondenceForms"
+            , CASE_FILE_CORRESPONDENCE_FORMS: "AcmCaseFileCorrespondenceForms"
+            , COMPLAINT_CORRESPONDENCE_FORMS: "AcmComplaintCorrespondenceForms"
         };
         Service.CacheNames = {};
 
@@ -912,15 +931,17 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @methodOf services:Object.LookupService
          *
          * @description
-         * Query list of correspondence forms
+         * Query list of correspondence forms; for backwards compatibility, this returns the case file
+         * correspondence forms.  Since each module could have different correspondence forms, in the future please
+         * call the specific module method.
          *
          * @returns {Object} An array returned by $resource
          */
         Service.getCorrespondenceForms = function () {
-            var cacheCorrespondenceForms = new Store.SessionData(Service.SessionCacheNames.CORRESPONDENCE_FORMS);
+            var cacheCorrespondenceForms = new Store.SessionData(Service.SessionCacheNames.CASE_FILE_CORRESPONDENCE_FORMS);
             var correspondenceForms = cacheCorrespondenceForms.get();
             return Util.serviceCall({
-                service: Service._getCorrespondenceForms
+                service: Service._getCaseFileCorrespondenceForms
                 , result: correspondenceForms
                 , onSuccess: function (data) {
                     if (Service.validateCorrespondenceForms(data)) {
@@ -930,6 +951,57 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
                 }
             });
         };
+
+        /**
+         * @ngdoc method
+         * @name getCaseFileCorrespondenceForms
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of correspondence forms for use in the Case File module
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getCaseFileCorrespondenceForms = function () {
+            var cacheCorrespondenceForms = new Store.SessionData(Service.SessionCacheNames.CASE_FILE_CORRESPONDENCE_FORMS);
+            var correspondenceForms = cacheCorrespondenceForms.get();
+            return Util.serviceCall({
+                service: Service._getCaseFileCorrespondenceForms
+                , result: correspondenceForms
+                , onSuccess: function (data) {
+                    if (Service.validateCorrespondenceForms(data)) {
+                        cacheCorrespondenceForms.set(data);
+                        return data;
+                    }
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name getComplaintCorrespondenceForms
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of correspondence forms for use in the Complaints module
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getComplaintCorrespondenceForms = function () {
+            var cacheComplaintCorrespondenceForms = new Store.SessionData(Service.SessionCacheNames.COMPLAINT_CORRESPONDENCE_FORMS);
+            var complaintCorrespondenceForms = cacheComplaintCorrespondenceForms.get();
+            return Util.serviceCall({
+                service: Service._getComplaintCorrespondenceForms
+                , result: complaintCorrespondenceForms
+                , onSuccess: function (data) {
+                    if (Service.validateCorrespondenceForms(data)) {
+                        cacheComplaintCorrespondenceForms.set(data);
+                        return data;
+                    }
+                }
+            });
+        };
+
 
         /**
          * @ngdoc method
