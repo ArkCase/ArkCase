@@ -1,5 +1,6 @@
 package com.armedia.acm.pdf.service;
 
+import com.armedia.acm.pdf.PdfServiceException;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -38,7 +39,7 @@ public class PdfServiceImplTest
     }
 
     @Test
-    public void generateMultiPageTiffFromPdf() throws IOException
+    public void generateMultiPageTiffFromPdf() throws PdfServiceException
     {
         assertNotNull(pdfService);
 
