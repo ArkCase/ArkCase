@@ -393,7 +393,12 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
             setPersonAssociations(new ArrayList<>());
         }
 
-        getPersonAssociations().add(originator);
+        Optional<PersonAssociation> found = getPersonAssociations().stream().filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
+
+        if (found == null || !found.isPresent())
+        {
+            getPersonAssociations().add(originator);
+        }
     }
 
     public String getEcmFolderPath()
