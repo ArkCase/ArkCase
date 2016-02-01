@@ -20,6 +20,26 @@
             classpath:/spring/spring-security-config.xml</param-value>
     </context-param>
 
+    <!-- Sets RequestId, User Id, Remote address in org.slfj.MDC variables -->
+    <filter>
+        <filter-name>RequestMDCFilter</filter-name>
+        <filter-class>com.armedia.acm.web.api.RequestMDCFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>RequestMDCFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- wraps the HTTP request so that its body can be read multiple times -->
+    <filter>
+        <filter-name>RequestWrapperFilter</filter-name>
+        <filter-class>com.armedia.acm.web.api.RequestWrapperFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>RequestWrapperFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <!--
 		SPRING SECURITY
 	-->

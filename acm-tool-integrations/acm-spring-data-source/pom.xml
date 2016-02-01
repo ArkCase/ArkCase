@@ -120,6 +120,12 @@
             <groupId>com.oracle</groupId>
             <artifactId>jdbc</artifactId>
         </dependency>
+
+        <!-- utilities -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
     </dependencies>
 
     <profiles>
