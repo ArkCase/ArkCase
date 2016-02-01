@@ -50,5 +50,9 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.complaintInfo, $scope.fileTypes);
         };
 
+        $scope.onClickRefresh = function () {
+            $scope.treeControl.refreshTree();
+        };
+
     }
 ]);
