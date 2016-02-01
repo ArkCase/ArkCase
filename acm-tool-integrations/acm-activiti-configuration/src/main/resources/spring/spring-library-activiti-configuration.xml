@@ -95,6 +95,12 @@
                 <ref bean="acmActivitiUserTaskHandler"/>
             </list>
         </property>
+        <property name="eventListeners">
+            <list>
+                <ref bean="acmActivitiEventListener"/>
+                <ref bean="acmActivitiEntityEventListener"/>
+            </list>
+        </property>
     </bean>
 
     <bean id="activitiProcessEngine" class="org.activiti.spring.ProcessEngineFactoryBean">

@@ -8,6 +8,8 @@ atlassian-ide-plugin.xml
 *.project
 *.classpath
 .settings/
+.springBeans
+.externalToolBuilders/
 
 # Package Files #
 *.jar
