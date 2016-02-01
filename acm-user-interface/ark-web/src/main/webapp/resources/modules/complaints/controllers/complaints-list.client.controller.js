@@ -17,11 +17,6 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
             var data = ServCommService.popRequest("frevvo", topic);
             if (data) {
                 ComplaintListService.resetComplaintsTreeData();
-                if ("close-complaint" == topic) {
-                    //var params = {id: $stateParams, type: "COMPLAINTS"};
-                    //$state.go("complaints.task", params);
-                    //return;
-                }
             }
         });
 

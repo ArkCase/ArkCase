@@ -15,9 +15,6 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
             var data = ServCommService.popRequest("frevvo", topic);
             if (data) {
                 CaseListService.resetCasesTreeData();
-                if ("change-case-status" == topic) {
-
-                }
             }
         });
 
