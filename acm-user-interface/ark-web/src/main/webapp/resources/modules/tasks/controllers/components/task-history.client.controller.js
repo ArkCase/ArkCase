@@ -1,14 +1,32 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.AuditService', 'Helper.ObjectBrowserService'
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.AuditService', 'Task.InfoService'
+    , 'Helper.ObjectBrowserService'
     , function ($scope, $stateParams, $q
-        , Util, ConfigService, HelperUiGridService, ObjectService, ObjectAuditService, HelperObjectBrowserService) {
+        , Util, ConfigService, HelperUiGridService, ObjectService, ObjectAuditService, TaskInfoService
+        , HelperObjectBrowserService) {
+
+        new HelperObjectBrowserService.Component({
+            moduleId: "tasks"
+            , componentId: "history"
+            , scope: $scope
+            , stateParams: $stateParams
+            , retrieveObjectInfo: TaskInfoService.getTaskInfo
+            , validateObjectInfo: TaskInfoService.validateTaskInfo
+            , onObjectInfoRetrieved: function (taskInfo) {
+                $scope.taskInfo = taskInfo;
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        ConfigService.getComponentConfig("tasks", "history").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -16,15 +34,12 @@ angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$state
             gridHelper.setUserNameFilter(promiseUsers);
 
             $scope.retrieveGridData();
-            return config;
-        });
+        };
 
         $scope.retrieveGridData = function () {
-
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (Util.goodPositive(currentObjectId, false)) {
+            if (Util.goodPositive($scope.currentObjectId, false)) {
                 var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.TASK
-                    , currentObjectId
+                    , $scope.currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodMapValue($scope.sort, "by")

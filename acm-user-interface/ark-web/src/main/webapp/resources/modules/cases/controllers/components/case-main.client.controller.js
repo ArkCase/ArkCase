@@ -7,8 +7,6 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
         , CaseInfoService, ObjectService, ObjectCorrespondenceService, ObjectNoteService, ObjectTaskService
         , ObjectAuditService, ObjectCostService, ObjectTimeService, dashboard, DashboardService, Store) {
 
-        $scope.$emit('main-component-started');
-
         var promiseConfig = ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
             $scope.components = moduleConfig.components;
             $scope.config = _.find(moduleConfig.components, {id: "main"});

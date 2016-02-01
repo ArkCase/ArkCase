@@ -5,10 +5,18 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
     , function ($scope, $stateParams, $modal
         , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, HelperObjectBrowserService) {
 
-        ConfigService.getComponentConfig("cases", "documents").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cases"
+            , componentId: "documents"
+            , retrieveObjectInfo: CaseInfoService.getCaseInfo
+            , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onObjectInfoRetrieved: function (caseInfo) {
+                onObjectInfoRetrieved(caseInfo);
+            }
         });
+
 
         ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE).then(
             function (formTypes) {
@@ -27,21 +35,12 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
 
         $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
-        $scope.objectId = $stateParams.id;
-
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
-                $scope.caseInfo = caseInfo;
-                $scope.objectId = caseInfo.id;
-                return caseInfo;
-            });
-        }
-
-        $scope.$on('object-refreshed', function (e, caseInfo) {
+        $scope.objectId = $scope.currentObjectId; //$stateParams.id;
+        var onObjectInfoRetrieved = function (caseInfo) {
             $scope.caseInfo = caseInfo;
             $scope.objectId = caseInfo.id;
-        });
+        };
+
 
         var silentReplace = function (value, replace, replacement) {
             if (!Util.isEmpty(value) && value.replace) {

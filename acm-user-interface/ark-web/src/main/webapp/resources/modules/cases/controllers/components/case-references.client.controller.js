@@ -5,28 +5,31 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
     , function ($scope, $stateParams
         , Util, ConfigService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService) {
 
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cases"
+            , componentId: "references"
+            , retrieveObjectInfo: CaseInfoService.getCaseInfo
+            , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onObjectInfoRetrieved: function (caseInfo) {
+                onObjectInfoRetrieved(caseInfo);
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
+
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        ConfigService.getComponentConfig("cases", "references").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
-            return config;
-        });
+        };
 
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
-                updateData(caseInfo);
-                return caseInfo;
-            });
-        }
-
-        $scope.$on('object-refreshed', function (e, caseInfo) {
-            updateData(caseInfo);
-        });
-
-        var updateData = function (caseInfo) {
+        var onObjectInfoRetrieved = function (caseInfo) {
             $scope.caseInfo = caseInfo;
             $scope.gridOptions = $scope.gridOptions || {};
             $scope.gridOptions.data = $scope.caseInfo.references;

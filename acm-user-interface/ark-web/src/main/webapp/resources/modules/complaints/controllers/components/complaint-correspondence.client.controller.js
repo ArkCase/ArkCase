@@ -7,6 +7,21 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
         , Util, ConfigService, ObjectService, LookupService, ObjectLookupService
         , ObjectCorrespondenceService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService) {
 
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "complaints"
+            , componentId: "correspondence"
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onObjectInfoRetrieved: function (complaintInfo) {
+                $scope.complaintInfo = complaintInfo;
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
+
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
@@ -17,7 +32,8 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
             }
         );
 
-        ConfigService.getComponentConfig("complaints", "correspondence").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -25,8 +41,7 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
             gridHelper.setUserNameFilter(promiseUsers);
 
             $scope.retrieveGridData();
-            return config;
-        });
+        };
 
         $scope.correspondenceForms = [{"value": "noop", "name": $translate.instant("common.select.option.none")}];
         $scope.correspondenceForm = {"value": "noop", "name": $translate.instant("common.select.option.none")};
@@ -41,18 +56,10 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
             }
         );
 
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
-                $scope.complaintInfo = complaintInfo;
-                return complaintInfo;
-            });
-        }
-
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive(currentObjectId, false)) {
+            if (Util.goodPositive($scope.currentObjectId, false)) {
                 var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.COMPLAINT
-                    , currentObjectId
+                    , $scope.currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)

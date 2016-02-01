@@ -5,21 +5,16 @@ angular.module('tasks').controller('Tasks.DetailsController', ['$scope', '$state
     , function ($scope, $stateParams, $translate
         , Util, ConfigService, TaskInfoService, MessageService, HelperObjectBrowserService) {
 
-        ConfigService.getComponentConfig("tasks", "actions").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
-        });
-
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            TaskInfoService.getTaskInfo(currentObjectId).then(function (taskInfo) {
+        new HelperObjectBrowserService.Component({
+            moduleId: "tasks"
+            , componentId: "details"
+            , scope: $scope
+            , stateParams: $stateParams
+            , retrieveObjectInfo: TaskInfoService.getTaskInfo
+            , validateObjectInfo: TaskInfoService.validateTaskInfo
+            , onObjectInfoRetrieved: function (taskInfo) {
                 $scope.taskInfo = taskInfo;
-                return taskInfo;
-            });
-        }
-
-        $scope.$on('object-refreshed', function (e, taskInfo) {
-            $scope.taskInfo = taskInfo;
+            }
         });
 
 

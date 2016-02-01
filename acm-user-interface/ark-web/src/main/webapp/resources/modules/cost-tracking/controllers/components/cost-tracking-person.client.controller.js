@@ -5,32 +5,34 @@ angular.module('cost-tracking').controller('CostTracking.PersonController', ['$s
     , function ($scope, $stateParams
         , Util, ConfigService, HelperUiGridService, CostTrackingInfoService, HelperObjectBrowserService) {
 
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cost-tracking"
+            , componentId: "person"
+            , retrieveObjectInfo: CostTrackingInfoService.getCostsheetInfo
+            , validateObjectInfo: CostTrackingInfoService.validateCostsheet
+            , onObjectInfoRetrieved: function (costsheetInfo) {
+                onObjectInfoRetrieved(costsheetInfo);
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
+
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-        ConfigService.getComponentConfig("cost-tracking", "person").then(function (config) {
+
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
-            return config;
-        });
+        };
 
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            CostTrackingInfoService.getCostsheetInfo(currentObjectId).then(function (costsheetInfo) {
-                updateData(costsheetInfo);
-                return costsheetInfo;
-            });
-        }
-
-        $scope.$on('object-refreshed', function (e, costsheetInfo) {
-            updateData(costsheetInfo);
-        });
-
-        var updateData = function (costsheetInfo) {
+        var onObjectInfoRetrieved = function (costsheetInfo) {
             $scope.costsheetInfo = costsheetInfo;
             $scope.gridOptions = $scope.gridOptions || {};
             $scope.gridOptions.data = [$scope.costsheetInfo.user];
         };
-
-
 
     }
 ]);
