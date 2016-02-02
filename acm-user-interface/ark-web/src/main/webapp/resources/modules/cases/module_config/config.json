@@ -496,7 +496,9 @@
           {
             "name": "created",
             "displayName": "cases.comp.people.contactMethods.table.columns.created",
-            "headerCellFilter": "translate"
+            "headerCellFilter": "translate",
+            "cellTemplate": "<div>{{ row.entity.created | date : 'MM/dd/yyyy'}}</div>",
+            "enableCellEdit": false
           },
           {
             "name": "creator",
@@ -509,6 +511,7 @@
       "organizations": {
         "id": "organizations",
         "title": "Organizations",
+        "className": "com.armedia.acm.plugins.person.model.Organization",
         "enableFiltering": true,
         "paginationPageSizes": [
           5,
@@ -534,7 +537,9 @@
           {
             "name": "created",
             "displayName": "cases.comp.people.organizations.table.columns.created",
-            "headerCellFilter": "translate"
+            "headerCellFilter": "translate",
+            "cellTemplate": "<div>{{ row.entity.created | date : 'MM/dd/yyyy'}}</div>",
+            "enableCellEdit": false
           },
           {
             "name": "creator",
@@ -590,7 +595,9 @@
           {
             "name": "created",
             "displayName": "cases.comp.people.addresses.table.columns.created",
-            "headerCellFilter": "translate"
+            "headerCellFilter": "translate",
+            "cellTemplate": "<div>{{ row.entity.created | date : 'MM/dd/yyyy'}}</div>",
+            "enableCellEdit": false
           },
           {
             "name": "creator",
@@ -613,20 +620,22 @@
         "paginationPageSize": 5,
         "columnDefs": [
           {
-            "name": "type",
+            "name": "aliasType",
             "displayName": "cases.comp.people.aliases.table.columns.type",
             "headerCellFilter": "translate",
             "lookup": "aliasTypes"
           },
           {
-            "name": "value",
+            "name": "aliasValue",
             "displayName": "cases.comp.people.aliases.table.columns.value",
             "headerCellFilter": "translate"
           },
           {
             "name": "created",
             "displayName": "cases.comp.people.aliases.table.columns.created",
-            "headerCellFilter": "translate"
+            "headerCellFilter": "translate",
+            "cellTemplate": "<div>{{ row.entity.created | date : 'MM/dd/yyyy'}}</div>",
+            "enableCellEdit": false
           },
           {
             "name": "creator",
