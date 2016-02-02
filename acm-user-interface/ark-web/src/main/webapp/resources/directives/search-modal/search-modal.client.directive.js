@@ -24,6 +24,8 @@
  * @param {Object} search-control - (Optional)Search dialog API for caller:
  * @param {Function} search-control.getSelectedItems returns list of selected search items
  * @param {Function} on-items-selected Callback function in response to selected items in search result.
+ * @param {Boolean} showDefaultItem  - (Optional) If equals true then performs request to get all possible items.
+ * If response contains only 1 item, then display it.
  **/
 
 
@@ -42,10 +44,12 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 config: '&',            //& : one way binding (read-only, can return key, value pair via a getter function)
                 modalInstance: '=',     //= : two way binding (read-write both, parent scope and directive's isolated scope have two way binding)
                 searchControl: '=',
-                onItemsSelected: '='
+                onItemsSelected: '=',
+                showDefaultItem: '='
             },
 
-            link: function (scope) {    //dom operations
+            link: function (scope, el, attrs) {
+                //dom operations
                 scope.header = Util.goodValue(scope.header, $translate.instant("common.directive.searchModal.header"));
                 scope.search = Util.goodValue(scope.search, $translate.instant("common.directive.searchModal.btnSearch.text"));
                 scope.ok = Util.goodValue(scope.ok, $translate.instant("common.directive.searchModal.btnOk.text"));
@@ -194,6 +198,26 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                             scope.filters = 'fq=' + scope.filter;
                         }
                     }
+                }
+
+                // Perform initial request to get 1 default item if showDefaultItem is defined
+                if (scope.showDefaultItem === true) {
+                    // Return only one item
+                    var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + '*', scope.filters, 1, 0);
+                    if (query) {
+                        SearchService.queryFilteredSearch({
+                                query: query
+                            },
+                            function (data) {
+                                // Display data only if response contains 1 dociment
+                                if (data.response.numFound == 1) {
+                                    updateFacets(data.facet_counts.facet_fields);
+                                    scope.gridOptions.data = data.response.docs;
+                                    scope.gridOptions.totalItems = data.response.numFound;
+                                }
+                            });
+                    }
+
                 }
             },
 

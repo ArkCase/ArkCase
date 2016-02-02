@@ -2,10 +2,17 @@
 
 angular.module('complaints').controller('Complaints.PeopleController', ['$scope', '$stateParams', '$q', '$translate'
     , 'StoreService', 'UtilService', 'ObjectService', 'ConfigService', 'LookupService', 'Object.LookupService'
-    , 'Complaint.InfoService', 'Object.PersonService', 'Helper.ObjectBrowserService', 'Helper.UiGridService'
+    , 'Complaint.InfoService', 'Object.PersonService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', "Authentication"
     , function ($scope, $stateParams, $q, $translate
         , Store, Util, ObjectService, ConfigService, LookupService, ObjectLookupService
-        , ComplaintInfoService, ObjectPersonService, HelperObjectBrowserService, HelperUiGridService) {
+        , ComplaintInfoService, ObjectPersonService, HelperObjectBrowserService, HelperUiGridService, Authentication) {
+
+        Authentication.queryUserInfo().then(
+            function (userInfo) {
+                $scope.userId = userInfo.userId;
+                return userInfo;
+            }
+        );
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -112,6 +119,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                     $scope.gridApi.grid.columns[0].hideColumn();
                 });
             });
+
 
             //$scope.gridOptions is defined by above setBasicOptions()
             $scope.gridOptions.expandableRowTemplate = "modules/complaints/views/components/complaint-people.sub.view.html";
@@ -292,19 +300,20 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                     + "<a ng-click='grid.appScope.expand(\"organizations\", row)' title='" + $translate.instant("complaints.comp.people.organizations.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-cubes'></i></a>"
                     + "<a ng-click='grid.appScope.expand(\"addresses\", row)' title='" + $translate.instant("complaints.comp.people.addresses.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-map-marker'></i></a>"
                     + "<a ng-click='grid.appScope.expand(\"aliases\", row)' title='" + $translate.instant("complaints.comp.people.aliases.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-users'></i></a>"
-                    + "<a ng-click='grid.appScope.expand(\"securityTags\", row)' title='" + $translate.instant("complaints.comp.people.securityTags.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-shield'></i></a>"
                 ;
             }
         };
 
         $scope.expand = function (subGrid, row) {
-            if (row.entity.currentSubGrid == subGrid) {
+            if (row.entity.acm$_currentSubGrid == subGrid) {
                 $scope.gridApi.expandable.toggleRowExpansion(row.entity);
+                $scope.currentSubGrid = row.entity.acm$_currentSubGrid;
 
             } else {
-                row.entity.currentSubGrid = subGrid;
+                row.entity.acm$_currentSubGrid = subGrid;
                 if (!row.isExpanded) {
                     $scope.gridApi.expandable.toggleRowExpansion(row.entity);
+                    $scope.currentSubGrid = row.entity.acm$_currentSubGrid;
                 }
             }
         };
@@ -443,7 +452,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             if (Util.isEmpty(rowEntity.id)) {
                 var pa = newPersonAssociation();
                 pa.parentId = $scope.complaintInfo.complaintId;
-                pa.parentType = ObjectService.ObjectTypes.CASE_FILE;
+                pa.parentType = ObjectService.ObjectTypes.COMPLAINT;
                 pa.person.className = Util.goodValue($scope.config.className); //"com.armedia.acm.plugins.person.model.Person";
                 pa.person.givenName = givenName;
                 pa.person.familyName = familyName;
@@ -493,10 +502,13 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
             if (0 <= idxPa) {
                 if (Util.goodMapValue($scope.gridOptions.data, "[" + idxPa + "].acm$_contactMethods.gridApi", false)) {
-                    var gridApi = $scope.gridOptions.data[idx].acm$_contactMethods.gridApi;
+                    var gridApi = $scope.gridOptions.data[idxPa].acm$_contactMethods.gridApi;
                     var lastPage = gridApi.pagination.getTotalPages();
                     gridApi.pagination.seek(lastPage);
-                    $scope.gridOptions.data[idx].acm$_contactMethods.gridOptions.data.push({});
+                    var contactMethod = {};
+                    contactMethod.created = Util.dateToIsoString(new Date());
+                    contactMethod.creator = $scope.userId;
+                    $scope.gridOptions.data[idxPa].acm$_contactMethods.gridOptions.data.push(contactMethod);
                 }
             }
         };
@@ -504,13 +516,18 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             var complaintInfo = Util.omitNg($scope.complaintInfo);
             ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                 function (complaintSaved) {
-                    if (Util.isEmpty(rowEntity.id)) {
-                        var personAssociationsSaved = Util.goodMapValue(complaintSaved, "personAssociations", []);
-                        var personAssociationSaved = _.find(personAssociationsSaved, {id: personAssociation.id});
-                        if (personAssociationSaved) {
-                            var contactMethodSaved = _.find(personAssociationSaved.person.contactMethods, {id: rowEntity.id});
-                            if (contactMethodSaved) {
-                                rowEntity = _.merge(rowEntity, contactMethodSaved);
+                    var personAssociationsSaved = Util.goodMapValue(complaintSaved, "personAssociations", []);
+                    var personAssociationSaved = _.find(personAssociationsSaved, {id: personAssociation.id});
+                    if (personAssociationSaved) {
+                        var contactMethodSaved = _.find(personAssociationSaved.person.contactMethods, {id: rowEntity.id});
+                        if (contactMethodSaved) {
+                            rowEntity = _.merge(rowEntity, contactMethodSaved);
+                        } else if (personAssociationSaved && personAssociationSaved.person) {
+                            if (personAssociationSaved.person.contactMethods && personAssociationSaved.person.contactMethods.length > 0) {
+                                contactMethodSaved = personAssociationSaved.person.contactMethods[personAssociationSaved.person.contactMethods.length - 1];
+                                if (contactMethodSaved) {
+                                    rowEntity = _.merge(rowEntity, contactMethodSaved);
+                                }
                             }
                         }
                     }
@@ -519,34 +536,14 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             );
         };
         $scope.deleteRowContactMethods = function (rowEntity) {
-            var idxPa = _.findIndex($scope.gridOptions.data, function (pa) {
-                return (pa.id == rowEntity.acm$_paId);
-            });
-            if (0 <= idxPa) {
-                var entityId = Util.goodMapValue(rowEntity, "id", 0);
-                var gridData = $scope.gridOptions.data[idxPa].acm$_contactMethods.gridOptions.data;
-                var idx = _.findIndex(gridData, function (obj) {
-                    return Util.compare(obj.id, entityId);
-                });
-                if (0 <= idx) {
-                    gridData.splice(idx, 1);
-                }
+            gridContactMethodHelper.deleteRow(rowEntity);
 
-                if (0 < entityId) {    //do not need to save for deleting a new row
-                    var complaintInfo = Util.omitNg($scope.complaintInfo);
-                    ComplaintInfoService.saveComplaintInfo(complaintInfo);
-                }
+            var id = Util.goodMapValue(rowEntity, "id", 0);
+            if (0 < id) {    //do not need to save for deleting a new row
+                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };
-        //$scope.deleteRowContactMethods = function (rowEntity) {
-        //    gridContactMethodHelper.deleteRow(rowEntity);
-        //
-        //    var id = Util.goodMapValue(rowEntity, "id", 0);
-        //    if (0 < id) {    //do not need to save for deleting a new row
-        //        var complaintInfo = Util.omitNg($scope.complaintInfo);
-        //        ComplaintInfoService.saveComplaintInfo(complaintInfo);
-        //    }
-        //};
         $scope.addNewOrganizations = function (rowParent) {
             var idx = _.findIndex($scope.gridOptions.data, function (obj) {
                 return (obj == rowParent.entity);
@@ -555,10 +552,37 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 var gridApi = $scope.gridOptions.data[idx].acm$_organizations.gridApi;
                 var lastPage = gridApi.pagination.getTotalPages();
                 gridApi.pagination.seek(lastPage);
-                $scope.gridOptions.data[idx].acm$_organizations.gridOptions.data.push({});
+                var organizations = {};
+                organizations.className = Util.goodValue($scope.config.organizations.className);
+                organizations.created = Util.dateToIsoString(new Date());
+                organizations.creator = $scope.userId;
+                $scope.gridOptions.data[idx].acm$_organizations.gridOptions.data.push(organizations);
             }
         };
         $scope.updateRowOrganizations = function (personAssociation, rowEntity) {
+            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            if(rowEntity.organizationType && rowEntity.organizationValue) {
+                ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
+                    function (complaintSaved) {
+                        var personAssociationsSaved = Util.goodMapValue(complaintSaved, "personAssociations", []);
+                        var personAssociationSaved = _.find(personAssociationsSaved, {id: personAssociation.id});
+                        if (personAssociationSaved) {
+                            var organizationsSaved = _.find(personAssociationSaved.person.organizations, {id: rowEntity.id});
+                            if (organizationsSaved) {
+                                rowEntity = _.merge(rowEntity, organizationsSaved);
+                            } else if (personAssociationSaved && personAssociationSaved.person) {
+                                if (personAssociationSaved.person.organizations && personAssociationSaved.person.organizations.length > 0) {
+                                    organizationsSaved = personAssociationSaved.person.organizations[personAssociationSaved.person.organizations.length - 1];
+                                    if (organizationsSaved) {
+                                        rowEntity = _.merge(rowEntity, organizationsSaved);
+                                    }
+                                }
+                            }
+                        }
+                        return complaintSaved;
+                    }
+                );
+            }
         };
         $scope.deleteRowOrganizations = function (rowEntity) {
             gridOrganizationHelper.deleteRow(rowEntity);
@@ -577,10 +601,34 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 var gridApi = $scope.gridOptions.data[idx].acm$_addresses.gridApi;
                 var lastPage = gridApi.pagination.getTotalPages();
                 gridApi.pagination.seek(lastPage);
-                $scope.gridOptions.data[idx].acm$_addresses.gridOptions.data.push({});
+                var addresses = {};
+                addresses.created = Util.dateToIsoString(new Date());
+                addresses.creator = $scope.userId;
+                $scope.gridOptions.data[idx].acm$_addresses.gridOptions.data.push(addresses);
             }
         };
         $scope.updateRowAddresses = function (personAssociation, rowEntity) {
+            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
+                function (complaintSaved) {
+                    var personAssociationsSaved = Util.goodMapValue(complaintSaved, "personAssociations", []);
+                    var personAssociationSaved = _.find(personAssociationsSaved, {id: personAssociation.id});
+                    if (personAssociationSaved) {
+                        var addressesSaved = _.find(personAssociationSaved.person.addresses, {id: rowEntity.id});
+                        if (addressesSaved) {
+                            rowEntity = _.merge(rowEntity, addressesSaved);
+                        } else if (personAssociationSaved && personAssociationSaved.person) {
+                            if (personAssociationSaved.person.addresses && personAssociationSaved.person.addresses.length > 0) {
+                                addressesSaved = personAssociationSaved.person.addresses[personAssociationSaved.person.addresses.length - 1];
+                                if (addressesSaved) {
+                                    rowEntity = _.merge(rowEntity, addressesSaved);
+                                }
+                            }
+                        }
+                    }
+                    return complaintSaved;
+                }
+            );
         };
         $scope.deleteRowAddresses = function (rowEntity) {
             gridAddressHelper.deleteRow(rowEntity);
@@ -599,10 +647,36 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 var gridApi = $scope.gridOptions.data[idx].acm$_aliases.gridApi;
                 var lastPage = gridApi.pagination.getTotalPages();
                 gridApi.pagination.seek(lastPage);
-                $scope.gridOptions.data[idx].acm$_aliases.gridOptions.data.push({});
+                var aliases = {};
+                aliases.created = Util.dateToIsoString(new Date());
+                aliases.creator = $scope.userId;
+                $scope.gridOptions.data[idx].acm$_aliases.gridOptions.data.push(aliases);
             }
         };
         $scope.updateRowAliases = function (personAssociation, rowEntity) {
+            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            if (rowEntity.aliasType && rowEntity.aliasValue) {
+                ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
+                    function (complaintSaved) {
+                        var personAssociationsSaved = Util.goodMapValue(complaintSaved, "personAssociations", []);
+                        var personAssociationSaved = _.find(personAssociationsSaved, {id: personAssociation.id});
+                        if (personAssociationSaved) {
+                            var aliasesSaved = _.find(personAssociationSaved.person.personAliases, {id: rowEntity.id});
+                            if (aliasesSaved) {
+                                rowEntity = _.merge(rowEntity, aliasesSaved);
+                            } else if (personAssociationSaved && personAssociationSaved.person) {
+                                if (personAssociationSaved.person.personAliases && personAssociationSaved.person.personAliases.length > 0) {
+                                    aliasesSaved = personAssociationSaved.person.personAliases[personAssociationSaved.person.personAliases.length - 1];
+                                    if (aliasesSaved) {
+                                        rowEntity = _.merge(rowEntity, aliasesSaved);
+                                    }
+                                }
+                            }
+                        }
+                        return complaintSaved;
+                    }
+                );
+            }
         };
         $scope.deleteRowAliases = function (rowEntity) {
             gridAliasHelper.deleteRow(rowEntity);

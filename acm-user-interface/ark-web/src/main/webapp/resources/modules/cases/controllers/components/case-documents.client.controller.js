@@ -48,5 +48,8 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.caseInfo, $scope.fileTypes);
         };
 
+        $scope.onClickRefresh = function () {
+            $scope.treeControl.refreshTree();
+        };
     }
 ]);
