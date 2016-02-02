@@ -15,7 +15,7 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
 
             for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                 if ("name" == $scope.config.columnDefs[i].name) {
-                    $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.acm$_formName}}</a>";
+                    $scope.gridOptions.columnDefs[i].cellTemplate = "<a data-ui-sref=\"time-tracking.main({id: row.entity.id})\">{{row.entity.acm$_formName}}</a>";
                 } else if ("tally" == $scope.config.columnDefs[i].name) {
                     $scope.gridOptions.columnDefs[i].field = "acm$_hours";
                 }
@@ -45,11 +45,5 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
                 }
             );
         }
-
-        $scope.onClickObjLink = function (event, rowEntity) {
-            event.preventDefault();
-            gridHelper.showObject(ObjectService.ObjectTypes.TIMESHEET, Util.goodMapValue(rowEntity, "id", 0));
-        };
-
     }
 ]);
