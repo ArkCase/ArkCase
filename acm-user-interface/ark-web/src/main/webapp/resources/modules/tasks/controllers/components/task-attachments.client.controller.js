@@ -39,7 +39,11 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
             return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.taskInfo, $scope.fileTypes);
-        }
+        };
+
+        $scope.onClickRefresh = function () {
+            $scope.treeControl.refreshTree();
+        };
 
     }
 ]);
