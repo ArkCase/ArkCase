@@ -10,6 +10,14 @@ angular.module('dashboard.my-tasks')
             $scope.$emit('req-component-config', 'myTasks');
 
             vm.config = null;
+            var userInfo = null;
+
+            var paginationOptions = {
+                pageNumber: 1,
+                pageSize: 5,
+                sortBy: 'taskId',
+                sortDir: 'desc'
+            };
 
             vm.gridOptions = {
                 enableColumnResizing: true,
@@ -28,16 +36,29 @@ angular.module('dashboard.my-tasks')
                     vm.gridOptions.enableFiltering = config.enableFiltering;
                     vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
                     vm.gridOptions.paginationPageSize = config.paginationPageSize;
+                    paginationOptions.pageSize = config.paginationPageSize;
 
-                    Authentication.queryUserInfo().then(function (userInfo) {
-                        DashboardService.queryMyTasks({userId: userInfo.userId},
-                            function (data) {
-                                vm.gridOptions.data = data;
-                            }
-                        );
+                     Authentication.queryUserInfo().then(function (responseUserInfo) {
+                        userInfo = responseUserInfo;
+                        getPage();
                         return userInfo;
                     });
                 }
+            }
+
+            function getPage() {
+                DashboardService.queryMyTasks({
+                        userId: userInfo.userId,
+                        sortBy: paginationOptions.sortBy,
+                        sortDir: paginationOptions.sortDir,
+                        startWith: (paginationOptions.pageNumber - 1) * paginationOptions.pageSize,
+                        pageSize: paginationOptions.pageSize
+                    },
+                    function (data) {
+                        vm.gridOptions.data = data;
+                        vm.gridOptions.totalItems = data.length;
+                    }
+                );
             }
         }
     ]);
