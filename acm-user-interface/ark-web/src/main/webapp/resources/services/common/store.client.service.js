@@ -333,6 +333,8 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              * @description
              * Get value of a CacheFifo
              *
+             * @returns {Object} Object stored in cache
+             *
              * Example:
              *
              * var dataCache = new CacheFifo({name: "MyData", maxSize: 3});
@@ -523,6 +525,22 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
                 }
                 thisCache.locks = [];
             }
+
+            /**
+             * @ngdoc method
+             * @name keys
+             * @methodOf StoreService.CacheFifo
+             *
+             * @description
+             * Return keys in array of CacheFifo.
+             *
+             * @returns {Array} Keys in array
+             */
+            , keys: function () {
+                var thisCache = this._getThis();
+                return thisCache.keys;
+            }
+
             , _evict: function (name, expiration) {
                 //fixme: need a timer
 

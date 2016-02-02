@@ -13,6 +13,9 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "acm_participant")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.services.participants.model.AcmParticipant")
 public class AcmParticipant implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 5046781644315879063L;
@@ -30,6 +33,9 @@ public class AcmParticipant implements Serializable, AcmEntity
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_participant_gen")
     @Column(name = "cm_participant_id")
     private Long id;
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType;
@@ -112,6 +118,14 @@ public class AcmParticipant implements Serializable, AcmEntity
     public void setObjectId(Long objectId)
     {
         this.objectId = objectId;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     public String getParticipantType()
