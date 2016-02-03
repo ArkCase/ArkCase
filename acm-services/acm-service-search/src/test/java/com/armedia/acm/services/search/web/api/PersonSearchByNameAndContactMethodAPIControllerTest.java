@@ -68,8 +68,8 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
         String solrResponse = "{ \"solrResponse\": \"this is a test response.\" }";
 
         final String encodedContactMethodJoin = URLEncoder.encode("{!join from=id to=contact_method_ss}");
-        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode("*test* *name*") + " AND " +
-                encodedContactMethodJoin + "value_parseable:" + URLEncoder.encode("*contact* *method*");
+        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode(name) + " AND " +
+                encodedContactMethodJoin + "value_parseable:" + URLEncoder.encode(contactMethod + "*");
         String sort = "last_name_lcs ASC, first_name_lcs ASC";
 
         query = query.replaceAll(" ", "+");
@@ -109,8 +109,8 @@ public class PersonSearchByNameAndContactMethodAPIControllerTest extends EasyMoc
         String contactMethod = "contact method";
 
         final String encodedContactMethodJoin = URLEncoder.encode("{!join from=id to=contact_method_ss}");
-        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode("*test* *name*") + " AND " +
-                encodedContactMethodJoin + "value_parseable:" + URLEncoder.encode("*contact* *method*");
+        String query = "object_type_s:PERSON AND name:" + URLEncoder.encode(name) + " AND " +
+                encodedContactMethodJoin + "value_parseable:" + URLEncoder.encode(contactMethod + "*");
         String sort = "last_name_lcs ASC, first_name_lcs ASC";
         query = query.replaceAll(" ", "+");
         sort = sort.replaceAll(" ", "+");
