@@ -293,11 +293,13 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
             setPersonAssociations(new ArrayList<>());
         }
 
-        Optional<PersonAssociation> found = getPersonAssociations().stream().filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
+        if(originator != null) {
 
-        if (found == null || !found.isPresent())
-        {
-            getPersonAssociations().add(originator);
+            Optional<PersonAssociation> found = getPersonAssociations().stream().filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
+
+            if (found == null || !found.isPresent()) {
+                getPersonAssociations().add(originator);
+            }
         }
 
     }
