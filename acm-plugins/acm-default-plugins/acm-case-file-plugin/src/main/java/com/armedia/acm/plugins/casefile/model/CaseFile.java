@@ -18,12 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "acm_case_file")
@@ -142,10 +137,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     @JoinColumn(name = "cm_milestone_object_id", updatable = false, insertable = false)
     private List<AcmMilestone> milestones = new ArrayList<>();
 
-    // the same person could originate many complaints, but each complaint is originated by
-    // only one person, so a ManyToOne mapping makes sense here.
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cm_originator_id")
+    @Transient
     private PersonAssociation originator;
 
     @Column(name = "cm_case_restricted_flag", nullable = false)
@@ -277,12 +269,37 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
 
     public PersonAssociation getOriginator()
     {
+        if (getPersonAssociations() == null)
+        {
+            return null;
+        }
+
+        Optional<PersonAssociation> found = getPersonAssociations().stream().filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
+
+        if (found != null && found.isPresent())
+        {
+            originator = found.get();
+        }
+
         return originator;
     }
 
     public void setOriginator(PersonAssociation originator)
     {
         this.originator = originator;
+
+        if (getPersonAssociations() == null)
+        {
+            setPersonAssociations(new ArrayList<>());
+        }
+
+        Optional<PersonAssociation> found = getPersonAssociations().stream().filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
+
+        if (found == null || !found.isPresent())
+        {
+            getPersonAssociations().add(originator);
+        }
+
     }
 
     public Long getId()

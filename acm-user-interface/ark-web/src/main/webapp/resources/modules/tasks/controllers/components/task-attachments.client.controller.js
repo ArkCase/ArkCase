@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService'
     , function ($scope, $stateParams, $modal
-        , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService) {
+        , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, DocTreeService) {
 
         ConfigService.getComponentConfig("tasks", "attachments").then(function (componentConfig) {
             $scope.config = componentConfig;
@@ -37,43 +37,13 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             });
         }
 
-        var silentReplace = function (value, replace, replacement) {
-            if (!Util.isEmpty(value) && value.replace) {
-                value = value.replace(replace, replacement);
-            }
-            return value;
-        };
         $scope.uploadForm = function (type, folderId, onCloseForm) {
-            if ($scope.taskInfo) {
-                var fileType = _.find($scope.fileTypes, {type: type});
-                if (ObjectLookupService.validatePlainForm(fileType)) {
-                    var data = "_data=(";
+            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.taskInfo, $scope.fileTypes);
+        };
 
-                    var url = fileType.url;
-                    var urlParameters = fileType.urlParameters;
-                    var parametersAsString = '';
-                    for (var i = 0; i < urlParameters.length; i++) {
-                        var key = urlParameters[i].name;
-                        var value = '';
-                        if (!Util.isEmpty(urlParameters[i].defaultValue)) {
-                            value = silentReplace(urlParameters[i].defaultValue, "'", "_0027_");
-                        } else if (!Util.isEmpty(urlParameters[i].keyValue)) {
-                            var _value = _.get($scope.taskInfo, urlParameters[i].keyValue)
-                            if (!Util.isEmpty(_value)) {
-                                value = silentReplace(_value, "'", "_0027_");
-                            }
-                        }
-                        value = encodeURIComponent(value);
-                        parametersAsString += key + ":'" + Util.goodValue(value) + "',";
-                    }
-                    parametersAsString += "folderId:'" + folderId + "',";
-                    data += parametersAsString;
-
-                    url = url.replace("_data=(", data);
-                    return url;
-                }
-            }
-        }
+        $scope.onClickRefresh = function () {
+            $scope.treeControl.refreshTree();
+        };
 
     }
 ]);

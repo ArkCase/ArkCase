@@ -28,6 +28,7 @@ angular.module('services').factory('CostTracking.ListService', ['$resource', '$t
              * @param {Number} params.start  Zero based index of result starts from
              * @param {Number} params.n max Number of list to return
              * @param {String} params.sort  Sort value. Allowed choice is based on backend specification
+             * @param {String} params.query  Search term for tree entry to match
              * @param {Function} onSuccess (Optional)Callback function of success query
              * @param {Function} onError (Optional) Callback function when fail
              *
@@ -35,10 +36,13 @@ angular.module('services').factory('CostTracking.ListService', ['$resource', '$t
              */
             listObjects: {
                 method: 'GET',
-                url: 'proxy/arkcase/api/v1/service/costsheet/user/:userId?start=:start&n=:n&s=:sort',
+                url: 'proxy/arkcase/api/v1/service/costsheet/user/:userId?start=:start&n=:n&s=:sort&searchQuery=:query',
                 cache: false,
                 isArray: false
             }
+
+            //jwu: searchQuery seems not supported by API. Put it here as placeholder for future enhancement
+
         });
 
         Service.CacheNames = {
@@ -72,20 +76,24 @@ angular.module('services').factory('CostTracking.ListService', ['$resource', '$t
          * @param {Number} start  Zero based index of result starts from
          * @param {Number} n max Number of list to return
          * @param {String} sort  Sort value. Allowed choice is based on backend specification
+         * @param {String} query  Search term for tree entry to match
          *
          *
          * @returns {Object} Promise
          */
-        Service.queryCostTrackingTreeData = function (userId, start, n, sort) {
-            var cacheCostTrackingList = new Store.CacheFifo(Service.CacheNames.COSTSHEET_LIST);
-            var cacheKey = userId + "." + start + "." + n + "." + sort;
-            var treeData = cacheCostTrackingList.get(cacheKey);
-
+        Service.queryCostTrackingTreeData = function (userId, start, n, sort, query) {
             var param = {};
-            param.userId = userId;
-            param.start = start;
-            param.n = n;
-            param.sort = sort;
+            param.userId = Util.goodValue(userId);
+            //param.dataType = "costsheet";
+            param.start = Util.goodValue(start, 0);
+            param.n = Util.goodValue(n, 32);
+            param.sort = Util.goodValue(sort);
+            //param.filters = Util.goodValue(filters);
+            param.query = Util.goodValue(query);
+
+            var cacheCostTrackingList = new Store.CacheFifo(Service.CacheNames.COSTSHEET_LIST);
+            var cacheKey = param.userId + "." + param.start + "." + param.n + "." + param.sort + "." + param.query;
+            var treeData = cacheCostTrackingList.get(cacheKey);
 
             return Util.serviceCall({
                 service: Service.listObjects
