@@ -16,7 +16,7 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
 
             for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                 if ("name" == $scope.config.columnDefs[i].name) {
-                    $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.acm$_formName}}</a>";
+                    $scope.gridOptions.columnDefs[i].cellTemplate = "<a data-ui-sref=\"cost-tracking.main({id: row.entity.id})\">{{row.entity.acm$_formName}}</a>";
                 } else if ("tally" == $scope.config.columnDefs[i].name) {
                     $scope.gridOptions.columnDefs[i].field = "acm$_costs";
                 }
@@ -30,7 +30,7 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
                 function (costsheets) {
                     promiseConfig.then(function (config) {
                         for (var i = 0; i < costsheets.length; i++) {
-                            costsheets[i].acm$_formName = $translate.instant("components.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
+                            costsheets[i].acm$_formName = $translate.instant("complaints.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
                             costsheets[i].acm$_costs = _.reduce(Util.goodArray(costsheets[i].costs), function (total, n) {
                                 return total + Util.goodValue(n.value, 0);
                             }, 0);
@@ -46,10 +46,5 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
                 }
             );
         }
-
-        $scope.onClickObjLink = function (event, rowEntity) {
-            event.preventDefault();
-            gridHelper.showObject(ObjectService.ObjectTypes.COSTSHEET, Util.goodMapValue(rowEntity, "id", 0));
-        };
     }
 ]);

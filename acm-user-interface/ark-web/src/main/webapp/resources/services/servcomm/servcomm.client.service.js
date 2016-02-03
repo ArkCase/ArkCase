@@ -63,6 +63,17 @@ angular.module('services').factory('ServCommService', ['$rootScope', '$timeout',
                 cache.remove(key);
                 return data;
             }
+
+            , setStateToGo: function (stateName) {
+                var stateNameVariable = new Store.Variable("NextStateName");
+                stateNameVariable.set(stateName);
+            }
+
+            , getStateToGo: function () {
+                var stateNameVariable = new Store.Variable("NextStateName");
+                var stateName = stateNameVariable.get();
+                return stateName;
+            }
         };
         Service.ServComm.prototype = {};
 
