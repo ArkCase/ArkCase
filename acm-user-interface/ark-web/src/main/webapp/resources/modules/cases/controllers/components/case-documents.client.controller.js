@@ -10,6 +10,11 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             return componentConfig;
         });
 
+        ConfigService.getModuleConfig("cases").then(function (config) {
+            $scope.treeConfig = config.docTree;
+            return config;
+        });
+
         ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE).then(
             function (formTypes) {
                 $scope.fileTypes = $scope.fileTypes || [];
@@ -33,6 +38,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         if (Util.goodPositive(currentObjectId, false)) {
             CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
                 $scope.caseInfo = caseInfo;
+                $scope.objectInfo = caseInfo;
                 $scope.objectId = caseInfo.id;
                 return caseInfo;
             });

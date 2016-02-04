@@ -235,6 +235,9 @@
       }
     ]
   },
+  "docTree": {
+    "emailSubject": "Task $taskId"
+  },
   "components": [
     {
       "id": "main",
