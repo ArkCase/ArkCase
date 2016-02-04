@@ -14,9 +14,10 @@ angular.module('dashboard.signature', ['adf.provider'])
             );
     })
     .controller('Dashboard.SignatureController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService', 'Task.InfoService'
-        , 'Authentication', 'Dashboard.DashboardService', 'Object.SignatureService', 'ObjectService', 'ConfigService',
+        , 'Authentication', 'Dashboard.DashboardService', 'Object.SignatureService', 'ObjectService', 'ConfigService'
+        , 'Helper.ObjectBrowserService',
         function ($scope, $translate, $stateParams, $q, Util, TaskInfoService, Authentication, DashboardService, ObjectSignatureService
-        , ObjectService, ConfigService) {
+        , ObjectService, ConfigService, HelperObjectBrowserService) {
 
             var promiseConfig;
             var promiseInfo;
@@ -34,9 +35,10 @@ angular.module('dashboard.signature', ['adf.provider'])
                 columnDefs: []
             };
 
-            if (module) {
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseInfo = module.getInfo(module.objectType, $stateParams.id);
+                promiseInfo = module.getInfo(module.objectType, currentObjectId);
 
                 $q.all([promiseConfig, promiseInfo]).then(function (data) {
                         var config = _.find(data[0].components, {id: "main"});

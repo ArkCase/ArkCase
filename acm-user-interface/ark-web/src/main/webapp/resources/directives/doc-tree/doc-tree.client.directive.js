@@ -489,25 +489,39 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     //remove tree cache for current obj
                     DocTree.cacheTree.remove(objType + "." + objId);
                     //remove individual folder cache for current obj
-                    var cacheFolderList = DocTree.cacheFolderList.cache;
-                    if (!Util.isEmpty(cacheFolderList)) {
-                        for (var cacheKey in cacheFolderList) {
-                            if (cacheFolderList.hasOwnProperty(cacheKey)) {
-                                var cacheKeySplit = cacheKey.split(".");
-                                if (Util.isArray(cacheKeySplit)) {
-                                    // cache keys have following format :
-                                    // CASE_FILE.1258.0.0.name.ASC.16
-                                    // ojType.objId.folderId.pageId.soryBy.sortDirection.maxSize
-                                    var cacheKeyObjId = cacheKeySplit[1];
-                                    if (!Util.isEmpty(cacheKeyObjId)) {
-                                        if (Util.goodValue(cacheKeyObjId) == Util.goodValue(objId)) {
-                                            DocTree.cacheFolderList.remove(cacheKey);
-                                        }
-                                    }
+                    var keys = DocTree.cacheFolderList.keys();
+                    _.each(keys, function (key) {
+                        // cache key has following format :
+                        // ojType.objId.folderId. (...)
+                        if (!Util.isEmpty(key)) {
+                            var tokens = key.split(".");
+                            if (1 < tokens.length) {
+                                var keyObjId = tokens[1];
+                                if (Util.compare(objId, keyObjId)) {
+                                    DocTree.cacheFolderList.remove(key);
                                 }
                             }
                         }
-                    }
+                    });
+                    //var cacheFolderList = DocTree.cacheFolderList.cache;
+                    //if (!Util.isEmpty(cacheFolderList)) {
+                    //    for (var cacheKey in cacheFolderList) {
+                    //        if (cacheFolderList.hasOwnProperty(cacheKey)) {
+                    //            var cacheKeySplit = cacheKey.split(".");
+                    //            if (Util.isArray(cacheKeySplit)) {
+                    //                // cache keys have following format :
+                    //                // CASE_FILE.1258.0.0.name.ASC.16
+                    //                // ojType.objId.folderId.pageId.soryBy.sortDirection.maxSize
+                    //                var cacheKeyObjId = cacheKeySplit[1];
+                    //                if (!Util.isEmpty(cacheKeyObjId)) {
+                    //                    if (Util.goodValue(cacheKeyObjId) == Util.goodValue(objId)) {
+                    //                        DocTree.cacheFolderList.remove(cacheKey);
+                    //                    }
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
                 }
                 DocTree.tree.reload(DocTree.Source.source());
             }
@@ -1953,7 +1967,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                                 folderData.modifier = Util.goodValue(copyFolderInfo.newFolder.modifier);
                                                 toFolderList.children.push(folderData);
                                                 toFolderList.totalChildren++;
-                                                DocTree.Model.cacheFolderList.put(toCacheKey, toFolderList);
+                                                DocTree.cacheFolderList.put(toCacheKey, toFolderList);
                                                 return folderData;
                                             }
                                         }

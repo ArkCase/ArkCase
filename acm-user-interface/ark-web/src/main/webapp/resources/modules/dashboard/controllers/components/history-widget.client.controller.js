@@ -61,7 +61,7 @@ angular.module('dashboard.history', ['adf.provider'])
                                 chartData.push(eventIter.count);
                             });
                             vm.showChart = chartData.length > 0;
-                            vm.data = data;
+                            vm.data = chartData;
                             vm.labels = labels;
                             vm.chartTitle = "";
                         }

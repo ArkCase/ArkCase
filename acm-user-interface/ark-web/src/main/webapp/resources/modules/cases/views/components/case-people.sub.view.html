@@ -1,4 +1,4 @@
-<div class="panel panel-success" ng-show="'contactMethods' == row.entity.currentSubGrid">
+<div class="panel panel-success" ng-show="'contactMethods' == row.entity.acm$_currentSubGrid">
     <div class="panel-heading">
         <div class="panel-title">
             <span translate>cases.comp.people.contactMethods.title</span>
@@ -9,68 +9,68 @@
     </div>
     <div class="panel-body">
         <div ui-grid="row.entity.acm$_contactMethods.gridOptions" ui-grid-resize-columns ui-grid-auto-resize
-             ui-grid-pagination ui-grid-edit class="grid" style="height:240px;"></div>
+             ui-grid-pagination ui-grid-edit class="grid" adjust-table-height="row.entity.acm$_contactMethods.gridOptions.data.length"></div>
     </div>
 
 </div>
 
-<div class="panel panel-success" ng-show="'organizations' == row.entity.currentSubGrid">
+<div class="panel panel-success" ng-show="'organizations' == row.entity.acm$_currentSubGrid">
     <div class="panel-heading">
         <div class="panel-title">
             <span translate>cases.comp.people.organizations.title</span>
             <div class="pull-right">
-                <button class="btn btn-default btn-xs" ng-click="grid.appScope.addNewOrganizations()"><i class="fa fa-lg fa-plus"></i></button>
+                <button class="btn btn-default btn-xs" ng-click="grid.appScope.addNewOrganizations(row)"><i class="fa fa-lg fa-plus"></i></button>
             </div>
         </div>
     </div>
     <div class="panel-body">
         <div ui-grid="row.entity.acm$_organizations.gridOptions" ui-grid-resize-columns ui-grid-auto-resize
-             ui-grid-pagination ui-grid-edit class="grid" style="height:250px;"></div>
+             ui-grid-pagination ui-grid-edit class="grid" adjust-table-height="row.entity.acm$_organizations.gridOptions.data.length"></div>
     </div>
 </div>
 
-<div class="panel panel-success" ng-show="'addresses' == row.entity.currentSubGrid">
+<div class="panel panel-success" ng-show="'addresses' == row.entity.acm$_currentSubGrid">
     <div class="panel-heading">
         <div class="panel-title">
             <span translate>cases.comp.people.addresses.title</span>
             <div class="pull-right">
-                <button class="btn btn-default btn-xs" ng-click="grid.appScope.addNewAddresses()"><i class="fa fa-lg fa-plus"></i></button>
+                <button class="btn btn-default btn-xs" ng-click="grid.appScope.addNewAddresses(row)"><i class="fa fa-lg fa-plus"></i></button>
             </div>
         </div>
     </div>
     <div class="panel-body">
         <div ui-grid="row.entity.acm$_addresses.gridOptions" ui-grid-resize-columns ui-grid-auto-resize
-             ui-grid-pagination ui-grid-edit class="grid" style="height:250px;"></div>
+             ui-grid-pagination ui-grid-edit class="grid" adjust-table-height="row.entity.acm$_addresses.gridOptions.data.length"></div>
     </div>
 </div>
 
-<div class="panel panel-success" ng-show="'aliases' == row.entity.currentSubGrid">
+<div class="panel panel-success" ng-show="'aliases' == row.entity.acm$_currentSubGrid">
     <div class="panel-heading">
         <div class="panel-title">
             <span translate>cases.comp.people.aliases.title</span>
             <div class="pull-right">
-                <button class="btn btn-default btn-xs" ng-click="grid.appScope.addNewAliases()"><i class="fa fa-lg fa-plus"></i></button>
+                <button class="btn btn-default btn-xs" ng-click="grid.appScope.addNewAliases(row)"><i class="fa fa-lg fa-plus"></i></button>
             </div>
         </div>
     </div>
     <div class="panel-body">
-        <div ui-grid="row.entity.acm$_aliases.gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination
-             ui-grid-edit class="grid" style="height:250px;"></div>
+        <div ui-grid="row.entity.acm$_aliases.gridOptions" ui-grid-resize-columns ui-grid-auto-resize
+             ui-grid-pagination ui-grid-edit class="grid" adjust-table-height="row.entity.acm$_aliases.gridOptions.data.length"></div>
     </div>
 </div>
 
-<div class="panel panel-success" ng-show="'securityTags' == row.entity.currentSubGrid">
+<div class="panel panel-success" ng-show="'securityTags' == row.entity.acm$_currentSubGrid">
     <div class="panel-heading">
         <div class="panel-title">
             <span translate>cases.comp.people.securityTags.title</span>
             <div class="pull-right">
-                <button class="btn btn-default btn-xs" ng-click="grid.appScope.addNewSecurityTags()"><i class="fa fa-lg fa-plus"></i></button>
+                <button class="btn btn-default btn-xs" ng-click="grid.appScope.addNewSecurityTags(row)"><i class="fa fa-lg fa-plus"></i></button>
             </div>
         </div>
     </div>
     <div class="panel-body">
         <div ui-grid="row.entity.acm$_securityTags.gridOptions" ui-grid-resize-columns ui-grid-auto-resize
-             ui-grid-pagination ui-grid-edit class="grid" style="height:250px;"></div>
+             ui-grid-pagination ui-grid-edit class="grid" adjust-table-height="row.entity.acm$_securityTags.gridOptions.data.length"></div>
     </div>
 </div>
 
