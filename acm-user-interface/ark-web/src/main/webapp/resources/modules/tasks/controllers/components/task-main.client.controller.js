@@ -7,8 +7,6 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', '$statePar
         , Store, Util, ConfigService, ObjectService, ObjectNoteService, ObjectAuditService
         , ObjectSignatureService, TaskInfoService, TaskHistoryService, dashboard, DashboardService) {
 
-        $scope.$emit('main-component-started');
-
         ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
             $scope.components = moduleConfig.components;
             $scope.config = _.find(moduleConfig.components, {id: "main"});

@@ -162,27 +162,27 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 }
                 treeInfo.key = key;
                 //Tree.refreshTree(key);
+                //Tree.tree.activateKey(key);
 
             }, setTitle: function (nodeType, nodeId, title, toolTip) {
                 console.log("tree setTitle");
             }
 
             , refreshTree: function (key) {
-                var a1 = this;
-                var a2 = Tree;
-                this.tree.reload().done(function () {
+                //this.tree.reload().done(function () {
+                this.tree.reload(Tree.getSource()).done(function () {
                     if (!Util.isEmpty(key)) {
                         var parts = key.split(Tree.Key.KEY_SEPARATOR);
                         if (parts && 1 < parts.length) {
+                            var promiseClosestParentExpanded = null;
+                            var parentNode = null;
                             var parentKey = parts[0];
                             //exclude page ID, so start from 1; expand parents only, not include self, so length-1
                             for (var i = 1; i < parts.length - 1; i++) {
                                 parentKey += Tree.Key.KEY_SEPARATOR + parts[i];
-                                var node = Tree.tree.getNodeByKey(parentKey);
-                                if (node) {
-                                    if (!node.isExpanded()) {
-                                        node.setExpanded(true);
-                                    }
+                                parentNode = Tree.tree.getNodeByKey(parentKey);
+                                if (parentNode) {
+                                    promiseClosestParentExpanded = parentNode.setExpanded(true);
                                 }
                             }
                         }
@@ -837,15 +837,8 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     }
 
                     if (isNewData && treeConfig && Util.goodMapValue(treeData, "docs", false)) {
-                        Tree.tree.reload(Tree.getSource()).done(function () {
-                            if (0 < treeData.docs.length) {
-                                var treeInfo = Tree.Info.getTreeInfo();
-                                if (!Util.isEmpty(treeInfo.key)) {
-                                    Tree.tree.activateKey(treeInfo.key);
-                                }
-                            }
-                        });
-
+                        var treeInfo = Tree.Info.getTreeInfo();
+                        Tree.refreshTree(treeInfo.key);
                     }
                 });
 
