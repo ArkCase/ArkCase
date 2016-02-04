@@ -19,6 +19,7 @@
             "enabled": "true",
             "type": "grid",
             "enableFiltering": false,
+            "typeAheadColumn":"title_parseable",
             "columnDefs": [
                 {
                     "name": "parent_id_s",
