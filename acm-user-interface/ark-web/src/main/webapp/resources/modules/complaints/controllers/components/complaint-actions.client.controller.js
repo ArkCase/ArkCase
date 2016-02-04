@@ -2,63 +2,67 @@
 
 angular.module('complaints').controller('Complaints.ActionsController', ['$scope', '$state', '$stateParams', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Complaint.LookupService'
-    , 'Object.SubscriptionService', 'Object.ModelService', 'Complaint.InfoService'
+    , 'Object.SubscriptionService', 'Object.ModelService', 'Complaint.InfoService', 'Helper.ObjectBrowserService'
     , function ($scope, $state, $stateParams, $q
         , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, ComplaintLookupService
-        , ObjectSubscriptionService, ObjectModelService, ComplaintInfoService) {
+        , ObjectSubscriptionService, ObjectModelService, ComplaintInfoService, HelperObjectBrowserService) {
 
-        ConfigService.getComponentConfig("complaints", "actions").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "complaints"
+            , componentId: "actions"
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onObjectInfoRetrieved: function (complaintInfo) {
+                onObjectInfoRetrieved(complaintInfo);
+            }
         });
+        //ConfigService.getComponentConfig("complaints", "actions").then(function (componentConfig) {
+        //    $scope.config = componentConfig;
+        //    return componentConfig;
+        //});
 
         var promiseQueryUser = Authentication.queryUserInfo();
         var promiseGetGroups = ObjectLookupService.getGroups();
 
 
-        var previousId = null;
-        $scope.$on('object-updated', function (e, data) {
-            updateData(data);
-        });
+        //var previousId = null;
+        //$scope.$on('object-updated', function (e, data) {
+        //    updateData(data);
+        //});
+        //
+        //$scope.$on('object-refreshed', function (e, data) {
+        //    var previousId = null;
+        //    updateData(data);
+        //});
 
-        $scope.$on('object-refreshed', function (e, data) {
-            var previousId = null;
-            updateData(data);
-        });
+        var onObjectInfoRetrieved = function (complaintInfo) {
+            $scope.complaintInfo = complaintInfo;
 
-        var updateData = function (data) {
-            if (!ComplaintInfoService.validateComplaintInfo(data)) {
-                return;
-            }
-            $scope.complaintInfo = data;
-
-            var group = ObjectModelService.getGroup(data);
-            var assignee = ObjectModelService.getAssignee(data);
-            if (previousId != $stateParams.id) {
-                var promiseGetApprovers = ComplaintLookupService.getApprovers(group, assignee);
-                $q.all([promiseQueryUser, promiseGetGroups, promiseGetApprovers]).then(function (data) {
-                    var userInfo = data[0];
-                    var groups = data[1];
-                    var assignees = data[2];
-                    $scope.restricted = ObjectModelService.checkRestriction(userInfo.userId, assignee, group, assignees, groups);
-                });
+            var group = ObjectModelService.getGroup(complaintInfo);
+            var assignee = ObjectModelService.getAssignee(complaintInfo);
+            var promiseGetApprovers = ComplaintLookupService.getApprovers(group, assignee);
+            $q.all([promiseQueryUser, promiseGetGroups, promiseGetApprovers]).then(function (data) {
+                var userInfo = data[0];
+                var groups = data[1];
+                var assignees = data[2];
+                $scope.restricted = ObjectModelService.checkRestriction(userInfo.userId, assignee, group, assignees, groups);
+            });
 
 
-                promiseQueryUser.then(function (userInfo) {
-                    $scope.userId = userInfo.userId;
-                    ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.COMPLAINT, $scope.complaintInfo.complaintId).then(function (subscriptions) {
-                        var found = _.find(subscriptions, {
-                            userId: userInfo.userId,
-                            subscriptionObjectType: ObjectService.ObjectTypes.COMPLAINT,
-                            objectId: $scope.complaintInfo.complaintId
-                        });
-                        $scope.showBtnSubscribe = Util.isEmpty(found);
-                        $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
+            promiseQueryUser.then(function (userInfo) {
+                $scope.userId = userInfo.userId;
+                ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.COMPLAINT, $scope.complaintInfo.complaintId).then(function (subscriptions) {
+                    var found = _.find(subscriptions, {
+                        userId: userInfo.userId,
+                        subscriptionObjectType: ObjectService.ObjectTypes.COMPLAINT,
+                        objectId: $scope.complaintInfo.complaintId
                     });
+                    $scope.showBtnSubscribe = Util.isEmpty(found);
+                    $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 });
-
-                previousId = $stateParams.id;
-            }
+            });
         };
 
         $scope.restricted = false;
@@ -75,6 +79,11 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
             $state.go("frevvo", {
                 name: "new-complaint"
             });
+
+
+            var targetType = ObjectService.ObjectTypes.COMPLAINT;
+            var targetId = Util.goodMapValue(rowEntity, "object_id_s");
+            gridHelper.showObject(targetType, targetId);
         };
 
         $scope.close = function (complaintInfo) {

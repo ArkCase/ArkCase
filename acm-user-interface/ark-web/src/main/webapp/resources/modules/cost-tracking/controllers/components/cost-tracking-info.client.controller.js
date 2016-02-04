@@ -1,51 +1,46 @@
 'use strict';
 
-angular.module('cost-tracking').controller('CostTracking.InfoController', ['$scope', 'UtilService'
-    , 'ConfigService', 'Object.InfoService', 'ObjectService', 'CostTracking.InfoService', 'Helper.ObjectBrowserService'
-    , function ($scope, Util
-        , ConfigService, ObjectInfoService, ObjectService, CostTrackingInfoService, HelperObjectBrowserService) {
+angular.module('cost-tracking').controller('CostTracking.InfoController', ['$scope', '$stateParams', 'UtilService'
+    , 'ConfigService', 'ObjectService', 'Case.InfoService', 'Complaint.InfoService', 'CostTracking.InfoService'
+    , 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, Util
+        , ConfigService, ObjectService, CaseInfoService, ComplaintInfoService, CostTrackingInfoService
+        , HelperObjectBrowserService) {
 
-        ConfigService.getComponentConfig("cost-tracking", "info").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cost-tracking"
+            , componentId: "info"
+            , retrieveObjectInfo: CostTrackingInfoService.getCostsheetInfo
+            , validateObjectInfo: CostTrackingInfoService.validateCostsheet
+            , onObjectInfoRetrieved: function (costsheetInfo) {
+                onObjectInfoRetrieved(costsheetInfo);
+            }
         });
 
-        $scope.$on('object-updated', function (e, data) {
-            updateData(data);
-        });
-
-        $scope.$on('object-refreshed', function (e, costsheetInfo) {
-            updateData(costsheetInfo);
-        });
 
         $scope.parentInfo = {};
-        var updateData = function (data) {
-            $scope.costsheetInfo = data;
+        var onObjectInfoRetrieved = function (costsheetInfo) {
+            $scope.costsheetInfo = costsheetInfo;
 
             if ($scope.costsheetInfo.parentType == ObjectService.ObjectTypes.CASE_FILE) {
-                ObjectInfoService.get({
-                        type: "casefile",
-                        id: $scope.costsheetInfo.parentId
-                    },
-                    function (data) {
-                        $scope.parentInfo.title = data.title;
-                        $scope.parentInfo.incidentDate = moment(data.created).format($scope.config.parentDateFormat);
-                        $scope.parentInfo.priortiy = data.priority;
-                        $scope.parentInfo.type = data.caseType;
-                        $scope.parentInfo.status = data.status;
-                    });
+                CaseInfoService.getCaseInfo($scope.costsheetInfo.parentId).then(function (caseInfo) {
+                    $scope.parentInfo.title = caseInfo.title;
+                    $scope.parentInfo.incidentDate = moment(caseInfo.created).format($scope.config.parentDateFormat);
+                    $scope.parentInfo.priortiy = caseInfo.priority;
+                    $scope.parentInfo.type = caseInfo.caseType;
+                    $scope.parentInfo.status = caseInfo.status;
+                });
+
             } else if ($scope.costsheetInfo.parentType == ObjectService.ObjectTypes.COMPLAINT) {
-                ObjectInfoService.get({
-                        type: "complaint",
-                        id: $scope.costsheetInfo.parentId
-                    },
-                    function (data) {
-                        $scope.parentInfo.title = data.complaintTitle;
-                        $scope.parentInfo.incidentDate = moment(data.incidentDate).format($scope.config.parentDateFormat);
-                        $scope.parentInfo.priortiy = data.priority;
-                        $scope.parentInfo.type = data.complaintType;
-                        $scope.parentInfo.status = data.status;
-                    });
+                ComplaintInfoService.getComplaintInfo($scope.costsheetInfo.parentId).then(function (complaintInfo) {
+                    $scope.parentInfo.title = complaintInfo.complaintTitle;
+                    $scope.parentInfo.incidentDate = moment(complaintInfo.incidentDate).format($scope.config.parentDateFormat);
+                    $scope.parentInfo.priortiy = complaintInfo.priority;
+                    $scope.parentInfo.type = complaintInfo.complaintType;
+                    $scope.parentInfo.status = complaintInfo.status;
+                });
             }
         };
 

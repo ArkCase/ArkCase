@@ -1,16 +1,32 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.NoteService', 'Authentication'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.NoteService', 'Authentication', 'Task.InfoService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
     , function ($scope, $stateParams, $q
-        , Util, ConfigService, ObjectService, ObjectNoteService, Authentication
+        , Util, ConfigService, ObjectService, ObjectNoteService, Authentication, TaskInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
+
+        new HelperObjectBrowserService.Component({
+            moduleId: "tasks"
+            , componentId: "rejcomments"
+            , scope: $scope
+            , stateParams: $stateParams
+            , retrieveObjectInfo: TaskInfoService.getTaskInfo
+            , validateObjectInfo: TaskInfoService.validateTaskInfo
+            , onObjectInfoRetrieved: function (taskInfo) {
+                $scope.taskInfo = taskInfo;
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        ConfigService.getComponentConfig("tasks", "rejcomments").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
@@ -19,8 +35,7 @@ angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', 
             gridHelper.setUserNameFilter(promiseUsers);
 
             $scope.retrieveGridData();
-            return config;
-        });
+        };
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -30,9 +45,8 @@ angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', 
         );
 
         $scope.retrieveGridData = function () {
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (Util.goodPositive(currentObjectId, false)) {
-                var promiseQueryNotes = ObjectNoteService.queryRejectComments(ObjectService.ObjectTypes.TASK, currentObjectId);
+            if (Util.goodPositive($scope.currentObjectId, false)) {
+                var promiseQueryNotes = ObjectNoteService.queryRejectComments(ObjectService.ObjectTypes.TASK, $scope.currentObjectId);
                 $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions.data = notes;

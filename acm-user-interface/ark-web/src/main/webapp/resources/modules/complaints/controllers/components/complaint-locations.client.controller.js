@@ -6,6 +6,21 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
     , function ($scope, $stateParams, $q, Util, HelperUiGridService, ConfigService, ComplaintInfoService
         , ObjectLookupService, HelperObjectBrowserService) {
 
+        new HelperObjectBrowserService.Component({
+            moduleId: "complaints"
+            , componentId: "locations"
+            , scope: $scope
+            , stateParams: $stateParams
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onObjectInfoRetrieved: function (complaintInfo) {
+                onObjectInfoRetrieved(complaintInfo);
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
+
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
         var promiseAddressTypes = ObjectLookupService.getAddressTypes().then(
@@ -15,7 +30,8 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
             }
         );
 
-        var promiseConfig = ConfigService.getComponentConfig("complaints", "locations").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
@@ -35,18 +51,13 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
                     }
                 }
             });
-            return config;
-        });
+        };
 
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
-                $scope.complaintInfo = complaintInfo;
-                $scope.gridOptions.data = [Util.goodValue($scope.complaintInfo.location, {})];
-                //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
-                return complaintInfo;
-            });
-        }
+        var onObjectInfoRetrieved = function (complaintInfo) {
+            $scope.complaintInfo = complaintInfo;
+            $scope.gridOptions.data = [Util.goodValue($scope.complaintInfo.location, {})];
+            //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
+        };
 
 
         $scope.addNew = function () {

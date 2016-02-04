@@ -5,10 +5,18 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
     , function ($scope, $stateParams, $modal
         , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, DocTreeService) {
 
-        ConfigService.getComponentConfig("tasks", "attachments").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
+        new HelperObjectBrowserService.Component({
+            moduleId: "tasks"
+            , componentId: "attachments"
+            , scope: $scope
+            , stateParams: $stateParams
+            , retrieveObjectInfo: TaskInfoService.getTaskInfo
+            , validateObjectInfo: TaskInfoService.validateTaskInfo
+            , onObjectInfoRetrieved: function (taskInfo) {
+                $scope.taskInfo = taskInfo;
+            }
         });
+
 
         ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.TASK).then(
             function (formTypes) {
