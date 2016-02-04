@@ -30,8 +30,8 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
             , resetTreeData: function () {
                 return ComplaintListService.resetComplaintsTreeData();
             }
-            , getTreeData: function (start, n, sort, filters) {
-                return ComplaintListService.queryComplaintsTreeData(start, n, sort, filters);
+            , getTreeData: function (start, n, sort, filters, query) {
+                return ComplaintListService.queryComplaintsTreeData(start, n, sort, filters, query);
             }
             , getNodeData: function (complaintId) {
                 return ComplaintInfoService.getComplaintInfo(complaintId);

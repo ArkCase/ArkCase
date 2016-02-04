@@ -17,9 +17,9 @@ angular.module('dashboard.calendar', ['adf.provider'])
             });
     })
     .controller('Dashboard.CalendarController', ['$scope', 'config', '$stateParams', '$translate', 'Dashboard.DashboardService'
-        , 'Helper.ObjectBrowserService', 'UtilService', 'Object.CalendarService',
+        , 'Helper.ObjectBrowserService', 'UtilService', 'Object.CalendarService', 'ObjectService',
         function ($scope, config, $stateParams, $translate, DashboardService, CaseInfoService, ComplaintInfoService
-            , ObjectService, HelperObjectBrowserService, Util, CalendarService) {
+            , HelperObjectBrowserService, Util, CalendarService, ObjectService) {
 
             var vm = this;
 

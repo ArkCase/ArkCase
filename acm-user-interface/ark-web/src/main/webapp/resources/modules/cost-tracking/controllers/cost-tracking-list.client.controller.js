@@ -30,12 +30,12 @@ angular.module('cost-tracking').controller('CostTrackingListController', ['$scop
             , resetTreeData: function () {
                 return CostTrackingListService.resetCostTrackingTreeData();
             }
-            , getTreeData: function (start, n, sort, filters) {
+            , getTreeData: function (start, n, sort, filters, query) {
                 var dfd = $q.defer();
                 Authentication.queryUserInfo().then(
                     function (userInfo) {
                         var userId = userInfo.userId;
-                        CostTrackingListService.queryCostTrackingTreeData(userId, start, n, sort, filters).then(
+                        CostTrackingListService.queryCostTrackingTreeData(userId, start, n, sort, filters, query).then(
                             function (treeData) {
                                 dfd.resolve(treeData);
                                 return treeData;

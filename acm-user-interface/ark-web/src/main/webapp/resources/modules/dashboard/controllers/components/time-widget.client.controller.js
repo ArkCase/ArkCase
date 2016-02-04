@@ -21,30 +21,32 @@ angular.module('dashboard.time', ['adf.provider'])
             var vm = this;
 
             var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            ObjectTimeService.queryTimesheets($stateParams.type, currentObjectId).then(
-                function (timesheets) {
-                    for (var i = 0; i < timesheets.length; i++) {
-                        timesheets[i].acm$_formName = $translate.instant("cases.comp.time.formNamePrefix")
-                            + " " + Util.goodValue(timesheets[i].startDate) + " - " + Util.goodValue(timesheets[i].endDate);
-                        timesheets[i].acm$_hours = _.reduce(Util.goodArray(timesheets[i].times), function (total, n) {
-                            return total + Util.goodValue(n.value, 0);
-                        }, 0);
+            if(Util.goodPositive(currentObjectId, false)) {
+                ObjectTimeService.queryTimesheets($stateParams.type, currentObjectId).then(
+                    function (timesheets) {
+                        for (var i = 0; i < timesheets.length; i++) {
+                            timesheets[i].acm$_formName = $translate.instant("cases.comp.time.formNamePrefix")
+                                + " " + Util.goodValue(timesheets[i].startDate) + " - " + Util.goodValue(timesheets[i].endDate);
+                            timesheets[i].acm$_hours = _.reduce(Util.goodArray(timesheets[i].times), function (total, n) {
+                                return total + Util.goodValue(n.value, 0);
+                            }, 0);
+                        }
+
+                        var data = {};
+                        var chartData = [];
+                        var labels = [];
+
+                        _.forEach(timesheets, function (timeIter) {
+                            labels.push(timeIter.user.fullName);
+                            chartData.push(timeIter.acm$_hours);
+                        });
+
+                        vm.showChart = chartData.length > 0;
+                        vm.data = [chartData];
+                        vm.labels = labels;
                     }
-
-                    var data = {};
-                    var chartData = [];
-                    var labels = [];
-
-                    _.forEach(timesheets, function (timeIter) {
-                        labels.push(timeIter.user.fullName);
-                        chartData.push(timeIter.acm$_hours);
-                    });
-
-                    vm.showChart = chartData.length > 0;
-                    vm.data = [chartData];
-                    vm.labels = labels;
-                }
-            );
+                );
+            }
         }
 
     ]);

@@ -20,7 +20,7 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
 
         function toggleDefaultView() {
             var collapsed = ($scope.defaultViewExpand === 'true');
-            DashboardService.getConfig({moduleName: $scope.moduleName}, function(config) {
+            DashboardService.getConfig({moduleName: $scope.moduleName}, function (config) {
                 DashboardService.saveConfig({
                     dashboardConfig: config.dashboardConfig,
                     module: $scope.moduleName,
@@ -28,6 +28,7 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
                 });
             });
         }
+
         /**
          * Toggle widget panel on header click
          * @param widget
@@ -44,19 +45,20 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
 
         function removeNonObjectWidgets(arrayOfWidgets) {
             var retval = arrayOfWidgets;
-            _.remove(retval, function(widgetName) {
-                if(!_.includes($scope.objectWidgets, widgetName)) {
+            _.remove(retval, function (widgetName) {
+                if (!_.includes($scope.objectWidgets, widgetName)) {
                     return true;
                 }
             });
             return retval;
         }
+
         function filterObjectWidgetsByModule(preferenceConfig, widgets) {
             var retval = [];
             var allowedWidgets = (_.find(preferenceConfig.moduleWidgetPreferences, {name: $scope.moduleName})).allowedWidgets;
-            _.forEach(widgets, function(widget) {
-                if(widget.commonName) {
-                    if(_.includes(allowedWidgets, widget.commonName)){
+            _.forEach(widgets, function (widget) {
+                if (widget.commonName) {
+                    if (_.includes(allowedWidgets, widget.commonName)) {
                         retval.push(widget);
                     }
                 }
@@ -66,34 +68,43 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
 
         function enableWidget($event, widget, enable) {
             PreferenceService.getPreferredWidgets({moduleName: $scope.moduleName}, function (preferredWidgets) {
-                if(enable) {
-                    if(!_.includes(preferredWidgets.preferredWidgets, widget.commonName)) {
+                if (enable) {
+                    if (!_.includes(preferredWidgets.preferredWidgets, widget.commonName)) {
                         preferredWidgets.preferredWidgets.push(widget.commonName);
                     }
                 } else {
-                    _.remove(preferredWidgets.preferredWidgets, function(prefWidget) {
+                    _.remove(preferredWidgets.preferredWidgets, function (prefWidget) {
                         return prefWidget == widget.commonName;
                     });
                 }
 
                 var enabledWidgets = preferredWidgets.preferredWidgets;
                 enabledWidgets = removeNonObjectWidgets(enabledWidgets);
-                PreferenceService.setPreferredWidgets({moduleName: $scope.moduleName, preferredWidgets: enabledWidgets});
+                PreferenceService.setPreferredWidgets({
+                    moduleName: $scope.moduleName,
+                    preferredWidgets: enabledWidgets
+                });
                 widget.enabled = enable;
 
                 //set appropriate dashboardConfig to make note of appropriate widget
                 DashboardService.getConfig({moduleName: $scope.moduleName}, function (config) {
                     var model = angular.fromJson(config.dashboardConfig);
                     model.rows[0].columns[0].widgets = [];
-                    _.forEach(enabledWidgets, function(widgetName) {
-                        var widgetToInsert = {};
-                        var widgetInfo = _.find($scope.preferenceDashboardWidgetsCopy, {commonName: widgetName});
-                        widgetToInsert.type = widgetInfo.commonName;
-                        widgetToInsert.config = {};
-                        widgetToInsert.title = widgetInfo.title;
-                        widgetToInsert.titleTemplateUrl = "../src/templates/widget-title.html";
-                        model.rows[0].columns[0].widgets.push(widgetToInsert);
+                    var widgetsToInsert = [];
+                    _.forEach(enabledWidgets, function (widgetName) {
+                        var widgetToInsert = createWidgetStructure(widgetName);
+                        widgetsToInsert.push(widgetToInsert);
                     });
+
+                    var orderedWidgetList = (_.find($scope.preferenceConfig.moduleWidgetPreferences, {name: $scope.moduleName})).allowedWidgets;
+                    _.forEach(orderedWidgetList, function (widget) {
+                        var found = _.find(widgetsToInsert, {type: widget});
+                        if (found) {
+                            model.rows[0].columns[0].widgets.push(found);
+                        }
+                    });
+
+
                     DashboardService.saveConfig({
                         dashboardConfig: angular.toJson(model),
                         module: $scope.moduleName
@@ -102,10 +113,21 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
             });
         }
 
+        function createWidgetStructure(widgetName) {
+            var widgetToInsert = {};
+            var widgetInfo = _.find($scope.preferenceDashboardWidgetsCopy, {commonName: widgetName});
+            widgetToInsert.type = widgetInfo.commonName;
+            widgetToInsert.config = {};
+            widgetToInsert.title = widgetInfo.title;
+            widgetToInsert.titleTemplateUrl = "../src/templates/widget-title.html";
+            return widgetToInsert;
+        }
+
         function showWidgets(e, widgets, moduleDashboardConfig, objectWidgets, preferenceConfig) {
             $scope.objectWidgets = objectWidgets;
             $scope.moduleName = moduleDashboardConfig.module;
             $scope.defaultViewExpand = (moduleDashboardConfig.collapsed).toString();
+            $scope.preferenceConfig = preferenceConfig;
             widgets = filterObjectWidgetsByModule(preferenceConfig, widgets);
 
             PreferenceService.getPreferredWidgets({moduleName: $scope.moduleName}, function (preferredWidgets) {
@@ -115,7 +137,7 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
                     widget.enabled = _.includes(preferredWidgets.preferredWidgets, widget.commonName);
                 });
                 $scope.widgets = widgets;
-            }, function(error) {
+            }, function (error) {
 
             });
 

@@ -14,8 +14,9 @@ angular.module('dashboard.locations', ['adf.provider'])
             );
     })
     .controller('Dashboard.LocationsController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
-        , 'Complaint.InfoService', 'Authentication', 'Dashboard.DashboardService', 'ConfigService',
-        function ($scope, $translate, $stateParams, $q, Util, ComplaintInfoService, Authentication, DashboardService, ConfigService) {
+        , 'Complaint.InfoService', 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'Helper.ObjectBrowserService',
+        function ($scope, $translate, $stateParams, $q, Util, ComplaintInfoService, Authentication, DashboardService, ConfigService
+        , HelperObjectBrowserService) {
 
             var promiseConfig;
             var promiseInfo;
@@ -32,9 +33,10 @@ angular.module('dashboard.locations', ['adf.provider'])
                 columnDefs: []
             };
 
-            if (module) {
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseInfo = module.getInfo($stateParams.id);
+                promiseInfo = module.getInfo(currentObjectId);
 
                 $q.all([promiseConfig, promiseInfo]).then(function (data) {
                         var config = _.find(data[0].components, {id: "main"});
@@ -46,10 +48,14 @@ angular.module('dashboard.locations', ['adf.provider'])
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
                         $scope.gridOptions.data = [info];
-
-                        var fullAddress = createFullAddress(info.location);
-                        $scope.gridOptions.data[0].location.fullAddress = fullAddress ? fullAddress : "Error creating full address";
-                        $scope.gridOptions.totalItems = 1;
+                        if($scope.gridOptions.data[0].location) {
+                            var fullAddress = createFullAddress(info.location);
+                            $scope.gridOptions.data[0].location.fullAddress = fullAddress ? fullAddress : "Error creating full address";
+                            $scope.gridOptions.totalItems = 1;
+                        } else {
+                            //No location data to show
+                            $scope.gridOptions.totalItems = 0;
+                        }
                     },
                     function (err) {
 
