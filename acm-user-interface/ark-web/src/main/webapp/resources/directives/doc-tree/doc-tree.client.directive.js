@@ -3346,7 +3346,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             }
             , _makeEmailDataForEmailWithAttachments: function (emailAddresses, nodes) {
                 var emailData = {};
-                emailData.subject = $translate.instant("common.directive.docTree.email.subjectForAttachment");
+                var subject = DocTree.treeConfig.emailSubject;
+                var tokens = subject.split("$");
+                var objectType = tokens[0];
+                var objectNumber = DocTree.objectInfo[tokens[1]];
+                emailData.subject = objectType + objectNumber;
                 emailData.body = $translate.instant("common.directive.docTree.email.bodyForAttachment");
                 emailData.header = $translate.instant("common.directive.docTree.email.headerForAttachment");
                 emailData.footer = $translate.instant("common.directive.docTree.email.footerForAttachment");
@@ -4013,7 +4017,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             //+ '</table>'
             , templateUrl: "directives/doc-tree/doc-tree.client.view.html"
             , scope: {
-                treeControl: '='
+                treeConfig: '='
+                , objectInfo: '='
+                , treeControl: '='
                 , objectType: '='
                 , objectId: '='
                 , fileTypes: '='
@@ -4026,6 +4032,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.jqTree = $(element).find("table");
                 DocTree.setObjType(scope.objectType);
                 DocTree.setObjId(scope.objectId);
+                DocTree.treeConfig = null;
+                DocTree.objectInfo = null;
                 DocTree.doUploadForm = (scope.uploadForm) ? scope.uploadForm()
                     : (function () {
                 }); //if not defined, do nothing
@@ -4035,6 +4043,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     , getSelectedNodes: DocTree.getSelectedNodes
                 };
 
+                scope.$watchGroup(['treeConfig', 'objectInfo'], function (newValues, oldValues, scope) {
+                    var treeConfig = newValues[0];
+                    var objectInfo = newValues[1];
+                    DocTree.treeConfig = treeConfig;
+                    DocTree.objectInfo = objectInfo;
+                });
 
                 DocTree.create();
                 DocTree.makeDownloadDocForm(DocTree.jqTree);

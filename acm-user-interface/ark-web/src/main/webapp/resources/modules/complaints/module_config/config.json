@@ -218,6 +218,9 @@
       }
     ]
   },
+  "docTree": {
+    "emailSubject": "Complaint $complaintNumber"
+  },
   "components": [
     {
       "id": "main",

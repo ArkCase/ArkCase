@@ -12,6 +12,10 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             return componentConfig;
         });
 
+        ConfigService.getModuleConfig("complaints").then(function (config) {
+            $scope.treeConfig = config.docTree;
+            return config;
+        });
 
         ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.COMPLAINT).then(
             function (formTypes) {
@@ -36,6 +40,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         if (Util.goodPositive(currentObjectId, false)) {
             ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
                 $scope.complaintInfo = complaintInfo;
+                $scope.objectInfo = complaintInfo;
                 $scope.objectId = complaintInfo.complaintId;
                 return complaintInfo;
             });

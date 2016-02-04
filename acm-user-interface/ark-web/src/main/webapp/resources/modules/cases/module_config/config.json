@@ -201,6 +201,9 @@
       }
     ]
   },
+  "docTree": {
+    "emailSubject": "Case $caseNumber"
+  },
   "components": [
     {
       "id": "main",
