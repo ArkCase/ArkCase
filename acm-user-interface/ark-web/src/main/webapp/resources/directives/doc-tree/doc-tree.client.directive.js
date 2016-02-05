@@ -3346,7 +3346,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             }
             , _makeEmailDataForEmailWithAttachments: function (emailAddresses, nodes) {
                 var emailData = {};
-                emailData.subject = $translate.instant("common.directive.docTree.email.subjectForAttachment");
+                var subject = Util.goodMapValue(DocTree, "treeConfig.emailSubject");
+                var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.subjectRegex"));
+                var match = subject.match(regex);
+                if(match && match[Util.goodMapValue(DocTree, "treeConfig.objectTypeRegexGroup")] && match[Util.goodMapValue(DocTree, "treeConfig.objectNumberRegexGroup")]) {
+                    var objectType = match[DocTree.treeConfig.objectTypeRegexGroup];
+                    var objectNumber = match[DocTree.treeConfig.objectNumberRegexGroup];
+                    emailData.subject = objectType + DocTree.objectInfo[objectNumber];
+                }
                 emailData.body = $translate.instant("common.directive.docTree.email.bodyForAttachment");
                 emailData.header = $translate.instant("common.directive.docTree.email.headerForAttachment");
                 emailData.footer = $translate.instant("common.directive.docTree.email.footerForAttachment");
@@ -4013,7 +4020,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             //+ '</table>'
             , templateUrl: "directives/doc-tree/doc-tree.client.view.html"
             , scope: {
-                treeControl: '='
+                treeConfig: '='
+                , objectInfo: '='
+                , treeControl: '='
                 , objectType: '='
                 , objectId: '='
                 , fileTypes: '='
@@ -4026,6 +4035,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.jqTree = $(element).find("table");
                 DocTree.setObjType(scope.objectType);
                 DocTree.setObjId(scope.objectId);
+                DocTree.treeConfig = null;
+                DocTree.objectInfo = null;
                 DocTree.doUploadForm = (scope.uploadForm) ? scope.uploadForm()
                     : (function () {
                 }); //if not defined, do nothing
@@ -4035,6 +4046,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     , getSelectedNodes: DocTree.getSelectedNodes
                 };
 
+                scope.$watchGroup(['treeConfig', 'objectInfo'], function (newValues, oldValues, scope) {
+                    var treeConfig = newValues[0];
+                    var objectInfo = newValues[1];
+                    DocTree.treeConfig = treeConfig;
+                    DocTree.objectInfo = objectInfo;
+                });
 
                 DocTree.create();
                 DocTree.makeDownloadDocForm(DocTree.jqTree);

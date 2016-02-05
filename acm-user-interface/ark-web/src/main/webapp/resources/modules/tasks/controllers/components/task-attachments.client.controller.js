@@ -18,6 +18,11 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         });
 
 
+        ConfigService.getModuleConfig("tasks").then(function (config) {
+            $scope.treeConfig = config.docTree;
+            return config;
+        });
+
         ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.TASK).then(
             function (formTypes) {
                 $scope.fileTypes = $scope.fileTypes || [];
@@ -40,6 +45,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         if (Util.goodPositive(currentObjectId, false)) {
             TaskInfoService.getTaskInfo(currentObjectId).then(function (taskInfo) {
                 $scope.taskInfo = taskInfo;
+                $scope.objectInfo = taskInfo;
                 $scope.objectId = taskInfo.taskId;
                 return taskInfo;
             });
