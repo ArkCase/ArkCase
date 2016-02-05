@@ -47,7 +47,7 @@ public class PersonSearchByNameAndContactMethodAPIController
         final String encodedContactMethodJoin = URLEncoder.encode("{!join from=id to=contact_method_ss}", "UTF-8");
 
         String query = "object_type_s:PERSON AND name:" + URLEncoder.encode(personName, "UTF-8") + " AND " +
-                encodedContactMethodJoin + "value_parseable:" + URLEncoder.encode(contactMethod, "UTF-8");
+                encodedContactMethodJoin + "value_parseable:" + URLEncoder.encode(processSearchArgument(contactMethod), "UTF-8");
         String sort = "last_name_lcs ASC, first_name_lcs ASC";
 
         query = query.replaceAll(" ", "+");
@@ -60,6 +60,17 @@ public class PersonSearchByNameAndContactMethodAPIController
 
         return results;
 
+    }
+
+    private String processSearchArgument(String searchArgument)
+    {
+        if (!searchArgument.isEmpty())
+        {
+            return searchArgument + "*";
+        } else
+        {
+            return searchArgument;
+        }
     }
 
     public ExecuteSolrQuery getExecuteSolrQuery()
