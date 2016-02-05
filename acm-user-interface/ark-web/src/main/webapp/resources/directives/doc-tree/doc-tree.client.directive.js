@@ -67,9 +67,9 @@
  </example>
  */
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', 'StoreService', 'UtilService'
-    , 'Util.DateService', 'LookupService', 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService'
+    , 'Util.DateService', 'LookupService', 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', '$filter'
     , function ($q, $translate, $modal, Store, Util
-        , UtilDateService, LookupService, Ecm, EcmEmailService, EcmRecordService) {
+        , UtilDateService, LookupService, Ecm, EcmEmailService, EcmRecordService, $filter) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
         var promiseGetUserFullName = LookupService.getUserFullNames();
@@ -139,7 +139,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         if (DocTree.isFolderNode(node)) {
                             ;
                         } else if (DocTree.isFileNode(node)) {
-                            $tdList.eq(3).text(DocTree.getDocumentTypeDisplayLabel(node.data.type)); // document type is mapped (afdp-1249)
+                            var filter = $filter('capitalizeFirst');
+                            var typeColumn = (DocTree.getDocumentTypeDisplayLabel(node.data.type));
+                            var filteredType = filter(typeColumn);
+
+                            $tdList.eq(3).text(filteredType); // document type is mapped (afdp-1249)
 
                             var versionDate = UtilDateService.getDate(node.data.created);
                             var versionUser = Util.goodValue(node.data.creator);
