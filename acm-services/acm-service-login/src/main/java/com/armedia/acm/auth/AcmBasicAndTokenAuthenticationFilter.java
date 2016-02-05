@@ -12,10 +12,11 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.json.JSONArray;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
@@ -34,21 +35,21 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Lookup cached authentications for token requests (token requests are requests that include an acm_ticket in the
  * query string), and setup the user session for both token requests and basic authentication requests.
- *
+ * <p>
  * These two functions must be in the same class since both tasks must be done in the Spring Security basic
  * authentication filter, and Spring Security allows only one filter in the Basic Authentication filter position.
- *
+ * <p>
  * If token request handling was done in some other filter position (e.g. as the pre-auth filter), then Spring
  * Security always causes an HTTP redirect to be sent to the client, so the client has to issue another request
  * (being sure to include the session cookie) that goes through another authentication chain.  But by placing the token
  * handling in the basic authentication position, there is no redirect and the requested URL is activated right away.
- *
  */
 public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFilter
 {
@@ -74,7 +75,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     {
         super.onSuccessfulAuthentication(request, response, authResult);
 
-        if  ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
             log.debug(authResult.getName() + " has logged in via basic authentication.");
         }
@@ -86,19 +87,26 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
 
     }
 
-    public void validateEmailTicketAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException, MuleException{
+    public void validateEmailTicketAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException, MuleException
+    {
         String emailToken = ServletRequestUtils.getStringParameter(request, "acm_email_ticket");
         String fileId = ServletRequestUtils.getStringParameter(request, "ecmFileId");
-        if( emailToken != null){
+        if (emailToken != null)
+        {
             List<AuthenticationToken> authenticationTokens = getAuthenticationTokenDao().findAuthenticationTokenByKey(emailToken);
-            if(authenticationTokens != null){
-                for(AuthenticationToken authenticationToken : authenticationTokens){
-                    if((AuthenticationTokenConstants.ACTIVE).equals(authenticationToken.getStatus())){
-                        if(emailToken.equals(authenticationToken.getKey())
-                                && fileId.equals(authenticationToken.getFileId().toString())){
+            if (authenticationTokens != null)
+            {
+                for (AuthenticationToken authenticationToken : authenticationTokens)
+                {
+                    if ((AuthenticationTokenConstants.ACTIVE).equals(authenticationToken.getStatus()))
+                    {
+                        if (emailToken.equals(authenticationToken.getKey())
+                                && fileId.equals(authenticationToken.getFileId().toString()))
+                        {
                             int days = Days.daysBetween(new DateTime(authenticationToken.getCreated()), new DateTime()).getDays();
                             //token expires after 3 days
-                            if(days > 3){
+                            if (days > 3)
+                            {
                                 authenticationToken.setStatus(AuthenticationTokenConstants.EXPIRED);
                                 authenticationToken.setModifier(authenticationToken.getCreator());
                                 authenticationToken.setModified(new Date());
@@ -107,7 +115,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                             }
                             try
                             {
-                                if ( logger.isTraceEnabled() )
+                                if (logger.isTraceEnabled())
                                 {
                                     log.trace("starting token auth for email links");
                                 }
@@ -126,30 +134,27 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                                             grantedAuthorities.add(new SimpleGrantedAuthority(searchResults.extractString(docs.getJSONObject(i), SearchConstants.PROPERTY_NAME)));
                                         }
                                     }
-                                    authentication=new UsernamePasswordAuthenticationToken(authenticationToken.getCreator(), authenticationToken.getCreator(), getAcmGrantedAuthoritiesMapper().mapAuthorities(grantedAuthorities));
+                                    authentication = new UsernamePasswordAuthenticationToken(authenticationToken.getCreator(), authenticationToken.getCreator(), getAcmGrantedAuthoritiesMapper().mapAuthorities(grantedAuthorities));
                                     SecurityContextHolder.getContext().setAuthentication(authentication);
                                     onSuccessfulAuthentication(request, response, authentication);
-                                }
-                                catch (IllegalArgumentException e)
+                                } catch (IllegalArgumentException e)
                                 {
                                     throw new PreAuthenticatedCredentialsNotFoundException(e.getMessage(), e);
                                 }
-                            }
-                            catch (AuthenticationException failed)
+                            } catch (AuthenticationException failed)
                             {
                                 SecurityContextHolder.clearContext();
-                                if ( logger.isTraceEnabled() )
+                                if (logger.isTraceEnabled())
                                 {
                                     logger.trace("Authentication request failed: " + failed);
                                 }
 
                                 onUnsuccessfulAuthentication(request, response, failed);
 
-                                if ( isIgnoreFailure() )
+                                if (isIgnoreFailure())
                                 {
                                     chain.doFilter(request, response);
-                                }
-                                else
+                                } else
                                 {
                                     getAuthenticationEntryPoint().commence(request, response, failed);
                                 }
@@ -181,9 +186,9 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         boolean emailTokenRequest = emailToken != null;
 
         // No token, no basic authentication
-        if ( ! tokenRequest && ! basicAuthRequest && !emailTokenRequest)
+        if (!tokenRequest && !basicAuthRequest && !emailTokenRequest)
         {
-            if ( trace )
+            if (trace)
             {
                 log.trace("neither token nor basic - skipping.");
             }
@@ -192,102 +197,63 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         }
 
         //Email token requests
-        if(emailTokenRequest){
-            try{
-                validateEmailTicketAuthentication(request,response,chain);
-            }
-            catch(MuleException e){
+        if (emailTokenRequest)
+        {
+            try
+            {
+                validateEmailTicketAuthentication(request, response, chain);
+            } catch (MuleException e)
+            {
                 log.error("Could not validate email ticket" + e.getMessage(), e);
             }
         }
 
         // Token authentication
-        if ( tokenRequest )
+        if (tokenRequest)
         {
-	        try
-	        {
-	            if ( trace )
-	            {
-	                log.trace("starting token auth");
-	            }
-	            Authentication auth;
-	            try
-	            {
-	                auth = getAuthenticationTokenService().getAuthenticationForToken(token);
-	                SecurityContextHolder.getContext().setAuthentication(auth);
-	                onSuccessfulAuthentication(request, response, auth);
-	            }
-	            catch (IllegalArgumentException e)
-	            {
-	                throw new PreAuthenticatedCredentialsNotFoundException(e.getMessage(), e);
-	            }
-	        }
-	        catch (AuthenticationException failed)
-	        {
-	            SecurityContextHolder.clearContext();
-	            if ( trace )
-	            {
-	                logger.trace("Authentication request failed: " + failed);
-	            }
-	
-	            onUnsuccessfulAuthentication(request, response, failed);
-	
-	            if ( isIgnoreFailure() )
-	            {
-	                chain.doFilter(request, response);
-	            }
-	            else
-	            {
-	                getAuthenticationEntryPoint().commence(request, response, failed);
-	            }
-	
-	            return;
-	        }
-        }
-        
-        // Basic authentication
-        if ( basicAuthRequest )
-        {
-            if ( trace )
+
+            if (trace)
             {
-                log.trace("switching to basic auth");
+                log.trace("starting token auth");
             }
-            // let Spring Security's native basic authentication do the work.
-            super.doFilter(req, res, chain);
-            return;
+            Authentication auth;
+            try
+            {
+                auth = getAuthenticationTokenService().getAuthenticationForToken(token);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+                onSuccessfulAuthentication(request, response, auth);
+            } catch (IllegalArgumentException e)
+            {
+                SecurityContextHolder.clearContext();
+                if (trace)
+                {
+                    logger.trace("Authentication request failed", e);
+                }
+
+                AuthenticationException authenticationException = new BadCredentialsException(e.getMessage(), e);
+                onUnsuccessfulAuthentication(request, response, authenticationException);
+
+
+                // by calling setStatus, and then NOT calling doFilter, processing stops and the client will get a 401
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                return;
+            }
+
+
+            // Basic authentication
+            if (basicAuthRequest)
+            {
+                if (trace)
+                {
+                    log.trace("switching to basic auth");
+                }
+                // let Spring Security's native basic authentication do the work.
+                super.doFilter(req, res, chain);
+                return;
+            }
+
+            chain.doFilter(request, response);
         }
-
-        chain.doFilter(request, response);
-    }
-
-    public String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException {
-
-        if (logger.isInfoEnabled())
-        {
-            logger.info("Taking all groups and subgroups from Solr. Authenticated user is " + usernamePasswordAuthenticationToken.getName());
-        }
-
-        String query = "object_type_s:GROUP AND object_sub_type_s:LDAP_GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
-
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("maxRows", 1000);
-        headers.put("firstRow", 0);
-        headers.put("sort", "");
-        headers.put("acmUser", usernamePasswordAuthenticationToken);
-
-        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
-
-        logger.debug("Response type: " + response.getPayload().getClass());
-
-        if ( response.getPayload() instanceof String )
-        {
-            String responsePayload = (String) response.getPayload();
-
-            return responsePayload;
-        }
-
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
     }
 
     private boolean isBasicAuthRequest(HttpServletRequest request)
@@ -326,35 +292,43 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         this.authenticationTokenService = authenticationTokenService;
     }
 
-    public AuthenticationTokenDao getAuthenticationTokenDao() {
+    public AuthenticationTokenDao getAuthenticationTokenDao()
+    {
         return authenticationTokenDao;
     }
 
-    public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao) {
+    public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
+    {
         this.authenticationTokenDao = authenticationTokenDao;
     }
 
-    public MuleContextManager getMuleContextManager() {
+    public MuleContextManager getMuleContextManager()
+    {
         return muleContextManager;
     }
 
-    public void setMuleContextManager(MuleContextManager muleContextManager) {
+    public void setMuleContextManager(MuleContextManager muleContextManager)
+    {
         this.muleContextManager = muleContextManager;
     }
 
-    public AcmGrantedAuthoritiesMapper getAcmGrantedAuthoritiesMapper() {
+    public AcmGrantedAuthoritiesMapper getAcmGrantedAuthoritiesMapper()
+    {
         return acmGrantedAuthoritiesMapper;
     }
 
-    public void setAcmGrantedAuthoritiesMapper(AcmGrantedAuthoritiesMapper acmGrantedAuthoritiesMapper) {
+    public void setAcmGrantedAuthoritiesMapper(AcmGrantedAuthoritiesMapper acmGrantedAuthoritiesMapper)
+    {
         this.acmGrantedAuthoritiesMapper = acmGrantedAuthoritiesMapper;
     }
 
-    public GroupService getGroupService() {
+    public GroupService getGroupService()
+    {
         return groupService;
     }
 
-    public void setGroupService(GroupService groupService) {
+    public void setGroupService(GroupService groupService)
+    {
         this.groupService = groupService;
     }
 }
