@@ -304,7 +304,8 @@ SearchBase.View = {
                 ,multiselect: false
                 ,selecting: false
                 ,selectingCheckboxes: false
-                ,pageSize: 16
+                ,pageSize: 5
+				,pageSizeChangeArea: false
                 ,paging: true
                 ,sorting: true
                 ,actions: {
