@@ -3346,11 +3346,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             }
             , _makeEmailDataForEmailWithAttachments: function (emailAddresses, nodes) {
                 var emailData = {};
-                var subject = DocTree.treeConfig.emailSubject;
-                var tokens = subject.split("$");
-                var objectType = tokens[0];
-                var objectNumber = DocTree.objectInfo[tokens[1]];
-                emailData.subject = objectType + objectNumber;
+                var subject = Util.goodMapValue(DocTree, "treeConfig.emailSubject");
+                var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.subjectRegex"));
+                var match = subject.match(regex);
+                if(match && match[Util.goodMapValue(DocTree, "treeConfig.objectTypeRegexGroup")] && match[Util.goodMapValue(DocTree, "treeConfig.objectNumberRegexGroup")]) {
+                    var objectType = match[DocTree.treeConfig.objectTypeRegexGroup];
+                    var objectNumber = match[DocTree.treeConfig.objectNumberRegexGroup];
+                    emailData.subject = objectType + DocTree.objectInfo[objectNumber];
+                }
                 emailData.body = $translate.instant("common.directive.docTree.email.bodyForAttachment");
                 emailData.header = $translate.instant("common.directive.docTree.email.headerForAttachment");
                 emailData.footer = $translate.instant("common.directive.docTree.email.footerForAttachment");

@@ -232,7 +232,10 @@
     ]
   },
   "docTree": {
-    "emailSubject": "Complaint $complaintNumber"
+    "emailSubject": "Complaint $complaintNumber",
+    "subjectRegex": "(.*)\\$([^\\s]+)",
+    "objectTypeRegexGroup": 1,
+    "objectNumberRegexGroup": 2
   },
   "components": [
     {
