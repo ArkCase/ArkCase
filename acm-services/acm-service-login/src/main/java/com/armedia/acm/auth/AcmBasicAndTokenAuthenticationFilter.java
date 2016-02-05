@@ -237,22 +237,23 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 return;
             }
-
-
-            // Basic authentication
-            if (basicAuthRequest)
-            {
-                if (trace)
-                {
-                    log.trace("switching to basic auth");
-                }
-                // let Spring Security's native basic authentication do the work.
-                super.doFilter(req, res, chain);
-                return;
-            }
-
-            chain.doFilter(request, response);
         }
+
+
+        // Basic authentication
+        if (basicAuthRequest)
+        {
+            if (trace)
+            {
+                log.trace("switching to basic auth");
+            }
+            // let Spring Security's native basic authentication do the work.
+            super.doFilter(req, res, chain);
+            return;
+        }
+
+        chain.doFilter(request, response);
+
     }
 
     private boolean isBasicAuthRequest(HttpServletRequest request)
