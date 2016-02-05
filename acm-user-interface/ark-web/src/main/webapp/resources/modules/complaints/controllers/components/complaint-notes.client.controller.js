@@ -1,11 +1,26 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.NotesController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ConfigService', 'Authentication', 'ObjectService', 'Object.NoteService'
+    , 'UtilService', 'ConfigService', 'Authentication', 'ObjectService', 'Object.NoteService', 'Complaint.InfoService'
     , 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Helper.NoteService'
     , function ($scope, $stateParams, $q
-        , Util, ConfigService, Authentication, ObjectService, ObjectNoteService
+        , Util, ConfigService, Authentication, ObjectService, ObjectNoteService, ComplaintInfoService
         , HelperObjectBrowserService, HelperUiGridService, HelperNoteService) {
+
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "complaints"
+            , componentId: "notes"
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onObjectInfoRetrieved: function (complaintInfo) {
+                $scope.complaintInfo = complaintInfo;
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
 
         var noteHelper = new HelperNoteService.Note();
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
@@ -18,7 +33,8 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
             }
         );
 
-        ConfigService.getComponentConfig("complaints", "notes").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
@@ -27,14 +43,11 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
             gridHelper.setUserNameFilter(promiseUsers);
 
             $scope.retrieveGridData();
-            return config;
-        });
+        };
 
-
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive(currentObjectId, false)) {
-                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.COMPLAINT, currentObjectId);
+            if (Util.goodPositive($scope.currentObjectId, false)) {
+                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.COMPLAINT, $scope.currentObjectId);
                 $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions.data = notes;

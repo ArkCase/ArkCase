@@ -6,8 +6,6 @@ angular.module('time-tracking').controller('TimeTracking.MainController', ['$sco
     , function ($scope, $translate, Store, Util, dashboard, DashboardService
         , TimeTrackingInfoService, ConfigService) {
 
-        $scope.$emit('main-component-started');
-
         ConfigService.getComponentConfig("time-tracking", "main").then(function (componentConfig) {
             $scope.config = componentConfig;
             $scope.allowedWidgets = ['details'];
