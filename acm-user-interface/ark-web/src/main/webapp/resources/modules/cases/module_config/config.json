@@ -213,6 +213,12 @@
       }
     ]
   },
+  "docTree": {
+    "emailSubject": "Case $caseNumber",
+    "subjectRegex": "(.*)\\$([^\\s]+)",
+    "objectTypeRegexGroup": 1,
+    "objectNumberRegexGroup": 2
+  },
   "components": [
     {
       "id": "main",
