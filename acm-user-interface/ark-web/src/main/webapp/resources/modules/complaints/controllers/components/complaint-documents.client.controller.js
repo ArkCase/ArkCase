@@ -7,11 +7,17 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         , Util, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService
         , HelperObjectBrowserService, DocTreeService) {
 
-        ConfigService.getComponentConfig("complaints", "documents").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "complaints"
+            , componentId: "documents"
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onObjectInfoRetrieved: function (complaintInfo) {
+                onObjectInfoRetrieved(complaintInfo);
+            }
         });
-
 
         ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.COMPLAINT).then(
             function (formTypes) {
@@ -30,21 +36,11 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
 
 
         $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
-        $scope.objectId = $stateParams.id;
-
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
-                $scope.complaintInfo = complaintInfo;
-                $scope.objectId = complaintInfo.complaintId;
-                return complaintInfo;
-            });
-        }
-
-        $scope.$on('object-refreshed', function (e, complaintInfo) {
+        $scope.objectId = $scope.currentObjectId; //$stateParams.id;
+        var onObjectInfoRetrieved = function (complaintInfo) {
             $scope.complaintInfo = complaintInfo;
             $scope.objectId = complaintInfo.complaintId;
-        });
+        };
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
             return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.complaintInfo, $scope.fileTypes);

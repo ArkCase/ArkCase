@@ -1,22 +1,22 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.ReworkDetailsController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'ConfigService', 'Task.InfoService', 'MessageService'
-    , function ($scope, $stateParams, $translate, Util, ConfigService, TaskInfoService, MessageService) {
+    , 'UtilService', 'ConfigService', 'Task.InfoService', 'MessageService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $translate
+        , Util, ConfigService, TaskInfoService, MessageService, HelperObjectBrowserService) {
 
-        ConfigService.getComponentConfig("tasks", "reworkdetails").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
+        new HelperObjectBrowserService.Component({
+            moduleId: "tasks"
+            , componentId: "reworkdetails"
+            , scope: $scope
+            , stateParams: $stateParams
+            , retrieveObjectInfo: TaskInfoService.getTaskInfo
+            , validateObjectInfo: TaskInfoService.validateTaskInfo
+            , onObjectInfoRetrieved: function (taskInfo) {
+                $scope.taskInfo = taskInfo;
+            }
         });
 
-        TaskInfoService.getTaskInfo($stateParams.id).then(function (taskInfo) {
-            $scope.taskInfo = taskInfo;
-            return taskInfo;
-        });
-
-        $scope.$on('object-refreshed', function (e, taskInfo) {
-            $scope.taskInfo = taskInfo;
-        });
 
         $scope.options = {
             focus: true

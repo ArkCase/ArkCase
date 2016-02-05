@@ -7,9 +7,25 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
         , Store, Util, ConfigService, ComplaintInfoService, LookupService
         , ObjectLookupService, HelperUiGridService, HelperObjectBrowserService) {
 
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "complaints"
+            , componentId: "participants"
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onObjectInfoRetrieved: function (complaintInfo) {
+                onObjectInfoRetrieved(complaintInfo);
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
+
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        var promiseConfig = ConfigService.getComponentConfig("complaints", "participants").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
@@ -71,9 +87,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                     }
                 }
             });
-
-            return config;
-        });
+        };
 
         $scope.pickParticipant = function (rowEntity) {
             var params = {};
@@ -131,8 +145,8 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
             }
         );
 
-        var updateGridData = function (data) {
-            $q.all([promiseTypes, promiseUsers, promiseGroups, promiseConfig]).then(function () {
+        var onObjectInfoRetrieved = function (data) {
+            $q.all([promiseTypes, promiseUsers, promiseGroups, $scope.promiseConfig]).then(function () {
                 var participants = data.participants;
                 _.each(participants, function (participant) {
                     if ("*" === participant.participantType) {
@@ -151,17 +165,6 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
             });
         };
 
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
-                updateGridData(complaintInfo);
-                return complaintInfo;
-            });
-        }
-
-        $scope.$on('object-refreshed', function (e, complaintInfo) {
-            updateGridData(complaintInfo);
-        });
 
 
         $scope.addNew = function () {
