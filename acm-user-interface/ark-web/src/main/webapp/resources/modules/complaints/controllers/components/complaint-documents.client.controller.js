@@ -42,7 +42,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
         $scope.objectId = $scope.currentObjectId; //$stateParams.id;
         var onObjectInfoRetrieved = function (complaintInfo) {
-                $scope.objectInfo = complaintInfo;
+            $scope.objectInfo = complaintInfo;
             $scope.complaintInfo = complaintInfo;
             $scope.objectId = complaintInfo.complaintId;
         };

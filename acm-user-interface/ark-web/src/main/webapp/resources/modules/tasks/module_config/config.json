@@ -251,7 +251,10 @@
     ]
   },
   "docTree": {
-    "emailSubject": "Task $taskId"
+    "emailSubject": "Task $taskId",
+    "subjectRegex": "(.*)\\$([^\\s]+)",
+    "objectTypeRegexGroup": 1,
+    "objectNumberRegexGroup": 2
   },
   "components": [
     {
