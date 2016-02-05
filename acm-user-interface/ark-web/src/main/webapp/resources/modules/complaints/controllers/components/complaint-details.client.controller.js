@@ -5,21 +5,16 @@ angular.module('complaints').controller('Complaints.DetailsController', ['$scope
     , function ($scope, $stateParams, $translate
         , Util, ConfigService, ComplaintInfoService, MessageService, HelperObjectBrowserService) {
 
-        ConfigService.getComponentConfig("complaints", "details").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
-        });
-
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "complaints"
+            , componentId: "details"
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onObjectInfoRetrieved: function (complaintInfo) {
                 $scope.complaintInfo = complaintInfo;
-                return complaintInfo;
-            });
-        }
-
-        $scope.$on('object-refreshed', function (e, complaintInfo) {
-            $scope.complaintInfo = complaintInfo;
+            }
         });
 
 

@@ -1,15 +1,32 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.HistoryController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.AuditService'
-    , 'Helper.ObjectBrowserService'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.AuditService', 'Complaint.InfoService'
+    , 'Helper.ObjectBrowserService', 'Helper.UiGridService'
     , function ($scope, $stateParams, $q
-        , Util, ConfigService, HelperUiGridService, ObjectService, ObjectAuditService, HelperObjectBrowserService) {
+        , Util, ConfigService, ObjectService, ObjectAuditService, ComplaintInfoService
+        , HelperObjectBrowserService, HelperUiGridService) {
+
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "complaints"
+            , componentId: "history"
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onObjectInfoRetrieved: function (complaintInfo) {
+                $scope.complaintInfo = complaintInfo;
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        ConfigService.getComponentConfig("complaints", "history").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -17,14 +34,12 @@ angular.module('complaints').controller('Complaints.HistoryController', ['$scope
             gridHelper.setUserNameFilter(promiseUsers);
 
             $scope.retrieveGridData();
-            return config;
-        });
+        };
 
         $scope.retrieveGridData = function () {
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (Util.goodPositive(currentObjectId, false)) {
+            if (Util.goodPositive($scope.currentObjectId, false)) {
                 var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.COMPLAINT
-                    , currentObjectId
+                    , $scope.currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodMapValue($scope.sort, "by")

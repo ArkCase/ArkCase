@@ -3,14 +3,24 @@
 angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state', '$stateParams', '$q', '$modal'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Case.LookupService'
     , 'Object.SubscriptionService', 'Object.ModelService', 'Case.InfoService', 'Case.MergeSplitService'
+    , 'Helper.ObjectBrowserService'
     , function ($scope, $state, $stateParams, $q, $modal
         , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, CaseLookupService
-        , ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService) {
+        , ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService
+        , HelperObjectBrowserService) {
 
-        ConfigService.getComponentConfig("cases", "actions").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cases"
+            , componentId: "actions"
+            , retrieveObjectInfo: CaseInfoService.getCaseInfo
+            , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onObjectInfoRetrieved: function (caseInfo) {
+                onObjectInfoRetrieved(caseInfo);
+            }
         });
+
 
         ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
             $scope.caseFileSearchConfig = _.find(moduleConfig.components, {id: "merge"});
@@ -19,49 +29,31 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         var promiseQueryUser = Authentication.queryUserInfo();
         var promiseGetGroups = ObjectLookupService.getGroups();
 
-        var previousId = null;
-        $scope.$on('object-updated', function (e, data) {
-            updateData(data);
-        });
+        var onObjectInfoRetrieved = function (caseInfo) {
+            $scope.caseInfo = caseInfo;
 
-        $scope.$on('object-refreshed', function (e, data) {
-            var previousId = null;
-            updateData(data);
-        });
+            var group = ObjectModelService.getGroup(caseInfo);
+            var assignee = ObjectModelService.getAssignee(caseInfo);
+            var promiseGetApprovers = CaseLookupService.getApprovers(group, assignee);
+            $q.all([promiseQueryUser, promiseGetGroups, promiseGetApprovers]).then(function (data) {
+                var userInfo = data[0];
+                var groups = data[1];
+                var assignees = data[2];
+                $scope.restricted = ObjectModelService.checkRestriction(userInfo.userId, assignee, group, assignees, groups);
+            });
 
-        var updateData = function (data) {
-            if (!CaseInfoService.validateCaseInfo(data)) {
-                return;
-            }
-            $scope.caseInfo = data;
-
-            var group = ObjectModelService.getGroup(data);
-            var assignee = ObjectModelService.getAssignee(data);
-            if (previousId != $stateParams.id) {
-                var promiseGetApprovers = CaseLookupService.getApprovers(group, assignee);
-                $q.all([promiseQueryUser, promiseGetGroups, promiseGetApprovers]).then(function (data) {
-                    var userInfo = data[0];
-                    var groups = data[1];
-                    var assignees = data[2];
-                    $scope.restricted = ObjectModelService.checkRestriction(userInfo.userId, assignee, group, assignees, groups);
-                });
-
-
-                promiseQueryUser.then(function (userInfo) {
-                    $scope.userId = userInfo.userId;
-                    ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (subscriptions) {
-                        var found = _.find(subscriptions, {
-                            userId: userInfo.userId,
-                            subscriptionObjectType: ObjectService.ObjectTypes.CASE_FILE,
-                            objectId: $scope.caseInfo.id
-                        });
-                        $scope.showBtnSubscribe = Util.isEmpty(found);
-                        $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
+            promiseQueryUser.then(function (userInfo) {
+                $scope.userId = userInfo.userId;
+                ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (subscriptions) {
+                    var found = _.find(subscriptions, {
+                        userId: userInfo.userId,
+                        subscriptionObjectType: ObjectService.ObjectTypes.CASE_FILE,
+                        objectId: $scope.caseInfo.id
                     });
+                    $scope.showBtnSubscribe = Util.isEmpty(found);
+                    $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 });
-
-                previousId = $stateParams.id;
-            }
+            });
         };
 
         $scope.restricted = false;

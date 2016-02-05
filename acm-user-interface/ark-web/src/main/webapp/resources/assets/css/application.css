@@ -1,3 +1,5 @@
+/* @override http://dev.jsapn.armedianet.com/arkcase/assets/css/application.css */
+
 /* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
 
 /* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css
@@ -346,7 +348,7 @@ span.fancytree-title {
     border-left: 0px;
     border-right: 0px;
     position: relative;
-    z-index: 1001;
+    z-index: 999;
 }
 
 .module-header .btn-group {

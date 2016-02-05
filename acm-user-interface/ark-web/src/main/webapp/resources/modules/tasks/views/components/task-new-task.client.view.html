@@ -47,6 +47,7 @@
                 <p class="row">
                 <div class="col-sm-12">
                     <label for="subject" translate> tasks.newTask.subject.label </label>
+                    <span class="required-asterisk">*</span>
                     <input type="text" id="subject" ng-required="true" ng-model="config.data.title"
                            class="input-md form-control" placeholder="{{ 'tasks.newTask.subject.label'  | translate }}"
                            id="subject">
@@ -85,6 +86,7 @@
 </div>
 <div class="col-sm-4">
     <label for="dueDate" translate> tasks.newTask.dueDate.label </label>
+    <span class="required-asterisk">*</span>
 
     <div>
         <p class="input-group">
