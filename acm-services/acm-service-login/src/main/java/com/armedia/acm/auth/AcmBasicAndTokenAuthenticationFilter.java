@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
@@ -230,7 +229,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                     logger.trace("Authentication request failed", e);
                 }
 
-                AuthenticationException authenticationException = new BadCredentialsException(e.getMessage(), e);
+                AuthenticationException authenticationException = new PreAuthenticatedCredentialsNotFoundException(e.getMessage(), e);
                 onUnsuccessfulAuthentication(request, response, authenticationException);
 
 
