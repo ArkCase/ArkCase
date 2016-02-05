@@ -14,6 +14,21 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         );
 
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "complaints"
+            , componentId: "people"
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onObjectInfoRetrieved: function (complaintInfo) {
+                onObjectInfoRetrieved(complaintInfo);
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
+
         $scope.contactMethods = {gridOptions: {appScopeProvider: $scope}};
         $scope.organizations = {gridOptions: {appScopeProvider: $scope}};
         $scope.addresses = {gridOptions: {appScopeProvider: $scope}};
@@ -73,7 +88,8 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         );
 
-        var promiseConfig = ConfigService.getComponentConfig("complaints", "people").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             configGridMain(config);
             configGridContactMethod(config);
             configGridOrganization(config);
@@ -81,7 +97,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             configGridAlias(config);
             configGridSecurityTag(config);
             return config;
-        });
+        };
 
 
         var configGridMain = function (config) {
@@ -302,9 +318,9 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         };
 
-        var updateGridData = function (data) {
-            $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, promiseConfig]).then(function () {
-                $scope.complaintInfo = data;
+        var onObjectInfoRetrieved = function (complaintInfo) {
+            $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, $scope.promiseConfig]).then(function () {
+                $scope.complaintInfo = complaintInfo;
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.complaintInfo.personAssociations;
                 //gridHelper.hidePagingControlsIfAllDataShown($scope.complaintInfo.personAssociations.length);
@@ -419,17 +435,6 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }); //end $q
         };
 
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
-                updateGridData(complaintInfo);
-                return complaintInfo;
-            });
-        }
-
-        $scope.$on('object-refreshed', function (e, complaintInfo) {
-            updateGridData(complaintInfo);
-        });
 
 
         $scope.addNew = function () {

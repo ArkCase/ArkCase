@@ -13,6 +13,21 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         );
 
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cases"
+            , componentId: "participants"
+            , retrieveObjectInfo: CaseInfoService.getCaseInfo
+            , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onObjectInfoRetrieved: function (caseInfo) {
+                onObjectInfoRetrieved(caseInfo);
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
+
         $scope.contactMethods = {gridOptions: {appScopeProvider: $scope}};
         $scope.organizations = {gridOptions: {appScopeProvider: $scope}};
         $scope.addresses = {gridOptions: {appScopeProvider: $scope}};
@@ -72,15 +87,15 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         );
 
-        var promiseConfig = ConfigService.getComponentConfig("cases", "people").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             configGridMain(config);
             configGridContactMethod(config);
             configGridOrganization(config);
             configGridAddress(config);
             configGridAlias(config);
             configGridSecurityTag(config);
-            return config;
-        });
+        };
 
 
         var configGridMain = function (config) {
@@ -298,9 +313,9 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         };
 
-        var updateGridData = function (data) {
-            $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, promiseConfig]).then(function () {
-                $scope.caseInfo = data;
+        var onObjectInfoRetrieved = function (caseInfo) {
+            $scope.caseInfo = caseInfo;
+            $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, $scope.promiseConfig]).then(function () {
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.caseInfo.personAssociations;
                 //gridHelper.hidePagingControlsIfAllDataShown($scope.caseInfo.personAssociations.length);
@@ -414,17 +429,6 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }); //end $q
         };
 
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
-                updateGridData(caseInfo);
-                return caseInfo;
-            });
-        }
-
-        $scope.$on('object-refreshed', function (e, caseInfo) {
-            updateGridData(caseInfo);
-        });
 
         $scope.addNew = function () {
             var lastPage = $scope.gridApi.pagination.getTotalPages();

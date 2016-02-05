@@ -1,15 +1,31 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.CostController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'ObjectService', 'ConfigService', 'Object.CostService'
+    , 'UtilService', 'ObjectService', 'ConfigService', 'Object.CostService', 'Complaint.InfoService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
     , function ($scope, $stateParams, $translate
-        , Util, ObjectService, ConfigService, ObjectCostService
+        , Util, ObjectService, ConfigService, ObjectCostService, ComplaintInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
+
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "complaints"
+            , componentId: "cost"
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onObjectInfoRetrieved: function (complaintInfo) {
+                $scope.complaintInfo = complaintInfo;
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        var promiseConfig = ConfigService.getComponentConfig("complaints", "cost").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -21,14 +37,12 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
                     $scope.gridOptions.columnDefs[i].field = "acm$_costs";
                 }
             }
-            return config;
-        });
+        };
 
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.COMPLAINT, currentObjectId).then(
+        if (Util.goodPositive($scope.currentObjectId, false)) {
+            ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.COMPLAINT, $scope.currentObjectId).then(
                 function (costsheets) {
-                    promiseConfig.then(function (config) {
+                    $scope.promiseConfig.then(function (config) {
                         for (var i = 0; i < costsheets.length; i++) {
                             costsheets[i].acm$_formName = $translate.instant("complaints.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
                             costsheets[i].acm$_costs = _.reduce(Util.goodArray(costsheets[i].costs), function (total, n) {

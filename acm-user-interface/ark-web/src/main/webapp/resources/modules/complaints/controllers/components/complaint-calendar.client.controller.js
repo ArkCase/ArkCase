@@ -1,24 +1,22 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.CalendarController', ['$scope', 'ConfigService', '$timeout', 'uiCalendarConfig', 'Object.CalendarService','Complaint.InfoService',
-    function($scope, ConfigService, $timeout, uiCalendarConfig, CalendarService,ComplaintInfoService) {
-        ConfigService.getComponentConfig("complaints", "calendar").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
+angular.module('complaints').controller('Complaints.CalendarController', ['$scope', '$stateParams', '$timeout'
+    , 'ConfigService', 'uiCalendarConfig', 'Object.CalendarService', 'Complaint.InfoService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $timeout
+        , ConfigService, uiCalendarConfig, CalendarService, ComplaintInfoService, HelperObjectBrowserService) {
 
-        });
-
-        $scope.$on('object-updated', function (e, data) {
-            if (ComplaintInfoService.validateComplaintInfo(data)) {
-                $scope.complaintInfo = data;
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "complaints"
+            , componentId: "calendar"
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onObjectInfoRetrieved: function (complaintInfo) {
+                $scope.complaintInfo = complaintInfo;
             }
         });
 
-        $scope.$on('object-refreshed', function (e, caseInfo) {
-            if (ComplaintInfoService.validateComplaintInfo(data)) {
-                $scope.complaintInfo = data;
-            }
-        });
 
         /* Calendar config object */
         $scope.uiConfig = {

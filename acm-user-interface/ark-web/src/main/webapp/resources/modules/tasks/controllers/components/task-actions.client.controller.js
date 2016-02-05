@@ -3,30 +3,28 @@
 angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'Authentication'
     , 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'ObjectService'
+    , 'Helper.ObjectBrowserService'
     , function ($scope, $state, $stateParams, $modal
         , Util, ConfigService, Authentication
-        , TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectService) {
+        , TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectService
+        , HelperObjectBrowserService) {
 
-        ConfigService.getComponentConfig("tasks", "actions").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "tasks"
+            , componentId: "actions"
+            , retrieveObjectInfo: TaskInfoService.getTaskInfo
+            , validateObjectInfo: TaskInfoService.validateTaskInfo
+            , onObjectInfoRetrieved: function (taskInfo) {
+                onObjectInfoRetrieved(taskInfo);
+            }
         });
 
         var promiseQueryUser = Authentication.queryUserInfo();
 
-        $scope.$on('object-updated', function (e, data) {
-            updateData(data);
-        });
-
-        $scope.$on('object-refreshed', function (e, data) {
-            updateData(data);
-        });
-
-        var updateData = function (data) {
-            if (!TaskInfoService.validateTaskInfo(data)) {
-                return;
-            }
-            $scope.taskInfo = data;
+        var onObjectInfoRetrieved = function (taskInfo) {
+            $scope.taskInfo = taskInfo;
 
             $scope.showBtnSignature = false;
             $scope.showBtnDelete = false;
