@@ -131,14 +131,14 @@ public class ComplaintServiceIT
         Contact initiator = new Contact();
         frevvoComplaint.setInitiator(initiator);
 
-        populateContact(initiator, "Complaintant");
+        populateContact(initiator, "Initiator");
 
         Contact witness = new Contact();
         frevvoComplaint.setPeople(Arrays.asList(witness));
         populateContact(witness, "Witness");
 
         assertEquals("Witness first", frevvoComplaint.getPeople().get(0).getMainInformation().getFirstName());
-        assertEquals("Complaintant first", frevvoComplaint.getInitiator().getMainInformation().getFirstName());
+        assertEquals("Initiator first", frevvoComplaint.getInitiator().getMainInformation().getFirstName());
 
         ComplaintForm savedFrevvoComplaint = service.saveComplaint(frevvoComplaint);
 

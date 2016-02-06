@@ -40,7 +40,7 @@
           "displayName": "dashboard.widgets.myCases.table.header.caseId",
           "headerCellFilter": "translate",
           "enableSorting": true,
-          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a><\/div>",
+          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
           "width": 130
         },
         {
@@ -48,7 +48,7 @@
           "displayName": "dashboard.widgets.myCases.table.header.title",
           "headerCellFilter": "translate",
           "enableSorting": true,
-          "cellTemplate:": "<div><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a><\/div>"
+          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "status_lcs",
@@ -81,14 +81,16 @@
           "name": "taskId",
           "displayName": "dashboard.widgets.myTasks.table.header.taskId",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.taskId}}</a>",
+          "enableSorting": true,
+          "type":"number",
+          "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}<\/a>",
           "width": 75
         },
         {
           "name": "title",
           "displayName": "dashboard.widgets.myTasks.table.header.title",
           "headerCellFilter": "translate",
-          "cellTemplate:": "<div><a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}<\/a><\/div>"
+          "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.taskId})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "priority",
@@ -129,36 +131,42 @@
       "columnDefs": [
         {
           "name": "complaintNumber",
-          "displayName": "dashboard.widgets.myTasks.table.header.complaintNumber",
+          "displayName": "dashboard.widgets.myComplaints.table.header.number",
           "headerCellFilter": "translate",
-          "cellTemplate:": "'<div class=\"ui-grid-cell-contents\"><a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}<\/a><\/div>'",
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}<\/a>",
           "width": 175
         },
         {
           "name": "complaintTitle",
-          "displayName": "dashboard.widgets.myTasks.table.header.title",
+          "displayName": "dashboard.widgets.myComplaints.table.header.title",
           "headerCellFilter": "translate",
-          "cellTemplate:": "'<div class=\"ui-grid-cell-contents\"><a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}<\/a><\/div>'"
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.complaintId})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "priority",
-          "displayName": "dashboard.widgets.myTasks.table.header.priority",
+          "displayName": "dashboard.widgets.myComplaints.table.header.priority",
           "headerCellFilter": "translate",
-          "width": 55
+          "width": 75
         },
         {
           "name": "created",
-          "displayName": "dashboard.widgets.myTasks.table.header.created",
+          "displayName": "dashboard.widgets.myComplaints.table.header.created",
           "headerCellFilter": "translate",
-          "width": 55
+          "width": 70
         },
         {
           "name": "status",
-          "displayName": "dashboard.widgets.myTasks.table.header.status",
+          "displayName": "dashboard.widgets.myComplaints.table.header.status",
           "headerCellFilter": "translate",
-          "width": 55
+          "width": 100
         }
       ]
+    },
+    {
+      "id": "newComplaints",
+      "title": "New Complaints",
+      "redirectSettings": {
+      }
     },
     {
       "id": "casesByQueue",
@@ -166,5 +174,49 @@
       "redirectSettings": {
       }
     }
+  ],
+  "modules": [
+    {
+      "name": "CASE",
+      "configName": "cases"
+    },
+    {
+      "name": "COMPLAINT",
+      "configName": "complaints"
+    },
+    {
+      "name": "COST",
+      "configName": "cost-tracking"
+    },
+    {
+      "name": "TIME",
+      "configName": "time-tracking"
+    },
+    {
+      "name": "TASK",
+      "configName": "tasks"
+    }
+  ],
+  "objectWidgets": [
+    "calendar",
+    "correspondence",
+    "cost",
+    "details",
+    "docReview",
+    "documents",
+    "expenses",
+    "history",
+    "hoursSummary",
+    "locations",
+    "notes",
+    "participants",
+    "people",
+    "person",
+    "references",
+    "reworkDetails",
+    "signature",
+    "tasks",
+    "time",
+    "workflow"
   ]
 }

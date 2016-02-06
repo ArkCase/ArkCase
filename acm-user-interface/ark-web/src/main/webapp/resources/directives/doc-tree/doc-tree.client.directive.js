@@ -67,9 +67,9 @@
  </example>
  */
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', 'StoreService', 'UtilService'
-    , 'Util.DateService', 'LookupService', 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService'
+    , 'Util.DateService', 'LookupService', 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', '$filter'
     , function ($q, $translate, $modal, Store, Util
-        , UtilDateService, LookupService, Ecm, EcmEmailService, EcmRecordService) {
+        , UtilDateService, LookupService, Ecm, EcmEmailService, EcmRecordService, $filter) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
         var promiseGetUserFullName = LookupService.getUserFullNames();
@@ -139,7 +139,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         if (DocTree.isFolderNode(node)) {
                             ;
                         } else if (DocTree.isFileNode(node)) {
-                            $tdList.eq(3).text(DocTree.getDocumentTypeDisplayLabel(node.data.type)); // document type is mapped (afdp-1249)
+                            var filter = $filter('capitalizeFirst');
+                            var typeColumn = (DocTree.getDocumentTypeDisplayLabel(node.data.type));
+                            var filteredType = filter(typeColumn);
+
+                            $tdList.eq(3).text(filteredType); // document type is mapped (afdp-1249)
 
                             var versionDate = UtilDateService.getDate(node.data.created);
                             var versionUser = Util.goodValue(node.data.creator);
@@ -489,25 +493,39 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     //remove tree cache for current obj
                     DocTree.cacheTree.remove(objType + "." + objId);
                     //remove individual folder cache for current obj
-                    var cacheFolderList = DocTree.cacheFolderList.cache;
-                    if (!Util.isEmpty(cacheFolderList)) {
-                        for (var cacheKey in cacheFolderList) {
-                            if (cacheFolderList.hasOwnProperty(cacheKey)) {
-                                var cacheKeySplit = cacheKey.split(".");
-                                if (Util.isArray(cacheKeySplit)) {
-                                    // cache keys have following format :
-                                    // CASE_FILE.1258.0.0.name.ASC.16
-                                    // ojType.objId.folderId.pageId.soryBy.sortDirection.maxSize
-                                    var cacheKeyObjId = cacheKeySplit[1];
-                                    if (!Util.isEmpty(cacheKeyObjId)) {
-                                        if (Util.goodValue(cacheKeyObjId) == Util.goodValue(objId)) {
-                                            DocTree.cacheFolderList.remove(cacheKey);
-                                        }
-                                    }
+                    var keys = DocTree.cacheFolderList.keys();
+                    _.each(keys, function (key) {
+                        // cache key has following format :
+                        // ojType.objId.folderId. (...)
+                        if (!Util.isEmpty(key)) {
+                            var tokens = key.split(".");
+                            if (1 < tokens.length) {
+                                var keyObjId = tokens[1];
+                                if (Util.compare(objId, keyObjId)) {
+                                    DocTree.cacheFolderList.remove(key);
                                 }
                             }
                         }
-                    }
+                    });
+                    //var cacheFolderList = DocTree.cacheFolderList.cache;
+                    //if (!Util.isEmpty(cacheFolderList)) {
+                    //    for (var cacheKey in cacheFolderList) {
+                    //        if (cacheFolderList.hasOwnProperty(cacheKey)) {
+                    //            var cacheKeySplit = cacheKey.split(".");
+                    //            if (Util.isArray(cacheKeySplit)) {
+                    //                // cache keys have following format :
+                    //                // CASE_FILE.1258.0.0.name.ASC.16
+                    //                // ojType.objId.folderId.pageId.soryBy.sortDirection.maxSize
+                    //                var cacheKeyObjId = cacheKeySplit[1];
+                    //                if (!Util.isEmpty(cacheKeyObjId)) {
+                    //                    if (Util.goodValue(cacheKeyObjId) == Util.goodValue(objId)) {
+                    //                        DocTree.cacheFolderList.remove(cacheKey);
+                    //                    }
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
                 }
                 DocTree.tree.reload(DocTree.Source.source());
             }
@@ -1953,7 +1971,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                                 folderData.modifier = Util.goodValue(copyFolderInfo.newFolder.modifier);
                                                 toFolderList.children.push(folderData);
                                                 toFolderList.totalChildren++;
-                                                DocTree.Model.cacheFolderList.put(toCacheKey, toFolderList);
+                                                DocTree.cacheFolderList.put(toCacheKey, toFolderList);
                                                 return folderData;
                                             }
                                         }
@@ -3190,10 +3208,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     for (var i = 0; i < fileData.versions.length; i++) {
                         var version = {};
                         version.versionTag = Util.goodValue(fileData.versions[i].versionTag);
-                        version.created = Util.goodValue(fileData.versionList[i].created);
-                        version.creator = Util.goodValue(fileData.versionList[i].creator);
-                        version.modified = Util.goodValue(fileData.versionList[i].modified);
-                        version.modifier = Util.goodValue(fileData.versionList[i].modifier);
+                        version.created = Util.goodValue(fileData.versions[i].created);
+                        version.creator = Util.goodValue(fileData.versions[i].creator);
+                        version.modified = Util.goodValue(fileData.versions[i].modified);
+                        version.modifier = Util.goodValue(fileData.versions[i].modifier);
                         solrData.versionList.push(version);
                     }
                 }
@@ -3286,6 +3304,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 var modalInstance = $modal.open({
                     templateUrl: "directives/doc-tree/doc-tree.email.dialog.html"
                     , controller: 'directives.DocTreeEmailDialogController'
+                    , animation: true
+                    , size: 'lg'
                     , resolve: {
                         params: function () {
                             return params;
@@ -3330,7 +3350,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             }
             , _makeEmailDataForEmailWithAttachments: function (emailAddresses, nodes) {
                 var emailData = {};
-                emailData.subject = $translate.instant("common.directive.docTree.email.subjectForAttachment");
+                var subject = Util.goodMapValue(DocTree, "treeConfig.emailSubject");
+                var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.subjectRegex"));
+                var match = subject.match(regex);
+                if(match && match[Util.goodMapValue(DocTree, "treeConfig.objectTypeRegexGroup")] && match[Util.goodMapValue(DocTree, "treeConfig.objectNumberRegexGroup")]) {
+                    var objectType = match[DocTree.treeConfig.objectTypeRegexGroup];
+                    var objectNumber = match[DocTree.treeConfig.objectNumberRegexGroup];
+                    emailData.subject = objectType + DocTree.objectInfo[objectNumber];
+                }
                 emailData.body = $translate.instant("common.directive.docTree.email.bodyForAttachment");
                 emailData.header = $translate.instant("common.directive.docTree.email.headerForAttachment");
                 emailData.footer = $translate.instant("common.directive.docTree.email.footerForAttachment");
@@ -3997,7 +4024,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             //+ '</table>'
             , templateUrl: "directives/doc-tree/doc-tree.client.view.html"
             , scope: {
-                treeControl: '='
+                treeConfig: '='
+                , objectInfo: '='
+                , treeControl: '='
                 , objectType: '='
                 , objectId: '='
                 , fileTypes: '='
@@ -4010,6 +4039,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.jqTree = $(element).find("table");
                 DocTree.setObjType(scope.objectType);
                 DocTree.setObjId(scope.objectId);
+                DocTree.treeConfig = null;
+                DocTree.objectInfo = null;
                 DocTree.doUploadForm = (scope.uploadForm) ? scope.uploadForm()
                     : (function () {
                 }); //if not defined, do nothing
@@ -4019,6 +4050,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     , getSelectedNodes: DocTree.getSelectedNodes
                 };
 
+                scope.$watchGroup(['treeConfig', 'objectInfo'], function (newValues, oldValues, scope) {
+                    var treeConfig = newValues[0];
+                    var objectInfo = newValues[1];
+                    DocTree.treeConfig = treeConfig;
+                    DocTree.objectInfo = objectInfo;
+                });
 
                 DocTree.create();
                 DocTree.makeDownloadDocForm(DocTree.jqTree);

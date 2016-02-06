@@ -1,33 +1,49 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.TimeController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'ObjectService', 'ConfigService', 'Object.TimeService'
+    , 'UtilService', 'ObjectService', 'ConfigService', 'Object.TimeService', 'Complaint.InfoService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, $translate, Util, ObjectService, ConfigService, ObjectTimeService
+    , function ($scope, $stateParams, $translate
+        , Util, ObjectService, ConfigService, ObjectTimeService, ComplaintInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
 
+        new HelperObjectBrowserService.Component({
+            moduleId: "complaints"
+            , componentId: "time"
+            , scope: $scope
+            , stateParams: $stateParams
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onObjectInfoRetrieved: function (complaintInfo) {
+                $scope.complaintInfo = complaintInfo;
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
+
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-        var promiseConfig = ConfigService.getComponentConfig("complaints", "cost").then(function (config) {
+
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
 
             for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                 if ("name" == $scope.config.columnDefs[i].name) {
-                    $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.acm$_formName}}</a>";
+                    $scope.gridOptions.columnDefs[i].cellTemplate = "<a data-ui-sref=\"time-tracking.main({id: row.entity.id})\">{{row.entity.acm$_formName}}</a>";
                 } else if ("tally" == $scope.config.columnDefs[i].name) {
                     $scope.gridOptions.columnDefs[i].field = "acm$_hours";
                 }
             }
-            return config;
-        });
+        };
 
 
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.CASE_FILE, currentObjectId).then(
+        if (Util.goodPositive($scope.currentObjectId, false)) {
+            ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.CASE_FILE, $scope.currentObjectId).then(
                 function (timesheets) {
-                    promiseConfig.then(function (config) {
+                    $scope.promiseConfig.then(function (config) {
                         for (var i = 0; i < timesheets.length; i++) {
                             timesheets[i].acm$_formName = $translate.instant("complaints.comp.time.formNamePrefix") + " " + Util.goodValue(timesheets[i].startDate) + " - " + Util.goodValue(timesheets[i].endDate);
                             timesheets[i].acm$_hours = _.reduce(Util.goodArray(timesheets[i].times), function (total, n) {
@@ -45,12 +61,5 @@ angular.module('complaints').controller('Complaints.TimeController', ['$scope', 
                 }
             );
         }
-
-
-        $scope.onClickObjLink = function (event, rowEntity) {
-            event.preventDefault();
-            gridHelper.showObject(ObjectService.ObjectTypes.TIMESHEET, Util.goodMapValue(rowEntity, "id", 0));
-        };
-
     }
 ]);

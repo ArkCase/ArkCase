@@ -2,11 +2,21 @@
 
 angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams'
     , 'UtilService', 'ConfigService', 'LookupService', 'Object.LookupService', 'Task.InfoService', 'Object.ModelService'
-    , function ($scope, $stateParams, Util, ConfigService, LookupService, ObjectLookupService, TaskInfoService, ObjectModelService) {
+    , 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams
+        , Util, ConfigService, LookupService, ObjectLookupService, TaskInfoService, ObjectModelService
+        , HelperObjectBrowserService) {
 
-        ConfigService.getComponentConfig("tasks", "info").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "tasks"
+            , componentId: "info"
+            , retrieveObjectInfo: TaskInfoService.getTaskInfo
+            , validateObjectInfo: TaskInfoService.validateTaskInfo
+            , onObjectInfoRetrieved: function (taskInfo) {
+                onObjectInfoRetrieved(taskInfo);
+            }
         });
 
 
@@ -32,13 +42,14 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             }
         );
 
-
-        $scope.$on('object-updated', function (e, data) {
-            if (TaskInfoService.validateTaskInfo(data)) {
-                $scope.taskInfo = data;
-                $scope.assignee = ObjectModelService.getAssignee(data);
-            }
-        });
+        $scope.dueDate = null;
+        $scope.taskStartDate = null;
+        var onObjectInfoRetrieved = function (taskInfo) {
+            $scope.taskInfo = taskInfo;
+            $scope.dueDate = ($scope.taskInfo.dueDate) ? moment($scope.taskInfo.dueDate).toDate() : null;
+            $scope.taskStartDate = ($scope.taskInfo.taskStartDate) ? moment($scope.taskInfo.taskStartDate).toDate() : null;
+            $scope.assignee = ObjectModelService.getAssignee($scope.taskInfo);
+        };
 
 
         $scope.updateTitle = function () {
@@ -55,10 +66,12 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         $scope.updatePriority = function () {
             saveTask();
         };
-        $scope.updateStartDate = function () {
+        $scope.updateStartDate = function (taskStartDate) {
+            $scope.taskInfo.taskStartDate = (taskStartDate) ? moment(taskStartDate).format($scope.config.dateFormat): null;
             saveTask();
         };
-        $scope.updateDueDate = function () {
+        $scope.updateDueDate = function (dueDate) {
+            $scope.taskInfo.dueDate = (dueDate) ? moment(dueDate).format($scope.config.dateFormat): null;
             saveTask();
         };
 

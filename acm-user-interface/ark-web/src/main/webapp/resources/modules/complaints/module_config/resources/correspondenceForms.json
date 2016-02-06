@@ -1,0 +1,30 @@
+[
+  {
+    "value": "ComplaintApprovalLetter.docx",
+    "name": "Approval Letter"
+  },
+  {
+    "value": "ComplaintClearanceDenied.docx",
+    "name": "Clearance Denied"
+  },
+  {
+    "value": "ComplaintClearanceGranted.docx",
+    "name": "Clearance Granted"
+  },
+  {
+    "value": "ComplaintGeneralRelease.docx",
+    "name": "General Release"
+  },
+  {
+    "value": "ComplaintInterviewRequest.docx",
+    "name": "Interview Request"
+  },
+  {
+    "value": "ComplaintMedicalRelease.docx",
+    "name": "Medical Release"
+  },
+  {
+    "value": "ComplaintNoticeofInvestigation.docx",
+    "name": "Notice of Investigation"
+  }
+]

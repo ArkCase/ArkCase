@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['$scope', 'Admin.OrganizationalHierarchyService', '$q', '$modal', 'MessageService', '$translate', 'Admin.ModalDialogService',
-    function ($scope, organizationalHierarchyService, $q, $modal, messageService, $translate, modalDialogService) {
+angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['$scope', 'Admin.OrganizationalHierarchyService', '$q', '$modal', 'MessageService', '$translate', 'Admin.ModalDialogService', 'UtilService',
+    function ($scope, organizationalHierarchyService, $q, $modal, messageService, $translate, modalDialogService, Util) {
         $scope.config.$promise.then(function (config) {
             $scope.cfg = _.find(config.components, {id: 'usersPicker'});
         });
@@ -186,9 +186,16 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             modalInstance.result.then(function (membersSelected) {
                 //ok button clicked
                 var mappedMembers = [];
-                for (var i = 0; i < membersSelected.length; i++) {
-                    mappedMembers.push(mapMember(membersSelected[i]));
+                if(Util.isArray(membersSelected)) {
+                    for (var i = 0; i < membersSelected.length; i++) {
+                        mappedMembers.push(mapMember(membersSelected[i]));
+                    }
                 }
+                else {
+                    mappedMembers.push(mapMember(membersSelected));
+                }
+
+
                 organizationalHierarchyService.saveMembers(group, mappedMembers).then(function (payload) {
                     //saving success
                     //map members

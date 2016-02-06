@@ -18,6 +18,7 @@ angular.module('dashboard.my-complaints')
                 sortDir: 'desc'
             };
             vm.gridOptions = {
+                appScopeProvider: vm,
                 enableColumnResizing: true,
                 enableRowSelection: true,
                 enableSelectAll: false,

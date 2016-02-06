@@ -35,6 +35,7 @@
   "tasks.comp.actions": {
     "eSignature.button": "Sign",
     "subscribe.button": "Subscribe",
+    "unsubscribe.button": "Unsubscribe",
     "reject.button": "Reject",
     "delete.button": "Delete",
     "complete.button": "Complete",
@@ -44,11 +45,21 @@
   },
   "tasks.comp.details": {
     "title": "Task Details",
-    "informSaved": "Task details saved"
+    "informSaved": "Task details saved",
+    "table.columns": {
+      "details": "Details",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
+    }
   },
   "tasks.comp.reworkdetails": {
     "title": "Rework Details",
-    "informSaved": "Rework details saved"
+    "informSaved": "Rework details saved",
+    "table.columns": {
+      "title": "Rework Details",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
+    }
   },
   "tasks.comp.attachments": {
     "title": "Attachments"

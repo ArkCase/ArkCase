@@ -16,9 +16,11 @@ angular.module("dashboard.weather").controller("Dashboard.WeatherController", ["
 
                 vm.units = config.units;
 
-                WidgetService.getWeather(url, appid, location, units).then(function (weather) {
-                    vm.weather = weather;
-                });
+                if (location != null) {
+                    WidgetService.getWeather(url, appid, location, units).then(function (weather) {
+                        vm.weather = weather;
+                    });
+                }
             }
         }
     }

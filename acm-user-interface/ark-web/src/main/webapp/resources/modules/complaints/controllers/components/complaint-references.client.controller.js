@@ -5,44 +5,41 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
     , function ($scope, $stateParams
         , Util, ConfigService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService) {
 
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "complaints"
+            , componentId: "references"
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onObjectInfoRetrieved: function (complaintInfo) {
+                onObjectInfoRetrieved(complaintInfo);
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
+
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        ConfigService.getComponentConfig("complaints", "references").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
-            return config;
-        });
+        };
 
-        //$scope.$on('object-updated', function (e, data) {
-        //    if (!ComplaintInfoService.validateComplaintInfo(data)) {
-        //        return;
-        //    }
-        //    $scope.complaintInfo = data;
-        //    var references = [];
-        //    _.each($scope.complaintInfo.childObjects, function (childObject) {
-        //        if (ComplaintInfoService.validateReferenceRecord(childObject)) {
-        //            references.push(childObject);
-        //        }
-        //    });
-        //    $scope.gridOptions.data = references;
-        //    gridHelper.hidePagingControlsIfAllDataShown(references.length);
-        //});
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
-                $scope.complaintInfo = complaintInfo;
-                var references = [];
-                _.each($scope.complaintInfo.childObjects, function (childObject) {
-                    if (ComplaintInfoService.validateReferenceRecord(childObject)) {
-                        references.push(childObject);
-                    }
-                });
-                $scope.gridOptions.data = references;
-                //gridHelper.hidePagingControlsIfAllDataShown(references.length);
-                return complaintInfo;
+        var onObjectInfoRetrieved = function (complaintInfo) {
+            $scope.complaintInfo = complaintInfo;
+            var references = [];
+            _.each($scope.complaintInfo.childObjects, function (childObject) {
+                if (ComplaintInfoService.validateReferenceRecord(childObject)) {
+                    references.push(childObject);
+                }
             });
-        }
+            $scope.gridOptions.data = references;
+            //gridHelper.hidePagingControlsIfAllDataShown(references.length);
+        };
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();

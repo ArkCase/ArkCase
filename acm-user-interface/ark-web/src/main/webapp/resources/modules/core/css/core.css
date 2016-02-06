@@ -1,3 +1,7 @@
+/* @override http://dev.jsapn.armedianet.com/arkcase/modules/core/css/core.css */
+
+/* @override http://sharecaredev.armedianet.com/arkcase/modules/core/css/core.css */
+
 /* @override http://10.21.4.149/arkcase/modules/core/css/core.css
 	http://sharecaredev.armedianet.com/arkcase/modules/core/css/core.css */
 
@@ -92,6 +96,7 @@ body {
 .navbar-arkcase .dropdown-menu {
     text-align: center;
     width: 275px;
+    z-index: 1001 !important;
 }
 
 .navbar-arkcase .dropdown-menu .col-xs-4 {
@@ -375,8 +380,8 @@ body {
     vertical-align: top;
     padding-left: 0px;
     padding-right: 0px;
-    padding-top: 140px;
-    padding-bottom: 60px;
+    top: 132px;
+    padding-bottom: 190px;
     width: 500px;
     height: 100% !important;
     -webkit-overflow-scrolling: touch;

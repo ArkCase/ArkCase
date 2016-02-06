@@ -1,33 +1,27 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTracking.ActionsController', ['$scope', '$state', '$translate'
+angular.module('time-tracking').controller('TimeTracking.ActionsController', ['$scope', '$state', '$stateParams', '$translate'
     , 'UtilService', 'ConfigService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService'
-    , function ($scope, $state, $translate
+    , function ($scope, $state, $stateParams, $translate
         , Util, ConfigService, TimeTrackingInfoService, HelperObjectBrowserService) {
 
-        ConfigService.getComponentConfig("time-tracking", "actions").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
-        });
-
-        $scope.$on('object-updated', function (e, data) {
-            if (TimeTrackingInfoService.validateTimesheet(data)) {
-                $scope.timesheetInfo = data;
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "time-tracking"
+            , componentId: "actions"
+            , retrieveObjectInfo: TimeTrackingInfoService.getTimesheetInfo
+            , validateObjectInfo: TimeTrackingInfoService.validateTimesheet
+            , onObjectInfoRetrieved: function (timesheetInfo) {
+                $scope.timesheetInfo = timesheetInfo;
             }
         });
-        //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        //if (Util.goodPositive(currentObjectId, false)) {
-        //    TimeTrackingInfoService.getTimesheetInfo(currentObjectId).then(function (timesheetInfo) {
-        //        $scope.timesheetInfo = timesheetInfo;
-        //        return timesheetInfo;
-        //    });
-        //}
+
 
         $scope.createNew = function () {
             $state.go("frevvo", {
                 name: "new-timesheet"
             });
-            //$state.go('newTimesheet');
         };
 
         $scope.edit = function (timesheetInfo) {
@@ -39,7 +33,10 @@ angular.module('time-tracking').controller('TimeTracking.ActionsController', ['$
                     period: starDate
                 }
             });
-            //$state.go('editTimesheet', { period : $scope.timesheetInfo.starDate});
+        };
+
+        $scope.refresh = function () {
+            $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
     }

@@ -43,7 +43,7 @@ public class SearchChildrenAPIController
          query = query + " AND object_type_s:" + childType;
         }
         if (activeOnly) {
-            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
+            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:CLOSE";
         }
         if (exceptDeletedOnly) {
             if(!activeOnly){

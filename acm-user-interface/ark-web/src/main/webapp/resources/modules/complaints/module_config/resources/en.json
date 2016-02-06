@@ -19,7 +19,12 @@
   },
   "complaints.comp.details": {
     "title": "Details",
-    "informSaved": "Complaint details saved"
+    "informSaved": "Complaint details saved",
+    "table.columns": {
+      "title": "Details",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
+    }
   },
   "complaints.comp.documents": {
     "title": "Documents"
@@ -51,7 +56,7 @@
       }
     },
     "addresses": {
-      "title": "Addresses",
+      "title": "Locations",
       "table.columns": {
         "type": "Type",
         "streetAddress": "Address",
@@ -87,6 +92,19 @@
     "table.columns": {
       "type": "Type",
       "name": "Name"
+    },
+    "dialogUserPicker": {
+      "header": "Choose User",
+      "table.columns": {
+        "name": "Name",
+        "id": "ID"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "Choose Group",
+      "table.columns": {
+        "name": "Name"
+      }
     }
   },
   "complaints.comp.locations": {
@@ -96,7 +114,9 @@
       "type": "Type",
       "city": "City",
       "state": "State",
-      "zip": "Zip"
+      "zip": "Zip",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
     }
   },
   "complaints.comp.notes": {

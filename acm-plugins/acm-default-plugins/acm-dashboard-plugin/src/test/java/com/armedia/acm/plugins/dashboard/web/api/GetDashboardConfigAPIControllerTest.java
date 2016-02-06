@@ -1,11 +1,12 @@
 package com.armedia.acm.plugins.dashboard.web.api;
 
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
-import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
+import com.armedia.acm.plugins.dashboard.model.DashboardConstants;
 import com.armedia.acm.plugins.dashboard.model.DashboardDto;
 import com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
+import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.EasyMockSupport;
@@ -26,10 +27,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -51,11 +53,11 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport
 
     private GetDashboardConfigAPIController unit;
 
-    private DashboardDao mockDashboardDao;
-    private UserDao mockUserDao;
+    private DashboardService mockDashboardService;
     private DashboardEventPublisher mockDashboardEventPublisher;
     private Authentication mockAuthentication;
     private AcmPlugin mockDashboardPlugin;
+    private DashboardPropertyReader mockDashboardPropertyReader;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -65,20 +67,20 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport
     @Before
     public void setUp() throws Exception
     {
-        mockDashboardDao = createMock(DashboardDao.class);
-        mockUserDao = createMock(UserDao.class);
+        mockDashboardService = createMock(DashboardService.class);
         mockDashboardEventPublisher = createMock(DashboardEventPublisher.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
         mockDashboardPlugin = createMock(AcmPlugin.class);
+        mockDashboardPropertyReader = createMock(DashboardPropertyReader.class);
 
 
         unit = new GetDashboardConfigAPIController();
 
-        unit.setDashboardDao(mockDashboardDao);
+        unit.setDashboardService(mockDashboardService);
         unit.setEventPublisher(mockDashboardEventPublisher);
-        unit.setUserDao(mockUserDao);
         unit.setDashboardPlugin(mockDashboardPlugin);
+        unit.setDashboardPropertyReader(mockDashboardPropertyReader);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
@@ -101,20 +103,20 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport
         ret.setDashboardOwner(user);
         ret.setDashboardConfig(dashboardConfig);
 
+        List<String> retList = new ArrayList<>();
+        retList.add(DashboardConstants.DASHBOARD_MODULE_NAME);
+
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
 
         Map<String, Object> prop = new HashMap<String, Object>();
         prop.put("key", "value");
 
-        expect(mockDashboardDao.getDashboardConfigForUser(user)).andReturn(ret);
-        expect(mockUserDao.findByUserId(userId)).andReturn(user);
+        expect(mockDashboardPropertyReader.getModuleNameList()).andReturn(retList);
+        expect(mockDashboardService.getDashboardConfigForUserAndModuleName(user, DashboardConstants.DASHBOARD_MODULE_NAME)).andReturn(ret);
+        expect(mockDashboardService.getUserByUserId(userId)).andReturn(user);
+        expect(mockDashboardService.prepareDashboardDto(ret, false, DashboardConstants.DASHBOARD_MODULE_NAME)).andReturn(returned);
         expect(mockDashboardPlugin.getPluginProperties()).andReturn(prop).anyTimes();
-        mockDashboardEventPublisher.publishGetDashboardByUserIdEvent(
-                eq(ret),
-                eq(mockAuthentication),
-                eq(ipAddress),
-                eq(true));
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("ann-acm").atLeastOnce();

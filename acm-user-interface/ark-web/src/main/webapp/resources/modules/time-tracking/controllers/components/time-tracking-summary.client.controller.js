@@ -5,23 +5,35 @@ angular.module('time-tracking').controller('TimeTracking.SummaryController', ['$
     , function ($scope, $stateParams
         , Util, ConfigService, HelperUiGridService, TimeTrackingInfoService, HelperObjectBrowserService) {
 
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "time-tracking"
+            , componentId: "summary"
+            , retrieveObjectInfo: TimeTrackingInfoService.getTimesheetInfo
+            , validateObjectInfo: TimeTrackingInfoService.validateTimesheet
+            , onObjectInfoRetrieved: function (timesheetInfo) {
+                onObjectInfoRetrieved(timesheetInfo);
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
+
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-        ConfigService.getComponentConfig("time-tracking", "summary").then(function (config) {
+
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
-            return config;
-        });
+        };
 
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            TimeTrackingInfoService.getTimesheetInfo(currentObjectId).then(function (timesheetInfo) {
-                $scope.timesheetInfo = timesheetInfo;
-                $scope.gridOptions = $scope.gridOptions || {};
-                $scope.gridOptions.data = $scope.timesheetInfo.times;
-                return timesheetInfo;
-            });
-        }
+        var onObjectInfoRetrieved = function (timesheetInfo) {
+            $scope.timesheetInfo = timesheetInfo;
+            $scope.gridOptions = $scope.gridOptions || {};
+            $scope.gridOptions.data = $scope.timesheetInfo.times;
+        };
 
         $scope.onClickObjectType = function (event, rowEntity) {
             event.preventDefault();

@@ -5,18 +5,18 @@ angular.module('cost-tracking').controller('CostTracking.DetailsController', ['$
     , function ($scope, $translate, $stateParams
         , Util, ConfigService, CostTrackingInfoService, MessageService, HelperObjectBrowserService) {
 
-        ConfigService.getComponentConfig("cost-tracking", "details").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cost-tracking"
+            , componentId: "details"
+            , retrieveObjectInfo: CostTrackingInfoService.getCostsheetInfo
+            , validateObjectInfo: CostTrackingInfoService.validateCostsheet
+            , onObjectInfoRetrieved: function (costsheetInfo) {
+                $scope.costsheetInfo = costsheetInfo;
+            }
         });
 
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            CostTrackingInfoService.getCostsheetInfo(currentObjectId).then(function (costsheetInfo) {
-                $scope.costsheetInfo = costsheetInfo;
-                return costsheetInfo;
-            });
-        }
 
         $scope.saveDetails = function() {
             var costsheetInfo = Util.omitNg($scope.costsheetInfo);

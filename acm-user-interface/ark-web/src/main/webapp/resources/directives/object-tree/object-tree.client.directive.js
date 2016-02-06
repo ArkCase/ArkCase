@@ -13,6 +13,7 @@
  *
  * @param {Expression} tree-config Configuration for tree
  * @param {Expression} tree-data Data structure used to render the top level tree nodes of the current page
+ * @param {Function} on-reset Callback function to reset tree to initial state.
  * @param {Function} on-select Callback function in response to selected tree item.
  * @param {Function} on-load Callback function to load list of objects.
  * @param {Object} tree-control Tree API functions exposed to user. Following is the list:
@@ -22,7 +23,7 @@
  * @example
  <example>
  <file name="index.html">
- <object-tree tree-config="treeConfig" tree-data="treeData" on-load="onLoad" on-select="onSelect">
+ <object-tree tree-config="treeConfig" tree-data="treeData" on-reset="onReset" on-load="onLoad" on-select="onSelect">
  </object-tree>
  </file>
  <file name="app.js">
@@ -161,27 +162,27 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 }
                 treeInfo.key = key;
                 //Tree.refreshTree(key);
+                //Tree.tree.activateKey(key);
 
             }, setTitle: function (nodeType, nodeId, title, toolTip) {
                 console.log("tree setTitle");
             }
 
             , refreshTree: function (key) {
-                var a1 = this;
-                var a2 = Tree;
-                this.tree.reload().done(function () {
+                //this.tree.reload().done(function () {
+                this.tree.reload(Tree.getSource()).done(function () {
                     if (!Util.isEmpty(key)) {
                         var parts = key.split(Tree.Key.KEY_SEPARATOR);
                         if (parts && 1 < parts.length) {
+                            var promiseClosestParentExpanded = null;
+                            var parentNode = null;
                             var parentKey = parts[0];
                             //exclude page ID, so start from 1; expand parents only, not include self, so length-1
                             for (var i = 1; i < parts.length - 1; i++) {
                                 parentKey += Tree.Key.KEY_SEPARATOR + parts[i];
-                                var node = Tree.tree.getNodeByKey(parentKey);
-                                if (node) {
-                                    if (!node.isExpanded()) {
-                                        node.setExpanded(true);
-                                    }
+                                parentNode = Tree.tree.getNodeByKey(parentKey);
+                                if (parentNode) {
+                                    promiseClosestParentExpanded = parentNode.setExpanded(true);
                                 }
                             }
                         }
@@ -297,7 +298,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                             treeInfo.start = 0;
                         }
                     }
-                    Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter);
+                    Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
 
                 } else if (Tree.Key.getKeyNextPage() == node.key) {
                     Tree.setNodeId(0);
@@ -309,8 +310,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     } else if ((treeInfo.total - treeInfo.n) > treeInfo.start) {
                         treeInfo.start += treeInfo.n;
                     }
-                    //Tree.onLoad()(treeInfo.start, treeInfo.n, "sort-date-asc", "my-created-cases");
-                    Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter);
+                    Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
 
                 } else {
                     var activeKey = Tree.getActiveKey();
@@ -672,48 +672,38 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 }
             } // Config
 
-            , onFilterChanged: function (filter) {
-                var treeInfo = Tree.Info.getTreeInfo();
-                if (!Util.compare(treeInfo.filter, filter)) {
-                    Tree.setNodeId(0);
-                    Tree.setNodeType(null);
-                    treeInfo.start = 0;
-                    treeInfo.filter = filter;
-                    Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter);
-                }
-            }
-            , onSorterChanged: function (sorter) {
-                var treeInfo = Tree.Info.getTreeInfo();
-                if (!Util.compare(treeInfo.sorter, sorter)) {
-                    Tree.setNodeId(0);
-                    Tree.setNodeType(null);
-                    treeInfo.start = 0;
-                    treeInfo.sorter = sorter;
-                    Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter);
-                }
-            }
         }; //Tree
 
         var Filter = {
-            buildFilter: function (filters) {
+            defaultFilter: ""
+            , buildFilter: function (filters) {
+                var that = this;
                 var treeInfo = Tree.Info.getTreeInfo();
                 var oldFilter = treeInfo.filter;
 
                 var html = "";
                 _.each(filters, function (filter) {
                     if (filter.default) {
-                        treeInfo.filter = Util.goodValue(filter.name);
+                        that.defaultFilter = Util.goodValue(filter.name);
+                        treeInfo.filter = that.defaultFilter;
                     }
                     html += "<li value='" + Util.goodValue(filter.name)
                         + "'><a href='#'>" + Util.goodValue(filter.desc) + "</a></li>";
                 });
 
                 if (!Util.isEmpty(html)) {
-                    this.jqUlFilter.html(html);
-                    this.jqUlFilter.find("li").on("click", function (e) {
+                    that.jqUlFilter.html(html);
+                    that.jqUlFilter.find("li").on("click", function (e) {
                         e.preventDefault();
-                        var value = $(this).attr("value");
-                        Tree.onFilterChanged(value);
+                        var filter = $(this).attr("value");
+                        var treeInfo = Tree.Info.getTreeInfo();
+                        if (!Util.compare(treeInfo.filter, filter)) {
+                            Tree.setNodeId(0);
+                            Tree.setNodeType(null);
+                            treeInfo.start = 0;
+                            treeInfo.filter = filter;
+                            Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
+                        }
                     });
                 }
 
@@ -722,25 +712,35 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
         }; //Filter
 
         var Sorter = {
-            buildSorter: function (sorters) {
+            defaultSort: ""
+            , buildSorter: function (sorters) {
+                var that = this;
                 var treeInfo = Tree.Info.getTreeInfo();
                 var oldSorter = treeInfo.sorter;
 
                 var html = "";
                 _.each(sorters, function (sorter) {
                     if (sorter.default) {
-                        treeInfo.sorter = Util.goodValue(sorter.name);
+                        that.defaultSort = Util.goodValue(sorter.name);
+                        treeInfo.sorter = that.defaultSort;
                     }
                     html += "<li value='" + Util.goodValue(sorter.name)
                         + "'><a href='#'>" + Util.goodValue(sorter.desc) + "</a></li>";
                 });
 
                 if (!Util.isEmpty(html)) {
-                    this.jqUlSorter.html(html);
-                    this.jqUlSorter.find("li").on("click", function (e) {
+                    that.jqUlSorter.html(html);
+                    that.jqUlSorter.find("li").on("click", function (e) {
                         e.preventDefault();
-                        var value = $(this).attr("value");
-                        Tree.onSorterChanged(value);
+                        var sorter = $(this).attr("value");
+                        var treeInfo = Tree.Info.getTreeInfo();
+                        if (!Util.compare(treeInfo.sorter, sorter)) {
+                            Tree.setNodeId(0);
+                            Tree.setNodeType(null);
+                            treeInfo.start = 0;
+                            treeInfo.sorter = sorter;
+                            Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
+                        }
                     });
                 }
 
@@ -748,6 +748,30 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
             }
         }; //Sorter
 
+        var Search = {
+            defaultSearch: ""
+            , initSearch: function (searchQuery) {
+                var that = this;
+
+                //keyup can be used for type ahead
+                //that.jqEdtQuery.on("keyup", function (e) {
+                //});
+
+                that.jqBtnQuery.on("click", function (e) {
+                    var searchQuery = that.jqEdtQuery.val();
+                    var treeInfo = Tree.Info.getTreeInfo();
+                    if (!Util.compare(treeInfo.searchQuery, searchQuery)) {
+                        Tree.setNodeId(0);
+                        Tree.setNodeType(null);
+                        treeInfo.start = 0;
+                        treeInfo.searchQuery = searchQuery;
+                        Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
+                    }
+
+                });
+
+            }
+        }; //Search
 
         return {
             restrict: 'E'
@@ -755,6 +779,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
             , scope: {
                 treeConfig: '='
                 , treeData: '='
+                , onReset: '&'
                 , onLoad: '&'
                 , onSelect: '&'
                 , treeControl: '='
@@ -763,10 +788,13 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
             , link: function (scope, element, attrs) {
                 Filter.jqUlFilter = $(element).find(".treeFilter");
                 Sorter.jqUlSorter = $(element).find(".treeSorter");
+                Search.jqEdtQuery = $(element).find(".edtTreeQuery");
+                Search.jqBtnQuery = $(element).find("#btnTreeQuery");
 
                 Tree.reset();
                 Tree.scope = scope;
                 Tree.jqDivTree = $(element).find(".tree");
+                Tree.onReset = scope.onReset;
                 Tree.onLoad = scope.onLoad;
                 Tree.onSelect = scope.onSelect;
                 Tree.treeConfig = null; //scope.treeConfig;
@@ -779,7 +807,6 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 Tree.create();
 
                 var treeInfo = Tree.Info.getTreeInfo();
-                //Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter);
 
                 scope.$watchGroup(['treeConfig', 'treeData'], function (newValues, oldValues, scope) {
                     var treeConfig = newValues[0];
@@ -794,30 +821,36 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                         var oldPageSize = treeInfo.pageSize;
                         var oldFilter = treeInfo.filter;
                         var oldSorter = treeInfo.sorter;
+                        var oldSearchQuery = treeInfo.searchQuery;
 
                         treeInfo.pageSize = Util.goodValue(treeConfig.pageSize, Tree.Info.DEFAULT_PAGE_SIZE);
                         var filters = Util.goodArray(treeConfig.filters);
                         var sorters = Util.goodArray(treeConfig.sorters);
+                        var searchQuery = Util.goodArray(treeConfig.searchQuery);
                         Filter.buildFilter(filters);
                         Sorter.buildSorter(sorters);
+                        Search.initSearch(searchQuery);
 
-                        if (oldPageSize != treeInfo.pageSize || !Util.compare(oldFilter, treeInfo.filter) || !Util.compare(oldSorter, treeInfo.sorter)) {
-                            Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter);
+                        if (oldPageSize != treeInfo.pageSize || !Util.compare(oldFilter, treeInfo.filter) || !Util.compare(oldSorter, treeInfo.sorter) || !Util.compare(oldSearchQuery, treeInfo.searchQuery)) {
+                            Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
                         }
                     }
 
                     if (isNewData && treeConfig && Util.goodMapValue(treeData, "docs", false)) {
-                        Tree.tree.reload(Tree.getSource()).done(function () {
-                            if (0 < treeData.docs.length) {
-                                var treeInfo = Tree.Info.getTreeInfo();
-                                if (!Util.isEmpty(treeInfo.key)) {
-                                    Tree.tree.activateKey(treeInfo.key);
-                                }
-                            }
-                        });
-
+                        var treeInfo = Tree.Info.getTreeInfo();
+                        Tree.refreshTree(treeInfo.key);
                     }
                 });
+
+                scope.onClickRefresh = function () {
+                    Tree.onReset()();
+                    Tree.reset();
+
+                    var treeInfo = Tree.Info.getTreeInfo();
+                    treeInfo.sorter = Sorter.defaultSort;
+                    treeInfo.filter = Sorter.defaultFilter;
+                    Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
+                };
             }
         };
     }

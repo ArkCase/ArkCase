@@ -10,6 +10,7 @@
         <property name="placeholderSuffix" value="]"/>
     </bean>
 
+    <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication"/>
 
     <bean id="datasourceProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean" >

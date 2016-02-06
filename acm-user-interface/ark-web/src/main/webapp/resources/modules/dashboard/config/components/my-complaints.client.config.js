@@ -6,6 +6,7 @@ angular.module('dashboard.my-complaints', ['adf.provider']).config(function (das
         description: 'Displays my complaints',
         controller: 'Dashboard.MyComplaintsController',
         controllerAs: 'myComplaints',
+        reload: true,
         templateUrl: 'modules/dashboard/views/components/my-complaints.client.view.html'
     });
 });

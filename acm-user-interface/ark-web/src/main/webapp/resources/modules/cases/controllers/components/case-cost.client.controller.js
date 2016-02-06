@@ -1,33 +1,48 @@
 'use strict';
 
 angular.module('cases').controller('Cases.CostController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'ObjectService', 'ConfigService', 'Object.CostService'
+    , 'UtilService', 'ObjectService', 'ConfigService', 'Object.CostService', 'Case.InfoService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
     , function ($scope, $stateParams, $translate
-        , Util, ObjectService, ConfigService, ObjectCostService, HelperUiGridService, HelperObjectBrowserService) {
+        , Util, ObjectService, ConfigService, ObjectCostService, CaseInfoService
+        , HelperUiGridService, HelperObjectBrowserService) {
+
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cases"
+            , componentId: "cost"
+            , retrieveObjectInfo: CaseInfoService.getCaseInfo
+            , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onObjectInfoRetrieved: function (caseInfo) {
+                $scope.caseInfo = caseInfo;
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        var promiseConfig = ConfigService.getComponentConfig("cases", "cost").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
 
             for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                 if ("name" == $scope.config.columnDefs[i].name) {
-                    $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.acm$_formName}}</a>";
+                    $scope.gridOptions.columnDefs[i].cellTemplate = "<a data-ui-sref=\"cost-tracking.main({id: row.entity.id})\">{{row.entity.acm$_formName}}</a>";
                 } else if ("tally" == $scope.config.columnDefs[i].name) {
                     $scope.gridOptions.columnDefs[i].field = "acm$_costs";
                 }
             }
-            return config;
-        });
+        };
 
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.CASE_FILE, currentObjectId).then(
+        if (Util.goodPositive($scope.currentObjectId, false)) {
+            ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.CASE_FILE, $scope.currentObjectId).then(
                 function (costsheets) {
-                    promiseConfig.then(function (config) {
+                    $scope.promiseConfig.then(function (config) {
                         for (var i = 0; i < costsheets.length; i++) {
                             costsheets[i].acm$_formName = $translate.instant("cases.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
                             costsheets[i].acm$_costs = _.reduce(Util.goodArray(costsheets[i].costs), function (total, n) {
@@ -45,11 +60,5 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
                 }
             );
         }
-
-
-        $scope.onClickObjLink = function (event, rowEntity) {
-            event.preventDefault();
-            gridHelper.showObject(ObjectService.ObjectTypes.COSTSHEET, Util.goodMapValue(rowEntity, "id", 0));
-        };
     }
 ]);

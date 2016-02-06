@@ -28,10 +28,6 @@
             </props>
         </property>
     </bean>
-    
-    <bean id="applicationRoleToUserGroupPropertyConfigurer" class="net.unicon.springframework.addons.properties.ReloadingPropertyPlaceholderConfigurer">
-		<property name="properties" ref="applicationRoleToUserGroupProperties"/>
-	</bean>
 
     <bean
             id="acmAuthoritiesMapper"

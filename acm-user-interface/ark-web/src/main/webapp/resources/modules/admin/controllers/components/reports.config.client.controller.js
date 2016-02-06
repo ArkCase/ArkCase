@@ -45,7 +45,7 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
             //set not authorized groups.
             // Logic: iterate all user groups and if not already exists in selected report user groups, add to the array
             for (var key in $scope.userGroupsAll) {
-                if ($scope.reportsUserGroups[selectedObject.key].indexOf(key) == -1) {
+                if (!$scope.reportsUserGroups || !$scope.reportsUserGroups[selectedObject.key] || $scope.reportsUserGroups[selectedObject.key].indexOf(key) == -1) {
                     var notAuthObject = {};
                     notAuthObject.key = key;
                     notAuthObject.name = key;
@@ -67,6 +67,11 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
             //recreate reports array
             var reports = [];
             for (var key in $scope.reportsMap) {
+                if ($scope.reportsUserGroups && $scope.reportsUserGroups[key]) {
+                    var injected = $scope.reportsUserGroups[key].length === 0 ? false : true;
+                    $scope.reportsMap[key].injected = injected;
+                }
+
                 reports.push($scope.reportsMap[key]);
             }
             reportsConfigService.saveReports(reports);

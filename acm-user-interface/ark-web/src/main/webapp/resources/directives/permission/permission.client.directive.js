@@ -35,16 +35,11 @@ angular.module('directives').directive('permission', ['$q', '$log', 'Permissions
         return {
             priority: 100,
             restrict: 'A',
-            scope: {
-                permission: '@',
-                permissionAction: '@',
-                permissionProperties: '='
-            },
 
             link: {
                 pre: function (scope, element, attrs) {
                     element.on('click', {
-                            actionName: scope.permission,
+                            actionName: attrs.permission,
                             element: element
                         },
                         onElementClick
@@ -52,19 +47,21 @@ angular.module('directives').directive('permission', ['$q', '$log', 'Permissions
                 },
 
                 post: function (scope, element, attrs) {
-                    var actionName = scope.permission;
-                    var permissionAction = scope.permissionAction;
 
-                    scope.$watchCollection('permissionProperties', function (newValue, oldValue) {
-                        $q.when(newValue).then(function (permissionProperties) {
-                            setPermission(element, actionName, permissionProperties, permissionAction);
-                        }, true);
+                    // We use access to attributes value instead of isolated scope
+                    // to avoid "isolated scopes conflicts" when few directives with isolated scopes are applied to element
+                    var actionName = attrs.permission;
+                    var permissionAction = attrs.permissionAction;
+                    var permissionProperties = null;
+
+                    scope.$watch(attrs.permissionProperties, function(value){
+                        permissionProperties = value;
+                        setPermission(element, actionName, permissionProperties, permissionAction);
                     });
 
                     attrs.$observe('disabled', function () {
-                        setPermission(element, actionName, scope.permissionProperties, permissionAction);
+                        setPermission(element, actionName, permissionProperties, permissionAction);
                     });
-
                 }
             }
         };

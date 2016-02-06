@@ -3,41 +3,72 @@ package com.armedia.acm.plugins.dashboard.model;
 /**
  * Created by marst on 8/6/14.
  */
-public class DashboardDto {
-String userId;
-String dashboardConfig;
-boolean updated = false;
-boolean inserted = false;
+public class DashboardDto
+{
+    String userId;
+    String dashboardConfig;
+    String module;
+    boolean collapsed = false;
+    boolean updated = false;
+    boolean inserted = false;
 
-    public boolean isInserted() {
+    public boolean isInserted()
+    {
         return inserted;
     }
 
-    public void setInserted(boolean inserted) {
+    public void setInserted(boolean inserted)
+    {
         this.inserted = inserted;
     }
 
-    public boolean isUpdated() {
+    public boolean isUpdated()
+    {
         return updated;
     }
 
-    public void setUpdated(boolean updated) {
+    public void setUpdated(boolean updated)
+    {
         this.updated = updated;
     }
 
-    public String getUserId() {
+    public String getUserId()
+    {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(String userId)
+    {
         this.userId = userId;
     }
 
-    public String getDashboardConfig() {
+    public String getDashboardConfig()
+    {
         return dashboardConfig;
     }
 
-    public void setDashboardConfig(String dashboardConfig) {
+    public void setDashboardConfig(String dashboardConfig)
+    {
         this.dashboardConfig = dashboardConfig;
+    }
+
+    public String getModule()
+    {
+        return module;
+    }
+
+    public void setModule(String module)
+    {
+        this.module = module;
+    }
+
+    public boolean isCollapsed()
+    {
+        return collapsed;
+    }
+
+    public void setCollapsed(boolean collapsed)
+    {
+        this.collapsed = collapsed;
     }
 }

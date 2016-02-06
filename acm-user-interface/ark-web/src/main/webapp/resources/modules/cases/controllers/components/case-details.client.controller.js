@@ -5,18 +5,17 @@ angular.module('cases').controller('Cases.DetailsController', ['$scope', '$state
     , function ($scope, $stateParams, $translate
         , Util, ConfigService, CaseInfoService, MessageService, HelperObjectBrowserService) {
 
-        ConfigService.getComponentConfig("cases", "details").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
-        });
-
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cases"
+            , componentId: "details"
+            , retrieveObjectInfo: CaseInfoService.getCaseInfo
+            , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onObjectInfoRetrieved: function (caseInfo) {
                 $scope.caseInfo = caseInfo;
-                return caseInfo;
-            });
-        }
+            }
+        });
 
 
         $scope.options = {

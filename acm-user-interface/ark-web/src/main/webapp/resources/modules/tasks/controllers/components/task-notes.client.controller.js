@@ -1,17 +1,33 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.NoteService', 'Authentication'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.NoteService', 'Authentication', 'Task.InfoService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Helper.NoteService'
     , function ($scope, $stateParams, $q
-        , Util, ConfigService, ObjectService, ObjectNoteService, Authentication
+        , Util, ConfigService, ObjectService, ObjectNoteService, Authentication, TaskInfoService
         , HelperUiGridService, HelperObjectBrowserService, HelperNoteService) {
+
+        new HelperObjectBrowserService.Component({
+            moduleId: "tasks"
+            , componentId: "notes"
+            , scope: $scope
+            , stateParams: $stateParams
+            , retrieveObjectInfo: TaskInfoService.getTaskInfo
+            , validateObjectInfo: TaskInfoService.validateTaskInfo
+            , onObjectInfoRetrieved: function (taskInfo) {
+                $scope.taskInfo = taskInfo;
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
 
         var noteHelper = new HelperNoteService.Note();
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        ConfigService.getComponentConfig("tasks", "notes").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
@@ -20,8 +36,7 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
             gridHelper.setUserNameFilter(promiseUsers);
 
             $scope.retrieveGridData();
-            return config;
-        });
+        };
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -31,9 +46,8 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
         );
 
         $scope.retrieveGridData = function () {
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (Util.goodPositive(currentObjectId, false)) {
-                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.TASK, currentObjectId);
+            if (Util.goodPositive($scope.currentObjectId, false)) {
+                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.TASK, $scope.currentObjectId);
                 $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions.data = notes;

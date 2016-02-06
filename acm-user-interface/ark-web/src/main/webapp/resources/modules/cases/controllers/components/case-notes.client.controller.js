@@ -1,11 +1,26 @@
 'use strict';
 
 angular.module('cases').controller('Cases.NotesController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.NoteService', 'Authentication'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.NoteService', 'Authentication', 'Case.InfoService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Helper.NoteService'
     , function ($scope, $stateParams, $q
-        , Util, ConfigService, ObjectService, ObjectNoteService, Authentication
+        , Util, ConfigService, ObjectService, ObjectNoteService, Authentication, CaseInfoService
         , HelperUiGridService, HelperObjectBrowserService, HelperNoteService) {
+
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cases"
+            , componentId: "notes"
+            , retrieveObjectInfo: CaseInfoService.getCaseInfo
+            , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onObjectInfoRetrieved: function (caseInfo) {
+                $scope.caseInfo = caseInfo;
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
 
         var noteHelper = new HelperNoteService.Note();
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
@@ -18,7 +33,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             }
         );
 
-        var promiseConfig = ConfigService.getComponentConfig("cases", "notes").then(function (config) {
+        var onConfigRetrieved = function (config) {
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
@@ -28,13 +43,12 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
 
             $scope.retrieveGridData();
             return config;
-        });
+        };
 
         $scope.retrieveGridData = function () {
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (Util.goodPositive(currentObjectId, false)) {
-                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.CASE_FILE, currentObjectId);
-                $q.all([promiseQueryNotes, promiseUsers, promiseConfig]).then(function (data) {
+            if (Util.goodPositive($scope.currentObjectId, false)) {
+                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.CASE_FILE, $scope.currentObjectId);
+                $q.all([promiseQueryNotes, promiseUsers, $scope.promiseConfig]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = notes;
