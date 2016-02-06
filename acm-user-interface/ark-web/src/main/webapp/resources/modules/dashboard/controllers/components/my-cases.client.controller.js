@@ -10,23 +10,16 @@
  *
  * Loads cases in the "My Cases" widget.
  */
-angular.module('dashboard.my-cases', ['adf.provider'])
-    .config(function (dashboardProvider) {
-        dashboardProvider
-            .widget('myCases', {
-                title: 'My Cases',
-                description: 'Displays my cases',
-                controller: 'Dashboard.MyCasesController',
-                reload: true,
-                templateUrl: 'modules/dashboard/views/components/my-cases.client.view.html'
-            });
-    })
+angular.module('dashboard.my-cases')
     .controller('Dashboard.MyCasesController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
         function ($scope, $translate, Authentication, DashboardService) {
 
+            var vm = this;
+
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'myCases');
-            $scope.config = null;
+
+            vm.config = null;
             var userInfo = null;
 
             var paginationOptions = {
@@ -46,13 +39,13 @@ angular.module('dashboard.my-cases', ['adf.provider'])
              * @description
              * This method opens the selected file in the snowbound viewer
              */
-            $scope.openViewer = function (rowData) {
+            vm.openViewer = function (rowData) {
                 if (rowData && rowData.entity.object_id_s) {
                     window.open(window.location.href.split('!')[0] + '!/cases/' + rowData.entity.object_id_s + '/main', '_self');
                 }
             };
 
-            $scope.gridOptions = {
+            vm.gridOptions = {
                 enableColumnResizing: true,
                 enableRowSelection: true,
                 enableSelectAll: false,
@@ -63,7 +56,7 @@ angular.module('dashboard.my-cases', ['adf.provider'])
                 noUnselect: false,
                 columnDefs: [],
                 onRegisterApi: function (gridApi) {
-                    $scope.gridApi = gridApi;
+                    vm.gridApi = gridApi;
 
                     gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
                         if (sortColumns.length == 0) {
@@ -82,14 +75,13 @@ angular.module('dashboard.my-cases', ['adf.provider'])
                 }
             };
 
-
             function applyConfig(e, componentId, config) {
                 if (componentId == 'myCases') {
-                    $scope.config = config;
-                    $scope.gridOptions.columnDefs = config.columnDefs;
-                    $scope.gridOptions.enableFiltering = config.enableFiltering;
-                    $scope.gridOptions.paginationPageSizes = config.paginationPageSizes;
-                    $scope.gridOptions.paginationPageSize = config.paginationPageSize;
+                    vm.config = config;
+                    vm.gridOptions.columnDefs = config.columnDefs;
+                    vm.gridOptions.enableFiltering = config.enableFiltering;
+                    vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
+                    vm.gridOptions.paginationPageSize = config.paginationPageSize;
                     paginationOptions.pageSize = config.paginationPageSize;
 
                     Authentication.queryUserInfo().then(function (responseUserInfo) {
@@ -97,13 +89,8 @@ angular.module('dashboard.my-cases', ['adf.provider'])
                         getPage();
                         return userInfo;
                     });
-                    //Authentication.queryUserInfo(function (responseUserInfo) {
-                    //    userInfo = responseUserInfo;
-                    //    getPage();
-                    //});
                 }
             }
-
 
             function getPage() {
                 DashboardService.queryMyCases({
@@ -114,8 +101,8 @@ angular.module('dashboard.my-cases', ['adf.provider'])
                         pageSize: paginationOptions.pageSize
                     },
                     function (data) {
-                        $scope.gridOptions.data = data.response.docs;
-                        $scope.gridOptions.totalItems = data.response.numFound;
+                        vm.gridOptions.data = data.response.docs;
+                        vm.gridOptions.totalItems = data.response.numFound;
                     }
                 );
             }

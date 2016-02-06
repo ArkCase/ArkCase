@@ -1,6 +1,7 @@
 {
   "id": "tasks",
   "title": "Tasks",
+  "initialLinksShown": true,
   "hasOverviewWidgets": true,
   "menus": [
     {
@@ -117,6 +118,7 @@
       {
         "type": "p/TASK/det",
         "label": "Details",
+        "icon": "fa fa-info-circle",
         "components": [
           "details"
         ]
@@ -124,6 +126,7 @@
       {
         "type": "p/TASK/rewk",
         "label": "Rework Details",
+        "icon": "fa fa-repeat",
         "components": [
           "reworkdetails"
         ]
@@ -131,6 +134,7 @@
       {
         "type": "p/TASK/docrev",
         "label": "Documents Under Review",
+        "icon": "fa fa-search-plus",
         "components": [
           "docsreview"
         ]
@@ -138,6 +142,7 @@
       {
         "type": "p/TASK/att",
         "label": "Attachments",
+        "icon": "fa fa-file",
         "components": [
           "attachments"
         ]
@@ -145,6 +150,7 @@
       {
         "type": "p/TASK/note",
         "label": "Notes",
+        "icon": "fa fa-comments",
         "components": [
           "notes"
         ]
@@ -152,6 +158,7 @@
       {
         "type": "p/TASK/wkfl",
         "label": "Workflow Overview",
+        "icon": "fa fa-code-fork",
         "components": [
           "workflow"
         ]
@@ -159,6 +166,7 @@
       {
         "type": "p/TASK/his",
         "label": "History",
+        "icon": "fa fa-bell-o",
         "components": [
           "history"
         ]
@@ -166,6 +174,7 @@
       {
         "type": "p/TASK/sig",
         "label": "eSignatures",
+        "icon": "fa fa-certificate",
         "components": [
           "signatures"
         ]
@@ -186,6 +195,7 @@
       {
         "type": "p/ADHOC/det",
         "label": "Details",
+        "icon": "fa fa-info-circle",
         "components": [
           "details"
         ]
@@ -193,6 +203,7 @@
       {
         "type": "p/ADHOC/rej",
         "label": "Reject Comments",
+        "icon": "fa fa-hand-stop-o",
         "components": [
           "rejcomments"
         ]
@@ -200,6 +211,7 @@
       {
         "type": "p/ADHOC/att",
         "label": "Attachments",
+        "icon": "fa fa-file",
         "components": [
           "attachments"
         ]
@@ -207,6 +219,7 @@
       {
         "type": "p/ADHOC/note",
         "label": "Notes",
+        "icon": "fa fa-comments",
         "components": [
           "notes"
         ]
@@ -214,6 +227,7 @@
       {
         "type": "p/ADHOC/wkfl",
         "label": "Workflow Overview",
+        "icon": "fa fa-code-fork",
         "components": [
           "workflow"
         ]
@@ -221,6 +235,7 @@
       {
         "type": "p/ADHOC/his",
         "label": "History",
+        "icon": "fa fa-bell-o",
         "components": [
           "history"
         ]
@@ -228,11 +243,18 @@
       {
         "type": "p/ADHOC/sig",
         "label": "eSignatures",
+        "icon": "fa fa-certificate",
         "components": [
           "signatures"
         ]
       }
     ]
+  },
+  "docTree": {
+    "emailSubject": "Task $taskId",
+    "subjectRegex": "(.*)\\$([^\\s]+)",
+    "objectTypeRegexGroup": 1,
+    "objectNumberRegexGroup": 2
   },
   "components": [
     {
@@ -242,35 +264,74 @@
       "enabled": false,
       "type": "empty",
       "editable": false,
-      "widgetsTask": [
+      "widgets": [
         {
           "id": "details",
           "type": "component",
           "columnDefs": [
             {
               "name": "details",
-              "displayName": "dashboard.widgets.details.table.header.details",
+              "displayName": "tasks.comp.details.table.columns.details",
               "headerCellFilter": "translate"
             },
             {
-              "name": "modified",
-              "displayName": "dashboard.widgets.details.table.header.modified",
+              "name": "createDate",
+              "displayName": "tasks.comp.details.table.columns.modified",
               "headerCellFilter": "translate"
             },
             {
-              "name": "modifier",
-              "displayName": "dashboard.widgets.details.table.header.modifier",
+              "name": "assignee",
+              "displayName": "tasks.comp.details.table.columns.modifier",
               "headerCellFilter": "translate"
             }
           ]
         },
         {
-          "id": "reworkdetails",
-          "type": "component"
+          "id": "reworkDetails",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "reworkInstructions",
+              "displayName": "tasks.comp.reworkdetails.table.columns.title",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "taskStartDate",
+              "displayName": "tasks.comp.reworkdetails.table.columns.modified",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "assignee",
+              "displayName": "tasks.comp.reworkdetails.table.columns.modifier",
+              "headerCellFilter": "translate"
+            }
+          ]
         },
         {
-          "id": "docsreview",
-          "type": "component"
+          "id": "docsReview",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "fileName",
+              "displayName": "tasks.comp.docsreview.table.columns.fileName",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "tasks.comp.docsreview.table.columns.created",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "creator",
+              "displayName": "tasks.comp.docsreview.table.columns.creator",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "status",
+              "displayName": "tasks.comp.docsreview.table.columns.status",
+              "headerCellFilter": "translate"
+            }
+          ]
         },
         {
           "id": "attachments",
@@ -278,11 +339,65 @@
         },
         {
           "id": "notes",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "note",
+              "displayName": "tasks.comp.notes.table.columns.note",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "tasks.comp.notes.table.columns.created",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+              "enableCellEdit": false
+            },
+            {
+              "name": "creator",
+              "displayName": "tasks.comp.notes.table.columns.creator",
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "lookup": "userFullNames"
+            }
+          ]
         },
         {
           "id": "workflow",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "participant",
+              "displayName": "tasks.comp.workflow.table.columns.participant",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "role",
+              "displayName": "tasks.comp.workflow.table.columns.role",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "status",
+              "displayName": "tasks.comp.workflow.table.columns.status",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "startDateTime",
+              "field": "startDate",
+              "displayName": "tasks.comp.workflow.table.columns.startDateTime",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.startDate | date : 'medium'}}</div>",
+              "enableCellEdit": false
+            },
+            {
+              "name": "endDateTime",
+              "field": "endDate",
+              "displayName": "tasks.comp.workflow.table.columns.endDateTime",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.endDate | date : 'medium'}}</div>",
+              "enableCellEdit": false
+            }
+          ]
         },
         {
           "id": "history",
@@ -290,7 +405,23 @@
         },
         {
           "id": "signatures",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "signedDate",
+              "displayName": "tasks.comp.signatures.table.columns.signedDate",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+              "enableCellEdit": false
+            },
+            {
+              "name": "signedBy",
+              "displayName": "tasks.comp.signatures.table.columns.signedBy",
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "lookup": "userFullNames"
+            }
+          ]
         }
       ],
       "widgetsAdhoc": [
@@ -308,11 +439,65 @@
         },
         {
           "id": "notes",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "note",
+              "displayName": "tasks.comp.notes.table.columns.note",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "tasks.comp.notes.table.columns.created",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+              "enableCellEdit": false
+            },
+            {
+              "name": "creator",
+              "displayName": "tasks.comp.notes.table.columns.creator",
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "lookup": "userFullNames"
+            }
+          ]
         },
         {
           "id": "workflow",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "participant",
+              "displayName": "tasks.comp.workflow.table.columns.participant",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "role",
+              "displayName": "tasks.comp.workflow.table.columns.role",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "status",
+              "displayName": "tasks.comp.workflow.table.columns.status",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "startDateTime",
+              "field": "startDate",
+              "displayName": "tasks.comp.workflow.table.columns.startDateTime",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.startDate | date : 'medium'}}</div>",
+              "enableCellEdit": false
+            },
+            {
+              "name": "endDateTime",
+              "field": "endDate",
+              "displayName": "tasks.comp.workflow.table.columns.endDateTime",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.endDate | date : 'medium'}}</div>",
+              "enableCellEdit": false
+            }
+          ]
         },
         {
           "id": "history",
@@ -320,7 +505,23 @@
         },
         {
           "id": "signatures",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "signedDate",
+              "displayName": "tasks.comp.signatures.table.columns.signedDate",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+              "enableCellEdit": false
+            },
+            {
+              "name": "signedBy",
+              "displayName": "tasks.comp.signatures.table.columns.signedBy",
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "lookup": "userFullNames"
+            }
+          ]
         }
       ]
     },
@@ -329,7 +530,8 @@
       "title": "Info",
       "enabled": false,
       "type": "empty",
-      "editable": false
+      "editable": false,
+      "dateFormat": "YYYY-MM-DDTHH:mm:ss.SSSZZ"
     },
     {
       "id": "parentinfo",

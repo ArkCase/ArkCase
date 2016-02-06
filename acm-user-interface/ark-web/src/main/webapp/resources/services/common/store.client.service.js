@@ -249,7 +249,6 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              * var data = dataCache.get();                              // data contains value '{greeting: "Hello", who: "World"}'
              */
             , set: function (data) {
-                return; //jwu:  disable as temporary measure
                 var item = (Util.isEmpty(data)) ? null : JSON.stringify(data);
                 sessionStorage.setItem(this.name, item);
             }
@@ -311,7 +310,6 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              * var data = dataCache.get();                              // data contains value '{greeting: "Hello", who: "World"}'
              */
             , set: function (data) {
-                return; //jwu:  disable as temporary measure
                 var item = (Util.isEmpty(data)) ? null : JSON.stringify(data);
                 localStorage.setItem(this.name, item);
             }
@@ -334,6 +332,8 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              * @description
              * Get value of a CacheFifo
+             *
+             * @returns {Object} Object stored in cache
              *
              * Example:
              *
@@ -403,7 +403,6 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              */
             , put: function (key, item) {
-                return; //jwu:  disable as temporary measure
                 var thisCache = this._getThis();
                 var putAt = -1;
                 for (var i = 0; i < thisCache.size; i++) {
@@ -526,6 +525,22 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
                 }
                 thisCache.locks = [];
             }
+
+            /**
+             * @ngdoc method
+             * @name keys
+             * @methodOf StoreService.CacheFifo
+             *
+             * @description
+             * Return keys in array of CacheFifo.
+             *
+             * @returns {Array} Keys in array
+             */
+            , keys: function () {
+                var thisCache = this._getThis();
+                return thisCache.keys;
+            }
+
             , _evict: function (name, expiration) {
                 //fixme: need a timer
 

@@ -43,6 +43,12 @@ public class Dashboard implements Serializable
     @Column(name = "cm_dashboard_config")
     private String dashboardConfig;
 
+    @Column(name = "cm_module_name")
+    private String moduleName;
+
+    @Column(name = "cm_module_config_collapsed")
+    private Boolean collapsed;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cm_dashboard_owner")
     private AcmUser dashboardOwner;
@@ -77,4 +83,23 @@ public class Dashboard implements Serializable
         this.dashboardConfig = dashboardConfig;
     }
 
+    public String getModuleName()
+    {
+        return moduleName;
+    }
+
+    public void setModuleName(String moduleName)
+    {
+        this.moduleName = moduleName;
+    }
+
+    public Boolean getCollapsed()
+    {
+        return collapsed;
+    }
+
+    public void setCollapsed(Boolean collapsed)
+    {
+        this.collapsed = collapsed;
+    }
 }

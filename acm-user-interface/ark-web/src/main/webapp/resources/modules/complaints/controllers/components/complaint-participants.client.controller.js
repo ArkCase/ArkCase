@@ -1,15 +1,31 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.ParticipantsController', ['$scope', '$stateParams', '$q'
+angular.module('complaints').controller('Complaints.ParticipantsController', ['$scope', '$stateParams', '$q', '$translate', '$modal'
     , 'StoreService', 'UtilService', 'ConfigService', 'Complaint.InfoService', 'LookupService'
     , 'Object.LookupService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, $q
+    , function ($scope, $stateParams, $q, $translate, $modal
         , Store, Util, ConfigService, ComplaintInfoService, LookupService
         , ObjectLookupService, HelperUiGridService, HelperObjectBrowserService) {
 
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "complaints"
+            , componentId: "participants"
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onObjectInfoRetrieved: function (complaintInfo) {
+                onObjectInfoRetrieved(complaintInfo);
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
+
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        var promiseConfig = ConfigService.getComponentConfig("complaints", "participants").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
@@ -62,17 +78,51 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
 
 
                     } else if (HelperUiGridService.Lookups.PARTICIPANT_NAMES == $scope.config.columnDefs[i].lookup) {
-                        $scope.gridOptions.columnDefs[i].enableCellEdit = true;
-                        $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                        $scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                        $scope.gridOptions.columnDefs[i].editDropdownRowEntityOptionsArrayPath = "acm$_participantNames";
-                        $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: row.entity.acm$_participantNames:'id':'name'";
+                        //$scope.gridOptions.columnDefs[i].enableCellEdit = true;
+                        //$scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
+                        //$scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
+                        //$scope.gridOptions.columnDefs[i].editDropdownRowEntityOptionsArrayPath = "acm$_participantNames";
+                        //$scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: row.entity.acm$_participantNames:'id':'name'";
+                        $scope.gridOptions.columnDefs[i].cellTemplate = "<div class='ui-grid-cell-contents' ng-click='grid.appScope.pickParticipant(row.entity)'>{{row.entity[col.field] | mapKeyValue: row.entity.acm$_participantNames:'id':'name'}}</div>";
                     }
                 }
             });
+        };
 
-            return config;
-        });
+        $scope.pickParticipant = function (rowEntity) {
+            var params = {};
+            if (rowEntity.acm$_participantNames == $scope.participantUsers) {
+                params.header = $translate.instant("complaints.comp.participants.dialogUserPicker.header");
+                params.filter = '"Object Type": USER';
+                params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
+
+            } else if (rowEntity.acm$_participantNames == $scope.participantGroups) {
+                params.header = $translate.instant("complaints.comp.participants.dialogGroupPicker.header");
+                params.filter = '"Object Type": GROUP';
+                params.config = Util.goodMapValue($scope.config, "dialogGroupPicker");
+
+            } else { //if ("*" == Util.goodValue(rowEntity.participantType)) {
+                return;
+            }
+
+            var modalInstance = $modal.open({
+                templateUrl: "modules/complaints/views/components/complaint-participant-picker.dialog.html"
+                , controller: 'Complaints.ParticipantPickerController'
+                , animation: true
+                , size: 'lg'
+                , resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
+            });
+            modalInstance.result.then(function (selected) {
+                if (!Util.isEmpty(selected)) {
+                    rowEntity.participantLdapId = selected.object_id_s;
+                    $scope.updateRow(rowEntity);
+                }
+            });
+        };
 
         var promiseTypes = ObjectLookupService.getParticipantTypes().then(
             function (participantTypes) {
@@ -95,8 +145,8 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
             }
         );
 
-        var updateGridData = function (data) {
-            $q.all([promiseTypes, promiseUsers, promiseGroups, promiseConfig]).then(function () {
+        var onObjectInfoRetrieved = function (data) {
+            $q.all([promiseTypes, promiseUsers, promiseGroups, $scope.promiseConfig]).then(function () {
                 var participants = data.participants;
                 _.each(participants, function (participant) {
                     if ("*" === participant.participantType) {
@@ -115,25 +165,6 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
             });
         };
 
-        //$scope.$on('object-updated', function (e, data) {
-        //    if (!ComplaintInfoService.validateComplaintInfo(data)) {
-        //        return;
-        //    }
-        //
-        //    if (data.complaintId == $stateParams.id) {
-        //        updateGridData(data);
-        //    } else {                      // condition when data comes before state is routed and config is not set
-        //        var deferParticipantData = new Store.Variable("deferComplaintParticipantData");
-        //        deferParticipantData.set(data);
-        //    }
-        //});
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
-                updateGridData(complaintInfo);
-                return complaintInfo;
-            });
-        }
 
 
         $scope.addNew = function () {
@@ -171,8 +202,15 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
 
         };
     }
-])
-
-;
+]);
 
 
+angular.module('directives').controller('Complaints.ParticipantPickerController', ['$scope', '$modalInstance', 'params'
+        , function ($scope, $modalInstance, params) {
+            $scope.modalInstance = $modalInstance;
+            $scope.header = params.header;
+            $scope.filter = params.filter;
+            $scope.config = params.config;
+        }
+    ]
+);

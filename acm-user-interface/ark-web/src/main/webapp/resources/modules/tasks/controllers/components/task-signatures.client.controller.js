@@ -1,27 +1,43 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.SignaturesController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.SignatureService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.SignatureService', 'Task.InfoService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
     , function ($scope, $stateParams, $q
-        , Util, ConfigService, ObjectService, ObjectSignatureService, HelperUiGridService, HelperObjectBrowserService) {
+        , Util, ConfigService, ObjectService, ObjectSignatureService, TaskInfoService
+        , HelperUiGridService, HelperObjectBrowserService) {
+
+        new HelperObjectBrowserService.Component({
+            moduleId: "tasks"
+            , componentId: "signatures"
+            , scope: $scope
+            , stateParams: $stateParams
+            , retrieveObjectInfo: TaskInfoService.getTaskInfo
+            , validateObjectInfo: TaskInfoService.validateTaskInfo
+            , onObjectInfoRetrieved: function (taskInfo) {
+                $scope.taskInfo = taskInfo;
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        ConfigService.getComponentConfig("tasks", "signatures").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
             gridHelper.setUserNameFilter(promiseUsers);
 
             $scope.retrieveGridData();
-            return config;
-        });
+        };
 
         $scope.retrieveGridData = function () {
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (Util.goodPositive(currentObjectId, false)) {
-                var promiseQueryAudit = ObjectSignatureService.findSignatures(ObjectService.ObjectTypes.TASK, currentObjectId);
+            if (Util.goodPositive($scope.currentObjectId, false)) {
+                var promiseQueryAudit = ObjectSignatureService.findSignatures(ObjectService.ObjectTypes.TASK, $scope.currentObjectId);
 
                 $q.all([promiseQueryAudit, promiseUsers]).then(function (data) {
                     var signatures = data[0];

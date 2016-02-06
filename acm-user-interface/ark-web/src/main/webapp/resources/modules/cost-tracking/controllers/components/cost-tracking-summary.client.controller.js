@@ -5,30 +5,42 @@ angular.module('cost-tracking').controller('CostTracking.SummaryController', ['$
     , function ($scope, $stateParams
         , Util, ConfigService, HelperUiGridService, CostTrackingInfoService, HelperObjectBrowserService) {
 
-        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-        ConfigService.getComponentConfig("cost-tracking", "summary").then(function (config) {
-            gridHelper.setColumnDefs(config);
-            gridHelper.setBasicOptions(config);
-            return config;
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cost-tracking"
+            , componentId: "summary"
+            , retrieveObjectInfo: CostTrackingInfoService.getCostsheetInfo
+            , validateObjectInfo: CostTrackingInfoService.validateCostsheet
+            , onObjectInfoRetrieved: function (costsheetInfo) {
+                onObjectInfoRetrieved(costsheetInfo);
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
         });
 
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            CostTrackingInfoService.getCostsheetInfo(currentObjectId).then(function (costsheetInfo) {
-                $scope.costsheetInfo = costsheetInfo;
-                var parentNumber = {parentNumber: $scope.costsheetInfo.parentNumber};
-                var parentType = {parentType: $scope.costsheetInfo.parentType};
-                var parentId = {parentId: $scope.costsheetInfo.parentId};
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-                var costs = angular.copy($scope.costsheetInfo.costs);
-                costs = costs.map(function (obj) {
-                    return angular.extend(obj, parentNumber, parentType, parentId);
-                });
-                $scope.gridOptions = $scope.gridOptions || {};
-                $scope.gridOptions.data = costs;
-                return costsheetInfo;
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+        };
+
+        var onObjectInfoRetrieved = function (costsheetInfo) {
+            $scope.costsheetInfo = costsheetInfo;
+            var parentNumber = {parentNumber: $scope.costsheetInfo.parentNumber};
+            var parentType = {parentType: $scope.costsheetInfo.parentType};
+            var parentId = {parentId: $scope.costsheetInfo.parentId};
+
+            var costs = angular.copy($scope.costsheetInfo.costs);
+            costs = costs.map(function (obj) {
+                return angular.extend(obj, parentNumber, parentType, parentId);
             });
-        }
+            $scope.gridOptions = $scope.gridOptions || {};
+            $scope.gridOptions.data = costs;
+        };
 
         $scope.onClickObjectType = function (event, rowEntity) {
             event.preventDefault();

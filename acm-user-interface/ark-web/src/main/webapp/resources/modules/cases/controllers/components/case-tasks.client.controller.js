@@ -7,19 +7,26 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
         , Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService
         , HelperUiGridService, HelperObjectBrowserService, CaseInfoService) {
 
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cases"
+            , componentId: "tasks"
+            , retrieveObjectInfo: CaseInfoService.getCaseInfo
+            , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onObjectInfoRetrieved: function (caseInfo) {
+                $scope.caseInfo = caseInfo;
+            }
+        });
+
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
         var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
 
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
-                $scope.caseInfo = caseInfo;
-                return caseInfo;
-            });
-        }
+        $q.all([$scope.promiseConfig, promiseMyTasks]).then(function (data) {
+            var config = data[0];
+            //var myTasks = data[1];
 
-        ConfigService.getComponentConfig("cases", "tasks").then(function (config) {
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -29,7 +36,9 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             promiseMyTasks.then(function (data) {
                 for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                     if ("taskId" == $scope.config.columnDefs[i].name) {
-                        $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.object_id_s}}</a>";
+                        $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.object_id_s}}</a>";
+                        //$scope.gridOptions.columnDefs[i].cellTemplate = "<a ui-sref='tasks.id({type: \"TASK\", id: row.entity.object_id_s})'>{{row.entity.object_id_s}}</a>";
+
                     } else if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
                         $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
                             + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
@@ -44,11 +53,11 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             return config;
         });
 
+
         $scope.retrieveGridData = function () {
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (Util.goodPositive(currentObjectId, false)) {
+            if (Util.goodPositive($scope.currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
-                    , currentObjectId
+                    , $scope.currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)
@@ -154,14 +163,11 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                 completeTaskWithOutcome(rowEntity);
             }
         };
-        $scope.showUrl = function (event, rowEntity) {
-            event.preventDefault();
-            gridHelper.showObject(ObjectService.ObjectTypes.TASK, Util.goodMapValue(rowEntity, "object_id_s", 0));
-        };
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();
-            var targetType = Util.goodMapValue(rowEntity, "object_type_s");
+            var targetType = (Util.goodMapValue(rowEntity, "adhocTask_b", false)) ? ObjectService.ObjectTypes.ADHOC_TASK : ObjectService.ObjectTypes.TASK;
+            //var targetType = Util.goodMapValue(rowEntity, "object_type_s");
             var targetId = Util.goodMapValue(rowEntity, "object_id_s");
             gridHelper.showObject(targetType, targetId);
         };

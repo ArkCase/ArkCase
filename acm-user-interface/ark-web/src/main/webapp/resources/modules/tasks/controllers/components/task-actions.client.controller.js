@@ -1,29 +1,30 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$modal'
+angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'Authentication'
     , 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'ObjectService'
-    , function ($scope, $state, $modal
+    , 'Helper.ObjectBrowserService'
+    , function ($scope, $state, $stateParams, $modal
         , Util, ConfigService, Authentication
-        , TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectService) {
+        , TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectService
+        , HelperObjectBrowserService) {
 
-        ConfigService.getComponentConfig("tasks", "actions").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "tasks"
+            , componentId: "actions"
+            , retrieveObjectInfo: TaskInfoService.getTaskInfo
+            , validateObjectInfo: TaskInfoService.validateTaskInfo
+            , onObjectInfoRetrieved: function (taskInfo) {
+                onObjectInfoRetrieved(taskInfo);
+            }
         });
 
-        Authentication.queryUserInfo().then(
-            function (userInfo) {
-                $scope.userId = userInfo.userId;
-                return userInfo;
-            }
-        );
+        var promiseQueryUser = Authentication.queryUserInfo();
 
-        $scope.$on('object-updated', function (e, data) {
-            if (!TaskInfoService.validateTaskInfo(data)) {
-                return;
-            }
-            $scope.taskInfo = data;
+        var onObjectInfoRetrieved = function (taskInfo) {
+            $scope.taskInfo = taskInfo;
 
             $scope.showBtnSignature = false;
             $scope.showBtnDelete = false;
@@ -54,12 +55,27 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                     }
                 }
             }
-        });
+
+
+            promiseQueryUser.then(function (userInfo) {
+                $scope.userId = userInfo.userId;
+                ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.TASK, $scope.taskInfo.taskId).then(function (subscriptions) {
+                    var found = _.find(subscriptions, {
+                        userId: userInfo.userId,
+                        subscriptionObjectType: ObjectService.ObjectTypes.TASK,
+                        objectId: $scope.taskInfo.taskId
+                    });
+                    $scope.showBtnSubscribe = Util.isEmpty(found);
+                    $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
+                });
+                return userInfo;
+            });
+        };
+
 
         //$scope.availableOutcomes0 = [{name: "APPROVE", description: "Approve Document", fields: ["value", "message"]}
         //    , {name: "SEND_FOR_REWORK", description: "Send for Rework", fields: ["reworkInstructions"]}
         //];
-
 
 
         $scope.sign = function () {
@@ -85,6 +101,15 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                 return data;
             });
         };
+
+        $scope.unsubscribe = function () {
+            ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.TASK, $scope.taskInfo.taskId).then(function (data) {
+                $scope.showBtnSubscribe = true;
+                $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
+                return data;
+            });
+        };
+
         $scope.delete = function () {
             var taskInfo = Util.omitNg($scope.taskInfo);
             if (TaskInfoService.validateTaskInfo(taskInfo)) {
@@ -134,6 +159,10 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                     }
                 );
             }
+        };
+
+        $scope.refresh = function () {
+            $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
     }

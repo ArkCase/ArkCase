@@ -5,33 +5,36 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
     , function ($scope, $stateParams
         , Util, ConfigService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService) {
 
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cases"
+            , componentId: "references"
+            , retrieveObjectInfo: CaseInfoService.getCaseInfo
+            , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onObjectInfoRetrieved: function (caseInfo) {
+                onObjectInfoRetrieved(caseInfo);
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
+
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        ConfigService.getComponentConfig("cases", "references").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
-            return config;
-        });
+        };
 
-        //$scope.$on('object-updated', function (e, data) {
-        //    if (CaseInfoService.validateCaseInfo(data)) {
-        //        $scope.caseInfo = data;
-        //        $scope.gridOptions = $scope.gridOptions || {};
-        //        $scope.gridOptions.data = $scope.caseInfo.references;
-        //        gridHelper.hidePagingControlsIfAllDataShown($scope.caseInfo.references.length);
-        //    }
-        //});
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
-                $scope.caseInfo = caseInfo;
-                $scope.gridOptions = $scope.gridOptions || {};
-                $scope.gridOptions.data = $scope.caseInfo.references;
-                //gridHelper.hidePagingControlsIfAllDataShown($scope.caseInfo.references.length);
-                return caseInfo;
-            });
-        }
+        var onObjectInfoRetrieved = function (caseInfo) {
+            $scope.caseInfo = caseInfo;
+            $scope.gridOptions = $scope.gridOptions || {};
+            $scope.gridOptions.data = $scope.caseInfo.references;
+            //gridHelper.hidePagingControlsIfAllDataShown($scope.caseInfo.references.length);
+        };
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();

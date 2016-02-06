@@ -77,7 +77,10 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
                 scope.queryExistingItems = function () {
-                    if (scope.searchQuery && scope.pageSize >= 0 && scope.start >= 0) {
+                    if (scope.searchQuery === undefined || scope.searchQuery === null) {
+                        scope.searchQuery = "";
+                    }
+                    if (scope.pageSize >= 0 && scope.start >= 0) {
                         var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*", scope.filters, scope.pageSize, scope.start);
                         if (query) {
                             SearchService.queryFilteredSearch({
@@ -85,7 +88,6 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                 },
                                 function (data) {
                                     updateFacets(data.facet_counts.facet_fields);
-                                    scope.searchQuery = scope.searchQuery.replace('*', '');
                                     scope.gridOptions.data = data.response.docs;
                                     scope.gridOptions.totalItems = data.response.numFound;
                                 }
@@ -98,13 +100,17 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     typeaheadQuery = typeaheadQuery.replace('*', '');
                     var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery + '*', scope.filters, 10, 0);
                     var deferred = $q.defer();
-                    if (query) {
+                    if (!scope.hideTypeahead && query) {
                         SearchService.queryFilteredSearch({
                             query: query
                         }, function (res) {
-                            var result = _.pluck(res.response.docs, 'name');
+                            var result = _.pluck(res.response.docs, scope.typeAheadColumn);
                             deferred.resolve(result);
                         });
+                    }
+                    else
+                    {
+                        deferred.reject();
                     }
                     return deferred.promise;
                 };
@@ -202,7 +208,17 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                     scope.queryExistingItems();
                                 });
                             }
-                        }
+                        };
+
+                        //hideTypeahead is false by default, it will be changed in true if it is added in config
+                        scope.hideTypeahead = false;
+                        if(config.hideTypeahead)
+                            scope.hideTypeahead = true;
+                        //default for typeAheadColumn is name
+                        scope.typeAheadColumn = "name";
+                        if(config.typeAheadColumn)
+                            scope.typeAheadColumn = config.typeAheadColumn;
+
                         if (scope.gridOptions) {
                             if (scope.filter) {
                                 scope.filters = 'fq=' + scope.filter;

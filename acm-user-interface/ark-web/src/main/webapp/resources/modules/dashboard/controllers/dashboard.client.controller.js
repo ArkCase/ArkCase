@@ -5,11 +5,26 @@ angular.module('dashboard').controller('DashboardController', ['$scope', '$trans
         $scope.config = ConfigService.getModule({moduleId: 'dashboard'});
         $scope.$on('req-component-config', onConfigRequest);
 
-        // Update all dashboard widget titles and descriptions
-        _.forEach(dashboard.widgets, function(widget, widgetId){
+        //Update all dashboard widget titles and descriptions
+        _.forEach(dashboard.widgets, function (widget, widgetId) {
             widget.title = $translate.instant('dashboard.widgets.' + widgetId + '.title');
             widget.description = $translate.instant('dashboard.widgets.' + widgetId + '.description');
         });
+
+        var widgetsPerRoles;
+        DashboardService.getWidgetsPerRoles(function (widgets) {
+            widgetsPerRoles = widgets;
+        });
+
+        $scope.widgetFilter = function (widget, type) {
+            var result = false;
+            angular.forEach(widgetsPerRoles, function (w) {
+                if (type === w.widgetName) {
+                    result = true;
+                }
+            });
+            return result;
+        };
 
         $scope.dashboard = {
             structure: '6-6',
@@ -20,7 +35,7 @@ angular.module('dashboard').controller('DashboardController', ['$scope', '$trans
             }
         };
 
-        DashboardService.getConfig({}, function (data) {
+        DashboardService.getConfig({moduleName: "DASHBOARD"}, function (data) {
             $scope.dashboard.model = angular.fromJson(data.dashboardConfig);
 
             // Set Dashboard custom title
@@ -29,7 +44,8 @@ angular.module('dashboard').controller('DashboardController', ['$scope', '$trans
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {
             DashboardService.saveConfig({
-                dashboardConfig: angular.toJson(model)
+                dashboardConfig: angular.toJson(model),
+                module: "DASHBOARD"
             });
         });
 

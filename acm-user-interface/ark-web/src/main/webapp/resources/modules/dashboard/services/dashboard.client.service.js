@@ -6,6 +6,9 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
             getConfig: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/v1/plugin/dashboard/get',
+                params: {
+                    moduleName: "@moduleName"
+                },
                 data: ''
             },
 
@@ -19,6 +22,13 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
             queryCasesByStatus: {
                 method: 'GET',
                 url: 'proxy/arkcase/api/v1/plugin/casebystatus/:period',
+                isArray: true,
+                data: ''
+            },
+
+            queryNewComplaints: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/v1/plugin/complaint/list/lastMonth',
                 isArray: true,
                 data: ''
             },
@@ -51,6 +61,12 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
                 url: 'proxy/arkcase/api/v1/plugin/task/list/:due',
                 isArray: true,
                 data: ''
+            },
+
+            getWidgetsPerRoles: {
+                method: 'GET',
+                url: 'proxy/arkcase/api/latest/plugin/dashboard/widgets/get',
+                isArray: true,
             },
 
             saveConfig: {

@@ -3,10 +3,24 @@
 
 angular.module('time-tracking').controller('TimeTrackingListController', ['$scope', '$state', '$stateParams', '$q', '$translate'
     , 'Authentication', 'UtilService', 'ObjectService', 'Helper.ObjectBrowserService'
-    , 'TimeTracking.ListService', 'TimeTracking.InfoService'
+    , 'TimeTracking.ListService', 'TimeTracking.InfoService', 'ServCommService'
     , function ($scope, $state, $stateParams, $q, $translate
         , Authentication, Util, ObjectService, HelperObjectBrowserService
-        , TimeTrackingListService, TimeTrackingInfoService) {
+        , TimeTrackingListService, TimeTrackingInfoService, ServCommService) {
+
+        //
+        // Check to see if complaint page is shown as a result returned by Frevvo
+        // Reset the tree cache so that new entry created by Frevvo can be shown.
+        // This is a temporary solution until UI and backend communication is implemented
+        //
+        var topics = ["new-timesheet"];
+        _.each(topics, function (topic) {
+            var data = ServCommService.popRequest("frevvo", topic);
+            if (data) {
+                TimeTrackingListService.resetTimeTrackingTreeData();
+            }
+        });
+
 
         //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper
         new HelperObjectBrowserService.Tree({
@@ -14,12 +28,15 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
             , state: $state
             , stateParams: $stateParams
             , moduleId: "time-tracking"
-            , getTreeData: function (start, n, sort, filters) {
+            , resetTreeData: function () {
+                return TimeTrackingListService.resetTimeTrackingTreeData();
+            }
+            , getTreeData: function (start, n, sort, filters, query) {
                 var dfd = $q.defer();
                 Authentication.queryUserInfo().then(
                     function (userInfo) {
                         var userId = userInfo.userId;
-                        TimeTrackingListService.queryTimeTrackingTreeData(userId, start, n, sort, filters).then(
+                        TimeTrackingListService.queryTimeTrackingTreeData(userId, start, n, sort, filters, query).then(
                             function (treeData) {
                                 dfd.resolve(treeData);
                                 return treeData;

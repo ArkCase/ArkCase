@@ -10,8 +10,9 @@
 
  * TimeTracking.ListService provides functions for Timesheet database data
  */
-angular.module('services').factory('TimeTracking.ListService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ObjectService', 'Object.ListService',
-    function ($resource, $translate, Store, Util, ObjectService, ObjectListService) {
+angular.module('services').factory('TimeTracking.ListService', ['$resource', '$translate'
+    , 'StoreService', 'UtilService', 'ObjectService', 'Object.ListService'
+    , function ($resource, $translate, Store, Util, ObjectService, ObjectListService) {
         var Service = $resource('proxy/arkcase/api/v1/service/timesheet', {}, {
 
             /**
@@ -27,6 +28,7 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
              * @param {Number} params.start  Zero based index of result starts from
              * @param {Number} params.n max Number of list to return
              * @param {String} params.sort  Sort value. Allowed choice is based on backend specification
+             * @param {String} params.query  Search term for tree entry to match
              * @param {Function} onSuccess (Optional)Callback function of success query
              * @param {Function} onError (Optional) Callback function when fail
              *
@@ -34,11 +36,32 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
              */
             listObjects: {
                 method: 'GET',
-                url: 'proxy/arkcase/api/v1/service/timesheet/user/:userId?start=:start&n=:n&s=:sort',
+                url: 'proxy/arkcase/api/v1/service/timesheet/user/:userId?start=:start&n=:n&s=:sort&searchQuery=:query',
                 cache: false,
                 isArray: false
             }
+
+            //jwu: searchQuery seems not supported by API. Put it here as placeholder for future enhancement
         });
+
+        Service.CacheNames = {
+            TIMESHEET_LIST: "TimesheetList"
+        };
+
+        /**
+         * @ngdoc method
+         * @name resetTimeTrackingTreeData
+         * @methodOf services:TimeTracking.ListService
+         *
+         * @description
+         * Reset tree to initial state, including empty tree data
+         *
+         * @returns None
+         */
+        Service.resetTimeTrackingTreeData = function () {
+            var cacheTimesheetList = new Store.CacheFifo(Service.CacheNames.TIMESHEET_LIST);
+            cacheTimesheetList.reset();
+        };
 
         /**
          * @ngdoc method
@@ -52,22 +75,29 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
          * @param {Number} start  Zero based index of result starts from
          * @param {Number} n max Number of list to return
          * @param {String} sort  Sort value. Allowed choice is based on backend specification
+         * @param {String} query  Search term for tree entry to match
          *
          *
          * @returns {Object} Promise
          */
-        Service.queryTimeTrackingTreeData = function (userId, start, n, sort) {
-            var treeData = null;
-
+        Service.queryTimeTrackingTreeData = function (userId, start, n, sort, query) {
             var param = {};
-            param.userId = userId;
-            param.start = start;
-            param.n = n;
-            param.sort = sort;
+            param.userId = Util.goodValue(userId);
+            //param.dataType = "timesheet";
+            param.start = Util.goodValue(start, 0);
+            param.n = Util.goodValue(n, 32);
+            param.sort = Util.goodValue(sort);
+            //param.filters = Util.goodValue(filters);
+            param.query = Util.goodValue(query);
+
+            var cacheTimesheetList = new Store.CacheFifo(Service.CacheNames.TIMESHEET_LIST);
+            var cacheKey = param.userId + "." + param.start + "." + param.n + "." + param.sort + "." + param.query;
+            var treeData = cacheTimesheetList.get(cacheKey);
 
             return Util.serviceCall({
                 service: Service.listObjects
                 , param: param
+                , result: treeData
                 , onSuccess: function (data) {
                     if (Service.validateTimesheetList(data)) {
                         treeData = {docs: [], total: data.response.numFound};
@@ -80,6 +110,7 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
                                 , nodeToolTip: Util.goodValue(doc.name)
                             });
                         });
+                        cacheTimesheetList.put(cacheKey, treeData);
                         return treeData;
                     }
                 }

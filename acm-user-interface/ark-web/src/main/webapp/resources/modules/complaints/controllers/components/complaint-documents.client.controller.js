@@ -2,17 +2,27 @@
 
 angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
-    , 'Helper.ObjectBrowserService'
+    , 'Helper.ObjectBrowserService', 'DocTreeService'
     , function ($scope, $stateParams, $modal
         , Util, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService
-        , HelperObjectBrowserService) {
+        , HelperObjectBrowserService, DocTreeService) {
 
-        ConfigService.getComponentConfig("complaints", "documents").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "complaints"
+            , componentId: "documents"
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onObjectInfoRetrieved: function (complaintInfo) {
+                onObjectInfoRetrieved(complaintInfo);
+            }
         });
 
-
+        ConfigService.getModuleConfig("complaints").then(function (config) {
+            $scope.treeConfig = config.docTree;
+            return config;
+        });
         ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.COMPLAINT).then(
             function (formTypes) {
                 $scope.fileTypes = $scope.fileTypes || [];
@@ -30,59 +40,20 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
 
 
         $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
-        $scope.objectId = $stateParams.id;
-
-        //$scope.$on('object-updated', function (e, data) {
-        //    if (ComplaintInfoService.validateComplaintInfo(data)) {
-        //        $scope.complaintInfo = data;
-        //    }
-        //});
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
-                $scope.complaintInfo = complaintInfo;
-                $scope.objectId = complaintInfo.complaintId;
-                return complaintInfo;
-            });
-        }
-
-        var silentReplace = function (value, replace, replacement) {
-            if (!Util.isEmpty(value) && value.replace) {
-                value = value.replace(replace, replacement);
-            }
-            return value;
+        $scope.objectId = $scope.currentObjectId; //$stateParams.id;
+        var onObjectInfoRetrieved = function (complaintInfo) {
+            $scope.objectInfo = complaintInfo;
+            $scope.complaintInfo = complaintInfo;
+            $scope.objectId = complaintInfo.complaintId;
         };
+
         $scope.uploadForm = function (type, folderId, onCloseForm) {
-            if ($scope.complaintInfo) {
-                //Complaint.View.Documents.getFileTypeByType(type);
-                var fileType = _.find($scope.fileTypes, {type: type});
-                if (ObjectLookupService.validatePlainForm(fileType)) {
-                    var data = "_data=(";
+            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.complaintInfo, $scope.fileTypes);
+        };
 
-                    var url = fileType.url;
-                    var urlParameters = fileType.urlParameters;
-                    var parametersAsString = '';
-                    for (var i = 0; i < urlParameters.length; i++) {
-                        var key = urlParameters[i].name;
-                        var value = '';
-                        if (!Util.isEmpty(urlParameters[i].defaultValue)) {
-                            value = silentReplace(urlParameters[i].defaultValue, "'", "_0027_");
-                        } else if (!Util.isEmpty(urlParameters[i].keyValue)) {
-                            var _value = _.get($scope.complaintInfo, urlParameters[i].keyValue)
-                            if (!Util.isEmpty(_value)) {
-                                value = silentReplace(_value, "'", "_0027_");
-                            }
-                        }
-                        value = encodeURIComponent(value);
-                        parametersAsString += key + ":'" + Util.goodValue(value) + "',";
-                    }
-                    parametersAsString += "folderId:'" + folderId + "',";
-                    data += parametersAsString;
+        $scope.onClickRefresh = function () {
+            $scope.treeControl.refreshTree();
+        };
 
-                    url = url.replace("_data=(", data);
-                    return url;
-                }
-            }
-        }
     }
 ]);

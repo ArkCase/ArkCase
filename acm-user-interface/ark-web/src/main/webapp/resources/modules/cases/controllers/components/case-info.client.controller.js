@@ -5,10 +5,18 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
     , function ($scope, $stateParams, Util, ConfigService
         , ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService) {
 
-        ConfigService.getComponentConfig("cases", "info").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cases"
+            , componentId: "info"
+            , retrieveObjectInfo: CaseInfoService.getCaseInfo
+            , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onObjectInfoRetrieved: function (caseInfo) {
+                onObjectInfoRetrieved(caseInfo);
+            }
         });
+
 
         ObjectLookupService.getPriorities().then(
             function (priorities) {
@@ -43,51 +51,24 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        //$scope.$on('object-selected', function onSelectedCase(e, selectedCase) {
-        //    $scope.caseSolr = selectedCase;
-        //});
-
-        var previousId = null;
-        $scope.$on('object-updated', function (e, data) {
-            if (!CaseInfoService.validateCaseInfo(data)) {
-                return;
-            }
+        $scope.dueDate = null;
+        var onObjectInfoRetrieved = function (data) {
             $scope.caseInfo = data;
+            $scope.dueDate = ($scope.caseInfo.dueDate) ? moment($scope.caseInfo.dueDate).toDate() : null;
             $scope.owningGroup = ObjectModelService.getGroup(data);
             $scope.assignee = ObjectModelService.getAssignee(data);
-            if (previousId != $stateParams.id) {
-                CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
-                    function (approvers) {
-                        var options = [];
-                        _.each(approvers, function (approver) {
-                            options.push({id: approver.userId, name: approver.fullName});
-                        });
-                        $scope.assignees = options;
-                        return approvers;
-                    }
-                );
-                previousId = $stateParams.id;
-            }
-        });
-        //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        //if (Util.goodPositive(currentObjectId, false)) {
-        //    CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
-        //        $scope.caseInfo = caseInfo;
-        //        $scope.owningGroup = ObjectModelService.getGroup(caseInfo);
-        //        $scope.assignee = ObjectModelService.getAssignee(caseInfo);
-        //        CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
-        //            function (approvers) {
-        //                var options = [];
-        //                _.each(approvers, function (approver) {
-        //                    options.push({id: approver.userId, name: approver.fullName});
-        //                });
-        //                $scope.assignees = options;
-        //                return approvers;
-        //            }
-        //        );
-        //        return caseInfo;
-        //    });
-        //}
+            CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
+                function (approvers) {
+                    var options = [];
+                    _.each(approvers, function (approver) {
+                        options.push({id: approver.userId, name: approver.fullName});
+                    });
+                    $scope.assignees = options;
+                    return approvers;
+                }
+            );
+        };
+
 
         /**
          * Persists the updated casefile metadata to the ArkCase database
@@ -130,7 +111,8 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             ObjectModelService.setAssignee($scope.caseInfo, $scope.assignee);
             saveCase();
         };
-        $scope.updateDueDate = function() {
+        $scope.updateDueDate = function(dueDate) {
+            $scope.caseInfo.dueDate = (dueDate) ? moment(dueDate).format($scope.config.dateFormat): null;
             saveCase();
         };
 

@@ -589,6 +589,20 @@ angular.module('services').factory('UtilService', ['$q'
             }
 
         };
+
+
+        //
+        // Fix for incompatibility issues:
+        // startsWith is a method proposed for the next version of JavaScript, ES6.
+        // It's currently unsupported outside of Chrome 41+, and Firefox 17+.
+        //
+        if (!String.prototype.startsWith) {
+            String.prototype.startsWith = function(searchString, position) {
+                position = position || 0;
+                return this.indexOf(searchString, position) === position;
+            };
+        }
+
         return Util;
     }
 ]);

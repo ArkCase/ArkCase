@@ -97,4 +97,15 @@ public interface PdfService
      * @throws PdfServiceException on error while merging
      */
     PDDocument append(PDDocument pdDocument, String filename, PDFMergerUtility pdfMergerUtility) throws PdfServiceException;
+
+    /**
+     * Generates multipage TIFF from PDF file
+     * <p/>
+     * <p/>
+     * Can throw IllegalArgumentException if inputPdf file not exists
+     *
+     * @param inputPdf   pdf file to be processed
+     * @param outputTiff location where generated TIFF to be saved
+     */
+    void generateTiffFromPdf(File inputPdf, File outputTiff) throws PdfServiceException;
 }

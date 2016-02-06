@@ -2,14 +2,21 @@
 
 angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService'
-    , 'Object.ModelService', 'LookupService', '$log'
+    , 'Object.ModelService', 'LookupService', 'Helper.ObjectBrowserService', '$log'
     , function ($scope, $stateParams
         , Util, ConfigService, ObjectService, CaseInfoService, ComplaintInfoService, TaskInfoService
-        , ObjectModelService, LookupService, $log) {
+        , ObjectModelService, LookupService, HelperObjectBrowserService, $log) {
 
-        ConfigService.getComponentConfig("tasks", "parentinfo").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
+        new HelperObjectBrowserService.Component({
+            moduleId: "tasks"
+            , componentId: "parentinfo"
+            , scope: $scope
+            , stateParams: $stateParams
+            , retrieveObjectInfo: TaskInfoService.getTaskInfo
+            , validateObjectInfo: TaskInfoService.validateTaskInfo
+            , onObjectInfoRetrieved: function (taskInfo) {
+                onObjectInfoRetrieved(taskInfo);
+            }
         });
 
         LookupService.getUsers().then(
@@ -33,11 +40,10 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
             }
         };
 
-        $scope.$on('object-updated', function (e, data) {
-            if (!TaskInfoService.validateTaskInfo(data)) {
-                return;
-            }
-            $scope.taskInfo = data;
+
+        var onObjectInfoRetrieved = function (taskInfo) {
+            $scope.taskInfo = taskInfo;
+
             if (Util.isEmpty($scope.taskInfo.parentObjectId)) {
                 return;
             }
@@ -68,7 +74,7 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
                     }
                 );
             }
-        });
+        };
 
     }
 ]);

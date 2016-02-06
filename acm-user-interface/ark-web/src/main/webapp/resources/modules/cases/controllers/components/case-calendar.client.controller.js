@@ -1,20 +1,24 @@
 'use strict';
 
-angular.module('cases').controller('Cases.CalendarController', ['$scope', 'ConfigService','$timeout', 'uiCalendarConfig', 'Object.CalendarService','Case.InfoService',
-	function($scope, ConfigService, $timeout, uiCalendarConfig, CalendarService,CaseInfoService) {
+angular.module('cases').controller('Cases.CalendarController', ['$scope', '$stateParams', '$timeout', 'ConfigService'
+    , 'uiCalendarConfig', 'Object.CalendarService', 'Case.InfoService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $timeout, ConfigService
+        , uiCalendarConfig, CalendarService, CaseInfoService, HelperObjectBrowserService) {
 
-		ConfigService.getComponentConfig("cases", "calendar").then(function (componentConfig) {
-			$scope.config = componentConfig;
-			return componentConfig;
-		});
-
-		$scope.$on('case-updated', function (e, data) {
-			if (CaseInfoService.validateCaseInfo(data)) {
-				$scope.caseInfo = data;
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cases"
+            , componentId: "calendar"
+            , retrieveObjectInfo: CaseInfoService.getCaseInfo
+            , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onObjectInfoRetrieved: function (caseInfo) {
+				$scope.caseInfo = caseInfo;
 			}
 		});
 
-		/* Calendar config object */
+
+        /* Calendar config object */
 		$scope.uiConfig = {
 			calendar: {
 				height: 450,

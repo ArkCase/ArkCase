@@ -1,21 +1,42 @@
 'use strict';
 
-angular.module('dashboard.new-complaints', ['adf.provider'])
-    .config(function (dashboardProvider) {
-        dashboardProvider
-            .widget('newComplaints', {
-                title: 'New Complaints',
-                description: 'Displays new complaints',
-                controller: 'Dashboard.NewComplaintsController',
-                controllerAs: 'newComplaints',
-                templateUrl: 'modules/dashboard/views/components/new-complaints.client.view.html',
-                edit: {
-                    templateUrl: 'modules/dashboard/views/components/new-complaints-edit.client.view.html'
-                }
-            });
-    })
-    .controller('Dashboard.NewComplaintsController', ['$scope',
-        function ($scope) {
+angular.module('dashboard.new-complaints').controller('Dashboard.NewComplaintsController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
+    function ($scope, $translate, Authentication, DashboardService) {
 
+        var vm = this;
+
+        $scope.$on('component-config', applyConfig);
+        $scope.$emit('req-component-config', 'newComplaints');
+
+        vm.config = null;
+        var userInfo = null;
+
+        function applyConfig(e, componentId, config) {
+            if (componentId == 'newComplaints') {
+
+                DashboardService.queryNewComplaints(function (complaints) {
+
+                    var data = {};
+                    var chartData = [];
+                    var labels = [];
+                    angular.forEach(complaints, function (complaint) {
+                        var day = complaint.created;
+                        day = day.substring(0, day.indexOf("T"));
+                        data[day] ? data[day]++ : data[day] = 1;
+                    });
+
+                    angular.forEach(data, function (index, value) {
+                        labels.push(value);
+                        chartData.push(index);
+                    });
+
+                    vm.showChart = labels.length > 0 && chartData.length > 0 ? true : false;
+
+                    vm.labels = labels.reverse();
+                    vm.data = [chartData.reverse()];
+                    vm.series = [config.title];
+                })
+            }
         }
-    ]);
+    }
+]);
