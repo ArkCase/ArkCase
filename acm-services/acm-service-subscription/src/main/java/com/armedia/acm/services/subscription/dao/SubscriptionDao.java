@@ -1,41 +1,42 @@
 package com.armedia.acm.services.subscription.dao;
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.services.subscription.model.AcmSubscription;
-import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.sql.SQLException;
-import java.sql.SQLTimeoutException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.services.subscription.model.AcmSubscription;
+import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
+
 /**
  * Created by marjan.stefanoski on 29.01.2015.
  */
-public class SubscriptionDao extends AcmAbstractDao<AcmSubscription> {
+public class SubscriptionDao extends AcmAbstractDao<AcmSubscription>
+{
+    private Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private final String AUDIT_ACTIVITY_RESULT_SUCCESS="success";
+    private final String AUDIT_ACTIVITY_RESULT_SUCCESS = "success";
 
     @Override
-    protected Class<AcmSubscription> getPersistenceClass() {
+    protected Class<AcmSubscription> getPersistenceClass()
+    {
         return AcmSubscription.class;
     }
 
-    public List<AcmSubscription> getSubscriptionByUserObjectIdAndType(String userId, Long objectId, String objectType)  {
+    public List<AcmSubscription> getSubscriptionByUserObjectIdAndType(String userId, Long objectId, String objectType)
+    {
 
-        Query query = getEm().createQuery(
-                "SELECT sub FROM AcmSubscription sub " +
-                        "WHERE sub.userId =:userId " +
-                        "AND sub.objectId =:objectId " +
-                        "AND sub.subscriptionObjectType =:objectType ");
+        TypedQuery<AcmSubscription> query = getEm().createQuery("SELECT sub FROM AcmSubscription sub " + "WHERE sub.userId =:userId "
+                + "AND sub.objectId =:objectId " + "AND sub.subscriptionObjectType =:objectType ", AcmSubscription.class);
 
         query.setParameter("userId", userId);
         query.setParameter("objectId", objectId);
@@ -44,12 +45,11 @@ public class SubscriptionDao extends AcmAbstractDao<AcmSubscription> {
 
         return resultList;
     }
-    public List<AcmSubscription> getListOfSubscriptionsByUser(String userId,int start, int numrows) throws AcmObjectNotFoundException {
 
-        Query query = getEm().createQuery(
-                "SELECT sub FROM AcmSubscription sub " +
-                        "WHERE sub.userId =:userId " +
-                        "ORDER BY sub.created");
+    public List<AcmSubscription> getListOfSubscriptionsByUser(String userId, int start, int numrows) throws AcmObjectNotFoundException
+    {
+
+        Query query = getEm().createQuery("SELECT sub FROM AcmSubscription sub " + "WHERE sub.userId =:userId " + "ORDER BY sub.created");
         query.setParameter("userId", userId);
         query.setFirstResult(start);
         query.setMaxResults(numrows);
@@ -58,60 +58,60 @@ public class SubscriptionDao extends AcmAbstractDao<AcmSubscription> {
 
         results = query.getResultList();
 
-        if( results.isEmpty()){
+        if (results.isEmpty())
+        {
             throw new AcmObjectNotFoundException("SUBSCRIPTION", null, "No Subscriptions are found", null);
         }
 
         return results;
     }
 
-    public List<AcmSubscriptionEvent> createListOfNewSubscriptionEventsForInserting(Date lastRunDate) throws AcmObjectNotFoundException {
+    public List<AcmSubscriptionEvent> createListOfNewSubscriptionEventsForInserting(Date lastRunDate) throws AcmObjectNotFoundException
+    {
 
-        //this should be native query? Actually acm_audit_log table is mapped as JPA entity class AuditEvent
+        // this should be native query? Actually acm_audit_log table is mapped as JPA entity class AuditEvent
         // and I used this model.
-        Query query = getEm().createQuery("SELECT aud.objectType, aud.objectId, " +
-                "aud.userId, aud.eventDate, aud.fullEventType, sub.userId, " +
-                "sub.objectName, sub.objectTitle " +
-                "FROM AuditEvent aud, AcmSubscription sub " +
-                "WHERE sub.subscriptionObjectType = aud.objectType " +
-                "AND sub.objectId = aud.objectId " +
-                "AND aud.eventResult =:activityResult " +
-                "AND aud.eventDate >:lastRunDate ");
+        Query query = getEm().createQuery("SELECT aud.objectType, aud.objectId, "
+                + "aud.userId, aud.eventDate, aud.fullEventType, sub.userId, " + "sub.objectName, sub.objectTitle "
+                + "FROM AuditEvent aud, AcmSubscription sub " + "WHERE sub.subscriptionObjectType = aud.objectType "
+                + "AND sub.objectId = aud.objectId " + "AND aud.eventResult =:activityResult " + "AND aud.eventDate >:lastRunDate ");
 
         query.setParameter("activityResult", AUDIT_ACTIVITY_RESULT_SUCCESS);
         query.setParameter("lastRunDate", lastRunDate);
 
         List<Object[]> queryResultList = query.getResultList();
         List<AcmSubscriptionEvent> result = new ArrayList<>();
-        for( Object[] row : queryResultList ) {
+        for (Object[] row : queryResultList)
+        {
             int i = 0;
             AcmSubscriptionEvent subscriptionEvent = new AcmSubscriptionEvent();
-            subscriptionEvent.setEventObjectType((String)row[i++]);
-            subscriptionEvent.setEventObjectId((Long)row[i++]);
-            subscriptionEvent.setEventUser((String)row[i++]);
-            subscriptionEvent.setEventDate((Date)row[i++]);
-            subscriptionEvent.setEventType((String)row[i++]);
+            subscriptionEvent.setEventObjectType((String) row[i++]);
+            subscriptionEvent.setEventObjectId((Long) row[i++]);
+            subscriptionEvent.setEventUser((String) row[i++]);
+            subscriptionEvent.setEventDate((Date) row[i++]);
+            subscriptionEvent.setEventType((String) row[i++]);
             subscriptionEvent.setSubscriptionOwner((String) row[i++]);
-            subscriptionEvent.setEventObjectName((String)row[i++]);
-            subscriptionEvent.setEventObjectNumber((String)row[i++]);
+            subscriptionEvent.setEventObjectName((String) row[i++]);
+            subscriptionEvent.setEventObjectNumber((String) row[i++]);
             result.add(subscriptionEvent);
         }
-        if( result.isEmpty() ) {
-            throw new AcmObjectNotFoundException("SUBSCRIPTION", null, "No new Subscriptions are found", null);
+        if (result.isEmpty())
+        {
+            LOG.info("No new Subscriptions found");
+
         }
         return result;
     }
 
     @Transactional
-    public int deleteSubscription( String userId, Long objectId, String objectType ) throws SQLException {
+    public int deleteSubscription(String userId, Long objectId, String objectType) throws SQLException
+    {
 
-        Query selectQuery = getEm().createQuery("SELECT sub FROM AcmSubscription sub " +
-                "WHERE sub.userId=:userId " +
-                "AND sub.objectId=:objectId " +
-                "AND sub.subscriptionObjectType=:objectType");
-        selectQuery.setParameter("userId",userId);
-        selectQuery.setParameter("objectId",objectId);
-        selectQuery.setParameter("objectType",objectType);
+        Query selectQuery = getEm().createQuery("SELECT sub FROM AcmSubscription sub " + "WHERE sub.userId=:userId "
+                + "AND sub.objectId=:objectId " + "AND sub.subscriptionObjectType=:objectType");
+        selectQuery.setParameter("userId", userId);
+        selectQuery.setParameter("objectId", objectId);
+        selectQuery.setParameter("objectType", objectType);
 
         List<AcmSubscription> results;
 
@@ -119,7 +119,8 @@ public class SubscriptionDao extends AcmAbstractDao<AcmSubscription> {
 
         AcmSubscription subscriptionForDel;
         int rowCount = 0;
-        if(!results.isEmpty()){
+        if (!results.isEmpty())
+        {
             subscriptionForDel = results.get(0);
             getEm().remove(subscriptionForDel);
             rowCount = 1;
