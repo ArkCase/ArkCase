@@ -101,12 +101,12 @@ public class ComplaintDaoIT
 
         complaint = complaintDao.save(complaint);
 
+        assertNotNull(complaint.getComplaintId());
+        assertNotNull(complaint.getOriginator());
+        assertNotNull(complaint.getOriginator().getId());
 
         log.info("Complaint ID: " + complaint.getComplaintId());
         log.info("Complaint originator object ID: " + complaint.getOriginator().getId());
-
-        assertNotNull(complaint.getComplaintId());
-        assertNotNull(complaint.getOriginator().getId());
 
         if (complaint.getChildObjects() != null && !complaint.getChildObjects().isEmpty())
         {

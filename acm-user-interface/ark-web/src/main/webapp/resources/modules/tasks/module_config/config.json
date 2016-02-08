@@ -118,6 +118,7 @@
       {
         "type": "p/TASK/det",
         "label": "Details",
+        "icon": "fa fa-info-circle",
         "components": [
           "details"
         ]
@@ -125,6 +126,7 @@
       {
         "type": "p/TASK/rewk",
         "label": "Rework Details",
+        "icon": "fa fa-repeat",
         "components": [
           "reworkdetails"
         ]
@@ -132,6 +134,7 @@
       {
         "type": "p/TASK/docrev",
         "label": "Documents Under Review",
+        "icon": "fa fa-search-plus",
         "components": [
           "docsreview"
         ]
@@ -139,6 +142,7 @@
       {
         "type": "p/TASK/att",
         "label": "Attachments",
+        "icon": "fa fa-file",
         "components": [
           "attachments"
         ]
@@ -146,6 +150,7 @@
       {
         "type": "p/TASK/note",
         "label": "Notes",
+        "icon": "fa fa-comments",
         "components": [
           "notes"
         ]
@@ -153,6 +158,7 @@
       {
         "type": "p/TASK/wkfl",
         "label": "Workflow Overview",
+        "icon": "fa fa-code-fork",
         "components": [
           "workflow"
         ]
@@ -160,6 +166,7 @@
       {
         "type": "p/TASK/his",
         "label": "History",
+        "icon": "fa fa-bell-o",
         "components": [
           "history"
         ]
@@ -167,6 +174,7 @@
       {
         "type": "p/TASK/sig",
         "label": "eSignatures",
+        "icon": "fa fa-certificate",
         "components": [
           "signatures"
         ]
@@ -187,6 +195,7 @@
       {
         "type": "p/ADHOC/det",
         "label": "Details",
+        "icon": "fa fa-info-circle",
         "components": [
           "details"
         ]
@@ -194,6 +203,7 @@
       {
         "type": "p/ADHOC/rej",
         "label": "Reject Comments",
+        "icon": "fa fa-hand-stop-o",
         "components": [
           "rejcomments"
         ]
@@ -201,6 +211,7 @@
       {
         "type": "p/ADHOC/att",
         "label": "Attachments",
+        "icon": "fa fa-file",
         "components": [
           "attachments"
         ]
@@ -208,6 +219,7 @@
       {
         "type": "p/ADHOC/note",
         "label": "Notes",
+        "icon": "fa fa-comments",
         "components": [
           "notes"
         ]
@@ -215,6 +227,7 @@
       {
         "type": "p/ADHOC/wkfl",
         "label": "Workflow Overview",
+        "icon": "fa fa-code-fork",
         "components": [
           "workflow"
         ]
@@ -222,6 +235,7 @@
       {
         "type": "p/ADHOC/his",
         "label": "History",
+        "icon": "fa fa-bell-o",
         "components": [
           "history"
         ]
@@ -229,11 +243,18 @@
       {
         "type": "p/ADHOC/sig",
         "label": "eSignatures",
+        "icon": "fa fa-certificate",
         "components": [
           "signatures"
         ]
       }
     ]
+  },
+  "docTree": {
+    "emailSubject": "Task $taskId",
+    "subjectRegex": "(.*)\\$([^\\s]+)",
+    "objectTypeRegexGroup": 1,
+    "objectNumberRegexGroup": 2
   },
   "components": [
     {

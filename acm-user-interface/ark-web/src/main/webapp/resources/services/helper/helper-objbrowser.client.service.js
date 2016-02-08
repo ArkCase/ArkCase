@@ -9,7 +9,8 @@
  * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/helper/helper-objbrowser.client.service.js services/helper/helper-objbrowser.client.service.js}
 
  * Helper.ObjectBrowserService provide help for common functions for an object page. It includes navigation (or tree) part and content part.
- * Tree part uses 'object-tree' directive. Content part includes component links and data loading.
+ * Content part consists list of Components.
+ * Tree helper uses 'object-tree' directive. Content helper includes component links and data loading. Component helper includes common object info handling
  */
 angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', '$translate'
     , 'StoreService', 'UtilService', 'ConfigService', 'ServCommService'
@@ -49,9 +50,33 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                 that.makeTreeNode = arg.makeTreeNode;
                 that.firstLoad = true;
 
+
+                //
+                // if url contains component, save its subKey to go to a sub tree node
+                //
+                that.subKey = Service.getComponentByState(that.state);
+                if ("main" == that.subKey) {
+                    that.subKey = null;
+                }
+
+
                 ConfigService.getModuleConfig(that.moduleId).then(function (config) {
                     that.scope.treeConfig = config.tree;
                     that.scope.componentsConfig = config.components;
+
+                    var activeComponent = Service.getComponentByState(that.state);
+                    if ("main" != activeComponent) {
+                        var nodeTypes = Util.goodArray(config.tree.nodeTypes);
+                        var found = _.find(nodeTypes, function (nodeType) {
+                            var comp = Util.goodArray(nodeType.components);
+                            if (1 == comp.length && activeComponent == comp[0]) {
+                                return true;
+                            }
+                            return false;
+                        });
+                        that.subKey = Util.goodMapValue(found, "type").split("/").pop();
+                    }
+
                     return config;
                 });
 
@@ -73,7 +98,6 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                     console.log("helper.Tree: refresh-content");
                 });
             }
-
 
 
             /**
@@ -115,13 +139,15 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                     return "";
                 };
 
+                that.scope.activeLinkId = Service.getComponentByState(that.state);
+                Service.updateObjectSetting(that.moduleId, that.scope.activeLinkId); //don't update objectId/Type; only set linkId
 
-                var promiseGetModuleConfig = ConfigService.getModuleConfig(that.moduleId).then(function (config) {
-                    that.scope.config = config;
-                    that.scope.componentLinks = that.initComponentLinks(config);
-                    that.scope.activeLinkId = "main";
-                    that.scope.linksShown = Util.goodValue(config.initialLinksShown, true);
-                    return config;
+                ConfigService.getModuleConfig(that.moduleId).then(function (moduleConfig) {
+                    that.scope.config = moduleConfig;
+                    that.scope.componentLinks = that.initComponentLinks(moduleConfig);
+                    //that.scope.activeLinkId = "main";
+                    that.scope.linksShown = Util.goodValue(moduleConfig.initialLinksShown, true);
+                    return moduleConfig;
                 });
 
                 that.scope.getActive = function (linkId) {
@@ -148,10 +174,10 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                 };
 
 
-                that.scope.$on('main-component-started', function (e) {
-                    that.scope.activeLinkId = "main";
-                    Service.updateObjectSetting(that.moduleId, "main"); //don't update objectId/Type; only set linkId = "main"
-                });
+                //that.scope.$on('main-component-started', function (e) {
+                //    that.scope.activeLinkId = "main";
+                //    Service.updateObjectSetting(that.moduleId, "main"); //don't update objectId/Type; only set linkId = "main"
+                //});
 
                 that.scope.$on('report-object-refreshed', function (e, objectId) {
                     that.resetObjectInfo();
@@ -224,6 +250,108 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                 var objectSetting = Service.updateObjectSetting(that.moduleId, null, that.stateParams.id, that.stateParams.type);
                 loadObject(objectSetting.objectId);
             }
+
+
+            /**
+             * @ngdoc method
+             * @name Component Constructor
+             * @methodOf services:Helper.ObjectBrowserService
+             *
+             * @param {Object} arg Map arguments
+             * @param {Object} arg.scope Angular $scope
+             * @param {Object} arg.stateParams Angular $stateParams
+             * @param {String} arg.moduleId Module ID
+             * @param {String} arg.componentId Component ID
+             * @param {Function} arg.getObjectInfo Function to retrieve object info
+             * @param {Function} (Optional)arg.validateObjectInfo Function to validate object info data
+             * @param {Function} (Optional)arg.onObjectInfoRetrieved Callback function when object info retrieved
+             * @param {Function} (Optional)arg.onConfigRetrieved Callback function when component config retrieved
+             *
+             * @description
+             * Helper.ObjectBrowserService.Component captures common handling for typical components, including
+             * retrieving configuration of the component and data of the object (ObjectInfo) the component represent.
+             *
+             * It retrieves component configuration and presents it by the callback function onConfigRetrieved argument.
+             * By default, component config is saved to a scope variable '$scope.config', unless consumer code
+             * override it in onConfigRetrieved() callback handler.
+             *
+             * Object info can be retrieved or updated via events between components. Assumption of the order of
+             * Components being initialized is one of source of bugs. Component helper does not make any assumption of the
+             * component initialization order to ensure it works regardless it is initialized before or after other
+             * components. By default, object info is saved to a scope variable '$scope.objectInfo', but consumer
+             * code may override it in onObjectInfoRetrieved() callback handler.
+             *
+             * The helper saves two instance variables 'currentObjectId' and 'promiseConfig'. 'currentObjectId' tracks
+             * the current object ID; and 'promiseConfig' is the promise returned by configuration retrieving.
+             * The promise variable may be helpful when retrieving data depends on configuration.
+             *
+             */
+            , Component: function (arg) {
+                var that = this;
+                that.scope = arg.scope;
+                that.stateParams = arg.stateParams;
+                that.moduleId = arg.moduleId;
+                that.componentId = arg.componentId;
+                that.retrieveObjectInfo = arg.retrieveObjectInfo;
+                that.validateObjectInfo = (arg.validateObjectInfo) ? arg.validateObjectInfo : function (data) {
+                    return (!Util.isEmpty(data));
+                };
+                that.onObjectInfoRetrieved = (arg.onObjectInfoRetrieved) ? arg.onObjectInfoRetrieved : function (objectInfo) {
+                    that.scope.objectInfo = objectInfo;
+                };
+                that.onConfigRetrieved = (arg.onConfigRetrieved) ? arg.onConfigRetrieved : function (componentConfig) {
+                    that.scope.config = componentConfig;
+                };
+
+                that.promiseConfig = ConfigService.getComponentConfig(that.moduleId, that.componentId);
+                that.scope.promiseConfig = that.promiseConfig;  //phase out; keep for backward compatibility
+                that.promiseConfig.then(function (componentConfig) {
+                    that.onConfigRetrieved(componentConfig);
+                    return componentConfig;
+                });
+
+
+                that.previousId = null;
+                that.scope.$on('object-updated', function (e, objectInfo) {
+                    that.scope.currentObjectId = Service.getCurrentObjectId();  //phase out; keep for backward compatibility
+                    that.currentObjectId = Service.getCurrentObjectId();
+                    updateObjectInfo(that.currentObjectId, objectInfo);
+                });
+
+                that.scope.$on('object-refreshed', function (e, objectInfo) {
+                    that.previousId = null;
+                    that.scope.currentObjectId = Service.getCurrentObjectId();  //phase out; keep for backward compatibility
+                    that.currentObjectId = Service.getCurrentObjectId();
+                    updateObjectInfo(that.currentObjectId, objectInfo);
+                });
+
+                that.scope.currentObjectId = Service.getCurrentObjectId();  //phase out; keep for backward compatibility
+                that.currentObjectId = Service.getCurrentObjectId();
+                if (Util.goodPositive(that.currentObjectId, false)) {
+                    if (!Util.compare(that.previousId, that.currentObjectId)) {
+                        that.retrieveObjectInfo(that.currentObjectId).then(function (objectInfo) {
+                            updateObjectInfo(that.currentObjectId, objectInfo);
+                            return objectInfo;
+                        });
+                    }
+                }
+
+                var updateObjectInfo = function (objectId, objectInfo) {
+                    if (!that.validateObjectInfo(objectInfo)) {
+                        return;
+                    }
+                    if (!Util.goodPositive(objectId, false)) {
+                        return;
+                    }
+                    if (Util.compare(that.previousId, objectId)) {
+                        return;
+                    }
+                    that.previousId = objectId;
+
+                    that.onObjectInfoRetrieved(objectInfo);
+                };
+
+            }
         };
 
         Service.Tree.prototype = {
@@ -269,14 +397,12 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                                 } else {
                                     if (0 < treeData.docs.length) {
                                         var found = that.findByNodeId(treeData.docs, that.nodeId);
-                                        var selectNode = treeData.docs[0];
-                                        if (found) {
-                                            selectNode = found;
-                                        }
+                                        var selectNode = (found) ? found : treeData.docs[0];
                                         that.scope.treeControl.select({
                                             pageStart: start
                                             , nodeType: selectNode.nodeType
                                             , nodeId: selectNode.nodeId
+                                            , subKey: that.subKey
                                         });
                                     }
                                     that.firstLoad = false;
@@ -290,6 +416,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                                         pageStart: start
                                         , nodeType: selectNode.nodeType
                                         , nodeId: selectNode.nodeId
+                                        , subKey: that.subKey
                                     });
                                 }
                                 that.firstLoad = false;
@@ -310,6 +437,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                                 pageStart: start
                                 , nodeType: treeNode.nodeType
                                 , nodeId: treeNode.nodeId
+                                , subKey: that.subKey
                             });
 
                             var treeData = {docs: [], total: 0};
@@ -337,6 +465,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                                 pageStart: start
                                 , nodeType: "ERROR"
                                 , nodeId: that.nodeId
+                                , subKey: that.subKey
                             });
 
 
@@ -374,20 +503,9 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                 var that = this;
                 that.scope.$emit('req-select-object', selectedObject);
 
-
-                //var a1 = that.state.current.name;
-                //var stateName = ServCommService.getStateToGo();
-                //if (stateName) {
-                //    ServCommService.setStateToGo(null);
-                //} else {
-                //    var components = Util.goodArray(selectedObject.components);
-                //    var componentType = (1 == components.length) ? components[0] : "main";
-                //    stateName = that.moduleId + "." + componentType;
-                //}
                 var components = Util.goodArray(selectedObject.components);
                 var componentType = (1 == components.length) ? components[0] : "main";
                 var stateName = that.moduleId + "." + componentType;
-
                 var params = {
                     id: selectedObject.nodeId
                     , type: selectedObject.nodeType
@@ -417,6 +535,18 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
 
         };
 
+        Service.getComponentByState = function (state) {
+            var comp = "main";
+            var tokens = state.current.url.split("/");
+            if (1 < tokens.length) {
+                if (":id" == tokens[tokens.length - 2]) {
+                    if ("main" != tokens[tokens.length - 1]) {
+                        comp = tokens[tokens.length - 1];
+                    }
+                }
+            }
+            return comp;
+        };
 
         /**
          * @ngdoc method

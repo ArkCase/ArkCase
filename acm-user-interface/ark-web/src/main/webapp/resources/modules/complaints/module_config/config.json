@@ -128,6 +128,7 @@
       {
         "type": "p/COMPLAINT/det",
         "label": "Details",
+        "icon": "fa fa-info-circle",
         "components": [
           "details"
         ]
@@ -135,6 +136,7 @@
       {
         "type": "p/COMPLAINT/loc",
         "label": "Locations",
+        "icon": "fa fa-location-arrow",
         "components": [
           "locations"
         ]
@@ -142,6 +144,7 @@
       {
         "type": "p/COMPLAINT/ppl",
         "label": "People",
+        "icon": "fa fa-user",
         "components": [
           "people"
         ]
@@ -149,6 +152,7 @@
       {
         "type": "p/COMPLAINT/doc",
         "label": "Documents",
+        "icon": "fa fa-file",
         "components": [
           "documents"
         ]
@@ -156,6 +160,7 @@
       {
         "type": "p/COMPLAINT/par",
         "label": "Participants",
+        "icon": "fa fa-users",
         "components": [
           "participants"
         ]
@@ -163,6 +168,7 @@
       {
         "type": "p/COMPLAINT/note",
         "label": "Notes",
+        "icon": "fa fa-comments",
         "components": [
           "notes"
         ]
@@ -170,6 +176,7 @@
       {
         "type": "p/COMPLAINT/task",
         "label": "Tasks",
+        "icon": "fa fa-check-circle",
         "components": [
           "tasks"
         ]
@@ -177,6 +184,7 @@
       {
         "type": "p/COMPLAINT/ref",
         "label": "References",
+        "icon": "fa fa-exchange",
         "components": [
           "references"
         ]
@@ -184,6 +192,7 @@
       {
         "type": "p/COMPLAINT/his",
         "label": "History",
+        "icon": "fa fa-bell-o",
         "components": [
           "history"
         ]
@@ -191,6 +200,7 @@
       {
         "type": "p/COMPLAINT/tpl",
         "label": "Correspondence",
+        "icon": "fa fa-envelope",
         "components": [
           "correspondence"
         ]
@@ -198,6 +208,7 @@
       {
         "type": "p/COMPLAINT/time",
         "label": "Time",
+        "icon": "fa fa-clock-o",
         "components": [
           "time"
         ]
@@ -205,6 +216,7 @@
       {
         "type": "p/COMPLAINT/cost",
         "label": "Cost",
+        "icon": "fa fa-money",
         "components": [
           "cost"
         ]
@@ -212,11 +224,18 @@
       {
         "type": "p/COMPLAINT/calendar",
         "label": "Calendar",
+        "icon": "fa fa-calendar",
         "components": [
           "calendar"
         ]
       }
     ]
+  },
+  "docTree": {
+    "emailSubject": "Complaint $complaintNumber",
+    "subjectRegex": "(.*)\\$([^\\s]+)",
+    "objectTypeRegexGroup": 1,
+    "objectNumberRegexGroup": 2
   },
   "components": [
     {
