@@ -7,6 +7,21 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         , Util, ConfigService, ObjectService, LookupService, ObjectLookupService
         , ObjectCorrespondenceService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService) {
 
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cases"
+            , componentId: "correspondence"
+            , retrieveObjectInfo: CaseInfoService.getCaseInfo
+            , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onObjectInfoRetrieved: function (caseInfo) {
+                $scope.caseInfo = caseInfo;
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
+
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
@@ -17,7 +32,8 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             }
         );
 
-        ConfigService.getComponentConfig("cases", "correspondence").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -25,8 +41,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             gridHelper.setUserNameFilter(promiseUsers);
 
             $scope.retrieveGridData();
-            return config;
-        });
+        };
 
 
         $scope.correspondenceForms = [{"value": "noop", "name": $translate.instant("common.select.option.none")}];
@@ -42,18 +57,10 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             }
         );
 
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
-                $scope.caseInfo = caseInfo;
-                return caseInfo;
-            });
-        }
-
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive(currentObjectId, false)) {
+            if (Util.goodPositive($scope.currentObjectId, false)) {
                 var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.CASE_FILE
-                    , currentObjectId
+                    , $scope.currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)

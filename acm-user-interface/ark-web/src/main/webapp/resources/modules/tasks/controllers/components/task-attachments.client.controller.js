@@ -5,9 +5,22 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
     , function ($scope, $stateParams, $modal
         , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, DocTreeService) {
 
-        ConfigService.getComponentConfig("tasks", "attachments").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
+        new HelperObjectBrowserService.Component({
+            moduleId: "tasks"
+            , componentId: "attachments"
+            , scope: $scope
+            , stateParams: $stateParams
+            , retrieveObjectInfo: TaskInfoService.getTaskInfo
+            , validateObjectInfo: TaskInfoService.validateTaskInfo
+            , onObjectInfoRetrieved: function (taskInfo) {
+                $scope.taskInfo = taskInfo;
+            }
+        });
+
+
+        ConfigService.getModuleConfig("tasks").then(function (config) {
+            $scope.treeConfig = config.docTree;
+            return config;
         });
 
         ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.TASK).then(
@@ -32,6 +45,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         if (Util.goodPositive(currentObjectId, false)) {
             TaskInfoService.getTaskInfo(currentObjectId).then(function (taskInfo) {
                 $scope.taskInfo = taskInfo;
+                $scope.objectInfo = taskInfo;
                 $scope.objectId = taskInfo.taskId;
                 return taskInfo;
             });

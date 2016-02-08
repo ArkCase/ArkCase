@@ -4,22 +4,18 @@ angular.module('cost-tracking').controller('CostTracking.ActionsController', ['$
     , 'UtilService', 'ConfigService', 'CostTracking.InfoService', 'Helper.ObjectBrowserService'
     , function ($scope, $state, $stateParams, Util, ConfigService, CostTrackingInfoService, HelperObjectBrowserService) {
 
-        ConfigService.getComponentConfig("cost-tracking", "actions").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
-        });
-
-        $scope.$on('object-updated', function (e, data) {
-            if (CostTrackingInfoService.validateCostsheet(data)) {
-                $scope.costsheetInfo = data;
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cost-tracking"
+            , componentId: "actions"
+            , retrieveObjectInfo: CostTrackingInfoService.getCostsheetInfo
+            , validateObjectInfo: CostTrackingInfoService.validateCostsheet
+            , onObjectInfoRetrieved: function (costsheetInfo) {
+                $scope.costsheetInfo = costsheetInfo;
             }
         });
 
-        $scope.$on('object-refreshed', function (e, data) {
-            if (CostTrackingInfoService.validateCostsheet(data)) {
-                $scope.costsheetInfo = data;
-            }
-        });
 
         $scope.createNew = function () {
             $state.go("frevvo", {

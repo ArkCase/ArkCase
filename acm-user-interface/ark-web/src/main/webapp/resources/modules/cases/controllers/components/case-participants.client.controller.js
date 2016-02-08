@@ -7,6 +7,21 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
         , Store, Util, ConfigService, CaseInfoService, LookupService, ObjectLookupService
         , HelperUiGridService, HelperObjectBrowserService) {
 
+        new HelperObjectBrowserService.Component({
+            scope: $scope
+            , stateParams: $stateParams
+            , moduleId: "cases"
+            , componentId: "participants"
+            , retrieveObjectInfo: CaseInfoService.getCaseInfo
+            , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onObjectInfoRetrieved: function (caseInfo) {
+                onObjectInfoRetrieved(caseInfo);
+            }
+            , onConfigRetrieved: function (componentConfig) {
+                onConfigRetrieved(componentConfig);
+            }
+        });
+
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
         var promiseTypes = ObjectLookupService.getParticipantTypes().then(
@@ -29,7 +44,8 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
         );
 
 
-        var promiseConfig = ConfigService.getComponentConfig("cases", "participants").then(function (config) {
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
@@ -91,9 +107,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                     }
                 }
             });
-
-            return config;
-        });
+        };
 
         $scope.pickParticipant = function (rowEntity) {
             var params = {};
@@ -130,9 +144,10 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             });
         };
 
-        var updateGridData = function (data) {
-            $q.all([promiseTypes, promiseUsers, promiseGroups, promiseConfig]).then(function () {
-                var participants = data.participants;
+        var onObjectInfoRetrieved = function (caseInfo) {
+            $scope.caseInfo = caseInfo;
+            $q.all([promiseTypes, promiseUsers, promiseGroups, $scope.promiseConfig]).then(function () {
+                var participants = caseInfo.participants;
                 _.each(participants, function (participant) {
                     if ("*" === participant.participantType) {
                         participant.acm$_participantNames = [
@@ -146,22 +161,9 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                 });
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = participants;
-                $scope.caseInfo = data;
                 //gridHelper.hidePagingControlsIfAllDataShown(participants.length);
             });
         };
-
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            CaseInfoService.getCaseInfo(currentObjectId).then(function (caseInfo) {
-                updateGridData(caseInfo);
-                return caseInfo;
-            });
-        }
-
-        $scope.$on('object-refreshed', function (e, caseInfo) {
-            updateGridData(caseInfo);
-        });
 
 
         $scope.addNew = function () {
