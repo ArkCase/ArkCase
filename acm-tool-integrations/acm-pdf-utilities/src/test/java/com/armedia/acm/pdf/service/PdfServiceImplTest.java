@@ -33,11 +33,12 @@ public class PdfServiceImplTest
     PdfService pdfService;
 
     private String outputFileName = "multipageImage.tif";
+    private File outputFile = new File(System.getProperty("java.io.tmpdir") + File.separator + outputFileName);
 
     @Before
     public void setUp() throws Exception
     {
-
+        FileUtils.deleteQuietly(outputFile);
     }
 
     @Test
@@ -47,7 +48,6 @@ public class PdfServiceImplTest
 
 
         FileSystemResource multipagePdf = new FileSystemResource(this.getClass().getResource("/pdfs/multipage_document.pdf").getFile());
-        File outputFile = new File(System.getProperty("java.io.tmpdir") + File.separator + outputFileName);
         assertTrue(multipagePdf.exists());
 
         log.debug("file length is {}", outputFile.length());
@@ -58,7 +58,7 @@ public class PdfServiceImplTest
     @After
     public void tearDown() throws Exception
     {
-        File outputFile = new File(System.getProperty("java.io.tmpdir") + File.separator + outputFileName);
+        log.debug(outputFile.getAbsolutePath());
         FileUtils.deleteQuietly(outputFile);
     }
 }
