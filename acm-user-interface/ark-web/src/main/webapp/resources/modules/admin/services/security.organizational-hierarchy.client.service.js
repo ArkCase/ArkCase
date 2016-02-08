@@ -33,12 +33,21 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', function
      * @description
      * Performs retrieving all groups
      *
+     * param {string} start
+     * param {string} num
      * @returns {HttpPromise} Future info about groups
      */
-    function getGroups() {
+    function getGroups(start, num) {
+        //s and n are 0 and 50 by default
+        var s = 0;
+        var n = 50;
+        if(start)
+            s = start;
+        if(num)
+            n = num;
         return $http({
             method: 'GET',
-            url: 'proxy/arkcase/api/latest/users/groups/get?n=50&s=create_date_tdt desc'
+            url: 'proxy/arkcase/api/latest/users/groups/get?n='+n+'&start='+s+'&s=create_date_tdt desc'
         });
     }
 

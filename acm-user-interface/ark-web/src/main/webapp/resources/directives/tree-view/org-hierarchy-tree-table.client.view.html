@@ -16,3 +16,9 @@
     </tr>
     </tbody>
 </table>
+<div class="well-sm">
+    <button class='btn btn-link btn-xs' type='button' title="{{'common.directive.treeTableView.moreRecords.tooltip' | translate}}" ng-click="onLoadMore(treeData.length)" ng-show="moreRecords>0">
+        <i class="fa fa-arrow-down"></i>
+        <span>{{moreRecords}} {{'common.directive.treeTableView.moreRecords.title' | translate}} </span>
+    </button>
+</div>

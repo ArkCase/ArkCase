@@ -4,14 +4,27 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
     function ($scope, organizationalHierarchyService, $q, $modal, messageService, $translate, modalDialogService, Util) {
         $scope.config.$promise.then(function (config) {
             $scope.cfg = _.find(config.components, {id: 'usersPicker'});
+
+            setPageSize();
         });
 
-        var groupsPromise = organizationalHierarchyService.getGroups();
+        //this is default value for pageSize
+        $scope.pageSize = 50;
+
+        function setPageSize() {
+
+            if ($scope.cfg.pageSize)
+                $scope.pageSize = $scope.cfg.pageSize;
+
+        }
+
+        var groupsPromise = organizationalHierarchyService.getGroups(0, $scope.pageSize);
         $scope.data = [];
         var groupsMap = {};
 
         groupsPromise.then(function (payload) {
             var tempGroups = payload.data.response.docs;
+            $scope.totalGroups = payload.data.response.numFound;
             //create map from groups
             for (var i = 0; i < tempGroups.length; i++) {
                 var tempGroup = tempGroups[i];
@@ -56,6 +69,22 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             }
 
         }
+
+        $scope.onLoadMore = function (numberOfItems) {
+            var groupsPromise = organizationalHierarchyService.getGroups(numberOfItems, $scope.pageSize);
+
+            groupsPromise.then(function (payload) {
+                var tempGroups = payload.data.response.docs;
+                //create map from groups
+                for (var i = 0; i < tempGroups.length; i++) {
+                    var tempGroup = tempGroups[i];
+                    groupsMap[tempGroup.object_id_s] = tempGroup;
+                }
+
+                createTreeData(tempGroups);
+            });
+
+        };
 
         $scope.onAddSubGroup = function (parent) {
             var deffered = $q.defer();
@@ -186,7 +215,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             modalInstance.result.then(function (membersSelected) {
                 //ok button clicked
                 var mappedMembers = [];
-                if(Util.isArray(membersSelected)) {
+                if (Util.isArray(membersSelected)) {
                     for (var i = 0; i < membersSelected.length; i++) {
                         mappedMembers.push(mapMember(membersSelected[i]));
                     }
