@@ -6,6 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,7 +28,7 @@ import static junit.framework.TestCase.assertNotNull;
 })
 public class PdfServiceImplTest
 {
-
+    private Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     PdfService pdfService;
 
@@ -48,7 +50,7 @@ public class PdfServiceImplTest
         File outputFile = new File(System.getProperty("java.io.tmpdir") + File.separator + outputFileName);
         assertTrue(multipagePdf.exists());
 
-
+        log.debug("file length is {}", outputFile.length());
         pdfService.generateTiffFromPdf(multipagePdf.getFile(), outputFile);
     }
 
