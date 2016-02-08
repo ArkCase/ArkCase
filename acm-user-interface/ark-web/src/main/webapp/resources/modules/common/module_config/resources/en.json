@@ -89,6 +89,10 @@
     "errorNode.title": "(Error)",
     "errorNode.toolTip": "(Error)"
   },
+  "common.directive.treeTableView": {
+    "moreRecords.title": " more records...",
+    "moreRecords.tooltip": "Load more records"
+  },
   "common.directive.objectAuthorizationRoles": {
     "choose": "Choose",
     "not_authorized": "Not Authorized",
