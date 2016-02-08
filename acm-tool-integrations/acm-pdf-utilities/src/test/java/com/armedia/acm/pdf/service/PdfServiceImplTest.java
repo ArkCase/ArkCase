@@ -6,6 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,16 +28,17 @@ import static junit.framework.TestCase.assertNotNull;
 })
 public class PdfServiceImplTest
 {
-
+    private Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     PdfService pdfService;
 
     private String outputFileName = "multipageImage.tif";
+    private File outputFile = new File(System.getProperty("java.io.tmpdir") + File.separator + outputFileName);
 
     @Before
     public void setUp() throws Exception
     {
-
+        FileUtils.deleteQuietly(outputFile);
     }
 
     @Test
@@ -45,10 +48,9 @@ public class PdfServiceImplTest
 
 
         FileSystemResource multipagePdf = new FileSystemResource(this.getClass().getResource("/pdfs/multipage_document.pdf").getFile());
-        File outputFile = new File(System.getProperty("java.io.tmpdir") + File.separator + outputFileName);
         assertTrue(multipagePdf.exists());
 
-
+        log.debug("file length is {}", outputFile.length());
         pdfService.generateTiffFromPdf(multipagePdf.getFile(), outputFile);
     }
 
@@ -56,7 +58,7 @@ public class PdfServiceImplTest
     @After
     public void tearDown() throws Exception
     {
-        File outputFile = new File(System.getProperty("java.io.tmpdir") + File.separator + outputFileName);
+        log.debug(outputFile.getAbsolutePath());
         FileUtils.deleteQuietly(outputFile);
     }
 }
