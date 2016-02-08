@@ -276,7 +276,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
              * override it in onConfigRetrieved() callback handler.
              *
              * Object info can be retrieved or updated via events between components. Assumption of the order of
-             * Components is initialized is one of source of bugs. Component helper does not make any assumption of the
+             * Components being initialized is one of source of bugs. Component helper does not make any assumption of the
              * component initialization order to ensure it works regardless it is initialized before or after other
              * components. By default, object info is saved to a scope variable '$scope.objectInfo', but consumer
              * code may override it in onObjectInfoRetrieved() callback handler.
