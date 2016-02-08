@@ -82,6 +82,10 @@
             <artifactId>mule-module-scripting</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-cmis</artifactId>
+        </dependency>
 
         <!-- activiti -->
         <dependency>

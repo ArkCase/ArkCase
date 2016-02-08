@@ -5,6 +5,7 @@ import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.AuditService;
 import com.armedia.acm.web.api.MDCConstants;
 import com.google.common.io.CharStreams;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -14,6 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -29,7 +31,7 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private static final String EVENT_TYPE = "com.armedia.acm.audit.request";
+    public static final String EVENT_TYPE = "com.armedia.acm.audit.request";
 
     private AuditService auditService;
     private boolean requestsLoggingEnabled;
@@ -71,9 +73,13 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
             eventProperties.put("Protocol", request.getProtocol());
             eventProperties.put("URI", request.getRequestURI());
             if (request.getQueryString() != null)
+            {
                 eventProperties.put("QueryString", request.getQueryString());
+            }
             if (request.getRequestedSessionId() != null)
+            {
                 eventProperties.put("SessionId", request.getRequestedSessionId());
+            }
 
             // headers
             if (isRequestsLoggingHeadersEnabled())
@@ -90,7 +96,9 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
                     separator = ";";
                 }
                 if (headers != null && headers.length() > 0)
+                {
                     eventProperties.put("Headers", headers.toString());
+                }
             }
 
             // cookies
@@ -107,11 +115,14 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
                     separator = ";";
                 }
                 if (cookies.length() > 0)
+                {
                     eventProperties.put("Cookies", cookies.toString());
+                }
             }
 
             // body
-            if (isRequestsLoggingBodyEnabled() && "POST".equalsIgnoreCase(request.getMethod()))
+            if (isRequestsLoggingBodyEnabled() && "POST".equalsIgnoreCase(request.getMethod()) && (request.getHeader("content-type") == null
+                    || (request.getHeader("content-type") != null && !request.getHeader("content-type").contains("multipart/form-data"))))
             {
                 eventProperties.put("Body", CharStreams.toString(request.getReader()));
             }
@@ -130,9 +141,7 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
     }
 
     @Override
-    public void afterCompletion(
-            HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
-            throws Exception
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception
     {
         MDC.clear();
     }

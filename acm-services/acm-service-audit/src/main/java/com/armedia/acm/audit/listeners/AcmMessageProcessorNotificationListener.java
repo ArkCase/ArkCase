@@ -16,6 +16,7 @@ import org.mule.component.simple.EchoComponent;
 import org.mule.context.notification.MessageProcessorNotification;
 import org.mule.endpoint.DefaultOutboundEndpoint;
 import org.mule.interceptor.TimerInterceptor;
+import org.mule.module.cmis.processors.AbstractConnectedProcessor;
 import org.mule.module.scripting.transformer.ScriptTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +28,8 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Mule message notification listener sets the {@link MDC} variables to messages in session properties and sets the
- * {@link MDC} variables from them.
+ * Mule message notification listener sets the {@link MDC} variables to messages in session properties and sets the {@link MDC} variables
+ * from them.
  * <p>
  * Created by Bojan Milenkoski on 20.1.2016.
  */
@@ -52,23 +53,27 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
 
         if (notification.getAction() == MessageProcessorNotification.MESSAGE_PROCESSOR_PRE_INVOKE)
         {
-            if ((event.getSessionVariable(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) == null) && (event.getMessage().getInboundProperty(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) != null))
+            if ((event.getSessionVariable(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) == null)
+                    && (event.getMessage().getInboundProperty(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) != null))
             {
                 // set session variables if missing
-                event.setSessionVariable(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, event.getMessage().getInboundProperty(MDCConstants.EVENT_MDC_REQUEST_ID_KEY));
-                event.setSessionVariable(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY, event.getMessage().getInboundProperty(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY));
-                event.setSessionVariable(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, event.getMessage().getInboundProperty(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY));
+                event.setSessionVariable(MDCConstants.EVENT_MDC_REQUEST_ID_KEY,
+                        event.getMessage().getInboundProperty(MDCConstants.EVENT_MDC_REQUEST_ID_KEY));
+                event.setSessionVariable(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY,
+                        event.getMessage().getInboundProperty(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY));
+                event.setSessionVariable(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY,
+                        event.getMessage().getInboundProperty(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY));
             }
 
             // set MDC variables from message session properties
             MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, event.getSessionVariable(MDCConstants.EVENT_MDC_REQUEST_ID_KEY));
-            MDC.put(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY, event.getSessionVariable(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY));
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY,
+                    event.getSessionVariable(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY));
             MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, event.getSessionVariable(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY));
         }
 
         if (notification.getAction() == MessageProcessorNotification.MESSAGE_PROCESSOR_POST_INVOKE)
         {
-            // TODO cmis:get-content-stream, cmis:create-document-by-id-from-content, cmis:get-object-by-id
             if (isAuditable(notification))
             {
                 audit(notification);
@@ -104,8 +109,10 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
 
             auditEvent.setIpAddress(MDC.get(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY));
             // when entity is changed without web request the MDC.get(AuditConstants.EVENT_MDC_REQUEST_ID_KEY) is null
-            auditEvent.setRequestId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) == null ? null : UUID.fromString(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY)));
-            auditEvent.setUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) != null ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) : "anonymous");
+            auditEvent.setRequestId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) == null ? null
+                    : UUID.fromString(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY)));
+            auditEvent.setUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) != null
+                    ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) : "anonymous");
             auditEvent.setFullEventType(EVENT_TYPE + " | " + event.getMessageSourceURI());
             auditEvent.setEventResult(AuditConstants.EVENT_RESULT_SUCCESS);
             auditEvent.setObjectType(AuditConstants.EVENT_OBJECT_TYPE_MULE_FLOW);
@@ -119,10 +126,11 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
             eventProperties.put("Server ID", notification.getServerId());
             eventProperties.put("Message source URI", event.getMessageSourceURI().toString());
             eventProperties.put("Exchange pattern", event.getExchangePattern().name());
-            eventProperties.put("Processor type", notification.getProcessor().getClass().getName());
             eventProperties.put("Processor path", notification.getProcessorPath());
 
             MessageProcessor processor = notification.getProcessor();
+
+            eventProperties.put("Processor type", processor.getClass().getName());
 
             if (processor instanceof DefaultOutboundEndpoint)
             {
@@ -145,12 +153,21 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
                 eventProperties.put("Processor name", scriptTransformer.getName());
             }
 
+            // Alfresco processor
+            if (processor instanceof AbstractConnectedProcessor)
+            {
+                AbstractConnectedProcessor abstractConnectedProcessor = (AbstractConnectedProcessor) processor;
+                eventProperties.put("Alfresco Repository Id", abstractConnectedProcessor.getRepositoryId().toString());
+                eventProperties.put("Base URL", abstractConnectedProcessor.getBaseUrl().toString());
+            }
+
             if (isMuleFlowsLoggingMessageEnabled())
             {
                 try
                 {
                     eventProperties.put("Message", event.getMessageAsString());
-                } catch (MuleException e)
+                }
+                catch (MuleException e)
                 {
                     // continue execution on exception
                     log.error("Error getting Mule message as String", e);
@@ -163,17 +180,20 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
 
                 for (String outboundPropertyName : message.getOutboundPropertyNames())
                 {
-                    eventProperties.put(outboundPropertyName + "(outbound property)", message.getOutboundProperty(outboundPropertyName).toString());
+                    eventProperties.put(outboundPropertyName + "(outbound property)",
+                            message.getOutboundProperty(outboundPropertyName).toString());
                 }
 
                 for (String inboundPropertyName : message.getInboundPropertyNames())
                 {
-                    eventProperties.put(inboundPropertyName + "(inbound property)", message.getInboundProperty(inboundPropertyName).toString());
+                    eventProperties.put(inboundPropertyName + "(inbound property)",
+                            message.getInboundProperty(inboundPropertyName).toString());
                 }
 
                 for (String invocationPropertyName : message.getInvocationPropertyNames())
                 {
-                    eventProperties.put(invocationPropertyName + "(invocation property)", message.getInvocationProperty(invocationPropertyName).toString());
+                    eventProperties.put(invocationPropertyName + "(invocation property)",
+                            message.getInvocationProperty(invocationPropertyName).toString());
                 }
             }
 

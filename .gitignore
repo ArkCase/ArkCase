@@ -10,6 +10,7 @@ atlassian-ide-plugin.xml
 .settings/
 .springBeans
 .externalToolBuilders/
+.checkstyle
 
 # Package Files #
 *.jar
