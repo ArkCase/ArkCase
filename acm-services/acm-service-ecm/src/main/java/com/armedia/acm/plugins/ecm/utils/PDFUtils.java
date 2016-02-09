@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.utils;
 
-import org.apache.pdfbox.util.PDFMergerUtility;
+import org.apache.pdfbox.io.MemoryUsageSetting;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,9 @@ public class PDFUtils
             // Merges the documents together and creates an in-memory copy of the new combined document
             ByteArrayOutputStream outputStreamBytes = new ByteArrayOutputStream();
             pdfMergerUtility.setDestinationStream(outputStreamBytes);
-            pdfMergerUtility.mergeDocuments();
+            // using at most 32MB memory, the rest goes to disk
+            MemoryUsageSetting memoryUsageSetting = MemoryUsageSetting.setupMixed(1024 * 1024 * 32);
+            pdfMergerUtility.mergeDocuments(memoryUsageSetting);
 
             mergedDocument = outputStreamBytes.toByteArray();
             log.debug("merged length: " + mergedDocument.length);

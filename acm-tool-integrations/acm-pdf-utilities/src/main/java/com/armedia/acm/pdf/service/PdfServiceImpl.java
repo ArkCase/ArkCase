@@ -5,27 +5,27 @@ import com.armedia.acm.pdf.PdfServiceException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.github.jaiimageio.impl.plugins.tiff.TIFFImageWriterSpi;
-import com.github.jaiimageio.impl.plugins.tiff.TIFFJPEGCompressor;
-import com.github.jaiimageio.plugins.tiff.TIFFCompressor;
 import com.github.jaiimageio.plugins.tiff.TIFFImageWriteParam;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
+import org.apache.pdfbox.io.IOUtils;
+import org.apache.pdfbox.io.MemoryUsageSetting;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.util.PDFMergerUtility;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
-import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.stream.ImageOutputStream;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -45,7 +45,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
@@ -178,7 +177,7 @@ public class PdfServiceImpl implements PdfService
     }
 
     /**
-     * Append one PDF file to another (incremental merge)
+     * Append one PDF file to another (incremental merge).
      *
      * @param pdDocument       source PDF, the document we are appending to
      * @param is               input stream of the document we are appending
@@ -209,7 +208,7 @@ public class PdfServiceImpl implements PdfService
     }
 
     /**
-     * Append one PDF file to another (incremental merge)
+     * Append one PDF file to another (incremental merge).
      *
      * @param pdDocument       source PDF, the document we are appending to
      * @param ecmFile          document we are appending as ECM file
@@ -232,7 +231,7 @@ public class PdfServiceImpl implements PdfService
     }
 
     /**
-     * Append one PDF file to another (incremental merge)
+     * Append one PDF file to another (incremental merge).
      *
      * @param pdDocument       source PDF, the document we are appending to
      * @param filename         path to the document we are appending
@@ -255,31 +254,39 @@ public class PdfServiceImpl implements PdfService
     }
 
     /**
-     * Generates multipage TIFF from PDF file
-     * <p>
-     * <p>
-     * Can throw IllegalArgumentException if inputPdf file not exists
+     * Generates multipage TIFF from PDF file.
      *
      * @param inputPdf   pdf file to be processed
      * @param outputTiff location where generated TIFF to be saved
+     * @throws PdfServiceException on error generating TIFF
      */
     @Override
     public void generateTiffFromPdf(File inputPdf, File outputTiff) throws PdfServiceException
     {
         if (!inputPdf.exists())
-            throw new PdfServiceException(inputPdf.getAbsolutePath() + " doesn't exists");
-
-        try (ImageOutputStream ios = ImageIO.createImageOutputStream(outputTiff); PDDocument document = PDDocument.loadNonSeq(inputPdf, null))
         {
+            throw new PdfServiceException(inputPdf.getAbsolutePath() + " doesn't exists");
+        }
+
+        ImageOutputStream ios = null;
+        PDDocument document = null;
+        try
+        {
+            ios = ImageIO.createImageOutputStream(outputTiff);
+            document = PDDocument.load(inputPdf);
+
             log.debug("Reading pdf from file path {}", outputTiff.getPath());
-            List<PDPage> pdPages = document.getDocumentCatalog().getAllPages();
+
+            PDFRenderer pdfRenderer = new PDFRenderer(document);
+
             TIFFImageWriterSpi tiffspi = new TIFFImageWriterSpi();
             ImageWriter writer = tiffspi.createWriterInstance();
             log.debug("Preparing to generate multi image tiff.");
             writer.setOutput(ios);
             writer.prepareWriteSequence(null);
-            log.debug("Pdf contains {} pages.", pdPages.size());
+            log.debug("Pdf contains {} pages.", document.getNumberOfPages());
             int page = 0;
+
 
             TIFFImageWriteParam writeParam = new TIFFImageWriteParam(Locale.getDefault());
             writeParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
@@ -288,28 +295,105 @@ public class PdfServiceImpl implements PdfService
             //full quality! could be: from 0.1f to 1.0f
             writeParam.setCompressionQuality(0.75f);
 
-            for (PDPage pdPage : pdPages)
+            for (PDPage pdPage : document.getPages())
             {
-                page++;
-                BufferedImage bim = pdPage.convertToImage(BufferedImage.TYPE_INT_RGB, 300);
+                // using 150dpi as the lowest acceptable resolution
+                BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 150, ImageType.RGB);
                 IIOImage image = new IIOImage(bim, null, null);
                 try
                 {
                     writer.writeToSequence(image, writeParam);
                 } catch (UnsupportedOperationException e)
                 {
-                    log.warn("not supported compression:", e);
+                    log.warn("Not supported compression:", e);
                     writer.writeToSequence(image, null);
                 }
-                log.debug("Successfully written one image to the sequence, {} more to go.", pdPages.size() - page);
+                log.debug("Successfully written one image to the sequence, {} more to go.", document.getNumberOfPages() - page);
+                page++;
             }
-            writer.endWriteSequence();
             ios.flush();
         } catch (IOException e)
         {
             throw new PdfServiceException(e);
+        } finally
+        {
+            IOUtils.closeQuietly(document);
+            IOUtils.closeQuietly(ios);
         }
         log.debug("Successfully written tiff sequence into file {}. With length: {} MBytes", outputTiff.getPath(), ((float) outputTiff.length() / (1024 * 1024)));
+    }
+
+    /**
+     * Add source for merging into single PDF document.
+     *
+     * @param pdfMergerUtility PDF merger utility
+     * @param is               input stream of the document we are appending
+     * @throws PdfServiceException on error adding source stream
+     */
+    public void addSource(PDFMergerUtility pdfMergerUtility, InputStream is) throws PdfServiceException
+    {
+        pdfMergerUtility.addSource(is);
+    }
+
+    /**
+     * Add source for merging into single PDF document.
+     *
+     * @param pdfMergerUtility PDF merger utility
+     * @param ecmFile          document we are appending as ECM file
+     * @throws PdfServiceException on error adding source ECM file
+     */
+    public void addSource(PDFMergerUtility pdfMergerUtility, EcmFile ecmFile) throws PdfServiceException
+    {
+        InputStream is = null;
+        try
+        {
+            is = ecmFileService.downloadAsInputStream(ecmFile.getFileId());
+        } catch (MuleException | AcmUserActionFailedException e)
+        {
+            throw new PdfServiceException(e);
+        }
+        addSource(pdfMergerUtility, is);
+    }
+
+    /**
+     * Add source for merging into single PDF document.
+     *
+     * @param pdfMergerUtility PDF merger utility
+     * @param filename         path to the document we are appending
+     * @throws PdfServiceException on error adding source file
+     */
+    public void addSource(PDFMergerUtility pdfMergerUtility, String filename) throws PdfServiceException
+    {
+        InputStream is = null;
+        try
+        {
+            is = new FileInputStream(filename);
+        } catch (FileNotFoundException e)
+        {
+            throw new PdfServiceException(e);
+        }
+        addSource(pdfMergerUtility, is);
+    }
+
+    /**
+     * Merge multiple sources into single PDF document.
+     *
+     * @param pdfMergerUtility PDF merger utility
+     * @param filename         path to the merged document
+     * @throws PdfServiceException on error creating merged document
+     */
+    public void mergeSources(PDFMergerUtility pdfMergerUtility, String filename) throws PdfServiceException
+    {
+        // using at most 32MB memory, the rest goes to disk
+        MemoryUsageSetting memoryUsageSetting = MemoryUsageSetting.setupMixed(1024 * 1024 * 32);
+        try
+        {
+            pdfMergerUtility.setDestinationFileName(filename);
+            pdfMergerUtility.mergeDocuments(memoryUsageSetting);
+        } catch (IOException e)
+        {
+            throw new PdfServiceException(e);
+        }
     }
 
     public EcmFileService getEcmFileService()
