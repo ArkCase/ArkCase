@@ -4,6 +4,10 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.pdf.PdfServiceException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.github.jaiimageio.impl.plugins.tiff.TIFFImageWriterSpi;
+import com.github.jaiimageio.impl.plugins.tiff.TIFFJPEGCompressor;
+import com.github.jaiimageio.plugins.tiff.TIFFCompressor;
+import com.github.jaiimageio.plugins.tiff.TIFFImageWriteParam;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
@@ -18,7 +22,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
+import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.stream.ImageOutputStream;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -39,6 +46,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -248,8 +256,8 @@ public class PdfServiceImpl implements PdfService
 
     /**
      * Generates multipage TIFF from PDF file
-     * <p/>
-     * <p/>
+     * <p>
+     * <p>
      * Can throw IllegalArgumentException if inputPdf file not exists
      *
      * @param inputPdf   pdf file to be processed
@@ -265,26 +273,43 @@ public class PdfServiceImpl implements PdfService
         {
             log.debug("Reading pdf from file path {}", outputTiff.getPath());
             List<PDPage> pdPages = document.getDocumentCatalog().getAllPages();
-            ImageWriter writer = ImageIO.getImageWritersByFormatName("TIFF").next();
+            TIFFImageWriterSpi tiffspi = new TIFFImageWriterSpi();
+            ImageWriter writer = tiffspi.createWriterInstance();
             log.debug("Preparing to generate multi image tiff.");
             writer.setOutput(ios);
             writer.prepareWriteSequence(null);
             log.debug("Pdf contains {} pages.", pdPages.size());
             int page = 0;
+
+            TIFFImageWriteParam writeParam = new TIFFImageWriteParam(Locale.getDefault());
+            writeParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            writeParam.setCompressionType("JPEG");
+
+            //full quality! could be: from 0.1f to 1.0f
+            writeParam.setCompressionQuality(0.75f);
+
             for (PDPage pdPage : pdPages)
             {
                 page++;
                 BufferedImage bim = pdPage.convertToImage(BufferedImage.TYPE_INT_RGB, 300);
                 IIOImage image = new IIOImage(bim, null, null);
-                writer.writeToSequence(image, null);
+                try
+                {
+                    writer.writeToSequence(image, writeParam);
+                } catch (UnsupportedOperationException e)
+                {
+                    log.warn("not supported compression:", e);
+                    writer.writeToSequence(image, null);
+                }
                 log.debug("Successfully written one image to the sequence, {} more to go.", pdPages.size() - page);
             }
+            writer.endWriteSequence();
             ios.flush();
         } catch (IOException e)
         {
             throw new PdfServiceException(e);
         }
-        log.debug("Successfully written tiff sequence into file {}.", outputTiff.getPath());
+        log.debug("Successfully written tiff sequence into file {}. With length: {} MBytes", outputTiff.getPath(), ((float) outputTiff.length() / (1024 * 1024)));
     }
 
     public EcmFileService getEcmFileService()

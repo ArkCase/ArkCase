@@ -268,7 +268,23 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
              * @param {Function} (Optional)arg.onConfigRetrieved Callback function when component config retrieved
              *
              * @description
-             * Helper.ObjectBrowserService.Component is to help common handling for typical components
+             * Helper.ObjectBrowserService.Component captures common handling for typical components, including
+             * retrieving configuration of the component and data of the object (ObjectInfo) the component represent.
+             *
+             * It retrieves component configuration and presents it by the callback function onConfigRetrieved argument.
+             * By default, component config is saved to a scope variable '$scope.config', unless consumer code
+             * override it in onConfigRetrieved() callback handler.
+             *
+             * Object info can be retrieved or updated via events between components. Assumption of the order of
+             * Components being initialized is one of source of bugs. Component helper does not make any assumption of the
+             * component initialization order to ensure it works regardless it is initialized before or after other
+             * components. By default, object info is saved to a scope variable '$scope.objectInfo', but consumer
+             * code may override it in onObjectInfoRetrieved() callback handler.
+             *
+             * The helper saves two instance variables 'currentObjectId' and 'promiseConfig'. 'currentObjectId' tracks
+             * the current object ID; and 'promiseConfig' is the promise returned by configuration retrieving.
+             * The promise variable may be helpful when retrieving data depends on configuration.
+             *
              */
             , Component: function (arg) {
                 var that = this;
@@ -287,31 +303,34 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                     that.scope.config = componentConfig;
                 };
 
-                that.scope.promiseConfig = ConfigService.getComponentConfig(that.moduleId, that.componentId).then(function (componentConfig) {
+                that.promiseConfig = ConfigService.getComponentConfig(that.moduleId, that.componentId);
+                that.scope.promiseConfig = that.promiseConfig;  //phase out; keep for backward compatibility
+                that.promiseConfig.then(function (componentConfig) {
                     that.onConfigRetrieved(componentConfig);
                     return componentConfig;
                 });
 
 
                 that.previousId = null;
-                that.scope.$on('object-updated', function (e, data) {
-                    that.scope.currentObjectId = Service.getCurrentObjectId();
-                    updateObjectInfo(that.scope.currentObjectId, data);
-                    //updateObjectInfo(that.stateParams.id, data);
+                that.scope.$on('object-updated', function (e, objectInfo) {
+                    that.scope.currentObjectId = Service.getCurrentObjectId();  //phase out; keep for backward compatibility
+                    that.currentObjectId = Service.getCurrentObjectId();
+                    updateObjectInfo(that.currentObjectId, objectInfo);
                 });
 
                 that.scope.$on('object-refreshed', function (e, objectInfo) {
                     that.previousId = null;
-                    that.scope.currentObjectId = Service.getCurrentObjectId();
-                    updateObjectInfo(that.scope.currentObjectId, data);
-                    //updateObjectInfo(that.stateParams.id, objectInfo);
+                    that.scope.currentObjectId = Service.getCurrentObjectId();  //phase out; keep for backward compatibility
+                    that.currentObjectId = Service.getCurrentObjectId();
+                    updateObjectInfo(that.currentObjectId, objectInfo);
                 });
 
-                that.scope.currentObjectId = Service.getCurrentObjectId();
-                if (Util.goodPositive(that.scope.currentObjectId, false)) {
-                    if (!Util.compare(that.previousId, that.scope.currentObjectId)) {
-                        that.retrieveObjectInfo(that.scope.currentObjectId).then(function (objectInfo) {
-                            updateObjectInfo(that.scope.currentObjectId, objectInfo);
+                that.scope.currentObjectId = Service.getCurrentObjectId();  //phase out; keep for backward compatibility
+                that.currentObjectId = Service.getCurrentObjectId();
+                if (Util.goodPositive(that.currentObjectId, false)) {
+                    if (!Util.compare(that.previousId, that.currentObjectId)) {
+                        that.retrieveObjectInfo(that.currentObjectId).then(function (objectInfo) {
+                            updateObjectInfo(that.currentObjectId, objectInfo);
                             return objectInfo;
                         });
                     }
