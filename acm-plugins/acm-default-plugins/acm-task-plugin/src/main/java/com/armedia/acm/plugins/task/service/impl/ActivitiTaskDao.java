@@ -51,7 +51,7 @@ import java.util.List;
 import java.util.Map;
 
 
-class ActivitiTaskDao implements TaskDao
+public class ActivitiTaskDao implements TaskDao
 {
     private TaskService activitiTaskService;
     private RepositoryService activitiRepositoryService;
