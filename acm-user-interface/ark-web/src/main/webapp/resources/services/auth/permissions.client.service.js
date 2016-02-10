@@ -13,7 +13,7 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
     function ($q, $http, $log, $interpolate, Authentication) {
         // Iniital rules loading
         var rules = queryRules();
-        var userProfile = Authentication._queryUserInfo();       //todo: refactor to queryUserInfo()
+        var userProfile = Authentication.queryUserInfo();
 
         return {
             /**
@@ -39,20 +39,61 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                 } else {
                     var deferred = $q.defer();
                     var rulesPromise = queryRules();
-                    var userProfilePromise = Authentication._queryUserInfo();   //todo: refactor to queryUserInfo()
+                    var userProfilePromise = Authentication.queryUserInfo();
 
                     $q.all([rules, userProfilePromise])
                         .then(
-                            function success(result) {
-                                rules = result[0];
-                                userProfile = result[1];
-                                var permissionResult = processAction(actionName, objectProperties)
-                                deferred.resolve(permissionResult);
-                            },
-                            function error() {
-                                deferred.reject();
-                            }
-                        );
+                        function success(result) {
+                            rules = result[0];
+                            userProfile = result[1];
+                            var permissionResult = processAction(actionName, objectProperties)
+                            deferred.resolve(permissionResult);
+                        },
+                        function error() {
+                            deferred.reject();
+                        }
+                    );
+                    return deferred.promise;
+                }
+            },
+
+            /**
+             * @ngdoc method
+             * @name getActionsByRoles
+             * @methodOf services.service:PermissionsService
+             *
+             * @param {String} actionName Name of action, for example 'printOrderUI'
+             * @param {Array} roles Roles that are to used for validation
+             *
+             * @returns {Promise} Action objects
+             * @description
+             * Retrieves available actions for the currently logged in user
+             */
+            getActionsByRoles: function (actionName, roles) {
+                if (!actionName && !roles) {
+                    $log.error('Permission Action name and roles are undefined');
+                    return $q.resolve(null);
+                }
+
+                if (rules && rules.data && rules.data.accessControlRuleList && userProfile && userProfile.$resolved) {
+                    return $q.resolve(processActionsByRoles(actionName, roles));
+                } else {
+                    var deferred = $q.defer();
+                    var rulesPromise = queryRules();
+                    var userProfilePromise = Authentication.queryUserInfo();
+
+                    $q.all([rules, userProfilePromise])
+                        .then(
+                        function success(result) {
+                            rules = result[0];
+                            userProfile = result[1];
+                            var actionsList = (processActionsByRoles(actionName, roles));
+                            deferred.resolve(actionsList);
+                        },
+                        function error() {
+                            deferred.reject();
+                        }
+                    );
                     return deferred.promise;
                 }
             }
@@ -112,6 +153,50 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
             }
             return isEnabled;
         }
+
+
+        /**
+         *
+         * @param {String }actionName
+         * @param {Array} roles
+         * @returns {Array} actionsList
+         */
+        function processActionsByRoles(actionName, roles) {
+            var actions = _.filter(rules.data.accessControlRuleList, {actionName: actionName});
+            var actionsList = [];
+            // If actions found
+            if (actions.length > 0) {
+                // Process all found actions objects
+                _.forEach(actions, function (action) {
+
+                    // Check ALL authorities
+                    if (action.userRolesAll) {
+                        _.forEach(action.userRolesAll, function (role) {
+                            if(_.indexOf(roles, role) != -1){
+                                if(_.indexOf(actionsList, action) == -1){
+                                    actionsList.push(action);
+                                }
+                            }
+                        });
+                    }
+
+                    // Check ANY authorities
+                    if (action.userRolesAny) {
+                        _.forEach(action.userRolesAny, function (role) {
+                            if(_.indexOf(roles, role) != -1){
+                                if(_.indexOf(actionsList, action) == -1){
+                                    actionsList.push(action);
+                                }
+                            }
+                        });
+                    }
+                });
+            } else {
+                $log.warn('Action ' + actionName + ' was not found in rules list');
+            }
+            return actionsList;
+        }
+
 
         /**
          * Load permissions rules from server
