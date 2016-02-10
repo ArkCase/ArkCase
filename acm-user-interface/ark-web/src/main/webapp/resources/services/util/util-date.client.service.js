@@ -102,26 +102,23 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
             }
 
 
-
-
-            //get day string in "yyyy-mm-dd" format
-            //parameter d is java Date() format; for some reason getDate() is 1 based while getMonth() is zero based
-            //, __copy_fr_old_app_dateToString: function (d) {
-            //    if (null == d) {
-            //        return "";
-            //    }
-            //    var month = d.getMonth() + 1;
-            //    var day = d.getDate();
-            //    var year = d.getFullYear();
-            //    return this._padZero(month)
-            //        + "/" + this._padZero(day)
-            //        + "/" + year;
-            //}
-            //
-            //, __copy_fr_old_app_getCurrentDay: function () {
-            //    var d = new Date();
-            //    return this.dateToString(d);
-            //}
+            /**
+             * @ngdoc method
+             * @name dateToIso
+             * @methodOf services:Util.DateService
+             *
+             * @description
+             * Converts a date object into an ISO format string
+             *
+             * @param {Date} Date object
+             * @Returns {String} ISO formatted date string YYYY-MM-DDTHH:mm:ss.SSSZZ
+             */
+            , dateToIso: function(d, replacement) {
+                if (Util.isEmpty(d)) {
+                    return Util.goodValue(d, replacement);
+                }
+                return moment(d).format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
+            }
 
         };
 
