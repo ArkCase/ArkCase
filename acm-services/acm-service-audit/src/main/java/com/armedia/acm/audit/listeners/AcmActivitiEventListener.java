@@ -29,12 +29,12 @@ public class AcmActivitiEventListener implements ActivitiEventListener
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private AuditService auditService;
-    private boolean activityEventsLoggingEnabled;
+    private boolean activitiEventsLoggingEnabled;
 
     @Override
     public void onEvent(ActivitiEvent event)
     {
-        log.debug("Activity event handling");
+        log.debug("Activiti event handling");
 
         switch (event.getType())
         {
@@ -60,7 +60,7 @@ public class AcmActivitiEventListener implements ActivitiEventListener
 
     private void audit(ActivitiEvent event, String eventResult)
     {
-        if (isActivityEventsLoggingEnabled())
+        if (isActivitiEventsLoggingEnabled())
         {
             AuditEvent auditEvent = new AuditEvent();
 
@@ -69,7 +69,7 @@ public class AcmActivitiEventListener implements ActivitiEventListener
             auditEvent.setRequestId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) == null ? null
                     : UUID.fromString(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY)));
             auditEvent.setUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) != null
-                    ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) : "anonymous");
+                    ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) : AuditConstants.USER_ID_ANONYMOUS);
             auditEvent.setFullEventType(EVENT_TYPE + " | " + event.getType().name());
             auditEvent.setEventResult(eventResult);
             auditEvent.setObjectType(AuditConstants.EVENT_OBJECT_TYPE_ACTIVITI_EVENT);
@@ -85,8 +85,8 @@ public class AcmActivitiEventListener implements ActivitiEventListener
             if (event.getExecutionId() != null)
             {
                 processVariables = event.getEngineServices().getRuntimeService().getVariables(event.getExecutionId());
-                eventProperties.putAll(processVariables.entrySet().stream()
-                        .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString())));
+                eventProperties.putAll(
+                        processVariables.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString())));
             }
 
             auditEvent.setEventProperties(eventProperties);
@@ -116,13 +116,13 @@ public class AcmActivitiEventListener implements ActivitiEventListener
         this.auditService = auditService;
     }
 
-    public boolean isActivityEventsLoggingEnabled()
+    public boolean isActivitiEventsLoggingEnabled()
     {
-        return activityEventsLoggingEnabled;
+        return activitiEventsLoggingEnabled;
     }
 
-    public void setActivityEventsLoggingEnabled(boolean activityEventsLoggingEnabled)
+    public void setActivitiEventsLoggingEnabled(boolean activitiEventsLoggingEnabled)
     {
-        this.activityEventsLoggingEnabled = activityEventsLoggingEnabled;
+        this.activitiEventsLoggingEnabled = activitiEventsLoggingEnabled;
     }
 }

@@ -14,8 +14,8 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -54,80 +54,9 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
             auditEvent.setEventResult(AuditConstants.EVENT_RESULT_SUCCESS);
             auditEvent.setObjectType(AuditConstants.EVENT_OBJECT_TYPE_WEB_REQUEST);
             auditEvent.setStatus(AuditConstants.EVENT_STATUS_COMPLETE);
-
-            // user Id
-            HttpSession session = request.getSession(false);
-            if (session != null)
-            {
-                auditEvent.setUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY));
-            }
-            if (auditEvent.getUserId() == null || auditEvent.getUserId().trim().isEmpty())
-            {
-                auditEvent.setUserId("anonymous");
-            }
-
-            // event properties
-            Map<String, String> eventProperties = new HashMap<>();
-
-            eventProperties.put("Method", request.getMethod());
-            eventProperties.put("Protocol", request.getProtocol());
-            eventProperties.put("URI", request.getRequestURI());
-            if (request.getQueryString() != null)
-            {
-                eventProperties.put("QueryString", request.getQueryString());
-            }
-            if (request.getRequestedSessionId() != null)
-            {
-                eventProperties.put("SessionId", request.getRequestedSessionId());
-            }
-
-            // headers
-            if (isRequestsLoggingHeadersEnabled())
-            {
-                Enumeration<String> headerNames = request.getHeaderNames();
-                StringBuilder headers = new StringBuilder();
-                String separator = "";
-                while (headerNames.hasMoreElements())
-                {
-                    headers.append(separator);
-                    String headerName = headerNames.nextElement();
-                    String headerValue = request.getHeader(headerName);
-                    headers.append(headerName).append("=").append(headerValue);
-                    separator = ";";
-                }
-                if (headers != null && headers.length() > 0)
-                {
-                    eventProperties.put("Headers", headers.toString());
-                }
-            }
-
-            // cookies
-            if (isRequestsLoggingCookiesEnabled() && (request.getCookies() != null))
-            {
-                StringBuilder cookies = new StringBuilder();
-                String separator = "";
-                for (Cookie cookie : request.getCookies())
-                {
-                    cookies.append(separator);
-                    String cookieName = cookie.getName();
-                    String cookieValue = cookie.getValue();
-                    cookies.append(cookieName).append("=").append(cookieValue);
-                    separator = ";";
-                }
-                if (cookies.length() > 0)
-                {
-                    eventProperties.put("Cookies", cookies.toString());
-                }
-            }
-
-            // body
-            if (isRequestsLoggingBodyEnabled() && "POST".equalsIgnoreCase(request.getMethod()) && (request.getHeader("content-type") == null
-                    || (request.getHeader("content-type") != null && !request.getHeader("content-type").contains("multipart/form-data"))))
-            {
-                eventProperties.put("Body", CharStreams.toString(request.getReader()));
-            }
-
-            auditEvent.setEventProperties(eventProperties);
+            auditEvent.setUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) != null
+                    ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) : AuditConstants.USER_ID_ANONYMOUS);
+            auditEvent.setEventProperties(getEventProperties(request));
 
             if (log.isTraceEnabled())
             {
@@ -138,6 +67,83 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
         }
 
         return true;
+    }
+
+    private Map<String, String> getEventProperties(HttpServletRequest request) throws IOException
+    {
+        Map<String, String> eventProperties = new HashMap<>();
+
+        eventProperties.put("Method", request.getMethod());
+        eventProperties.put("Protocol", request.getProtocol());
+        eventProperties.put("URI", request.getRequestURI());
+        if (request.getQueryString() != null)
+        {
+            eventProperties.put("QueryString", request.getQueryString());
+        }
+        if (request.getRequestedSessionId() != null)
+        {
+            eventProperties.put("SessionId", request.getRequestedSessionId());
+        }
+
+        // headers
+        if (isRequestsLoggingHeadersEnabled())
+        {
+            String headers = getRequestHeadersAsString(request);
+            if (headers.length() > 0)
+            {
+                eventProperties.put("Headers", headers);
+            }
+        }
+
+        // cookies
+        if (isRequestsLoggingCookiesEnabled() && (request.getCookies() != null))
+        {
+            String cookies = getCookiesAsString(request);
+            if (cookies.length() > 0)
+            {
+                eventProperties.put("Cookies", cookies);
+            }
+        }
+
+        // body
+        if (isRequestsLoggingBodyEnabled() && "POST".equalsIgnoreCase(request.getMethod()) && (request.getHeader("content-type") == null
+                || (request.getHeader("content-type") != null && !request.getHeader("content-type").contains("multipart/form-data"))))
+        {
+            eventProperties.put("Body", CharStreams.toString(request.getReader()));
+        }
+
+        return eventProperties;
+    }
+
+    private String getCookiesAsString(HttpServletRequest request)
+    {
+        StringBuilder cookies = new StringBuilder();
+        String separator = "";
+        for (Cookie cookie : request.getCookies())
+        {
+            cookies.append(separator);
+            String cookieName = cookie.getName();
+            String cookieValue = cookie.getValue();
+            cookies.append(cookieName).append("=").append(cookieValue);
+            separator = ";";
+        }
+        return cookies.toString();
+    }
+
+    private String getRequestHeadersAsString(HttpServletRequest request)
+    {
+        Enumeration<String> headerNames = request.getHeaderNames();
+        StringBuilder headers = new StringBuilder();
+        String separator = "";
+        while (headerNames.hasMoreElements())
+        {
+            headers.append(separator);
+            String headerName = headerNames.nextElement();
+            String headerValue = request.getHeader(headerName);
+            headers.append(headerName).append("=").append(headerValue);
+            separator = ";";
+        }
+        return headers.toString();
     }
 
     @Override

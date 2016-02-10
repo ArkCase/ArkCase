@@ -150,7 +150,6 @@
     <changeSet id="10-acm_audit_log_property_change_cm_audit_property_value_column_type" author="bojan.milenkoski">
         <modifyDataType columnName="cm_audit_property_value"
                         newDataType="CLOB"
-                        schemaName="public"
                         tableName="acm_audit_log_property"/>
     </changeSet>
 </databaseChangeLog>

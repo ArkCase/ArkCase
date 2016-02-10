@@ -86,7 +86,7 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
         if (notification.getProcessor() instanceof DefaultJavaComponent)
         {
             Class<?> type = ((DefaultJavaComponent) notification.getProcessor()).getObjectType();
-            return type.isInstance(EchoComponent.class);
+            return !type.isInstance(EchoComponent.class);
         }
 
         if (notification.getProcessor() instanceof TimerInterceptor || notification.getProcessor() instanceof LoggerMessageProcessor)
@@ -112,7 +112,7 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
             auditEvent.setRequestId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) == null ? null
                     : UUID.fromString(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY)));
             auditEvent.setUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) != null
-                    ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) : "anonymous");
+                    ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) : AuditConstants.USER_ID_ANONYMOUS);
             auditEvent.setFullEventType(EVENT_TYPE + " | " + event.getMessageSourceURI());
             auditEvent.setEventResult(AuditConstants.EVENT_RESULT_SUCCESS);
             auditEvent.setObjectType(AuditConstants.EVENT_OBJECT_TYPE_MULE_FLOW);
