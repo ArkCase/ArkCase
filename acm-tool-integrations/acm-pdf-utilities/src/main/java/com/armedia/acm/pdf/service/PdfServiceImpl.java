@@ -11,7 +11,6 @@ import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
-import org.apache.pdfbox.io.IOUtils;
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -59,7 +58,6 @@ public class PdfServiceImpl implements PdfService
      * Logger instance.
      */
     private Logger log = LoggerFactory.getLogger(getClass());
-
     /**
      * Ecm file service.
      */
@@ -69,6 +67,16 @@ public class PdfServiceImpl implements PdfService
      * Random number generator.
      */
     private Random random = new Random();
+
+    /**
+     * Megabyte in bytes.
+     */
+    public static final int MEGABYTE = 1024 * 1024;
+
+    /**
+     * Use no more than 32MB of main memory when merging PDFs, the disk is used for the rest.
+     */
+    public static final int MAX_MAIN_MEMORY_BYTES = MEGABYTE * 32;
 
     /**
      * Generate PDF file based on XSL-FO stylesheet, XML data source and replacement parameters.
@@ -184,7 +192,9 @@ public class PdfServiceImpl implements PdfService
      * @param pdfMergerUtility PDF merger utility
      * @return merged document
      * @throws PdfServiceException on error while merging
+     * @deprecated use {@link #addSource(PDFMergerUtility, InputStream)} and {@link #mergeSources(PDFMergerUtility, String)}
      */
+    @Deprecated
     @Override
     public PDDocument append(PDDocument pdDocument, InputStream is, PDFMergerUtility pdfMergerUtility) throws PdfServiceException
     {
@@ -215,7 +225,9 @@ public class PdfServiceImpl implements PdfService
      * @param pdfMergerUtility PDF merger utility
      * @return merged document
      * @throws PdfServiceException on error while merging
+     * @deprecated use {@link #addSource(PDFMergerUtility, EcmFile)} and {@link #mergeSources(PDFMergerUtility, String)}
      */
+    @Deprecated
     @Override
     public PDDocument append(PDDocument pdDocument, EcmFile ecmFile, PDFMergerUtility pdfMergerUtility) throws PdfServiceException
     {
@@ -238,7 +250,9 @@ public class PdfServiceImpl implements PdfService
      * @param pdfMergerUtility PDF merger utility
      * @return merged document
      * @throws PdfServiceException on error while merging
+     * @deprecated use {@link #addSource(PDFMergerUtility, String)} and {@link #mergeSources(PDFMergerUtility, String)}
      */
+    @Deprecated
     @Override
     public PDDocument append(PDDocument pdDocument, String filename, PDFMergerUtility pdfMergerUtility) throws PdfServiceException
     {
@@ -268,13 +282,8 @@ public class PdfServiceImpl implements PdfService
             throw new PdfServiceException(inputPdf.getAbsolutePath() + " doesn't exists");
         }
 
-        ImageOutputStream ios = null;
-        PDDocument document = null;
-        try
+        try (ImageOutputStream ios = ImageIO.createImageOutputStream(outputTiff); PDDocument document = PDDocument.load(inputPdf))
         {
-            ios = ImageIO.createImageOutputStream(outputTiff);
-            document = PDDocument.load(inputPdf);
-
             log.debug("Reading pdf from file path {}", outputTiff.getPath());
 
             PDFRenderer pdfRenderer = new PDFRenderer(document);
@@ -315,12 +324,8 @@ public class PdfServiceImpl implements PdfService
         } catch (IOException e)
         {
             throw new PdfServiceException(e);
-        } finally
-        {
-            IOUtils.closeQuietly(document);
-            IOUtils.closeQuietly(ios);
         }
-        log.debug("Successfully written tiff sequence into file {}. With length: {} MBytes", outputTiff.getPath(), ((float) outputTiff.length() / (1024 * 1024)));
+        log.debug("Successfully written tiff sequence into file {}. With length: {} MBytes", outputTiff.getPath(), outputTiff.length() / MEGABYTE);
     }
 
     /**
@@ -347,12 +352,15 @@ public class PdfServiceImpl implements PdfService
         InputStream is = null;
         try
         {
+            log.debug("About to add PDF document [{}] for merging", ecmFile.getFileName());
             is = ecmFileService.downloadAsInputStream(ecmFile.getFileId());
         } catch (MuleException | AcmUserActionFailedException e)
         {
+            log.error("Unable to add PDF document [{}] for merging", ecmFile.getFileName(), e);
             throw new PdfServiceException(e);
         }
         addSource(pdfMergerUtility, is);
+        log.debug("PDF document successfully added [{}] for merging", ecmFile.getFileName());
     }
 
     /**
@@ -367,12 +375,15 @@ public class PdfServiceImpl implements PdfService
         InputStream is = null;
         try
         {
+            log.debug("About to add PDF document [{}] for merging", filename);
             is = new FileInputStream(filename);
         } catch (FileNotFoundException e)
         {
+            log.error("Unable to add PDF document [{}] for merging", filename, e);
             throw new PdfServiceException(e);
         }
         addSource(pdfMergerUtility, is);
+        log.debug("PDF document successfully added [{}] for merging", filename);
     }
 
     /**
@@ -385,15 +396,18 @@ public class PdfServiceImpl implements PdfService
     public void mergeSources(PDFMergerUtility pdfMergerUtility, String filename) throws PdfServiceException
     {
         // using at most 32MB memory, the rest goes to disk
-        MemoryUsageSetting memoryUsageSetting = MemoryUsageSetting.setupMixed(1024 * 1024 * 32);
+        MemoryUsageSetting memoryUsageSetting = MemoryUsageSetting.setupMixed(MAX_MAIN_MEMORY_BYTES);
         try
         {
+            log.debug("About to merge multiple PDF documents to [{}]", filename);
             pdfMergerUtility.setDestinationFileName(filename);
             pdfMergerUtility.mergeDocuments(memoryUsageSetting);
         } catch (IOException e)
         {
+            log.error("Unable to merge multiple PDF documents to [{}]", filename, e);
             throw new PdfServiceException(e);
         }
+        log.debug("Multiple PDF documents successfully merged to [{}]", filename);
     }
 
     public EcmFileService getEcmFileService()

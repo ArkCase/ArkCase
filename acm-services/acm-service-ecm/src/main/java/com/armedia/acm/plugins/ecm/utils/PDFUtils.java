@@ -16,6 +16,11 @@ public class PDFUtils
     private static transient final Logger log = LoggerFactory.getLogger(PDFUtils.class);
 
     /**
+     * Use no more than 32MB of main memory when merging PDFs, the disk is used for the rest.
+     */
+    public static final int MAX_MAIN_MEMORY_BYTES = 1024 * 1024 * 32;
+
+    /**
      * Merges together the two supplied PDF documents
      *
      * @param originalFileStream - this PDF will be first in the combined document
@@ -37,7 +42,7 @@ public class PDFUtils
             ByteArrayOutputStream outputStreamBytes = new ByteArrayOutputStream();
             pdfMergerUtility.setDestinationStream(outputStreamBytes);
             // using at most 32MB memory, the rest goes to disk
-            MemoryUsageSetting memoryUsageSetting = MemoryUsageSetting.setupMixed(1024 * 1024 * 32);
+            MemoryUsageSetting memoryUsageSetting = MemoryUsageSetting.setupMixed(MAX_MAIN_MEMORY_BYTES);
             pdfMergerUtility.mergeDocuments(memoryUsageSetting);
 
             mergedDocument = outputStreamBytes.toByteArray();
