@@ -34,13 +34,16 @@ public class PdfServiceImplTest
     @Autowired
     PdfService pdfService;
 
-    private String outputFileName = System.getProperty("java.io.tmpdir") + File.separator + "multipageImage.tif";
-    private File outputFile = new File(outputFileName);
+    private String tiffOutputFileName = System.getProperty("java.io.tmpdir") + File.separator + "multipageImage.tif";
+    private File tiffOutputFile = new File(tiffOutputFileName);
+
+    private String pdfOutputFileName = System.getProperty("java.io.tmpdir") + File.separator + "Merged.pdf";
+    private File pdfOutputFile = new File(pdfOutputFileName);
 
     @Before
     public void setUp() throws Exception
     {
-        FileUtils.deleteQuietly(outputFile);
+        FileUtils.deleteQuietly(tiffOutputFile);
     }
 
     @Test
@@ -52,8 +55,8 @@ public class PdfServiceImplTest
         FileSystemResource multipagePdf = new FileSystemResource(this.getClass().getResource("/pdfs/multipage_document.pdf").getFile());
         assertTrue(multipagePdf.exists());
 
-        log.debug("file length is {}", outputFile.length());
-        pdfService.generateTiffFromPdf(multipagePdf.getFile(), outputFile);
+        log.debug("file length is {}", tiffOutputFile.length());
+        pdfService.generateTiffFromPdf(multipagePdf.getFile(), tiffOutputFile);
     }
 
     @Test
@@ -90,11 +93,11 @@ public class PdfServiceImplTest
         pdfService.addSource(pdfMergerUtility, abstractPdf.getInputStream());
         pdfService.addSource(pdfMergerUtility, authorizationPdf.getInputStream());
         pdfService.addSource(pdfMergerUtility, invoicePdf.getInputStream());
-        pdfService.mergeSources(pdfMergerUtility, outputFileName);
+        pdfService.mergeSources(pdfMergerUtility, pdfOutputFileName);
 
-        PDDocument mergedDoc = PDDocument.load(outputFile);
+        PDDocument mergedDoc = PDDocument.load(pdfOutputFile);
         int mergedPageCount = mergedDoc.getNumberOfPages();
-        log.debug("Number of pages in merged document [{}]", invoicePageCount);
+        log.debug("Number of pages in merged document [{}]", mergedPageCount);
         mergedDoc.close();
 
         assertEquals(mergedPageCount, abstractPageCount + authorizationPageCount + invoicePageCount);
@@ -104,7 +107,7 @@ public class PdfServiceImplTest
     @After
     public void tearDown() throws Exception
     {
-        log.debug(outputFile.getAbsolutePath());
-        FileUtils.deleteQuietly(outputFile);
+        log.debug(tiffOutputFile.getAbsolutePath());
+        FileUtils.deleteQuietly(tiffOutputFile);
     }
 }
