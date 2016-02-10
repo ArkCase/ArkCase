@@ -178,7 +178,9 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 };
 
                 scope.downloadCSV = function () {
-                    scope.gridApi.exporter.csvExport(uiGridExporterConstants.VISIBLE);
+                    if(scope.gridApi) {
+                        scope.gridApi.exporter.csvExport(uiGridExporterConstants.VISIBLE);
+                    }
                 };
 
                 //prepare the UI-grid
@@ -199,7 +201,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             paginationPageSizes: config.paginationPageSizes,
                             paginationPageSize: config.paginationPageSize,
                             enableSelectAll: true,
-                            exporterCsvFilename: 'file.csv',
+                            exporterCsvFilename: config.csvFileName,
                             exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location")),
                             exporterHeaderFilter : $translate.instant,
                             columnDefs: config.columnDefs,
