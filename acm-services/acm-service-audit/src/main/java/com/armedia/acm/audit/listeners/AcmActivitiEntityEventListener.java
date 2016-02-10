@@ -7,6 +7,7 @@ import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.web.api.AsyncApplicationListener;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.activiti.engine.delegate.event.ActivitiEntityEvent;
 import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.delegate.event.BaseEntityEventListener;
@@ -33,38 +34,47 @@ public class AcmActivitiEntityEventListener extends BaseEntityEventListener
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private AuditService auditService;
-    private boolean activityEventsLoggingEntityEventsEnabled;
-    private boolean activityEventsLoggingEntityEventsObjectEnabled;
+    private boolean activitiEventsLoggingEntityEventsEnabled;
+    private boolean activitiEventsLoggingEntityEventsObjectEnabled;
+
+    private static AcmMarshaller converter = ObjectConverter.createJSONMarshaller();
 
     @Override
     protected void onCreate(ActivitiEvent event)
     {
-        log.debug("Activity entity created event handling");
+        log.debug("Activiti entity created event handling");
 
-        audit((ActivitiEntityEvent) event, AuditConstants.EVENT_STATUS_ACTIVITI_ENTITY_CREATED);
+        audit(event, AuditConstants.EVENT_STATUS_ACTIVITI_ENTITY_CREATED);
     }
 
     @Override
     protected void onDelete(ActivitiEvent event)
     {
-        log.debug("Activity entity deleted event handling");
+        log.debug("Activiti entity deleted event handling");
 
-        audit((ActivitiEntityEvent) event, AuditConstants.EVENT_STATUS_ACTIVITI_ENTITY_DELETED);
+        audit(event, AuditConstants.EVENT_STATUS_ACTIVITI_ENTITY_DELETED);
     }
 
     @Override
     protected void onUpdate(ActivitiEvent event)
     {
-        log.debug("Activity entity update event handling");
+        log.debug("Activiti entity update event handling");
 
-        audit((ActivitiEntityEvent) event, AuditConstants.EVENT_STATUS_ACTIVITI_ENTITY_UPDATED);
+        audit(event, AuditConstants.EVENT_STATUS_ACTIVITI_ENTITY_UPDATED);
     }
 
-    private void audit(ActivitiEntityEvent event, String eventStatus)
+    private void audit(ActivitiEvent event, String eventStatus)
     {
-        if (isActivityEventsLoggingEntityEventsEnabled())
+        if (!(event instanceof ActivitiEntityEvent))
         {
-            Object entity = event.getEntity();
+            return;
+        }
+
+        ActivitiEntityEvent activitiEntityEvent = (ActivitiEntityEvent) event;
+
+        if (isActivitiEventsLoggingEntityEventsEnabled())
+        {
+            Object entity = activitiEntityEvent.getEntity();
 
             AuditEvent auditEvent = new AuditEvent();
 
@@ -89,8 +99,10 @@ public class AcmActivitiEntityEventListener extends BaseEntityEventListener
     {
         auditEvent.setIpAddress(MDC.get(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY));
         // when entity is changed without web request the MDC.get(AuditConstants.EVENT_MDC_REQUEST_ID_KEY) is null
-        auditEvent.setRequestId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) == null ? null : UUID.fromString(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY)));
-        auditEvent.setUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) != null ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) : "anonymous");
+        auditEvent.setRequestId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) == null ? null
+                : UUID.fromString(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY)));
+        auditEvent.setUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) != null
+                ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) : AuditConstants.USER_ID_ANONYMOUS);
         auditEvent.setFullEventType(EVENT_TYPE + " | " + object.getClass().getName());
         auditEvent.setEventResult(AuditConstants.EVENT_RESULT_SUCCESS);
         auditEvent.setObjectType(AuditConstants.EVENT_OBJECT_TYPE_ACTIVITI_ENTITY);
@@ -99,7 +111,8 @@ public class AcmActivitiEntityEventListener extends BaseEntityEventListener
         {
             id = (String) object.getClass().getMethod("getId").invoke(object);
             auditEvent.setObjectId(Long.decode(id));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             // object doesn't have String getId() method or the id cannot be cast to Long, we'll use the default -1L
             log.debug("Object of class: " + object.getClass().getName() + " doesn't have getId() method!");
@@ -114,13 +127,13 @@ public class AcmActivitiEntityEventListener extends BaseEntityEventListener
 
         if (processVariables != null)
         {
-            eventProperties.putAll(processVariables.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().toString())));
+            eventProperties.putAll(processVariables.entrySet().stream()
+                    .collect(Collectors.toMap(Map.Entry::getKey, e -> (e.getValue() == null) ? "null" : e.getValue().toString())));
         }
 
-        if (isActivityEventsLoggingEntityEventsObjectEnabled())
+        if (isActivitiEventsLoggingEntityEventsObjectEnabled())
         {
             // Convert Object to JSON string
-            AcmMarshaller converter = ObjectConverter.createJSONMarshaller();
             eventProperties.put("Object", converter.marshal(object));
         }
 
@@ -137,23 +150,23 @@ public class AcmActivitiEntityEventListener extends BaseEntityEventListener
         this.auditService = auditService;
     }
 
-    public boolean isActivityEventsLoggingEntityEventsEnabled()
+    public boolean isActivitiEventsLoggingEntityEventsEnabled()
     {
-        return activityEventsLoggingEntityEventsEnabled;
+        return activitiEventsLoggingEntityEventsEnabled;
     }
 
-    public void setActivityEventsLoggingEntityEventsEnabled(boolean activityEventsLoggingEntityEventsEnabled)
+    public void setActivitiEventsLoggingEntityEventsEnabled(boolean activitiEventsLoggingEntityEventsEnabled)
     {
-        this.activityEventsLoggingEntityEventsEnabled = activityEventsLoggingEntityEventsEnabled;
+        this.activitiEventsLoggingEntityEventsEnabled = activitiEventsLoggingEntityEventsEnabled;
     }
 
-    public boolean isActivityEventsLoggingEntityEventsObjectEnabled()
+    public boolean isActivitiEventsLoggingEntityEventsObjectEnabled()
     {
-        return activityEventsLoggingEntityEventsObjectEnabled;
+        return activitiEventsLoggingEntityEventsObjectEnabled;
     }
 
-    public void setActivityEventsLoggingEntityEventsObjectEnabled(boolean activityEventsLoggingEntityEventsObjectEnabled)
+    public void setActivitiEventsLoggingEntityEventsObjectEnabled(boolean activitiEventsLoggingEntityEventsObjectEnabled)
     {
-        this.activityEventsLoggingEntityEventsObjectEnabled = activityEventsLoggingEntityEventsObjectEnabled;
+        this.activitiEventsLoggingEntityEventsObjectEnabled = activitiEventsLoggingEntityEventsObjectEnabled;
     }
 }

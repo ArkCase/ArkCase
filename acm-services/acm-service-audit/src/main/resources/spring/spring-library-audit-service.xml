@@ -115,15 +115,15 @@
 
     <bean id="acmActivitiEntityEventListener" class="com.armedia.acm.audit.listeners.AcmActivitiEntityEventListener">
         <property name="auditService" ref="auditService"/>
-        <property name="activityEventsLoggingEntityEventsEnabled"
+        <property name="activitiEventsLoggingEntityEventsEnabled"
                   value="${audit.activiti.logging.entity.events.enabled}"/>
-        <property name="activityEventsLoggingEntityEventsObjectEnabled"
+        <property name="activitiEventsLoggingEntityEventsObjectEnabled"
                   value="${audit.activiti.logging.entity.events.object.enabled}"/>
     </bean>
 
     <bean id="acmActivitiEventListener" class="com.armedia.acm.audit.listeners.AcmActivitiEventListener">
         <property name="auditService" ref="auditService"/>
-        <property name="activityEventsLoggingEnabled" value="${audit.activiti.logging.enabled}"/>
+        <property name="activitiEventsLoggingEnabled" value="${audit.activiti.logging.enabled}"/>
     </bean>
 
     <bean name="muleAuditMessageProcessorNotificationListener"

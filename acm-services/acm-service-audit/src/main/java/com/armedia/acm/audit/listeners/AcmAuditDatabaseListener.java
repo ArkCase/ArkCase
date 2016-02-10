@@ -11,6 +11,7 @@ import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.web.api.AsyncApplicationListener;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -22,8 +23,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Listens to database changes and adds details of what has changed in the audit log.
- * Runs asynchronously.
+ * Listens to database changes and adds details of what has changed in the audit log. Runs asynchronously.
  * <p>
  * Created by Bojan Milenkoski on 13.1.2016.
  */
@@ -41,7 +41,8 @@ public class AcmAuditDatabaseListener implements ApplicationListener<AcmDatabase
     /**
      * Handle an {@link AcmDatabaseChangesEvent} event.
      *
-     * @param event the event to respond to
+     * @param event
+     *            the event to respond to
      */
     @Override
     public void onApplicationEvent(AcmDatabaseChangesEvent event)
@@ -106,18 +107,11 @@ public class AcmAuditDatabaseListener implements ApplicationListener<AcmDatabase
             AcmEntity acmEntity = (AcmEntity) object;
             auditEvent.setEventDate(acmEntity.getCreated());
             auditEvent.setUserId(acmEntity.getCreator());
-        } else
+        }
+        else
         {
             auditEvent.setEventDate(new Date());
-            try
-            {
-                auditEvent.setUserId((String) object.getClass().getMethod("getUserId").invoke(object));
-            } catch (Exception e)
-            {
-                // object doesn't have Long getId() method, we'll use the one in MDC or "anonymous"
-                auditEvent.setUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) != null ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) : "anonymous");
-            }
-
+            auditEvent.setUserId(getUserIdFromObject(object));
         }
     }
 
@@ -128,17 +122,11 @@ public class AcmAuditDatabaseListener implements ApplicationListener<AcmDatabase
             AcmEntity acmEntity = (AcmEntity) object;
             auditEvent.setEventDate(acmEntity.getModified());
             auditEvent.setUserId(acmEntity.getModifier());
-        } else
+        }
+        else
         {
             auditEvent.setEventDate(new Date());
-            try
-            {
-                auditEvent.setUserId((String) object.getClass().getMethod("getUserId").invoke(object));
-            } catch (Exception e)
-            {
-                // object doesn't have Long getId() method, we'll use the one in MDC or "anonymous"
-                auditEvent.setUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) != null ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) : "anonymous");
-            }
+            auditEvent.setUserId(getUserIdFromObject(object));
         }
     }
 
@@ -151,19 +139,23 @@ public class AcmAuditDatabaseListener implements ApplicationListener<AcmDatabase
     {
         auditEvent.setIpAddress(MDC.get(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY));
         // when database is changed without web request the MDC.get(AuditConstants.EVENT_MDC_REQUEST_ID_KEY) is null
-        auditEvent.setRequestId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) == null ? null : UUID.fromString(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY)));
+        auditEvent.setRequestId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) == null ? null
+                : UUID.fromString(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY)));
         auditEvent.setFullEventType(EVENT_TYPE + " | " + object.getClass().getName());
         auditEvent.setEventResult(AuditConstants.EVENT_RESULT_SUCCESS);
         auditEvent.setObjectType(AuditConstants.EVENT_OBJECT_TYPE_DATABASE);
+
         Long id = -1L;
         try
         {
             id = (Long) object.getClass().getMethod("getId").invoke(object);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             // object doesn't have Long getId() method, we'll use the default -1L
             log.debug("Object of class: " + object.getClass().getName() + " doesn't have getId() method!");
         }
+
         auditEvent.setObjectId(id);
 
         if (isDatabaseChangesLoggingFieldValuesEnabled())
@@ -177,6 +169,22 @@ public class AcmAuditDatabaseListener implements ApplicationListener<AcmDatabase
 
             auditEvent.setEventProperties(eventProperties);
         }
+    }
+
+    private String getUserIdFromObject(Object object)
+    {
+        String userId;
+        try
+        {
+            userId = (String) object.getClass().getMethod("getUserId").invoke(object);
+        }
+        catch (Exception e)
+        {
+            // object doesn't have String getUserId(), we'll use the one in MDC or "anonymous"
+            userId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) != null ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY)
+                    : AuditConstants.USER_ID_ANONYMOUS;
+        }
+        return userId;
     }
 
     private void audit(AuditEvent auditEvent)
