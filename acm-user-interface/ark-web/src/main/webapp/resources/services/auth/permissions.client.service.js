@@ -70,8 +70,8 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
              * Retrieves available actions for the currently logged in user
              */
             getActionsByRoles: function (actionName, roles) {
-                if (!actionName && !roles) {
-                    $log.error('Permission Action name and roles are undefined');
+                if (!roles) {
+                    $log.error('Permission roles are undefined');
                     return $q.resolve(null);
                 }
 
@@ -162,8 +162,16 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
          * @returns {Array} actionsList
          */
         function processActionsByRoles(actionName, roles) {
-            var actions = _.filter(rules.data.accessControlRuleList, {actionName: actionName});
             var actionsList = [];
+            var actions = [];
+            if(actionName){
+                actions = _.filter(rules.data.accessControlRuleList, {actionName: actionName});
+            }else{
+                if(rules.data && rules.data.accessControlRuleList){
+                    actions = rules.data.accessControlRuleList;
+                }
+            }
+
             // If actions found
             if (actions.length > 0) {
                 // Process all found actions objects
