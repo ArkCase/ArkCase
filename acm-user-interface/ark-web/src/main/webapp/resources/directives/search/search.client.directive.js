@@ -98,19 +98,37 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                 scope.queryTypeahead = function (typeaheadQuery) {
                     typeaheadQuery = typeaheadQuery.replace('*', '');
-                    var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery + '*', scope.filters, 10, 0);
+					typeaheadQuery = '/' + typeaheadQuery + '.*/';
+					
+					if (scope.filters.indexOf("USER") >= 0) {
+						return scope.queryTypeaheadForUser(typeaheadQuery);
+					} else {
+						var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery, scope.filters, 10, 0);
+						var deferred = $q.defer();
+						if (query) {
+							SearchService.queryFilteredSearch({
+								query: query
+							}, function (res) {
+								var result = _.pluck(res.response.docs, 'name');
+								deferred.resolve(result);
+							});
+						}
+						return deferred.promise;
+					}
+                };
+				
+				scope.queryTypeaheadForUser = function (typeaheadQuery) {
+                    typeaheadQuery = 'first_name_lcs:' + typeaheadQuery + ' OR last_name_lcs:' + typeaheadQuery;
                     var deferred = $q.defer();
-                    if (!scope.hideTypeahead && query) {
-                        SearchService.queryFilteredSearch({
-                            query: query
+                    if (typeaheadQuery) {
+                        SearchService.queryFilteredSearchForUser({
+                            query: typeaheadQuery,
+							startRow: 0,
+							maxRows: 10
                         }, function (res) {
-                            var result = _.pluck(res.response.docs, scope.typeAheadColumn);
+                            var result = _.pluck(res.response.docs, 'name');
                             deferred.resolve(result);
                         });
-                    }
-                    else
-                    {
-                        deferred.reject();
                     }
                     return deferred.promise;
                 };
@@ -208,17 +226,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                     scope.queryExistingItems();
                                 });
                             }
-                        };
-
-                        //hideTypeahead is false by default, it will be changed in true if it is added in config
-                        scope.hideTypeahead = false;
-                        if(config.hideTypeahead)
-                            scope.hideTypeahead = true;
-                        //default for typeAheadColumn is name
-                        scope.typeAheadColumn = "name";
-                        if(config.typeAheadColumn)
-                            scope.typeAheadColumn = config.typeAheadColumn;
-
+                        }
                         if (scope.gridOptions) {
                             if (scope.filter) {
                                 scope.filters = 'fq=' + scope.filter;
