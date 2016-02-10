@@ -86,7 +86,7 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
         if (notification.getProcessor() instanceof DefaultJavaComponent)
         {
             Class<?> type = ((DefaultJavaComponent) notification.getProcessor()).getObjectType();
-            return !type.isInstance(EchoComponent.class);
+            return !type.equals(EchoComponent.class);
         }
 
         if (notification.getProcessor() instanceof TimerInterceptor || notification.getProcessor() instanceof LoggerMessageProcessor)

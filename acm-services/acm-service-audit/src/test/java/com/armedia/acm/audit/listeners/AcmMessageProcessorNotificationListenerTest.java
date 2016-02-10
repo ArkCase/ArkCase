@@ -21,8 +21,14 @@ import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.construct.FlowConstruct;
+import org.mule.api.object.ObjectFactory;
+import org.mule.api.processor.LoggerMessageProcessor;
 import org.mule.api.processor.MessageProcessor;
+import org.mule.component.DefaultJavaComponent;
+import org.mule.component.simple.EchoComponent;
 import org.mule.context.notification.MessageProcessorNotification;
+import org.mule.interceptor.TimerInterceptor;
+import org.mule.object.SingletonObjectFactory;
 import org.slf4j.MDC;
 
 import java.net.URI;
@@ -62,8 +68,7 @@ public class AcmMessageProcessorNotificationListenerTest extends EasyMockSupport
         listener.setMuleFlowsLoggingMessageEnabled(true);
         listener.setMuleFlowsLoggingMessagePropertiesEnabled(true);
         expect(mockNotification.getSource()).andReturn(mockMuleEvent).anyTimes();
-        expect(mockNotification.getAction()).andReturn(MessageProcessorNotification.MESSAGE_PROCESSOR_POST_INVOKE)
-                .anyTimes();
+        expect(mockNotification.getAction()).andReturn(MessageProcessorNotification.MESSAGE_PROCESSOR_POST_INVOKE).anyTimes();
         MessageProcessor mockMessageProcessor = createMock(MessageProcessor.class);
         expect(mockNotification.getProcessor()).andReturn(mockMessageProcessor).anyTimes();
 
@@ -83,8 +88,7 @@ public class AcmMessageProcessorNotificationListenerTest extends EasyMockSupport
         listener.setMuleFlowsLoggingMessageEnabled(false);
         listener.setMuleFlowsLoggingMessagePropertiesEnabled(true);
         expect(mockNotification.getSource()).andReturn(mockMuleEvent).anyTimes();
-        expect(mockNotification.getAction()).andReturn(MessageProcessorNotification.MESSAGE_PROCESSOR_POST_INVOKE)
-                .anyTimes();
+        expect(mockNotification.getAction()).andReturn(MessageProcessorNotification.MESSAGE_PROCESSOR_POST_INVOKE).anyTimes();
         expect(mockNotification.getTimestamp()).andReturn(new Date().getTime());
         expect(mockNotification.getServerId()).andReturn("some server");
         expect(mockNotification.getProcessorPath()).andReturn("processor path");
@@ -123,8 +127,7 @@ public class AcmMessageProcessorNotificationListenerTest extends EasyMockSupport
         listener.setMuleFlowsLoggingMessageEnabled(true);
         listener.setMuleFlowsLoggingMessagePropertiesEnabled(false);
         expect(mockNotification.getSource()).andReturn(mockMuleEvent).anyTimes();
-        expect(mockNotification.getAction()).andReturn(MessageProcessorNotification.MESSAGE_PROCESSOR_POST_INVOKE)
-                .anyTimes();
+        expect(mockNotification.getAction()).andReturn(MessageProcessorNotification.MESSAGE_PROCESSOR_POST_INVOKE).anyTimes();
         expect(mockNotification.getTimestamp()).andReturn(new Date().getTime());
         expect(mockNotification.getServerId()).andReturn("some server");
         expect(mockNotification.getProcessorPath()).andReturn("processor path");
@@ -173,8 +176,7 @@ public class AcmMessageProcessorNotificationListenerTest extends EasyMockSupport
         final String invProp1Value = "invProp1Value";
         final LinkedHashSet<String> outboundProperties = new LinkedHashSet<String>(
                 Arrays.asList(new String[] { outProp1Key, outProp2Key, outProp3Key }));
-        final Set<String> inboundProperties = new LinkedHashSet<String>(
-                Arrays.asList(new String[] { inProp1Key, inProp2Key }));
+        final Set<String> inboundProperties = new LinkedHashSet<String>(Arrays.asList(new String[] { inProp1Key, inProp2Key }));
         final Set<String> invocationProperties = new LinkedHashSet<String>(Arrays.asList(new String[] { invProp1Key }));
         final UUID requestID = UUID.randomUUID();
         final String remoteAddress = "remote.address";
@@ -188,8 +190,7 @@ public class AcmMessageProcessorNotificationListenerTest extends EasyMockSupport
         listener.setMuleFlowsLoggingMessageEnabled(true);
         listener.setMuleFlowsLoggingMessagePropertiesEnabled(true);
         expect(mockNotification.getSource()).andReturn(mockMuleEvent).anyTimes();
-        expect(mockNotification.getAction()).andReturn(MessageProcessorNotification.MESSAGE_PROCESSOR_POST_INVOKE)
-                .anyTimes();
+        expect(mockNotification.getAction()).andReturn(MessageProcessorNotification.MESSAGE_PROCESSOR_POST_INVOKE).anyTimes();
         expect(mockNotification.getTimestamp()).andReturn(time);
         expect(mockNotification.getServerId()).andReturn(serverId);
         expect(mockNotification.getProcessorPath()).andReturn(processorPath);
@@ -242,6 +243,71 @@ public class AcmMessageProcessorNotificationListenerTest extends EasyMockSupport
         assertEquals(inProp1Value, auditEvent.getEventProperties().get(inProp1Key + "(inbound property)"));
         assertEquals(inProp2Value, auditEvent.getEventProperties().get(inProp2Key + "(inbound property)"));
         assertEquals(invProp1Value, auditEvent.getEventProperties().get(invProp1Key + "(invocation property)"));
+        verifyAll();
+    }
+
+    @Test
+    public void onNotificationDoesNotAuditEventsWhenProcessorOfTypeEchoComponent()
+    {
+        // given
+        listener.setMuleFlowsLoggingEnabled(true);
+        listener.setMuleFlowsLoggingMessageEnabled(true);
+        listener.setMuleFlowsLoggingMessagePropertiesEnabled(true);
+        expect(mockNotification.getSource()).andReturn(mockMuleEvent).anyTimes();
+        expect(mockNotification.getAction()).andReturn(MessageProcessorNotification.MESSAGE_PROCESSOR_POST_INVOKE).anyTimes();
+
+        DefaultJavaComponent messageProcessor = new DefaultJavaComponent();
+        ObjectFactory mockObjectFactory = new SingletonObjectFactory(EchoComponent.class);
+        messageProcessor.setObjectFactory(mockObjectFactory);
+        expect(mockNotification.getProcessor()).andReturn(messageProcessor).anyTimes();
+
+        // when
+        replayAll();
+        listener.onNotification(mockNotification);
+
+        // then
+        verifyAll();
+    }
+
+    @Test
+    public void onNotificationDoesNotAuditEventsWhenProcessorOfTimerInterceptor()
+    {
+        // given
+        listener.setMuleFlowsLoggingEnabled(true);
+        listener.setMuleFlowsLoggingMessageEnabled(true);
+        listener.setMuleFlowsLoggingMessagePropertiesEnabled(true);
+        expect(mockNotification.getSource()).andReturn(mockMuleEvent).anyTimes();
+        expect(mockNotification.getAction()).andReturn(MessageProcessorNotification.MESSAGE_PROCESSOR_POST_INVOKE).anyTimes();
+
+        TimerInterceptor messageProcessor = new TimerInterceptor();
+        expect(mockNotification.getProcessor()).andReturn(messageProcessor).anyTimes();
+
+        // when
+        replayAll();
+        listener.onNotification(mockNotification);
+
+        // then
+        verifyAll();
+    }
+
+    @Test
+    public void onNotificationDoesNotAuditEventsWhenProcessorOfLoggerMessageProcessor()
+    {
+        // given
+        listener.setMuleFlowsLoggingEnabled(true);
+        listener.setMuleFlowsLoggingMessageEnabled(true);
+        listener.setMuleFlowsLoggingMessagePropertiesEnabled(true);
+        expect(mockNotification.getSource()).andReturn(mockMuleEvent).anyTimes();
+        expect(mockNotification.getAction()).andReturn(MessageProcessorNotification.MESSAGE_PROCESSOR_POST_INVOKE).anyTimes();
+
+        LoggerMessageProcessor messageProcessor = new LoggerMessageProcessor();
+        expect(mockNotification.getProcessor()).andReturn(messageProcessor).anyTimes();
+
+        // when
+        replayAll();
+        listener.onNotification(mockNotification);
+
+        // then
         verifyAll();
     }
 }
