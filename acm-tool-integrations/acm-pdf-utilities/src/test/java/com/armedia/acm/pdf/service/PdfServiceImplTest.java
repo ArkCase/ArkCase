@@ -2,6 +2,8 @@ package com.armedia.acm.pdf.service;
 
 import com.armedia.acm.pdf.PdfServiceException;
 import org.apache.commons.io.FileUtils;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +16,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
-import java.io.IOException;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertNotNull;
 
@@ -32,8 +34,8 @@ public class PdfServiceImplTest
     @Autowired
     PdfService pdfService;
 
-    private String outputFileName = "multipageImage.tif";
-    private File outputFile = new File(System.getProperty("java.io.tmpdir") + File.separator + outputFileName);
+    private String outputFileName = System.getProperty("java.io.tmpdir") + File.separator + "multipageImage.tif";
+    private File outputFile = new File(outputFileName);
 
     @Before
     public void setUp() throws Exception
@@ -52,6 +54,50 @@ public class PdfServiceImplTest
 
         log.debug("file length is {}", outputFile.length());
         pdfService.generateTiffFromPdf(multipagePdf.getFile(), outputFile);
+    }
+
+    @Test
+    public void mergeDocuments() throws Exception
+    {
+        assertNotNull(pdfService);
+
+        FileSystemResource abstractPdf = new FileSystemResource(this.getClass().getResource("/pdfs/Abstract.pdf").getFile());
+        assertTrue(abstractPdf.exists());
+        FileSystemResource authorizationPdf = new FileSystemResource(this.getClass().getResource("/pdfs/Authorization.pdf").getFile());
+        assertTrue(authorizationPdf.exists());
+        FileSystemResource invoicePdf = new FileSystemResource(this.getClass().getResource("/pdfs/Invoice.pdf").getFile());
+        assertTrue(invoicePdf.exists());
+
+        // get page count of the Abstract
+        PDDocument abstractDoc = PDDocument.load(abstractPdf.getFile());
+        int abstractPageCount = abstractDoc.getNumberOfPages();
+        log.debug("Number of pages in Abstract document [{}]", abstractPageCount);
+        abstractDoc.close();
+
+        // get page count of the Abstract
+        PDDocument authorizationDoc = PDDocument.load(authorizationPdf.getFile());
+        int authorizationPageCount = authorizationDoc.getNumberOfPages();
+        log.debug("Number of pages in Authorization document [{}]", authorizationPageCount);
+        authorizationDoc.close();
+
+        // get page count of the Abstract
+        PDDocument invoiceDoc = PDDocument.load(invoicePdf.getFile());
+        int invoicePageCount = invoiceDoc.getNumberOfPages();
+        log.debug("Number of pages in Invoice document [{}]", invoicePageCount);
+        invoiceDoc.close();
+
+        PDFMergerUtility pdfMergerUtility = new PDFMergerUtility();
+        pdfService.addSource(pdfMergerUtility, abstractPdf.getInputStream());
+        pdfService.addSource(pdfMergerUtility, authorizationPdf.getInputStream());
+        pdfService.addSource(pdfMergerUtility, invoicePdf.getInputStream());
+        pdfService.mergeSources(pdfMergerUtility, outputFileName);
+
+        PDDocument mergedDoc = PDDocument.load(outputFile);
+        int mergedPageCount = mergedDoc.getNumberOfPages();
+        log.debug("Number of pages in merged document [{}]", invoicePageCount);
+        mergedDoc.close();
+
+        assertEquals(mergedPageCount, abstractPageCount + authorizationPageCount + invoicePageCount);
     }
 
 
