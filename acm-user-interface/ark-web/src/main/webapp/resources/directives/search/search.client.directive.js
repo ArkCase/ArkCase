@@ -196,7 +196,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 };
 
                 scope.downloadCSV = function () {
-                    if(scope.gridApi) {
+                    if(scope.gridApi && scope.gridApi.exporter) {
                         scope.gridApi.exporter.csvExport(uiGridExporterConstants.VISIBLE);
                     }
                 };
