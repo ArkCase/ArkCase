@@ -20,7 +20,6 @@ import org.slf4j.MDC;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
@@ -99,7 +98,6 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         interceptor.setRequestsLoggingCookiesEnabled(false);
         interceptor.setRequestsLoggingBodyEnabled(false);
 
-        expect(mockRequest.getSession(false)).andReturn(createMock(HttpSession.class));
         expect(mockRequest.getMethod()).andReturn(postMethod);
         expect(mockRequest.getProtocol()).andReturn(protocol);
         expect(mockRequest.getRequestURI()).andReturn(uri);
@@ -141,7 +139,6 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         interceptor.setRequestsLoggingCookiesEnabled(false);
         interceptor.setRequestsLoggingBodyEnabled(false);
 
-        expect(mockRequest.getSession(false)).andReturn(createMock(HttpSession.class));
         expect(mockRequest.getMethod()).andReturn(postMethod);
         expect(mockRequest.getProtocol()).andReturn(protocol);
         expect(mockRequest.getRequestURI()).andReturn(uri);
@@ -189,7 +186,6 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         interceptor.setRequestsLoggingCookiesEnabled(true);
         interceptor.setRequestsLoggingBodyEnabled(false);
 
-        expect(mockRequest.getSession(false)).andReturn(createMock(HttpSession.class));
         expect(mockRequest.getMethod()).andReturn(postMethod);
         expect(mockRequest.getProtocol()).andReturn(protocol);
         expect(mockRequest.getRequestURI()).andReturn(uri);
@@ -240,7 +236,6 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         interceptor.setRequestsLoggingCookiesEnabled(true);
         interceptor.setRequestsLoggingBodyEnabled(true);
 
-        expect(mockRequest.getSession(false)).andReturn(createMock(HttpSession.class));
         expect(mockRequest.getMethod()).andReturn(postMethod).anyTimes();
         expect(mockRequest.getProtocol()).andReturn(protocol);
         expect(mockRequest.getRequestURI()).andReturn(uri);
@@ -292,7 +287,6 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         interceptor.setRequestsLoggingCookiesEnabled(true);
         interceptor.setRequestsLoggingBodyEnabled(true);
 
-        expect(mockRequest.getSession(false)).andReturn(createMock(HttpSession.class));
         expect(mockRequest.getMethod()).andReturn(getMethod).anyTimes();
         expect(mockRequest.getProtocol()).andReturn(protocol);
         expect(mockRequest.getRequestURI()).andReturn(uri);
