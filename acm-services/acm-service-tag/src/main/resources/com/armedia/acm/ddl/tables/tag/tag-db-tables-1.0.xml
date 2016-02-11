@@ -129,12 +129,12 @@
 
 	<changeSet id="11-acm_associated_tag" author="nadica.cuculova">
 		<addColumn tableName="acm_associated_tag">
-			<column name="cm_associated_tag_modified" type="${timestampType}">
+			<column name="cm_associated_tag_modified" type="${timestampType}" defaultValueComputed="current_timestamp">
 				<constraints nullable="false" />
 			</column>
 		</addColumn>
 		<addColumn tableName="acm_associated_tag">
-			<column name="cm_associated_tag_modifier" type="VARCHAR(1024)">
+			<column name="cm_associated_tag_modifier" type="VARCHAR(1024)" defaultValue="">
 				<constraints nullable="false" />
 			</column>
 		</addColumn>
