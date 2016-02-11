@@ -25,6 +25,7 @@ var ApplicationConfiguration = (function () {
         'ui.grid.selection',
         'ui.grid.expandable',
         'ui.grid.edit',
+        'ui.grid.exporter',
         'xeditable',
         'summernote',
         'ngBootbox',
