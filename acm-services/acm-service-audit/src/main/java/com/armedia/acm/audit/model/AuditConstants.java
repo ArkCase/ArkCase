@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.armedia.acm.audit.model;
 
@@ -7,12 +7,26 @@ package com.armedia.acm.audit.model;
  * @author riste.tutureski
  *
  */
-public interface AuditConstants {
+public interface AuditConstants
+{
+    String USER_ID_ANONYMOUS = "anonymous";
 
-	String STATUS_DELETE = "DELETE";
-	
-	String PROPERTY_BATCH_RUN = "audit.batch.run";
-	String PROPERTY_BATCH_SIZE = "audit.batch.size";
-	String PROPERTY_PURGE_DAYS = "audit.purge.days";
-	
+    String EVENT_STATUS_COMPLETE = "COMPLETE";
+
+    String EVENT_RESULT_SUCCESS = "success";
+    String EVENT_RESULT_FAILURE = "failure";
+
+    String EVENT_STATUS_DB_OBJECT_ADDED = "DB_OBJECT_ADDED";
+    String EVENT_STATUS_DB_OBJECT_DELETED = "DB_OBJECT_DELETED";
+    String EVENT_STATUS_DB_OBJECT_UPDATED = "DB_OBJECT_UPDATED";
+
+    String EVENT_STATUS_ACTIVITI_ENTITY_CREATED = "ACTIVITI_ENTITY_CREATED";
+    String EVENT_STATUS_ACTIVITI_ENTITY_DELETED = "ACTIVITI_ENTITY_DELETED";
+    String EVENT_STATUS_ACTIVITI_ENTITY_UPDATED = "ACTIVITI_ENTITY_UPDATED";
+
+    String EVENT_OBJECT_TYPE_ACTIVITI_ENTITY = "ACTIVITI_ENTITY";
+    String EVENT_OBJECT_TYPE_WEB_REQUEST = "WEB REQUEST";
+    String EVENT_OBJECT_TYPE_DATABASE = "DATABASE";
+    String EVENT_OBJECT_TYPE_ACTIVITI_EVENT = "ACTIVITI EVENT";
+    String EVENT_OBJECT_TYPE_MULE_FLOW = "MULE FLOW";
 }

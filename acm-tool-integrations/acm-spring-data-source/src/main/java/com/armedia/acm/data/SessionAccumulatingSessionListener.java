@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
+import java.util.UUID;
+
 /**
  * Created by armdev on 10/21/14.
  */
@@ -27,7 +29,7 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
     public void postAcquireClientSession(SessionEvent event)
     {
         super.postAcquireClientSession(event);
-        String name = System.currentTimeMillis() + "";
+        String name = UUID.randomUUID().toString();
         log.trace("acquiring session: set session name to: " + name);
 
         event.getSession().setName(name);
