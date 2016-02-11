@@ -47,6 +47,11 @@ public class EmailNotificationSender implements NotificationSender {
 	{
 		Exception exception = null;
 		
+		if (notification == null)
+        {
+		    return null;
+        }
+		
 		try 
 		{
 			getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
@@ -69,17 +74,14 @@ public class EmailNotificationSender implements NotificationSender {
 			exception = e;
 		}
 		
-		if (notification != null)
+		if (exception == null)
 		{
-			if (exception == null)
-			{
-				notification.setState(NotificationConstants.STATE_SENT);
-			}
-			else
-			{
-				LOG.error("Notification message not sent ...", exception);
-				notification.setState(NotificationConstants.STATE_NOT_SENT);
-			}
+			notification.setState(NotificationConstants.STATE_SENT);
+		}
+		else
+		{
+			LOG.error("Notification message not sent ...", exception);
+			notification.setState(NotificationConstants.STATE_NOT_SENT);
 		}
 
 		return notification;
