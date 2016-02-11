@@ -15,6 +15,10 @@
         <spring:import resource="classpath:/spring/spring-library-property-file-manager.xml"/>
     </spring:beans>
 
+    <notifications>
+        <notification event="MESSAGE-PROCESSOR"/>
+        <notification-listener ref="muleAuditMessageProcessorNotificationListener"/>
+    </notifications>
 
     <cmis:config
             name="acmCmisConnector"

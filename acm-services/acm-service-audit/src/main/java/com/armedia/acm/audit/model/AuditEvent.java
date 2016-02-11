@@ -1,21 +1,32 @@
 package com.armedia.acm.audit.model;
 
+import com.armedia.acm.data.converter.UUIDToStringConverter;
+import com.google.common.base.Joiner;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Entity
+@NotAudited
 @Table(name = "acm_audit_log")
 public class AuditEvent {
 
@@ -60,6 +71,16 @@ public class AuditEvent {
 
     @Column(name = "cm_audit_track_id")
     private String trackId;
+
+    @Column(name = "cm_audit_request_id")
+    @Convert(converter = UUIDToStringConverter.class)
+    private UUID requestId;
+
+    @ElementCollection
+    @CollectionTable(name = "acm_audit_log_property", joinColumns = @JoinColumn(name = "cm_audit_id"))
+    @MapKeyColumn(name = "cm_audit_property_name")
+    @Column(name = "cm_audit_property_value")
+    private Map<String, String> eventProperties = new HashMap<>();
 
     public Date getEventDate() {
         return eventDate;
@@ -150,12 +171,45 @@ public class AuditEvent {
         return getFullEventType();
     }
 
+    public UUID getRequestId()
+    {
+        return requestId;
+    }
+
+    public void setRequestId(UUID requestId)
+    {
+        this.requestId = requestId;
+    }
+
+    public Map<String, String> getEventProperties()
+    {
+        return eventProperties;
+    }
+
+    public void setEventProperties(Map<String, String> eventProperties)
+    {
+        this.eventProperties = eventProperties;
+    }
+
     @Override
     public String toString()
     {
-        return "Event date/time: " + dtf.print(getEventDate().getTime()) + " | Originating IP address: " + getIpAddress()
-                + " | Track Id: " + getTrackId() + " | User: " + getUserId() + " | Event type: " + getFullEventType()
-                + " | Event result: " + getEventResult() + " | Object type: " + getObjectType()
-                + " | Object Id: " + getObjectId() + " | Status: " + getStatus();
+        String eventPropertiesString = null;
+        if (getEventProperties().size() > 0)
+        {
+            eventPropertiesString = Joiner.on(" | ").withKeyValueSeparator(": ").useForNull("").join(getEventProperties());
+        }
+        return "Event date/time: " + dtf.print(getEventDate().getTime())
+                + " | Originating IP address: " + getIpAddress()
+                + " | RequestId: " + getRequestId()
+                /// trackId is not used anymore
+                // + " | Track Id: " + getTrackId()
+                + " | User: " + getUserId()
+                + " | Event type: " + getFullEventType()
+                + " | Event result: " + getEventResult()
+                + " | Object type: " + getObjectType()
+                + " | Object Id: " + getObjectId()
+                + " | Status: " + getStatus()
+                + (eventPropertiesString == null ? "" : " | " + eventPropertiesString);
     }
 }

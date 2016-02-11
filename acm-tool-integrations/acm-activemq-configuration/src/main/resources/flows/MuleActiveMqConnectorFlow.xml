@@ -13,6 +13,11 @@
         <spring:import resource="classpath:/spring/spring-mule-activemq.xml"/>
     </spring:beans>
 
+    <notifications>
+        <notification event="MESSAGE-PROCESSOR"/>
+        <notification-listener ref="muleAuditMessageProcessorNotificationListener"/>
+    </notifications>
+
     <jms:activemq-connector
             name="ActiveMQ-ACM"
             specification="1.1"
