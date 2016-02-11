@@ -2,6 +2,7 @@
 *.iml
 .idea
 .acm
+.acm-ui
 target
 atlassian-ide-plugin.xml
 
