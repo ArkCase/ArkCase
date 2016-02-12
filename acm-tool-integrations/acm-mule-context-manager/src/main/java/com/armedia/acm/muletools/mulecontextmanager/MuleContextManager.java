@@ -1,7 +1,6 @@
 package com.armedia.acm.muletools.mulecontextmanager;
 
 import com.armedia.acm.web.api.MDCConstants;
-
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
@@ -9,20 +8,20 @@ import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.context.MuleContextFactory;
+import org.mule.api.context.notification.ServerNotificationListener;
 import org.mule.api.transformer.DataType;
 import org.mule.config.AnnotationsConfigurationBuilder;
 import org.mule.config.ConfigResource;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.context.DefaultMuleContextBuilder;
 import org.mule.context.DefaultMuleContextFactory;
+import org.mule.context.notification.MessageProcessorNotification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -82,9 +81,8 @@ public class MuleContextManager implements ApplicationContextAware
     /**
      * Set {@link MDC} thread local variables as {@link MuleMessage} outbound properties. These are later set as {@link MDC} thread local
      * variables in the the threads that Mule controls. See {@link com.armedia.acm.audit.listeners.AcmMessageProcessorNotificationListener}.
-     * 
-     * @param message
-     *            the {@link MuleMessage} to set the MDC variables as outbound properties
+     *
+     * @param message the {@link MuleMessage} to set the MDC variables as outbound properties
      */
     private void setMDCProperties(MuleMessage message)
     {
@@ -111,18 +109,6 @@ public class MuleContextManager implements ApplicationContextAware
         ConfigResource[] configs = findConfigResources();
         SpringXmlConfigurationBuilder springXmlConfigurationBuilder = new SpringXmlConfigurationBuilder(configs);
 
-        AbstractApplicationContext parentContext = (AbstractApplicationContext) applicationContext;
-
-        // In Integration tests the applicationContext is of type GenericApplicationContext,
-        // but the muleContext creation throws an error if the parent context is of this type.
-        if (applicationContext instanceof GenericApplicationContext)
-        {
-            parentContext = new ClassPathXmlApplicationContext(applicationContext);
-            parentContext.refresh();
-        }
-
-        springXmlConfigurationBuilder.setParentContext(parentContext);
-
         // ensure Mule processes Mule annotations in Spring beans
         AnnotationsConfigurationBuilder annotationsConfigurationBuilder = new AnnotationsConfigurationBuilder();
 
@@ -133,9 +119,24 @@ public class MuleContextManager implements ApplicationContextAware
         MuleContextFactory muleContextFactory = new DefaultMuleContextFactory();
         MuleContext muleContext = muleContextFactory.createMuleContext(builders, new DefaultMuleContextBuilder());
 
-        // TODO: application context does not need to be kept in separate variable. If removed, changes to the code needs to be done, where
-        // this variable is used. We should do this in a separate JIRA issue, as tests should be performed.
+
+        // Note, do not make the Spring application context a parent to the Mule context.  Strange things will
+        // happen.  Be prepared for extensive regression testing if you want access to Spring beans in any way
+        // other than this way (e.g., appRegistry.get("ArkContent").getBean("beanName")).
         muleContext.getRegistry().registerObject("arkContext", applicationContext);
+
+        // register our ArkCase audit listener with the Mule context.  This should deliver message processor events
+        // to the auditor.
+        try
+        {
+            ServerNotificationListener<MessageProcessorNotification> auditListener =
+                    applicationContext.getBean("muleAuditMessageProcessorNotificationListener", ServerNotificationListener.class);
+            muleContext.getNotificationManager().addListener(auditListener);
+        } catch (NoSuchBeanDefinitionException e)
+        {
+            log.info("No auditor listener available, hopefully this is a test method.");
+        }
+
 
         if (log.isDebugEnabled())
         {
@@ -161,12 +162,10 @@ public class MuleContextManager implements ApplicationContextAware
         if (getMuleConfigFilePattern() != null)
         {
             return loadConfigFromPattern();
-        }
-        else if (getSpecificConfigFiles() != null)
+        } else if (getSpecificConfigFiles() != null)
         {
             return loadSpecificConfigFiles();
-        }
-        else
+        } else
         {
             throw new IllegalStateException("Either a muleConfigFilePattern or specificConfigFiles must be specified");
         }
@@ -217,8 +216,7 @@ public class MuleContextManager implements ApplicationContextAware
                 getMuleContext().stop();
                 getMuleContext().dispose();
             }
-        }
-        catch (MuleException e)
+        } catch (MuleException e)
         {
             log.error("Could not stop Mule context: " + e.getMessage(), e);
         }
@@ -242,8 +240,7 @@ public class MuleContextManager implements ApplicationContextAware
             try
             {
                 startMuleContext(applicationContext);
-            }
-            catch (MuleException | IOException e)
+            } catch (MuleException | IOException e)
             {
                 log.error("Could not start Mule context: " + e.getMessage(), e);
                 throw new IllegalStateException(e);
