@@ -1,8 +1,11 @@
 package com.armedia.acm.web.api;
 
+import org.apache.commons.io.IOUtils;
+
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -15,26 +18,21 @@ import java.io.InputStreamReader;
  */
 public class MultiReadHttpServletRequest extends HttpServletRequestWrapper
 {
-    private String body;
+    private byte[] rawData;
 
     public MultiReadHttpServletRequest(HttpServletRequest request) throws IOException
     {
         super(request);
-        body = "";
-        BufferedReader bufferedReader = request.getReader();
-        String line;
-        while ((line = bufferedReader.readLine()) != null)
-        {
-            body += line;
-        }
+        rawData = IOUtils.toByteArray(request.getReader());
     }
 
     @Override
     public ServletInputStream getInputStream() throws IOException
     {
-        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
+        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(rawData);
         return new ServletInputStream()
         {
+            @Override
             public int read() throws IOException
             {
                 return byteArrayInputStream.read();
