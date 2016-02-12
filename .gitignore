@@ -2,12 +2,16 @@
 *.iml
 .idea
 .acm
+.acm-ui
 target
 atlassian-ide-plugin.xml
 
 *.project
 *.classpath
 .settings/
+.springBeans
+.externalToolBuilders/
+.checkstyle
 
 # Package Files #
 *.jar

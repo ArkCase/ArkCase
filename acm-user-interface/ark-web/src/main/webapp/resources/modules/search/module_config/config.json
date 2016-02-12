@@ -69,7 +69,8 @@
             "paginationPageSize": 20,
             "start": 0,
             "filter": "",
-            "filterName": ""
+            "filterName": "",
+            "csvFileName": "search.csv"
         }
     ]
 }

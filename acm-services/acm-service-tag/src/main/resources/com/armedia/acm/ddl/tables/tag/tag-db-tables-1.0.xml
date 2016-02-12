@@ -1,126 +1,143 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="cmParentObjectTypeLength" value="1024" dbms="oracle,postgresql"/>
-    <property name="cmParentObjectTypeLength" value="255" dbms="mysql"/>
+	<property name="cmParentObjectTypeLength" value="1024"
+		dbms="oracle,postgresql" />
+	<property name="cmParentObjectTypeLength" value="255" dbms="mysql" />
 
-    <changeSet id="01-tag-tables" author="marst">
-        <createTable tableName="acm_tag">
-            <column name="cm_tag_id" type="${idType}">
-                <constraints primaryKey="true" primaryKeyName="pk_cm_tag_id"/>
-            </column>
+	<changeSet id="01-tag-tables" author="marst">
+		<createTable tableName="acm_tag">
+			<column name="cm_tag_id" type="${idType}">
+				<constraints primaryKey="true" primaryKeyName="pk_cm_tag_id" />
+			</column>
 
-            <column name="cm_file_id" type="${fkIdType}"/>
+			<column name="cm_file_id" type="${fkIdType}" />
 
-            <column name="cm_tag_text" type="VARCHAR(256)">
-                <constraints nullable="false"/>
-            </column>
+			<column name="cm_tag_text" type="VARCHAR(256)">
+				<constraints nullable="false" />
+			</column>
 
-            <column name="cm_tag_creator" type="VARCHAR(128)">
-                <constraints nullable="false"/>
-            </column>
+			<column name="cm_tag_creator" type="VARCHAR(128)">
+				<constraints nullable="false" />
+			</column>
 
-            <column name="cm_tag_modified" type="${timestampType}">
-                <constraints nullable="false"/>
-            </column>
+			<column name="cm_tag_modified" type="${timestampType}">
+				<constraints nullable="false" />
+			</column>
 
-            <column name="cm_tag_modifier" type="VARCHAR(128)">
-                <constraints nullable="false"/>
-            </column>
+			<column name="cm_tag_modifier" type="VARCHAR(128)">
+				<constraints nullable="false" />
+			</column>
 
-            <column name="cm_tag_created" type="${timestampType}">
-                <constraints nullable="false"/>
-            </column>
+			<column name="cm_tag_created" type="${timestampType}">
+				<constraints nullable="false" />
+			</column>
 
-            <column name="cm_parent_object_id" type="${fkIdType}">
-                <constraints nullable="false"/>
-            </column>
+			<column name="cm_parent_object_id" type="${fkIdType}">
+				<constraints nullable="false" />
+			</column>
 
-            <column name="cm_parent_object_type" type="VARCHAR(128)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
+			<column name="cm_parent_object_type" type="VARCHAR(128)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
 
-    <changeSet id="2-tag-tables" author="marst">
+	<changeSet id="2-tag-tables" author="marst">
 
-        <dropColumn tableName="acm_tag" columnName="cm_file_id"/>
-        <dropColumn tableName="acm_tag" columnName="cm_parent_object_id"/>
-        <dropColumn tableName="acm_tag" columnName="cm_parent_object_type"/>
+		<dropColumn tableName="acm_tag" columnName="cm_file_id" />
+		<dropColumn tableName="acm_tag" columnName="cm_parent_object_id" />
+		<dropColumn tableName="acm_tag" columnName="cm_parent_object_type" />
 
 
-        <addColumn tableName="acm_tag">
-            <column name="cm_tag_description" type="VARCHAR(1024)">
-                <constraints nullable="true"/>
-            </column>
-        </addColumn>
+		<addColumn tableName="acm_tag">
+			<column name="cm_tag_description" type="VARCHAR(1024)">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
 
-        <addColumn tableName="acm_tag">
-            <column name="cm_tag_name" type="VARCHAR(256)">
-                <constraints nullable="true"/>
-            </column>
-        </addColumn>
+		<addColumn tableName="acm_tag">
+			<column name="cm_tag_name" type="VARCHAR(256)">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
 
-        <createTable tableName="acm_associated_tag">
-            <column name="cm_associated_tag_id" type="${idType}">
-                <constraints primaryKey="true" primaryKeyName="pk_cm_associated_tag_id"/>
-            </column>
+		<createTable tableName="acm_associated_tag">
+			<column name="cm_associated_tag_id" type="${idType}">
+				<constraints primaryKey="true" primaryKeyName="pk_cm_associated_tag_id" />
+			</column>
 
-            <column name="cm_tag_id" type="${fkIdType}"/>
+			<column name="cm_tag_id" type="${fkIdType}" />
 
-            <column name="cm_associated_tag_creator" type="VARCHAR(128)">
-                <constraints nullable="false"/>
-            </column>
+			<column name="cm_associated_tag_creator" type="VARCHAR(128)">
+				<constraints nullable="false" />
+			</column>
 
-            <column name="cm_associated_tag_created" type="${timestampType}">
-                <constraints nullable="false"/>
-            </column>
+			<column name="cm_associated_tag_created" type="${timestampType}">
+				<constraints nullable="false" />
+			</column>
 
-            <column name="cm_parent_object_id" type="${fkIdType}">
-                <constraints nullable="false"/>
-            </column>
+			<column name="cm_parent_object_id" type="${fkIdType}">
+				<constraints nullable="false" />
+			</column>
 
-            <column name="cm_parent_object_type" type="VARCHAR(128)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
+			<column name="cm_parent_object_type" type="VARCHAR(128)">
+				<constraints nullable="false" />
+			</column>
 
-        <createIndex tableName="acm_associated_tag" unique="true" indexName="idx_tag_object_type">
-            <column name="cm_tag_id" type="${fkIdType}"/>
-            <column name="cm_parent_object_id" type="${fkIdType}"/>
-            <column name="cm_parent_object_type" type="VARCHAR(${cmParentObjectTypeLength})"/>
-        </createIndex>
+		</createTable>
 
-    </changeSet>
+		<createIndex tableName="acm_associated_tag" unique="true"
+			indexName="idx_tag_object_type">
+			<column name="cm_tag_id" type="${fkIdType}" />
+			<column name="cm_parent_object_id" type="${fkIdType}" />
+			<column name="cm_parent_object_type" type="VARCHAR(${cmParentObjectTypeLength})" />
+		</createIndex>
 
-    <changeSet id="03-add-new-token-column-in-acm-tag-table" author="marst">
-        <addColumn tableName="acm_tag">
-            <column name="cm_tag_token" type="VARCHAR(512)"/>
-        </addColumn>
-    </changeSet>
+	</changeSet>
 
-    <changeSet id="09-acm_associated_tag-id" author="nebojsha.davidovikj">
-        <createTable tableName="acm_associated_tag_id">
-            <column name="cm_seq_num" type="${idType}"/>
-            <column name="cm_seq_name" type="VARCHAR(255)"/>
-        </createTable>
-        <insert tableName="acm_associated_tag_id">
-            <column name="cm_seq_num" value="100"></column>
-            <column name="cm_seq_name" value="acm_associated_tag"></column>
-        </insert>
-    </changeSet>
+	<changeSet id="03-add-new-token-column-in-acm-tag-table"
+		author="marst">
+		<addColumn tableName="acm_tag">
+			<column name="cm_tag_token" type="VARCHAR(512)" />
+		</addColumn>
+	</changeSet>
 
-    <changeSet id="10-acm_tag-id" author="dmiller">
-        <createTable tableName="acm_tag_id">
-            <column name="cm_seq_num" type="${idType}"/>
-            <column name="cm_seq_name" type="VARCHAR(255)"/>
-        </createTable>
-        <insert tableName="acm_tag_id">
-            <column name="cm_seq_num" value="100"></column>
-            <column name="cm_seq_name" value="acm_tag"></column>
-        </insert>
-    </changeSet>
+	<changeSet id="09-acm_associated_tag-id" author="nebojsha.davidovikj">
+		<createTable tableName="acm_associated_tag_id">
+			<column name="cm_seq_num" type="${idType}" />
+			<column name="cm_seq_name" type="VARCHAR(255)" />
+		</createTable>
+		<insert tableName="acm_associated_tag_id">
+			<column name="cm_seq_num" value="100"></column>
+			<column name="cm_seq_name" value="acm_associated_tag"></column>
+		</insert>
+	</changeSet>
+
+	<changeSet id="10-acm_tag-id" author="dmiller">
+		<createTable tableName="acm_tag_id">
+			<column name="cm_seq_num" type="${idType}" />
+			<column name="cm_seq_name" type="VARCHAR(255)" />
+		</createTable>
+		<insert tableName="acm_tag_id">
+			<column name="cm_seq_num" value="100"></column>
+			<column name="cm_seq_name" value="acm_tag"></column>
+		</insert>
+	</changeSet>
+
+	<changeSet id="11-acm_associated_tag" author="nadica.cuculova">
+		<addColumn tableName="acm_associated_tag">
+			<column name="cm_associated_tag_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+		<addColumn tableName="acm_associated_tag">
+			<column name="cm_associated_tag_modifier" type="VARCHAR(1024)" defaultValueComputed="${user}">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
+
 </databaseChangeLog>
