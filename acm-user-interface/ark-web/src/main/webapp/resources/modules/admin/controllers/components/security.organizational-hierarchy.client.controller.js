@@ -2,38 +2,19 @@
 
 angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['$scope', 'Admin.OrganizationalHierarchyService', '$q', '$modal', 'MessageService', '$translate', 'Admin.ModalDialogService', 'UtilService',
     function ($scope, organizationalHierarchyService, $q, $modal, messageService, $translate, modalDialogService, Util) {
-        $scope.config.$promise.then(function (config) {
-            $scope.cfg = _.find(config.components, {id: 'usersPicker'});
-
-            setPageSize();
-        });
 
         //this is default value for pageSize
-        $scope.pageSize = 50;
+/*        $scope.pagination = {
+            pageSize : 0,
+            pageSizes : [10,20,30,50]
+        };*/
 
-        function setPageSize() {
-
-            if ($scope.cfg.pageSize)
-                $scope.pageSize = $scope.cfg.pageSize;
-
-        }
-
-        var groupsPromise = organizationalHierarchyService.getGroups(0, $scope.pageSize);
         $scope.data = [];
         var groupsMap = {};
 
-        groupsPromise.then(function (payload) {
-            var tempGroups = payload.data.response.docs;
-            $scope.totalGroups = payload.data.response.numFound;
-            //create map from groups
-            for (var i = 0; i < tempGroups.length; i++) {
-                var tempGroup = tempGroups[i];
-                groupsMap[tempGroup.object_id_s] = tempGroup;
-            }
-
-            createTreeData(tempGroups);
+        $scope.config.$promise.then(function (config) {
+            $scope.cfg = _.find(config.components, {id: 'usersPicker'});
         });
-
 
         function createTreeData(groups) {
             var source = [];
@@ -70,17 +51,19 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
         }
 
-        $scope.onLoadMore = function (numberOfItems) {
-            var groupsPromise = organizationalHierarchyService.getGroups(numberOfItems, $scope.pageSize);
+        $scope.onLoadMore = function (currentPage, pageSize) {
+
+            var groupsPromise = organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize);
 
             groupsPromise.then(function (payload) {
                 var tempGroups = payload.data.response.docs;
+                $scope.totalGroups = payload.data.response.numFound;
                 //create map from groups
                 for (var i = 0; i < tempGroups.length; i++) {
                     var tempGroup = tempGroups[i];
                     groupsMap[tempGroup.object_id_s] = tempGroup;
                 }
-
+                $scope.data = [];
                 createTreeData(tempGroups);
             });
 
@@ -253,44 +236,56 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         };
 
         $scope.onLazyLoad = function (event, groupNode) {
+
+            var parentId = groupNode.object_id_s;
             var dfd = $q.defer();
-            var group = groupsMap[groupNode.object_id_s];
+            var group = groupsMap[parentId];
+            var children = [];
 
             //find child groups
-            var children = [];
-            if (group.child_id_ss) {
-                for (var i = 0; i < group.child_id_ss.length; i++) {
-                    var groupId = group.child_id_ss[i];
-                    children.push(getGroup(groupId));
+            var subGroupsPromise = organizationalHierarchyService.getSubGroupsForGroup(parentId);
+            subGroupsPromise.then(function (payload) {
+                var tempGroups = payload.data.response.docs;
+                //create map from groups
+                for (var i = 0; i < tempGroups.length; i++) {
+                    var tempGroup = tempGroups[i];
+                    groupsMap[tempGroup.object_id_s] = tempGroup;
                 }
-            }
+                createTreeData(tempGroups);
 
-            //find child users
-            if (group.member_id_ss) {
-                organizationalHierarchyService.getUsersForGroup(group.object_id_s).then(function (payload) {
-                    //successfully users received, insert with groups in same array
-                    var data = payload.data.response.docs;
-                    if (data) {
-                        for (var i = 0; i < data.length; i++) {
-                            data[i].title = data[i].name;
-                            data[i].isMember = true;
-                            children.push(data[i]);
-                        }
-                        group.children = children;
+                if (group.child_id_ss) {
+                    for (var i = 0; i < group.child_id_ss.length; i++) {
+                        var groupId = group.child_id_ss[i];
+                        children.push(getGroup(groupId));
                     }
-                    dfd.resolve(children);
-                }, function (payload) {
-                    //error getting users
-                    console.log("Error getting users: " + payload);
+                }
 
-                    //be we still need to return sub groups which are included in children, that's why we are not using reject
-                    group.children = children;
-                    dfd.resolve(children);
-                });
-            } else {
-                dfd.resolve(children);
-            }
+                //find child users
+                if (group.member_id_ss) {
+                    organizationalHierarchyService.getUsersForGroup(group.object_id_s).then(function (payload) {
+                        //successfully users received, insert with groups in same array
+                        var data = payload.data.response.docs;
+                        if (data) {
+                            for (var i = 0; i < data.length; i++) {
+                                data[i].title = data[i].name;
+                                data[i].isMember = true;
+                                children.push(data[i]);
+                            }
+                            group.children = children;
+                        }
+                        dfd.resolve(children);
+                    }, function (payload) {
+                        //error getting users
+                        console.log("Error getting users: " + payload);
 
+                        //be we still need to return sub groups which are included in children, that's why we are not using reject
+                        group.children = children;
+                        dfd.resolve(children);
+                    });
+                } else {
+                    dfd.resolve(children);
+                }
+            });
             return dfd.promise;
         };
 

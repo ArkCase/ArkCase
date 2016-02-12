@@ -17,6 +17,8 @@
 angular.module('admin').service('Admin.OrganizationalHierarchyService', function ($http) {
     return ({
         getGroups: getGroups,
+        getGroupsTopLevel: getGroupsTopLevel,
+        getSubGroupsForGroup: getSubGroupsForGroup,
         getUsersForGroup: getUsersForGroup,
         addAdHocGroup: addAdHocGroup,
         saveMembers: saveMembers,
@@ -33,21 +35,57 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', function
      * @description
      * Performs retrieving all groups
      *
-     * param {string} start
-     * param {string} num
      * @returns {HttpPromise} Future info about groups
      */
-    function getGroups(start, num) {
-        //s and n are 0 and 50 by default
-        var s = 0;
-        var n = 50;
-        if(start)
-            s = start;
-        if(num)
-            n = num;
+    function getGroups(currentPage, pageSize) {
         return $http({
             method: 'GET',
-            url: 'proxy/arkcase/api/latest/users/groups/get?n='+n+'&start='+s+'&s=create_date_tdt desc'
+            url: 'proxy/arkcase/api/latest/users/groups/get?n=50&s=create_date_tdt desc'
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name getGroupsTopLevel
+     * @methodOf admin.service:Admin.OrganizationalHierarchyService
+     *
+     * @description
+     * Performs retrieving all groups
+     *
+     * param {string} currentPage
+     * param {string} pageSize
+     * @returns {HttpPromise} Future info about groups
+     */
+    function getGroupsTopLevel(currentPage, pageSize) {
+        //s and n are 0 and 50 by default
+        var start = 0, n = 50;
+        if (pageSize) {
+            if (currentPage)
+                start = (currentPage-1) * pageSize;
+            n = pageSize;
+        }
+        return $http({
+            method: 'GET',
+            url: 'proxy/arkcase/api/latest/users/group/get/toplevel?n=' + n + '&start=' + start + '&s=create_date_tdt desc'
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name getSubGroupsForGroup
+     * @methodOf admin.service:Admin.OrganizationalHierarchyService
+     *
+     * @description
+     * Performs retrieving users for provided group
+     *
+     * param {string} group id
+     *
+     * @returns {HttpPromise} Future info about array of users
+     */
+    function getSubGroupsForGroup(group) {
+        return $http({
+            method: 'GET',
+            url: 'proxy/arkcase/api/latest/users/group/' + group + '/get/subgroups/'
         });
     }
 

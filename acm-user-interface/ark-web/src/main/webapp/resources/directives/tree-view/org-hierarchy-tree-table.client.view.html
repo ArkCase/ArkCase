@@ -16,9 +16,22 @@
     </tr>
     </tbody>
 </table>
-<div class="well-sm">
-    <button class='btn btn-link btn-xs' type='button' title="{{'common.directive.treeTableView.moreRecords.tooltip' | translate}}" ng-click="onLoadMore(treeData.length)" ng-show="moreRecords>0">
-        <i class="fa fa-arrow-down"></i>
-        <span>{{moreRecords}} {{'common.directive.treeTableView.moreRecords.title' | translate}} </span>
-    </button>
+<div class="ui-grid-pager-panel">
+    <div class="ui-grid-pager-container">
+        <div class="ui-grid-pager-control">
+            <pagination class="pagination-sm" total-items="totalGroups" items-per-page="pageSize" ng-model="currentPage"
+                        boundary-links="true" ng-change="pageChanged()" style="margin:0px"></pagination>
+        </div>
+        <div class="ui-grid-pager-row-count-picker">
+            <select ng-model="pageSize" ng-options="o as o for o in pages" ng-change="pageChanged()"></select>
+            <span class="ui-grid-pager-row-count-label">&nbsp; items per page</span>
+        </div>
+    </div>
+    <div class="ui-grid-pager-count-container">
+        <div class="ui-grid-pager-count">
+                <span ng-show="totalGroups > 0">
+                    {{showingLow}} - {{showingHigh}} of {{totalGroups}} items
+                </span>
+        </div>
+    </div>
 </div>

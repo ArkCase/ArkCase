@@ -15,7 +15,7 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                 onAddSubGroup: '=',
                 onSetSupervisor: '=',
                 config: '=',
-                totalGroups: '='
+                totalGroups: '=',
             },
             link: function (scope, element, attrs) {
                 var treeOptions = {
@@ -61,19 +61,14 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                     }
                 };
 
-                //pageSize is 50 by default, it will be changed if it is added in config
-                scope.pageSize = 50;
-                scope.moreRecords = 0;
+                scope.currentPage = 1;
 
-                scope.$watchCollection('config', function (newValue, oldValue) {
-                    $q.when(newValue).then(function (config) {
+                scope.pageChanged = function () {
+                    scope.onLoadMore(scope.currentPage, scope.pageSize);
+                };
 
-                        if (config.pageSize)
-                            scope.pageSize = config.pageSize;
-
-                    }, true);
-                });
-
+                scope.pages = [10, 20, 30, 40, 50];
+                scope.pageSize = 0;
 
                 var $fancytree = $(element).find('table').fancytree(treeOptions);
 
@@ -83,13 +78,23 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
 
                             $($fancytree).fancytree("getTree").reload(treeData);
 
-                            scope.moreRecords = scope.pageSize;
-                            var moreRecords = scope.totalGroups - treeData.length;
-                            if (moreRecords < scope.pageSize)
-                                scope.moreRecords = moreRecords;
+                            scope.showingLow = (scope.currentPage-1)*scope.pageSize+1;
+                            var max = scope.currentPage * scope.pageSize;
+                            scope.showingHigh = max< scope.totalGroups ? max : scope.totalGroups;
                         }
                     });
                 }
+
+                scope.$watchCollection('config', function (config, oldValue) {
+                    if (config) {
+                        if (config.paginationPageSizes)
+                            scope.pages = config.paginationPageSizes;
+                        if (config.paginationPageSize)
+                            scope.pageSize = config.paginationPageSize;
+                        if(!scope.treeData || scope.treeData.length ==0)
+                            scope.onLoadMore(scope.currentPage, scope.pageSize);
+                    }
+                });
 
                 scope.pickUsersBtn = function (event) {
                     var node = $.ui.fancytree.getNode(event);
@@ -130,7 +135,6 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                         node.remove();
                     });
                 };
-
 
             },
             templateUrl: 'directives/tree-view/org-hierarchy-tree-table.client.view.html'
