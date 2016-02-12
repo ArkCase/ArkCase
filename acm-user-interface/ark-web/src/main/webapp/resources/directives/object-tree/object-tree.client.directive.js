@@ -119,7 +119,7 @@
 
     $scope.onLoad = function(start, n, sort, filters){
         //query list of objects according to the parameters. Only consider 'start' here:
-        if (0 = start) {
+        if (0 == start) {
             return page1;
         } else if (2 == start) {
             return page2;

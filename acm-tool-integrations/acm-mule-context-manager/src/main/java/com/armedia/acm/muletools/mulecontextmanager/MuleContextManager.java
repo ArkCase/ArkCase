@@ -1,5 +1,7 @@
 package com.armedia.acm.muletools.mulecontextmanager;
 
+import com.armedia.acm.web.api.MDCConstants;
+
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
@@ -7,6 +9,7 @@ import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.context.MuleContextFactory;
+import org.mule.api.transformer.DataType;
 import org.mule.config.AnnotationsConfigurationBuilder;
 import org.mule.config.ConfigResource;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
@@ -14,8 +17,12 @@ import org.mule.context.DefaultMuleContextBuilder;
 import org.mule.context.DefaultMuleContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -36,18 +43,21 @@ public class MuleContextManager implements ApplicationContextAware
     public void dispatch(String endpoint, Object payload, Map<String, Object> messageProperties) throws MuleException
     {
         MuleMessage request = new DefaultMuleMessage(payload, messageProperties, getMuleContext());
+        setMDCProperties(request);
         getMuleClient().dispatch(endpoint, request);
     }
 
     public void dispatch(String endpoint, Object payload) throws MuleException
     {
         MuleMessage request = new DefaultMuleMessage(payload, getMuleContext());
+        setMDCProperties(request);
         getMuleClient().dispatch(endpoint, request);
     }
 
     public MuleMessage send(String endpoint, Object payload, Map<String, Object> messageProperties) throws MuleException
     {
         MuleMessage request = new DefaultMuleMessage(payload, messageProperties, getMuleContext());
+        setMDCProperties(request);
 
         MuleMessage received = getMuleClient().send(endpoint, request);
 
@@ -58,6 +68,7 @@ public class MuleContextManager implements ApplicationContextAware
     {
         MuleMessage request = new DefaultMuleMessage(payload, getMuleContext());
 
+        setMDCProperties(request);
         MuleMessage received = getMuleClient().send(endpoint, request);
 
         return received;
@@ -68,15 +79,49 @@ public class MuleContextManager implements ApplicationContextAware
         return getMuleContext().getClient();
     }
 
+    /**
+     * Set {@link MDC} thread local variables as {@link MuleMessage} outbound properties. These are later set as {@link MDC} thread local
+     * variables in the the threads that Mule controls. See {@link com.armedia.acm.audit.listeners.AcmMessageProcessorNotificationListener}.
+     * 
+     * @param message
+     *            the {@link MuleMessage} to set the MDC variables as outbound properties
+     */
+    private void setMDCProperties(MuleMessage message)
+    {
+        if (MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) != null)
+        {
+            message.setOutboundProperty(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY),
+                    DataType.STRING_DATA_TYPE);
+            message.setOutboundProperty(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY,
+                    MDC.get(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY), DataType.STRING_DATA_TYPE);
+            message.setOutboundProperty(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY,
+                    MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) == null ? "anonymous"
+                            : MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY),
+                    DataType.STRING_DATA_TYPE);
+        }
+    }
+
     private void startMuleContext(ApplicationContext applicationContext) throws MuleException, IOException
     {
-        if ( getMuleContext() != null )
+        if (getMuleContext() != null)
         {
             return;
         }
 
         ConfigResource[] configs = findConfigResources();
         SpringXmlConfigurationBuilder springXmlConfigurationBuilder = new SpringXmlConfigurationBuilder(configs);
+
+        AbstractApplicationContext parentContext = (AbstractApplicationContext) applicationContext;
+
+        // In Integration tests the applicationContext is of type GenericApplicationContext,
+        // but the muleContext creation throws an error if the parent context is of this type.
+        if (applicationContext instanceof GenericApplicationContext)
+        {
+            parentContext = new ClassPathXmlApplicationContext(applicationContext);
+            parentContext.refresh();
+        }
+
+        springXmlConfigurationBuilder.setParentContext(parentContext);
 
         // ensure Mule processes Mule annotations in Spring beans
         AnnotationsConfigurationBuilder annotationsConfigurationBuilder = new AnnotationsConfigurationBuilder();
@@ -88,9 +133,11 @@ public class MuleContextManager implements ApplicationContextAware
         MuleContextFactory muleContextFactory = new DefaultMuleContextFactory();
         MuleContext muleContext = muleContextFactory.createMuleContext(builders, new DefaultMuleContextBuilder());
 
+        // TODO: application context does not need to be kept in separate variable. If removed, changes to the code needs to be done, where
+        // this variable is used. We should do this in a separate JIRA issue, as tests should be performed.
         muleContext.getRegistry().registerObject("arkContext", applicationContext);
 
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
             log.debug("Starting mule context");
         }
@@ -98,7 +145,7 @@ public class MuleContextManager implements ApplicationContextAware
         muleContext.start();
         setMuleContext(muleContext);
 
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
             log.debug("Done.");
         }
@@ -106,16 +153,16 @@ public class MuleContextManager implements ApplicationContextAware
 
     private ConfigResource[] findConfigResources() throws IOException
     {
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
             log.debug("Finding Mule flow XML configuration files.");
         }
 
-        if ( getMuleConfigFilePattern() != null )
+        if (getMuleConfigFilePattern() != null)
         {
             return loadConfigFromPattern();
         }
-        else if ( getSpecificConfigFiles() != null )
+        else if (getSpecificConfigFiles() != null)
         {
             return loadSpecificConfigFiles();
         }
@@ -128,7 +175,7 @@ public class MuleContextManager implements ApplicationContextAware
     private ConfigResource[] loadSpecificConfigFiles() throws IOException
     {
         ConfigResource[] configs = new ConfigResource[getSpecificConfigFiles().size()];
-        for ( int a = 0; a < getSpecificConfigFiles().size(); a++ )
+        for (int a = 0; a < getSpecificConfigFiles().size(); a++)
         {
             Resource configResource = new ClassPathResource(getSpecificConfigFiles().get(a));
             configs[a] = new ConfigResource(configResource.getURL());
@@ -143,15 +190,15 @@ public class MuleContextManager implements ApplicationContextAware
         Resource[] muleConfigs = pathResolver.getResources(getMuleConfigFilePattern());
         ConfigResource[] configs = new ConfigResource[muleConfigs.length];
 
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
             log.debug(muleConfigs.length + " mule configs found.");
         }
 
-        for ( int a = 0; a < muleConfigs.length; a++ )
+        for (int a = 0; a < muleConfigs.length; a++)
         {
             Resource muleConfig = muleConfigs[a];
-            if ( log.isDebugEnabled() )
+            if (log.isDebugEnabled())
             {
                 log.debug("Processing mule config " + muleConfig.getFilename());
             }
@@ -164,7 +211,7 @@ public class MuleContextManager implements ApplicationContextAware
     {
         try
         {
-            if ( getMuleContext() != null )
+            if (getMuleContext() != null)
             {
                 log.debug("Stopping Mule context");
                 getMuleContext().stop();
@@ -176,7 +223,6 @@ public class MuleContextManager implements ApplicationContextAware
             log.error("Could not stop Mule context: " + e.getMessage(), e);
         }
     }
-
 
     public MuleContext getMuleContext()
     {
@@ -191,7 +237,7 @@ public class MuleContextManager implements ApplicationContextAware
     @Override
     public void setApplicationContext(ApplicationContext applicationContext)
     {
-        if ( getMuleContext() == null )
+        if (getMuleContext() == null)
         {
             try
             {

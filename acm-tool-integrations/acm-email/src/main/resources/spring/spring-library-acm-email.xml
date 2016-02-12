@@ -20,14 +20,23 @@
                                       should-mark-messages-as-read="${email.should-mark-messages-as-read}"
                                       java-mail-properties="javaMailProperties"
                                       max-fetch-size="1">
-        <int:poller max-messages-per-poll="${email.max-messages-per-poll}" fixed-rate="${email.fixed-rate}" />
+        <int:poller max-messages-per-poll="${email.max-messages-per-poll}" fixed-rate="${email.fixed-rate}" error-channel="mailErrorChannel"/>
     </int-mail:inbound-channel-adapter>
+    
+    <bean id="loggingHandler" class="org.springframework.integration.handler.LoggingHandler">
+        <constructor-arg value="ERROR" />
+        <property name="expression" value="payload.message"/>
+    </bean>
 
+    <int:chain input-channel="mailErrorChannel" >
+        <int:service-activator ref="loggingHandler" method="handleMessage"/>
+    </int:chain>
+    
     <util:properties id="javaMailProperties">
         <prop key="mail.imap.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
         <prop key="mail.imap.socketFactory.fallback">false</prop>
         <prop key="mail.store.protocol">${email.protocol}</prop>
         <prop key="mail.debug">${email.debug}</prop>
     </util:properties>
-
+	
 </beans>

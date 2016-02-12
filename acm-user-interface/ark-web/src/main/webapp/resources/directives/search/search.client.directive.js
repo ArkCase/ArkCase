@@ -59,15 +59,16 @@
      </file>
  </example>
  */
-angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService', 'Object.LookupService', '$window',
-    function (SearchService, SearchQueryBuilder, $q, Util, ObjectLookupService, $window) {
-        return {
-            restrict: 'E',              //match only element name
-            scope: {
-                header: '@',            //@ : text binding (read-only and only strings)
-                searchBtn: '@',
-                searchQuery: '@',
-                searchPlaceholder: '@',
+angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService', 'Object.LookupService', '$window', 'uiGridExporterConstants', '$translate',
+            function (SearchService, SearchQueryBuilder, $q, Util, ObjectLookupService, $window, uiGridExporterConstants, $translate) {
+                return {
+                    restrict: 'E',              //match only element name
+                    scope: {
+                        header: '@',            //@ : text binding (read-only and only strings)
+                        searchBtn: '@',
+                        exportBtn: '@',
+                        searchQuery: '@',
+                        searchPlaceholder: '@',
                 filter: '@',
                 config: '='            //= : two way binding so that the data can be monitored for changes
             },
@@ -134,7 +135,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             scope.filters += '&fq="' + facet + '":' + field;
                         }
                         else {
-                            scope.filters=""
+                            scope.filters="";
                             scope.filters += 'fq="' + facet + '":' + field;
                         }
                         scope.queryExistingItems();
@@ -176,6 +177,12 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     }
                 };
 
+                scope.downloadCSV = function () {
+                    if(scope.gridApi && scope.gridApi.exporter) {
+                        scope.gridApi.exporter.csvExport(uiGridExporterConstants.VISIBLE);
+                    }
+                };
+
                 //prepare the UI-grid
                 scope.gridOptions = {};
                 scope.$watchCollection('config', function (newValue, oldValue) {
@@ -193,6 +200,10 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             useExternalPagination: true,
                             paginationPageSizes: config.paginationPageSizes,
                             paginationPageSize: config.paginationPageSize,
+                            enableSelectAll: true,
+                            exporterCsvFilename: config.csvFileName,
+                            exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location")),
+                            exporterHeaderFilter : $translate.instant,
                             columnDefs: config.columnDefs,
                             onRegisterApi: function (gridApi) {
                                 scope.gridApi = gridApi;
