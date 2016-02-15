@@ -14,11 +14,11 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             , componentId: "participants"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (objectInfo) {
-                onObjectInfoRetrieved(objectInfo);
-            }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
+            }
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
@@ -147,7 +147,8 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $q.all([promiseTypes, promiseUsers, promiseGroups, componentHelper.promiseConfig]).then(function () {
+            //$q.all([promiseTypes, promiseUsers, promiseGroups, componentHelper.promiseConfig]).then(function () {
+            $q.all([promiseTypes, promiseUsers, promiseGroups]).then(function () {
                 var participants = objectInfo.participants;
                 _.each(participants, function (participant) {
                     if ("*" === participant.participantType) {
