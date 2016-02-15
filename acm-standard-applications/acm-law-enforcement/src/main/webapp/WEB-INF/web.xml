@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
-  <display-name>ACM Law Enforcement</display-name>
+    <display-name>ACM Law Enforcement</display-name>
 
     <!--
 		SPRING ROOT WEB APPLICATION CONTEXT.  Spring MVC does require us to have a root application
@@ -17,7 +17,8 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:/spring/spring-library-*.xml,
-            classpath:/spring/spring-security-config.xml</param-value>
+            classpath:/spring/spring-security-config.xml
+        </param-value>
     </context-param>
 
     <!-- Sets RequestId, User Id, Remote address in org.slfj.MDC variables -->
@@ -104,21 +105,21 @@
         <filter-name>characterEncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    
+
     <!-- 
     	ETag Filter - .js and .css files
      -->
     <filter>
-	   <filter-name>etagFilter</filter-name>
-	   <filter-class>org.springframework.web.filter.ShallowEtagHeaderFilter</filter-class>
-	</filter>
-	<filter-mapping>
-	   <filter-name>etagFilter</filter-name>
-	   <url-pattern>*.js</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-	   <filter-name>etagFilter</filter-name>
-	   <url-pattern>*.css</url-pattern>
-	</filter-mapping>
+        <filter-name>etagFilter</filter-name>
+        <filter-class>org.springframework.web.filter.ShallowEtagHeaderFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>etagFilter</filter-name>
+        <url-pattern>*.js</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>etagFilter</filter-name>
+        <url-pattern>*.css</url-pattern>
+    </filter-mapping>
 
 </web-app>
