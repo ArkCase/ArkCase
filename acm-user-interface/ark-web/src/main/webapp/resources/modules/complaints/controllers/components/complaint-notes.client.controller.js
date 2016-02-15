@@ -14,9 +14,6 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
             , componentId: "notes"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                $scope.complaintInfo = complaintInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
             }

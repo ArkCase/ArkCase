@@ -12,9 +12,6 @@ angular.module('complaints').controller('Complaints.CalendarController', ['$scop
             , componentId: "calendar"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                $scope.complaintInfo = complaintInfo;
-            }
         });
 
 
@@ -43,7 +40,7 @@ angular.module('complaints').controller('Complaints.CalendarController', ['$scop
         /* Event sources array */
         $scope.eventSources = [$scope.events];
 
-        $scope.$watchCollection('complaintInfo', function(newValue, oldValue){
+        $scope.$watchCollection('objectInfo', function(newValue, oldValue){
             if(newValue && newValue.container){
                 CalendarService.queryCalendarEvents(newValue.container.calendarFolderId).then(function(calendarEvents){
                     if(calendarEvents.items){

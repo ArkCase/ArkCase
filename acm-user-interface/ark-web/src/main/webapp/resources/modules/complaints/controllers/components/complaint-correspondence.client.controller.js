@@ -14,9 +14,6 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
             , componentId: "correspondence"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                $scope.complaintInfo = complaintInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
             }
@@ -90,8 +87,8 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
         };
 
         $scope.addNew = function () {
-            var complaintId = Util.goodValue($scope.complaintInfo.complaintId, 0);
-            var folderId = Util.goodMapValue($scope.complaintInfo, "container.folder.cmisFolderId", "");
+            var complaintId = Util.goodValue($scope.objectInfo.complaintId, 0);
+            var folderId = Util.goodMapValue($scope.objectInfo, "container.folder.cmisFolderId", "");
             var template = $scope.correspondenceForm.value;
             var promiseCreateCorrespondence = ObjectCorrespondenceService.createCorrespondence(template, ObjectService.ObjectTypes.COMPLAINT, $stateParams.id, folderId);
 

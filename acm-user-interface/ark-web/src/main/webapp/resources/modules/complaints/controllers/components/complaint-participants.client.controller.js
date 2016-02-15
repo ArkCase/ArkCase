@@ -14,8 +14,8 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
             , componentId: "participants"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                onObjectInfoRetrieved(complaintInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
@@ -160,7 +160,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                     }
                 });
                 $scope.gridOptions.data = participants;
-                $scope.complaintInfo = data;
+                $scope.objectInfo = data;
                 //gridHelper.hidePagingControlsIfAllDataShown(participants.length);
             });
         };
@@ -173,7 +173,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
             $scope.gridOptions.data.push({});
         };
         $scope.updateRow = function (rowEntity) {
-            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            var complaintInfo = Util.omitNg($scope.objectInfo);
             ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                 function (complaintSaved) {
                     //if participant is newly added, fill incomplete values with the latest
@@ -196,7 +196,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
 
