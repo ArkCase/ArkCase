@@ -12,8 +12,8 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
             , componentId: "references"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
-                onObjectInfoRetrieved(caseInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
@@ -29,11 +29,11 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
             gridHelper.disableGridScrolling(config);
         };
 
-        var onObjectInfoRetrieved = function (caseInfo) {
-            $scope.caseInfo = caseInfo;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
             $scope.gridOptions = $scope.gridOptions || {};
-            $scope.gridOptions.data = $scope.caseInfo.references;
-            //gridHelper.hidePagingControlsIfAllDataShown($scope.caseInfo.references.length);
+            $scope.gridOptions.data = $scope.objectInfo.references;
+            //gridHelper.hidePagingControlsIfAllDataShown($scope.objectInfo.references.length);
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {

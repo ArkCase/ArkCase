@@ -14,8 +14,8 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             , componentId: "participants"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
-                onObjectInfoRetrieved(caseInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
@@ -144,10 +144,10 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             });
         };
 
-        var onObjectInfoRetrieved = function (caseInfo) {
-            $scope.caseInfo = caseInfo;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
             $q.all([promiseTypes, promiseUsers, promiseGroups, componentHelper.promiseConfig]).then(function () {
-                var participants = caseInfo.participants;
+                var participants = objectInfo.participants;
                 _.each(participants, function (participant) {
                     if ("*" === participant.participantType) {
                         participant.acm$_participantNames = [
@@ -173,7 +173,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
         };
         $scope.updateRow = function (rowEntity) {
-            var caseInfo = Util.omitNg($scope.caseInfo);
+            var caseInfo = Util.omitNg($scope.objectInfo);
             CaseInfoService.saveCaseInfo(caseInfo).then(
                 function (caseSaved) {
                     //if participant is newly added, fill incomplete values with the latest
@@ -196,7 +196,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row
-                var caseInfo = Util.omitNg($scope.caseInfo);
+                var caseInfo = Util.omitNg($scope.objectInfo);
                 CaseInfoService.saveCaseInfo(caseInfo);
             }
 

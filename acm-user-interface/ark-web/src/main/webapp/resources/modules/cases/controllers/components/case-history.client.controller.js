@@ -14,9 +14,6 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
             , componentId: "history"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
-                $scope.caseInfo = caseInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
             }
