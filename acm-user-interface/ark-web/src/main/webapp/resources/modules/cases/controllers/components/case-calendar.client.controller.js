@@ -12,9 +12,6 @@ angular.module('cases').controller('Cases.CalendarController', ['$scope', '$stat
             , componentId: "calendar"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
-				$scope.caseInfo = caseInfo;
-			}
 		});
 
 
@@ -43,7 +40,7 @@ angular.module('cases').controller('Cases.CalendarController', ['$scope', '$stat
 		/* Event sources array */
 		$scope.eventSources = [$scope.events];
 
-		$scope.$watchCollection('caseInfo', function (newValue, oldValue) {
+		$scope.$watchCollection('objectInfo', function (newValue, oldValue) {
 			if (newValue && newValue.container) {
 				CalendarService.queryCalendarEvents(newValue.container.calendarFolderId).then(function (calendarEvents) {
 					if (calendarEvents.items) {

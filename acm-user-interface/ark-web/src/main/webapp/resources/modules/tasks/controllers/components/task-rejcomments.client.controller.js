@@ -7,16 +7,13 @@ angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', 
         , Util, ConfigService, ObjectService, ObjectNoteService, Authentication, TaskInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             moduleId: "tasks"
             , componentId: "rejcomments"
             , scope: $scope
             , stateParams: $stateParams
             , retrieveObjectInfo: TaskInfoService.getTaskInfo
             , validateObjectInfo: TaskInfoService.validateTaskInfo
-            , onObjectInfoRetrieved: function (taskInfo) {
-                $scope.taskInfo = taskInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
             }
@@ -45,8 +42,8 @@ angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', 
         );
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($scope.currentObjectId, false)) {
-                var promiseQueryNotes = ObjectNoteService.queryRejectComments(ObjectService.ObjectTypes.TASK, $scope.currentObjectId);
+            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+                var promiseQueryNotes = ObjectNoteService.queryRejectComments(ObjectService.ObjectTypes.TASK, componentHelper.currentObjectId);
                 $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions.data = notes;
