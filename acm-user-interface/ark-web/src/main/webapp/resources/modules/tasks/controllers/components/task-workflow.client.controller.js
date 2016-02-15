@@ -14,9 +14,6 @@ angular.module('tasks').controller('Tasks.WorkflowOverviewController', ['$scope'
             , stateParams: $stateParams
             , retrieveObjectInfo: TaskInfoService.getTaskInfo
             , validateObjectInfo: TaskInfoService.validateTaskInfo
-            , onObjectInfoRetrieved: function (taskInfo) {
-                $scope.taskInfo = taskInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
             }
@@ -39,9 +36,9 @@ angular.module('tasks').controller('Tasks.WorkflowOverviewController', ['$scope'
         $scope.retrieveGridData = function () {
             if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                 TaskInfoService.getTaskInfo(componentHelper.currentObjectId).then(function (taskInfo) {
-                    $scope.taskInfo = taskInfo;
+                    $scope.objectInfo = taskInfo;
 
-                    var promiseQueryTaskHistory = TaskHistoryService.queryTaskHistory($scope.taskInfo);
+                    var promiseQueryTaskHistory = TaskHistoryService.queryTaskHistory($scope.objectInfo);
                     $q.all([promiseQueryTaskHistory, promiseUsers]).then(function (data) {
                         var taskHistory = data[0];
                         $scope.gridOptions.data = taskHistory;

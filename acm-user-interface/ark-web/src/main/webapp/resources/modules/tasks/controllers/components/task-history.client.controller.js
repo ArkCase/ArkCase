@@ -14,9 +14,6 @@ angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$state
             , stateParams: $stateParams
             , retrieveObjectInfo: TaskInfoService.getTaskInfo
             , validateObjectInfo: TaskInfoService.validateTaskInfo
-            , onObjectInfoRetrieved: function (taskInfo) {
-                $scope.taskInfo = taskInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
             }
