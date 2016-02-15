@@ -12,8 +12,8 @@ angular.module('cost-tracking').controller('CostTracking.SummaryController', ['$
             , componentId: "summary"
             , retrieveObjectInfo: CostTrackingInfoService.getCostsheetInfo
             , validateObjectInfo: CostTrackingInfoService.validateCostsheet
-            , onObjectInfoRetrieved: function (costsheetInfo) {
-                onObjectInfoRetrieved(costsheetInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
@@ -28,13 +28,13 @@ angular.module('cost-tracking').controller('CostTracking.SummaryController', ['$
             gridHelper.setBasicOptions(config);
         };
 
-        var onObjectInfoRetrieved = function (costsheetInfo) {
-            $scope.costsheetInfo = costsheetInfo;
-            var parentNumber = {parentNumber: $scope.costsheetInfo.parentNumber};
-            var parentType = {parentType: $scope.costsheetInfo.parentType};
-            var parentId = {parentId: $scope.costsheetInfo.parentId};
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+            var parentNumber = {parentNumber: $scope.objectInfo.parentNumber};
+            var parentType = {parentType: $scope.objectInfo.parentType};
+            var parentId = {parentId: $scope.objectInfo.parentId};
 
-            var costs = angular.copy($scope.costsheetInfo.costs);
+            var costs = angular.copy($scope.objectInfo.costs);
             costs = costs.map(function (obj) {
                 return angular.extend(obj, parentNumber, parentType, parentId);
             });

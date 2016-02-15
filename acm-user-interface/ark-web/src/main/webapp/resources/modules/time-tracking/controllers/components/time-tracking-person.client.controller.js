@@ -12,8 +12,8 @@ angular.module('time-tracking').controller('TimeTracking.PersonController', ['$s
             , componentId: "person"
             , retrieveObjectInfo: TimeTrackingInfoService.getTimesheetInfo
             , validateObjectInfo: TimeTrackingInfoService.validateTimesheet
-            , onObjectInfoRetrieved: function (timesheetInfo) {
-                onObjectInfoRetrieved(timesheetInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
@@ -29,10 +29,10 @@ angular.module('time-tracking').controller('TimeTracking.PersonController', ['$s
             gridHelper.disableGridScrolling(config);
         };
 
-        var onObjectInfoRetrieved = function (timesheetInfo) {
-            $scope.timesheetInfo = timesheetInfo;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
             $scope.gridOptions = $scope.gridOptions || {};
-            $scope.gridOptions.data = [$scope.timesheetInfo.user];
+            $scope.gridOptions.data = [$scope.objectInfo.user];
         };
 
     }
