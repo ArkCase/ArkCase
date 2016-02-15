@@ -14,18 +14,18 @@ angular.module('cost-tracking').controller('CostTracking.InfoController', ['$sco
             , componentId: "info"
             , retrieveObjectInfo: CostTrackingInfoService.getCostsheetInfo
             , validateObjectInfo: CostTrackingInfoService.validateCostsheet
-            , onObjectInfoRetrieved: function (costsheetInfo) {
-                onObjectInfoRetrieved(costsheetInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
 
         $scope.parentInfo = {};
-        var onObjectInfoRetrieved = function (costsheetInfo) {
-            $scope.costsheetInfo = costsheetInfo;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
 
-            if ($scope.costsheetInfo.parentType == ObjectService.ObjectTypes.CASE_FILE) {
-                CaseInfoService.getCaseInfo($scope.costsheetInfo.parentId).then(function (caseInfo) {
+            if ($scope.objectInfo.parentType == ObjectService.ObjectTypes.CASE_FILE) {
+                CaseInfoService.getCaseInfo($scope.objectInfo.parentId).then(function (caseInfo) {
                     $scope.parentInfo.title = caseInfo.title;
                     $scope.parentInfo.incidentDate = moment(caseInfo.created).format($scope.config.parentDateFormat);
                     $scope.parentInfo.priortiy = caseInfo.priority;
@@ -33,8 +33,8 @@ angular.module('cost-tracking').controller('CostTracking.InfoController', ['$sco
                     $scope.parentInfo.status = caseInfo.status;
                 });
 
-            } else if ($scope.costsheetInfo.parentType == ObjectService.ObjectTypes.COMPLAINT) {
-                ComplaintInfoService.getComplaintInfo($scope.costsheetInfo.parentId).then(function (complaintInfo) {
+            } else if ($scope.objectInfo.parentType == ObjectService.ObjectTypes.COMPLAINT) {
+                ComplaintInfoService.getComplaintInfo($scope.objectInfo.parentId).then(function (complaintInfo) {
                     $scope.parentInfo.title = complaintInfo.complaintTitle;
                     $scope.parentInfo.incidentDate = moment(complaintInfo.incidentDate).format($scope.config.parentDateFormat);
                     $scope.parentInfo.priortiy = complaintInfo.priority;
@@ -45,7 +45,7 @@ angular.module('cost-tracking').controller('CostTracking.InfoController', ['$sco
         };
 
         $scope.onClickTitle = function () {
-            ObjectService.gotoUrl($scope.costsheetInfo.parentType, $scope.costsheetInfo.parentId);
+            ObjectService.gotoUrl($scope.objectInfo.parentType, $scope.objectInfo.parentId);
         }
     }
 ]);
