@@ -20,8 +20,8 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             , componentId: "people"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
-                onObjectInfoRetrieved(caseInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
@@ -313,15 +313,15 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         };
 
-        var onObjectInfoRetrieved = function (caseInfo) {
-            $scope.caseInfo = caseInfo;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
             $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, componentHelper.promiseConfig]).then(function () {
                 $scope.gridOptions = $scope.gridOptions || {};
-                $scope.gridOptions.data = $scope.caseInfo.personAssociations;
-                //gridHelper.hidePagingControlsIfAllDataShown($scope.caseInfo.personAssociations.length);
+                $scope.gridOptions.data = $scope.objectInfo.personAssociations;
+                //gridHelper.hidePagingControlsIfAllDataShown($scope.objectInfo.personAssociations.length);
 
-                for (var i = 0; i < $scope.caseInfo.personAssociations.length; i++) {
-                    var personAssociation = $scope.caseInfo.personAssociations[i];
+                for (var i = 0; i < $scope.objectInfo.personAssociations.length; i++) {
+                    var personAssociation = $scope.objectInfo.personAssociations[i];
 
                     personAssociation.acm$_contactMethods = {};
                     personAssociation.acm$_contactMethods.gridOptions = Util.goodValue($scope.contactMethods.gridOptions, {
@@ -444,7 +444,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             //
             if (Util.isEmpty(rowEntity.id)) {
                 var pa = newPersonAssociation();
-                pa.parentId = $scope.caseInfo.id;
+                pa.parentId = $scope.objectInfo.id;
                 pa.parentType = ObjectService.ObjectTypes.CASE_FILE;
                 pa.person.className = Util.goodValue($scope.config.className); //"com.armedia.acm.plugins.person.model.Person";
                 pa.person.givenName = givenName;
@@ -460,7 +460,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
                 // update person association
                 //
             } else {
-                var caseInfo = Util.omitNg($scope.caseInfo);
+                var caseInfo = Util.omitNg($scope.objectInfo);
                 CaseInfoService.saveCaseInfo(caseInfo).then(
                     function (caseSaved) {
                         return caseSaved;
@@ -506,7 +506,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         };
         $scope.updateRowContactMethods = function (personAssociation, rowEntity) {
-            var caseInfo = Util.omitNg($scope.caseInfo);
+            var caseInfo = Util.omitNg($scope.objectInfo);
             CaseInfoService.saveCaseInfo(caseInfo).then(
                 function (caseSaved) {
                     var personAssociationsSaved = Util.goodMapValue(caseSaved, "personAssociations", []);
@@ -532,7 +532,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var caseInfo = Util.omitNg($scope.caseInfo);
+                var caseInfo = Util.omitNg($scope.objectInfo);
                 CaseInfoService.saveCaseInfo(caseInfo);
             }
         };
@@ -552,7 +552,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         };
         $scope.updateRowOrganizations = function (personAssociation, rowEntity) {
-            var caseInfo = Util.omitNg($scope.caseInfo);
+            var caseInfo = Util.omitNg($scope.objectInfo);
             if(rowEntity.organizationType && rowEntity.organizationValue) {
                 CaseInfoService.saveCaseInfo(caseInfo).then(
                     function (caseSaved) {
@@ -581,7 +581,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var caseInfo = Util.omitNg($scope.caseInfo);
+                var caseInfo = Util.omitNg($scope.objectInfo);
                 CaseInfoService.saveCaseInfo(caseInfo);
             }
         };
@@ -600,7 +600,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         };
         $scope.updateRowAddresses = function (personAssociation, rowEntity) {
-            var caseInfo = Util.omitNg($scope.caseInfo);
+            var caseInfo = Util.omitNg($scope.objectInfo);
             CaseInfoService.saveCaseInfo(caseInfo).then(
                 function (caseSaved) {
                     var personAssociationsSaved = Util.goodMapValue(caseSaved, "personAssociations", []);
@@ -627,7 +627,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var caseInfo = Util.omitNg($scope.caseInfo);
+                var caseInfo = Util.omitNg($scope.objectInfo);
                 CaseInfoService.saveCaseInfo(caseInfo);
             }
         };
@@ -646,7 +646,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         };
         $scope.updateRowAliases = function (personAssociation, rowEntity) {
-            var caseInfo = Util.omitNg($scope.caseInfo);
+            var caseInfo = Util.omitNg($scope.objectInfo);
             if (rowEntity.aliasType && rowEntity.aliasValue) {
                 CaseInfoService.saveCaseInfo(caseInfo).then(
                     function (caseSaved) {
@@ -675,7 +675,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var caseInfo = Util.omitNg($scope.caseInfo);
+                var caseInfo = Util.omitNg($scope.objectInfo);
                 CaseInfoService.saveCaseInfo(caseInfo);
             }
         };
@@ -698,7 +698,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var caseInfo = Util.omitNg($scope.caseInfo);
+                var caseInfo = Util.omitNg($scope.objectInfo);
                 CaseInfoService.saveCaseInfo(caseInfo);
             }
         };

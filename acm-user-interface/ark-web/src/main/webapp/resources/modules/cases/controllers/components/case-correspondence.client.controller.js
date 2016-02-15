@@ -14,9 +14,6 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             , componentId: "correspondence"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
-                $scope.caseInfo = caseInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
             }
@@ -91,8 +88,8 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         };
 
         $scope.addNew = function () {
-            var caseId = Util.goodValue($scope.caseInfo.id, 0);
-            var folderId = Util.goodMapValue($scope.caseInfo, "container.folder.cmisFolderId", "");
+            var caseId = Util.goodValue($scope.objectInfo.id, 0);
+            var folderId = Util.goodMapValue($scope.objectInfo, "container.folder.cmisFolderId", "");
             var template = $scope.correspondenceForm.value;
             var promiseCreateCorrespondence = ObjectCorrespondenceService.createCorrespondence(template, ObjectService.ObjectTypes.CASE_FILE, $stateParams.id, folderId);
 
