@@ -5,16 +5,16 @@
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="cmAuditActivityLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmAuditActivityLength" value="255" dbms="mysql"/>
+    <property name="cmAuditActivityLength" value="255" dbms="mysql,mssql"/>
 
     <property name="cmKeyLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmKeyLength" value="255" dbms="mysql"/>
+    <property name="cmKeyLength" value="255" dbms="mysql,mssql"/>
 
     <property name="cmObjectTypeLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmObjectTypeLength" value="255" dbms="mysql"/>
+    <property name="cmObjectTypeLength" value="255" dbms="mysql,mssql"/>
 
     <property name="cmAuditPropertyNameLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmAuditPropertyNameLength" value="255" dbms="mysql"/>
+    <property name="cmAuditPropertyNameLength" value="255" dbms="mysql,mssql"/>
 
     <changeSet id="01-create-audit-table" author="dmiller">
         <createTable tableName="acm_audit_log">
