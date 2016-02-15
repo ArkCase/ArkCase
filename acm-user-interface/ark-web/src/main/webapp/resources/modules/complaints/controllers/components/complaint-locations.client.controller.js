@@ -39,17 +39,7 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
             gridHelper.setInPlaceEditing(config, $scope.updateRow);
 
             $q.all([promiseAddressTypes]).then(function (data) {
-                $scope.gridOptions.enableRowSelection = false;    //need to turn off for inline edit
-                for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                    if (HelperUiGridService.Lookups.ADDRESS_TYPES == $scope.config.columnDefs[i].lookup) {
-                        $scope.gridOptions.columnDefs[i].enableCellEdit = true;
-                        $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                        $scope.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
-                        $scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                        $scope.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.addressTypes;
-                        $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
-                    }
-                }
+                gridHelper.setLookupDropDown(HelperUiGridService.Lookups.ADDRESS_TYPES, "type", "name", $scope.addressTypes);
             });
         };
 
