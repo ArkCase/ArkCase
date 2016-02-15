@@ -1,6 +1,7 @@
 package com.armedia.acm.web.api;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.web.util.WebUtils;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +24,7 @@ public class MultiReadHttpServletRequest extends HttpServletRequestWrapper
     public MultiReadHttpServletRequest(HttpServletRequest request) throws IOException
     {
         super(request);
-        rawData = IOUtils.toByteArray(request.getReader());
+        rawData = IOUtils.toByteArray(request.getInputStream());
     }
 
     @Override
@@ -43,6 +44,18 @@ public class MultiReadHttpServletRequest extends HttpServletRequestWrapper
     @Override
     public BufferedReader getReader() throws IOException
     {
-        return new BufferedReader(new InputStreamReader(this.getInputStream()));
+        if (rawData == null)
+        {
+            return super.getReader();
+        }
+
+        return new BufferedReader(new InputStreamReader(this.getInputStream(), getCharacterEncoding()));
+    }
+
+    @Override
+    public String getCharacterEncoding()
+    {
+        String enc = super.getCharacterEncoding();
+        return (enc != null ? enc : WebUtils.DEFAULT_CHARACTER_ENCODING);
     }
 }

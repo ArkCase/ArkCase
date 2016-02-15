@@ -7,27 +7,27 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
         , Store, Util, ObjectService, ConfigService, LookupService, ObjectLookupService
         , ComplaintInfoService, ObjectPersonService, HelperObjectBrowserService, HelperUiGridService, Authentication) {
 
-        Authentication.queryUserInfo().then(
-            function (userInfo) {
-                $scope.userId = userInfo.userId;
-                return userInfo;
-            }
-        );
-
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"
             , componentId: "people"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                onObjectInfoRetrieved(complaintInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
             }
         });
+
+        Authentication.queryUserInfo().then(
+            function (userInfo) {
+                $scope.userId = userInfo.userId;
+                return userInfo;
+            }
+        );
 
         $scope.contactMethods = {gridOptions: {appScopeProvider: $scope}};
         $scope.organizations = {gridOptions: {appScopeProvider: $scope}};
@@ -228,15 +228,15 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         };
 
-        var onObjectInfoRetrieved = function (complaintInfo) {
-            $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, $scope.promiseConfig]).then(function () {
-                $scope.complaintInfo = complaintInfo;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, componentHelper.promiseConfig]).then(function () {
+                $scope.objectInfo = objectInfo;
                 $scope.gridOptions = $scope.gridOptions || {};
-                $scope.gridOptions.data = $scope.complaintInfo.personAssociations;
-                //gridHelper.hidePagingControlsIfAllDataShown($scope.complaintInfo.personAssociations.length);
+                $scope.gridOptions.data = $scope.objectInfo.personAssociations;
+                //gridHelper.hidePagingControlsIfAllDataShown($scope.objectInfo.personAssociations.length);
 
-                for (var i = 0; i < $scope.complaintInfo.personAssociations.length; i++) {
-                    var personAssociation = $scope.complaintInfo.personAssociations[i];
+                for (var i = 0; i < $scope.objectInfo.personAssociations.length; i++) {
+                    var personAssociation = $scope.objectInfo.personAssociations[i];
 
                     personAssociation.acm$_contactMethods = {};
                     personAssociation.acm$_contactMethods.gridOptions = Util.goodValue($scope.contactMethods.gridOptions, {
@@ -361,7 +361,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             //
             if (Util.isEmpty(rowEntity.id)) {
                 var pa = newPersonAssociation();
-                pa.parentId = $scope.complaintInfo.complaintId;
+                pa.parentId = $scope.objectInfo.complaintId;
                 pa.parentType = ObjectService.ObjectTypes.COMPLAINT;
                 pa.person.className = Util.goodValue($scope.config.className); //"com.armedia.acm.plugins.person.model.Person";
                 pa.person.givenName = givenName;
@@ -377,7 +377,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 // update person association
                 //
             } else {
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                     function (complaintSaved) {
                         return complaintSaved;
@@ -423,7 +423,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         };
         $scope.updateRowContactMethods = function (personAssociation, rowEntity) {
-            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            var complaintInfo = Util.omitNg($scope.objectInfo);
             ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                 function (complaintSaved) {
                     var personAssociationsSaved = Util.goodMapValue(complaintSaved, "personAssociations", []);
@@ -450,7 +450,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };
@@ -470,7 +470,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         };
         $scope.updateRowOrganizations = function (personAssociation, rowEntity) {
-            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            var complaintInfo = Util.omitNg($scope.objectInfo);
             if(rowEntity.organizationType && rowEntity.organizationValue) {
                 ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                     function (complaintSaved) {
@@ -499,7 +499,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };
@@ -518,7 +518,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         };
         $scope.updateRowAddresses = function (personAssociation, rowEntity) {
-            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            var complaintInfo = Util.omitNg($scope.objectInfo);
             ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                 function (complaintSaved) {
                     var personAssociationsSaved = Util.goodMapValue(complaintSaved, "personAssociations", []);
@@ -545,7 +545,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };
@@ -564,7 +564,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         };
         $scope.updateRowAliases = function (personAssociation, rowEntity) {
-            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            var complaintInfo = Util.omitNg($scope.objectInfo);
             if (rowEntity.aliasType && rowEntity.aliasValue) {
                 ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                     function (complaintSaved) {
@@ -593,7 +593,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };
@@ -616,7 +616,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };

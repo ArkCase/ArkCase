@@ -2,7 +2,7 @@
     <div class="clearfix">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a href="#" editable-text="taskInfo.title" onaftersave="updateTitle()">{{taskInfo.title ||
+                <h4><a href="#" editable-text="objectInfo.title" onaftersave="updateTitle()">{{objectInfo.title ||
                     "Unknown"}}</a></h4>
             </div>
 
@@ -10,8 +10,8 @@
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-text="taskInfo.percentComplete" onaftersave="updatePercentage()">
-                        {{taskInfo.percentComplete || 'Unknown'}}</a>
+                    <a href="#" editable-text="objectInfo.percentComplete" onaftersave="updatePercentage()">
+                        {{objectInfo.percentComplete || 'Unknown'}}</a>
                 </div>
                 <small class="text-muted">"% of Completion"</small>
             </div>
@@ -25,8 +25,8 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-select="taskInfo.priority" onaftersave="updatePriority()"
-                       e-ng-options="p.value as p.text for p in priorities">{{ taskInfo.priority ||
+                    <a href="#" editable-select="objectInfo.priority" onaftersave="updatePriority()"
+                       e-ng-options="p.value as p.text for p in priorities">{{ objectInfo.priority ||
                         'Unknown'}}</a>
                 </div>
                 <small class="text-muted">Priority</small>
@@ -52,7 +52,7 @@
                 <small class="text-muted">Due Date</small>
             </div>
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{taskInfo.status || 'Unknown'}}</div>
+                <div class="h4 font-bold">{{objectInfo.status || 'Unknown'}}</div>
                 <small class="text-muted">State</small>
             </div>
 

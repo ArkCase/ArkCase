@@ -7,15 +7,15 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
         , Store, Util, ConfigService, ComplaintInfoService, LookupService
         , ObjectLookupService, HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"
             , componentId: "participants"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                onObjectInfoRetrieved(complaintInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
@@ -132,7 +132,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
         );
 
         var onObjectInfoRetrieved = function (data) {
-            $q.all([promiseTypes, promiseUsers, promiseGroups, $scope.promiseConfig]).then(function () {
+            $q.all([promiseTypes, promiseUsers, promiseGroups, componentHelper.promiseConfig]).then(function () {
                 var participants = data.participants;
                 _.each(participants, function (participant) {
                     if ("*" === participant.participantType) {
@@ -146,7 +146,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                     }
                 });
                 $scope.gridOptions.data = participants;
-                $scope.complaintInfo = data;
+                $scope.objectInfo = data;
                 //gridHelper.hidePagingControlsIfAllDataShown(participants.length);
             });
         };
@@ -159,7 +159,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
             $scope.gridOptions.data.push({});
         };
         $scope.updateRow = function (rowEntity) {
-            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            var complaintInfo = Util.omitNg($scope.objectInfo);
             ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                 function (complaintSaved) {
                     //if participant is newly added, fill incomplete values with the latest
@@ -182,7 +182,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
 
