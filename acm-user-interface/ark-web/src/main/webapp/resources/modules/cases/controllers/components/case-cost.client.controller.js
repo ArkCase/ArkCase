@@ -7,7 +7,7 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
         , Util, ObjectService, ConfigService, ObjectCostService, CaseInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
@@ -39,10 +39,10 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
             }
         };
 
-        if (Util.goodPositive($scope.currentObjectId, false)) {
-            ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.CASE_FILE, $scope.currentObjectId).then(
+        if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+            ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.CASE_FILE, componentHelper.currentObjectId).then(
                 function (costsheets) {
-                    $scope.promiseConfig.then(function (config) {
+                    componentHelper.promiseConfig.then(function (config) {
                         for (var i = 0; i < costsheets.length; i++) {
                             costsheets[i].acm$_formName = $translate.instant("cases.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
                             costsheets[i].acm$_costs = _.reduce(Util.goodArray(costsheets[i].costs), function (total, n) {

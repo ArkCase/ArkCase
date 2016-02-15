@@ -19,10 +19,6 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             }
         });
 
-        //ConfigService.getComponentConfig("complaints", "info").then(function (componentConfig) {
-        //    $scope.config = componentConfig;
-        //    return componentConfig;
-        //});
 
         ObjectLookupService.getPriorities().then(
             function (priorities) {
@@ -57,42 +53,6 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             }
         );
 
-
-        //
-        //var previousId = null;
-        //$scope.$on('object-updated', function (e, data) {
-        //    updateObjectInfo($stateParams.id, data);
-        //});
-        //
-        //$scope.$on('object-refreshed', function (e, complaintInfo) {
-        //    previousId = null;
-        //    updateObjectInfo($stateParams.id, complaintInfo);
-        //});
-        //
-        //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        //if (Util.goodPositive(currentObjectId, false)) {
-        //    if (!Util.compare(previousId, currentObjectId)) {
-        //        ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
-        //            updateObjectInfo(currentObjectId, complaintInfo);
-        //            return complaintInfo;
-        //        });
-        //    }
-        //}
-        //
-        //var updateObjectInfo = function (objectId, objectInfo) {
-        //    if (!ComplaintInfoService.validateComplaintInfo(objectInfo)) {
-        //        return;
-        //    }
-        //    if (!Util.goodPositive(objectId, false)) {
-        //        return;
-        //    }
-        //    if (Util.compare(previousId, objectId)) {
-        //        return;
-        //    }
-        //    previousId = objectId;
-        //
-        //    onUpdateObjectInfo(objectInfo);
-        //};
 
         $scope.dueDate = null;
         var onObjectInfoRetrieved = function (complaintInfo) {

@@ -14,7 +14,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         );
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"
@@ -319,7 +319,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
         };
 
         var onObjectInfoRetrieved = function (complaintInfo) {
-            $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, $scope.promiseConfig]).then(function () {
+            $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, componentHelper.promiseConfig]).then(function () {
                 $scope.complaintInfo = complaintInfo;
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.complaintInfo.personAssociations;

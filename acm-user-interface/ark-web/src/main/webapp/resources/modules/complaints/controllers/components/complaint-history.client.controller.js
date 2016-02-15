@@ -7,7 +7,7 @@ angular.module('complaints').controller('Complaints.HistoryController', ['$scope
         , Util, ConfigService, ObjectService, ObjectAuditService, ComplaintInfoService
         , HelperObjectBrowserService, HelperUiGridService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"
@@ -37,9 +37,9 @@ angular.module('complaints').controller('Complaints.HistoryController', ['$scope
         };
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($scope.currentObjectId, false)) {
+            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                 var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.COMPLAINT
-                    , $scope.currentObjectId
+                    , componentHelper.currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodMapValue($scope.sort, "by")

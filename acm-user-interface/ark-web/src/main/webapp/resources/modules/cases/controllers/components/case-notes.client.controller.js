@@ -7,7 +7,7 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
         , Util, ConfigService, ObjectService, ObjectNoteService, Authentication, CaseInfoService
         , HelperUiGridService, HelperObjectBrowserService, HelperNoteService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
@@ -46,9 +46,9 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
         };
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($scope.currentObjectId, false)) {
-                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.CASE_FILE, $scope.currentObjectId);
-                $q.all([promiseQueryNotes, promiseUsers, $scope.promiseConfig]).then(function (data) {
+            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.CASE_FILE, componentHelper.currentObjectId);
+                $q.all([promiseQueryNotes, promiseUsers, componentHelper.promiseConfig]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = notes;

@@ -4,7 +4,7 @@ angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
     , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'Task.InfoService', 'Helper.ObjectBrowserService'
     , function ($scope, $q, $stateParams, Util, ConfigService, HelperUiGridService, TaskInfoService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             moduleId: "tasks"
             , componentId: "docsreview"
             , scope: $scope
@@ -31,8 +31,8 @@ angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
             //$scope.gridOptions.enableFiltering = false;
         };
 
-        if (Util.goodPositive($scope.currentObjectId, false)) {
-            TaskInfoService.getTaskInfo($scope.currentObjectId).then(function (taskInfo) {
+        if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+            TaskInfoService.getTaskInfo(componentHelper.currentObjectId).then(function (taskInfo) {
                 $scope.taskInfo = taskInfo;
                 $q.all([promiseUsers]).then(function () {
                     var arr = (taskInfo.documentUnderReview) ? [taskInfo.documentUnderReview] : [];

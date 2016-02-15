@@ -7,7 +7,7 @@ angular.module('tasks').controller('Tasks.SignaturesController', ['$scope', '$st
         , Util, ConfigService, ObjectService, ObjectSignatureService, TaskInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             moduleId: "tasks"
             , componentId: "signatures"
             , scope: $scope
@@ -36,8 +36,8 @@ angular.module('tasks').controller('Tasks.SignaturesController', ['$scope', '$st
         };
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($scope.currentObjectId, false)) {
-                var promiseQueryAudit = ObjectSignatureService.findSignatures(ObjectService.ObjectTypes.TASK, $scope.currentObjectId);
+            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+                var promiseQueryAudit = ObjectSignatureService.findSignatures(ObjectService.ObjectTypes.TASK, componentHelper.currentObjectId);
 
                 $q.all([promiseQueryAudit, promiseUsers]).then(function (data) {
                     var signatures = data[0];

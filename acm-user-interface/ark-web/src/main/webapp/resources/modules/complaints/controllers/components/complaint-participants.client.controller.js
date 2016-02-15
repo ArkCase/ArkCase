@@ -7,7 +7,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
         , Store, Util, ConfigService, ComplaintInfoService, LookupService
         , ObjectLookupService, HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"
@@ -146,7 +146,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
         );
 
         var onObjectInfoRetrieved = function (data) {
-            $q.all([promiseTypes, promiseUsers, promiseGroups, $scope.promiseConfig]).then(function () {
+            $q.all([promiseTypes, promiseUsers, promiseGroups, componentHelper.promiseConfig]).then(function () {
                 var participants = data.participants;
                 _.each(participants, function (participant) {
                     if ("*" === participant.participantType) {
