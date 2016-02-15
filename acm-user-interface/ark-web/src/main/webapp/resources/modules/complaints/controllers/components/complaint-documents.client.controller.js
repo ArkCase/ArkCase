@@ -14,8 +14,8 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             , componentId: "documents"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                onObjectInfoRetrieved(complaintInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
@@ -41,14 +41,13 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
 
         $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
         $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
-        var onObjectInfoRetrieved = function (complaintInfo) {
-            $scope.objectInfo = complaintInfo;
-            $scope.complaintInfo = complaintInfo;
-            $scope.objectId = complaintInfo.complaintId;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+            $scope.objectId = objectInfo.complaintId;
         };
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
-            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.complaintInfo, $scope.fileTypes);
+            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, $scope.fileTypes);
         };
 
         $scope.onClickRefresh = function () {

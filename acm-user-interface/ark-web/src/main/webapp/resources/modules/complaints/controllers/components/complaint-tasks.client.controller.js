@@ -7,7 +7,6 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         , Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService
         , HelperUiGridService, HelperObjectBrowserService, ComplaintInfoService) {
 
-        //componentHelper.promiseConfig, componentHelper.currentObjectId will be set by the helper
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
@@ -15,11 +14,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
             , componentId: "tasks"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                $scope.complaintInfo = complaintInfo;
-            }
         });
-        //var promiseConfig = ConfigService.getComponentConfig("complaints", "tasks");
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
@@ -55,7 +50,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         //if (Util.goodPositive(currentObjectId, false)) {
         //    ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
-        //        $scope.complaintInfo = complaintInfo;
+        //        $scope.objectInfo = complaintInfo;
         //        return complaintInfo;
         //    });
         //}
@@ -119,7 +114,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         $scope.addNew = function () {
             $state.go("newTaskFromParentObject", {
                 parentType: ObjectService.ObjectTypes.COMPLAINT,
-                parentObject: $scope.complaintInfo.complaintNumber
+                parentObject: $scope.objectInfo.complaintNumber
             });
 
         };
