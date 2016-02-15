@@ -7,7 +7,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
         , Util, ConfigService, ObjectService, ObjectAuditService, CaseInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
 
-        var componentHelper = new HelperObjectBrowserService.Component({
+        new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
@@ -36,7 +36,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
         };
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+            if (Util.goodPositive($scope.currentObjectId, false)) {
                 var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.CASE_FILE
                     , $scope.currentObjectId
                     , Util.goodValue($scope.start, 0)
@@ -45,7 +45,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
                     , Util.goodMapValue($scope.sort, "dir")
                 );
 
-                $q.all([promiseQueryAudit, promiseUsers, componentHelper.promiseConfig]).then(function (data) {
+                $q.all([promiseQueryAudit, promiseUsers, $scope.promiseConfig]).then(function (data) {
                     var auditData = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = auditData.resultPage;
