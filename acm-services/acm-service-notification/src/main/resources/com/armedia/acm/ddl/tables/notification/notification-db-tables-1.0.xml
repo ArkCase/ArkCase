@@ -33,9 +33,26 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="02-change-ID-type" author="manojd">
+    <changeSet id="02-change-ID-type" author="manojd" dbms="${excludeMSSQL}">
         <dropDefaultValue tableName="acm_notification" columnName="cm_notification_id"/>
         <modifyDataType tableName="acm_notification" columnName="cm_notification_id" newDataType="${fkIdType}"/>
+    </changeSet>
+
+    <changeSet id="02-1-change-ID-type-mssql" author="riste.tutureski" dbms="mssql" failOnError="false">
+        <dropDefaultValue tableName="acm_notification" columnName="cm_notification_id"/>
+    </changeSet>
+
+    <changeSet id="02-2-change-ID-type-mssql" author="riste.tutureski" dbms="mssql">
+        <dropPrimaryKey tableName="acm_notification" constraintName="pk_notification"/>
+    </changeSet>
+
+    <changeSet id="02-3-change-ID-type-mssql" author="riste.tutureski" dbms="mssql">
+        <modifyDataType tableName="acm_notification" columnName="cm_notification_id" newDataType="${fkIdType}"/>
+    </changeSet>
+
+    <changeSet id="02-4-change-ID-type-mssql" author="riste.tutureski" dbms="mssql">
+        <addNotNullConstraint tableName="acm_notification" columnName="cm_notification_id" columnDataType="${fkIdType}"/>
+        <addPrimaryKey tableName="acm_notification" columnNames="cm_notification_id" constraintName="pk_notification"/>
     </changeSet>
 
     <changeSet id="03-add-modify-params" author="manojd">

@@ -5,7 +5,7 @@
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="cmUserIdLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmUserIdLength" value="255" dbms="mysql"/>
+    <property name="cmUserIdLength" value="255" dbms="mysql,mssql"/>
 
     <changeSet id="03-profile-tables" author="marst">
         <createTable tableName="acm_user_org">
@@ -74,7 +74,23 @@
 
     </changeSet>
 
-    <changeSet id="03-drop-companyName-column-add-profile_ecm_folder_id-column" author="marst">
+    <changeSet id="03-drop-companyName-column-add-profile_ecm_folder_id-column" author="marst" dbms="${excludeMSSQL}">
+        <dropColumn tableName="acm_user_org" columnName="cm_company_name"/>
+        <addColumn tableName="acm_user_org">
+            <column name="cm_profile_ecm_folder_id" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <createIndex tableName="acm_user_org" indexName="idx_profile_folder_id">
+            <column name="cm_profile_ecm_folder_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="03-1-drop-companyName-column-add-profile_ecm_folder_id-column-mssql" author="marst" dbms="mssql">
+        <sql>ALTER TABLE acm_user_org DROP CONSTRAINT DF_acm_user_org_cm_company_name</sql>
+    </changeSet>
+
+    <changeSet id="03-2-drop-companyName-column-add-profile_ecm_folder_id-column-mssql" author="riste.tutureski" dbms="mssql">
         <dropColumn tableName="acm_user_org" columnName="cm_company_name"/>
         <addColumn tableName="acm_user_org">
             <column name="cm_profile_ecm_folder_id" type="VARCHAR(1024)">
