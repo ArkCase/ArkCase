@@ -14,8 +14,8 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
             , stateParams: $stateParams
             , retrieveObjectInfo: TaskInfoService.getTaskInfo
             , validateObjectInfo: TaskInfoService.validateTaskInfo
-            , onObjectInfoRetrieved: function (taskInfo) {
-                onObjectInfoRetrieved(taskInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
@@ -41,22 +41,22 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
         };
 
 
-        var onObjectInfoRetrieved = function (taskInfo) {
-            $scope.taskInfo = taskInfo;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
 
-            if (Util.isEmpty($scope.taskInfo.parentObjectId)) {
+            if (Util.isEmpty($scope.objectInfo.parentObjectId)) {
                 return;
             }
 
             //for test
-            //if (1148 == $scope.taskInfo.taskId) {
-            //    $scope.taskInfo.parentObjectType = "COMPLAINT";
-            //    $scope.taskInfo.parentObjectId = 123;
+            //if (1148 == $scope.objectInfo.taskId) {
+            //    $scope.objectInfo.parentObjectType = "COMPLAINT";
+            //    $scope.objectInfo.parentObjectId = 123;
             //}
 
 
-            if (ObjectService.ObjectTypes.CASE_FILE == $scope.taskInfo.parentObjectType) {
-                CaseInfoService.getCaseInfo($scope.taskInfo.parentObjectId).then(
+            if (ObjectService.ObjectTypes.CASE_FILE == $scope.objectInfo.parentObjectType) {
+                CaseInfoService.getCaseInfo($scope.objectInfo.parentObjectId).then(
                     function (caseInfo) {
                         $scope.parentCaseInfo = caseInfo;
                         $scope.owningGroup = ObjectModelService.getGroup(caseInfo);
@@ -64,8 +64,8 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
                         return caseInfo;
                     }
                 );
-            } else if (ObjectService.ObjectTypes.COMPLAINT == $scope.taskInfo.parentObjectType) {
-                ComplaintInfoService.getComplaintInfo($scope.taskInfo.parentObjectId).then(
+            } else if (ObjectService.ObjectTypes.COMPLAINT == $scope.objectInfo.parentObjectType) {
+                ComplaintInfoService.getComplaintInfo($scope.objectInfo.parentObjectId).then(
                     function (complaintInfo) {
                         $scope.parentComplaintInfo = complaintInfo;
                         $scope.owningGroup = ObjectModelService.getGroup(complaintInfo);

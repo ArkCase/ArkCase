@@ -3,6 +3,9 @@
 // Authentication service for user variables
 angular.module('services').factory('MultiDownloadService', [
     function () {
+
+        console.log("Compatibility warning: MultiDownloadService is relocated to Ecm.MultiDownloadService");
+
         return {
 
             /**

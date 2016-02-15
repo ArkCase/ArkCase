@@ -6,15 +6,15 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
     , function ($scope, $stateParams, $q, Util, HelperUiGridService, ConfigService, ComplaintInfoService
         , ObjectLookupService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             moduleId: "complaints"
             , componentId: "locations"
             , scope: $scope
             , stateParams: $stateParams
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                onObjectInfoRetrieved(complaintInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
@@ -43,10 +43,13 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
             });
         };
 
-        var onObjectInfoRetrieved = function (complaintInfo) {
-            $scope.complaintInfo = complaintInfo;
-            $scope.gridOptions.data = [Util.goodValue($scope.complaintInfo.location, {})];
-            //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $q.all([componentHelper.promiseConfig]).then(function () {
+                $scope.objectInfo = objectInfo;
+                var location = Util.goodMapValue($scope.objectInfo, "location", null);
+                $scope.gridOptions.data = (location)? [location] : [];
+                //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
+            });
         };
 
 
@@ -54,7 +57,7 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
             $scope.gridOptions.data.push({});
         };
         $scope.updateRow = function (rowEntity) {
-            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            var complaintInfo = Util.omitNg($scope.objectInfo);
             complaintInfo.location = complaintInfo.location || {};
             complaintInfo.location.streetAddress = rowEntity.streetAddress;
             complaintInfo.location.type = rowEntity.type;
@@ -64,7 +67,7 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
             if (ComplaintInfoService.validateLocation(complaintInfo.location)) {
                 ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                     function (complaintSaved) {
-                        $scope.$emit("report-complaint-updated", complaintSaved);
+                        $scope.$emit("report-object-updated", complaintSaved);
                         return complaintSaved;
                     }
                 );
@@ -75,11 +78,11 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 complaintInfo.location = null;
                 ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                     function (complaintSaved) {
-                        $scope.$emit("report-complaint-updated", complaintSaved);
+                        $scope.$emit("report-object-updated", complaintSaved);
                         return complaintSaved;
                     }
                 );

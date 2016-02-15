@@ -7,7 +7,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
         , HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
@@ -15,7 +15,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
             , onObjectInfoRetrieved: function (caseInfo) {
-                onObjectInfoRetrieved(caseInfo);
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
@@ -41,16 +41,15 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
 
         $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
-        $scope.objectId = $scope.currentObjectId; //$stateParams.id;
-        var onObjectInfoRetrieved = function (caseInfo) {
-            $scope.caseInfo = caseInfo;
-            $scope.objectInfo = caseInfo;
-            $scope.objectId = caseInfo.id;
+        $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+            $scope.objectId = objectInfo.id;
         };
 
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
-            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.caseInfo, $scope.fileTypes);
+            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, $scope.fileTypes);
         };
 
         $scope.onClickRefresh = function () {
