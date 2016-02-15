@@ -12,9 +12,9 @@
  * Content part consists list of Components.
  * Tree helper uses 'object-tree' directive. Content helper includes component links and data loading. Component helper includes common object info handling
  */
-angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', '$translate'
+angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resource', '$translate'
     , 'StoreService', 'UtilService', 'ConfigService', 'ServCommService'
-    , function ($resource, $translate, Store, Util, ConfigService, ServCommService) {
+    , function ($q, $resource, $translate, Store, Util, ConfigService, ServCommService) {
 
         var Service = {
             VariableNames: {
@@ -348,7 +348,9 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                     }
                     that.previousId = objectId;
 
-                    that.onObjectInfoRetrieved(objectInfo);
+                    $q.all([that.promiseConfig]).then(function (data) {
+                        that.onObjectInfoRetrieved(objectInfo);
+                    });
                 };
 
             }
