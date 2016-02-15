@@ -7,7 +7,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
         , Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService
         , HelperUiGridService, HelperObjectBrowserService, CaseInfoService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
@@ -23,7 +23,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
         var promiseUsers = gridHelper.getUsers();
         var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
 
-        $q.all([$scope.promiseConfig, promiseMyTasks]).then(function (data) {
+        $q.all([componentHelper.promiseConfig, promiseMyTasks]).then(function (data) {
             var config = data[0];
             //var myTasks = data[1];
 
@@ -55,9 +55,9 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
 
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($scope.currentObjectId, false)) {
+            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
-                    , $scope.currentObjectId
+                    , componentHelper.currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)

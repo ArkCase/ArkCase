@@ -7,7 +7,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
         , Store, Util, ConfigService, CaseInfoService, LookupService, ObjectLookupService
         , HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
@@ -146,7 +146,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
 
         var onObjectInfoRetrieved = function (caseInfo) {
             $scope.caseInfo = caseInfo;
-            $q.all([promiseTypes, promiseUsers, promiseGroups, $scope.promiseConfig]).then(function () {
+            $q.all([promiseTypes, promiseUsers, promiseGroups, componentHelper.promiseConfig]).then(function () {
                 var participants = caseInfo.participants;
                 _.each(participants, function (participant) {
                     if ("*" === participant.participantType) {

@@ -7,7 +7,7 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
         , Util, ConfigService, ObjectService, ObjectNoteService, Authentication, TaskInfoService
         , HelperUiGridService, HelperObjectBrowserService, HelperNoteService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             moduleId: "tasks"
             , componentId: "notes"
             , scope: $scope
@@ -46,8 +46,8 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
         );
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($scope.currentObjectId, false)) {
-                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.TASK, $scope.currentObjectId);
+            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.TASK, componentHelper.currentObjectId);
                 $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions.data = notes;

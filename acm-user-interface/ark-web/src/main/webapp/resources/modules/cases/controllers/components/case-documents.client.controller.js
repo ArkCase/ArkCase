@@ -7,7 +7,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
         , HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
@@ -41,7 +41,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
 
         $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
-        $scope.objectId = $scope.currentObjectId; //$stateParams.id;
+        $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
         var onObjectInfoRetrieved = function (caseInfo) {
             $scope.caseInfo = caseInfo;
             $scope.objectInfo = caseInfo;

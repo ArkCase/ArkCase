@@ -5,7 +5,7 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
     , function ($scope, $stateParams
         , Util, ConfigService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"

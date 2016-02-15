@@ -7,7 +7,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         , Util, ConfigService, ObjectService, LookupService, ObjectLookupService
         , ObjectCorrespondenceService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
@@ -58,9 +58,9 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         );
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($scope.currentObjectId, false)) {
+            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                 var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.CASE_FILE
-                    , $scope.currentObjectId
+                    , componentHelper.currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)

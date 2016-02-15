@@ -7,7 +7,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         , Util, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService
         , HelperObjectBrowserService, DocTreeService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"
@@ -40,7 +40,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
 
 
         $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
-        $scope.objectId = $scope.currentObjectId; //$stateParams.id;
+        $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
         var onObjectInfoRetrieved = function (complaintInfo) {
             $scope.objectInfo = complaintInfo;
             $scope.complaintInfo = complaintInfo;

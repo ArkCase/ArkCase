@@ -13,11 +13,11 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             }
         );
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
-            , componentId: "participants"
+            , componentId: "people"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
             , onObjectInfoRetrieved: function (caseInfo) {
@@ -315,7 +315,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
         var onObjectInfoRetrieved = function (caseInfo) {
             $scope.caseInfo = caseInfo;
-            $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, $scope.promiseConfig]).then(function () {
+            $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, componentHelper.promiseConfig]).then(function () {
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.caseInfo.personAssociations;
                 //gridHelper.hidePagingControlsIfAllDataShown($scope.caseInfo.personAssociations.length);

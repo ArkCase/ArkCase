@@ -35,10 +35,6 @@ angular.module('cases').controller('Cases.DetailsController', ['$scope', '$state
                     return caseInfo;
                 }
             );
-            //Util.serviceCall({
-            //    service: CasesService.save
-            //    , data: caseInfo
-            //});
         };
 
 
