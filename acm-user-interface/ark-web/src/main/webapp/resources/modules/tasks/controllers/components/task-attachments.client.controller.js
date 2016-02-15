@@ -12,8 +12,8 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             , stateParams: $stateParams
             , retrieveObjectInfo: TaskInfoService.getTaskInfo
             , validateObjectInfo: TaskInfoService.validateTaskInfo
-            , onObjectInfoRetrieved: function (taskInfo) {
-                onObjectInfoRetrieved(taskInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
@@ -44,7 +44,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         //if (Util.goodPositive(currentObjectId, false)) {
         //    TaskInfoService.getTaskInfo(currentObjectId).then(function (taskInfo) {
-        //        $scope.taskInfo = taskInfo;
+        //        $scope.objectInfo = taskInfo;
         //        $scope.objectInfo = taskInfo;
         //        $scope.objectId = taskInfo.taskId;
         //        return taskInfo;
@@ -52,14 +52,13 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         //}
         $scope.objectType = ObjectService.ObjectTypes.TASK;
         $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
-        var onObjectInfoRetrieved = function (taskInfo) {
-            $scope.taskInfo = taskInfo;
-            $scope.objectInfo = taskInfo;
-            $scope.objectId = taskInfo.taskId;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+            $scope.objectId = objectInfo.taskId;
         };
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
-            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.taskInfo, $scope.fileTypes);
+            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, $scope.fileTypes);
         };
 
         $scope.onClickRefresh = function () {

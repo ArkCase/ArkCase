@@ -12,9 +12,6 @@ angular.module('tasks').controller('Tasks.DetailsController', ['$scope', '$state
             , stateParams: $stateParams
             , retrieveObjectInfo: TaskInfoService.getTaskInfo
             , validateObjectInfo: TaskInfoService.validateTaskInfo
-            , onObjectInfoRetrieved: function (taskInfo) {
-                $scope.taskInfo = taskInfo;
-            }
         });
 
 
@@ -28,7 +25,7 @@ angular.module('tasks').controller('Tasks.DetailsController', ['$scope', '$state
         //}
         $scope.saveDetails = function () {
             //$scope.editor.destroy();
-            var taskInfo = Util.omitNg($scope.taskInfo);
+            var taskInfo = Util.omitNg($scope.objectInfo);
             TaskInfoService.saveTaskInfo(taskInfo).then(
                 function (taskInfo) {
                     $scope.$emit("report-object-updated", taskInfo);

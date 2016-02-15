@@ -11,8 +11,8 @@ angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
             , stateParams: $stateParams
             , retrieveObjectInfo: TaskInfoService.getTaskInfo
             , validateObjectInfo: TaskInfoService.validateTaskInfo
-            , onObjectInfoRetrieved: function (taskInfo) {
-                $scope.taskInfo = taskInfo;
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
@@ -31,17 +31,25 @@ angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
             //$scope.gridOptions.enableFiltering = false;
         };
 
-        if (Util.goodPositive(componentHelper.currentObjectId, false)) {
-            TaskInfoService.getTaskInfo(componentHelper.currentObjectId).then(function (taskInfo) {
-                $scope.taskInfo = taskInfo;
-                $q.all([promiseUsers]).then(function () {
-                    var arr = (taskInfo.documentUnderReview) ? [taskInfo.documentUnderReview] : [];
-                    $scope.gridOptions.data = arr;
-                    //gridHelper.hidePagingControlsIfAllDataShown(1);
-                });
-                return taskInfo;
+        //if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+        //    TaskInfoService.getTaskInfo(componentHelper.currentObjectId).then(function (taskInfo) {
+        //        $scope.objectInfo = taskInfo;
+        //        $q.all([promiseUsers]).then(function () {
+        //            var arr = (taskInfo.documentUnderReview) ? [taskInfo.documentUnderReview] : [];
+        //            $scope.gridOptions.data = arr;
+        //            //gridHelper.hidePagingControlsIfAllDataShown(1);
+        //        });
+        //        return taskInfo;
+        //    });
+        //}
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+            $q.all([promiseUsers]).then(function () {
+                var urv = Util.goodMapValue($scope.objectInfo, "documentUnderReview", null);
+                $scope.gridOptions.data = (urv)? [urv] : [];
+                //gridHelper.hidePagingControlsIfAllDataShown(1);
             });
-        }
+        };
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();
