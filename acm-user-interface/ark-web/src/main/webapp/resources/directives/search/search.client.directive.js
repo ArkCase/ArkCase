@@ -78,8 +78,9 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
                 scope.queryExistingItems = function () {
-                    if (scope.searchQuery === undefined || scope.searchQuery === null) {
+                	if (scope.searchQuery.length === 0 || !scope.searchQuery.trim()){
                         scope.searchQuery = "";
+                        return;
                     }
                     if (scope.pageSize >= 0 && scope.start >= 0) {
                         var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*", scope.filters, scope.pageSize, scope.start);
