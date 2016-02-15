@@ -7,15 +7,15 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
         , Store, Util, ConfigService, CaseInfoService, LookupService, ObjectLookupService
         , HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
             , componentId: "participants"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
-                onObjectInfoRetrieved(caseInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
@@ -97,7 +97,8 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                         $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
 
 
-                    } else if (HelperUiGridService.Lookups.PARTICIPANT_NAMES == $scope.config.columnDefs[i].lookup) {
+                    } else
+                    if (HelperUiGridService.Lookups.PARTICIPANT_NAMES == $scope.config.columnDefs[i].lookup) {
                         //$scope.gridOptions.columnDefs[i].enableCellEdit = true;
                         //$scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
                         //$scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
@@ -144,10 +145,10 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             });
         };
 
-        var onObjectInfoRetrieved = function (caseInfo) {
-            $scope.caseInfo = caseInfo;
-            $q.all([promiseTypes, promiseUsers, promiseGroups, $scope.promiseConfig]).then(function () {
-                var participants = caseInfo.participants;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+            $q.all([promiseTypes, promiseUsers, promiseGroups, componentHelper.promiseConfig]).then(function () {
+                var participants = objectInfo.participants;
                 _.each(participants, function (participant) {
                     if ("*" === participant.participantType) {
                         participant.acm$_participantNames = [
@@ -173,7 +174,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
         };
         $scope.updateRow = function (rowEntity) {
-            var caseInfo = Util.omitNg($scope.caseInfo);
+            var caseInfo = Util.omitNg($scope.objectInfo);
             CaseInfoService.saveCaseInfo(caseInfo).then(
                 function (caseSaved) {
                     //if participant is newly added, fill incomplete values with the latest
@@ -196,7 +197,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row
-                var caseInfo = Util.omitNg($scope.caseInfo);
+                var caseInfo = Util.omitNg($scope.objectInfo);
                 CaseInfoService.saveCaseInfo(caseInfo);
             }
 

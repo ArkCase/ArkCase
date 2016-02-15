@@ -7,16 +7,13 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
         , Util, ConfigService, Authentication, ObjectService, ObjectNoteService, ComplaintInfoService
         , HelperObjectBrowserService, HelperUiGridService, HelperNoteService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"
             , componentId: "notes"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                $scope.complaintInfo = complaintInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
             }
@@ -46,8 +43,8 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
         };
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($scope.currentObjectId, false)) {
-                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.COMPLAINT, $scope.currentObjectId);
+            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.COMPLAINT, componentHelper.currentObjectId);
                 $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions.data = notes;

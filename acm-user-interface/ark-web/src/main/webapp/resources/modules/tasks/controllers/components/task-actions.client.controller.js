@@ -16,39 +16,39 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             , componentId: "actions"
             , retrieveObjectInfo: TaskInfoService.getTaskInfo
             , validateObjectInfo: TaskInfoService.validateTaskInfo
-            , onObjectInfoRetrieved: function (taskInfo) {
-                onObjectInfoRetrieved(taskInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
         var promiseQueryUser = Authentication.queryUserInfo();
 
-        var onObjectInfoRetrieved = function (taskInfo) {
-            $scope.taskInfo = taskInfo;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
 
             $scope.showBtnSignature = false;
             $scope.showBtnDelete = false;
             $scope.showBtnComplete = false;
             $scope.showBtnReject = false;
             $scope.showBtnOutcomes = false;
-            if (!Util.isEmpty($scope.taskInfo.assignee)) {
-                if (Util.compare($scope.userId, $scope.taskInfo.assignee)) {
-                    if ($scope.taskInfo.adhocTask) {
-                        if (!Util.goodValue($scope.taskInfo.completed, false)) {
+            if (!Util.isEmpty($scope.objectInfo.assignee)) {
+                if (Util.compare($scope.userId, $scope.objectInfo.assignee)) {
+                    if ($scope.objectInfo.adhocTask) {
+                        if (!Util.goodValue($scope.objectInfo.completed, false)) {
                             $scope.showBtnSignature = true;
                             $scope.showBtnDelete = true;
                             $scope.showBtnComplete = true;
                         }
 
-                        if (!Util.isEmpty($scope.taskInfo.owner) && !Util.isEmpty($scope.taskInfo.assignee)) {
-                            if (($scope.taskInfo.owner != $scope.taskInfo.assignee)) {
+                        if (!Util.isEmpty($scope.objectInfo.owner) && !Util.isEmpty($scope.objectInfo.assignee)) {
+                            if (($scope.objectInfo.owner != $scope.objectInfo.assignee)) {
                                 $scope.showBtnSignature = true;
                                 $scope.showBtnReject = true;
                             }
                         }
 
                     } else {
-                        if (!Util.goodValue($scope.taskInfo.completed, false)) {
+                        if (!Util.goodValue($scope.objectInfo.completed, false)) {
                             $scope.showBtnSignature = true;
                             $scope.showBtnOutcomes = true;
                         }
@@ -59,11 +59,11 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
 
             promiseQueryUser.then(function (userInfo) {
                 $scope.userId = userInfo.userId;
-                ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.TASK, $scope.taskInfo.taskId).then(function (subscriptions) {
+                ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId).then(function (subscriptions) {
                     var found = _.find(subscriptions, {
                         userId: userInfo.userId,
                         subscriptionObjectType: ObjectService.ObjectTypes.TASK,
-                        objectId: $scope.taskInfo.taskId
+                        objectId: $scope.objectInfo.taskId
                     });
                     $scope.showBtnSubscribe = Util.isEmpty(found);
                     $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
@@ -95,7 +95,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             });
         };
         $scope.subscribe = function () {
-            ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.TASK, $scope.taskInfo.taskId).then(function (data) {
+            ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId).then(function (data) {
                 $scope.showBtnSubscribe = false;
                 $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 return data;
@@ -103,7 +103,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         };
 
         $scope.unsubscribe = function () {
-            ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.TASK, $scope.taskInfo.taskId).then(function (data) {
+            ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId).then(function (data) {
                 $scope.showBtnSubscribe = true;
                 $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 return data;
@@ -111,7 +111,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         };
 
         $scope.delete = function () {
-            var taskInfo = Util.omitNg($scope.taskInfo);
+            var taskInfo = Util.omitNg($scope.objectInfo);
             if (TaskInfoService.validateTaskInfo(taskInfo)) {
                 TaskWorkflowService.deleteTask(taskInfo.taskId).then(
                     function (taskInfo) {
@@ -122,10 +122,10 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             }
         };
         $scope.complete = function () {
-            //var taskInfo = Util.omitNg($scope.taskInfo);
+            //var taskInfo = Util.omitNg($scope.objectInfo);
             //if (TaskInfoService.validateTaskInfo(taskInfo)) {
-            if (Util.goodMapValue($scope.taskInfo, "taskId", false)) {
-                TaskWorkflowService.completeTask($scope.taskInfo.taskId).then(
+            if (Util.goodMapValue($scope.objectInfo, "taskId", false)) {
+                TaskWorkflowService.completeTask($scope.objectInfo.taskId).then(
                     function (taskInfo) {
                         $scope.$emit("report-object-updated", taskInfo);
                         return taskInfo;
@@ -150,7 +150,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             });
         };
         $scope.onClickOutcome = function (name) {
-            var taskInfo = Util.omitNg($scope.taskInfo);
+            var taskInfo = Util.omitNg($scope.objectInfo);
             if (TaskInfoService.validateTaskInfo(taskInfo)) {
                 TaskWorkflowService.completeTaskWithOutcome(taskInfo, name).then(
                     function (taskInfo) {

@@ -16,8 +16,8 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             , componentId: "actions"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
-                onObjectInfoRetrieved(caseInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
@@ -29,11 +29,11 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         var promiseQueryUser = Authentication.queryUserInfo();
         var promiseGetGroups = ObjectLookupService.getGroups();
 
-        var onObjectInfoRetrieved = function (caseInfo) {
-            $scope.caseInfo = caseInfo;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
 
-            var group = ObjectModelService.getGroup(caseInfo);
-            var assignee = ObjectModelService.getAssignee(caseInfo);
+            var group = ObjectModelService.getGroup(objectInfo);
+            var assignee = ObjectModelService.getAssignee(objectInfo);
             var promiseGetApprovers = CaseLookupService.getApprovers(group, assignee);
             $q.all([promiseQueryUser, promiseGetGroups, promiseGetApprovers]).then(function (data) {
                 var userInfo = data[0];
@@ -44,11 +44,11 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
 
             promiseQueryUser.then(function (userInfo) {
                 $scope.userId = userInfo.userId;
-                ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (subscriptions) {
+                ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.objectInfo.id).then(function (subscriptions) {
                     var found = _.find(subscriptions, {
                         userId: userInfo.userId,
                         subscriptionObjectType: ObjectService.ObjectTypes.CASE_FILE,
-                        objectId: $scope.caseInfo.id
+                        objectId: $scope.objectInfo.id
                     });
                     $scope.showBtnSubscribe = Util.isEmpty(found);
                     $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
@@ -58,10 +58,10 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
 
         $scope.restricted = false;
         $scope.onClickRestrict = function ($event) {
-            if ($scope.restricted != $scope.caseInfo.restricted) {
-                $scope.caseInfo.restricted = $scope.restricted;
+            if ($scope.restricted != $scope.objectInfo.restricted) {
+                $scope.objectInfo.restricted = $scope.restricted;
 
-                var caseInfo = Util.omitNg($scope.caseInfo);
+                var caseInfo = Util.omitNg($scope.objectInfo);
                 CaseInfoService.saveCaseInfo(caseInfo);
             }
         };
@@ -108,14 +108,14 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
             });
         };
         $scope.subscribe = function (caseInfo) {
-            ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (data) {
+            ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.CASE_FILE, caseInfo.id).then(function (data) {
                 $scope.showBtnSubscribe = false;
                 $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 return data;
             });
         };
         $scope.unsubscribe = function (caseInfo) {
-            ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.CASE_FILE, $scope.caseInfo.id).then(function (data) {
+            ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.CASE_FILE, caseInfo.id).then(function (data) {
                 $scope.showBtnSubscribe = true;
                 $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 return data;
