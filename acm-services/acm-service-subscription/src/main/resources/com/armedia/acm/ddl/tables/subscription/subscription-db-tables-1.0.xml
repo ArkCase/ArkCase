@@ -8,7 +8,7 @@
     <property name="cmObjectTypeLength" value="200" dbms="mysql"/>
 
     <property name="cmUserIdLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmUserIdLength" value="255" dbms="mysql"/>
+    <property name="cmUserIdLength" value="255" dbms="mysql,mssql"/>
 
     <changeSet id="01-subscription-tables" author="marst">
         <createTable tableName="acm_subscription">
