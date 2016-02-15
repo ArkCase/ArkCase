@@ -89,6 +89,14 @@
     "errorNode.title": "(Error)",
     "errorNode.toolTip": "(Error)"
   },
+  "common.directive.treeTableView": {
+    "pagination.rowCountLabel": "items per page",
+    "pagination.pagerCountMiddleLabel": " of ",
+    "pagination.pagerCountLabel": " items"
+  },
+
+
+
   "common.directive.objectAuthorizationRoles": {
     "choose": "Choose",
     "not_authorized": "Not Authorized",
