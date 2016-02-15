@@ -64,25 +64,11 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
 
 
             $q.all([promiseTypes, promiseUsers, promiseGroups]).then(function (data) {
+                gridHelper.setLookupDropDown(HelperUiGridService.Lookups.PARTICIPANT_TYPES, "type", "name", $scope.participantTypes);
+
                 $scope.gridOptions.enableRowSelection = false;    //need to turn off for inline edit
-                //$scope.gridOptions.enableCellEdit = true;
-                //$scope.gridOptions.enableCellEditOnFocus = true;
                 for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                    if (HelperUiGridService.Lookups.PARTICIPANT_TYPES == $scope.config.columnDefs[i].lookup) {
-                        $scope.gridOptions.columnDefs[i].enableCellEdit = true;
-                        $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                        $scope.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
-                        $scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                        $scope.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.participantTypes;
-                        $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
-
-
-                    } else if (HelperUiGridService.Lookups.PARTICIPANT_NAMES == $scope.config.columnDefs[i].lookup) {
-                        //$scope.gridOptions.columnDefs[i].enableCellEdit = true;
-                        //$scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                        //$scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                        //$scope.gridOptions.columnDefs[i].editDropdownRowEntityOptionsArrayPath = "acm$_participantNames";
-                        //$scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: row.entity.acm$_participantNames:'id':'name'";
+                    if (HelperUiGridService.Lookups.PARTICIPANT_NAMES == $scope.config.columnDefs[i].lookup) {
                         $scope.gridOptions.columnDefs[i].cellTemplate = "<div class='ui-grid-cell-contents' ng-click='grid.appScope.pickParticipant(row.entity)'>{{row.entity[col.field] | mapKeyValue: row.entity.acm$_participantNames:'id':'name'}}</div>";
                     }
                 }
