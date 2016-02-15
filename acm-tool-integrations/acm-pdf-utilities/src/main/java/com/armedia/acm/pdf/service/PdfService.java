@@ -1,7 +1,6 @@
 package com.armedia.acm.pdf.service;
 
 import com.armedia.acm.pdf.PdfServiceException;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
@@ -81,19 +80,6 @@ public interface PdfService
      * Append one PDF file to another (incremental merge)
      *
      * @param pdDocument       source PDF, the document we are appending to
-     * @param ecmFile          document we are appending as ECM file
-     * @param pdfMergerUtility PDF merger utility
-     * @return merged document
-     * @throws PdfServiceException on error while merging
-     * @deprecated use {@link #addSource(PDFMergerUtility, EcmFile)} and {@link #mergeSources(PDFMergerUtility, String)}
-     */
-    @Deprecated
-    PDDocument append(PDDocument pdDocument, EcmFile ecmFile, PDFMergerUtility pdfMergerUtility) throws PdfServiceException;
-
-    /**
-     * Append one PDF file to another (incremental merge)
-     *
-     * @param pdDocument       source PDF, the document we are appending to
      * @param filename         path to the document we are appending
      * @param pdfMergerUtility PDF merger utility
      * @return merged document
@@ -120,15 +106,6 @@ public interface PdfService
      * @throws PdfServiceException on error adding source stream
      */
     void addSource(PDFMergerUtility pdfMergerUtility, InputStream is) throws PdfServiceException;
-
-    /**
-     * Add source for merging into single PDF document.
-     *
-     * @param pdfMergerUtility PDF merger utility
-     * @param ecmFile          document we are appending as ECM file
-     * @throws PdfServiceException on error adding source ECM file
-     */
-    void addSource(PDFMergerUtility pdfMergerUtility, EcmFile ecmFile) throws PdfServiceException;
 
     /**
      * Add source for merging into single PDF document.
