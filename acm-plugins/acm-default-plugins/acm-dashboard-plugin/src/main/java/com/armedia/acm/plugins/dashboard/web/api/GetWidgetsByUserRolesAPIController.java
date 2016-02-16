@@ -4,13 +4,14 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmWidgetException;
-import com.armedia.acm.plugins.dashboard.model.PropertyKeyByRole;
+import com.armedia.acm.plugins.dashboard.model.DashboardConstants;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRole;
 import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -112,7 +114,7 @@ public class GetWidgetsByUserRolesAPIController
         Set<Widget> retvalSet = new HashSet<>();
         List<AcmRole> userRoles = userDao.findAllRolesByUser(userId);
         Set<String> widgetSet = new HashSet<>();
-        String retVal;
+        String retVal = null;
         String[] widgetArray;
 
         if (!dashboardPlugin.getPluginProperties().isEmpty())
@@ -121,14 +123,23 @@ public class GetWidgetsByUserRolesAPIController
             // get all widgets by roles from the property file and put them as strings in a Set Collection to avoid widget duplicates
             for (AcmRole role : userRoles)
             {
-                String key = PropertyKeyByRole.getPropertyKeyByRoleName(role.getRoleName()).getPropertyKey();
-                retVal = (String) dashboardPlugin.getPluginProperties().get(key);
-                if(retVal!=null) {
-                    widgetArray = retVal.split(",");
-                } else {
-                    log.debug("widget - role");
-                    continue;
+                Map<String, Object> dashboardPluginPluginProperties = dashboardPlugin.getPluginProperties();
+                String jsonRoleWidgetsString = (String) dashboardPluginPluginProperties.get(DashboardConstants.ROLE_WIDGET_LIST);
+                JSONArray jsonArray = new JSONArray(jsonRoleWidgetsString);
+                for (int i = 0; i < jsonArray.length(); i++)
+                {
+                    if (role.getRoleName().equals(jsonArray.getJSONObject(i).getString(DashboardConstants.ROLE)))
+                    {
+                        retVal = jsonArray.getJSONObject(i).getString(DashboardConstants.WIDGET_LIST);
+                        break;
+                    }
                 }
+
+                if (retVal == null)
+                    continue;
+
+                widgetArray = retVal.split(DashboardConstants.COMMA_SPLITTER);
+
 
                 for (String widget : widgetArray)
                 {
