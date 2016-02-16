@@ -1,9 +1,8 @@
 'use strict';
 
-angular.module('profile').controller('Profile.PicController', ['$scope', 'Profile.UserInfoService', 'Profile.ProfilePictureService','$log',
-    function ($scope, UserInfoService, ProfilePictureService,$log) {
+angular.module('profile').controller('Profile.PicController', ['$scope', '$rootScope', 'Profile.UserInfoService', 'Profile.ProfilePictureService','$log',
+    function ($scope, $rootScope, UserInfoService, ProfilePictureService,$log) {
         $scope.$emit('req-component-config', 'picture');
-        $scope.profilePicDefault = true;
         $scope.changePic = function () {
             $("#file").click();
         };
@@ -18,6 +17,9 @@ angular.module('profile').controller('Profile.PicController', ['$scope', 'Profil
                                 UserInfoService.getUserInfo().then(function (infoData) {
                                     infoData.ecmFileId = $scope.profileEcmFileID;
                                     UserInfoService.updateUserInfo(infoData);
+                                    $scope.imgSrc = !$scope.profileEcmFileID ? 'modules/profile/img/nopic.png' :
+                                    'proxy/arkcase/api/latest/plugin/ecm/download?ecmFileId='+$scope.profileEcmFileID+'&inline=true';
+                                    $rootScope.$broadcast('uploadedPicture', $scope.profileEcmFileID);
                                 });
                             })
                             .error(function () {
@@ -41,9 +43,8 @@ angular.module('profile').controller('Profile.PicController', ['$scope', 'Profil
             $scope.profilePicEmail = data.email;
             $scope.profilePicTitle = data.title;
             $scope.profileEcmFileID = data.ecmFileId;
-            if ($scope.profileEcmFileID !== null) {
-                $scope.profilePicDefault = false;
-            }
+            $scope.imgSrc = !$scope.profileEcmFileID ? 'modules/profile/img/nopic.png' :
+            'proxy/arkcase/api/latest/plugin/ecm/download?ecmFileId='+$scope.profileEcmFileID+'&inline=true';
         });
     }
 ]);
