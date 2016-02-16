@@ -1,4 +1,5 @@
-/* @override http://dev.jsapn.armedianet.com/arkcase/assets/css/application.css */
+/* @override http://dev.jsapn.armedianet.com/arkcase/assets/css/application.css
+	http://localhost:8080/arkcase/assets/css/application.css */
 
 /* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
 
@@ -426,7 +427,7 @@ span.fancytree-title {
 .module-content .left-sidebar header.header .btn-group.select.pull-right {
     position: relative;
     top: -90px;
-    z-index: 20000;
+    z-index: 1000 !important;
 
 }
 
@@ -442,6 +443,8 @@ span.fancytree-title {
     padding-left: 15px;
     padding-right: 15px;
 }
+
+
 
 .module-content .content-body .well-sm .btn-group {
     padding-top: 10px;
@@ -609,6 +612,21 @@ span.fancytree-title {
     border: 0px;
     box-shadow: none;
     background-color: #ddd;
+}
+
+.expandableRow .panel-body {
+	padding: 0px;
+}
+.expandableRow{
+	height: auto !important;
+}
+
+.ui-grid-canvas {
+	height: auto !important;
+}
+
+.ui-grid-canvas .panel.panel-success {
+	margin: 0px !important;
 }
 
 thead {
@@ -926,21 +944,6 @@ a.editable.editable-click.editable-hide {
 
 /*Case Overview */
 
-.overview-tabs {
-  border: 0px;
-}
-
-.overview-tabs li {
-  width: 125px;
-  height: 70px;
-  text-align: center;
-  cursor: pointer; cursor: hand; 
-}
-
-.overview-tabs li.active a {
-  border-bottom: 1px solid #ddd;
-  border-radius: 3px;
-}
 
 
 /* Style of invalid fields */
@@ -965,3 +968,100 @@ input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
     height: 500px;
     border: 1px solid #cbd5dd;
 }
+
+
+.tabbed-footer {
+	position: fixed;
+	bottom: 0px;
+	background-color: white;
+	height: 40px;
+	right: 0px;
+	border-radius: 5px 0px 0px 0px;
+	border-top: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+	border-bottom: 0px;
+	border-right: 0px;
+	z-index: 2000;
+}
+
+div.tabbed-footer a.collapsed-button {
+	float: left;
+	height: 40px;
+	width: 30px;
+}
+
+div.tabbed-footer a.collapsed-button:hover{
+	background-color: #2d343e;
+	color: white;
+	border-radius: 5px 0px 0px 0px;
+}
+
+div.tabbed-footer a.collapsed-button i{
+	margin-top: 15px;
+	margin-left: 12px;
+}
+
+div.tabbed-footer .overview-tabs {
+  float: left;
+}
+
+div.tabbed-footer .overview-tabs li {
+  width: auto;
+  height: auto;
+  text-align: center;
+  cursor: pointer; 
+  cursor: hand; 
+  border-radius: 0px;
+  border: 0px;
+}
+
+div.tabbed-footer .overview-tabs li span{
+	display: none;
+	clear: none;
+}
+
+div.tabbed-footer .overview-tabs li.active a{
+    background-color: #efefef;
+    color: #2d343e;
+    border-radius: 0px;
+    border: 0px;
+}
+
+div.tabbed-footer .overview-tabs li:hover a {
+    background-color: #2d343e;
+    color: white;
+    border-radius: 0px;
+    border: 0px;
+}
+
+div.tabbed-footer .overview-tabs li:hover span {
+    position: fixed;
+    display: block;
+    bottom: 50px;
+	font-weight: bold;
+	color: #2d343e;
+	margin-left: -20px;
+}
+
+div.tabbed-footer .overview-tabs li:hover:last-child span {
+	margin-left: -40px;
+}
+
+div.tabbed-footer .overview-tabs li:hover span:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #2d343e;
+    position: absolute;
+    top: 25px;
+    left: 15px;
+}
+
+div.tabbed-footer .overview-tabs li:hover:last-child span:before {
+    left: 35px;
+}
+
+
+
