@@ -94,9 +94,6 @@
     "pagination.pagerCountMiddleLabel": " of ",
     "pagination.pagerCountLabel": " items"
   },
-
-
-
   "common.directive.objectAuthorizationRoles": {
     "choose": "Choose",
     "not_authorized": "Not Authorized",
