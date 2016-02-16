@@ -3,12 +3,6 @@
 angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['$scope', 'Admin.OrganizationalHierarchyService', '$q', '$modal', 'MessageService', '$translate', 'Admin.ModalDialogService', 'UtilService',
     function ($scope, organizationalHierarchyService, $q, $modal, messageService, $translate, modalDialogService, Util) {
 
-        //this is default value for pageSize
-/*        $scope.pagination = {
-            pageSize : 0,
-            pageSizes : [10,20,30,50]
-        };*/
-
         $scope.data = [];
         var groupsMap = {};
 
