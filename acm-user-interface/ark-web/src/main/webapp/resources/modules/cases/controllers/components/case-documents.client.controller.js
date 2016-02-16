@@ -14,7 +14,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             , componentId: "documents"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
+            , onObjectInfoRetrieved: function (objectInfo) {
                 onObjectInfoRetrieved(objectInfo);
             }
         });

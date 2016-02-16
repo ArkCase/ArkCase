@@ -20,11 +20,11 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
             , componentId: "people"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onConfigRetrieved: function (componentConfig) {
+                return onConfigRetrieved(componentConfig);
+            }
             , onObjectInfoRetrieved: function (objectInfo) {
                 onObjectInfoRetrieved(objectInfo);
-            }
-            , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
             }
         });
 
@@ -225,7 +225,8 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$stateP
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, componentHelper.promiseConfig]).then(function () {
+            //$q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, componentHelper.promiseConfig]).then(function () {
+            $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes]).then(function () {
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.objectInfo.personAssociations;
                 //gridHelper.hidePagingControlsIfAllDataShown($scope.objectInfo.personAssociations.length);

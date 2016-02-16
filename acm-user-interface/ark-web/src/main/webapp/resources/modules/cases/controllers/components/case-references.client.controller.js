@@ -12,11 +12,11 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
             , componentId: "references"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onConfigRetrieved: function (componentConfig) {
+                return onConfigRetrieved(componentConfig);
+            }
             , onObjectInfoRetrieved: function (objectInfo) {
                 onObjectInfoRetrieved(objectInfo);
-            }
-            , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
             }
         });
 
