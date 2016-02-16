@@ -266,15 +266,16 @@ public class PdfServiceImpl implements PdfService
 
             TIFFImageWriteParam writeParam = new TIFFImageWriteParam(Locale.getDefault());
             writeParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-            writeParam.setCompressionType("JPEG");
+            writeParam.setCompressionType("CCITT T.6"); // Sharecare requires CCITT Group 4 Fax Encoding
 
             //full quality! could be: from 0.1f to 1.0f
             writeParam.setCompressionQuality(0.75f);
 
             for (PDPage pdPage : document.getPages())
             {
-                // using 150dpi as the lowest acceptable resolution
-                BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 150, ImageType.RGB);
+                log.debug("Rendering PDF page [{}/{}] as TIFF image", page, document.getNumberOfPages());
+                // using 200dpi b/w since Sharecare uses that resolution
+                BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 200, ImageType.BINARY);
                 IIOImage image = new IIOImage(bim, null, null);
                 try
                 {
