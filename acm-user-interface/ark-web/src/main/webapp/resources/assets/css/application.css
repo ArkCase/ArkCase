@@ -997,8 +997,10 @@ div.tabbed-footer a.collapsed-button:hover{
 }
 
 div.tabbed-footer a.collapsed-button i{
-	margin-top: 15px;
+	margin-top: 10px;
 	margin-left: 12px;
+	font-size: 20px;
+	
 }
 
 div.tabbed-footer .overview-tabs {
@@ -1013,11 +1015,17 @@ div.tabbed-footer .overview-tabs li {
   cursor: hand; 
   border-radius: 0px;
   border: 0px;
+  font-size: 18px;
 }
 
 div.tabbed-footer .overview-tabs li span{
 	display: none;
 	clear: none;
+}
+
+div.tabbed-footer .overview-tabs li i.fa {
+	position: relative;
+	top: -4px;
 }
 
 div.tabbed-footer .overview-tabs li.active a{
@@ -1044,7 +1052,7 @@ div.tabbed-footer .overview-tabs li:hover span {
 }
 
 div.tabbed-footer .overview-tabs li:hover:last-child span {
-	margin-left: -40px;
+	margin-left: -60px;
 }
 
 div.tabbed-footer .overview-tabs li:hover span:before {
@@ -1055,12 +1063,12 @@ div.tabbed-footer .overview-tabs li:hover span:before {
     border-right: 10px solid transparent;
     border-bottom: 10px solid #2d343e;
     position: absolute;
-    top: 25px;
+    top: 30px;
     left: 15px;
 }
 
 div.tabbed-footer .overview-tabs li:hover:last-child span:before {
-    left: 35px;
+    left: 58px;
 }
 
 
