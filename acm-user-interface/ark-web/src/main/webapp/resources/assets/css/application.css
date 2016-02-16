@@ -427,7 +427,7 @@ span.fancytree-title {
 .module-content .left-sidebar header.header .btn-group.select.pull-right {
     position: relative;
     top: -90px;
-    z-index: 20000;
+    z-index: 1000 !important;
 
 }
 
