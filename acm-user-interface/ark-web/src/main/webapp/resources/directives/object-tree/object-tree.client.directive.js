@@ -315,13 +315,13 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 } else {
                     var activeKey = Tree.getActiveKey();
                     var nodeId = Tree.Key.getNodeIdByKey(activeKey);
-                    var nodeType = Tree.Key.getNodeTypeByKey(activeKey);
+                    var nodeTypePath = Tree.Key.getNodeTypeByKey(activeKey);
 
                     var previousKey = Tree.getPreviousKey();
                     var previousNodeId = Tree.Key.getNodeIdByKey(previousKey);
-                    var previousNodeType = Tree.Key.getNodeTypeByKey(previousKey);
+                    var previousNodeTypePath = Tree.Key.getNodeTypeByKey(previousKey);
 
-                    if (nodeId != previousNodeId || nodeType != previousNodeType) {
+                    if (nodeId != previousNodeId || nodeTypePath != previousNodeTypePath) {
                         Tree.onSelect()(node.data);
                     }
                 }
@@ -396,7 +396,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 var nodeTypePath = Tree.Key.getNodeTypeByKey(key);
                 var arr = nodeTypePath.split(Tree.Key.KEY_SEPARATOR);
                 if (Util.isArray(arr) && 2 == arr.length) {
-                    var nodeType = arr[1];
+                    var nodeDataType = arr[1];
                     _.each(nodeTypes, function (nodeType) {
                         var type = Util.goodValue(nodeType.type);
                         var label = Util.goodValue(nodeType.label);
@@ -409,7 +409,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                                     key: key + subPart
                                     , title: label
                                     , components: components
-                                    , nodeType: nodeType
+                                    , nodeType: nodeDataType
                                     , nodeId: nodeId
                                 });
                             }

@@ -15,7 +15,10 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
+            }
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
@@ -37,7 +40,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             gridHelper.setExternalPaging(config, $scope.retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
 
-            $scope.retrieveGridData();
+            //$scope.retrieveGridData();
         };
 
 
@@ -54,8 +57,30 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             }
         );
 
-        $scope.retrieveGridData = function () {
-            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+        //$scope.retrieveGridData = function () {
+        //    if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+        //        var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.CASE_FILE
+        //            , componentHelper.currentObjectId
+        //            , Util.goodValue($scope.start, 0)
+        //            , Util.goodValue($scope.pageSize, 10)
+        //            , Util.goodValue($scope.sort.by)
+        //            , Util.goodValue($scope.sort.dir)
+        //        );
+        //
+        //        $q.all([promiseCorrespondence, promiseUsers]).then(function (data) {
+        //            var correspondenceData = data[0];
+        //            $scope.gridOptions = $scope.gridOptions || {};
+        //            $scope.gridOptions.data = correspondenceData.children;
+        //            $scope.gridOptions.totalItems = Util.goodValue(correspondenceData.totalChildren, 0);
+        //            //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+        //        });
+        //    }
+        //};
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+
+            var currentObjectId = Util.goodMapValue(objectInfo, "id");
+            if (Util.goodPositive(currentObjectId, false)) {
                 var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.CASE_FILE
                     , componentHelper.currentObjectId
                     , Util.goodValue($scope.start, 0)
