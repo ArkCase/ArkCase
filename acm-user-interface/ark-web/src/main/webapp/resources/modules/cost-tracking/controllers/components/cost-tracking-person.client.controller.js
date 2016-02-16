@@ -16,7 +16,7 @@ angular.module('cost-tracking').controller('CostTracking.PersonController', ['$s
                 onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
             }
         });
 

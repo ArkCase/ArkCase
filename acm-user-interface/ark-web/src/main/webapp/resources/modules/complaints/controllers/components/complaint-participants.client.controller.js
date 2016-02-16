@@ -18,7 +18,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                 onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
             }
         });
 

@@ -15,7 +15,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
             }
             , onObjectInfoRetrieved: function (objectInfo) {
                 onObjectInfoRetrieved(objectInfo);
@@ -96,7 +96,11 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                         $scope.gridOptions.columnDefs[i].cellTemplate = "<div class='ui-grid-cell-contents' ng-click='grid.appScope.pickParticipant(row.entity)'>{{row.entity[col.field] | mapKeyValue: row.entity.acm$_participantNames:'id':'name'}}</div>";
                     }
                 }
+
+                componentHelper.doneConfig(config);
             });
+
+            return false; //wait, I am not done. I'll call doneConfig() a bit later when I am
         };
 
         $scope.pickParticipant = function (rowEntity) {
