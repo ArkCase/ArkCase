@@ -15,7 +15,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
             }
             , onObjectInfoRetrieved: function (objectInfo) {
                 onObjectInfoRetrieved(objectInfo);
@@ -58,24 +58,23 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
             $scope.objectInfo = objectInfo;
 
             var currentObjectId = Util.goodMapValue(objectInfo, "id");
-            if (Util.isEmpty(currentObjectId)) {
-                return;
-            }
-            var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.CASE_FILE
-                , currentObjectId
-                , Util.goodValue($scope.start, 0)
-                , Util.goodValue($scope.pageSize, 10)
-                , Util.goodMapValue($scope.sort, "by")
-                , Util.goodMapValue($scope.sort, "dir")
-            );
+            if (Util.goodPositive(currentObjectId, false)) {
+                var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.CASE_FILE
+                    , currentObjectId
+                    , Util.goodValue($scope.start, 0)
+                    , Util.goodValue($scope.pageSize, 10)
+                    , Util.goodMapValue($scope.sort, "by")
+                    , Util.goodMapValue($scope.sort, "dir")
+                );
 
-            $q.all([promiseQueryAudit, promiseUsers]).then(function (data) {
-                var auditData = data[0];
-                $scope.gridOptions = $scope.gridOptions || {};
-                $scope.gridOptions.data = auditData.resultPage;
-                $scope.gridOptions.totalItems = auditData.totalCount;
-                //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
-            });
+                $q.all([promiseQueryAudit, promiseUsers]).then(function (data) {
+                    var auditData = data[0];
+                    $scope.gridOptions = $scope.gridOptions || {};
+                    $scope.gridOptions.data = auditData.resultPage;
+                    $scope.gridOptions.totalItems = auditData.totalCount;
+                    //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+                });
+            }
         };
 
     }

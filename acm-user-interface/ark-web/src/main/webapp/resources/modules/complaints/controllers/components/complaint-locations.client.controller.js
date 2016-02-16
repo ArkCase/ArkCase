@@ -17,7 +17,7 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
                 onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
             }
         });
 
