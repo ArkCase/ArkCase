@@ -61,46 +61,36 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                     }
                 };
 
-                scope.currentPage = 1;
-
-                scope.pageChanged = function (currentPage) {
-                    if (currentPage) {
-                        scope.currentPage = currentPage;
-                    }
-                    else {
-                        scope.currentPage = 1;
-                    }
-                    scope.onLoadMore(scope.currentPage, scope.pageSize);
-                };
-
-                scope.pages = [10, 20, 30, 40, 50];
-                scope.pageSize = 0;
-
                 var $fancytree = $(element).find('table').fancytree(treeOptions);
 
                 if (scope.treeData) {
                     scope.$watchCollection('treeData', function (treeData, oldValue) {
                         if (treeData && treeData.length > 0) {
-
                             $($fancytree).fancytree("getTree").reload(treeData);
-
-                            scope.showingLow = (scope.currentPage - 1) * scope.pageSize + 1;
-                            var max = scope.currentPage * scope.pageSize;
-                            scope.showingHigh = max < scope.totalGroups ? max : scope.totalGroups;
-                            var num = parseInt(scope.totalGroups / scope.pageSize);
-                            scope.totalPages = scope.totalGroups % scope.pageSize > 0 ? num + 1 : num;
                         }
                     });
                 }
 
+                //some default values if it is not set in config file
+                scope.pagerData = {
+                    pageSizes: [10, 20, 30, 40, 50],
+                    pageSize: 50,
+                    totalItems: scope.totalGroups
+                };
                 scope.$watchCollection('config', function (config, oldValue) {
                     if (config) {
                         if (config.paginationPageSizes)
-                            scope.pages = config.paginationPageSizes;
+                            scope.pagerData.pageSizes = config.paginationPageSizes;
                         if (config.paginationPageSize)
-                            scope.pageSize = config.paginationPageSize;
+                            scope.pagerData.pageSize = config.paginationPageSize;
                         if (!scope.treeData || scope.treeData.length == 0)
-                            scope.onLoadMore(scope.currentPage, scope.pageSize);
+                            scope.onLoadMore(scope.pagerData.currentPage, scope.pagerData.pageSize);
+                    }
+                });
+
+                scope.$watchCollection('totalGroups', function (totalGroups, oldValue) {
+                    if (totalGroups && totalGroups != oldValue) {
+                        scope.pagerData.totalItems = scope.totalGroups;
                     }
                 });
 
@@ -142,8 +132,6 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                     var node = $.ui.fancytree.getNode(event);
                     scope.onDeleteGroup(node.data).then(function () {
                         node.remove();
-                        scope.showingHigh--;
-                        scope.totalGroups--;
                     });
                 };
 
