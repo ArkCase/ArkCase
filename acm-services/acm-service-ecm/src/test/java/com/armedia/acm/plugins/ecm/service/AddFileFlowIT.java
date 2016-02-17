@@ -1,9 +1,16 @@
 package com.armedia.acm.plugins.ecm.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.commons.audit.sink.jdbc.SpringDataSourceHelper;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,22 +18,23 @@ import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-        "/spring/spring-library-add-file-mule.xml",
-        "/spring/spring-library-cmis-configuration.xml"
-})
+@ContextConfiguration(locations = { "/spring/spring-library-ecm-plugin-test-mule.xml", "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-data-source.xml", "/spring/spring-library-property-file-manager.xml", "/spring/spring-library-add-file-mule.xml", "/spring/spring-library-cmis-configuration.xml",
+        "/spring/spring-library-audit-service.xml" })
 public class AddFileFlowIT
 {
 
@@ -45,6 +53,19 @@ public class AddFileFlowIT
         String folderId = message.getPayloadAsString();
 
         testFolderId = folderId;
+    }
+
+    @AfterClass
+    public static void cleanUpClass() throws Exception
+    {
+        Field CONTEXTS = SpringDataSourceHelper.class.getDeclaredField("CONTEXTS");
+        CONTEXTS.setAccessible(true);
+
+        Field modifier = CONTEXTS.getClass().getDeclaredField("modifiers");
+        modifier.setAccessible(true);
+        modifier.setInt(CONTEXTS, CONTEXTS.getModifiers() & ~Modifier.FINAL);
+
+        CONTEXTS.set(null, new ConcurrentHashMap<String, ApplicationContext>());
     }
 
     @Test
@@ -87,10 +108,9 @@ public class AddFileFlowIT
             assertTrue(payloadStream.available() > 0);
 
             assertEquals(uploadFile.contentLength(), payloadStream.available());
-        }
-        finally
+        } finally
         {
-            if (payloadStream != null )
+            if (payloadStream != null)
             {
                 payloadStream.close();
             }

@@ -14,6 +14,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
@@ -26,6 +27,7 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.json.JSONArray;
@@ -41,6 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -86,17 +89,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private FolderAndFilesUtils folderAndFilesUtils;
 
     @Override
-    public EcmFile upload(
-            String originalFileName,
-            String fileType,
-            String fileCategory,
-            InputStream fileContents,
-            String fileContentType,
-            String fileName,
-            Authentication authentication,
-            String targetCmisFolderId,
-            String parentObjectType,
-            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    public EcmFile upload(String originalFileName, String fileType, String fileCategory, InputStream fileContents, String fileContentType, String fileName, Authentication authentication,
+            String targetCmisFolderId, String parentObjectType, Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         if (log.isInfoEnabled())
         {
@@ -104,36 +98,35 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
 
         AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
+
+        EcmFileAddedEvent event = null;
+
         try
         {
-            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
-                    originalFileName,
-                    authentication,
-                    fileType,
-                    fileCategory,
-                    fileContents,
-                    fileContentType,
-                    fileName,
-                    targetCmisFolderId,
+            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(originalFileName, authentication, fileType, fileCategory, fileContents, fileContentType, fileName, targetCmisFolderId,
                     container);
+
+            event = new EcmFileAddedEvent(uploaded, authentication);
+
+            event.setSucceeded(true);
+            applicationEventPublisher.publishEvent(event);
 
             return uploaded;
         } catch (IOException | MuleException e)
         {
+            if (event != null)
+            {
+                event.setSucceeded(false);
+                applicationEventPublisher.publishEvent(event);
+            }
             log.error("Could not upload file: " + e.getMessage(), e);
             throw new AcmCreateObjectFailedException(fileName, e.getMessage(), e);
         }
     }
 
     @Override
-    public EcmFile upload(
-            String originalFileName,
-            String fileType,
-            MultipartFile file,
-            Authentication authentication,
-            String targetCmisFolderId,
-            String parentObjectType,
-            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    public EcmFile upload(String originalFileName, String fileType, MultipartFile file, Authentication authentication, String targetCmisFolderId, String parentObjectType, Long parentObjectId)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         if (log.isInfoEnabled())
         {
@@ -143,29 +136,33 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
 
+        EcmFileAddedEvent event = null;
+
         try
         {
-            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
-                    originalFileName,
-                    authentication,
-                    fileType,
-                    file.getInputStream(),
-                    file.getContentType(),
-                    file.getOriginalFilename(),
-                    targetCmisFolderId,
-                    container);
+            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(originalFileName, authentication, fileType, file.getInputStream(), file.getContentType(), file.getOriginalFilename(),
+                    targetCmisFolderId, container);
+
+            event = new EcmFileAddedEvent(uploaded, authentication);
+
+            event.setSucceeded(true);
+            applicationEventPublisher.publishEvent(event);
 
             return uploaded;
         } catch (IOException | MuleException e)
         {
+            if (event != null)
+            {
+                event.setSucceeded(false);
+                applicationEventPublisher.publishEvent(event);
+            }
             log.error("Could not upload file: " + e.getMessage(), e);
             throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
         }
     }
 
     @Override
-    public EcmFile update(EcmFile ecmFile, MultipartFile file,
-                          Authentication authentication) throws AcmCreateObjectFailedException
+    public EcmFile update(EcmFile ecmFile, MultipartFile file, Authentication authentication) throws AcmCreateObjectFailedException
     {
         try
         {
@@ -189,10 +186,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
-            EcmFile updated = getEcmFileTransaction().updateFileTransaction(
-                    authentication,
-                    ecmFile,
-                    inputStream);
+            EcmFile updated = getEcmFileTransaction().updateFileTransaction(authentication, ecmFile, inputStream);
 
             event = new EcmFileUpdatedEvent(updated, authentication);
 
@@ -239,8 +233,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         } catch (MuleException e)
         {
             log.error("Could not create folder: " + e.getMessage(), e);
-            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DOWNLOAD_FILE_AS_INPUTSTREAM, EcmFileConstants.OBJECT_FILE_TYPE, id,
-                    "Download as InputStream failed", e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DOWNLOAD_FILE_AS_INPUTSTREAM, EcmFileConstants.OBJECT_FILE_TYPE, id, "Download as InputStream failed", e);
         }
     }
 
@@ -262,8 +255,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @Transactional
-    public AcmContainer getOrCreateContainer(String objectType, Long objectId) throws
-            AcmCreateObjectFailedException, AcmUserActionFailedException
+    public AcmContainer getOrCreateContainer(String objectType, Long objectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         log.info("Finding folder for object " + objectType + " id " + objectId);
 
@@ -281,9 +273,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     /**
-     * Objects should really have a folder already.  Since we got here the object does not actually have one.
-     * The application doesn't really care where the folder is, so we'll just create a folder in a sensible
-     * location.
+     * Objects should really have a folder already. Since we got here the object does not actually have one. The
+     * application doesn't really care where the folder is, so we'll just create a folder in a sensible location.
      *
      * @param objectType
      * @param objectId
@@ -296,7 +287,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         String path = getEcmFileServiceProperties().getProperty(EcmFileConstants.PROPERTY_KEY_DEFAULT_FOLDER_BASE_PATH);
         path += getEcmFileServiceProperties().getProperty(EcmFileConstants.PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE + objectType);
         path += "/" + objectId;
-
 
         String cmisFolderId = createFolder(path);
 
@@ -322,18 +312,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public AcmCmisObjectList allFilesForContainer(Authentication auth,
-                                                  AcmContainer container)
-            throws AcmListObjectsFailedException
+    public AcmCmisObjectList allFilesForContainer(Authentication auth, AcmContainer container) throws AcmListObjectsFailedException
     {
 
         log.debug("All files for container " + container.getContainerObjectType() + " " + container.getContainerObjectId());
         // This method is to search for all files that belong to a container, no matter where they are in the
         // folder hierarchy.
-        String query = "{!join from=parent_object_id_i to=parent_object_id_i}object_type_s:" +
-                "CONTAINER AND parent_object_id_i:" +
-                container.getContainerObjectId() + " AND parent_object_type_s:" +
-                container.getContainerObjectType();
+        String query = "{!join from=parent_object_id_i to=parent_object_id_i}object_type_s:" + "CONTAINER AND parent_object_id_i:" + container.getContainerObjectId() + " AND parent_object_type_s:"
+                + container.getContainerObjectType();
 
         String filterQuery = "fq=object_type_s:FILE";
 
@@ -343,8 +329,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         String sortBy = "created";
         String sortDirection = "ASC";
 
-        AcmCmisObjectList retval = findObjects(auth, container, container.getFolder().getId(), EcmFileConstants.CATEGORY_ALL, query, filterQuery,
-                start, max, sortBy, sortDirection);
+        AcmCmisObjectList retval = findObjects(auth, container, container.getFolder().getId(), EcmFileConstants.CATEGORY_ALL, query, filterQuery, start, max, sortBy, sortDirection);
 
         int totalFiles = retval.getTotalChildren();
         int foundSoFar = retval.getChildren().size();
@@ -355,8 +340,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             start += max;
 
-            AcmCmisObjectList more = findObjects(auth, container, container.getFolder().getId(), EcmFileConstants.CATEGORY_ALL, query, filterQuery,
-                    start, max, sortBy, sortDirection);
+            AcmCmisObjectList more = findObjects(auth, container, container.getFolder().getId(), EcmFileConstants.CATEGORY_ALL, query, filterQuery, start, max, sortBy, sortDirection);
             retval.getChildren().addAll(more.getChildren());
 
             foundSoFar += more.getChildren().size();
@@ -370,9 +354,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public AcmCmisObjectList allFilesForFolder(Authentication auth,
-                                               AcmContainer container, Long folderId)
-            throws AcmListObjectsFailedException
+    public AcmCmisObjectList allFilesForFolder(Authentication auth, AcmContainer container, Long folderId) throws AcmListObjectsFailedException
     {
 
         log.debug("All files for folder with ID " + folderId + "container " + container.getContainerObjectType() + "with ID " + container.getContainerObjectId());
@@ -387,8 +369,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         String sortBy = "created";
         String sortDirection = "ASC";
 
-        AcmCmisObjectList retval = findObjects(auth, container, folderId, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
-                start, max, sortBy, sortDirection);
+        AcmCmisObjectList retval = findObjects(auth, container, folderId, EcmFileConstants.CATEGORY_ALL, query, filterQuery, start, max, sortBy, sortDirection);
 
         int totalFiles = retval.getTotalChildren();
         int foundSoFar = retval.getChildren().size();
@@ -399,8 +380,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             start += max;
 
-            AcmCmisObjectList more = findObjects(auth, container, container.getFolder().getId(), EcmFileConstants.CATEGORY_ALL, query, filterQuery,
-                    start, max, sortBy, sortDirection);
+            AcmCmisObjectList more = findObjects(auth, container, container.getFolder().getId(), EcmFileConstants.CATEGORY_ALL, query, filterQuery, start, max, sortBy, sortDirection);
             retval.getChildren().addAll(more.getChildren());
 
             foundSoFar += more.getChildren().size();
@@ -418,82 +398,80 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
 
         EcmFile file = getEcmFileDao().find(fileId);
-        List<EcmFileVersion> fileVersionList = file.getVersions();
+        file.getVersions();
         file.setActiveVersionTag(versionTag);
 
         return getEcmFileDao().save(file);
     }
 
     @Override
-    public AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId, int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException, AcmObjectNotFoundException
+    public AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId, int startRow, int maxRows, String sortBy, String sortDirection)
+            throws AcmListObjectsFailedException, AcmObjectNotFoundException
     {
 
         log.debug("All children objects from folder " + folderId);
 
         AcmFolder folder = getFolderDao().find(folderId);
         if (folder == null)
+        {
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found", null);
+        }
         String query = "(object_type_s:FILE OR object_type_s:FOLDER) AND parent_folder_id_i:" + folderId;
-        String filterQuery =
-                category == null ? "fq=hidden_b:false" :
-                        "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in case some bad data gets through
+        String filterQuery = category == null ? "fq=hidden_b:false" : "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in
+                                                                                                                                                                          // case
+                                                                                                                                                                          // some
+                                                                                                                                                                          // bad
+                                                                                                                                                                          // data
+                                                                                                                                                                          // gets
+                                                                                                                                                                          // through
 
-        AcmCmisObjectList retval = findObjects(auth, container, folderId, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
-                startRow, maxRows, sortBy, sortDirection);
+        AcmCmisObjectList retval = findObjects(auth, container, folderId, EcmFileConstants.CATEGORY_ALL, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
         return retval;
     }
 
     @Override
-    public AcmCmisObjectList listFolderContents(Authentication auth,
-                                                AcmContainer container,
-                                                String category,
-                                                String sortBy,
-                                                String sortDirection,
-                                                int startRow,
-                                                int maxRows)
+    public AcmCmisObjectList listFolderContents(Authentication auth, AcmContainer container, String category, String sortBy, String sortDirection, int startRow, int maxRows)
             throws AcmListObjectsFailedException
     {
 
-        // This method is to search for objects in the root of a container.  So we restrict the return list
+        // This method is to search for objects in the root of a container. So we restrict the return list
         // to those items whose parent folder ID is the container folder id.... Note, this query assumes
         // only files and folders will have a "folder_id_i" attribute with a value that matches a container
         // folder id
-        String query = "{!join from=folder_id_i to=parent_folder_id_i}object_type_s:" +
-                "CONTAINER AND parent_object_id_i:" +
-                container.getContainerObjectId() + " AND parent_object_type_s:" +
-                container.getContainerObjectType();
+        String query = "{!join from=folder_id_i to=parent_folder_id_i}object_type_s:" + "CONTAINER AND parent_object_id_i:" + container.getContainerObjectId() + " AND parent_object_type_s:"
+                + container.getContainerObjectType();
 
-        String filterQuery =
-                category == null ? "fq=hidden_b:false" :
-                        "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in case some bad data gets through
+        String filterQuery = category == null ? "fq=hidden_b:false" : "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in
+                                                                                                                                                                          // case
+                                                                                                                                                                          // some
+                                                                                                                                                                          // bad
+                                                                                                                                                                          // data
+                                                                                                                                                                          // gets
+                                                                                                                                                                          // through
 
         return findObjects(auth, container, container.getFolder().getId(), category, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
-
 
     }
 
     @Override
-    public AcmCmisObjectList listFileFolderByCategory(Authentication auth,
-                                                      AcmContainer container,
-                                                      String sortBy,
-                                                      String sortDirection,
-                                                      int startRow,
-                                                      int maxRows,
-                                                      String category)
+    public AcmCmisObjectList listFileFolderByCategory(Authentication auth, AcmContainer container, String sortBy, String sortDirection, int startRow, int maxRows, String category)
             throws AcmListObjectsFailedException
     {
-        String query = "parent_object_id_i:" +
-                container.getContainerObjectId() + " AND parent_object_type_s:" +
-                container.getContainerObjectType();
+        String query = "parent_object_id_i:" + container.getContainerObjectId() + " AND parent_object_type_s:" + container.getContainerObjectType();
 
-        String filterQuery = "fq=(object_type_s:FILE OR object_type_s:FOLDER) AND (category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in case some bad data gets through
+        String filterQuery = "fq=(object_type_s:FILE OR object_type_s:FOLDER) AND (category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in
+                                                                                                                                                                                  // case
+                                                                                                                                                                                  // some
+                                                                                                                                                                                  // bad
+                                                                                                                                                                                  // data
+                                                                                                                                                                                  // gets
+                                                                                                                                                                                  // through
 
         return findObjects(auth, container, container.getFolder().getId(), category, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
     }
 
     @Override
-    public void declareFileAsRecord(Long fileId, Authentication authentication)
-            throws AcmObjectNotFoundException
+    public void declareFileAsRecord(Long fileId, Authentication authentication) throws AcmObjectNotFoundException
     {
 
         if (null != fileId)
@@ -545,22 +523,18 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
-    private AcmCmisObjectList findObjects(Authentication auth, AcmContainer container, Long folderId, String category, String query,
-                                          String filterQuery, int startRow, int maxRows, String sortBy,
-                                          String sortDirection)
-            throws AcmListObjectsFailedException
+    private AcmCmisObjectList findObjects(Authentication auth, AcmContainer container, Long folderId, String category, String query, String filterQuery, int startRow, int maxRows, String sortBy,
+            String sortDirection) throws AcmListObjectsFailedException
     {
         try
         {
             String sortParam = listFolderContents_getSortSpec(sortBy, sortDirection);
 
-            String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH, query,
-                    startRow, maxRows, sortParam, filterQuery);
+            String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sortParam, filterQuery);
             JSONArray docs = getSearchResults().getDocuments(results);
             int numFound = getSearchResults().getNumFound(results);
 
-            AcmCmisObjectList retval = buildAcmCmisObjectList(container, folderId, category, numFound, sortBy, sortDirection,
-                    startRow, maxRows);
+            AcmCmisObjectList retval = buildAcmCmisObjectList(container, folderId, category, numFound, sortBy, sortDirection, startRow, maxRows);
 
             buildChildren(docs, retval);
 
@@ -589,8 +563,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
-    private AcmCmisObjectList buildAcmCmisObjectList(AcmContainer container, Long folderId, String category, int numFound,
-                                                     String sortBy, String sortDirection, int startRow, int maxRows)
+    private AcmCmisObjectList buildAcmCmisObjectList(AcmContainer container, Long folderId, String category, int numFound, String sortBy, String sortDirection, int startRow, int maxRows)
     {
         AcmCmisObjectList retval = new AcmCmisObjectList();
         retval.setContainerObjectId(container.getContainerObjectId());
@@ -655,7 +628,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return object;
     }
 
-
     private String listFolderContents_getSortSpec(String sortBy, String sortDirection)
     {
         String sortParam = EcmFileConstants.FOLDER_LIST_DEFAULT_SORT_PARAM;
@@ -687,7 +659,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, fileId, "Could not copy file", e);
         }
     }
-
 
     @Override
     public EcmFile copyFile(Long fileId, AcmFolder targetFolder, AcmContainer targetContainer) throws AcmUserActionFailedException, AcmObjectNotFoundException
@@ -724,9 +695,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             EcmFile fileCopy = new EcmFile();
 
-
             // TODO this has to be fixed, we can't just copy the versions from the original file to the
-            // new file.  The original file's versions belong to a different versionSeriesId after all.  In reality
+            // new file. The original file's versions belong to a different versionSeriesId after all. In reality
             // we should start from scratch with just the single version we just created.... And also, the original
             // new file we just now created, will not be in the version list!!!
             List<EcmFileVersion> versionList = new ArrayList<>();
@@ -743,7 +713,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 }
             }
 
-
             fileCopy.setVersionSeriesId(cmisObject.getVersionSeriesId());
             fileCopy.setFileType(file.getFileType());
             fileCopy.setActiveVersionTag(file.getActiveVersionTag());
@@ -754,7 +723,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             fileCopy.setCategory(file.getCategory());
             fileCopy.setFileMimeType(file.getFileMimeType());
             fileCopy.setVersions(versionList);
-
 
             result = getEcmFileDao().save(fileCopy);
             return result;
@@ -803,11 +771,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             String typeQuery = createQueryFormListAndOperator(totalPageCountFileTypes, SearchConstants.OPERATOR_OR);
             String mimeQuery = createQueryFormListAndOperator(totalPageCountMimeTypes, SearchConstants.OPERATOR_OR);
 
-            String query = SearchConstants.PROPERTY_OBJECT_TYPE + ":FILE AND " +
-                           (typeQuery != null && !typeQuery.isEmpty() ? SearchConstants.PROPERTY_FILE_TYPE + ":" + typeQuery + " AND " : "") +
-                           (mimeQuery != null && !mimeQuery.isEmpty() ? SearchConstants.PROPERTY_MIME_TYPE + ":" + mimeQuery + " AND " : "") +
-                           SearchConstants.PROPERTY_PARENT_OBJECT_TYPE_S + ":" + parentObjectType + " AND " +
-                           SearchConstants.PROPERTY_PARENT_OBJECT_ID_I + ":" + parentObjectId;
+            String query = SearchConstants.PROPERTY_OBJECT_TYPE + ":FILE AND " + (typeQuery != null && !typeQuery.isEmpty() ? SearchConstants.PROPERTY_FILE_TYPE + ":" + typeQuery + " AND " : "")
+                    + (mimeQuery != null && !mimeQuery.isEmpty() ? SearchConstants.PROPERTY_MIME_TYPE + ":" + mimeQuery + " AND " : "") + SearchConstants.PROPERTY_PARENT_OBJECT_TYPE_S + ":"
+                    + parentObjectType + " AND " + SearchConstants.PROPERTY_PARENT_OBJECT_ID_I + ":" + parentObjectId;
 
             JSONArray docs;
 
@@ -831,9 +797,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 }
 
                 startRow += maxRows;
-            }while(docs != null && docs.length() > 0);
-        }
-        catch (MuleException e)
+            } while (docs != null && docs.length() > 0);
+        } catch (MuleException e)
         {
             log.error("Cannot take total count. 'Parent Object Type': {}, 'Parent Object ID': {}", parentObjectType, parentObjectId);
         }
@@ -867,7 +832,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
         AcmFolder folder = getFolderDao().find(dstFolderId);
         if (folder == null)
+        {
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, dstFolderId, "Folder  not found", null);
+        }
 
         return moveFile(fileId, targetObjectId, targetObjectType, folder);
     }
@@ -878,7 +845,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         EcmFile file = getEcmFileDao().find(fileId);
         if (file == null)
+        {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File  not found", null);
+        }
         Map<String, Object> props = new HashMap<>();
         props.put(EcmFileConstants.CMIS_OBJECT_ID, file.getVersionSeriesId());
         props.put(EcmFileConstants.DST_FOLDER_ID, folder.getCmisFolderId());
@@ -960,7 +929,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         Map<String, Object> props = new HashMap<>();
         props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
         props.put(EcmFileConstants.NEW_FILE_NAME, newFileName);
-
 
         EcmFile renamedFile;
         try

@@ -19,6 +19,7 @@
             "enabled": "true",
             "type": "grid",
             "enableFiltering": false,
+            "emptySearch":false,
             "columnDefs": [
                 {
                     "name": "object_id_s",
