@@ -7,18 +7,18 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
         , Util, ObjectService, ConfigService, ObjectCostService, CaseInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
             , componentId: "cost"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
-                $scope.caseInfo = caseInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
+            }
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
@@ -39,10 +39,34 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
             }
         };
 
-        if (Util.goodPositive($scope.currentObjectId, false)) {
-            ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.CASE_FILE, $scope.currentObjectId).then(
-                function (costsheets) {
-                    $scope.promiseConfig.then(function (config) {
+        //if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+        //    ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.CASE_FILE, componentHelper.currentObjectId).then(
+        //        function (costsheets) {
+        //            componentHelper.promiseConfig.then(function (config) {
+        //                for (var i = 0; i < costsheets.length; i++) {
+        //                    costsheets[i].acm$_formName = $translate.instant("cases.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
+        //                    costsheets[i].acm$_costs = _.reduce(Util.goodArray(costsheets[i].costs), function (total, n) {
+        //                        return total + Util.goodValue(n.value, 0);
+        //                    }, 0);
+        //                }
+        //
+        //                $scope.gridOptions = $scope.gridOptions || {};
+        //                $scope.gridOptions.data = costsheets;
+        //                $scope.gridOptions.totalItems = Util.goodValue(costsheets.length, 0);
+        //                //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+        //                return config;
+        //            });
+        //            return costsheets;
+        //        }
+        //    );
+        //}
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+
+            var currentObjectId = Util.goodMapValue(objectInfo, "id");
+            if (Util.goodPositive(currentObjectId, false)) {
+                ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.CASE_FILE, currentObjectId).then(
+                    function (costsheets) {
                         for (var i = 0; i < costsheets.length; i++) {
                             costsheets[i].acm$_formName = $translate.instant("cases.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
                             costsheets[i].acm$_costs = _.reduce(Util.goodArray(costsheets[i].costs), function (total, n) {
@@ -54,11 +78,11 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
                         $scope.gridOptions.data = costsheets;
                         $scope.gridOptions.totalItems = Util.goodValue(costsheets.length, 0);
                         //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
-                        return config;
-                    });
-                    return costsheets;
-                }
-            );
-        }
+
+                        return costsheets;
+                    }
+                );
+            }
+        };
     }
 ]);

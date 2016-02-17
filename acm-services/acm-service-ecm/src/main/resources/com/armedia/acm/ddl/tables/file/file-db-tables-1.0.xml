@@ -5,16 +5,16 @@
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="cmObjectTypeLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmObjectTypeLength" value="255" dbms="mysql"/>
+    <property name="cmObjectTypeLength" value="255" dbms="mysql,mssql"/>
 
     <property name="cmFileEcmIdLength" value="4000" dbms="postgresql,oracle"/>
-    <property name="cmFileEcmIdLength" value="255" dbms="mysql"/>
+    <property name="cmFileEcmIdLength" value="255" dbms="mysql,mssql"/>
 
     <property name="cmCmisFolderIdLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmCmisFolderIdLength" value="255" dbms="mysql"/>
+    <property name="cmCmisFolderIdLength" value="255" dbms="mysql,mssql"/>
 
     <property name="cmVersionSeriesIdLength" value="4000" dbms="postgresql,oracle"/>
-    <property name="cmVersionSeriesIdLength" value="255" dbms="mysql"/>
+    <property name="cmVersionSeriesIdLength" value="255" dbms="mysql,mssql"/>
 
     <changeSet id="01-create-file-table" author="dmiller">
         <createTable tableName="acm_file">
@@ -54,7 +54,7 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="files-05-container-folder-table" author="dmiller">
+    <changeSet id="files-05-container-folder-table" author="dmiller" dbms="${excludeMSSQL}">
         <createTable tableName="acm_container_folder">
             <column name="cm_container_folder_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_container_folder"/>
@@ -83,6 +83,37 @@
         </createTable>
         <addUniqueConstraint tableName="acm_container_folder" columnNames="cm_object_id, cm_object_type"/>
         <addUniqueConstraint tableName="acm_container_folder" columnNames="cm_cmis_folder_id"/>
+    </changeSet>
+
+    <changeSet id="files-05-container-folder-table-mssql" author="riste.tutureski" dbms="mssql">
+        <createTable tableName="acm_container_folder">
+            <column name="cm_container_folder_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_container_folder"/>
+            </column>
+            <column name="cm_container_folder_created" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_container_folder_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_container_folder_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_container_folder_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cmis_folder_id" type="VARCHAR(${cmCmisFolderIdLength})">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="acm_container_folder" columnNames="cm_object_id, cm_object_type"/>
+        <addUniqueConstraint tableName="acm_container_folder" columnNames="cm_cmis_folder_id" constraintName="uq_cons_cm_cmis_folder_id"/>
     </changeSet>
 
     <changeSet id="files-09-rename-acm-container-folder" author="dmiller">
@@ -209,7 +240,7 @@
 
     <!-- need to fix the unique key on acm_file before inserting the files from cases where those
          files are also in a complaint -->
-    <changeSet id="files-23-unique-key-on-file-and-folder" author="dmiller">
+    <changeSet id="files-23-unique-key-on-file-and-folder" author="dmiller" dbms="${excludeMSSQL}">
         <dropUniqueConstraint tableName="acm_file" constraintName="uk_version_series_id"/>
         <addUniqueConstraint tableName="acm_file"
                              columnNames="cm_version_series_id, cm_folder_id"
@@ -219,6 +250,13 @@
     <!-- finally time to make cm_folder_id required -->
     <changeSet id="files-26-make-folder-id-required" author="dmiller">
         <addNotNullConstraint tableName="acm_file" columnName="cm_folder_id" columnDataType="${fkIdType}"/>
+    </changeSet>
+
+    <changeSet id="files-26-1-unique-key-on-file-and-folder-mssql" author="riste.tutureski" dbms="mssql">
+        <dropUniqueConstraint tableName="acm_file" constraintName="uk_version_series_id"/>
+        <addUniqueConstraint tableName="acm_file"
+                             columnNames="cm_version_series_id, cm_folder_id"
+                             constraintName="uk_file_folder"/>
     </changeSet>
 
     <changeSet id="files-27-make-folder-id-unique" author="dmiller">

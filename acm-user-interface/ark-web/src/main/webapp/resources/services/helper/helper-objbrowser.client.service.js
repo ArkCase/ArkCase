@@ -12,9 +12,9 @@
  * Content part consists list of Components.
  * Tree helper uses 'object-tree' directive. Content helper includes component links and data loading. Component helper includes common object info handling
  */
-angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', '$translate'
+angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resource', '$translate'
     , 'StoreService', 'UtilService', 'ConfigService', 'ServCommService'
-    , function ($resource, $translate, Store, Util, ConfigService, ServCommService) {
+    , function ($q, $resource, $translate, Store, Util, ConfigService, ServCommService) {
 
         var Service = {
             VariableNames: {
@@ -265,7 +265,11 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
              * @param {Function} arg.getObjectInfo Function to retrieve object info
              * @param {Function} (Optional)arg.validateObjectInfo Function to validate object info data
              * @param {Function} (Optional)arg.onObjectInfoRetrieved Callback function when object info retrieved
-             * @param {Function} (Optional)arg.onConfigRetrieved Callback function when component config retrieved
+             * @param {Function} (Optional)arg.onConfigRetrieved Callback function when component config retrieved.
+             * The callback could optionally return true or false to indicate the config data is processed.
+             * If no return is defined, it is the same as return true. With a false return, onObjectInfoRetrieved
+             * callback would not be called until caller to call doneConfig() function later to notify Component
+             * Helper to release onObjectInfoRetrieved().
              *
              * @description
              * Helper.ObjectBrowserService.Component captures common handling for typical components, including
@@ -303,10 +307,14 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                     that.scope.config = componentConfig;
                 };
 
+                that.deferConfigDone = $q.defer();
                 that.promiseConfig = ConfigService.getComponentConfig(that.moduleId, that.componentId);
                 that.scope.promiseConfig = that.promiseConfig;  //phase out; keep for backward compatibility
                 that.promiseConfig.then(function (componentConfig) {
-                    that.onConfigRetrieved(componentConfig);
+                    var done = that.onConfigRetrieved(componentConfig);
+                    if (undefined === done || true === done) {
+                        that.deferConfigDone.resolve(componentConfig);
+                    }
                     return componentConfig;
                 });
 
@@ -348,7 +356,9 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                     }
                     that.previousId = objectId;
 
-                    that.onObjectInfoRetrieved(objectInfo);
+                    that.deferConfigDone.promise.then(function (data) {
+                        that.onObjectInfoRetrieved(objectInfo);
+                    });
                 };
 
             }
@@ -535,6 +545,24 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
 
         };
 
+        Service.Component.prototype = {
+
+            /**
+             * @ngdoc method
+             * @name onLoad
+             * @methodOf services:Helper.ObjectBrowserService
+             *
+             * @param {Object} config Component configuration JSON object
+             *
+             * @description
+             * Notify Component Helper that Config data is processed
+             */
+            doneConfig: function (config) {
+                this.deferConfigDone.resolve(config);
+            }
+
+        };
+
         Service.getComponentByState = function (state) {
             var comp = "main";
             var tokens = state.current.url.split("/");
@@ -547,6 +575,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
             }
             return comp;
         };
+
 
         /**
          * @ngdoc method

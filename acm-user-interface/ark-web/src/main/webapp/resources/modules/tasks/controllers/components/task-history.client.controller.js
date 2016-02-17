@@ -7,18 +7,15 @@ angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$state
         , Util, ConfigService, HelperUiGridService, ObjectService, ObjectAuditService, TaskInfoService
         , HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             moduleId: "tasks"
             , componentId: "history"
             , scope: $scope
             , stateParams: $stateParams
             , retrieveObjectInfo: TaskInfoService.getTaskInfo
             , validateObjectInfo: TaskInfoService.validateTaskInfo
-            , onObjectInfoRetrieved: function (taskInfo) {
-                $scope.taskInfo = taskInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
             }
         });
 
@@ -37,9 +34,9 @@ angular.module('tasks').controller('Tasks.HistoryController', ['$scope', '$state
         };
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($scope.currentObjectId, false)) {
+            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                 var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.TASK
-                    , $scope.currentObjectId
+                    , componentHelper.currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodMapValue($scope.sort, "by")

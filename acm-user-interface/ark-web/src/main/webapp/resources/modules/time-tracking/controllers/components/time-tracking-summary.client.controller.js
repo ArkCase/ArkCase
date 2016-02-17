@@ -12,11 +12,11 @@ angular.module('time-tracking').controller('TimeTracking.SummaryController', ['$
             , componentId: "summary"
             , retrieveObjectInfo: TimeTrackingInfoService.getTimesheetInfo
             , validateObjectInfo: TimeTrackingInfoService.validateTimesheet
-            , onObjectInfoRetrieved: function (timesheetInfo) {
-                onObjectInfoRetrieved(timesheetInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
             }
         });
 
@@ -29,10 +29,10 @@ angular.module('time-tracking').controller('TimeTracking.SummaryController', ['$
             gridHelper.disableGridScrolling(config);
         };
 
-        var onObjectInfoRetrieved = function (timesheetInfo) {
-            $scope.timesheetInfo = timesheetInfo;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
             $scope.gridOptions = $scope.gridOptions || {};
-            $scope.gridOptions.data = $scope.timesheetInfo.times;
+            $scope.gridOptions.data = $scope.objectInfo.times;
         };
 
         $scope.onClickObjectType = function (event, rowEntity) {

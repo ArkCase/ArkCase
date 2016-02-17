@@ -545,6 +545,9 @@ angular.module('services').factory('UtilService', ['$q'
              * @Returns {String} ISO formatted date string YYYY-MM-DDTHH:mm:ss.SSSZZ
              */
             , dateToIsoString: function(d) {
+
+                console.log("Compatibility warning: UtilService.dateToIsoString() phase out. Please use Util.DateService.dateToIso()");
+
                 if (null == d) {
                     return "";
                 }
