@@ -80,7 +80,7 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
          *
          * @returns {Object} Promise
          */
-        Service.queryTimeTrackingTreeData = function (userId, start, n, sort, query) {
+        Service.queryTimeTrackingTreeData = function (userId, start, n, sort, query, nodeMaker) {
             var param = {};
             param.userId = Util.goodValue(userId);
             //param.dataType = "timesheet";
@@ -103,12 +103,18 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
                         treeData = {docs: [], total: data.response.numFound};
                         var docs = data.response.docs;
                         _.forEach(docs, function (doc) {
-                            treeData.docs.push({
-                                nodeId: Util.goodValue(doc.object_id_s, 0)
-                                , nodeType: ObjectService.ObjectTypes.TIMESHEET
-                                , nodeTitle: Util.goodValue(doc.name)
-                                , nodeToolTip: Util.goodValue(doc.name)
-                            });
+                            var node;
+                            if (nodeMaker) {
+                                node = nodeMaker(doc);
+                            } else {
+                                node = {
+                                    nodeId: Util.goodValue(doc.object_id_s, 0)
+                                    , nodeType: ObjectService.ObjectTypes.TIMESHEET
+                                    , nodeTitle: Util.goodValue(doc.name)
+                                    , nodeToolTip: Util.goodValue(doc.name)
+                                };
+                            }
+                            treeData.docs.push(node);
                         });
                         cacheTimesheetList.put(cacheKey, treeData);
                         return treeData;
