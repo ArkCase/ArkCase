@@ -13,4 +13,6 @@
         </property>
     </bean>
 
+    <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication"/>
+
 </beans>
