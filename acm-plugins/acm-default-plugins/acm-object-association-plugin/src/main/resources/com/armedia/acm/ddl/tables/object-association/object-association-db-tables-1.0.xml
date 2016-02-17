@@ -59,9 +59,26 @@
         <modifyDataType tableName="acm_object_association" columnName="cm_target_name" newDataType="VARCHAR2(4000)"/>
     </changeSet>
 
-    <changeSet id="03-object-assn-switch-to-sequence-pk" author="dmiller">
+    <changeSet id="03-object-assn-switch-to-sequence-pk" author="dmiller" dbms="${excludeMSSQL}">
         <dropDefaultValue tableName="acm_object_association" columnName="cm_association_id"/>
         <modifyDataType tableName="acm_object_association" columnName="cm_association_id" newDataType="${fkIdType}"/>
+    </changeSet>
+
+    <changeSet id="03-1-object-assn-switch-to-sequence-pk-mssql" author="riste.tutureski" dbms="mssql" failOnError="false">
+        <dropDefaultValue tableName="acm_object_association" columnName="cm_association_id"/>
+    </changeSet>
+
+    <changeSet id="03-2-object-assn-switch-to-sequence-pk-mssql" author="riste.tutureski" dbms="mssql">
+        <dropPrimaryKey tableName="acm_object_association" constraintName="pk_object_association"/>
+    </changeSet>
+
+    <changeSet id="03-3-object-assn-switch-to-sequence-pk-mssql" author="riste.tutureski" dbms="mssql">
+        <modifyDataType tableName="acm_object_association" columnName="cm_association_id" newDataType="${fkIdType}"/>
+    </changeSet>
+
+    <changeSet id="03-4-object-assn-switch-to-sequence-pk-mssql" author="riste.tutureski" dbms="mssql">
+        <addNotNullConstraint tableName="acm_object_association" columnName="cm_association_id" columnDataType="${fkIdType}"/>
+        <addPrimaryKey tableName="acm_object_association" columnNames="cm_association_id" constraintName="pk_object_association"/>
     </changeSet>
 
     <changeSet id="04-fix-object-id-type" author="dmiller">

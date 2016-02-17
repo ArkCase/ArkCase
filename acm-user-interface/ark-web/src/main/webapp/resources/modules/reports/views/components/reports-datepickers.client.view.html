@@ -1,9 +1,8 @@
 <div ng-controller="Reports.DatepickersController" ng-cloak>
 
-    <span translate>reports.startDate.label</span>
-    <div>
+    <label for="dateFromReports" translate>reports.startDate.label</label>
         <p class="input-group">
-            <input type="text"
+            <input id="dateFromReports" type="text"
                    class="form-control"
                    datepicker-popup="{{config.datepickerPopupFormat}}"
                    ng-model="data.startDate"
@@ -19,12 +18,11 @@
                 </button>
             </span>
         </p>
-    </div>
 
-    <span translate>reports.endDate.label</span>
-    <div>
+    <label for="dateToReports" translate>reports.endDate.label</label>
+
         <p class="input-group">
-            <input type="text"
+            <input id="dateToReports" type="text"
                    class="form-control"
                    datepicker-popup="{{config.datepickerPopupFormat}}"
                    ng-model="data.endDate"
@@ -40,6 +38,5 @@
                 </button>
             </span>
         </p>
-    </div>
 
 </div>

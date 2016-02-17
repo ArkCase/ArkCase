@@ -145,7 +145,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                             $tdList.eq(3).text(filteredType); // document type is mapped (afdp-1249)
 
-                            var versionDate = UtilDateService.getDate(node.data.created);
+                            var versionDate = UtilDateService.getDatePart(node.data.created);
                             var versionUser = Util.goodValue(node.data.creator);
 
                             var $td6 = $("<td/>");
@@ -167,7 +167,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     if (Util.goodValue(node.data.version) == versionTag) {
                                         $option.attr("selected", true);
 
-                                        versionDate = UtilDateService.getDate(node.data.versionList[i].created);
+                                        versionDate = UtilDateService.getDatePart(node.data.versionList[i].created);
                                         versionUser = Util.goodValue(node.data.versionList[i].creator);
                                     }
                                 }

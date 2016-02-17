@@ -5,18 +5,18 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
     , function ($scope, $stateParams
         , Util, ConfigService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"
             , componentId: "references"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                onObjectInfoRetrieved(complaintInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
             }
         });
 
@@ -29,10 +29,10 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
             gridHelper.disableGridScrolling(config);
         };
 
-        var onObjectInfoRetrieved = function (complaintInfo) {
-            $scope.complaintInfo = complaintInfo;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
             var references = [];
-            _.each($scope.complaintInfo.childObjects, function (childObject) {
+            _.each($scope.objectInfo.childObjects, function (childObject) {
                 if (ComplaintInfoService.validateReferenceRecord(childObject)) {
                     references.push(childObject);
                 }

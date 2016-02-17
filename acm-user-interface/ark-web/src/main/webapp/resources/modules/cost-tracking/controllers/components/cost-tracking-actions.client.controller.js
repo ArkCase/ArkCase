@@ -11,9 +11,6 @@ angular.module('cost-tracking').controller('CostTracking.ActionsController', ['$
             , componentId: "actions"
             , retrieveObjectInfo: CostTrackingInfoService.getCostsheetInfo
             , validateObjectInfo: CostTrackingInfoService.validateCostsheet
-            , onObjectInfoRetrieved: function (costsheetInfo) {
-                $scope.costsheetInfo = costsheetInfo;
-            }
         });
 
 
