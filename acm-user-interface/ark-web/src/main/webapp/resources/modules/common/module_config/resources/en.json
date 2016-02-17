@@ -89,6 +89,11 @@
     "errorNode.title": "(Error)",
     "errorNode.toolTip": "(Error)"
   },
+  "common.directive.simplePager": {
+    "rowCountLabel": "items per page",
+    "pagerCountMiddleLabel": " of ",
+    "pagerCountLabel": " items"
+  },
   "common.directive.objectAuthorizationRoles": {
     "choose": "Choose",
     "not_authorized": "Not Authorized",
