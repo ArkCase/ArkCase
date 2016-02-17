@@ -1,11 +1,12 @@
 <div ng-controller="Audit.DatepickersController">
 
-    <span translate>audit.navigation.label.dateFrom</span>
+    <label for="dateFromAudit" translate>audit.navigation.label.dateFrom</label>
     <div>
 
         <p class="input-group">
             <input type="text"
                    class="form-control"
+                   id="dateFromAudit"
                    datepicker-popup="{{config.datepickerPopupFormat}}"
                    ng-model="dateFrom"
                    is-open="opened.openedStart"
@@ -22,11 +23,14 @@
         </p>
     </div>
 
-    <span translate>audit.navigation.label.dateTo</span>
+
+
+    <label for="dateToAudit" translate>audit.navigation.label.dateTo</label>
     <div>
         <p class="input-group">
             <input type="text"
                    class="form-control"
+                   id="dateToAudit"
                    datepicker-popup="{{config.datepickerPopupFormat}}"
                    ng-model="dateTo"
                    is-open="opened.openedEnd"

@@ -11,6 +11,7 @@ import org.mule.api.MuleMessage;
 import org.mule.api.context.notification.MessageProcessorNotificationListener;
 import org.mule.api.processor.LoggerMessageProcessor;
 import org.mule.api.processor.MessageProcessor;
+import org.mule.api.transport.PropertyScope;
 import org.mule.component.DefaultJavaComponent;
 import org.mule.component.simple.EchoComponent;
 import org.mule.context.notification.MessageProcessorNotification;
@@ -161,11 +162,13 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
                 eventProperties.put("Base URL", abstractConnectedProcessor.getBaseUrl().toString());
             }
 
-            if (isMuleFlowsLoggingMessageEnabled())
+            // TODO add alll content types that needs to be skipped
+            if (isMuleFlowsLoggingMessageEnabled() && ((event.getMessage().getProperty("contentType", PropertyScope.INVOCATION) == null)
+                    || !((String) event.getMessage().getProperty("contentType", PropertyScope.INVOCATION)).contains("application/pdf")))
             {
                 try
                 {
-                    eventProperties.put("Message", event.getMessageAsString());
+                    eventProperties.put("Message", event.getMessageAsString("UTF-8"));
                 }
                 catch (MuleException e)
                 {

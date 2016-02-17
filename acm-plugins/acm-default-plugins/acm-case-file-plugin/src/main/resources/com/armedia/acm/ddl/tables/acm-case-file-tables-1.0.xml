@@ -5,7 +5,7 @@
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="caseNumberLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="caseNumberLength" value="255" dbms="mysql"/>
+    <property name="caseNumberLength" value="255" dbms="mysql,mssql"/>
 
     <changeSet id="case-file-01-acm-case-file-table" author="dmiller">
         <createTable tableName="acm_case_file">

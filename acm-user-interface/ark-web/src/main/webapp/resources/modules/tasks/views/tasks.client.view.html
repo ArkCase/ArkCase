@@ -21,22 +21,23 @@
             </div>
 
             <div class="well-sm">
+                <div data-ui-view></div>
+            </div>
+
+
+            <div class="tabbed-footer">
                 <a href title="{{linksShown ? 'Hide links' : 'Show links'}}"
-                   ng-click="toggleShowLinks()">
-                    <i x-ng-class="{'fa fa-plus-square-o' : !linksShown, 'fa fa-minus-square-o' : linksShown}"></i>
+                   ng-click="toggleShowLinks()" class="collapsed-button">
+                    <i x-ng-class="{'fa fa-angle-double-left' : !linksShown, 'fa fa-angle-double-right' : linksShown}"></i>
                 </a>
                 <ul ng-if="linksShown" class="nav nav-tabs overview-tabs">
                     <li class="{{getActive(link.id)}}" ng-repeat="link in componentLinks">
                         <a ng-click="onClickComponentLink(link.id)">
                             <i class="{{link.icon}}"></i>
-                            <br/> {{link.title}}
+                            <span>{{link.title}}</span>
                         </a>
                     </li>
                 </ul>
-            </div>
-
-            <div class="well-sm">
-                <div data-ui-view></div>
             </div>
         </section>
 

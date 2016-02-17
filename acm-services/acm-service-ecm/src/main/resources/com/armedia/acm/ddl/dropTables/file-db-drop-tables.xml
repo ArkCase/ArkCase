@@ -4,6 +4,10 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <changeSet id="file-db-drop-table-01-drop-constraint" author="riste.tutureski" dbms="mssql">
+        <dropUniqueConstraint tableName="acm_container" constraintName="uq_cons_cm_cmis_folder_id"/>
+    </changeSet>
+
     <changeSet id="file-db-drop-table-01-drop-container-cmis-id" author="dmiller">
         <dropColumn tableName="acm_container" columnName="cm_cmis_folder_id"/>
     </changeSet>

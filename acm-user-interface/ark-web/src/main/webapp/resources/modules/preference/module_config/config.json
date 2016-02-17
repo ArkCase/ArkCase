@@ -1,11 +1,11 @@
 {
   "id": "preference",
-  "title": "Preference",
+  "title": "Preferences",
   "menus": [
     {
       "menuId": "usermenu",
       "menuItemURL": "preference",
-      "menuItemTitle": "Preference",
+      "menuItemTitle": "Preferences",
       "iconClass": "glyphicon glyphicon-asterisk",
       "position": 120
     }

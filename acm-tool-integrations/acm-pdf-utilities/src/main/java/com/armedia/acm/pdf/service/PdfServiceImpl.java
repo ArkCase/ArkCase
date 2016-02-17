@@ -1,9 +1,6 @@
 package com.armedia.acm.pdf.service;
 
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.pdf.PdfServiceException;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.github.jaiimageio.impl.plugins.tiff.TIFFImageWriterSpi;
 import com.github.jaiimageio.plugins.tiff.TIFFImageWriteParam;
 import org.apache.fop.apps.FOPException;
@@ -17,7 +14,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,10 +54,6 @@ public class PdfServiceImpl implements PdfService
      * Logger instance.
      */
     private Logger log = LoggerFactory.getLogger(getClass());
-    /**
-     * Ecm file service.
-     */
-    private EcmFileService ecmFileService;
 
     /**
      * Random number generator.
@@ -221,31 +213,6 @@ public class PdfServiceImpl implements PdfService
      * Append one PDF file to another (incremental merge).
      *
      * @param pdDocument       source PDF, the document we are appending to
-     * @param ecmFile          document we are appending as ECM file
-     * @param pdfMergerUtility PDF merger utility
-     * @return merged document
-     * @throws PdfServiceException on error while merging
-     * @deprecated use {@link #addSource(PDFMergerUtility, EcmFile)} and {@link #mergeSources(PDFMergerUtility, String)}
-     */
-    @Deprecated
-    @Override
-    public PDDocument append(PDDocument pdDocument, EcmFile ecmFile, PDFMergerUtility pdfMergerUtility) throws PdfServiceException
-    {
-        InputStream is = null;
-        try
-        {
-            is = ecmFileService.downloadAsInputStream(ecmFile.getFileId());
-        } catch (MuleException | AcmUserActionFailedException e)
-        {
-            throw new PdfServiceException(e);
-        }
-        return append(pdDocument, is, pdfMergerUtility);
-    }
-
-    /**
-     * Append one PDF file to another (incremental merge).
-     *
-     * @param pdDocument       source PDF, the document we are appending to
      * @param filename         path to the document we are appending
      * @param pdfMergerUtility PDF merger utility
      * @return merged document
@@ -299,15 +266,16 @@ public class PdfServiceImpl implements PdfService
 
             TIFFImageWriteParam writeParam = new TIFFImageWriteParam(Locale.getDefault());
             writeParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-            writeParam.setCompressionType("JPEG");
+            writeParam.setCompressionType("CCITT T.6"); // Sharecare requires CCITT Group 4 Fax Encoding
 
             //full quality! could be: from 0.1f to 1.0f
             writeParam.setCompressionQuality(0.75f);
 
             for (PDPage pdPage : document.getPages())
             {
-                // using 150dpi as the lowest acceptable resolution
-                BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 150, ImageType.RGB);
+                log.debug("Rendering PDF page [{}/{}] as TIFF image", page, document.getNumberOfPages());
+                // using 200dpi b/w since Sharecare uses that resolution
+                BufferedImage bim = pdfRenderer.renderImageWithDPI(page, 200, ImageType.BINARY);
                 IIOImage image = new IIOImage(bim, null, null);
                 try
                 {
@@ -338,29 +306,6 @@ public class PdfServiceImpl implements PdfService
     public void addSource(PDFMergerUtility pdfMergerUtility, InputStream is) throws PdfServiceException
     {
         pdfMergerUtility.addSource(is);
-    }
-
-    /**
-     * Add source for merging into single PDF document.
-     *
-     * @param pdfMergerUtility PDF merger utility
-     * @param ecmFile          document we are appending as ECM file
-     * @throws PdfServiceException on error adding source ECM file
-     */
-    public void addSource(PDFMergerUtility pdfMergerUtility, EcmFile ecmFile) throws PdfServiceException
-    {
-        InputStream is = null;
-        try
-        {
-            log.debug("About to add PDF document [{}] for merging", ecmFile.getFileName());
-            is = ecmFileService.downloadAsInputStream(ecmFile.getFileId());
-        } catch (MuleException | AcmUserActionFailedException e)
-        {
-            log.error("Unable to add PDF document [{}] for merging", ecmFile.getFileName(), e);
-            throw new PdfServiceException(e);
-        }
-        addSource(pdfMergerUtility, is);
-        log.debug("PDF document successfully added [{}] for merging", ecmFile.getFileName());
     }
 
     /**
@@ -408,15 +353,5 @@ public class PdfServiceImpl implements PdfService
             throw new PdfServiceException(e);
         }
         log.debug("Multiple PDF documents successfully merged to [{}]", filename);
-    }
-
-    public EcmFileService getEcmFileService()
-    {
-        return ecmFileService;
-    }
-
-    public void setEcmFileService(EcmFileService ecmFileService)
-    {
-        this.ecmFileService = ecmFileService;
     }
 }
