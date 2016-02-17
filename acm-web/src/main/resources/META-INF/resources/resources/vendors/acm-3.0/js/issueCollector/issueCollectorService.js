@@ -6,20 +6,22 @@
  * @author manoj.dhungana
  */
 IssueCollector.Service = {
-    create : function() {
+    create: function () {
     }
 
     //will be read from the properties file soon
 
-    ,API_GET_JIRA_ISSUE_COLLECTOR             : "***REMOVED***/s/31413758042897b94fd2d74d89768365-T/en_US9cltp4/6346/2/1.4.16/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?locale=en-US&collectorId=aad5f79b"
+    ,
+    API_GET_JIRA_ISSUE_COLLECTOR: "https://project.armedia.com/jira/s/272b7e5d0b48558abb6f76f2cc38fb4c-T/en_US-f0xdna/6346/2/1.4.16/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=2b76dcde"
 
-    ,getIssueCollector: function() {
+    ,
+    getIssueCollector: function () {
         Acm.Service.ajax({
             type: "GET"
-            ,url: this.API_GET_JIRA_ISSUE_COLLECTOR
-            ,cache: true
-            ,dataType: "script"
-            ,nonAcmUrl: true
+            , url: this.API_GET_JIRA_ISSUE_COLLECTOR
+            , cache: true
+            , dataType: "script"
+            , nonAcmUrl: true
         });
     }
 };
