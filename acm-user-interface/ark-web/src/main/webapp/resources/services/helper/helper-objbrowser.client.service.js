@@ -173,6 +173,9 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     that.scope.linksShown = !that.scope.linksShown;
                 };
 
+                that.scope.$on("collapsed", function(event, collapsed) {
+                    that.scope.linksShown = !collapsed;
+                });
 
                 //that.scope.$on('main-component-started', function (e) {
                 //    that.scope.activeLinkId = "main";
