@@ -12,14 +12,11 @@ angular.module('cost-tracking').controller('CostTracking.DetailsController', ['$
             , componentId: "details"
             , retrieveObjectInfo: CostTrackingInfoService.getCostsheetInfo
             , validateObjectInfo: CostTrackingInfoService.validateCostsheet
-            , onObjectInfoRetrieved: function (costsheetInfo) {
-                $scope.costsheetInfo = costsheetInfo;
-            }
         });
 
 
         $scope.saveDetails = function() {
-            var costsheetInfo = Util.omitNg($scope.costsheetInfo);
+            var costsheetInfo = Util.omitNg($scope.objectInfo);
             CostTrackingInfoService.saveCostsheetInfo(costsheetInfo).then(
                 function (costsheetInfo) {
                     MessageService.info($translate.instant("costTracking.comp.details.informSaved"));

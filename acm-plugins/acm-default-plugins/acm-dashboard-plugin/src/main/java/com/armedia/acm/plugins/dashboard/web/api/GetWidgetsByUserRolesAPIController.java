@@ -48,7 +48,7 @@ public class GetWidgetsByUserRolesAPIController
     public List<Widget> getDashboardConfig(Authentication authentication, HttpSession session) throws AcmWidgetException, AcmObjectNotFoundException
     {
 
-        String userId = (String) authentication.getName().toLowerCase();
+        String userId = authentication.getName().toLowerCase();
         if (log.isInfoEnabled())
         {
             log.info("Finding widgets for user  based on the user roles'" + userId + "'");
@@ -112,8 +112,8 @@ public class GetWidgetsByUserRolesAPIController
         Set<Widget> retvalSet = new HashSet<>();
         List<AcmRole> userRoles = userDao.findAllRolesByUser(userId);
         Set<String> widgetSet = new HashSet<>();
-        String retVal = null;
-        String[] widgetArray = null;
+        String retVal;
+        String[] widgetArray;
 
         if (!dashboardPlugin.getPluginProperties().isEmpty())
         {
@@ -123,11 +123,18 @@ public class GetWidgetsByUserRolesAPIController
             {
                 String key = PropertyKeyByRole.getPropertyKeyByRoleName(role.getRoleName()).getPropertyKey();
                 retVal = (String) dashboardPlugin.getPluginProperties().get(key);
-                widgetArray = retVal.split(",");
+                if(retVal!=null) {
+                    widgetArray = retVal.split(",");
+                } else {
+                    log.debug("widget - role");
+                    continue;
+                }
+
                 for (String widget : widgetArray)
                 {
                     widgetSet.add(widget.trim());
                 }
+
                 for (String widgetName : widgetSet)
                 {
 
@@ -138,22 +145,20 @@ public class GetWidgetsByUserRolesAPIController
                     if (widget.getWidgetId() != null)
                     {
                         getEventPublisher().publishWidgetEvent(widget, authentication, true, true);
-                        WidgetRole widgetRole = null;
+                        WidgetRole widgetRole;
                         widgetRole = addWidgetRoleIntoDB(widget, role);
                         getEventPublisher().publishWidgetRoleEvent(widgetRole, authentication, true, true);
                     } else
                     {
-                        WidgetRole widgetRole = null;
+                        WidgetRole widgetRole;
                         widgetRole = addWidgetRoleIntoDB(widget, role);
                         getEventPublisher().publishWidgetRoleEvent(widgetRole, authentication, true, true);
                     }
                 }
+                widgetSet.clear();
             }
         }
-        for (Widget widget : retvalSet)
-        {
-            retval.add(widget);
-        }
+        retval.addAll(retvalSet);
         return retval;
     }
 

@@ -7,25 +7,20 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         , Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService
         , HelperUiGridService, HelperObjectBrowserService, ComplaintInfoService) {
 
-        //$scope.promiseConfig, $scope.currentObjectId will be set by the helper
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"
             , componentId: "tasks"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                $scope.complaintInfo = complaintInfo;
-            }
         });
-        //var promiseConfig = ConfigService.getComponentConfig("complaints", "tasks");
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
         var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
 
-        $q.all([$scope.promiseConfig, promiseMyTasks]).then(function (data) {
+        $q.all([componentHelper.promiseConfig, promiseMyTasks]).then(function (data) {
             var config = data[0];
 
             gridHelper.setColumnDefs(config);
@@ -55,14 +50,14 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
         //if (Util.goodPositive(currentObjectId, false)) {
         //    ComplaintInfoService.getComplaintInfo(currentObjectId).then(function (complaintInfo) {
-        //        $scope.complaintInfo = complaintInfo;
+        //        $scope.objectInfo = complaintInfo;
         //        return complaintInfo;
         //    });
         //}
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($scope.currentObjectId, false)) {
+            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.COMPLAINT
-                    , $scope.currentObjectId
+                    , componentHelper.currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)
@@ -119,7 +114,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         $scope.addNew = function () {
             $state.go("newTaskFromParentObject", {
                 parentType: ObjectService.ObjectTypes.COMPLAINT,
-                parentObject: $scope.complaintInfo.complaintNumber
+                parentObject: $scope.objectInfo.complaintNumber
             });
 
         };

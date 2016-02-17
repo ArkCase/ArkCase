@@ -12,9 +12,6 @@ angular.module('complaints').controller('Complaints.DetailsController', ['$scope
             , componentId: "details"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                $scope.complaintInfo = complaintInfo;
-            }
         });
 
 
@@ -24,7 +21,7 @@ angular.module('complaints').controller('Complaints.DetailsController', ['$scope
         };
 
         $scope.saveDetails = function () {
-            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            var complaintInfo = Util.omitNg($scope.objectInfo);
             ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                 function (complaintInfo) {
                     MessageService.info($translate.instant("complaints.comp.details.informSaved"));

@@ -14,11 +14,11 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
             , componentId: "history"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
-                $scope.caseInfo = caseInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
+            }
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
@@ -32,20 +32,42 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
             gridHelper.setExternalPaging(config, $scope.retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
 
-            $scope.retrieveGridData();
+            //$scope.retrieveGridData();
         };
 
-        $scope.retrieveGridData = function () {
-            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+        //$scope.retrieveGridData = function () {
+        //    if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+        //        var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.CASE_FILE
+        //            , componentHelper.currentObjectId
+        //            , Util.goodValue($scope.start, 0)
+        //            , Util.goodValue($scope.pageSize, 10)
+        //            , Util.goodMapValue($scope.sort, "by")
+        //            , Util.goodMapValue($scope.sort, "dir")
+        //        );
+        //
+        //        $q.all([promiseQueryAudit, promiseUsers, componentHelper.promiseConfig]).then(function (data) {
+        //            var auditData = data[0];
+        //            $scope.gridOptions = $scope.gridOptions || {};
+        //            $scope.gridOptions.data = auditData.resultPage;
+        //            $scope.gridOptions.totalItems = auditData.totalCount;
+        //            //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+        //        });
+        //    }
+        //};
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+
+            var currentObjectId = Util.goodMapValue(objectInfo, "id");
+            if (Util.goodPositive(currentObjectId, false)) {
                 var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.CASE_FILE
-                    , $scope.currentObjectId
+                    , currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodMapValue($scope.sort, "by")
                     , Util.goodMapValue($scope.sort, "dir")
                 );
 
-                $q.all([promiseQueryAudit, promiseUsers, componentHelper.promiseConfig]).then(function (data) {
+                $q.all([promiseQueryAudit, promiseUsers]).then(function (data) {
                     var auditData = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = auditData.resultPage;
@@ -54,5 +76,6 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
                 });
             }
         };
+
     }
 ]);
