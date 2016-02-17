@@ -86,6 +86,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             $q.all([promiseTypes, promiseUsers, promiseGroups]).then(function (data) {
                 gridHelper.setLookupDropDown(HelperUiGridService.Lookups.PARTICIPANT_TYPES, "type", "name", $scope.participantTypes);
 
+                $scope.gridOptions.enableRowSelection = false;    //need to turn off for inline edit
                 for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                     if (HelperUiGridService.Lookups.PARTICIPANT_NAMES == $scope.config.columnDefs[i].lookup) {
                         //$scope.gridOptions.columnDefs[i].enableCellEdit = true;
