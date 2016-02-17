@@ -7,27 +7,27 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
         , Store, Util, ObjectService, ConfigService, LookupService, ObjectLookupService
         , ComplaintInfoService, ObjectPersonService, HelperObjectBrowserService, HelperUiGridService, Authentication) {
 
-        Authentication.queryUserInfo().then(
-            function (userInfo) {
-                $scope.userId = userInfo.userId;
-                return userInfo;
-            }
-        );
-
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"
             , componentId: "people"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                onObjectInfoRetrieved(complaintInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
             }
         });
+
+        Authentication.queryUserInfo().then(
+            function (userInfo) {
+                $scope.userId = userInfo.userId;
+                return userInfo;
+            }
+        );
 
         $scope.contactMethods = {gridOptions: {appScopeProvider: $scope}};
         $scope.organizations = {gridOptions: {appScopeProvider: $scope}};
@@ -129,17 +129,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             };
 
             promisePersonTypes.then(function (data) {
-                $scope.gridOptions.enableRowSelection = false;
-                for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                    if (HelperUiGridService.Lookups.PERSON_TYPES == $scope.config.columnDefs[i].lookup) {
-                        $scope.gridOptions.columnDefs[i].enableCellEdit = true;
-                        $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                        $scope.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
-                        $scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                        $scope.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.personTypes;
-                        $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
-                    }
-                }
+                gridHelper.setLookupDropDown(HelperUiGridService.Lookups.PERSON_TYPES, "type", "name", $scope.personTypes);
             });
         };
 
@@ -150,24 +140,8 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 gridContactMethodHelper.setBasicOptions(config.contactMethods);
                 gridContactMethodHelper.disableGridScrolling(config.contactMethods);
                 $q.all([promiseContactMethodTypes, promiseUsers]).then(function (data) {
-                    for (var i = 0; i < $scope.config.contactMethods.columnDefs.length; i++) {
-                        if (HelperUiGridService.Lookups.CONTACT_METHODS_TYPES == $scope.config.contactMethods.columnDefs[i].lookup) {
-                            $scope.contactMethods.gridOptions.columnDefs[i].enableCellEdit = true;
-                            $scope.contactMethods.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                            $scope.contactMethods.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
-                            $scope.contactMethods.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                            $scope.contactMethods.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.contactMethodTypes;
-                            $scope.contactMethods.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
-
-
-                        } else if (HelperUiGridService.Lookups.USER_FULL_NAMES == $scope.config.contactMethods.columnDefs[i].lookup) {
-                            $scope.contactMethods.gridOptions.columnDefs[i].enableCellEdit = false;
-                            $scope.contactMethods.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                            $scope.contactMethods.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                            $scope.contactMethods.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.userFullNames;
-                            $scope.contactMethods.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'id':'name'";
-                        }
-                    }
+                    gridHelper.setLookupDropDown(HelperUiGridService.Lookups.CONTACT_METHODS_TYPES, "type", "name", $scope.contactMethodTypes);
+                    gridHelper.setLookupDropDown(HelperUiGridService.Lookups.USER_FULL_NAMES, "id", "name", $scope.userFullNames);
                 });
 
                 //todo:
@@ -182,24 +156,8 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 gridOrganizationHelper.setBasicOptions(config.organizations);
                 gridOrganizationHelper.disableGridScrolling(config.organizations);
                 $q.all([promiseOrganizationTypes, promiseUsers]).then(function (data) {
-                    for (var i = 0; i < $scope.config.organizations.columnDefs.length; i++) {
-                        if (HelperUiGridService.Lookups.ORGANIZATION_TYPES == $scope.config.organizations.columnDefs[i].lookup) {
-                            $scope.organizations.gridOptions.columnDefs[i].enableCellEdit = true;
-                            $scope.organizations.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                            $scope.organizations.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
-                            $scope.organizations.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                            $scope.organizations.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.organizationTypes;
-                            $scope.organizations.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
-
-
-                        } else if (HelperUiGridService.Lookups.USER_FULL_NAMES == $scope.config.organizations.columnDefs[i].lookup) {
-                            $scope.organizations.gridOptions.columnDefs[i].enableCellEdit = false;
-                            $scope.organizations.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                            $scope.organizations.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                            $scope.organizations.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.userFullNames;
-                            $scope.organizations.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'id':'name'";
-                        }
-                    }
+                    gridHelper.setLookupDropDown(HelperUiGridService.Lookups.ORGANIZATION_TYPES, "type", "name", $scope.organizationTypes);
+                    gridHelper.setLookupDropDown(HelperUiGridService.Lookups.USER_FULL_NAMES, "id", "name", $scope.userFullNames);
                 });
             }
         };
@@ -211,24 +169,8 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 gridAddressHelper.setBasicOptions(config.addresses);
                 gridAddressHelper.disableGridScrolling(config.addresses);
                 $q.all([promiseAddressTypes, promiseUsers]).then(function (data) {
-                    for (var i = 0; i < $scope.config.addresses.columnDefs.length; i++) {
-                        if (HelperUiGridService.Lookups.ADDRESS_TYPES == $scope.config.addresses.columnDefs[i].lookup) {
-                            $scope.addresses.gridOptions.columnDefs[i].enableCellEdit = true;
-                            $scope.addresses.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                            $scope.addresses.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
-                            $scope.addresses.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                            $scope.addresses.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.addressTypes;
-                            $scope.addresses.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
-
-
-                        } else if (HelperUiGridService.Lookups.USER_FULL_NAMES == $scope.config.addresses.columnDefs[i].lookup) {
-                            $scope.addresses.gridOptions.columnDefs[i].enableCellEdit = false;
-                            $scope.addresses.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                            $scope.addresses.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                            $scope.addresses.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.userFullNames;
-                            $scope.addresses.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'id':'name'";
-                        }
-                    }
+                    gridHelper.setLookupDropDown(HelperUiGridService.Lookups.ADDRESS_TYPES, "type", "name", $scope.addressTypes);
+                    gridHelper.setLookupDropDown(HelperUiGridService.Lookups.USER_FULL_NAMES, "id", "name", $scope.userFullNames);
                 });
             }
         };
@@ -240,24 +182,8 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 gridAliasHelper.setBasicOptions(config.aliases);
                 gridAliasHelper.disableGridScrolling(config.aliases);
                 $q.all([promiseAliasTypes, promiseUsers]).then(function (data) {
-                    for (var i = 0; i < $scope.config.aliases.columnDefs.length; i++) {
-                        if (HelperUiGridService.Lookups.ALIAS_TYPES == $scope.config.aliases.columnDefs[i].lookup) {
-                            $scope.aliases.gridOptions.columnDefs[i].enableCellEdit = true;
-                            $scope.aliases.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                            $scope.aliases.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
-                            $scope.aliases.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                            $scope.aliases.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.aliasTypes;
-                            $scope.aliases.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
-
-
-                        } else if (HelperUiGridService.Lookups.USER_FULL_NAMES == $scope.config.aliases.columnDefs[i].lookup) {
-                            $scope.aliases.gridOptions.columnDefs[i].enableCellEdit = false;
-                            $scope.aliases.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                            $scope.aliases.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                            $scope.aliases.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.userFullNames;
-                            $scope.aliases.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'id':'name'";
-                        }
-                    }
+                    gridHelper.setLookupDropDown(HelperUiGridService.Lookups.ALIAS_TYPES, "type", "name", $scope.aliasTypes);
+                    gridHelper.setLookupDropDown(HelperUiGridService.Lookups.USER_FULL_NAMES, "id", "name", $scope.userFullNames);
                 });
             }
         };
@@ -269,24 +195,8 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 gridSecurityTagHelper.setBasicOptions(config.securityTags);
                 gridSecurityTagHelper.disableGridScrolling(config.securityTags);
                 $q.all([promiseSecurityTagTypes, promiseUsers]).then(function (data) {
-                    for (var i = 0; i < $scope.config.securityTags.columnDefs.length; i++) {
-                        if (HelperUiGridService.Lookups.SECURITY_TAG_TYPES == $scope.config.securityTags.columnDefs[i].lookup) {
-                            $scope.securityTags.gridOptions.columnDefs[i].enableCellEdit = true;
-                            $scope.securityTags.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                            $scope.securityTags.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
-                            $scope.securityTags.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                            $scope.securityTags.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.securityTagTypes;
-                            $scope.securityTags.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
-
-
-                        } else if (HelperUiGridService.Lookups.USER_FULL_NAMES == $scope.config.securityTags.columnDefs[i].lookup) {
-                            $scope.securityTags.gridOptions.columnDefs[i].enableCellEdit = false;
-                            $scope.securityTags.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                            $scope.securityTags.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                            $scope.securityTags.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.userFullNames;
-                            $scope.securityTags.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'id':'name'";
-                        }
-                    }
+                    gridHelper.setLookupDropDown(HelperUiGridService.Lookups.SECURITY_TAG_TYPES, "type", "name", $scope.securityTagTypes);
+                    gridHelper.setLookupDropDown(HelperUiGridService.Lookups.USER_FULL_NAMES, "id", "name", $scope.userFullNames);
                 });
             }
         };
@@ -318,15 +228,15 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         };
 
-        var onObjectInfoRetrieved = function (complaintInfo) {
-            $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, $scope.promiseConfig]).then(function () {
-                $scope.complaintInfo = complaintInfo;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, componentHelper.promiseConfig]).then(function () {
+                $scope.objectInfo = objectInfo;
                 $scope.gridOptions = $scope.gridOptions || {};
-                $scope.gridOptions.data = $scope.complaintInfo.personAssociations;
-                //gridHelper.hidePagingControlsIfAllDataShown($scope.complaintInfo.personAssociations.length);
+                $scope.gridOptions.data = $scope.objectInfo.personAssociations;
+                //gridHelper.hidePagingControlsIfAllDataShown($scope.objectInfo.personAssociations.length);
 
-                for (var i = 0; i < $scope.complaintInfo.personAssociations.length; i++) {
-                    var personAssociation = $scope.complaintInfo.personAssociations[i];
+                for (var i = 0; i < $scope.objectInfo.personAssociations.length; i++) {
+                    var personAssociation = $scope.objectInfo.personAssociations[i];
 
                     personAssociation.acm$_contactMethods = {};
                     personAssociation.acm$_contactMethods.gridOptions = Util.goodValue($scope.contactMethods.gridOptions, {
@@ -451,7 +361,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             //
             if (Util.isEmpty(rowEntity.id)) {
                 var pa = newPersonAssociation();
-                pa.parentId = $scope.complaintInfo.complaintId;
+                pa.parentId = $scope.objectInfo.complaintId;
                 pa.parentType = ObjectService.ObjectTypes.COMPLAINT;
                 pa.person.className = Util.goodValue($scope.config.className); //"com.armedia.acm.plugins.person.model.Person";
                 pa.person.givenName = givenName;
@@ -467,7 +377,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 // update person association
                 //
             } else {
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                     function (complaintSaved) {
                         return complaintSaved;
@@ -513,7 +423,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         };
         $scope.updateRowContactMethods = function (personAssociation, rowEntity) {
-            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            var complaintInfo = Util.omitNg($scope.objectInfo);
             ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                 function (complaintSaved) {
                     var personAssociationsSaved = Util.goodMapValue(complaintSaved, "personAssociations", []);
@@ -540,7 +450,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };
@@ -560,7 +470,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         };
         $scope.updateRowOrganizations = function (personAssociation, rowEntity) {
-            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            var complaintInfo = Util.omitNg($scope.objectInfo);
             if(rowEntity.organizationType && rowEntity.organizationValue) {
                 ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                     function (complaintSaved) {
@@ -589,7 +499,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };
@@ -608,7 +518,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         };
         $scope.updateRowAddresses = function (personAssociation, rowEntity) {
-            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            var complaintInfo = Util.omitNg($scope.objectInfo);
             ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                 function (complaintSaved) {
                     var personAssociationsSaved = Util.goodMapValue(complaintSaved, "personAssociations", []);
@@ -635,7 +545,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };
@@ -654,7 +564,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         };
         $scope.updateRowAliases = function (personAssociation, rowEntity) {
-            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            var complaintInfo = Util.omitNg($scope.objectInfo);
             if (rowEntity.aliasType && rowEntity.aliasValue) {
                 ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                     function (complaintSaved) {
@@ -683,7 +593,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };
@@ -706,7 +616,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to save for deleting a new row
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };

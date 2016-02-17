@@ -12,9 +12,6 @@ angular.module('time-tracking').controller('TimeTracking.InfoController', ['$sco
             , componentId: "info"
             , retrieveObjectInfo: TimeTrackingInfoService.getTimesheetInfo
             , validateObjectInfo: TimeTrackingInfoService.validateTimesheet
-            , onObjectInfoRetrieved: function (timesheetInfo) {
-                $scope.timesheetInfo = timesheetInfo;
-            }
         });
 
     }

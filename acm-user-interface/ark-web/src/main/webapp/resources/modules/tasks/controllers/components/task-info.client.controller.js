@@ -14,8 +14,8 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             , componentId: "info"
             , retrieveObjectInfo: TaskInfoService.getTaskInfo
             , validateObjectInfo: TaskInfoService.validateTaskInfo
-            , onObjectInfoRetrieved: function (taskInfo) {
-                onObjectInfoRetrieved(taskInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
@@ -44,11 +44,11 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
 
         $scope.dueDate = null;
         $scope.taskStartDate = null;
-        var onObjectInfoRetrieved = function (taskInfo) {
-            $scope.taskInfo = taskInfo;
-            $scope.dueDate = ($scope.taskInfo.dueDate) ? moment($scope.taskInfo.dueDate).toDate() : null;
-            $scope.taskStartDate = ($scope.taskInfo.taskStartDate) ? moment($scope.taskInfo.taskStartDate).toDate() : null;
-            $scope.assignee = ObjectModelService.getAssignee($scope.taskInfo);
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+            $scope.dueDate = ($scope.objectInfo.dueDate) ? moment($scope.objectInfo.dueDate).toDate() : null;
+            $scope.taskStartDate = ($scope.objectInfo.taskStartDate) ? moment($scope.objectInfo.taskStartDate).toDate() : null;
+            $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
         };
 
 
@@ -59,24 +59,24 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             saveTask();
         };
         $scope.updateAssignee = function () {
-            //var taskInfo = Util.omitNg($scope.taskInfo);
-            //TasksModelsService.setAssignee($scope.taskInfo, $scope.assignee);
+            //var taskInfo = Util.omitNg($scope.objectInfo);
+            //TasksModelsService.setAssignee($scope.objectInfo, $scope.assignee);
             saveTask();
         };
         $scope.updatePriority = function () {
             saveTask();
         };
         $scope.updateStartDate = function (taskStartDate) {
-            $scope.taskInfo.taskStartDate = (taskStartDate) ? moment(taskStartDate).format($scope.config.dateFormat): null;
+            $scope.objectInfo.taskStartDate = (taskStartDate) ? moment(taskStartDate).format($scope.config.dateFormat): null;
             saveTask();
         };
         $scope.updateDueDate = function (dueDate) {
-            $scope.taskInfo.dueDate = (dueDate) ? moment(dueDate).format($scope.config.dateFormat): null;
+            $scope.objectInfo.dueDate = (dueDate) ? moment(dueDate).format($scope.config.dateFormat): null;
             saveTask();
         };
 
         function saveTask() {
-            var taskInfo = Util.omitNg($scope.taskInfo);
+            var taskInfo = Util.omitNg($scope.objectInfo);
             if (TaskInfoService.validateTaskInfo(taskInfo)) {
                 TaskInfoService.saveTaskInfo(taskInfo).then(
                     function (taskInfo) {

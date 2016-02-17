@@ -289,7 +289,10 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * @param {Array} lookupArray Lookup array of pairs of (key, value)
              *
              * @description
-             * Set up dropdown options for a column identified by a lookupName
+             * Set up dropdown options for a column identified by a 'lookupName'. A 'lookupName' is defined in columndDefs
+             * of a ui-grid. It has to be unique to the lookup. 'lookupArray' is an array contains key-value pairs.
+             * The names of key and value are part of parameters of this function. The lookup data must be same for
+             * all rows.
              */
             , setLookupDropDown: function (lookupName, lookupKeyName, lookupValueName, lookupArray) {
                 var that = this;
@@ -320,8 +323,11 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * @param {Array} lookupArrayPath Lookup array of pairs of (key, value)
              *
              * @description
-             * Set up dropdown options for a column identified by a lookupName. Each row may have different lookups.
-             * Lookup arrays of row based lookup are saved in each row data identified by lookupArraypath.
+             * Set up dropdown options for a column identified by a 'lookupName'. A 'lookupName' is defined in columndDefs
+             * of a ui-grid. It has to be unique to the lookup. Each row may have different lookup data set.
+             * A property of the row points to the lookup the row is using. The property name is passed as a parameter
+             * 'lookupArraypath'.
+             *
              */
             , setRowLookupDropDown: function (lookupName, lookupKeyName, lookupValueName, lookupArrayPath) {
                 var that = this;

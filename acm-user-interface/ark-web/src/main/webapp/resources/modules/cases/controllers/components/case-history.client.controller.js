@@ -14,9 +14,6 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
             , componentId: "history"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
-                $scope.caseInfo = caseInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
             }
@@ -38,7 +35,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
         $scope.retrieveGridData = function () {
             if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                 var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.CASE_FILE
-                    , $scope.currentObjectId
+                    , componentHelper.currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodMapValue($scope.sort, "by")
