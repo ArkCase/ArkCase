@@ -14,16 +14,19 @@
 
     <!-- The login page itself, along with the JavaScript and images that
          appear on the login page, do not have to be protected.  -->
-    <http security="none" pattern="/login" />
-    <http security="none" pattern="/assets/css/login.css" />
-    <http security="none" pattern="/lib/bootstrap/dist/css/bootstrap.css" />
-    <http security="none" pattern="/proxy/resources/branding/loginlogo.png" />
+    <http security="none" pattern="/login"/>
+    <http security="none" pattern="/assets/css/login.css"/>
+    <!-- All lib are public, no security needed-->
+    <http security="none" pattern="/lib/**"/>
+    <http security="none" pattern="/proxy/resources/branding/loginlogo.png"/>
+    <!-- external resources, pages where no security needed-->
+    <http security="none" pattern="/external/**"/>
 
     <!-- arkCaseAuthenticationProvider is defined in spring-library-surf-connector.xml -->
 
     <http
             auto-config="true">
-        <intercept-url pattern="/**" access="ROLE_USER_INTERFACE" />
+        <intercept-url pattern="/**" access="ROLE_USER_INTERFACE"/>
         <form-login
                 login-page="/login"
                 default-target-url="/home.html#!/welcome"
@@ -36,7 +39,7 @@
     </http>
 
     <authentication-manager>
-        <authentication-provider ref="arkCaseAuthenticationProvider" />
+        <authentication-provider ref="arkCaseAuthenticationProvider"/>
     </authentication-manager>
 
 </beans:beans>
