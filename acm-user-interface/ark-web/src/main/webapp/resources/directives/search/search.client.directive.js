@@ -77,10 +77,19 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 scope.facets = [];
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
+                scope.emptySearch = true;
+                if(typeof scope.config.emptySearch !== 'undefined') {
+                    scope.emptySearch = scope.config.emptySearch;
+                }
                 scope.queryExistingItems = function () {
-                	if (scope.searchQuery.length === 0 || !scope.searchQuery.trim()){
-                        scope.searchQuery = "";
-                        return;
+                    if (!scope.searchQuery || scope.searchQuery.length === 0) {
+                        if (!scope.emptySearch) {
+                            scope.searchQuery = "";
+                            return;
+                        }
+                        else {
+                            scope.searchQuery = "";
+                        }
                     }
                     if (scope.pageSize >= 0 && scope.start >= 0) {
                         var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*", scope.filters, scope.pageSize, scope.start);
