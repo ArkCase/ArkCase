@@ -7,16 +7,13 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
         , Util, ConfigService, ObjectService, LookupService, ObjectLookupService
         , ObjectCorrespondenceService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"
             , componentId: "correspondence"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                $scope.complaintInfo = complaintInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
             }
@@ -57,9 +54,9 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
         );
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($scope.currentObjectId, false)) {
+            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                 var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.COMPLAINT
-                    , $scope.currentObjectId
+                    , componentHelper.currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)
@@ -90,8 +87,8 @@ angular.module('complaints').controller('Complaints.CorrespondenceController', [
         };
 
         $scope.addNew = function () {
-            var complaintId = Util.goodValue($scope.complaintInfo.complaintId, 0);
-            var folderId = Util.goodMapValue($scope.complaintInfo, "container.folder.cmisFolderId", "");
+            var complaintId = Util.goodValue($scope.objectInfo.complaintId, 0);
+            var folderId = Util.goodMapValue($scope.objectInfo, "container.folder.cmisFolderId", "");
             var template = $scope.correspondenceForm.value;
             var promiseCreateCorrespondence = ObjectCorrespondenceService.createCorrespondence(template, ObjectService.ObjectTypes.COMPLAINT, $stateParams.id, folderId);
 

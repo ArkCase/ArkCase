@@ -5,15 +5,15 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
     , function ($scope, $stateParams, $modal
         , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, DocTreeService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             moduleId: "tasks"
             , componentId: "attachments"
             , scope: $scope
             , stateParams: $stateParams
             , retrieveObjectInfo: TaskInfoService.getTaskInfo
             , validateObjectInfo: TaskInfoService.validateTaskInfo
-            , onObjectInfoRetrieved: function (taskInfo) {
-                $scope.taskInfo = taskInfo;
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
@@ -39,20 +39,26 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             }
         );
 
+        //$scope.objectType = ObjectService.ObjectTypes.TASK;
+        //$scope.objectId = $stateParams.id;
+        //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+        //if (Util.goodPositive(currentObjectId, false)) {
+        //    TaskInfoService.getTaskInfo(currentObjectId).then(function (taskInfo) {
+        //        $scope.objectInfo = taskInfo;
+        //        $scope.objectInfo = taskInfo;
+        //        $scope.objectId = taskInfo.taskId;
+        //        return taskInfo;
+        //    });
+        //}
         $scope.objectType = ObjectService.ObjectTypes.TASK;
-        $scope.objectId = $stateParams.id;
-        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        if (Util.goodPositive(currentObjectId, false)) {
-            TaskInfoService.getTaskInfo(currentObjectId).then(function (taskInfo) {
-                $scope.taskInfo = taskInfo;
-                $scope.objectInfo = taskInfo;
-                $scope.objectId = taskInfo.taskId;
-                return taskInfo;
-            });
-        }
+        $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+            $scope.objectId = objectInfo.taskId;
+        };
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
-            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.taskInfo, $scope.fileTypes);
+            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, $scope.fileTypes);
         };
 
         $scope.onClickRefresh = function () {

@@ -7,15 +7,15 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
         , Store, Util, ConfigService, ComplaintInfoService, LookupService
         , ObjectLookupService, HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"
             , componentId: "participants"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                onObjectInfoRetrieved(complaintInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
@@ -64,25 +64,11 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
 
 
             $q.all([promiseTypes, promiseUsers, promiseGroups]).then(function (data) {
+                gridHelper.setLookupDropDown(HelperUiGridService.Lookups.PARTICIPANT_TYPES, "type", "name", $scope.participantTypes);
+
                 $scope.gridOptions.enableRowSelection = false;    //need to turn off for inline edit
-                //$scope.gridOptions.enableCellEdit = true;
-                //$scope.gridOptions.enableCellEditOnFocus = true;
                 for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                    if (HelperUiGridService.Lookups.PARTICIPANT_TYPES == $scope.config.columnDefs[i].lookup) {
-                        $scope.gridOptions.columnDefs[i].enableCellEdit = true;
-                        $scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                        $scope.gridOptions.columnDefs[i].editDropdownIdLabel = "type";
-                        $scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                        $scope.gridOptions.columnDefs[i].editDropdownOptionsArray = $scope.participantTypes;
-                        $scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'type':'name'";
-
-
-                    } else if (HelperUiGridService.Lookups.PARTICIPANT_NAMES == $scope.config.columnDefs[i].lookup) {
-                        //$scope.gridOptions.columnDefs[i].enableCellEdit = true;
-                        //$scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
-                        //$scope.gridOptions.columnDefs[i].editDropdownValueLabel = "name";
-                        //$scope.gridOptions.columnDefs[i].editDropdownRowEntityOptionsArrayPath = "acm$_participantNames";
-                        //$scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: row.entity.acm$_participantNames:'id':'name'";
+                    if (HelperUiGridService.Lookups.PARTICIPANT_NAMES == $scope.config.columnDefs[i].lookup) {
                         $scope.gridOptions.columnDefs[i].cellTemplate = "<div class='ui-grid-cell-contents' ng-click='grid.appScope.pickParticipant(row.entity)'>{{row.entity[col.field] | mapKeyValue: row.entity.acm$_participantNames:'id':'name'}}</div>";
                     }
                 }
@@ -146,7 +132,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
         );
 
         var onObjectInfoRetrieved = function (data) {
-            $q.all([promiseTypes, promiseUsers, promiseGroups, $scope.promiseConfig]).then(function () {
+            $q.all([promiseTypes, promiseUsers, promiseGroups, componentHelper.promiseConfig]).then(function () {
                 var participants = data.participants;
                 _.each(participants, function (participant) {
                     if ("*" === participant.participantType) {
@@ -160,7 +146,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
                     }
                 });
                 $scope.gridOptions.data = participants;
-                $scope.complaintInfo = data;
+                $scope.objectInfo = data;
                 //gridHelper.hidePagingControlsIfAllDataShown(participants.length);
             });
         };
@@ -173,7 +159,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
             $scope.gridOptions.data.push({});
         };
         $scope.updateRow = function (rowEntity) {
-            var complaintInfo = Util.omitNg($scope.complaintInfo);
+            var complaintInfo = Util.omitNg($scope.objectInfo);
             ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
                 function (complaintSaved) {
                     //if participant is newly added, fill incomplete values with the latest
@@ -196,7 +182,7 @@ angular.module('complaints').controller('Complaints.ParticipantsController', ['$
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
 

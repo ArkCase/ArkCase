@@ -7,16 +7,13 @@ angular.module('tasks').controller('Tasks.WorkflowOverviewController', ['$scope'
         , Util, ConfigService, ObjectService, TaskHistoryService, TaskInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             moduleId: "tasks"
             , componentId: "workflow"
             , scope: $scope
             , stateParams: $stateParams
             , retrieveObjectInfo: TaskInfoService.getTaskInfo
             , validateObjectInfo: TaskInfoService.validateTaskInfo
-            , onObjectInfoRetrieved: function (taskInfo) {
-                $scope.taskInfo = taskInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
             }
@@ -37,11 +34,11 @@ angular.module('tasks').controller('Tasks.WorkflowOverviewController', ['$scope'
 
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($scope.currentObjectId, false)) {
-                TaskInfoService.getTaskInfo($scope.currentObjectId).then(function (taskInfo) {
-                    $scope.taskInfo = taskInfo;
+            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+                TaskInfoService.getTaskInfo(componentHelper.currentObjectId).then(function (taskInfo) {
+                    $scope.objectInfo = taskInfo;
 
-                    var promiseQueryTaskHistory = TaskHistoryService.queryTaskHistory($scope.taskInfo);
+                    var promiseQueryTaskHistory = TaskHistoryService.queryTaskHistory($scope.objectInfo);
                     $q.all([promiseQueryTaskHistory, promiseUsers]).then(function (data) {
                         var taskHistory = data[0];
                         $scope.gridOptions.data = taskHistory;

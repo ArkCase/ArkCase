@@ -12,8 +12,8 @@ angular.module('cost-tracking').controller('CostTracking.PersonController', ['$s
             , componentId: "person"
             , retrieveObjectInfo: CostTrackingInfoService.getCostsheetInfo
             , validateObjectInfo: CostTrackingInfoService.validateCostsheet
-            , onObjectInfoRetrieved: function (costsheetInfo) {
-                onObjectInfoRetrieved(costsheetInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
@@ -28,10 +28,10 @@ angular.module('cost-tracking').controller('CostTracking.PersonController', ['$s
             gridHelper.setBasicOptions(config);
         };
 
-        var onObjectInfoRetrieved = function (costsheetInfo) {
-            $scope.costsheetInfo = costsheetInfo;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
             $scope.gridOptions = $scope.gridOptions || {};
-            $scope.gridOptions.data = [$scope.costsheetInfo.user];
+            $scope.gridOptions.data = [$scope.objectInfo.user];
         };
 
     }

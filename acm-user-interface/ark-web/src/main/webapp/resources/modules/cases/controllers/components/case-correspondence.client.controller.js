@@ -7,16 +7,13 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         , Util, ConfigService, ObjectService, LookupService, ObjectLookupService
         , ObjectCorrespondenceService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
             , componentId: "correspondence"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
-                $scope.caseInfo = caseInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
             }
@@ -58,9 +55,9 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         );
 
         $scope.retrieveGridData = function () {
-            if (Util.goodPositive($scope.currentObjectId, false)) {
+            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                 var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.CASE_FILE
-                    , $scope.currentObjectId
+                    , componentHelper.currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)
@@ -91,8 +88,8 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         };
 
         $scope.addNew = function () {
-            var caseId = Util.goodValue($scope.caseInfo.id, 0);
-            var folderId = Util.goodMapValue($scope.caseInfo, "container.folder.cmisFolderId", "");
+            var caseId = Util.goodValue($scope.objectInfo.id, 0);
+            var folderId = Util.goodMapValue($scope.objectInfo, "container.folder.cmisFolderId", "");
             var template = $scope.correspondenceForm.value;
             var promiseCreateCorrespondence = ObjectCorrespondenceService.createCorrespondence(template, ObjectService.ObjectTypes.CASE_FILE, $stateParams.id, folderId);
 

@@ -7,16 +7,13 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
         , Util, ObjectService, ConfigService, ObjectTimeService, CaseInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
             , componentId: "time"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
-                $scope.caseInfo = caseInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
                 onConfigRetrieved(componentConfig);
             }
@@ -38,10 +35,10 @@ angular.module('cases').controller('Cases.TimeController', ['$scope', '$statePar
             }
         };
 
-        if (Util.goodPositive($scope.currentObjectId, false)) {
-            ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.CASE_FILE, $scope.currentObjectId).then(
+        if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+            ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.CASE_FILE, componentHelper.currentObjectId).then(
                 function (timesheets) {
-                    $scope.promiseConfig.then(function (config) {
+                    componentHelper.promiseConfig.then(function (config) {
                         for (var i = 0; i < timesheets.length; i++) {
                             timesheets[i].acm$_formName = $translate.instant("cases.comp.time.formNamePrefix") + " " + Util.goodValue(timesheets[i].startDate) + " - " + Util.goodValue(timesheets[i].endDate);
                             timesheets[i].acm$_hours = _.reduce(Util.goodArray(timesheets[i].times), function (total, n) {
