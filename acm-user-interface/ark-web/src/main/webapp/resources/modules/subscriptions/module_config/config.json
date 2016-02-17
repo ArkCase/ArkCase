@@ -19,6 +19,7 @@
             "enabled": "true",
             "type": "grid",
             "enableFiltering": false,
+            "emptySearch":true,
             "typeAheadColumn":"title_parseable",
             "columnDefs": [
                 {
