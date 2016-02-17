@@ -167,35 +167,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public EcmFile update(EcmFile ecmFile, MultipartFile file,
                           Authentication authentication) throws AcmCreateObjectFailedException
     {
-        if (log.isInfoEnabled())
-        {
-            log.info("The user '" + authentication.getName() + "' updating file: '" + file.getOriginalFilename() + "'");
-        }
-
-        EcmFileUpdatedEvent event = null;
-
         try
         {
-            EcmFile updated = getEcmFileTransaction().updateFileTransaction(
-                    authentication,
-                    ecmFile,
-                    file.getInputStream());
-
-            event = new EcmFileUpdatedEvent(updated, authentication);
-
-            event.setSucceeded(true);
-            applicationEventPublisher.publishEvent(event);
-
-            return updated;
-        } catch (IOException | MuleException e)
+            return update(ecmFile, file.getInputStream(), authentication);
+        } catch (IOException e)
         {
-            if (event != null)
-            {
-                event.setSucceeded(false);
-                applicationEventPublisher.publishEvent(event);
-            }
-            log.error("Could not update file: " + e.getMessage(), e);
-            throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
+            throw new AcmCreateObjectFailedException(ecmFile.getFileName(), e.getMessage(), e);
         }
     }
 
