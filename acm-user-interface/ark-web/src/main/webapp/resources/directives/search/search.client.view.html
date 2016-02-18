@@ -20,7 +20,9 @@
     <div class="content-body">
         <div class="module-header">
             <div class="input-group">
-                <input  type="text"
+                <input
+                	ng-hide= "isMultiFilter"  
+                	type="text"
                     autofocus
                     class="form-control input-md"
                     ng-keyup="keyUp($event)"
@@ -31,6 +33,19 @@
                     typeahead-loading="loadingResults"
                     typeahead-no-results="noResults"
                 >
+                <tags-input
+                	ng-show= "isMultiFilter"                  
+                    ng-model="searchQuery"
+                    placeholder="{{searchPlaceholder}}"
+                    display-property="tag_token_lcs"
+                    key-property="tag_token_lcs"
+                    on-tag-adding="checkTag($tag)"
+                    on-tag-removed="onTagRemoved($tag)"
+                    replace-spaces-with-dashes="false"
+                    add-from-autocomplete-only="true"
+                >
+                <auto-complete min-length="1" max-results-to-show="10" source="queryTypeahead($query)"></auto-complete>
+                </tags-input>
                 <span class="input-group-btn">
                     <button class="btn btn-md btn-primary" type="button" ng-click="queryExistingItems()">{{searchBtn}}</button>
                 </span>
