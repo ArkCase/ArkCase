@@ -18,9 +18,9 @@ angular.module('cost-tracking').controller('CostTrackingController', ['$scope', 
 			}
 		});
 
-		$scope.$on("collapsed", function(event, collapsed) {
-			$scope.linksShown = !collapsed;
-		});
+		//$scope.$on("collapsed", function(event, collapsed) {
+		//	$scope.linksShown = !collapsed;
+		//});
 
 	}
 ]);

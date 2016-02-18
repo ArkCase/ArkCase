@@ -14,15 +14,23 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             , componentId: "documents"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
+            , onConfigRetrieved: function (componentConfig) {
+                return onConfigRetrieved(componentConfig);
+            }
             , onObjectInfoRetrieved: function (objectInfo) {
                 onObjectInfoRetrieved(objectInfo);
             }
         });
 
-        ConfigService.getModuleConfig("complaints").then(function (config) {
+        //ConfigService.getModuleConfig("complaints").then(function (config) {
+        //    $scope.treeConfig = config.docTree;
+        //    return config;
+        //});
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             $scope.treeConfig = config.docTree;
-            return config;
-        });
+        };
+
         ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.COMPLAINT).then(
             function (formTypes) {
                 $scope.fileTypes = $scope.fileTypes || [];
