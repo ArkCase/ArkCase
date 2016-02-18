@@ -12,16 +12,23 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             , stateParams: $stateParams
             , retrieveObjectInfo: TaskInfoService.getTaskInfo
             , validateObjectInfo: TaskInfoService.validateTaskInfo
+            , onConfigRetrieved: function (componentConfig) {
+                return onConfigRetrieved(componentConfig);
+            }
             , onObjectInfoRetrieved: function (objectInfo) {
                 onObjectInfoRetrieved(objectInfo);
             }
         });
 
 
-        ConfigService.getModuleConfig("tasks").then(function (config) {
+        //ConfigService.getModuleConfig("tasks").then(function (config) {
+        //    $scope.treeConfig = config.docTree;
+        //    return config;
+        //});
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             $scope.treeConfig = config.docTree;
-            return config;
-        });
+        };
 
         ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.TASK).then(
             function (formTypes) {
