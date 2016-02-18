@@ -16,7 +16,7 @@ angular.module('time-tracking').controller('TimeTracking.PersonController', ['$s
                 onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
             }
         });
 

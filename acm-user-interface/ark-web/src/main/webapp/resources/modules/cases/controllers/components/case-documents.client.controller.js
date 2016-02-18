@@ -14,15 +14,22 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             , componentId: "documents"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
+            , onConfigRetrieved: function (componentConfig) {
+                return onConfigRetrieved(componentConfig);
+            }
+            , onObjectInfoRetrieved: function (objectInfo) {
                 onObjectInfoRetrieved(objectInfo);
             }
         });
 
-        ConfigService.getModuleConfig("cases").then(function (config) {
+        //ConfigService.getModuleConfig("cases").then(function (config) {
+        //    $scope.treeConfig = config.docTree;
+        //    return config;
+        //});
+        var onConfigRetrieved = function (config) {
+            $scope.config = config;
             $scope.treeConfig = config.docTree;
-            return config;
-        });
+        };
 
         ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE).then(
             function (formTypes) {

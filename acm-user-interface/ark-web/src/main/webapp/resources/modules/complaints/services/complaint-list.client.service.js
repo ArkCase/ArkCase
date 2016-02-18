@@ -50,7 +50,7 @@ angular.module('services').factory('Complaint.ListService', ['$resource', '$tran
          *
          * @returns {Object} Promise
          */
-        Service.queryComplaintsTreeData = function (start, n, sort, filters, query) {
+        Service.queryComplaintsTreeData = function (start, n, sort, filters, query, nodeMaker) {
             var param = {};
             param.objectType = "COMPLAINT";
             param.start = Util.goodValue(start, 0);
@@ -72,12 +72,18 @@ angular.module('services').factory('Complaint.ListService', ['$resource', '$tran
                         treeData = {docs: [], total: data.response.numFound};
                         var docs = data.response.docs;
                         _.forEach(docs, function (doc) {
-                            treeData.docs.push({
-                                nodeId: Util.goodValue(doc.object_id_s, 0)
-                                , nodeType: ObjectService.ObjectTypes.COMPLAINT
-                                , nodeTitle: Util.goodValue(doc.title_parseable)
-                                , nodeToolTip: Util.goodValue(doc.title_parseable)
-                            });
+                            var node;
+                            if (nodeMaker) {
+                                node = nodeMaker(doc);
+                            } else {
+                                node = {
+                                    nodeId: Util.goodValue(doc.object_id_s, 0)
+                                    , nodeType: ObjectService.ObjectTypes.COMPLAINT
+                                    , nodeTitle: Util.goodValue(doc.title_parseable)
+                                    , nodeToolTip: Util.goodValue(doc.title_parseable)
+                                };
+                            }
+                            treeData.docs.push(node);
                         });
                         cacheComplaintList.put(cacheKey, treeData);
                         return treeData;

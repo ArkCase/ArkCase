@@ -15,7 +15,7 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
             }
         });
 
