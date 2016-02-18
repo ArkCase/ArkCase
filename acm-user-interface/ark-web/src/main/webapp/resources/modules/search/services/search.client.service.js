@@ -74,7 +74,7 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService',
                 url: "proxy/arkcase/api/v1/plugin/search/facetedSearch?q=:query",
                 cache: true,
                 isArray: false,
-                transformResponse: function transformResponse(data, headerGetter) {
+                transformResponse: function (data, headerGetter) {
                     if (Service.validateSolrData(JSON.parse(data))) {
                         var result = {};
                         var searchObj = JSON.parse(data);

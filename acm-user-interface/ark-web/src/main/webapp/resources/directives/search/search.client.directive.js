@@ -77,9 +77,19 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 scope.facets = [];
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
+                scope.emptySearch = true;
+                if(typeof scope.config.emptySearch !== 'undefined') {
+                    scope.emptySearch = scope.config.emptySearch;
+                }
                 scope.queryExistingItems = function () {
-                    if (scope.searchQuery === undefined || scope.searchQuery === null) {
-                        scope.searchQuery = "";
+                    if (!scope.searchQuery || scope.searchQuery.length === 0) {
+                        if (!scope.emptySearch) {
+                            scope.searchQuery = "";
+                            return;
+                        }
+                        else {
+                            scope.searchQuery = "";
+                        }
                     }
                     if (scope.pageSize >= 0 && scope.start >= 0) {
                         var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*", scope.filters, scope.pageSize, scope.start);
@@ -99,23 +109,25 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                 scope.queryTypeahead = function (typeaheadQuery) {
                     typeaheadQuery = typeaheadQuery.replace('*', '');
-					typeaheadQuery = '/' + typeaheadQuery + '.*/';
-					
-					if (scope.filters.indexOf("USER") >= 0) {
-						return scope.queryTypeaheadForUser(typeaheadQuery);
-					} else {
-						var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery, scope.filters, 10, 0);
-						var deferred = $q.defer();
-						if (query) {
-							SearchService.queryFilteredSearch({
-								query: query
-							}, function (res) {
-								var result = _.pluck(res.response.docs, 'name');
-								deferred.resolve(result);
-							});
-						}
-						return deferred.promise;
-					}
+                    console.log(scope.filters);
+					if(!scope.hideTypeahead) {
+                        if (scope.filters && scope.filters.indexOf("USER") >= 0) {
+                            typeaheadQuery = '/' + typeaheadQuery + '.*/';
+                            return scope.queryTypeaheadForUser(typeaheadQuery);
+                        } else {
+                            var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery, scope.filters, 10, 0);
+                            var deferred = $q.defer();
+                            if (query) {
+                                SearchService.queryFilteredSearch({
+                                    query: query
+                                }, function (res) {
+                                    var result = _.pluck(res.response.docs, scope.typeAheadColumn);
+                                    deferred.resolve(result);
+                                });
+                            }
+                            return deferred.promise;
+                        }
+                    }
                 };
 				
 				scope.queryTypeaheadForUser = function (typeaheadQuery) {
@@ -131,6 +143,22 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             deferred.resolve(result);
                         });
                     }
+
+                    var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery + '*', scope.filters, 10, 0);
+                    var deferred = $q.defer();
+                    if (query) {
+                        SearchService.queryFilteredSearch({
+                            query: query
+                        }, function (res) {
+                            var result = _.pluck(res.response.docs, scope.typeAheadColumn);
+                            deferred.resolve(result);
+                        });
+                    }
+                    else
+                    {
+                        deferred.reject();
+                    }
+
                     return deferred.promise;
                 };
 
@@ -203,6 +231,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                 //prepare the UI-grid
                 scope.gridOptions = {};
+
                 scope.$watchCollection('config', function (newValue, oldValue) {
                     $q.when(newValue).then(function (config) {
                         scope.filterName = config.filterName;
@@ -221,7 +250,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             enableSelectAll: true,
                             exporterCsvFilename: config.csvFileName,
                             exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location")),
-                            exporterHeaderFilter : $translate.instant,
+                            exporterHeaderFilter: $translate.instant,
                             columnDefs: config.columnDefs,
                             onRegisterApi: function (gridApi) {
                                 scope.gridApi = gridApi;
@@ -237,7 +266,16 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                     scope.queryExistingItems();
                                 });
                             }
-                        }
+                        };
+                        //hideTypeahead is false by default, it will be changed in true if it is added in config
+                        scope.hideTypeahead = false;
+                        if (config.hideTypeahead)
+                            scope.hideTypeahead = true;
+                        //default for typeAheadColumn is name
+                        scope.typeAheadColumn = "name";
+                        if (config.typeAheadColumn)
+                            scope.typeAheadColumn = config.typeAheadColumn;
+
                         if (scope.gridOptions) {
                             if (scope.filter) {
                                 scope.filters = 'fq=' + scope.filter;
@@ -246,6 +284,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         }
                     }, true);
                 });
+
             },
 
             templateUrl: 'directives/search/search.client.view.html'

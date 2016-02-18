@@ -8,7 +8,7 @@
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-	<!-- 
+	<!--
 		Configure Spring Security.
 	-->
 
@@ -24,6 +24,8 @@
     <http security="none" pattern="/resources/styles/acm/**"/>
     <http security="none" pattern="/resources/styles/blueprint/**"/>
     <http security="none" pattern="/branding/**"/>
+    <http security="none" pattern="/external/**"/>
+
     <!-- acmAuthenticationManager, acmLogoutSuccessHandler, and acmAuthenticationDetailsFactory are defined
          in spring-library-user-login.xml -->
 
@@ -41,17 +43,17 @@
                 invalidate-session="true"/>
     </http>
 
-	<http 
+	<http
             auto-config="true"
             use-expressions="true"
             authentication-manager-ref="acmAuthenticationManager"  >
         <intercept-url pattern="/**" access="isAuthenticated()" />
-		<form-login 
+		<form-login
                 login-page="/login"
                 authentication-details-source-ref="acmAuthenticationDetailsFactory"
                 authentication-failure-url="/login?login_error=1"
                 authentication-success-handler-ref="acmLoginSuccessHandler"/>
-		<logout 
+		<logout
                 logout-url="/logout"
                 success-handler-ref="acmLogoutSuccessHandler"
                 invalidate-session="true"/>
