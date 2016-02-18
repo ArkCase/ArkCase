@@ -151,17 +151,17 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             var $td6 = $("<td/>");
                             var $span = $("<span/>").appendTo($td6);
                             var $select = $("<select/>")
-                                    .addClass('docversion inline')
-                                    .appendTo($span)
+                                .addClass('docversion inline')
+                                .appendTo($span)
                                 ;
 
                             if (Util.isArray(node.data.versionList)) {
                                 for (var i = 0; i < node.data.versionList.length; i++) {
                                     var versionTag = node.data.versionList[i].versionTag;
                                     var $option = $("<option/>")
-                                            .val(versionTag)
-                                            .text(versionTag)
-                                            .appendTo($select)
+                                        .val(versionTag)
+                                        .text(versionTag)
+                                        .appendTo($select)
                                         ;
 
                                     if (Util.goodValue(node.data.version) == versionTag) {
@@ -2511,20 +2511,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         } else {
                             var cacheKey = DocTree.getCacheKeyByNode(parent);
                             var fileId = node.data.objectId;
-                            var name = fileName;
-                            var ext = "";
-                            var ar = fileName.split(".");
-                            if (Util.isArray(ar) && 1 < ar.length) {
-                                ext = ar[ar.length - 1];
-                                name = fileName.substring(0, fileName.length - ext.length - 1);
-                            }
 
                             Util.serviceCall({
                                 service: Ecm.renameFile
                                 , param: {
-                                    fileId: fileId
-                                    , name: name
-                                    , ext: ext
+                                    fileId: fileId,
+                                    name: fileName
                                 }
                                 , data: {}
                                 , onSuccess: function (data) {
@@ -3353,7 +3345,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 var subject = Util.goodMapValue(DocTree, "treeConfig.emailSubject");
                 var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.subjectRegex"));
                 var match = subject.match(regex);
-                if(match && match[Util.goodMapValue(DocTree, "treeConfig.objectTypeRegexGroup")] && match[Util.goodMapValue(DocTree, "treeConfig.objectNumberRegexGroup")]) {
+                if (match && match[Util.goodMapValue(DocTree, "treeConfig.objectTypeRegexGroup")] && match[Util.goodMapValue(DocTree, "treeConfig.objectNumberRegexGroup")]) {
                     var objectType = match[DocTree.treeConfig.objectTypeRegexGroup];
                     var objectNumber = match[DocTree.treeConfig.objectNumberRegexGroup];
                     emailData.subject = objectType + DocTree.objectInfo[objectNumber];
