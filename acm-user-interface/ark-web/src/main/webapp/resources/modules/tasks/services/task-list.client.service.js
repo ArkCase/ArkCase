@@ -50,7 +50,7 @@ angular.module('tasks').factory('Task.ListService', ['$resource', '$translate', 
          *
          * @returns {Object} Promise
          */
-        Service.queryTasksTreeData = function (start, n, sort, filters, query) {
+        Service.queryTasksTreeData = function (start, n, sort, filters, query, nodeMaker) {
             var param = {};
             param.objectType = "TASK";
             param.start = Util.goodValue(start, 0);
@@ -79,12 +79,18 @@ angular.module('tasks').factory('Task.ListService', ['$resource', '$translate', 
                             //    nodeType = ObjectService.ObjectTypes.ADHOC_TASK;
                             //}
 
-                            treeData.docs.push({
-                                nodeId: Util.goodValue(doc.object_id_s, 0)
-                                , nodeType: nodeType
-                                , nodeTitle: Util.goodValue(doc.title_parseable)
-                                , nodeToolTip: Util.goodValue(doc.title_parseable)
-                            });
+                            var node;
+                            if (nodeMaker) {
+                                node = nodeMaker(doc);
+                            } else {
+                                node = {
+                                    nodeId: Util.goodValue(doc.object_id_s, 0)
+                                    , nodeType: nodeType
+                                    , nodeTitle: Util.goodValue(doc.title_parseable)
+                                    , nodeToolTip: Util.goodValue(doc.title_parseable)
+                                };
+                            }
+                            treeData.docs.push(node);
                         });
                         cacheTaskList.put(cacheKey, treeData);
                         return treeData;

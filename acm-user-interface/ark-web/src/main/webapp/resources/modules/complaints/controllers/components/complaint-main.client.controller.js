@@ -31,8 +31,7 @@ angular.module('complaints').controller('Complaints.MainController', ['$scope', 
 
         DashboardService.getConfig({moduleName: "COMPLAINT"}, function (data) {
             $scope.dashboard.complaintModel = angular.fromJson(data.dashboardConfig);
-            //jwu uncomment me back!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            //$scope.dashboard.complaintModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
+            $scope.dashboard.complaintModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
             $scope.$emit("collapsed", data.collapsed);
         });
     }

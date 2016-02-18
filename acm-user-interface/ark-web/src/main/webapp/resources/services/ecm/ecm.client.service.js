@@ -49,7 +49,7 @@ angular.module('services').factory('EcmService', ['$resource', 'StoreService', '
             }
             , renameFile: {
                 method: 'POST',
-                url: 'proxy/arkcase/api/latest/service/ecm/file/:fileId/:name/:ext'
+                url: 'proxy/arkcase/api/latest/service/ecm/file/:fileId/rename?newName=:name'
             }
             , moveFile: {
                 method: 'POST',
