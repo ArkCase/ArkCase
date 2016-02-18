@@ -18,6 +18,7 @@
                 <prop key="notification.user.batch.frequency">100000</prop>
                 <prop key="notification.user.batch.size">50</prop>
                 <prop key="notification.purge.days">30</prop>
+                <prop key="notification.send.from.system.user">false</prop>
             </props>
         </property>
     </bean>
