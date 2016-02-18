@@ -1,5 +1,6 @@
 /* @override http://dev.jsapn.armedianet.com/arkcase/assets/css/application.css
-	http://localhost:8080/arkcase/assets/css/application.css */
+	http://localhost:8080/arkcase/assets/css/application.css
+	http://10.21.4.149/arkcase/assets/css/application.css */
 
 /* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
 
@@ -281,6 +282,11 @@ span.fancytree-title {
 }
 .dashboard .weather .pull-left img {
 	padding: 15px;
+}
+
+.container-fluid{
+	margin: 0px;
+	padding: 0px;
 }
 
 
@@ -1070,6 +1076,3 @@ div.tabbed-footer .overview-tabs li:hover span:before {
 div.tabbed-footer .overview-tabs li:hover:last-child span:before {
     left: 58px;
 }
-
-
-
