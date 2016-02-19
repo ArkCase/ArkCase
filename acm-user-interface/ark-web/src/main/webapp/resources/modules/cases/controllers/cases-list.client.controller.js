@@ -42,5 +42,6 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
                 };
             }
         });
+
     }
 ]);

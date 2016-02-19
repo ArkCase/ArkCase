@@ -13,8 +13,8 @@
 
 //angular.module('services').factory('UtilService', ['$q', '$window', 'ngBootbox', 'LookupService',
 //    function ($q, $window, $ngBootbox, LookupService) {
-angular.module('services').factory('UtilService', ['$q'
-    , function ($q) {
+angular.module('services').factory('UtilService', ['$q', '$log'
+    , function ($q, $log) {
         var Util = {
 
             /**
@@ -314,10 +314,28 @@ angular.module('services').factory('UtilService', ['$q'
                     if (arg.onSuccess) {
                         rc = arg.onSuccess(successData);
                         if (undefined == rc) {
-                            if (arg.onInvalid) {
-                                rc = arg.onInvalid(successData);
+                            if (Util.goodMapValue(successData, "error", false)) {
+                                rc = {
+                                    status: Util.goodValue(Util.goodValue(successData.error.code), 0)
+                                    , statusText: "Partial Success"
+                                    , data: Util.goodValue(Util.goodValue(successData.error.msg), "Unknown error")
+                                };
+
+                            } else if (arg.onInvalid) {
+                                var rcInvalid = arg.onInvalid(successData);
+                                if (rcInvalid instanceof String) {
+                                    rc = {
+                                        status: 0
+                                        , statusText: "Customized error"
+                                        , data: rcInvalid
+                                    };
+                                }
                             } else {
-                                rc = Util.goodMapValue(successData, "error", "Validation failure");
+                                rc = {
+                                    status: 0
+                                    , statusText: "Validation error"
+                                    , data: "Validation error"
+                                };
                             }
                             callbacks.onError(rc);
                         } else {
@@ -335,8 +353,7 @@ angular.module('services').factory('UtilService', ['$q'
                     }
                     d.reject(rc);
 
-                    //todo: show error in UI
-                    console.log("service call error:" + rc);
+                    $log.error("service call error:[" + Util.goodValue(rc.status) + ", " + Util.goodValue(rc.statusText) + "]" + Util.goodValue(rc.data));
                     return rc;
                 };
 
