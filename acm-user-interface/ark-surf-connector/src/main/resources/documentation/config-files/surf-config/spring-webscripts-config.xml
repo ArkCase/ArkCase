@@ -77,7 +77,15 @@
                 <connector-id>http</connector-id>
                 <endpoint-url>http://localhost:8080/acm</endpoint-url>
             </endpoint>
-            
+
+            <endpoint>
+                <id>external</id>
+                <name>ArkCase - Unsecure access</name>
+                <description>Request to url's that not needed to be authenticated</description>
+                <connector-id>http</connector-id>
+                <endpoint-url>http://localhost:8080/acm</endpoint-url>
+            </endpoint>
+
             <!-- The default endpoint -->
             <default-endpoint-id>arkcase</default-endpoint-id>
 
