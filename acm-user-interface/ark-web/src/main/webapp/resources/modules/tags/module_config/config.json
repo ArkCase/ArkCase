@@ -19,6 +19,7 @@
             "enabled": "true",
             "type": "grid",
             "enableFiltering": false,
+            "typeAheadColumn": "tag_token_lcs",
             "emptySearch":false,
             "columnDefs": [
                 {
@@ -28,7 +29,7 @@
                     "visible": false
                 },
                 {
-                    "name": "name",
+                    "name": "tag_token_lcs",
                     "displayName": "tags.comp.grid.columns.name",
                     "headerCellFilter": "translate"
                 },
@@ -43,7 +44,7 @@
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "parent",
+                    "name": "parent_type_s",
                     "displayName": "tags.comp.grid.columns.parent",
                     "headerCellFilter": "translate"
                 },
@@ -66,7 +67,9 @@
             ],
             "paginationPageSize": 10,
             "start": 0,
-            "filter": "\"Object Type\": DOCUMENT"
+            "filter": "\"Object Type\": ASSOCIATED_TAG",
+            "multiFilter": "\"Tag Token\":",
+            "filterName" : "Object Type"
         }
    ]
 }
