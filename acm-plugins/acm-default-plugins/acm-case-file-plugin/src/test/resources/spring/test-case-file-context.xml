@@ -19,4 +19,9 @@
         </property>
     </bean>
 
+    <bean id="acmActivitiEventListener" class="com.armedia.acm.plugins.casefile.service.TestActivitiEventListener"/>
+
+    <bean id="acmActivitiEntityEventListener"
+          class="com.armedia.acm.plugins.casefile.service.TestActivitiEntityEventListener"/>
+
 </beans>

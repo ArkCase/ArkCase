@@ -12,12 +12,16 @@ public interface DashboardConstants
 
     String OBJECT_TYPE = DASHBOARD_MODULE_NAME;
     String EVENT_TYPE_DASHBOARD_UPDATED = "com.armedia.acm.dashboard.updated";
-    String EVENT_TYPE_GET_DASHBOARD_BY_USER_ID = "com.armedia.acm.dashboard.getByUserId";
     String EVENT_TYPE_DASHBOARD_CREATED = "com.armedia.acm.dashboard.created";
 
     String DEFAULT_DASHBOARD = "acm.defaultDashboard";
     String DEFAULT_DASHBOARD_NAME = "DASHBOARD";
     String DEFAULT_MODULE_DASHBOARD = "acm.moduleDefaultDashboard";
+
+    String ROLE_WIDGET_LIST = "acm.role.widgets";
+    String ROLE = "role";
+    String WIDGET_LIST = "widgetList";
+    String COMMA_SPLITTER = ",";
 
 
 }

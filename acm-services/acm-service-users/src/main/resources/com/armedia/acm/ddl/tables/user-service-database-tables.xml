@@ -5,27 +5,27 @@
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="cmValueLength" value="4000" dbms="postgresql,oracle"/>
-    <property name="cmValueLength" value="255" dbms="mysql"/>
+    <property name="cmValueLength" value="255" dbms="mysql,mssql"/>
 
     <property name="cmUserIdLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmUserIdLength" value="255" dbms="mysql"/>
+    <property name="cmUserIdLength" value="255" dbms="mysql,mssql"/>
 
     <property name="cmGroupNameLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmGroupNameLength" value="255" dbms="mysql"/>
+    <property name="cmGroupNameLength" value="255" dbms="mysql,mssql"/>
 
     <property name="lowerUserId" value="LOWER(cm_user_id)" dbms="oracle"/>
     <property name="lowerUserId" value="lower(cm_user_id)" dbms="postgresql"/>
-    <property name="lowerUserId" value="cm_user_id" dbms="mysql"/>
+    <property name="lowerUserId" value="cm_user_id" dbms="mysql,mssql"/>
 
 
     <property name="cmGroupSupervisorIdLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmGroupSupervisorIdLength" value="255" dbms="mysql"/>
+    <property name="cmGroupSupervisorIdLength" value="255" dbms="mysql,mssql"/>
 
     <property name="cmUserDirectoryNameLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmUserDirectoryNameLength" value="255" dbms="mysql"/>
+    <property name="cmUserDirectoryNameLength" value="255" dbms="mysql,mssql"/>
 
     <property name="cmRoleNameLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmRoleNameLength" value="255" dbms="mysql"/>
+    <property name="cmRoleNameLength" value="255" dbms="mysql,mssql"/>
 
 
     <changeSet id="01-user-service-tables" author="dmiller">

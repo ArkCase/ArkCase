@@ -8,15 +8,16 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                 treeData: '=',
                 onSelect: '&',
                 onLazyLoad: '=',
+                onLoadMore: '=',
                 onDeleteMembers: '=',
                 onDeleteGroup: '=',
                 onAddMembers: '=',
                 onAddSubGroup: '=',
                 onSetSupervisor: '=',
-                config: '='
+                config: '=',
+                totalGroups: '=',
             },
             link: function (scope, element, attrs) {
-
                 var treeOptions = {
                     source: [],
                     click: function (event, data) {
@@ -49,9 +50,9 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                         }
                         if (node.data.object_sub_type_s == "ADHOC_GROUP") {
                             $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs pull-left' type='button' ng-click='addSupervisor($event)' name='addSupervisor' title='Add/Edit Supervisor'><i class='fa fa-edit'></i></button>" +
-                                    "<button class='btn btn-link btn-xs' type='button' ng-click='addSubgroup($event)' name='addSubgroup' title='Add Subgroup'><i class='fa fa-users'></i></button>" +
-                                    "<button class='btn btn-link btn-xs' type='button' ng-click='pickUsersBtn($event)' name='addMembers' title='Add Members'><i class='fa fa-user'></i></button>" +
-                                    "<button class='btn btn-link btn-xs' type='button' ng-click='removeGroupBtn($event)' name='removeGroup' title='Remove Group'><i class='fa fa-trash-o'></i></button>")(scope)
+                                "<button class='btn btn-link btn-xs' type='button' ng-click='addSubgroup($event)' name='addSubgroup' title='Add Subgroup'><i class='fa fa-users'></i></button>" +
+                                "<button class='btn btn-link btn-xs' type='button' ng-click='pickUsersBtn($event)' name='addMembers' title='Add Members'><i class='fa fa-user'></i></button>" +
+                                "<button class='btn btn-link btn-xs' type='button' ng-click='removeGroupBtn($event)' name='removeGroup' title='Remove Group'><i class='fa fa-trash-o'></i></button>")(scope)
                             );
                         }
                         if (node.data.isMember == true && node.parent.data.object_sub_type_s == "ADHOC_GROUP") {
@@ -59,7 +60,6 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                         }
                     }
                 };
-
 
                 var $fancytree = $(element).find('table').fancytree(treeOptions);
 
@@ -70,6 +70,29 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                         }
                     });
                 }
+
+                //some default values if it is not set in config file
+                scope.pagerData = {
+                    pageSizes: [10, 20, 30, 40, 50],
+                    pageSize: 50,
+                    totalItems: scope.totalGroups
+                };
+                scope.$watchCollection('config', function (config, oldValue) {
+                    if (config) {
+                        if (config.paginationPageSizes)
+                            scope.pagerData.pageSizes = config.paginationPageSizes;
+                        if (config.paginationPageSize)
+                            scope.pagerData.pageSize = config.paginationPageSize;
+                        if (!scope.treeData || scope.treeData.length == 0)
+                            scope.onLoadMore(scope.pagerData.currentPage, scope.pagerData.pageSize);
+                    }
+                });
+
+                scope.$watchCollection('totalGroups', function (totalGroups, oldValue) {
+                    if (totalGroups && totalGroups != oldValue) {
+                        scope.pagerData.totalItems = scope.totalGroups;
+                    }
+                });
 
                 scope.pickUsersBtn = function (event) {
                     var node = $.ui.fancytree.getNode(event);
@@ -84,7 +107,7 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                 scope.addSubgroup = function (event) {
                     var node = $.ui.fancytree.getNode(event);
                     scope.onAddSubGroup(node.data).then(function (subGroup) {
-                        node.addNode(subGroup, 'firstChild')
+                        node.addNode(subGroup, 'firstChild');
                         node.setExpanded();
                     });
                 };
@@ -102,6 +125,7 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                     scope.onDeleteMembers(node.parent.data, node.data).then(function () {
                         node.remove();
                     });
+
                 };
 
                 scope.removeGroupBtn = function (event) {
@@ -110,7 +134,6 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                         node.remove();
                     });
                 };
-
 
             },
             templateUrl: 'directives/tree-view/org-hierarchy-tree-table.client.view.html'

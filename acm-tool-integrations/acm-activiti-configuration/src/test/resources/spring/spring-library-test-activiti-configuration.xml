@@ -5,4 +5,8 @@
 
     <bean id="acmActivitiTaskEventListener" class="com.armedia.acm.activiti.AcmActivitiTaskEventListener"/>
 
+    <bean id="acmActivitiEventListener" class="com.armedia.acm.activiti.TestActivitiEventListener"/>
+
+    <bean id="acmActivitiEntityEventListener" class="com.armedia.acm.activiti.TestActivitiEntityEventListener"/>
+
 </beans>

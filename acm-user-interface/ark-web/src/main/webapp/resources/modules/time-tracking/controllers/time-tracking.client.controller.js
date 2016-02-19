@@ -18,8 +18,8 @@ angular.module('time-tracking').controller('TimeTrackingController', ['$scope', 
             }
         });
 
-        $scope.$on("collapsed", function(event, collapsed) {
-            $scope.linksShown = !collapsed;
-        });
+        //$scope.$on("collapsed", function(event, collapsed) {
+        //    $scope.linksShown = !collapsed;
+        //});
 	}
 ]);

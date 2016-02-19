@@ -12,8 +12,8 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             , componentId: "info"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
-                onObjectInfoRetrieved(caseInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
@@ -53,8 +53,8 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
 
         $scope.dueDate = null;
         var onObjectInfoRetrieved = function (data) {
-            $scope.caseInfo = data;
-            $scope.dueDate = ($scope.caseInfo.dueDate) ? moment($scope.caseInfo.dueDate).toDate() : null;
+            $scope.objectInfo = data;
+            $scope.dueDate = ($scope.objectInfo.dueDate) ? moment($scope.objectInfo.dueDate).toDate() : null;
             $scope.owningGroup = ObjectModelService.getGroup(data);
             $scope.assignee = ObjectModelService.getAssignee(data);
             CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
@@ -74,7 +74,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
          * Persists the updated casefile metadata to the ArkCase database
          */
         function saveCase() {
-            var caseInfo = Util.omitNg($scope.caseInfo);
+            var caseInfo = Util.omitNg($scope.objectInfo);
             if (CaseInfoService.validateCaseInfo(caseInfo)) {
                 CaseInfoService.saveCaseInfo(caseInfo).then(
                     function (caseInfo) {
@@ -98,7 +98,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             saveCase();
         };
         $scope.updateOwningGroup = function() {
-            ObjectModelService.setGroup($scope.caseInfo, $scope.owningGroup);
+            ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
             saveCase();
         };
         $scope.updatePriority = function() {
@@ -108,11 +108,11 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             saveCase();
         };
         $scope.updateAssignee = function() {
-            ObjectModelService.setAssignee($scope.caseInfo, $scope.assignee);
+            ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
             saveCase();
         };
         $scope.updateDueDate = function(dueDate) {
-            $scope.caseInfo.dueDate = (dueDate) ? moment(dueDate).format($scope.config.dateFormat): null;
+            $scope.objectInfo.dueDate = (dueDate) ? moment(dueDate).format($scope.config.dateFormat): null;
             saveCase();
         };
 

@@ -1,10 +1,15 @@
 <div ng-controller="Audit.SelectionController">
 
     <div class="form-group">
-        <select class="form-control" ng-model="auditDropdown"
+
+        <label for="reportNameAudit" translate>audit.navigation.label.reportName</label>
+
+        <select class="form-control" id="reportNameAudit" ng-model="auditDropdown"
                 ng-options="option.id as option.name for option in config.auditDropdown">
         </select>
 
-        <input class="form-control" ng-model="selectId" type="text" placeholder="{{'audit.navigation.placeholder.inputId' | translate}}">
+        <label for="selectIDAudit" translate>audit.navigation.label.inputID</label>
+
+        <input class="form-control" id="selectIDAudit" ng-model="selectId" type="text" placeholder="{{'audit.navigation.placeholder.inputId' | translate}}">
     </div>
 </div>

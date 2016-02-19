@@ -250,12 +250,6 @@
       }
     ]
   },
-  "docTree": {
-    "emailSubject": "Task $taskId",
-    "subjectRegex": "(.*)\\$([^\\s]+)",
-    "objectTypeRegexGroup": 1,
-    "objectNumberRegexGroup": 2
-  },
   "components": [
     {
       "id": "main",
@@ -649,7 +643,13 @@
       "title": "Attachments",
       "icon": "fa fa-file",
       "enabled": true,
-      "type": "empty"
+      "type": "empty",
+      "docTree": {
+        "emailSubject": "Task $taskId",
+        "subjectRegex": "(.*)\\$([^\\s]+)",
+        "objectTypeRegexGroup": 1,
+        "objectNumberRegexGroup": 2
+      }
     },
     {
       "id": "notes",

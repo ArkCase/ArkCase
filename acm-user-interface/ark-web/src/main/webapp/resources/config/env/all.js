@@ -42,7 +42,7 @@ module.exports = {
                 'lib/angular-chart.js/dist/angular-chart.css'
             ],
             customJs: [
-                '***REMOVED***/s/31413758042897b94fd2d74d89768365-T/en_US9cltp4/6346/2/1.4.16/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?locale=en-US&collectorId=aad5f79b'
+                'https://project.armedia.com/jira/s/272b7e5d0b48558abb6f76f2cc38fb4c-T/en_US-f0xdna/6346/2/1.4.16/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=2b76dcde'
             ],
             js: [
                 'lib/jquery/dist/jquery.js',

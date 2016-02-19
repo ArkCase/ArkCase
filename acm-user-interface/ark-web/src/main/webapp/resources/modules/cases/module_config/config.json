@@ -213,12 +213,6 @@
       }
     ]
   },
-  "docTree": {
-    "emailSubject": "Case $caseNumber",
-    "subjectRegex": "(.*)\\$([^\\s]+)",
-    "objectTypeRegexGroup": 1,
-    "objectNumberRegexGroup": 2
-  },
   "components": [
     {
       "id": "main",
@@ -445,7 +439,13 @@
       "title": "Documents",
       "icon": "fa fa-file",
       "enabled": true,
-      "type": "empty"
+      "type": "empty",
+      "docTree": {
+        "emailSubject": "Case $caseNumber",
+        "subjectRegex": "(.*)\\$([^\\s]+)",
+        "objectTypeRegexGroup": 1,
+        "objectNumberRegexGroup": 2
+      }
     },
     {
       "id": "people",

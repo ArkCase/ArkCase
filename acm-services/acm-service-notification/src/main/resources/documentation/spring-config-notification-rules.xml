@@ -364,6 +364,42 @@
 		</property>
     </bean>
 	
+	<bean id="documentCreatedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+		<property name="globalRule" value="true"/>
+		<property name="queryType" value="CREATE"/>
+		<property name="executor" ref="noopExecutor"/>
+		<property name="jpaQuery">
+			<value>
+				<![CDATA[
+					SELECT
+					  u.userId AS user,
+					  CONCAT('Document(s) created in ${objectTypeLabel} ', ecmf.fileName, ' on ', a.eventDate) AS title,
+					  CONCAT('Document(s) created in ${objectTypeLabel} ', ecmf.fileName, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+					  'user' AS notificationType,
+					  a.objectId AS objectId,
+					  a.objectType AS objectType,
+					  ecmf.fileName AS objectName,
+					  ecmf.fileName AS objectTitle,
+					  u.mail as mail
+					FROM
+						AuditEvent a, EcmFile ecmf, AcmUser u
+					WHERE
+						a.userId = u.userId
+					AND
+						a.eventDate >= :lastRunDate
+					AND
+						a.fullEventType = 'com.armedia.acm.ecm.file.added'
+					AND
+						a.objectType = 'FILE'
+					AND
+						a.objectId = ecmf.fileId
+					ORDER BY
+						a.eventDate
+				]]>
+			</value>
+		</property>
+	</bean>
+	
         <!-- Senders Definition -->
         <bean id="emailNotificationSender" class="com.armedia.acm.services.notification.service.EmailNotificationSender">
                 <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>

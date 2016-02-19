@@ -5,16 +5,16 @@
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="cmAuditActivityLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmAuditActivityLength" value="255" dbms="mysql"/>
+    <property name="cmAuditActivityLength" value="255" dbms="mysql,mssql"/>
 
     <property name="cmKeyLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmKeyLength" value="255" dbms="mysql"/>
+    <property name="cmKeyLength" value="255" dbms="mysql,mssql"/>
 
     <property name="cmObjectTypeLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmObjectTypeLength" value="255" dbms="mysql"/>
+    <property name="cmObjectTypeLength" value="255" dbms="mysql,mssql"/>
 
     <property name="cmAuditPropertyNameLength" value="1024" dbms="postgresql,oracle"/>
-    <property name="cmAuditPropertyNameLength" value="255" dbms="mysql"/>
+    <property name="cmAuditPropertyNameLength" value="255" dbms="mysql,mssql"/>
 
     <changeSet id="01-create-audit-table" author="dmiller">
         <createTable tableName="acm_audit_log">
@@ -141,6 +141,17 @@
         </insert>
     </changeSet>
 
+    <changeSet id="09-acm_audit_add_requestId_column" author="bojan.milenkoski">
+        <addColumn tableName="acm_audit_log">
+            <column name="cm_audit_request_id" type="VARCHAR(36)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="10-acm_audit_log_property_change_cm_audit_property_value_column_type" author="bojan.milenkoski">
+        <modifyDataType columnName="cm_audit_property_value"
+                        newDataType="CLOB"
+                        tableName="acm_audit_log_property"/>
+    </changeSet>
 </databaseChangeLog>
     
 

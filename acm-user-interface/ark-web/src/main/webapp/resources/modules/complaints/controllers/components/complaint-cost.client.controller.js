@@ -7,18 +7,15 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
         , Util, ObjectService, ConfigService, ObjectCostService, ComplaintInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
 
-        new HelperObjectBrowserService.Component({
+        var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"
             , componentId: "cost"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                $scope.complaintInfo = complaintInfo;
-            }
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
             }
         });
 
@@ -39,10 +36,10 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
             }
         };
 
-        if (Util.goodPositive($scope.currentObjectId, false)) {
-            ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.COMPLAINT, $scope.currentObjectId).then(
+        if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+            ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.COMPLAINT, componentHelper.currentObjectId).then(
                 function (costsheets) {
-                    $scope.promiseConfig.then(function (config) {
+                    componentHelper.promiseConfig.then(function (config) {
                         for (var i = 0; i < costsheets.length; i++) {
                             costsheets[i].acm$_formName = $translate.instant("complaints.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
                             costsheets[i].acm$_costs = _.reduce(Util.goodArray(costsheets[i].costs), function (total, n) {

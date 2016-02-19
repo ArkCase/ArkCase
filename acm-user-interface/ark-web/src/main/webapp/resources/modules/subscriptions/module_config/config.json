@@ -19,6 +19,7 @@
             "enabled": "true",
             "type": "grid",
             "enableFiltering": false,
+            "emptySearch":true,
             "typeAheadColumn":"title_parseable",
             "columnDefs": [
                 {
@@ -60,7 +61,8 @@
             "paginationPageSize": 20,
             "start": 0,
             "filter": "\"Object Type\": SUBSCRIPTION_EVENT",
-            "filterName" : "Object Type"
+            "filterName" : "Object Type",
+            "csvFileName": "subscriptions.csv"
         }
 
     ]

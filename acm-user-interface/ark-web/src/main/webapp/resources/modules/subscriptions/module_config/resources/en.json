@@ -2,6 +2,7 @@
   "subscriptions": {
     "title": "Subscriptions",
     "search.btn": "Search",
+    "export.btn": "Export",
     "search.placeholder": "Search for subscriptions",
     "comp":{
       "grid": {

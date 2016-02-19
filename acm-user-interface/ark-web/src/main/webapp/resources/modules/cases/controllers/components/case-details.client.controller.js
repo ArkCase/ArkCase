@@ -12,9 +12,6 @@ angular.module('cases').controller('Cases.DetailsController', ['$scope', '$state
             , componentId: "details"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onObjectInfoRetrieved: function (caseInfo) {
-                $scope.caseInfo = caseInfo;
-            }
         });
 
 
@@ -28,17 +25,13 @@ angular.module('cases').controller('Cases.DetailsController', ['$scope', '$state
         //}
         $scope.saveDetails = function() {
             //$scope.editor.destroy();
-			var caseInfo = Util.omitNg($scope.caseInfo);
+			var caseInfo = Util.omitNg($scope.objectInfo);
             CaseInfoService.saveCaseInfo(caseInfo).then(
                 function (caseInfo) {
                     MessageService.info($translate.instant("cases.comp.details.informSaved"));
                     return caseInfo;
                 }
             );
-            //Util.serviceCall({
-            //    service: CasesService.save
-            //    , data: caseInfo
-            //});
         };
 
 

@@ -19,6 +19,7 @@
             "enabled": "true",
             "type": "grid",
             "enableFiltering": false,
+            "emptySearch":false,
             "hideTypeahead":true,
             "columnDefs": [
                 {
@@ -69,7 +70,8 @@
             "paginationPageSize": 20,
             "start": 0,
             "filter": "",
-            "filterName": ""
+            "filterName": "",
+            "csvFileName": "search.csv"
         }
     ]
 }

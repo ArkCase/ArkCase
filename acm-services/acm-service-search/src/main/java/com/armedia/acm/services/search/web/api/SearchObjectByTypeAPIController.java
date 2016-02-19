@@ -46,7 +46,8 @@ public class SearchObjectByTypeAPIController {
     @RequestMapping(value = "/{objectType}", method  = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String searchObjectByType(
-    		@PathVariable("objectType") String objectType,
+            @PathVariable("objectType") String objectType,
+            @RequestParam(value = "objectSubTypes", required = false, defaultValue = "") List<String> objectSubTypes,
             @RequestParam(value = "s", required = false, defaultValue = "") String sort,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
@@ -62,6 +63,9 @@ public class SearchObjectByTypeAPIController {
         String params = "";
         String query = "object_type_s:" + objectType;
         String user = authentication.getName();
+        if(!objectSubTypes.isEmpty()){
+            query += " AND object_sub_type_s:(" + String.join(" OR ", objectSubTypes) + ")";
+        }
         if (StringUtils.isBlank(filters)) {
             if (!StringUtils.isBlank(assignee)) {
                 query += " AND assignee_s:" + assignee;
@@ -98,7 +102,7 @@ public class SearchObjectByTypeAPIController {
         if (!StringUtils.isBlank(sort)){
           sortParams = findSortValuesAndCreateSotrString(objectType, sort);
         }
-        
+
         if (!StringUtils.isBlank(searchQuery)) {
         	String[] searchQueryProperties = findSearchQueryProperties(objectType);
         	params = addSearchQueryPropertiesToParams(searchQuery, searchQueryProperties, params);
@@ -111,10 +115,10 @@ public class SearchObjectByTypeAPIController {
                 startRow, maxRows, sortParams, params);
 
         publishSearchEvent(authentication, httpSession, true, results);
-          
+
         return results;
     }
-    
+
     @RequestMapping(value = "/advanced/{objectType}", method  = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String searchAdvancedObjectByType(
@@ -128,8 +132,8 @@ public class SearchObjectByTypeAPIController {
             HttpSession httpSession
     ) throws MuleException
     {
-        String query = "object_type_s:" + objectType;  
-        
+        String query = "object_type_s:" + objectType;
+
         if (!StringUtils.isBlank(assignee)) {
             query += " AND assignee_s:" + assignee;
         }
@@ -138,7 +142,7 @@ public class SearchObjectByTypeAPIController {
         {
             query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
         }
-        
+
         if ( log.isDebugEnabled() )
         {
             log.debug("Advanced Search: User '" + authentication.getName() + "' is searching for '" + query + "'");
@@ -146,7 +150,7 @@ public class SearchObjectByTypeAPIController {
 
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
                 query, startRow, maxRows, sort);
-     
+
         publishSearchEvent(authentication, httpSession, true, results);
 
         return results;
@@ -207,14 +211,14 @@ public class SearchObjectByTypeAPIController {
         publishSearchEvent(authentication, httpSession, true, results);
         return foundObjects;
     }
-    
+
     protected void publishSearchEvent(Authentication authentication,
             HttpSession httpSession,
             boolean succeeded, String jsonPayload)
     {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         SolrResponse solrResponse = gson.fromJson(jsonPayload, SolrResponse.class);
-        
+
         if ( solrResponse.getResponse() != null ) {
             List<SolrDocument> solrDocs = solrResponse.getResponse().getDocs();
             String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
@@ -296,7 +300,7 @@ public class SearchObjectByTypeAPIController {
         }
         return filters;
     }
-    
+
     private String[] findSearchQueryProperties(String objectType) {
         Collection<AcmPlugin> plugins = getAcmPluginManager().getAcmPlugins();
         List<String> suportedObjectTypes = null;
@@ -309,7 +313,7 @@ public class SearchObjectByTypeAPIController {
             for ( String objectTypeName : suportedObjectTypes ) {
                 if ( objectType.equals(objectTypeName) ) {
                 	String searchQueryPropertiesAsString = (String) plugin.getPluginProperties().get(SearchConstants.SEARCH_QUERY_PROPERTIES_KEY);
-                	
+
                 	if (StringUtils.isNotEmpty(searchQueryPropertiesAsString)) {
                 		return searchQueryPropertiesAsString.split(",");
                 	}
@@ -318,7 +322,7 @@ public class SearchObjectByTypeAPIController {
         }
         return null;
     }
-    
+
     private String addSearchQueryPropertiesToParams(String searchQuery, String[] searchQueryProperties, String params)
     {
     	if (searchQueryProperties != null && searchQueryProperties.length > 0 && StringUtils.isNotEmpty(searchQuery)) {
@@ -330,7 +334,7 @@ public class SearchObjectByTypeAPIController {
     			{
     				separator = " " + SearchConstants.OPERATOR_OR + " ";
     			}
-    			
+
     			// If the search keywords contains empty space, search for that particular phrase, otherwise find any objects that
     			// contains the characters in the searched properties
     			String value = searchQuery;
@@ -341,7 +345,7 @@ public class SearchObjectByTypeAPIController {
     			searchQueryBuilded += separator + searchQueryProperty.trim() + ":" + value;
     			index++;
     		}
-    		
+
     		String splitter = "";
     		if (StringUtils.isNotEmpty(params))
 			{
@@ -349,7 +353,7 @@ public class SearchObjectByTypeAPIController {
 			}
     		params += splitter + searchQueryBuilded;
     	}
-    	
+
     	return params;
     }
 
@@ -378,5 +382,5 @@ public class SearchObjectByTypeAPIController {
     public void setSearchEventPublisher(SearchEventPublisher searchEventPublisher) {
         this.searchEventPublisher = searchEventPublisher;
     }
-   
+
 }
