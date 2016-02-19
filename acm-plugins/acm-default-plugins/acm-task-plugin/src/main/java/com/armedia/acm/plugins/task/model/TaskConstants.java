@@ -8,7 +8,10 @@ public interface TaskConstants
     String OBJECT_TYPE = "TASK";
     String STATE_ACTIVE = "ACTIVE";
     String STATE_CLOSED = "CLOSED";
-    String STATE_DELETED = "DELETED";
+
+    // EDTRM-491: Use DELETE instead of DELETED, since the search filters for active objects filter out DELETE.
+    // So this way, deleted tasks won't show up when we search for active tasks.
+    String STATE_DELETED = "DELETE";
     Integer DEFAULT_PRIORITY = 50;
     String DEFAULT_PRIORITY_WORD = "Medium";
 
@@ -29,8 +32,6 @@ public interface TaskConstants
     String VARIABLE_NAME_REVIEWERS = "reviewers";
     String VARIABLE_NAME_TASK_NAME = "taskName";
     String VARIABLE_NAME_DOC_AUTHOR = "documentAuthor";
-
-
 
 
 }

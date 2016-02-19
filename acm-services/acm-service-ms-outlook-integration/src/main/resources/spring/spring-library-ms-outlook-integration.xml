@@ -19,6 +19,10 @@
                 <prop key="outlook.exchange.server.version">Exchange2010_SP2</prop>
                 <prop key="outlook.exchange.enable.autodiscovery">false</prop>
                 <prop key="outlook.exchange.client-access-server">https://outlook.office365.com/EWS/Exchange.asmx</prop>
+                <prop key="outlook.exchange.system_user_email">test@armedia.com</prop>
+                <prop key="outlook.exchange.system_user_email_password">testPass</prop>
+                <prop key="outlook.exchange.system_user_id">testId</prop>
+                
             </props>
         </property>
     </bean>
@@ -27,6 +31,10 @@
     <bean id="outlookService" class="com.armedia.acm.service.outlook.service.impl.OutlookServiceImpl">
         <property name="dao" ref="exchangeWebServicesOutlookDao"/>
         <property name="ecmFileService" ref="ecmFileService" />
+        <property name="sendFromSystemUser" value="${notification.send.from.system.user}" />
+        <property name="systemUserEmail" value="${outlook.exchange.system_user_email}" />
+        <property name="systemUserPass" value="${outlook.exchange.system_user_email_password}" />
+        <property name="systemUserId" value="${outlook.exchange.system_user_id}" />
     </bean>
 
     <bean id="outlookCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
