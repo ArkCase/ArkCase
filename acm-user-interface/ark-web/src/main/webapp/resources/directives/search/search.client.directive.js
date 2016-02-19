@@ -69,8 +69,9 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         exportBtn: '@',
                         searchQuery: '@',
                         searchPlaceholder: '@',
-                filter: '@',
-                config: '='            //= : two way binding so that the data can be monitored for changes
+		                filter: '@',
+		                multiFilter: '@',
+		                config: '='            //= : two way binding so that the data can be monitored for changes
             },
 
             link: function (scope) {    //dom operations
@@ -90,9 +91,19 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         else {
                             scope.searchQuery = "";
                         }
-                    }
+                    }                   
                     if (scope.pageSize >= 0 && scope.start >= 0) {
-                        var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*", scope.filters, scope.pageSize, scope.start);
+                    	if(scope.multiFilter) {
+                    		if(scope.searchQuery) {
+                    			if(scope.filters.indexOf("Tag Token") <=0) {
+                    				scope.filters += "&fq" + scope.multiFilter;
+                    			}
+                    				_.map(scope.searchQuery, function(tag) {
+                    					scope.filters += tag.tag_token_lcs + "|";
+                    				});
+                    		}
+                    	 }
+                    	var query = SearchQueryBuilder.buildFacetedSearchQuery((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.pageSize, scope.start);
                         if (query) {
                             SearchService.queryFilteredSearch({
                                     query: query
@@ -106,16 +117,28 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         }
                     }
                 };
+                
+                scope.onTagRemoved = function (tagRemoved) {
+                	scope.filters = 'fq=' + scope.filter;
+                };
+                
+                scope.checkTag = function (tagSelected) {
+                	if(!tagSelected.tag_token_lcs) {
+                		return false;
+                	}
+                	return true;
+                };
 
                 scope.queryTypeahead = function (typeaheadQuery) {
                     typeaheadQuery = typeaheadQuery.replace('*', '');
+                    typeaheadQuery = '/' + typeaheadQuery + '.*/';
                     console.log(scope.filters);
 					if(!scope.hideTypeahead) {
-                        if (scope.filters && scope.filters.indexOf("USER") >= 0) {
-                            typeaheadQuery = '/' + typeaheadQuery + '.*/';
+                        if (scope.filters && scope.filters.indexOf("USER") >= 0) {                            
                             return scope.queryTypeaheadForUser(typeaheadQuery);
                         } else {
-                            var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery, scope.filters, 10, 0);
+                        	scope.tagFilters = 'fq=' + scope.filter;
+                            var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery, (scope.multiFilter ? scope.tagFilters : scope.filters), 10, 0);
                             var deferred = $q.defer();
                             if (query) {
                                 SearchService.queryFilteredSearch({
@@ -267,6 +290,11 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                 });
                             }
                         };
+                        
+                        scope.isMultiFilter = false;
+                        if(config.multiFilter) {
+                        	scope.isMultiFilter = true;
+                        }
                         //hideTypeahead is false by default, it will be changed in true if it is added in config
                         scope.hideTypeahead = false;
                         if (config.hideTypeahead)
