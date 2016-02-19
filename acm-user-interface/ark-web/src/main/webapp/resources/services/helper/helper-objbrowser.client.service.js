@@ -173,7 +173,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     that.scope.linksShown = !that.scope.linksShown;
                 };
 
-                that.scope.$on("collapsed", function(event, collapsed) {
+                that.scope.$on("collapsed", function (event, collapsed) {
                     that.scope.linksShown = !collapsed;
                 });
 
@@ -354,9 +354,16 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     if (!Util.goodPositive(objectId, false)) {
                         return;
                     }
-                    if (Util.compare(that.previousId, objectId)) {
-                        return;
-                    }
+                    // EDTRM-491 Delete Adhoc task doesn't do anything: The fix is to remove the below block.
+                    //
+                    // With the below code, then when we re-load the same object, for example because we acted on
+                    // it (deleted it, completed it etc etc), the new state of the object will not be displayed.
+                    // So I have commented this code out, and added this warning comment, so nobody will try to add it
+                    // back in later..... Of course I am open to better ideas.  --DGM
+                    //if (Util.compare(that.previousId, objectId)) {
+                    //    return;   NOTE do not enable this code, or re-add similar code somewhere else, until
+                    //              you have read and understood the above comment.
+                    //}
                     that.previousId = objectId;
 
                     that.deferConfigDone.promise.then(function (data) {
