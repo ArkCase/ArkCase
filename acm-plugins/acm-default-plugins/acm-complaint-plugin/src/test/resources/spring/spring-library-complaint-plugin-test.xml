@@ -7,4 +7,9 @@
             id="complaintExceptionResolver"
             class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
 
+    <bean id="acmActivitiEventListener" class="com.armedia.acm.plugins.complaint.service.TestActivitiEventListener"/>
+
+    <bean id="acmActivitiEntityEventListener"
+          class="com.armedia.acm.plugins.complaint.service.TestActivitiEntityEventListener"/>
+
 </beans>

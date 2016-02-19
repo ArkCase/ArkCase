@@ -14,12 +14,6 @@
 
     <dependencies>
 
-        <!-- armedia commons -->
-        <dependency>
-            <groupId>com.armedia.commons</groupId>
-            <artifactId>audit-sink-jdbc</artifactId>
-        </dependency>
-
         <!-- acm -->
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
