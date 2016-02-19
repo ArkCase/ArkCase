@@ -9,19 +9,6 @@
         <property name="auditService" ref="auditService"/>
     </bean>
 
-    <bean id="auditConfigurer" class="com.armedia.acm.audit.AuditConfigurer"
-          destroy-method="closeBean">
-        <property name="auditConfigFilename" value="/audit.xml"/>
-    </bean>
-
-    <bean id="auditSpringDataSourceHelper" class="com.armedia.commons.audit.sink.jdbc.SpringDataSourceHelper">
-        <property name="sinks">
-            <set>
-                <value>jdbcSink</value>
-            </set>
-        </property>
-    </bean>
-
     <task:executor id="auditorExecutor" pool-size="5"/>
 
     <bean id="auditDao" class="com.armedia.acm.audit.dao.AuditDao"/>
