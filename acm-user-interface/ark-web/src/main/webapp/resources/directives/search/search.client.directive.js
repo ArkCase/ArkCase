@@ -59,29 +59,51 @@
      </file>
  </example>
  */
-angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService', 'Object.LookupService', '$window',
-    function (SearchService, SearchQueryBuilder, $q, Util, ObjectLookupService, $window) {
-        return {
-            restrict: 'E',              //match only element name
-            scope: {
-                header: '@',            //@ : text binding (read-only and only strings)
-                searchBtn: '@',
-                searchQuery: '@',
-                searchPlaceholder: '@',
-                filter: '@',
-                config: '='            //= : two way binding so that the data can be monitored for changes
+angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService', 'Object.LookupService', '$window', 'uiGridExporterConstants', '$translate',
+            function (SearchService, SearchQueryBuilder, $q, Util, ObjectLookupService, $window, uiGridExporterConstants, $translate) {
+                return {
+                    restrict: 'E',              //match only element name
+                    scope: {
+                        header: '@',            //@ : text binding (read-only and only strings)
+                        searchBtn: '@',
+                        exportBtn: '@',
+                        searchQuery: '@',
+                        searchPlaceholder: '@',
+		                filter: '@',
+		                multiFilter: '@',
+		                config: '='            //= : two way binding so that the data can be monitored for changes
             },
 
             link: function (scope) {    //dom operations
                 scope.facets = [];
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
+                scope.emptySearch = true;
+                if(typeof scope.config.emptySearch !== 'undefined') {
+                    scope.emptySearch = scope.config.emptySearch;
+                }
                 scope.queryExistingItems = function () {
-                    if (scope.searchQuery === undefined || scope.searchQuery === null) {
-                        scope.searchQuery = "";
-                    }
+                    if (!scope.searchQuery || scope.searchQuery.length === 0) {
+                        if (!scope.emptySearch) {
+                            scope.searchQuery = "";
+                            return;
+                        }
+                        else {
+                            scope.searchQuery = "";
+                        }
+                    }                   
                     if (scope.pageSize >= 0 && scope.start >= 0) {
-                        var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + "*", scope.filters, scope.pageSize, scope.start);
+                    	if(scope.multiFilter) {
+                    		if(scope.searchQuery) {
+                    			if(scope.filters.indexOf("Tag Token") <=0) {
+                    				scope.filters += "&fq" + scope.multiFilter;
+                    			}
+                    				_.map(scope.searchQuery, function(tag) {
+                    					scope.filters += tag.tag_token_lcs + "|";
+                    				});
+                    		}
+                    	 }
+                    	var query = SearchQueryBuilder.buildFacetedSearchQuery((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.pageSize, scope.start);
                         if (query) {
                             SearchService.queryFilteredSearch({
                                     query: query
@@ -95,12 +117,59 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         }
                     }
                 };
+                
+                scope.onTagRemoved = function (tagRemoved) {
+                	scope.filters = 'fq=' + scope.filter;
+                };
+                
+                scope.checkTag = function (tagSelected) {
+                	if(!tagSelected.tag_token_lcs) {
+                		return false;
+                	}
+                	return true;
+                };
 
                 scope.queryTypeahead = function (typeaheadQuery) {
                     typeaheadQuery = typeaheadQuery.replace('*', '');
+                    typeaheadQuery = '/' + typeaheadQuery + '.*/';
+                    console.log(scope.filters);
+					if(!scope.hideTypeahead) {
+                        if (scope.filters && scope.filters.indexOf("USER") >= 0) {                            
+                            return scope.queryTypeaheadForUser(typeaheadQuery);
+                        } else {
+                        	scope.tagFilters = 'fq=' + scope.filter;
+                            var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery, (scope.multiFilter ? scope.tagFilters : scope.filters), 10, 0);
+                            var deferred = $q.defer();
+                            if (query) {
+                                SearchService.queryFilteredSearch({
+                                    query: query
+                                }, function (res) {
+                                    var result = _.pluck(res.response.docs, scope.typeAheadColumn);
+                                    deferred.resolve(result);
+                                });
+                            }
+                            return deferred.promise;
+                        }
+                    }
+                };
+				
+				scope.queryTypeaheadForUser = function (typeaheadQuery) {
+                    typeaheadQuery = 'first_name_lcs:' + typeaheadQuery + ' OR last_name_lcs:' + typeaheadQuery;
+                    var deferred = $q.defer();
+                    if (typeaheadQuery) {
+                        SearchService.queryFilteredSearchForUser({
+                            query: typeaheadQuery,
+							startRow: 0,
+							maxRows: 10
+                        }, function (res) {
+                            var result = _.pluck(res.response.docs, 'name');
+                            deferred.resolve(result);
+                        });
+                    }
+
                     var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery + '*', scope.filters, 10, 0);
                     var deferred = $q.defer();
-                    if (!scope.hideTypeahead && query) {
+                    if (query) {
                         SearchService.queryFilteredSearch({
                             query: query
                         }, function (res) {
@@ -112,6 +181,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     {
                         deferred.reject();
                     }
+
                     return deferred.promise;
                 };
 
@@ -134,7 +204,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             scope.filters += '&fq="' + facet + '":' + field;
                         }
                         else {
-                            scope.filters=""
+                            scope.filters="";
                             scope.filters += 'fq="' + facet + '":' + field;
                         }
                         scope.queryExistingItems();
@@ -176,8 +246,15 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     }
                 };
 
+                scope.downloadCSV = function () {
+                    if(scope.gridApi && scope.gridApi.exporter) {
+                        scope.gridApi.exporter.csvExport(uiGridExporterConstants.VISIBLE);
+                    }
+                };
+
                 //prepare the UI-grid
                 scope.gridOptions = {};
+
                 scope.$watchCollection('config', function (newValue, oldValue) {
                     $q.when(newValue).then(function (config) {
                         scope.filterName = config.filterName;
@@ -193,6 +270,10 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             useExternalPagination: true,
                             paginationPageSizes: config.paginationPageSizes,
                             paginationPageSize: config.paginationPageSize,
+                            enableSelectAll: true,
+                            exporterCsvFilename: config.csvFileName,
+                            exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location")),
+                            exporterHeaderFilter: $translate.instant,
                             columnDefs: config.columnDefs,
                             onRegisterApi: function (gridApi) {
                                 scope.gridApi = gridApi;
@@ -209,14 +290,18 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                 });
                             }
                         };
-
+                        
+                        scope.isMultiFilter = false;
+                        if(config.multiFilter) {
+                        	scope.isMultiFilter = true;
+                        }
                         //hideTypeahead is false by default, it will be changed in true if it is added in config
                         scope.hideTypeahead = false;
-                        if(config.hideTypeahead)
+                        if (config.hideTypeahead)
                             scope.hideTypeahead = true;
                         //default for typeAheadColumn is name
                         scope.typeAheadColumn = "name";
-                        if(config.typeAheadColumn)
+                        if (config.typeAheadColumn)
                             scope.typeAheadColumn = config.typeAheadColumn;
 
                         if (scope.gridOptions) {
@@ -227,6 +312,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         }
                     }, true);
                 });
+
             },
 
             templateUrl: 'directives/search/search.client.view.html'

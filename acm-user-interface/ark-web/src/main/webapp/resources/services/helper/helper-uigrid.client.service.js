@@ -280,6 +280,73 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
 
             /**
              * @ngdoc method
+             * @name setLookupDropDown
+             * @methodOf services:Helper.UiGridService
+             *
+             * @param {String} lookupName Lookup name, used in ui-grid column def to identify a lookup a column is use
+             * @param {String} lookupKeyName Lookup key name
+             * @param {String} lookupValueName Lookup value name
+             * @param {Array} lookupArray Lookup array of pairs of (key, value)
+             *
+             * @description
+             * Set up dropdown options for a column identified by a 'lookupName'. A 'lookupName' is defined in columndDefs
+             * of a ui-grid. It has to be unique to the lookup. 'lookupArray' is an array contains key-value pairs.
+             * The names of key and value are part of parameters of this function. The lookup data must be same for
+             * all rows.
+             */
+            , setLookupDropDown: function (lookupName, lookupKeyName, lookupValueName, lookupArray) {
+                var that = this;
+                that.scope.gridOptions.enableRowSelection = false;    //need to turn off for inline edit
+                for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
+                    if (lookupName == that.scope.config.columnDefs[i].lookup) {
+                        that.scope.gridOptions.columnDefs[i].enableCellEdit = true;
+                        that.scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
+                        that.scope.gridOptions.columnDefs[i].editDropdownIdLabel = lookupKeyName;
+                        that.scope.gridOptions.columnDefs[i].editDropdownValueLabel = lookupValueName;
+                        that.scope.gridOptions.columnDefs[i].editDropdownOptionsArray = lookupArray;
+                        that.scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: col.colDef.editDropdownOptionsArray:'"
+                            + lookupKeyName + "':'" + lookupValueName + "'";
+
+
+                    }
+                }
+            }
+
+            /**
+             * @ngdoc method
+             * @name setRowLookupDropDown
+             * @methodOf services:Helper.UiGridService
+             *
+             * @param {String} lookupName Lookup name, used in ui-grid column def to identify a lookup a column is use
+             * @param {String} lookupKeyName Lookup key name
+             * @param {String} lookupValueName Lookup value name
+             * @param {Array} lookupArrayPath Lookup array of pairs of (key, value)
+             *
+             * @description
+             * Set up dropdown options for a column identified by a 'lookupName'. A 'lookupName' is defined in columndDefs
+             * of a ui-grid. It has to be unique to the lookup. Each row may have different lookup data set.
+             * A property of the row points to the lookup the row is using. The property name is passed as a parameter
+             * 'lookupArraypath'.
+             *
+             */
+            , setRowLookupDropDown: function (lookupName, lookupKeyName, lookupValueName, lookupArrayPath) {
+                var that = this;
+                that.scope.gridOptions.enableRowSelection = false;    //need to turn off for inline edit
+                for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
+                    if (lookupName == that.scope.config.columnDefs[i].lookup) {
+                        that.scope.gridOptions.columnDefs[i].enableCellEdit = true;
+                        that.scope.gridOptions.columnDefs[i].editableCellTemplate = "ui-grid/dropdownEditor";
+                        that.scope.gridOptions.columnDefs[i].editDropdownIdLabel = lookupKeyName;
+                        that.scope.gridOptions.columnDefs[i].editDropdownValueLabel = lookupValueName;
+                        that.scope.gridOptions.columnDefs[i].editDropdownRowEntityOptionsArrayPath = lookupArrayPath;
+                        that.scope.gridOptions.columnDefs[i].cellFilter = "mapKeyValue: row.entity."
+                            + lookupArrayPath + ":'" + lookupKeyName + "':'" + lookupValueName + "'";
+                    }
+                }
+            }
+
+            /**
+             * @ngdoc method
              * @name withPagingParams
              * @methodOf services:Helper.UiGridService
              *

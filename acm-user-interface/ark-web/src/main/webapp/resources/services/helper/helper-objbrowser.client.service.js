@@ -12,9 +12,9 @@
  * Content part consists list of Components.
  * Tree helper uses 'object-tree' directive. Content helper includes component links and data loading. Component helper includes common object info handling
  */
-angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', '$translate'
+angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resource', '$translate'
     , 'StoreService', 'UtilService', 'ConfigService', 'ServCommService'
-    , function ($resource, $translate, Store, Util, ConfigService, ServCommService) {
+    , function ($q, $resource, $translate, Store, Util, ConfigService, ServCommService) {
 
         var Service = {
             VariableNames: {
@@ -173,6 +173,9 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                     that.scope.linksShown = !that.scope.linksShown;
                 };
 
+                that.scope.$on("collapsed", function (event, collapsed) {
+                    that.scope.linksShown = !collapsed;
+                });
 
                 //that.scope.$on('main-component-started', function (e) {
                 //    that.scope.activeLinkId = "main";
@@ -265,10 +268,30 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
              * @param {Function} arg.getObjectInfo Function to retrieve object info
              * @param {Function} (Optional)arg.validateObjectInfo Function to validate object info data
              * @param {Function} (Optional)arg.onObjectInfoRetrieved Callback function when object info retrieved
-             * @param {Function} (Optional)arg.onConfigRetrieved Callback function when component config retrieved
+             * @param {Function} (Optional)arg.onConfigRetrieved Callback function when component config retrieved.
+             * The callback could optionally return true or false to indicate the config data is processed.
+             * If no return is defined, it is the same as return true. With a false return, onObjectInfoRetrieved
+             * callback would not be called until caller to call doneConfig() function later to notify Component
+             * Helper to release onObjectInfoRetrieved().
              *
              * @description
-             * Helper.ObjectBrowserService.Component is to help common handling for typical components
+             * Helper.ObjectBrowserService.Component captures common handling for typical components, including
+             * retrieving configuration of the component and data of the object (ObjectInfo) the component represent.
+             *
+             * It retrieves component configuration and presents it by the callback function onConfigRetrieved argument.
+             * By default, component config is saved to a scope variable '$scope.config', unless consumer code
+             * override it in onConfigRetrieved() callback handler.
+             *
+             * Object info can be retrieved or updated via events between components. Assumption of the order of
+             * Components being initialized is one of source of bugs. Component helper does not make any assumption of the
+             * component initialization order to ensure it works regardless it is initialized before or after other
+             * components. By default, object info is saved to a scope variable '$scope.objectInfo', but consumer
+             * code may override it in onObjectInfoRetrieved() callback handler.
+             *
+             * The helper saves two instance variables 'currentObjectId' and 'promiseConfig'. 'currentObjectId' tracks
+             * the current object ID; and 'promiseConfig' is the promise returned by configuration retrieving.
+             * The promise variable may be helpful when retrieving data depends on configuration.
+             *
              */
             , Component: function (arg) {
                 var that = this;
@@ -287,31 +310,38 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                     that.scope.config = componentConfig;
                 };
 
-                that.scope.promiseConfig = ConfigService.getComponentConfig(that.moduleId, that.componentId).then(function (componentConfig) {
-                    that.onConfigRetrieved(componentConfig);
+                that.deferConfigDone = $q.defer();
+                that.promiseConfig = ConfigService.getComponentConfig(that.moduleId, that.componentId);
+                that.scope.promiseConfig = that.promiseConfig;  //phase out; keep for backward compatibility
+                that.promiseConfig.then(function (componentConfig) {
+                    var done = that.onConfigRetrieved(componentConfig);
+                    if (undefined === done || true === done) {
+                        that.deferConfigDone.resolve(componentConfig);
+                    }
                     return componentConfig;
                 });
 
 
                 that.previousId = null;
-                that.scope.$on('object-updated', function (e, data) {
-                    that.scope.currentObjectId = Service.getCurrentObjectId();
-                    updateObjectInfo(that.scope.currentObjectId, data);
-                    //updateObjectInfo(that.stateParams.id, data);
+                that.scope.$on('object-updated', function (e, objectInfo) {
+                    that.scope.currentObjectId = Service.getCurrentObjectId();  //phase out; keep for backward compatibility
+                    that.currentObjectId = Service.getCurrentObjectId();
+                    updateObjectInfo(that.currentObjectId, objectInfo);
                 });
 
                 that.scope.$on('object-refreshed', function (e, objectInfo) {
                     that.previousId = null;
-                    that.scope.currentObjectId = Service.getCurrentObjectId();
-                    updateObjectInfo(that.scope.currentObjectId, data);
-                    //updateObjectInfo(that.stateParams.id, objectInfo);
+                    that.scope.currentObjectId = Service.getCurrentObjectId();  //phase out; keep for backward compatibility
+                    that.currentObjectId = Service.getCurrentObjectId();
+                    updateObjectInfo(that.currentObjectId, objectInfo);
                 });
 
-                that.scope.currentObjectId = Service.getCurrentObjectId();
-                if (Util.goodPositive(that.scope.currentObjectId, false)) {
-                    if (!Util.compare(that.previousId, that.scope.currentObjectId)) {
-                        that.retrieveObjectInfo(that.scope.currentObjectId).then(function (objectInfo) {
-                            updateObjectInfo(that.scope.currentObjectId, objectInfo);
+                that.scope.currentObjectId = Service.getCurrentObjectId();  //phase out; keep for backward compatibility
+                that.currentObjectId = Service.getCurrentObjectId();
+                if (Util.goodPositive(that.currentObjectId, false)) {
+                    if (!Util.compare(that.previousId, that.currentObjectId)) {
+                        that.retrieveObjectInfo(that.currentObjectId).then(function (objectInfo) {
+                            updateObjectInfo(that.currentObjectId, objectInfo);
                             return objectInfo;
                         });
                     }
@@ -324,12 +354,21 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
                     if (!Util.goodPositive(objectId, false)) {
                         return;
                     }
-                    if (Util.compare(that.previousId, objectId)) {
-                        return;
-                    }
+                    // EDTRM-491 Delete Adhoc task doesn't do anything: The fix is to remove the below block.
+                    //
+                    // With the below code, then when we re-load the same object, for example because we acted on
+                    // it (deleted it, completed it etc etc), the new state of the object will not be displayed.
+                    // So I have commented this code out, and added this warning comment, so nobody will try to add it
+                    // back in later..... Of course I am open to better ideas.  --DGM
+                    //if (Util.compare(that.previousId, objectId)) {
+                    //    return;   NOTE do not enable this code, or re-add similar code somewhere else, until
+                    //              you have read and understood the above comment.
+                    //}
                     that.previousId = objectId;
 
-                    that.onObjectInfoRetrieved(objectInfo);
+                    that.deferConfigDone.promise.then(function (data) {
+                        that.onObjectInfoRetrieved(objectInfo);
+                    });
                 };
 
             }
@@ -516,6 +555,24 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
 
         };
 
+        Service.Component.prototype = {
+
+            /**
+             * @ngdoc method
+             * @name onLoad
+             * @methodOf services:Helper.ObjectBrowserService
+             *
+             * @param {Object} config Component configuration JSON object
+             *
+             * @description
+             * Notify Component Helper that Config data is processed
+             */
+            doneConfig: function (config) {
+                this.deferConfigDone.resolve(config);
+            }
+
+        };
+
         Service.getComponentByState = function (state) {
             var comp = "main";
             var tokens = state.current.url.split("/");
@@ -528,6 +585,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$resource', 
             }
             return comp;
         };
+
 
         /**
          * @ngdoc method

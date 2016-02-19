@@ -1,9 +1,8 @@
 package com.armedia.acm.pdf.service;
 
 import com.armedia.acm.pdf.PdfServiceException;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.util.PDFMergerUtility;
 
 import javax.xml.transform.Source;
 import java.io.File;
@@ -64,7 +63,6 @@ public interface PdfService
      */
     String generatePdf(String xslFilename, Map<String, String> parameters) throws PdfServiceException;
 
-
     /**
      * Append one PDF file to another (incremental merge)
      *
@@ -73,19 +71,10 @@ public interface PdfService
      * @param pdfMergerUtility PDF merger utility
      * @return merged document
      * @throws PdfServiceException on error while merging
+     * @deprecated use {@link #addSource(PDFMergerUtility, InputStream)} and {@link #mergeSources(PDFMergerUtility, String)}
      */
+    @Deprecated
     PDDocument append(PDDocument pdDocument, InputStream is, PDFMergerUtility pdfMergerUtility) throws PdfServiceException;
-
-    /**
-     * Append one PDF file to another (incremental merge)
-     *
-     * @param pdDocument       source PDF, the document we are appending to
-     * @param ecmFile          document we are appending as ECM file
-     * @param pdfMergerUtility PDF merger utility
-     * @return merged document
-     * @throws PdfServiceException on error while merging
-     */
-    PDDocument append(PDDocument pdDocument, EcmFile ecmFile, PDFMergerUtility pdfMergerUtility) throws PdfServiceException;
 
     /**
      * Append one PDF file to another (incremental merge)
@@ -95,17 +84,44 @@ public interface PdfService
      * @param pdfMergerUtility PDF merger utility
      * @return merged document
      * @throws PdfServiceException on error while merging
+     * @deprecated use {@link #addSource(PDFMergerUtility, String)} and {@link #mergeSources(PDFMergerUtility, String)}
      */
+    @Deprecated
     PDDocument append(PDDocument pdDocument, String filename, PDFMergerUtility pdfMergerUtility) throws PdfServiceException;
 
     /**
-     * Generates multipage TIFF from PDF file
-     * <p/>
-     * <p/>
-     * Can throw IllegalArgumentException if inputPdf file not exists
+     * Generates multipage TIFF from PDF file.
      *
      * @param inputPdf   pdf file to be processed
      * @param outputTiff location where generated TIFF to be saved
+     * @throws PdfServiceException on error generating TIFF
      */
     void generateTiffFromPdf(File inputPdf, File outputTiff) throws PdfServiceException;
+
+    /**
+     * Add source for merging into single PDF document.
+     *
+     * @param pdfMergerUtility PDF merger utility
+     * @param is               input stream of the document we are appending
+     * @throws PdfServiceException on error adding source stream
+     */
+    void addSource(PDFMergerUtility pdfMergerUtility, InputStream is) throws PdfServiceException;
+
+    /**
+     * Add source for merging into single PDF document.
+     *
+     * @param pdfMergerUtility PDF merger utility
+     * @param filename         path to the document we are appending
+     * @throws PdfServiceException on error adding source file
+     */
+    void addSource(PDFMergerUtility pdfMergerUtility, String filename) throws PdfServiceException;
+
+    /**
+     * Merge multiple sources into single PDF document.
+     *
+     * @param pdfMergerUtility PDF merger utility
+     * @param filename         path to the merged document
+     * @throws PdfServiceException on error creating merged document
+     */
+    void mergeSources(PDFMergerUtility pdfMergerUtility, String filename) throws PdfServiceException;
 }

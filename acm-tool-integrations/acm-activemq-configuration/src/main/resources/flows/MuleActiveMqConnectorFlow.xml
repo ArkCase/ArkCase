@@ -13,6 +13,12 @@
         <spring:import resource="classpath:/spring/spring-mule-activemq.xml"/>
     </spring:beans>
 
+    <!-- We don't need a notification-listener since we register the listener during context startup.
+         But we do need the notifications element, to tell Mule we want the events to flow.. -->
+    <notifications>
+        <notification event="MESSAGE-PROCESSOR"/>
+    </notifications>
+
     <jms:activemq-connector
             name="ActiveMQ-ACM"
             specification="1.1"

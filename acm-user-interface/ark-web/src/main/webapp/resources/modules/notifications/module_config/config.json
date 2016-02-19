@@ -19,6 +19,7 @@
             "enabled": "true",
             "type": "grid",
             "enableFiltering": false,
+            "emptySearch":true,
             "typeAheadColumn":"title_parseable",
             "columnDefs": [
                 {
@@ -61,7 +62,8 @@
             "paginationPageSize": 20,
             "start": 0,
             "filter": "\"Object Type\": NOTIFICATION",
-            "filterName" : "Object Type"
+            "filterName" : "Object Type",
+            "csvFileName": "notifications.csv"
         }
     ]
 }

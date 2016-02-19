@@ -5,7 +5,7 @@
   },
    "profile.subscriptions" : {
     "title":"Subscriptions",
-    "unsubscribeSelect":"Unsubscribe Selcted",
+    "unsubscribeSelect":"Unsubscribe Selected",
     "table.columns": {
       "title": "Title",
       "created":"Created",

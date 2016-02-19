@@ -102,6 +102,10 @@
 
     <mvc:interceptors>
         <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <ref bean="acmAuditRequestInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
             <mvc:mapping path="/plugin/**"/>
             <mvc:mapping path="/api/*/plugin/**"/>
             <ref bean="acmPluginRoleBasedAccessInterceptor"/>

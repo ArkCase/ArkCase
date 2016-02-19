@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -110,11 +111,12 @@ public class SplitCaseFileServiceIT extends EasyMock
     public void splitCaseTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException, PipelineProcessException
     {
         auditAdapter.setUserId("auditUser");
-        auth = createMock(Authentication.class);
-        ipAddress = "127.0.0.1";
-
         String roleAdd = "ROLE_ADMINISTRATOR";
         AcmGrantedAuthority authority = new AcmGrantedAuthority(roleAdd);
+
+        auth = new UsernamePasswordAuthenticationToken("ann-acm", "AcMd3v$", Arrays.asList(authority));
+
+        ipAddress = "127.0.0.1";
 
 
         Resource dammyDocument = new ClassPathResource("/documents/textDammydocument.txt");
@@ -129,11 +131,6 @@ public class SplitCaseFileServiceIT extends EasyMock
         assertNotNull(acmFolderService);
         assertNotNull(splitCaseService);
 
-        expect(auth.getName()).andReturn("ann-acm").anyTimes();
-        expect(auth.getCredentials()).andReturn("AcMd3v$").anyTimes();
-
-        expect((List<AcmGrantedAuthority>) auth.getAuthorities()).andReturn(Arrays.asList(authority)).atLeastOnce();
-        replay(auth);
         //create source case file
         CaseFile sourceCaseFile = new CaseFile();
         sourceCaseFile.setCaseType("caseType");

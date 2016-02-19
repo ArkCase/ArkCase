@@ -14,34 +14,19 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
             , componentId: "actions"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (complaintInfo) {
-                onObjectInfoRetrieved(complaintInfo);
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
-        //ConfigService.getComponentConfig("complaints", "actions").then(function (componentConfig) {
-        //    $scope.config = componentConfig;
-        //    return componentConfig;
-        //});
 
         var promiseQueryUser = Authentication.queryUserInfo();
         var promiseGetGroups = ObjectLookupService.getGroups();
 
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
 
-        //var previousId = null;
-        //$scope.$on('object-updated', function (e, data) {
-        //    updateData(data);
-        //});
-        //
-        //$scope.$on('object-refreshed', function (e, data) {
-        //    var previousId = null;
-        //    updateData(data);
-        //});
-
-        var onObjectInfoRetrieved = function (complaintInfo) {
-            $scope.complaintInfo = complaintInfo;
-
-            var group = ObjectModelService.getGroup(complaintInfo);
-            var assignee = ObjectModelService.getAssignee(complaintInfo);
+            var group = ObjectModelService.getGroup(objectInfo);
+            var assignee = ObjectModelService.getAssignee(objectInfo);
             var promiseGetApprovers = ComplaintLookupService.getApprovers(group, assignee);
             $q.all([promiseQueryUser, promiseGetGroups, promiseGetApprovers]).then(function (data) {
                 var userInfo = data[0];
@@ -53,11 +38,11 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
 
             promiseQueryUser.then(function (userInfo) {
                 $scope.userId = userInfo.userId;
-                ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.COMPLAINT, $scope.complaintInfo.complaintId).then(function (subscriptions) {
+                ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.COMPLAINT, $scope.objectInfo.complaintId).then(function (subscriptions) {
                     var found = _.find(subscriptions, {
                         userId: userInfo.userId,
                         subscriptionObjectType: ObjectService.ObjectTypes.COMPLAINT,
-                        objectId: $scope.complaintInfo.complaintId
+                        objectId: $scope.objectInfo.complaintId
                     });
                     $scope.showBtnSubscribe = Util.isEmpty(found);
                     $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
@@ -67,10 +52,10 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
 
         $scope.restricted = false;
         $scope.onClickRestrict = function ($event) {
-            if ($scope.restricted != $scope.complaintInfo.restricted) {
-                $scope.complaintInfo.restricted = $scope.restricted;
+            if ($scope.restricted != $scope.objectInfo.restricted) {
+                $scope.objectInfo.restricted = $scope.restricted;
 
-                var complaintInfo = Util.omitNg($scope.complaintInfo);
+                var complaintInfo = Util.omitNg($scope.objectInfo);
                 ComplaintInfoService.saveComplaintInfo(complaintInfo);
             }
         };
@@ -98,14 +83,14 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
         };
 
         $scope.subscribe = function (complaintInfo) {
-            ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.COMPLAINT, $scope.complaintInfo.complaintId).then(function (data) {
+            ObjectSubscriptionService.subscribe($scope.userId, ObjectService.ObjectTypes.COMPLAINT, complaintInfo.complaintId).then(function (data) {
                 $scope.showBtnSubscribe = false;
                 $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 return data;
             });
         };
         $scope.unsubscribe = function (complaintInfo) {
-            ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.COMPLAINT, $scope.complaintInfo.complaintId).then(function (data) {
+            ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.COMPLAINT, complaintInfo.complaintId).then(function (data) {
                 $scope.showBtnSubscribe = true;
                 $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                 return data;

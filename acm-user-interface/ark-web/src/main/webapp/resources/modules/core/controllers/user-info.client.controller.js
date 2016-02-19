@@ -4,13 +4,16 @@ angular.module('core').controller('UserInfoController', ['$scope', '$state', 'Pr
     function ($scope, $state, UserInfoService, Menus) {
         $scope.menu = Menus.getMenu('usermenu');
 
-        $scope.profilePicDefault = true;
         UserInfoService.getUserInfo().then(function (data) {
             $scope.profileEcmFileID = data.ecmFileId;
             $scope.fullName = data.fullName;
-            if ($scope.profileEcmFileID !== null) {
-                $scope.profilePicDefault = false;
-            }
+            $scope.imgSrc = !$scope.profileEcmFileID ? 'modules/profile/img/nopic.png' :
+            'proxy/arkcase/api/latest/plugin/ecm/download?ecmFileId='+$scope.profileEcmFileID+'&inline=true';
+        });
+
+        $scope.$on('uploadedPicture', function (event, arg) {
+            $scope.imgSrc = !arg ? 'modules/profile/img/nopic.png' :
+            'proxy/arkcase/api/latest/plugin/ecm/download?ecmFileId='+ arg +'&inline=true';
         });
 
         $scope.onClickLogout = function () {

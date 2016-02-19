@@ -1,14 +1,24 @@
 package com.armedia.acm.plugins.audit.model;
 
+import com.armedia.acm.audit.model.NotAudited;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.audit.service.AuditConstants;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
+@NotAudited
 @Table(name = "acm_audit_event_type_lu")
 public class AcmAuditLookup implements Serializable, AcmObject, AcmEntity {
 

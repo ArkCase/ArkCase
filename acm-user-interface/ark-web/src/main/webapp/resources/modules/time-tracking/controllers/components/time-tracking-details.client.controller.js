@@ -12,14 +12,11 @@ angular.module('time-tracking').controller('TimeTracking.DetailsController', ['$
             , componentId: "details"
             , retrieveObjectInfo: TimeTrackingInfoService.getTimesheetInfo
             , validateObjectInfo: TimeTrackingInfoService.validateTimesheet
-            , onObjectInfoRetrieved: function (timesheetInfo) {
-                $scope.timesheetInfo = timesheetInfo;
-            }
         });
 
 
         $scope.saveDetails = function() {
-            var timesheetInfo = Util.omitNg($scope.timesheetInfo);
+            var timesheetInfo = Util.omitNg($scope.objectInfo);
            TimeTrackingInfoService.saveTimesheetInfo(timesheetInfo).then(
                 function (timesheetInfo) {
                     MessageService.info($translate.instant("timeTracking.comp.details.informSaved"));

@@ -3,6 +3,8 @@
     "title": "Audit",
     "navigation": {
       "label": {
+        "reportName": "Report Name",
+        "inputID": "ID",
         "dateFrom": "From",
         "dateTo": "To"
       },

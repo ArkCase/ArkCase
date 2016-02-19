@@ -23,10 +23,9 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-        "/spring/spring-library-add-file-mule.xml",
-        "/spring/spring-library-cmis-configuration.xml"
-})
+@ContextConfiguration(locations = {"/spring/spring-library-ecm-plugin-test-mule.xml", "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-data-source.xml", "/spring/spring-library-property-file-manager.xml", "/spring/spring-library-add-file-mule.xml", "/spring/spring-library-cmis-configuration.xml",
+        "/spring/spring-library-audit-service.xml"})
 public class AddFileFlowIT
 {
 
@@ -87,10 +86,9 @@ public class AddFileFlowIT
             assertTrue(payloadStream.available() > 0);
 
             assertEquals(uploadFile.contentLength(), payloadStream.available());
-        }
-        finally
+        } finally
         {
-            if (payloadStream != null )
+            if (payloadStream != null)
             {
                 payloadStream.close();
             }
