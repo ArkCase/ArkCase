@@ -1,22 +1,16 @@
 package com.armedia.acm.plugins.ecm.dao;
 
-import static org.junit.Assert.assertNotNull;
-
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
-import com.armedia.commons.audit.sink.jdbc.SpringDataSourceHelper;
-
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -25,18 +19,16 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.concurrent.ConcurrentHashMap;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by armdev on 4/22/14.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(name = "spring", locations = { "/spring/spring-library-data-source.xml", "/spring/spring-library-ecm-file.xml", "/spring/spring-library-context-holder.xml",
+@ContextConfiguration(name = "spring", locations = {"/spring/spring-library-data-source.xml", "/spring/spring-library-ecm-file.xml", "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-search.xml", "/spring/spring-library-property-file-manager.xml", "/spring/spring-library-data-access-control.xml", "/spring/spring-library-particpants.xml",
         "/spring/spring-library-folder-watcher.xml", "/spring/spring-library-activiti-configuration.xml", "/spring/spring-library-drools-monitor.xml",
-        "/spring/spring-library-ecm-plugin-test-mule.xml", "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-audit-service.xml" })
+        "/spring/spring-library-ecm-plugin-test-mule.xml", "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-audit-service.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class EcmFileDaoIT
 {
@@ -55,19 +47,6 @@ public class EcmFileDaoIT
     public void setUp() throws Exception
     {
         auditAdapter.setUserId("auditUser");
-    }
-
-    @AfterClass
-    public static void cleanUpClass() throws Exception
-    {
-        Field CONTEXTS = SpringDataSourceHelper.class.getDeclaredField("CONTEXTS");
-        CONTEXTS.setAccessible(true);
-
-        Field modifier = CONTEXTS.getClass().getDeclaredField("modifiers");
-        modifier.setAccessible(true);
-        modifier.setInt(CONTEXTS, CONTEXTS.getModifiers() & ~Modifier.FINAL);
-
-        CONTEXTS.set(null, new ConcurrentHashMap<String, ApplicationContext>());
     }
 
     @Test

@@ -45,10 +45,12 @@ import static org.junit.Assert.*;
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
-        "/spring/spring-library-acm-encryption.xml"
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-test-activiti-configuration.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
-public class AcmBpmnServiceIT {
+public class AcmBpmnServiceIT
+{
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -86,15 +88,17 @@ public class AcmBpmnServiceIT {
         log.info("Digest [{}] from Bpmn file", digest);
         String bpmnId = getProcessDefinitionKey(f);
         AcmProcessDefinition acmProcessDefinitionExisting = acmBpmnDao.getByKeyAndDigest(bpmnId, digest);
-        if ( acmProcessDefinitionExisting != null )
+        if (acmProcessDefinitionExisting != null)
         {
             activitiRepositoryService.deleteDeployment(acmProcessDefinitionExisting.getDeploymentId(), true);
             acmBpmnDao.remove(acmProcessDefinitionExisting);
         }
     }
 
-    private String getProcessDefinitionKey(File processDefinitionFile) {
-        try {
+    private String getProcessDefinitionKey(File processDefinitionFile)
+    {
+        try
+        {
             DocumentBuilderFactory domFactory =
                     DocumentBuilderFactory.newInstance();
             domFactory.setNamespaceAware(false);
@@ -108,13 +112,17 @@ public class AcmBpmnServiceIT {
             if (attributeValue == null || attributeValue.length() < 1)
                 throw new NotValidBpmnFileException("attribute id not found in process tag");
             return attributeValue;
-        } catch (ParserConfigurationException e) {
+        } catch (ParserConfigurationException e)
+        {
             throw new NotValidBpmnFileException("Not valid file!", e);
-        } catch (SAXException e) {
+        } catch (SAXException e)
+        {
             throw new NotValidBpmnFileException("Not valid file!", e);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             throw new NotValidBpmnFileException("Not valid file!", e);
-        } catch (XPathExpressionException e) {
+        } catch (XPathExpressionException e)
+        {
             throw new NotValidBpmnFileException("Not valid file!", e);
         }
     }
@@ -127,14 +135,12 @@ public class AcmBpmnServiceIT {
             stream = new FileInputStream(processDefinitionFile);
             String md5Hex = DigestUtils.md5Hex(stream);
             return md5Hex;
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             throw new AcmBpmnException("Error performing file digest!", e);
-        }
-        finally
+        } finally
         {
-            if ( stream != null )
+            if (stream != null)
             {
                 stream.close();
             }
@@ -143,7 +149,8 @@ public class AcmBpmnServiceIT {
 
     @Test
     @Transactional
-    public void deployProcessDefinitionAndMakeActive() throws Exception {
+    public void deployProcessDefinitionAndMakeActive() throws Exception
+    {
         File f = new File(getClass().getResource("/activiti/TestActivitiSpringProcess.bpmn20.xml").toURI());
 
         assertTrue(f.exists());
@@ -161,7 +168,8 @@ public class AcmBpmnServiceIT {
 
     @Test
     @Transactional
-    public void deployExistingProcessDefinition() throws Exception {
+    public void deployExistingProcessDefinition() throws Exception
+    {
         File f = new File(getClass().getResource("/activiti/TestActivitiSpringProcess.bpmn20.xml").toURI());
         AcmProcessDefinition apd = acmBpmnService.deploy(f, false, false);
         filesToDelete.add(apd.getFileName());
@@ -179,7 +187,8 @@ public class AcmBpmnServiceIT {
 
     @Test
     @Transactional
-    public void deployNotExistingProcessDefinition() throws Exception {
+    public void deployNotExistingProcessDefinition() throws Exception
+    {
         File f = new File(getClass().getResource("/activiti/TestActivitiSpringProcess.bpmn20.xml").toURI());
         AcmProcessDefinition apd = acmBpmnService.deploy(f, false, false);
         filesToDelete.add(apd.getFileName());
@@ -198,7 +207,8 @@ public class AcmBpmnServiceIT {
 
     @Test
     @Transactional
-    public void getHistoryOfProcessDefinition() throws Exception {
+    public void getHistoryOfProcessDefinition() throws Exception
+    {
         File f = new File(getClass().getResource("/activiti/TestActivitiSpringProcess.bpmn20.xml").toURI());
         AcmProcessDefinition apd = acmBpmnService.deploy(f, false, false);
         filesToDelete.add(apd.getFileName());
@@ -226,7 +236,8 @@ public class AcmBpmnServiceIT {
 
     @Test
     @Transactional
-    public void deployProcessDefinitionAndDownloadFile() throws Exception {
+    public void deployProcessDefinitionAndDownloadFile() throws Exception
+    {
         File f = new File(getClass().getResource("/activiti/TestActivitiSpringProcess.bpmn20.xml").toURI());
         AcmProcessDefinition apd = acmBpmnService.deploy(f, false, false);
         filesToDelete.add(apd.getFileName());
@@ -238,9 +249,11 @@ public class AcmBpmnServiceIT {
         File downloadedFile = new File(tmpFolder + "/" + apd.getFileName());
         FileUtils.copyStreamToFile(is, downloadedFile);
 
-        try {
+        try
+        {
             is.close();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             log.debug("file already closed");
         }
 
@@ -251,18 +264,21 @@ public class AcmBpmnServiceIT {
     }
 
     @After
-    public void cleanUp() {
+    public void cleanUp()
+    {
         //in case of failed test or exception, database will rollback, and files and deployments are cleaned manually
         String userHome = System.getProperty("user.home");
         String processDefinitionsFolder = userHome + "/.acm/activiti/versions";
         //delete created files
-        for (String file : filesToDelete) {
+        for (String file : filesToDelete)
+        {
             File toBeDeleted = new File(processDefinitionsFolder + "/" + file);
             if (toBeDeleted.exists())
                 toBeDeleted.delete();
         }
         //delete created deployments
-        for (String d : deploymentsIdToDelete) {
+        for (String d : deploymentsIdToDelete)
+        {
             if (activitiRepositoryService.createDeploymentQuery().deploymentId(d).singleResult() != null)
                 activitiRepositoryService.deleteDeployment(d, true);
         }
