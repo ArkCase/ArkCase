@@ -268,6 +268,20 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 }
                 return components;
             }
+            , getLeadComponentByKey: function (key) {
+                var leadComponent = null;
+                if (!Util.isEmpty(key)) {
+                    var nodeType = Tree.Key.getNodeTypeByKey(key);
+                    var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
+                    for (var i = 0; i < nodeTypes.length; i++) {
+                        if (nodeType == nodeTypes[i].type) {
+                            leadComponent = nodeTypes[i].leadComponent;
+                            break;
+                        }
+                    }
+                }
+                return leadComponent;
+            }
 
             , _getDefaultTreeArgs: function (treeArgs) {
                 return {
@@ -357,6 +371,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     if (nodeId && nodeType) {
                         var objKey = Tree.Key.getKeyByObjWithPage(treeInfo.start, nodeType, nodeId);
                         var components = Tree.getComponentsByKey(objKey);
+                        var leadComponent = Tree.getLeadComponentByKey(objKey);
                         builder.addLeaf({
                             key: objKey
                             , title: nodeTitle
@@ -366,6 +381,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                             , lazy: true
                             , cache: false
                             , components: components
+                            , leadComponent: leadComponent
                             , nodeType: nodeType
                             , nodeId: nodeId
                         });
@@ -401,6 +417,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                         var type = Util.goodValue(nodeType.type);
                         var label = Util.goodValue(nodeType.label);
                         var components = Util.goodArray(nodeType.components);
+                        var leadComponent = nodeType.leadComponent;
                         if (0 == type.indexOf(nodeTypePath)) {
                             var lastSep = type.lastIndexOf(Tree.Key.KEY_SEPARATOR);
                             if (nodeTypePath.length == lastSep) {
@@ -409,6 +426,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                                     key: key + subPart
                                     , title: label
                                     , components: components
+                                    , leadComponent: leadComponent
                                     , nodeType: nodeDataType
                                     , nodeId: nodeId
                                 });
