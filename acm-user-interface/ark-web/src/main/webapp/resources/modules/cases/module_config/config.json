@@ -100,6 +100,7 @@
       {
         "type": "p/CASE_FILE",
         "icon": "fa fa-folder",
+        "leadComponent": "main",
         "components": [
           "details",
           "people",
