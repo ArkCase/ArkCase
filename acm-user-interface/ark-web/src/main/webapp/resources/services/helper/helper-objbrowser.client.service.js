@@ -145,7 +145,6 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 ConfigService.getModuleConfig(that.moduleId).then(function (moduleConfig) {
                     that.scope.config = moduleConfig;
                     that.scope.componentLinks = that.initComponentLinks(moduleConfig);
-                    //that.scope.activeLinkId = "main";
                     that.scope.linksShown = Util.goodValue(moduleConfig.initialLinksShown, true);
                     return moduleConfig;
                 });
@@ -156,8 +155,6 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
                 that.scope.onClickComponentLink = function (linkId) {
                     that.scope.activeLinkId = linkId;
-                    //var objectId = that.stateParams.id;
-                    //var objectType = that.stateParams.type;
                     var objectId = that.getObjectIdFromInfo(that.scope.objectInfo);
                     var objectType = that.getObjectTypeFromInfo(that.scope.objectInfo);
                     Service.updateObjectSetting(that.moduleId, linkId, objectId, objectType);
@@ -176,11 +173,6 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.scope.$on("collapsed", function (event, collapsed) {
                     that.scope.linksShown = !collapsed;
                 });
-
-                //that.scope.$on('main-component-started', function (e) {
-                //    that.scope.activeLinkId = "main";
-                //    Service.updateObjectSetting(that.moduleId, "main"); //don't update objectId/Type; only set linkId = "main"
-                //});
 
                 that.scope.$on('report-object-refreshed', function (e, objectId) {
                     that.resetObjectInfo();
@@ -208,8 +200,13 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.scope.$on('req-select-object', function (e, selectedObject) {
                     that.scope.$broadcast('object-selected', selectedObject);
 
-                    var components = Util.goodArray(selectedObject.components);
-                    that.scope.activeLinkId = (1 == components.length) ? components[0] : "main";
+                    var leadComponent = selectedObject.leadComponent;
+                    if (!leadComponent) {
+                        var components = Util.goodArray(selectedObject.components);
+                        leadComponent = (1 == components.length) ? components[0] : "main";
+                    }
+                    that.scope.activeLinkId = leadComponent;
+
                     var objectId = Util.goodMapValue(selectedObject, "nodeId", null);
                     var objectType = Util.goodMapValue(selectedObject, "nodeType", null);
                     Service.updateObjectSetting(that.moduleId, that.scope.activeLinkId, objectId, objectType);
@@ -523,9 +520,13 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 var that = this;
                 that.scope.$emit('req-select-object', selectedObject);
 
-                var components = Util.goodArray(selectedObject.components);
-                var componentType = (1 == components.length) ? components[0] : "main";
+                var componentType = selectedObject.leadComponent;
+                if (Util.isEmpty(componentType)) {
+                    var components = Util.goodArray(selectedObject.components);
+                    componentType = (1 == components.length) ? components[0] : "main";
+                }
                 var stateName = that.moduleId + "." + componentType;
+
                 var params = {
                     id: selectedObject.nodeId
                     , type: selectedObject.nodeType
@@ -676,31 +677,33 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
          * @returns {Object} Array of links with items in format of {id: "component ID", title: "Link Title", icon: "link icon"}
          */
         Service.createComponentLinks = function (config, objType) {
-            var treeConfig = Util.goodMapValue(config, "tree", {});
-            var componentsConfig = Util.goodMapValue(config, "components", []);
-
             var componentLinks = [];
-            var mainConfig = _.find(componentsConfig, {id: "main"});
-            if (mainConfig) {
-                componentLinks.push({
-                    id: Util.goodValue(mainConfig.id)
-                    , title: Util.goodValue(mainConfig.title)
-                    , icon: Util.goodValue(mainConfig.icon)
-                });
-            }
-
+            var treeConfig = Util.goodMapValue(config, "tree", {});
             var foundNodeType = _.find(Util.goodMapValue(treeConfig, "nodeTypes", []), {"type": "p/" + objType});
-            _.each(Util.goodMapValue(foundNodeType, "components", []), function (component) {
-                var foundComponent = _.find(componentsConfig, {id: component});
-                if (foundComponent) {
+            if (foundNodeType) {
+                var componentsConfig = Util.goodMapValue(config, "components", []);
+
+                var leadComponent = Util.goodValue(foundNodeType.leadComponent, "main");
+                var leadConfig = _.find(componentsConfig, {id: leadComponent});
+                if (leadConfig) {
                     componentLinks.push({
-                        id: Util.goodValue(foundComponent.id)
-                        , title: Util.goodValue(foundComponent.title)
-                        , icon: Util.goodValue(foundComponent.icon)
+                        id: Util.goodValue(leadConfig.id)
+                        , title: Util.goodValue(leadConfig.title)
+                        , icon: Util.goodValue(leadConfig.icon)
                     });
                 }
-            });
 
+                _.each(Util.goodMapValue(foundNodeType, "components", []), function (component) {
+                    var foundComponent = _.find(componentsConfig, {id: component});
+                    if (foundComponent) {
+                        componentLinks.push({
+                            id: Util.goodValue(foundComponent.id)
+                            , title: Util.goodValue(foundComponent.title)
+                            , icon: Util.goodValue(foundComponent.icon)
+                        });
+                    }
+                });
+            }
             return componentLinks;
         };
 
