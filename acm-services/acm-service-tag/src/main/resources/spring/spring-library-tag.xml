@@ -47,5 +47,9 @@
     <bean id="associatedTagToSolrTransformer" class="com.armedia.acm.services.tag.service.AssociatedTagToSolrTransformer">
         <property name="associatedTagDao" ref="associatedTagDao"/>
     </bean>
+    
+    <bean id="tagToSolrTransformer" class="com.armedia.acm.services.tag.service.TagToSolrTransformer">
+        <property name="tagDao" ref="tagDao"/>
+    </bean>
 
 </beans>
