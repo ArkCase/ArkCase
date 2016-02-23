@@ -34,6 +34,7 @@
                 <value>file:${user.home}/.acm/solr.properties</value>
                 <value>file:${user.home}/.acm/subscriptionPlugin.properties</value>
                 <value>file:${user.home}/.acm/taskPlugin.properties</value>
+                <value>file:${user.home}/.acm/activiti.properties</value>
             </list>
         </property>
     </bean>

@@ -101,6 +101,7 @@
                 <ref bean="acmActivitiEntityEventListener"/>
             </list>
         </property>
+        <property name="jobExecutorActivate" value="${activiti.job.executor.activate}"/>
     </bean>
 
     <bean id="activitiProcessEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
