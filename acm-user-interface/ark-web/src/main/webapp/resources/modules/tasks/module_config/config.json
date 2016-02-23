@@ -854,6 +854,14 @@
         {
           "name": "Active",
           "id": "Active"
+        },
+        {
+          "name": "Inactive",
+          "id": "Inactive"
+        },
+        {
+          "name": "Closed",
+          "id": "Closed"
         }
       ],
       "priority": [
@@ -884,7 +892,7 @@
         "completed": "",
         "details": "",
         "dueDate": "",
-        "percentComplete": "",
+        "percentComplete": "0",
         "priority": "",
         "status": "",
         "taskDurationInMillis": "",
