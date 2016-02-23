@@ -93,6 +93,10 @@ angular.module('cases').config(['$stateProvider', '$urlRouterProvider',
                 templateUrl: 'modules/cases/views/components/case-time.client.view.html'
             })
 
+            .state('cases.tags', {
+                url: '/:id/tags',
+                templateUrl: 'modules/cases/views/components/case-tags.client.view.html'
+            })
 
     }
 ]);
