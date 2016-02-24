@@ -26,21 +26,17 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
         eventPublisher = applicationEventPublisher;
     }
 
-    public void publishComplaintEvent(
-            Complaint source,
-            Authentication authentication,
-            boolean newComplaint,
-            boolean succeeded)
+    public void publishComplaintEvent(Complaint source, Authentication authentication, boolean newComplaint, boolean succeeded)
     {
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
             log.debug("Publishing a complaint event.");
         }
 
-        ComplaintPersistenceEvent complaintPersistenceEvent =
-                newComplaint ? new ComplaintCreatedEvent(source) : new ComplaintUpdatedEvent(source);
+        ComplaintPersistenceEvent complaintPersistenceEvent = newComplaint ? new ComplaintCreatedEvent(source)
+                : new ComplaintUpdatedEvent(source);
         complaintPersistenceEvent.setSucceeded(succeeded);
-        if ( authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
+        if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
         {
             complaintPersistenceEvent.setIpAddress(((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress());
         }
@@ -48,10 +44,7 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(complaintPersistenceEvent);
     }
 
-    public void publishComplaintWorkflowEvent(
-            Complaint source,
-            Authentication authentication,
-            String userIpAddress, boolean successful)
+    public void publishComplaintWorkflowEvent(Complaint source, Authentication authentication, String userIpAddress, boolean successful)
     {
         ComplaintApprovalWorkflowRequestedEvent requestEvent = new ComplaintApprovalWorkflowRequestedEvent(source);
         requestEvent.setIpAddress(userIpAddress);
@@ -59,11 +52,7 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(requestEvent);
     }
 
-
-    public void publishComplaintSearchResultEvent(
-            ComplaintListView source,
-            Authentication authentication,
-            String userIpAddress)
+    public void publishComplaintSearchResultEvent(ComplaintListView source, Authentication authentication, String userIpAddress)
     {
         ComplaintSearchResultEvent event = new ComplaintSearchResultEvent(source);
 
@@ -75,11 +64,7 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
 
     }
 
-    public void publishFindComplaintByIdEvent(
-            Complaint source,
-            Authentication authentication,
-            String ipAddress,
-            boolean succeeded)
+    public void publishFindComplaintByIdEvent(Complaint source, Authentication authentication, String ipAddress, boolean succeeded)
     {
         FindComplaintByIdEvent event = new FindComplaintByIdEvent(source);
 
@@ -90,19 +75,35 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
 
         eventPublisher.publishEvent(event);
     }
-    
+
     public void publishComplaintClosedEvent(Complaint source, String userId, boolean succeeded, Date closeDate)
     {
-    	ComplaintClosedEvent event = new ComplaintClosedEvent(source, succeeded, userId, closeDate);
-
-    	eventPublisher.publishEvent(event);
+        ComplaintClosedEvent event = new ComplaintClosedEvent(source, succeeded, userId, closeDate);
+        eventPublisher.publishEvent(event);
     }
 
-    public void publishComplaintFileAddedEvent(Complaint source, String userId, boolean succeeded) {
+    public void publishComplaintFileAddedEvent(Complaint source, String userId, boolean succeeded)
+    {
 
         ComplaintFileAddedEvent event = new ComplaintFileAddedEvent(source);
         event.setSucceeded(succeeded);
         event.setUserId(userId);
         eventPublisher.publishEvent(event);
+    }
+    
+    public void publishComplaintModified(Complaint in, String ipAddress, String eventStatus)
+    {
+        ComplaintModifiedEvent event = new ComplaintModifiedEvent(in);
+        event.setSucceeded(true);
+        event.setIpAddress(ipAddress);
+        event.setEventStatus(eventStatus);
+        eventPublisher.publishEvent(event);
+    }
+    
+    public void publishComplaintUpdated(Complaint in, String userId)
+    {
+       ComplaintUpdatedEvent event = new ComplaintUpdatedEvent(in);
+       event.setUserId(userId);
+       eventPublisher.publishEvent(event);
     }
 }

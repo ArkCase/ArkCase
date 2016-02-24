@@ -8,6 +8,8 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <bean id="outlookSpringConfiguration" class="com.armedia.acm.service.outlook.config.OutlookSpringConfiguration"/>
+    
+    <bean id="outlookEventPublisher" class="com.armedia.acm.service.outlook.service.OutlookEventPublisher"/>
 
     <bean id="msOutlookIntegrationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="location" value="file:${user.home}/.acm/msOutlookIntegration.properties"/>
@@ -27,6 +29,7 @@
     <bean id="outlookService" class="com.armedia.acm.service.outlook.service.impl.OutlookServiceImpl">
         <property name="dao" ref="exchangeWebServicesOutlookDao"/>
         <property name="ecmFileService" ref="ecmFileService" />
+        <property name="outlookEventPublisher" ref="outlookEventPublisher" />
     </bean>
 
     <bean id="outlookCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">

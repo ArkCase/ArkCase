@@ -18,6 +18,7 @@ public class ApplicationNoteEvent extends AcmEvent
         setEventType(noteEvent);
         setSucceeded(succeeded);
         setIpAddress(ipAddress);
+        setObjectType("NOTIFICATION");
     }
 }
 

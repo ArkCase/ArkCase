@@ -3,6 +3,9 @@ package com.armedia.acm.plugins.person.web.api;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher;
+
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,8 @@ import javax.persistence.PersistenceException;
 public class DeletePersonAssocByIdAPIController
 {
     private PersonAssociationDao personAssociationDao;
+    private PersonAssociationEventPublisher personAssociationEventPublisher;
+    
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/delete/{personAssocId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,8 +44,12 @@ public class DeletePersonAssocByIdAPIController
             {
 
                 JSONObject objectToReturnJSON = new JSONObject();
+                PersonAssociation source = getPersonAssociationDao().find(personAssocId);
                 getPersonAssociationDao().deletePersonAssociationById(personAssocId);
                 log.info("Deleting person association by id '" + personAssocId + "'");
+               
+                getPersonAssociationEventPublisher().publishPersonAssociationDeletedEvent(source);
+                
                 objectToReturnJSON.put("deletedPersonAssociationId", personAssocId);
                 String objectToReturn;
                 objectToReturn = objectToReturnJSON.toString();
@@ -65,4 +74,15 @@ public class DeletePersonAssocByIdAPIController
     {
         this.personAssociationDao = personAssociationDao;
     }
+    
+    public PersonAssociationEventPublisher getPersonAssociationEventPublisher()
+    {
+        return personAssociationEventPublisher;
+    }
+
+    public void setPersonAssociationEventPublisher(PersonAssociationEventPublisher personAssociationEventPublisher)
+    {
+        this.personAssociationEventPublisher = personAssociationEventPublisher;
+    }
+
 }

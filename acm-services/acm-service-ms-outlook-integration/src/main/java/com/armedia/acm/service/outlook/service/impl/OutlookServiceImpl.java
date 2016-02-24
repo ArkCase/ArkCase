@@ -10,6 +10,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.model.*;
+import com.armedia.acm.service.outlook.service.OutlookEventPublisher;
 import com.armedia.acm.service.outlook.service.OutlookFolderService;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import microsoft.exchange.webservices.data.core.ExchangeService;
@@ -51,6 +52,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     private OutlookDao dao;
     private EcmFileService ecmFileService;
+    private OutlookEventPublisher outlookEventPublisher;
 
     @Override
     public OutlookResults<OutlookMailItem> findMailItems(AcmOutlookUser user, int start, int maxItems, String sortField,
@@ -377,6 +379,10 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             }
 
             retval = getDao().createCalendarAppointment(service, folder, calendarItem);
+            
+            
+            getOutlookEventPublisher().publishCalendarEventAdded(retval, user.getUserId());
+            
         }
         catch (AcmOutlookException e)
         {
@@ -714,5 +720,15 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     public void setEcmFileService(EcmFileService ecmFileService) {
         this.ecmFileService = ecmFileService;
+    }
+
+    public OutlookEventPublisher getOutlookEventPublisher()
+    {
+        return outlookEventPublisher;
+    }
+
+    public void setOutlookEventPublisher(OutlookEventPublisher outlookEventPublisher)
+    {
+        this.outlookEventPublisher = outlookEventPublisher;
     }
 }
