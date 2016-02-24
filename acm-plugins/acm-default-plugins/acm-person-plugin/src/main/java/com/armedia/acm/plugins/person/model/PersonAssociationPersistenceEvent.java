@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public abstract class PersonAssociationPersistenceEvent extends AcmEvent
 {
-    private static final String OBJECT_TYPE = "PERSONASSOCIATION";
+    private static final String OBJECT_TYPE = "PERSON-ASSOCIATION";
     
     public PersonAssociationPersistenceEvent(PersonAssociation source)
     {

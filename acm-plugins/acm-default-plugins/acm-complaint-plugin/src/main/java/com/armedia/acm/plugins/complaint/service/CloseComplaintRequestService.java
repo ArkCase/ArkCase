@@ -103,6 +103,8 @@ public class CloseComplaintRequestService
         // only raise the completed event if we get here, e.g. everything has happened and no exception has been
         // raised.
         getComplaintEventPublisher().publishComplaintClosedEvent(updatedComplaint, user, true, approvalDate);
+        
+        getComplaintEventPublisher().publishComplaintUpdated(updatedComplaint, user);
     }
 
     private CaseFile addToExistingCaseFile(CloseComplaintRequest updatedRequest, Complaint updatedComplaint, String userId)
