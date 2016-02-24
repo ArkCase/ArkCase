@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('CostTracking.TagsModalController', ['$scope', '$q', '$modalInstance', 'ConfigService', 'Object.TagsService', 'Tags.TagsService', 'MessageService', '$translate',
+angular.module('cost-tracking').controller('CostTracking.TagsModalController', ['$scope', '$q', '$modalInstance', 'ConfigService', 'Object.TagsService', 'Tags.TagsService', 'MessageService', '$translate',
     function ($scope, $q, $modalInstance, ConfigService, ObjectTagsService, TagsService, messageService, $translate) {
 
 	    $scope.tags = [];

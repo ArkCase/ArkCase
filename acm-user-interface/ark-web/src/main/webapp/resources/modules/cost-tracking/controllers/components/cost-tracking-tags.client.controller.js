@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('CostTracking.TagsController', ['$scope', '$q', '$stateParams', '$translate'
+angular.module('cost-tracking').controller('CostTracking.TagsController', ['$scope', '$q', '$stateParams', '$translate'
     , 'UtilService', 'ObjectService', 'CostTracking.InfoService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.TagsService', '$modal', 'MessageService'
     , function ($scope, $q, $stateParams, $translate

@@ -33,10 +33,10 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
 
         solr.setObject_id_s(in.getId() + "");
         solr.setObject_type_s(in.getObjectType());
-
-        solr.setAdditionalProperty("object_text_s", in.getTagText());
-        solr.setAdditionalProperty("object_description_s", in.getTagDescription());
-        solr.setAdditionalProperty("object_name_s", in.getTagName());
+        
+        solr.setTitle_parseable(in.getTagText());
+        solr.setDescription_parseable(in.getTagDescription());
+        solr.setName(in.getTagName());
 
         solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());
