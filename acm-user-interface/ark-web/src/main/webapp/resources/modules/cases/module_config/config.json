@@ -296,7 +296,8 @@
             {
               "name": "note",
               "displayName": "cases.comp.notes.table.columns.note",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "enableCellEdit": false
             },
             {
               "name": "created",

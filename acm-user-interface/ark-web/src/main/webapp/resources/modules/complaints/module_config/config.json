@@ -315,7 +315,8 @@
             {
               "name": "note",
               "displayName": "complaints.comp.notes.table.columns.note",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "enableCellEdit": false
             },
             {
               "name": "created",
@@ -860,7 +861,6 @@
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
-
         5,
         10,
         20,
