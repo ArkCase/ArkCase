@@ -101,5 +101,10 @@ angular.module('tasks').config(['$stateProvider', '$urlRouterProvider',
                 url: '/:type/:id/signatures',
                 templateUrl: 'modules/tasks/views/components/task-signatures.client.view.html'
             })
+            
+            .state('tasks.tags', {
+                url: '/:type/:id/tags',
+                templateUrl: 'modules/tasks/views/components/task-tags.client.view.html'
+            })
     }
 ]);

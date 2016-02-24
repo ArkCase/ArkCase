@@ -80,7 +80,6 @@
     <label class="control-label">{{ 'tasks.newTask.status.label' | translate }}
         <select ng-model="config.data.status" ng-options="status.id as status.name for status in config.status"
                 class="form-control input-md">
-            <option value="" translate>tasks.newTask.status.placeholder</option>
         </select>
     </label>
 </div>
@@ -107,7 +106,6 @@
     <label class="control-label">{{ 'tasks.newTask.priority.label' | translate }}
         <select ng-model="config.data.priority"
                 ng-options="priority.id as priority.name for priority in config.priority" class="form-control input-md">
-            <option value="" translate>tasks.newTask.priority.placeholder</option>
         </select>
     </label>
 </div>
