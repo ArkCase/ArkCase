@@ -108,5 +108,13 @@
     "btnOk.text": "OK",
     "btnCancel.text": "Cancel",
     "edtPlaceholder": "Type in to search"
+  },
+  "common.directive.coreNotes": {
+    "title": "Notes",
+    "modal.addNote": "Add Note",
+    "modal.editNote": "Edit Record",
+    "modal.notes.label": "Note",
+    "modal.btnOk.text": "Save",
+    "modal.btnCancel.text": "Cancel"
   }
 }
