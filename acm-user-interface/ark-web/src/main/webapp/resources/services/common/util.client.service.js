@@ -130,41 +130,40 @@ angular.module('services').factory('UtilService', ['$q', '$log'
                 return this._goodMapValueArr(arr, replacedWith);
             }
             , _goodMapValueArr: function (arr, replacedWith) {
-                if (this.isArray(arr)) {
-                    if (0 >= arr.length) {
-                        return replacedWith;
-                    }
-
-                    var v = replacedWith;
-                    for (var i = 0; i < arr.length; i++) {
-                        if (0 == i) {
-                            v = arr[0];
-                        } else {
-                            var k = arr[i];
-                            if (k.match(/^\[[0-9]+\]$/)) {  // match to "[ numbers ]"
-                                if (!this.isArray(v)) {
-                                    return replacedWith;
-                                }
-                                var idx = k.substring(1, k.length - 1);
-                                if (v.length <= idx) {
-                                    return replacedWith;
-                                }
-                                v = v[idx];
-
-                            } else {
-                                v = v[k];
-                            }
-                        }
-
-                        if (this.isEmpty(v)) {
-                            return replacedWith;
-                        }
-                    }
-                    return v;
-
-                } else {
+                if (!this.isArray(arr)) {
                     return replacedWith;
                 }
+
+                if (0 >= arr.length) {
+                    return replacedWith;
+                }
+
+                var v = replacedWith;
+                for (var i = 0; i < arr.length; i++) {
+                    if (0 == i) {
+                        v = arr[0];
+                    } else {
+                        var k = arr[i];
+                        if (k.match(/^\[[0-9]+\]$/)) {  // match to "[ numbers ]"
+                            if (!this.isArray(v)) {
+                                return replacedWith;
+                            }
+                            var idx = k.substring(1, k.length - 1);
+                            if (v.length <= idx) {
+                                return replacedWith;
+                            }
+                            v = v[idx];
+
+                        } else {
+                            v = v[k];
+                        }
+                    }
+
+                    if (this.isEmpty(v)) {
+                        return replacedWith;
+                    }
+                }
+                return v;
             }
 
 
