@@ -57,5 +57,24 @@ public class FacetedSearchServiceTest
         assertEquals(query, found);
     }
 
+    @Test
+    public void getFacetKeys() throws Exception
+    {
+        unit.getPluginSearch().getPluginProperties().put("facet.first_name_s", "First Name");
+        unit.getPluginSearch().getPluginProperties().put("facet.last_name_s", "Last Name");
+        unit.getPluginSearch().getPluginProperties().put("facet.date.birth_date_tdt", "Birth Date");
+
+        String expected = "facet.query=" +
+                URLEncoder.encode("{!key='Birth Date, Previous Week'}birth_date_tdt", SearchConstants.FACETED_SEARCH_ENCODING) +
+                ":" + URLEncoder.encode("[NOW/DAY-7DAY TO *]", SearchConstants.FACETED_SEARCH_ENCODING) +
+                "&facet.field=" +
+                URLEncoder.encode("{!key='First Name'}first_name_s", SearchConstants.FACETED_SEARCH_ENCODING) +
+                "&facet.field=" +
+                URLEncoder.encode("{!key='Last Name'}last_name_s", SearchConstants.FACETED_SEARCH_ENCODING);
+        String found = unit.getFacetKeys();
+
+        assertEquals(expected, found);
+    }
+
 
 }
