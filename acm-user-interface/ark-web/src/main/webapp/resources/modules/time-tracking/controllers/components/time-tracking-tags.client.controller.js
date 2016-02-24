@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('TimeTracking.TagsController', ['$scope', '$q', '$stateParams', '$translate'
+angular.module('time-tracking').controller('TimeTracking.TagsController', ['$scope', '$q', '$stateParams', '$translate'
     , 'UtilService', 'ObjectService', 'TimeTracking.InfoService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.TagsService', '$modal', 'MessageService'
     , function ($scope, $q, $stateParams, $translate

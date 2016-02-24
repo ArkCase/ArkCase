@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cases').controller('Tasks.TagsController', ['$scope', '$q', '$stateParams', '$translate'
+angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$stateParams', '$translate'
     , 'UtilService', 'ObjectService', 'Task.InfoService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.TagsService', '$modal', 'MessageService'
     , function ($scope, $q, $stateParams, $translate
