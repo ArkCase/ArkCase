@@ -9,7 +9,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
-                $scope.userId = userInfo.userId;
+                $scope.userFullName = userInfo.fullName;
                 return userInfo;
             }
         );
@@ -19,9 +19,14 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
             $scope.userSearchConfig = _.find(moduleConfig.components, {id: "userSearch"});
 
-            $scope.config.data.assignee = $scope.userId;
+            $scope.userName = $scope.userFullName;
             $scope.config.data.taskStartDate = new Date();
+            var defaultPriority = $scope.config.priority[1].id;
+            $scope.config.data.priority = defaultPriority;
+            var defaultStatus = $scope.config.status[0].id;
+            $scope.config.data.status = defaultStatus;
 
+            
             if (!Util.isEmpty($stateParams.parentObject) && !Util.isEmpty($stateParams.parentType)) {
                 $scope.config.data.attachedToObjectName = $stateParams.parentObject;
                 $scope.config.data.attachedToObjectType = $stateParams.parentType;
