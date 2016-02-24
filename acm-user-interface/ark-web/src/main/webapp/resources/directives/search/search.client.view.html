@@ -38,13 +38,13 @@
                     ng-model="searchQuery"
                     placeholder="{{searchPlaceholder}}"
                     display-property="tag_token_lcs"
-                    key-property="tag_token_lcs"
+                    key-property="id"
                     on-tag-adding="checkTag($tag)"
                     on-tag-removed="onTagRemoved($tag)"
                     replace-spaces-with-dashes="false"
                     add-from-autocomplete-only="true"
                 >
-                <auto-complete min-length="1" max-results-to-show="10" source="queryTypeahead($query)"></auto-complete>
+                <auto-complete min-length="1" max-results-to-show="10" source="loadTags($query)"></auto-complete>
                 </tags-input>
                 <span class="input-group-btn">
                     <button class="btn btn-md btn-primary" type="button" ng-click="queryExistingItems()">{{searchBtn}}</button>
