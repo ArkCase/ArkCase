@@ -321,20 +321,20 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
                 that.previousId = null;
                 that.scope.$on('object-updated', function (e, objectInfo) {
-                    that.scope.currentObjectId = Service.getCurrentObjectId();  //phase out; keep for backward compatibility
                     that.currentObjectId = Service.getCurrentObjectId();
+                    that.scope.currentObjectId = that.currentObjectId;  //phase out; keep for backward compatibility
                     updateObjectInfo(that.currentObjectId, objectInfo);
                 });
 
                 that.scope.$on('object-refreshed', function (e, objectInfo) {
                     that.previousId = null;
-                    that.scope.currentObjectId = Service.getCurrentObjectId();  //phase out; keep for backward compatibility
                     that.currentObjectId = Service.getCurrentObjectId();
+                    that.scope.currentObjectId = that.currentObjectId;  //phase out; keep for backward compatibility
                     updateObjectInfo(that.currentObjectId, objectInfo);
                 });
 
-                that.scope.currentObjectId = Service.getCurrentObjectId();  //phase out; keep for backward compatibility
                 that.currentObjectId = Service.getCurrentObjectId();
+                that.scope.currentObjectId = that.currentObjectId;  //phase out; keep for backward compatibility
                 if (Util.goodPositive(that.currentObjectId, false)) {
                     if (!Util.compare(that.previousId, that.currentObjectId)) {
                         that.retrieveObjectInfo(that.currentObjectId).then(function (objectInfo) {
