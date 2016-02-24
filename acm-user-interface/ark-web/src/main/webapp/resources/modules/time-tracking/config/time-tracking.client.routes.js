@@ -42,6 +42,11 @@ angular.module('time-tracking').config(['$stateProvider',
 				url: '/:id/summary',
 				templateUrl: 'modules/time-tracking/views/components/time-tracking-summary.client.view.html'
 			})
+			
+			.state('time-tracking.tags', {
+                url: '/:id/tags',
+                templateUrl: 'modules/time-tracking/views/components/time-tracking-tags.client.view.html'
+            })
 
 	}
 ]);

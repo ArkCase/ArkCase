@@ -59,8 +59,8 @@
      </file>
  </example>
  */
-angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService', 'Object.LookupService', '$window', 'uiGridExporterConstants', '$translate',
-            function (SearchService, SearchQueryBuilder, $q, Util, ObjectLookupService, $window, uiGridExporterConstants, $translate) {
+angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService', 'Object.LookupService', '$window', 'uiGridExporterConstants', '$translate', 'Tags.TagsService',
+            function (SearchService, SearchQueryBuilder, $q, Util, ObjectLookupService, $window, uiGridExporterConstants, $translate, TagsService) {
                 return {
                     restrict: 'E',              //match only element name
                     scope: {
@@ -129,6 +129,17 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 	return true;
                 };
 
+                scope.loadTags = function loadTags(query) {
+                	var deferred = $q.defer();
+                    TagsService.searchTags({
+                        query: query,
+                        filter: 'fq=' + scope.filter
+                    }).then(function (tags) {
+                        deferred.resolve(tags);
+                    });
+                    return deferred.promise;
+                }
+                
                 scope.queryTypeahead = function (typeaheadQuery) {
                     typeaheadQuery = typeaheadQuery.replace('*', '');
                     typeaheadQuery = '/' + typeaheadQuery + '.*/';
@@ -137,8 +148,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         if (scope.filters && scope.filters.indexOf("USER") >= 0) {                            
                             return scope.queryTypeaheadForUser(typeaheadQuery);
                         } else {
-                        	scope.tagFilters = 'fq=' + scope.filter;
-                            var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery, (scope.multiFilter ? scope.tagFilters : scope.filters), 10, 0);
+                            var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery, scope.filters, 10, 0);
                             var deferred = $q.defer();
                             if (query) {
                                 SearchService.queryFilteredSearch({

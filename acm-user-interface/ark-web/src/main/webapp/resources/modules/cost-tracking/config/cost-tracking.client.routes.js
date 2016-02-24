@@ -37,6 +37,11 @@ angular.module('cost-tracking').config(['$stateProvider',
 				url: '/:id/summary',
 				templateUrl: 'modules/cost-tracking/views/components/cost-tracking-summary.client.view.html'
 			})
+			
+			.state('cost-tracking.tags', {
+                url: '/:id/tags',
+                templateUrl: 'modules/cost-tracking/views/components/cost-tracking-tags.client.view.html'
+            })
 
 	}
 ]);

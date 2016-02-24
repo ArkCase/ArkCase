@@ -18,7 +18,9 @@
     <http security="none" pattern="/assets/css/login.css"/>
     <!-- All lib are public, no security needed-->
     <http security="none" pattern="/lib/**"/>
-    <http security="none" pattern="/proxy/resources/branding/loginlogo.png"/>
+    <!-- proxy external resources, no security needed-->
+    <http security="none" pattern="/proxy/resources/**"/>
+    <http security="none" pattern="/proxy/noauth/**"/>
     <!-- external resources, pages where no security needed-->
     <http security="none" pattern="/external/**"/>
 
