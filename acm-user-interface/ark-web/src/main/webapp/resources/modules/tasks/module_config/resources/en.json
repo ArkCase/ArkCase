@@ -115,6 +115,24 @@
       "userId": "User"
     }
   },
+  "tasks.comp.tags": {
+    "title": "Tags",
+    "table.columns": {
+      "tag": "Tag",
+      "created": "Created",
+      "createdBy": "Created By"
+    },
+    "modal": {
+    "title": "Tag",
+    "search": "Search for Tag",
+    "buttons": {
+          "cancel": "Cancel",
+          "ok": "Add Tag"
+     }
+    },
+    "message.tagExists": "Tag with that name or description or text already exists",
+    "message.tagAssociated": "already associated"
+  },
   "tasks.newTask": {
     "title": "New Task",
     "assignee.button": "Choose Assignee",

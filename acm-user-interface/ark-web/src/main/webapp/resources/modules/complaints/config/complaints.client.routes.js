@@ -98,6 +98,10 @@ angular.module('complaints').config(['$stateProvider', '$urlRouterProvider',
                 templateUrl: 'modules/complaints/views/components/complaint-locations.client.view.html'
             })
 
+            .state('complaints.tags', {
+                url: '/:id/tags',
+                templateUrl: 'modules/complaints/views/components/complaint-tags.client.view.html'
+            })
 
     }
 ]);
