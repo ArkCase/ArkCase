@@ -45,10 +45,7 @@ public class FacetedSearchAPIController
             Authentication authentication
     ) throws MuleException, UnsupportedEncodingException
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("User '" + authentication.getName() + "' is performing facet search for the query: '" + q + "' ");
-        }
+        log.debug("User '" + authentication.getName() + "' is performing facet search for the query: '" + q + "' ");
 
         String facetKeys = getFacetedSearchService().getFacetKeys();
 
