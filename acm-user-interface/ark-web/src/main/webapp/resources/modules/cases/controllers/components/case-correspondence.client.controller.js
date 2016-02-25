@@ -37,10 +37,9 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
-            gridHelper.setExternalPaging(config, $scope.retrieveGridData);
+            gridHelper.setExternalPaging(config, retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
 
-            //$scope.retrieveGridData();
         };
 
 
@@ -57,28 +56,12 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             }
         );
 
-        //$scope.retrieveGridData = function () {
-        //    if (Util.goodPositive(componentHelper.currentObjectId, false)) {
-        //        var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.CASE_FILE
-        //            , componentHelper.currentObjectId
-        //            , Util.goodValue($scope.start, 0)
-        //            , Util.goodValue($scope.pageSize, 10)
-        //            , Util.goodValue($scope.sort.by)
-        //            , Util.goodValue($scope.sort.dir)
-        //        );
-        //
-        //        $q.all([promiseCorrespondence, promiseUsers]).then(function (data) {
-        //            var correspondenceData = data[0];
-        //            $scope.gridOptions = $scope.gridOptions || {};
-        //            $scope.gridOptions.data = correspondenceData.children;
-        //            $scope.gridOptions.totalItems = Util.goodValue(correspondenceData.totalChildren, 0);
-        //            //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
-        //        });
-        //    }
-        //};
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
+            retrieveGridData();
+        };
 
+        var retrieveGridData = function () {
             var currentObjectId = Util.goodMapValue(objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
                 var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.CASE_FILE

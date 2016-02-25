@@ -30,16 +30,17 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
-            gridHelper.setExternalPaging(config, $scope.retrieveGridData);
+            gridHelper.setExternalPaging(config, retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
 
             $q.all([promiseMyTasks]).then(function (data) {
                 for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                    if ("taskId" == $scope.config.columnDefs[i].name) {
-                        $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.object_id_s}}</a>";
-                        //$scope.gridOptions.columnDefs[i].cellTemplate = "<a ui-sref='tasks.id({type: \"TASK\", id: row.entity.object_id_s})'>{{row.entity.object_id_s}}</a>";
-
-                    } else if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
+                    //if ("taskId" == $scope.config.columnDefs[i].name) {
+                    //    $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.object_id_s}}</a>";
+                    //    //$scope.gridOptions.columnDefs[i].cellTemplate = "<a ui-sref='tasks.id({type: \"TASK\", id: row.entity.object_id_s})'>{{row.entity.object_id_s}}</a>";
+                    //
+                    //} else
+                    if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
                         $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
                             + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
                             + ' ng-model="row.entity.acm$_taskOutcome">'
@@ -57,8 +58,11 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
+            retrieveGridData();
+        };
 
-            var currentObjectId = Util.goodMapValue(objectInfo, "id");
+        var retrieveGridData = function() {
+            var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
                     , currentObjectId

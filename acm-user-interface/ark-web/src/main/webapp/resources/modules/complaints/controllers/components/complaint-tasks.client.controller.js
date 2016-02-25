@@ -30,11 +30,12 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
             gridHelper.setUserNameFilter(promiseUsers);
 
             for (var i = 0; i < $scope.gridOptions.columnDefs.length; i++) {
-                if ("taskId" == $scope.gridOptions.columnDefs[i].name) {
-                    $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.object_id_s}}</a>";
-                    //$scope.gridOptions.columnDefs[i].cellTemplate = "<a ui-sref='tasks.id({type: \"TASK\", id: row.entity.object_id_s})'>{{row.entity.object_id_s}}</a>";
-
-                } else if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
+                //if ("taskId" == $scope.gridOptions.columnDefs[i].name) {
+                //    $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.object_id_s}}</a>";
+                //    //$scope.gridOptions.columnDefs[i].cellTemplate = "<a ui-sref='tasks.id({type: \"TASK\", id: row.entity.object_id_s})'>{{row.entity.object_id_s}}</a>";
+                //
+                //} else
+                if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
                     $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
                         + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
                         + ' ng-model="row.entity.acm$_taskOutcome">'
