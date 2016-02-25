@@ -918,16 +918,11 @@
       "paginationPageSize": 5,
       "columnDefs": [
         {
-          "name": "taskId",
-          "field": "object_id_s",
-          "displayName": "complaints.comp.tasks.table.columns.taskId",
-          "headerCellFilter": "translate"
-        },
-        {
           "name": "title",
           "field": "title_parseable",
           "displayName": "complaints.comp.tasks.table.columns.title",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
         },
         {
           "name": "assignee",
