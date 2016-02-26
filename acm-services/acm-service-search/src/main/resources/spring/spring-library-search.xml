@@ -28,6 +28,7 @@
                 <prop key="solr.enableBatchUpdateBasedOnLastModified">true</prop>
                 <prop key="solr.batchUpdateFrequencyInMilliseconds">3600000</prop>
                 <prop key="solr.batchUpdateBatchSize">50</prop>
+                <prop key="solr.enableContentFileIndexing">true</prop>
             </props>
         </property>
     </bean>
