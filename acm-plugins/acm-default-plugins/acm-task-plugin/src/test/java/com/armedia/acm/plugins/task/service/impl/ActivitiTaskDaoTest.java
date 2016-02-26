@@ -4,12 +4,14 @@ import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.model.TaskOutcome;
-import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-import org.activiti.bpmn.model.*;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.FormProperty;
+import org.activiti.bpmn.model.FormValue;
 import org.activiti.bpmn.model.Process;
+import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
@@ -17,9 +19,9 @@ import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
+import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
-import org.apache.commons.lang.WordUtils;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -35,7 +37,6 @@ import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by armdev on 6/2/14.
@@ -54,6 +55,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     private HistoricTaskInstanceQuery mockHistoricTaskInstanceQuery;
     private AcmParticipantDao mockParticipantDao;
     private DataAccessPrivilegeListener mockDataAccessPrivilegeListener;
+    private IdentityLink mockCandidateGroup;
 
     private ActivitiTaskDao unit;
     private BpmnModel mockBpmnModel;
@@ -82,6 +84,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockFormValue = createMock(FormValue.class);
         mockParticipantDao = createMock(AcmParticipantDao.class);
         mockDataAccessPrivilegeListener = createMock(DataAccessPrivilegeListener.class);
+        mockCandidateGroup = createMock(IdentityLink.class);
 
 
         unit = new ActivitiTaskDao();
@@ -96,7 +99,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         unit.setParticipantDao(mockParticipantDao);
         unit.setDataAccessPrivilegeListener(mockDataAccessPrivilegeListener);
         unit.setPriorityLevelToNumberMap(acmPriorityToActivitiPriority);
-        unit.setRequiredFieldsPerOutcomeMap(new HashMap<String, List<String>>());
+        unit.setRequiredFieldsPerOutcomeMap(new HashMap<>());
     }
 
     @Test
@@ -115,6 +118,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         Integer percentComplete = 25;
         String details = "details";
         String owner = "owner";
+        String candidateGroup = "candidateGroup";
 
         AcmTask in = new AcmTask();
         in.setTaskId(taskId);
@@ -134,6 +138,9 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         in.setReworkInstructions("rework instructions");
         in.setParentObjectId(2500L);
         in.setParentObjectType("parent object type");
+
+        // candidate group should not be saved... it is read-only, we read it from Activiti, but don't save it.
+        in.setCandidateGroups(Arrays.asList(candidateGroup));
 
         TaskOutcome selected = new TaskOutcome();
         selected.setName("outcome name");
@@ -164,6 +171,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockTaskService.setVariableLocal(taskId.toString(), "outcome", in.getTaskOutcome().getName());
         mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_ID", 2500L);
         mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_TYPE", "parent object type");
+
 
         // data access and assignment rules
         mockDataAccessPrivilegeListener.applyAssignmentAndAccessRules(in);
@@ -246,7 +254,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         expect(mockHistoricTaskInstance.getDurationInMillis()).andReturn(taskDuration);
 
-        expect(mockTask.getId()).andReturn(taskId.toString());
+        expect(mockTask.getId()).andReturn(taskId.toString()).atLeastOnce();
         expect(mockTask.getDueDate()).andReturn(dueDate);
         expect(mockTask.getPriority()).andReturn(activitiPriority);
         expect(mockTask.getName()).andReturn(title);
@@ -391,7 +399,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     }
 
     @Test
-    public void findById() throws Exception
+    public void findById_taskWithAssigneeAndCandidateGroup_acmTaskShouldNotHaveCandidateGroup() throws Exception
     {
         String user = "user";
         Long taskId = 500L;
@@ -426,7 +434,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTaskQuery.includeTaskLocalVariables()).andReturn(mockTaskQuery);
         expect(mockTaskQuery.singleResult()).andReturn(mockTask);
 
-        expect(mockTask.getId()).andReturn(taskId.toString());
+        expect(mockTask.getId()).andReturn(taskId.toString()).atLeastOnce();
         expect(mockTask.getDueDate()).andReturn(dueDate);
         expect(mockTask.getPriority()).andReturn(activitiPriority);
         expect(mockTask.getName()).andReturn(title);
@@ -481,7 +489,114 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals(Integer.valueOf(50), task.getPercentComplete());
 
         assertEquals(partList, task.getParticipants());
+
+        assertEquals(0, task.getCandidateGroups().size());
+
     }
+
+    @Test
+    public void findById_taskWithNoAssigneeAndCandidateGroup_acmTaskShouldHaveCandidateGroup() throws Exception
+    {
+        String user = "user";
+        Long taskId = 500L;
+        Date dueDate = new Date();
+        String acmPriority = "Medium";
+        int activitiPriority = 50;
+        String title = "task Title";
+        String processId = "processId";
+        String processName = "processName";
+        String candidateGroup = "grateful dead";
+
+        Long objectId = 250L;
+        String objectType = "objectType";
+        String objectName = "objectName";
+
+        Map<String, Object> pvars = new HashMap<>();
+        pvars.put("OBJECT_ID", objectId);
+        pvars.put("OBJECT_TYPE", objectType);
+        pvars.put("OBJECT_NAME", objectName);
+
+
+        Map<String, Object> taskLocalVars = new HashMap<>();
+        taskLocalVars.put("START_DATE", new Date());
+        taskLocalVars.put("PERCENT_COMPLETE", 50);
+        taskLocalVars.put("DETAILS", "task details");
+
+        List<AcmParticipant> partList = new ArrayList<>();
+        partList.add(new AcmParticipant());
+
+        expect(mockTaskService.createTaskQuery()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.taskId(String.valueOf(taskId))).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.includeProcessVariables()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.includeTaskLocalVariables()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.singleResult()).andReturn(mockTask);
+
+        // find the candidate group
+        expect(mockTaskService.getIdentityLinksForTask(String.valueOf(taskId))).andReturn(Arrays.asList(mockCandidateGroup));
+        expect(mockCandidateGroup.getType()).andReturn(TaskConstants.IDENTITY_LINK_TYPE_CANDIDATE);
+        expect(mockCandidateGroup.getGroupId()).andReturn(candidateGroup).atLeastOnce();
+
+        expect(mockTask.getId()).andReturn(taskId.toString()).atLeastOnce();
+        expect(mockTask.getDueDate()).andReturn(dueDate);
+        expect(mockTask.getPriority()).andReturn(activitiPriority);
+        expect(mockTask.getName()).andReturn(title);
+        expect(mockTask.getProcessVariables()).andReturn(pvars).atLeastOnce();
+        expect(mockTask.getTaskLocalVariables()).andReturn(taskLocalVars).atLeastOnce();
+        expect(mockTask.getAssignee()).andReturn(null);
+        expect(mockTask.getProcessDefinitionId()).andReturn(processId);
+        expect(mockTask.getCreateTime()).andReturn(null);
+        expect(mockTask.getOwner()).andReturn(user);
+        expect(mockTask.getProcessInstanceId()).andReturn("250").atLeastOnce();
+
+        expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.singleResult()).andReturn(mockProcessDefinition);
+
+        expect(mockProcessDefinition.getName()).andReturn(processName);
+
+        String taskDefKey = "taskDefinitionKey";
+        expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
+        expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
+        expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
+        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
+        expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
+        expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
+        expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
+        expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
+        expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+
+        replayAll();
+
+        AcmTask task = unit.findById(taskId);
+
+        verifyAll();
+
+        assertEquals(taskId, task.getTaskId());
+        assertEquals(dueDate, task.getDueDate());
+        assertEquals(acmPriority, task.getPriority());
+        assertEquals(title, task.getTitle());
+        assertEquals(objectId, task.getAttachedToObjectId());
+        assertEquals(objectType, task.getAttachedToObjectType());
+        assertEquals(objectName, task.getAttachedToObjectName());
+        assertNull(task.getAssignee());
+        assertEquals(processName, task.getBusinessProcessName());
+        assertFalse(task.isAdhocTask());
+        assertFalse(task.isCompleted());
+
+        assertNotNull(task.getTaskStartDate());
+        assertEquals(TaskConstants.STATE_ACTIVE, task.getStatus());
+        assertEquals("task details", task.getDetails());
+        assertEquals(Integer.valueOf(50), task.getPercentComplete());
+
+        assertEquals(partList, task.getParticipants());
+
+        assertEquals(1, task.getCandidateGroups().size());
+
+        assertEquals(candidateGroup, task.getCandidateGroups().get(0));
+    }
+
 
     @Test
     public void findById_completedTask() throws Exception
@@ -505,7 +620,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         Map<String, Object> pvars = new HashMap<>();
         pvars.put("OBJECT_ID", objectId);
         pvars.put("OBJECT_TYPE", objectType);
-        pvars.put("OBJECT_NAME",objectName);
+        pvars.put("OBJECT_NAME", objectName);
 
         expect(mockTaskService.createTaskQuery()).andReturn(mockTaskQuery);
         expect(mockTaskQuery.taskId(String.valueOf(taskId))).andReturn(mockTaskQuery);
@@ -615,8 +730,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         {
             unit.findById(taskId);
             fail("Should have exception since task was not found");
-        }
-        catch (AcmTaskException ate)
+        } catch (AcmTaskException ate)
         {
             // expected, so test passes
         }
