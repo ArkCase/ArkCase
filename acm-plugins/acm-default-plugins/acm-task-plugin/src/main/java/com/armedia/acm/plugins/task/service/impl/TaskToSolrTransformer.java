@@ -2,10 +2,10 @@ package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
+import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
-import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
@@ -46,18 +46,18 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setDescription_no_html_tags_parseable(in.getDetails());
         doc.setDueDate_tdt(in.getDueDate());
         doc.setModified_date_tdt(new Date());  // theoretically it's being indexed b/c it just changed
-                                               // activiti does not keep a last modified field
+        // activiti does not keep a last modified field
         doc.setObject_id_s(Long.toString(in.getId()));
         doc.setObject_type_s("TASK");
         doc.setObject_sub_type_s(in.getBusinessProcessName());
         doc.setPriority_lcs(in.getPriority());
-        if ( in.getParentObjectId() != null )
+        if (in.getParentObjectId() != null)
         {
             doc.setParent_type_s(in.getParentObjectType());
             doc.setParent_id_s(Long.toString(in.getParentObjectId()));
             doc.setParent_ref_s(Long.toString(in.getParentObjectId()) + "-" + in.getParentObjectType());
-        }
-        else if(in.getAttachedToObjectId() != null){
+        } else if (in.getAttachedToObjectId() != null)
+        {
             doc.setParent_type_s(in.getAttachedToObjectType());
             doc.setParent_id_s(Long.toString(in.getAttachedToObjectId()));
             doc.setParent_ref_s(Long.toString(in.getAttachedToObjectId()) + "-" + in.getAttachedToObjectType());
@@ -70,7 +70,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
 
         AcmUser assignee = getUserDao().quietFindByUserId(assigneeUserId);
 
-        if ( assignee != null )
+        if (assignee != null)
         {
             doc.setAssignee_first_name_lcs(assignee.getFirstName());
             doc.setAssignee_last_name_lcs(assignee.getLastName());
@@ -80,6 +80,8 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setAdhocTask_b(in.isAdhocTask());
         doc.setOwner_lcs(in.getOwner());
         doc.setBusiness_process_name_lcs(in.getBusinessProcessName());
+
+        doc.setAdditionalProperty("candidate_group_ss", in.getCandidateGroups());
 
         log.trace("returning an advanced search doc");
 
@@ -105,13 +107,13 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setId(in.getId() + "-TASK");
         doc.setPriority_s(in.getPriority());
 
-        if ( in.getParentObjectId() != null )
+        if (in.getParentObjectId() != null)
         {
             doc.setParent_object_type_s(in.getParentObjectType());
             doc.setParent_object_id_i(in.getParentObjectId());
             doc.setParent_ref_s(Long.toString(in.getParentObjectId()) + "-" + in.getParentObjectType());
-        }
-        else if(in.getAttachedToObjectId() != null){
+        } else if (in.getAttachedToObjectId() != null)
+        {
             doc.setParent_object_type_s(in.getAttachedToObjectType());
             doc.setParent_object_id_i(in.getAttachedToObjectId());
             doc.setParent_ref_s(Long.toString(in.getAttachedToObjectId()) + "-" + in.getAttachedToObjectType());
@@ -122,13 +124,16 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setAuthor_s(in.getOwner());
         doc.setLast_modified_tdt(new Date());
 
+        doc.setAdditionalProperty("candidate_group_ss", in.getCandidateGroups());
+
         log.trace("returning a quick search doc");
 
         return doc;
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmTask in) {
+    public SolrAdvancedSearchDocument toContentFileIndex(AcmTask in)
+    {
         //No implementation needed
         return null;
     }
