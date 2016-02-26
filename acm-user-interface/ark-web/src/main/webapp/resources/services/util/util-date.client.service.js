@@ -65,7 +65,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
                 var replacedWith = (undefined === replacement) ? null : replacement;
 
                 if (!Util.isEmpty(isoDateTime)) {
-                    return new Date(isoDateTime);
+                    return moment(isoDateTime).toDate();
                 } else {
                     return replacedWith;
                 }
