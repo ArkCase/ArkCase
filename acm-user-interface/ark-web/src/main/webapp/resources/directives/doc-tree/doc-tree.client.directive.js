@@ -658,10 +658,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.jqFormDownloadDoc.attr("action", url);
                 this.$input = $('<input>').attr({
                     id: 'fileId',
-                    name: 'ecmFileId',
+                    name: 'ecmFileId'
                 });
                 this.$input.val(node.data.objectId).appendTo(this.jqFormDownloadDoc);
                 DocTree.jqFormDownloadDoc.submit();
+                // empty jqFormDownloadDoc because everytime first input is selected and same file is downloaded
+                this.jqFormDownloadDoc.empty();
             }
 
             // Find oldest parent in the array(not include top node).
