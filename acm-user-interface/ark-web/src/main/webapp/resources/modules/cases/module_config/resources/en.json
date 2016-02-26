@@ -124,7 +124,6 @@
   "cases.comp.tasks": {
     "title": "Tasks",
     "table.columns": {
-      "taskId": "ID",
       "title": "Title",
       "assignee": "Assignee",
       "created": "Created",
