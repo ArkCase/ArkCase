@@ -17,6 +17,7 @@
  * @param {String} ok - (Optional)label for the add button. If not specified, default value is used
  * @param {String} searchPlaceholder - (Optional)label for the input placeholder. If not specified, default value is used
  * @param {Object} filter - filter required to send to the faceted search by default (e.g. for client : "\"Object Sub Type\":CLIENT")
+ * @param {String} defaultFilter  - (Optional) Used to  retrieve data by default.
  * @param {Object} config - config of the parent scope used mostly for the UI-grid and to retrieve other params
  * @param {Object} modalInstance - (Optional)current modalInstance in the parentScope, required to pass data when modal closes with "Add".
  * If not specified, this directive only show the content part of the dialog. Header and footer are not shown. And user has to handle the
@@ -24,7 +25,6 @@
  * @param {Object} search-control - (Optional)Search dialog API for caller:
  * @param {Function} search-control.getSelectedItems returns list of selected search items
  * @param {Function} on-items-selected Callback function in response to selected items in search result.
- * @param {Boolean} showDefaultItem  - (Optional) If equals true then performs request to get all possible items.
  * If response contains only 1 item, then display it.
  **/
 
@@ -41,11 +41,11 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 ok: '@',
                 searchPlaceholder: '@',
                 filter: '@',
+                defaultFilter: '@',
                 config: '&',            //& : one way binding (read-only, can return key, value pair via a getter function)
                 modalInstance: '=',     //= : two way binding (read-write both, parent scope and directive's isolated scope have two way binding)
                 searchControl: '=',
-                onItemsSelected: '=',
-                showDefaultItem: '='
+                onItemsSelected: '='
             },
 
             link: function (scope, el, attrs) {
@@ -200,21 +200,19 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                     }
                 }
 
-                // Perform initial request to get 1 default item if showDefaultItem is defined
-                if (scope.showDefaultItem === true) {
-                    // Return only one item
-                    var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + '*', scope.filters, 1, 0);
+                // Perform initial request to get list of documents if defaultFilter is defined
+                if (scope.defaultFilter) {
+                    // TODO: figure out why buildFacetedSearchQuery returns encoded URI?
+                    // $resource service encodes url parameters itself
+                    var query = decodeURIComponent(SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + '*', scope.defaultFilter, scope.pageSize, 0));
                     if (query) {
                         SearchService.queryFilteredSearch({
                                 query: query
                             },
                             function (data) {
-                                // Display data only if response contains 1 dociment
-                                if (data.response.numFound == 1) {
-                                    updateFacets(data.facet_counts.facet_fields);
-                                    scope.gridOptions.data = data.response.docs;
-                                    scope.gridOptions.totalItems = data.response.numFound;
-                                }
+                                updateFacets(data.facet_counts.facet_fields);
+                                scope.gridOptions.data = data.response.docs;
+                                scope.gridOptions.totalItems = data.response.numFound;
                             });
                     }
 
