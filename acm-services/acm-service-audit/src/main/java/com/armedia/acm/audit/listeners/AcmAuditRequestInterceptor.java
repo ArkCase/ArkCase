@@ -4,7 +4,6 @@ import com.armedia.acm.audit.model.AuditConstants;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.AuditService;
 import com.armedia.acm.web.api.MDCConstants;
-import com.google.common.io.CharStreams;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,10 +105,20 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
         }
 
         // body
-        if (isRequestsLoggingBodyEnabled() && "POST".equalsIgnoreCase(request.getMethod()) && (request.getHeader("content-type") == null
-                || (request.getHeader("content-type") != null && !request.getHeader("content-type").contains("multipart/form-data"))))
+        if (isRequestsLoggingBodyEnabled() && "POST".equalsIgnoreCase(request.getMethod()))
         {
-            eventProperties.put("Body", CharStreams.toString(request.getReader()));
+            Map<String, String[]> parameterMap = request.getParameterMap();
+            StringBuilder parameters = new StringBuilder();
+            String separator = "";
+            for (String parameterKey : parameterMap.keySet())
+            {
+                parameters.append(separator);
+                separator = "|";
+                parameters.append(parameterKey + ": [");
+                parameters.append(String.join(", ", parameterMap.get(parameterKey)));
+                parameters.append("]");
+            }
+            eventProperties.put("Body", parameters.toString());
         }
 
         return eventProperties;

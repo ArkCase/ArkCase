@@ -18,12 +18,9 @@
 
     <!-- Imports user-defined @Controller beans that process client requests -->
 	<!--<import resource="controllers.xml" />-->
-    <mvc:view-controller path="/" view-name="home"/>
-    <mvc:view-controller path="/home" view-name="home"/>
     <mvc:view-controller path="/login" view-name="login"/>
+    <mvc:view-controller path="/logout" view-name="login"/>
     <mvc:view-controller path="/login.html" view-name="login"/>
-    <mvc:view-controller path="/portal.html" view-name="home"/>
-    <mvc:view-controller path="/overview.html" view-name="home"/>
 
 	<!-- Scan for Spring beans declared via annotations. -->
 	<!--<context:component-scan base-package="com.armedia.acm.web"/>-->
@@ -123,6 +120,7 @@
     -->
 	<mvc:resources mapping="/resources/**" location="/resources/"  />
 
+    <mvc:default-servlet-handler/>
 
     <!-- File upload support -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />

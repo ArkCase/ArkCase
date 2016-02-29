@@ -13,8 +13,6 @@
     <description>Angular-based extensible web UI, which consumes ArkCase services.</description>
 
     <modules>
-        <module>ark-surf-connector</module>
-        <module>ark-web</module>
         <module>ark-angular-starter</module>
     </modules>
 </project>
