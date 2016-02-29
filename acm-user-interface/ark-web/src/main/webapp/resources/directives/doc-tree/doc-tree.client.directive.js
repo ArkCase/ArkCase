@@ -117,7 +117,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                     , table: {
                         indentation: 10,      // indent 20px per node level
-                        nodeColumnIdx: 2,     // render the node title into the 2nd column
+                        nodeColumnIdx: 1,     // render the node title into the 2nd column
                         checkboxColumnIdx: 0  // render the checkboxes into the 1st column
                     }
                     , gridnav: {
@@ -128,12 +128,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         var node = data.node;
                         var $tdList = $(node.tr).find(">td");
                         // (index #0 is rendered by fancytree by adding the checkbox)
-                        // (index #2 is rendered by fancytree)
+                        // (index #1 is rendered by fancytree)
 
-                        //$tdList.eq(1).html(DocTree.Source.getHtmlDocLink(node));
-                        var $td1 = $("<td/>");
-                        DocTree.Source.getHtmlDocLink(node).appendTo($td1);
-                        $tdList.eq(1).replaceWith($td1);
+                        ////$tdList.eq(1).html(DocTree.Source.getHtmlDocLink(node));
+                        //var $td1 = $("<td/>");
+                        //DocTree.Source.getHtmlDocLink(node).appendTo($td1);
+                        //$tdList.eq(1).replaceWith($td1);
 
 
                         if (DocTree.isFolderNode(node)) {
@@ -143,7 +143,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             var typeColumn = (DocTree.getDocumentTypeDisplayLabel(node.data.type));
                             var filteredType = filter(typeColumn);
 
-                            $tdList.eq(3).text(filteredType); // document type is mapped (afdp-1249)
+                            $tdList.eq(2).text(filteredType); // document type is mapped (afdp-1249)
 
                             var versionDate = UtilDateService.getDatePart(node.data.created);
                             var versionUser = Util.goodValue(node.data.creator);
@@ -172,18 +172,18 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     }
                                 }
                             }
-                            $tdList.eq(4).text(versionDate);
+                            $tdList.eq(3).text(versionDate);
 
                             promiseGetUserFullName.then(function (userFullNames) {
                                 var found = _.find(userFullNames, {id: versionUser});
-                                $tdList.eq(5).text(Util.goodMapValue(found, "name"));
+                                $tdList.eq(4).text(Util.goodMapValue(found, "name"));
                             });
 
-                            $tdList.eq(6).replaceWith($td6);
+                            $tdList.eq(5).replaceWith($td6);
 
-                            $tdList.eq(7).text(node.data.status);
+                            $tdList.eq(6).text(node.data.status);
 
-                            $tdList.eq(1).addClass("");
+                            //$tdList.eq(1).addClass("");
 
                         } else {  //non file, non folder
                             $tdList.eq(0).text("");
