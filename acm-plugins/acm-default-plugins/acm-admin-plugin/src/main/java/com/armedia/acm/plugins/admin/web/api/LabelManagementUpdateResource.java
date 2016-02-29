@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmLabelConfigurationException;
 import com.armedia.acm.plugins.admin.exception.AcmLabelManagementException;
+import com.armedia.acm.plugins.admin.service.LabelManagementService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;

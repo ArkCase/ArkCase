@@ -48,7 +48,7 @@
     </bean>
 
     <!-- Label management API -->
-    <bean id="labelManagementService" class="com.armedia.acm.plugins.admin.web.api.LabelManagementService">
+    <bean id="labelManagementService" class="com.armedia.acm.plugins.admin.service.LabelManagementService">
         <property name="modulesLocation" value="#{ systemProperties ['user.home'] }/.acm-ui/custom/modules/" />
         <property name="moduleResourcesLocation" value="#{ systemProperties ['user.home'] }/.acm-ui/custom/modules/%s/module_config/resources/%s.json" />
         <property name="customResourceFile" value="%s.%s.json" />
