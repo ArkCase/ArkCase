@@ -41,9 +41,7 @@ public class LabelManagementResetResource {
                 langs.add(langJsonArray.getString(i));
             }
         } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error(String.format("Wrong reset parameter '%s' ", resource));
-            }
+            log.error(String.format("Wrong reset parameter '%s' ", resource));
             throw new AcmLabelManagementException("Reset resource error", e);
         }
 

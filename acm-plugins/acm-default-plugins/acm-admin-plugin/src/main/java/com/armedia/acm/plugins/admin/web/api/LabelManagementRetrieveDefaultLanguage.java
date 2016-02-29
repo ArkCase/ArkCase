@@ -35,10 +35,9 @@ public class LabelManagementRetrieveDefaultLanguage {
             response.getOutputStream().print(responseObject.toString());
             response.getOutputStream().flush();
         } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Can't retrieve default langauage", e);
-            }
-            throw new AcmLabelManagementException("Can't retrieve default language", e);
+            String msg = "Can't retrieve default langauage";
+            log.error(msg, e);
+            throw new AcmLabelManagementException(msg, e);
         }
     }
 
