@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.admin.web.api;
+package com.armedia.acm.plugins.admin.service;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class LabelManagementService {
      */
     public List<String> getModulesNames() {
         List modulesNames = new ArrayList();
-        List <ModuleConfig> modules = getModules();
+        List<ModuleConfig> modules = getModules();
         for (ModuleConfig moduleIter : modules) {
             modulesNames.add(moduleIter.getId());
         }
