@@ -29,7 +29,7 @@
         </init-param> -->
         <init-param>
             <param-name>baseURL</param-name>
-            <param-value>http://devvm:8080/acm</param-value>
+            <param-value>http://devvm:8080/arkcase</param-value>
         </init-param>
         <init-param>
             <param-name>getFileService</param-name>

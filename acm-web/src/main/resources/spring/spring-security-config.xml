@@ -17,41 +17,36 @@
     <http security="none" pattern="/login" />
     <http security="none" pattern="/login.html" />
     <http security="none" pattern="/login.jsp" />
+    <http security="none" pattern="/assets/css/login.css"/>
     <http security="none" pattern="/resources/**" />
     <http security="none" pattern="/branding/**"/>
     <http security="none" pattern="/external/**"/>
+    <!-- All lib are public, no security needed-->
+    <http security="none" pattern="/lib/**"/>
 
     <!-- acmAuthenticationManager, acmLogoutSuccessHandler, and acmAuthenticationDetailsFactory are defined
          in spring-library-user-login.xml -->
 
-    <http pattern="/api/**"
+    <http
             auto-config="true"
             use-expressions="true"
             authentication-manager-ref="acmAuthenticationManager">
-        <intercept-url pattern="/api/**" access="isAuthenticated()"/>
+        <intercept-url pattern="/**" access="isAuthenticated()"/>
         <http-basic/>
         <custom-filter ref="acmBasicAndTokenAuthenticationFilter" before="BASIC_AUTH_FILTER"/>
         <custom-filter ref="corsFilter" after="PRE_AUTH_FILTER"/>
-        <logout
-                logout-url="/logout"
-                success-handler-ref="acmLogoutSuccessHandler"
-                invalidate-session="true"/>
-    </http>
-
-	<http
-            auto-config="true"
-            use-expressions="true"
-            authentication-manager-ref="acmAuthenticationManager"  >
-        <intercept-url pattern="/**" access="isAuthenticated()" />
 		<form-login
                 login-page="/login"
+                default-target-url="/home.html#!/welcome"
+                always-use-default-target="true"
                 authentication-details-source-ref="acmAuthenticationDetailsFactory"
                 authentication-failure-url="/login?login_error=1"
                 authentication-success-handler-ref="acmLoginSuccessHandler"/>
 		<logout
                 logout-url="/logout"
+                delete-cookies="JSESSIONID"
                 success-handler-ref="acmLogoutSuccessHandler"
                 invalidate-session="true"/>
 	</http>
-
+   
 </beans:beans>

@@ -31,16 +31,6 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!-- wraps the HTTP request so that its body can be read multiple times -->
-    <filter>
-        <filter-name>RequestWrapperFilter</filter-name>
-        <filter-class>com.armedia.acm.web.api.RequestWrapperFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>RequestWrapperFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
     <!--
 		SPRING SECURITY
 	-->
