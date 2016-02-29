@@ -34,10 +34,9 @@ public class LabelManagementRetrieveNamespaces {
             response.getOutputStream().print(jsonModules.toString());
             response.getOutputStream().flush();
         } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Can't retrieve namespaces", e);
-            }
-            throw new AcmLabelManagementException("Can't retrieve namespaces", e);
+            String msg = "Can't retrieve namespaces";
+            log.error(msg, e);
+            throw new AcmLabelManagementException(msg, e);
         }
     }
 

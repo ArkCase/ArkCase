@@ -42,10 +42,9 @@ public class LabelManagementRetrieveResource {
             response.getOutputStream().print(jsonResource.toString());
             response.getOutputStream().flush();
         } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Can't retrieve resource", e);
-            }
-            throw new AcmLabelManagementException("Can't retrieve resource", e);
+            String msg = String.format("Can't retrieve resource %s:%s", lang, ns);
+            log.error(msg, e);
+            throw new AcmLabelManagementException(msg, e);
         }
     }
 

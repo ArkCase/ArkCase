@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * Created by sergey on 2/14/16.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
 public class LabelManagementUpdateSettings {
     private Logger log = LoggerFactory.getLogger(getClass());
     private LabelManagementService labelManagementService;
@@ -27,12 +27,10 @@ public class LabelManagementUpdateSettings {
         try {
             JSONObject settingsObj = new JSONObject(settings);
             labelManagementService.updateSettings(settingsObj);
-        } catch (Exception e){
-            String errMsg = String.format("Can't update setitngs");
-            if (log.isErrorEnabled()) {
-                log.error(String.format(errMsg, e));
-            }
-            throw new AcmLabelManagementException(errMsg, e);
+        } catch (Exception e) {
+            String msg = "Can't update setitngs";
+            log.error(msg, e);
+            throw new AcmLabelManagementException(msg, e);
         }
     }
 

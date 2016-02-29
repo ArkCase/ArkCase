@@ -34,10 +34,9 @@ public class LabelManagementRetrieveLanguages {
             response.getOutputStream().print(jsonLangs.toString());
             response.getOutputStream().flush();
         } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Can't retrieve languages", e);
-            }
-            throw new AcmLabelManagementException("Can't retrieve languages", e);
+            String msg = "Can't retrieve languages";
+            log.error(msg, e);
+            throw new AcmLabelManagementException(msg, e);
         }
     }
 

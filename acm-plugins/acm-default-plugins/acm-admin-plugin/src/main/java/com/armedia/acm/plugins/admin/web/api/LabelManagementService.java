@@ -179,9 +179,7 @@ public class LabelManagementService {
             updateResource(moduleId, lang);
         } catch (Exception e) {
             String msg = String.format("Can't reset resource file %s", fileName);
-            if (log.isErrorEnabled()) {
-                log.error(msg);
-            }
+            log.error(msg);
             throw new AcmLabelManagementException(msg);
         }
     }
@@ -211,9 +209,7 @@ public class LabelManagementService {
             FileUtils.writeStringToFile(resourceFile, resource.toString());
         } catch (Exception e) {
             String msg = String.format("Can't write resource into the file %s", fileName);
-            if (log.isErrorEnabled()) {
-                log.error(msg);
-            }
+            log.error(msg);
             throw new AcmLabelManagementException(msg);
         }
         return resource;
@@ -250,9 +246,7 @@ public class LabelManagementService {
                 return customRes;
             } catch (Exception e) {
                 String msg = String.format("Can't write resource into the file %s", fileName);
-                if (log.isErrorEnabled()) {
-                    log.error(msg);
-                }
+                log.error(msg);
                 throw new AcmLabelManagementException(msg);
             }
         }
@@ -269,9 +263,7 @@ public class LabelManagementService {
             File file = FileUtils.getFile(settingsFileLocation);
             FileUtils.writeStringToFile(file, objSettings.toString());
         } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error(String.format("Can't write settings data in to the file %s", settingsFileLocation));
-            }
+            log.error(String.format("Can't write settings data in to the file %s", settingsFileLocation));
             throw new AcmLabelManagementException("Update settings error", e);
         }
         return objSettings;
@@ -412,9 +404,7 @@ public class LabelManagementService {
             return new JSONObject(resource);
 
         } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.warn(String.format("Can't read resource file %s", fileName));
-            }
+            log.warn(String.format("Can't read resource file %s", fileName));
             return null;
         }
 

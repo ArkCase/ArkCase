@@ -48,10 +48,9 @@ public class LabelManagementRetrieveAdminResource {
             response.getOutputStream().print(jsonResourceArray.toString());
             response.getOutputStream().flush();
         } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Can't retrieve admin resource", e);
-            }
-            throw new AcmLabelManagementException("Can't retrieve admin resource", e);
+            String msg = String.format("Can't retrieve admin resource %s:%s", lang, ns);
+            log.error(msg, e);
+            throw new AcmLabelManagementException(msg, e);
         }
     }
 

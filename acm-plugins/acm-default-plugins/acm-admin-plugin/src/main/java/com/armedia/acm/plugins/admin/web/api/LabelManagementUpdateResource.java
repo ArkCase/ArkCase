@@ -49,11 +49,9 @@ public class LabelManagementUpdateResource {
             response.getOutputStream().flush();
 
         } catch (Exception e){
-            String errMsg = String.format("Can't update resource %s:%s", lang, ns);
-            if (log.isErrorEnabled()) {
-                log.error(String.format(errMsg, e));
-            }
-            throw new AcmLabelManagementException(errMsg, e);
+            String msg = String.format("Can't update resource %s:%s", lang, ns);
+            log.error(msg, e);
+            throw new AcmLabelManagementException(msg, e);
         }
     }
 
