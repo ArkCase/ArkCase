@@ -68,6 +68,21 @@ public class AcmTask implements AcmAssignedObject, Serializable
     private Long parentObjectId;
     private String parentObjectType;
 
+    /**
+     * Names of the groups whose members can claim this task.  If the task has candidate group, but does not have
+     * an assignee, then any member of any of the candidate group can claim the task.  When a user claims a task, then the
+     * task is assigned to that user, and is not part of the group bucket any more.
+     */
+    private List<String> candidateGroups = new ArrayList<>();
+
+    /**
+     * User ID of the next person who should be responsible for the business process.  Many workflows allow
+     * the current responsible party to select the next person who should have it.  This field is used to store
+     * the next person.
+     */
+    private String nextAssignee;
+
+
     public AcmContainer getContainer()
     {
         return container;
@@ -333,36 +348,6 @@ public class AcmTask implements AcmAssignedObject, Serializable
         this.reviewDocumentFormXmlId = reviewDocumentFormXmlId;
     }
 
-    @Override
-    public String toString()
-    {
-        return "AcmTask{" +
-                "taskId=" + taskId +
-                ", priority='" + priority + '\'' +
-                ", title='" + title + '\'' +
-                ", dueDate=" + dueDate +
-                ", attachedToObjectType='" + attachedToObjectType + '\'' +
-                ", attachedToObjectName='" + attachedToObjectName + '\'' +
-                ", attachedToObjectId=" + attachedToObjectId +
-                ", assignee='" + assignee + '\'' +
-                ", owner='" + owner + '\'' +
-                ", businessProcessName='" + businessProcessName + '\'' +
-                ", adhocTask=" + adhocTask +
-                ", completed=" + completed +
-                ", status='" + status + '\'' +
-                ", percentComplete=" + percentComplete +
-                ", details='" + details + '\'' +
-                ", createDate=" + createDate +
-                ", taskStartDate=" + taskStartDate +
-                ", taskFinishedDate=" + taskFinishedDate +
-                ", taskDurationInMillis=" + taskDurationInMillis +
-                ", workflowRequestType='" + workflowRequestType + '\'' +
-                ", workflowRequestId='" + workflowRequestId + '\'' +
-                ", reviewDocumentPdfRenditionId=" + reviewDocumentPdfRenditionId +
-                ", reviewDocumentFormXmlId=" + reviewDocumentFormXmlId +
-                '}';
-    }
-
     public void setDocumentUnderReview(EcmFile documentUnderReview)
     {
         this.documentUnderReview = documentUnderReview;
@@ -462,5 +447,69 @@ public class AcmTask implements AcmAssignedObject, Serializable
     public String getParentObjectType()
     {
         return parentObjectType;
+    }
+
+    public String getNextAssignee()
+    {
+        return nextAssignee;
+    }
+
+    public void setNextAssignee(String nextAssignee)
+    {
+        this.nextAssignee = nextAssignee;
+    }
+
+    public List<String> getCandidateGroups()
+    {
+        return candidateGroups;
+    }
+
+    public void setCandidateGroups(List<String> candidateGroups)
+    {
+        this.candidateGroups = candidateGroups;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "AcmTask{" +
+                "taskId=" + taskId +
+                ", priority='" + priority + '\'' +
+                ", title='" + title + '\'' +
+                ", dueDate=" + dueDate +
+                ", attachedToObjectType='" + attachedToObjectType + '\'' +
+                ", attachedToObjectName='" + attachedToObjectName + '\'' +
+                ", attachedToObjectId=" + attachedToObjectId +
+                ", assignee='" + assignee + '\'' +
+                ", owner='" + owner + '\'' +
+                ", businessProcessName='" + businessProcessName + '\'' +
+                ", businessProcessId=" + businessProcessId +
+                ", adhocTask=" + adhocTask +
+                ", completed=" + completed +
+                ", status='" + status + '\'' +
+                ", percentComplete=" + percentComplete +
+                ", details='" + details + '\'' +
+                ", createDate=" + createDate +
+                ", taskStartDate=" + taskStartDate +
+                ", taskFinishedDate=" + taskFinishedDate +
+                ", taskDurationInMillis=" + taskDurationInMillis +
+                ", workflowRequestType='" + workflowRequestType + '\'' +
+                ", workflowRequestId=" + workflowRequestId +
+                ", reviewDocumentPdfRenditionId=" + reviewDocumentPdfRenditionId +
+                ", reviewDocumentFormXmlId=" + reviewDocumentFormXmlId +
+                ", documentUnderReview=" + documentUnderReview +
+                ", childObjects=" + childObjects +
+                ", reworkInstructions='" + reworkInstructions + '\'' +
+                ", outcomeName='" + outcomeName + '\'' +
+                ", availableOutcomes=" + availableOutcomes +
+                ", taskOutcome=" + taskOutcome +
+                ", participants=" + participants +
+                ", container=" + container +
+                ", ecmFolderPath='" + ecmFolderPath + '\'' +
+                ", parentObjectId=" + parentObjectId +
+                ", parentObjectType='" + parentObjectType + '\'' +
+                ", candidateGroups=" + candidateGroups +
+                ", nextAssignee='" + nextAssignee + '\'' +
+                '}';
     }
 }
