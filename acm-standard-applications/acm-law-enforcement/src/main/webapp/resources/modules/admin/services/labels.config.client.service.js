@@ -12,7 +12,7 @@
  */
 angular.module('admin').factory('Admin.LabelsConfigService', ['$resource',
     function ($resource) {
-        return $resource('api/latest/plugin/admin/labelconfiguration', {}, {
+        return $resource('api/latest/plugin/admin/labelmanagement', {}, {
 
             /**
              * @ngdoc method
@@ -30,8 +30,8 @@ angular.module('admin').factory('Admin.LabelsConfigService', ['$resource',
              */
             retrieveNamespaces: {
                 method: "GET",
-                url: "api/latest/plugin/admin/labelconfiguration/namespaces",
-                cache: true,
+                url: "api/latest/plugin/admin/labelmanagement/namespaces",
+                cache: false,
                 isArray: true
             },
 
@@ -51,8 +51,8 @@ angular.module('admin').factory('Admin.LabelsConfigService', ['$resource',
              */
             retrieveLanguages: {
                 method: "GET",
-                url: "api/latest/plugin/admin/labelconfiguration/languages",
-                cache: true,
+                url: "api/latest/plugin/admin/labelmanagement/languages",
+                cache: false,
                 isArray: true
             },
 
@@ -74,9 +74,29 @@ angular.module('admin').factory('Admin.LabelsConfigService', ['$resource',
              */
             retrieveResource: {
                 method: "GET",
-                url: "api/latest/plugin/admin/labelconfiguration/admin-resource?lang=:lang&ns=:ns",
+                url: "api/latest/plugin/admin/labelmanagement/admin-resource?lang=:lang&ns=:ns",
                 cache: false,
                 isArray: true
+            },
+
+            /**
+             * @ngdoc method
+             * @name retrieveSettings
+             * @methodOf admin.service:Admin.LabelsConfigService
+             *
+             * @param {Function} onSuccess (Optional)Callback function of success query
+             * @param {Function} onError (Optional) Callback function when fail
+             *
+             * @description
+             * Performs retrieving labels settings
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            retrieveSettings: {
+                method: "GET",
+                url: "proxy/arkcase/api/latest/plugin/admin/labelmanagement/settings",
+                cache: false,
+                isArray: false
             },
 
             /**
@@ -100,8 +120,8 @@ angular.module('admin').factory('Admin.LabelsConfigService', ['$resource',
              */
             updateResource: {
                 method: "PUT",
-                url: "api/latest/plugin/admin/labelconfiguration/admin-resource?lang=:lang&ns=:ns",
-                cache: true,
+                url: "api/latest/plugin/admin/labelmanagement/admin-resource?lang=:lang&ns=:ns",
+                cache: false,
                 isArray: true
             },
 
@@ -122,8 +142,8 @@ angular.module('admin').factory('Admin.LabelsConfigService', ['$resource',
              */
             updateSettings: {
                 method: "PUT",
-                url: "api/latest/plugin/admin/labelconfiguration/settings",
-                cache: true
+                url: "api/latest/plugin/admin/labelmanagement/settings",
+                cache: false
             },
 
             /**
@@ -144,8 +164,8 @@ angular.module('admin').factory('Admin.LabelsConfigService', ['$resource',
              */
             resetResource: {
                 method: "POST",
-                url: "api/latest/plugin/admin/labelconfiguration/admin-resource/reset",
-                cache: true
+                url: "api/latest/plugin/admin/labelmanagement/admin-resource/reset",
+                cache: false
             }
 
         });

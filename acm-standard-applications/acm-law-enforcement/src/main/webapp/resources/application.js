@@ -3,6 +3,11 @@
 //Start by defining the main module and adding the module dependencies
 var app = angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfiguration.applicationModuleVendorDependencies);
 
+var ACM_SETTINGS = {
+    LANG: 'en'
+};
+
+
 // Setting HTML5 Location Mode
 angular.module(ApplicationConfiguration.applicationModuleName).config([
     '$locationProvider', '$translateProvider', '$translatePartialLoaderProvider', '$httpProvider',
@@ -13,10 +18,10 @@ angular.module(ApplicationConfiguration.applicationModuleName).config([
 
         // Initialize angular-translate
         $translateProvider.useLoader('$translatePartialLoader', {
-            urlTemplate: 'modules_config/config/modules/{part}/resources/{lang}.json'
+            urlTemplate: 'proxy/arkcase/api/latest/plugin/admin/labelmanagement/resource?ns={part}&lang={lang}'
         });
 
-        $translateProvider.preferredLanguage('en');
+        $translateProvider.preferredLanguage(ACM_SETTINGS.LANG);
         //$translateProvider.useSanitizeValueStrategy('sanitize');
 
         // Add HTTP error interceptor
@@ -38,8 +43,13 @@ angular.module(ApplicationConfiguration.applicationModuleName).config([
 ]);
 
 
-//Then define the init function for starting up the application
+// Load language info before start Angular application
 angular.element(document).ready(function () {
-    //Then init the app
-    angular.bootstrap(document, [ApplicationConfiguration.applicationModuleName]);
+    $.getJSON('proxy/arkcase/api/latest/plugin/admin/labelmanagement/default-language', function(result){
+        ACM_SETTINGS.LANG = result.defaultLang || ACM_SETTINGS.LANG;
+        angular.bootstrap(document, [ApplicationConfiguration.applicationModuleName]);
+    }).fail(function(){
+        // If language is missed then use default lang settings (en)
+        angular.bootstrap(document, [ApplicationConfiguration.applicationModuleName]);
+    });
 });
