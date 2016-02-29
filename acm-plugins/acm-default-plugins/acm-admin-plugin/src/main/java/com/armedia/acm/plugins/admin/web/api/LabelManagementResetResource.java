@@ -25,7 +25,7 @@ public class LabelManagementResetResource {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public void updateResource(@RequestBody String resource) throws IOException, AcmLabelManagementException {
+    public String updateResource(@RequestBody String resource) throws IOException, AcmLabelManagementException {
 
         List<String> ns = new ArrayList<>();
         List<String> langs = new ArrayList<>();
@@ -46,6 +46,7 @@ public class LabelManagementResetResource {
         }
 
         labelManagementService.reset(ns, langs);
+        return (new JSONObject()).toString();
     }
 
     public void setLabelManagementService(LabelManagementService labelManagementService) {

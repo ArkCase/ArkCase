@@ -27,7 +27,7 @@ public class LabelManagementUpdateResource {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public void updateResource(
+    public String updateResource(
             @RequestParam("lang") String lang,
             @RequestParam("ns") String ns,
             @RequestBody String resource,
@@ -45,9 +45,7 @@ public class LabelManagementUpdateResource {
                 node.put("id", key);
                 jsonResourceArray.put(node);
             }
-            response.getOutputStream().print(jsonResourceArray.toString());
-            response.getOutputStream().flush();
-
+            return jsonResourceArray.toString();
         } catch (Exception e){
             String msg = String.format("Can't update resource %s:%s", lang, ns);
             log.error(msg, e);

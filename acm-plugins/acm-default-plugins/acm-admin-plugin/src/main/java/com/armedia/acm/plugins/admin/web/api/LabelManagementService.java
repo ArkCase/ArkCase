@@ -31,9 +31,9 @@ public class LabelManagementService {
     /**
      * Return modules
      */
-    public ArrayList<String> getModulesNames() {
-        ArrayList<String> modulesNames = new ArrayList();
-        ArrayList<ModuleConfig> modules = getModules();
+    public List<String> getModulesNames() {
+        List modulesNames = new ArrayList();
+        List <ModuleConfig> modules = getModules();
         for (ModuleConfig moduleIter : modules) {
             modulesNames.add(moduleIter.getId());
         }
@@ -46,7 +46,7 @@ public class LabelManagementService {
      *
      * @return
      */
-    public ArrayList<String> getLanguages() {
+    public List<String> getLanguages() {
         // Languages list is stored in XML configuration
         return new ArrayList(languages);
     }
@@ -56,13 +56,13 @@ public class LabelManagementService {
      *
      * @return
      */
-    public ArrayList<ModuleConfig> getModules() {
+    public List<ModuleConfig> getModules() {
 
         File modulesDir = new File(modulesLocation);
 
         File[] dirs = modulesDir.listFiles(File::isDirectory);
 
-        ArrayList<ModuleConfig> modules = new ArrayList();
+        List modules = new ArrayList();
 
         for (File dirIter : dirs) {
             ModuleConfig module = new ModuleConfig();

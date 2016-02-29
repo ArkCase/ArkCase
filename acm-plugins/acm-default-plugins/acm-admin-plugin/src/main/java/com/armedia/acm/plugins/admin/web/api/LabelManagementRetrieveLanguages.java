@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmLabelManagementException;
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by sergey on 2/14/15.
@@ -26,13 +26,11 @@ public class LabelManagementRetrieveLanguages {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public void retrieveLanguages(
+    public List<String> retrieveLanguages(
             HttpServletResponse response) throws IOException, AcmLabelManagementException {
 
         try {
-            JSONArray jsonLangs = new JSONArray(labelManagementService.getLanguages());
-            response.getOutputStream().print(jsonLangs.toString());
-            response.getOutputStream().flush();
+            return labelManagementService.getLanguages();
         } catch (Exception e) {
             String msg = "Can't retrieve languages";
             log.error(msg, e);

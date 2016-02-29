@@ -26,7 +26,7 @@ public class LabelManagementRetrieveResource {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public void retrieveResource(
+    public String retrieveResource(
             @RequestParam("lang") String lang,
             @RequestParam("ns") String ns,
             HttpServletResponse response) throws AcmLabelManagementException {
@@ -39,8 +39,7 @@ public class LabelManagementRetrieveResource {
             if (jsonResource == null) {
                 jsonResource = new JSONObject();
             }
-            response.getOutputStream().print(jsonResource.toString());
-            response.getOutputStream().flush();
+            return jsonResource.toString();
         } catch (Exception e) {
             String msg = String.format("Can't retrieve resource %s:%s", lang, ns);
             log.error(msg, e);
