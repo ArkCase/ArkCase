@@ -119,6 +119,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         String details = "details";
         String owner = "owner";
         String candidateGroup = "candidateGroup";
+        String nextAssignee = "nextAssignee";
 
         AcmTask in = new AcmTask();
         in.setTaskId(taskId);
@@ -138,6 +139,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         in.setReworkInstructions("rework instructions");
         in.setParentObjectId(2500L);
         in.setParentObjectType("parent object type");
+        in.setNextAssignee(nextAssignee);
 
         // candidate group should not be saved... it is read-only, we read it from Activiti, but don't save it.
         in.setCandidateGroups(Arrays.asList(candidateGroup));
@@ -171,6 +173,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockTaskService.setVariableLocal(taskId.toString(), "outcome", in.getTaskOutcome().getName());
         mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_ID", 2500L);
         mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_TYPE", "parent object type");
+        mockTaskService.setVariable(taskId.toString(), TaskConstants.VARIABLE_NAME_NEXT_ASSIGNEE, in.getNextAssignee());
 
 
         // data access and assignment rules
@@ -410,6 +413,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         String processId = "processId";
         String processName = "processName";
 
+        String nextAssignee = "nextAssignee";
+
         Long objectId = 250L;
         String objectType = "objectType";
         String objectName = "objectName";
@@ -418,6 +423,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         pvars.put("OBJECT_ID", objectId);
         pvars.put("OBJECT_TYPE", objectType);
         pvars.put("OBJECT_NAME", objectName);
+
+        pvars.put(TaskConstants.VARIABLE_NAME_NEXT_ASSIGNEE, nextAssignee);
 
 
         Map<String, Object> taskLocalVars = new HashMap<>();
@@ -482,6 +489,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals(processName, task.getBusinessProcessName());
         assertFalse(task.isAdhocTask());
         assertFalse(task.isCompleted());
+        assertEquals(nextAssignee, task.getNextAssignee());
 
         assertNotNull(task.getTaskStartDate());
         assertEquals(TaskConstants.STATE_ACTIVE, task.getStatus());

@@ -156,6 +156,11 @@ public class ActivitiTaskDao implements TaskDao
             in.setTaskId(Long.valueOf(activitiTask.getId()));
             in.setCreateDate(activitiTask.getCreateTime());
 
+            // AFDP-1876 save the assignee for the next task in the process to process-level variables.  The next
+            // assignee is to support business processes where the current assignee of a task can select the assignee
+            // for the next task.  This feature was added originally for the DoD Joint Staff EDTRM project.
+            getActivitiTaskService().setVariable(activitiTask.getId(), TaskConstants.VARIABLE_NAME_NEXT_ASSIGNEE, in.getNextAssignee());
+
             // make sure an assignee participant is there, so the right data access can be set on the assignee...
             // activiti has to control the assignee, not the assignment rules.
             ensureCorrectAssigneeInParticipants(in);
@@ -902,6 +907,20 @@ public class ActivitiTaskDao implements TaskDao
 
         String details = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_DETAILS);
         acmTask.setDetails(details);
+
+        // AFDP-1876 Task next assignee field: for ad-hoc tasks (not part of a business process) the next assignee
+        // will be stored here in task local variables.  It's hard to imagine why a "next assignee" is needed for an
+        // ad-hoc task - where you can just change the assignee directly - but we have this code here for
+        // consistency and to avoid surprises.  This way, every task can have a next assignee.
+        //
+        // Note, if the task already has nextAssignee set, then the process-level variables had the next assignee,
+        // and we don't want to overwrite it here.  So only check the task local variables if the nextAssignee is null.
+        if (acmTask.getNextAssignee() == null)
+        {
+            String nextAssignee = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_NEXT_ASSIGNEE);
+            acmTask.setNextAssignee(nextAssignee);
+        }
+
     }
 
     private String acmPriorityFromActivitiPriority(int priority)
@@ -1058,6 +1077,9 @@ public class ActivitiTaskDao implements TaskDao
                 EcmFile docUnderReview = getFileDao().find(acmTask.getReviewDocumentPdfRenditionId());
                 acmTask.setDocumentUnderReview(docUnderReview);
             }
+
+            // AFDP-1876 if the task is part of a business process, the next assignee will be stored in process variables.
+            acmTask.setNextAssignee((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_NEXT_ASSIGNEE));
         }
     }
 

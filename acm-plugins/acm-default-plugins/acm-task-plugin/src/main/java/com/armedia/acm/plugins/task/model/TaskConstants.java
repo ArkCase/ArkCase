@@ -35,4 +35,5 @@ public interface TaskConstants
 
 
     String IDENTITY_LINK_TYPE_CANDIDATE = "candidate";
+    String VARIABLE_NAME_NEXT_ASSIGNEE = "NEXT_ASSIGNEE";
 }
