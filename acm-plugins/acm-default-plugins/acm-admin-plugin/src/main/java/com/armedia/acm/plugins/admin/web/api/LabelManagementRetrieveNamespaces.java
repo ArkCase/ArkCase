@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmLabelManagementException;
-import org.json.JSONArray;
+import com.armedia.acm.plugins.admin.model.ModuleConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by sergey on 2/14/16.
@@ -26,13 +27,11 @@ public class LabelManagementRetrieveNamespaces {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public void retrieveNamespaces(
+    public List<ModuleConfig> retrieveNamespaces(
             HttpServletResponse response) throws IOException, AcmLabelManagementException {
 
         try {
-            JSONArray jsonModules = new JSONArray(labelManagementService.getModules());
-            response.getOutputStream().print(jsonModules.toString());
-            response.getOutputStream().flush();
+            return labelManagementService.getModules();
         } catch (Exception e) {
             String msg = "Can't retrieve namespaces";
             log.error(msg, e);

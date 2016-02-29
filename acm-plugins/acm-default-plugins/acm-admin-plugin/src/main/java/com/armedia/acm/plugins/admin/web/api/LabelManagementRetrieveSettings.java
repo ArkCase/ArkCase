@@ -25,13 +25,13 @@ public class LabelManagementRetrieveSettings {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public void retrieveSettings(HttpServletResponse response) throws AcmLabelManagementException {
+    public String retrieveSettings(HttpServletResponse response) throws AcmLabelManagementException {
 
         try {
             // Get Settings file. Create default settings file if missed
             JSONObject jsonSettings = labelManagementService.getSettings(true);
-            response.getOutputStream().print(jsonSettings.toString());
-            response.getOutputStream().flush();
+
+            return jsonSettings.toString();
         } catch (Exception e) {
             String msg = "Can't retrieve settings";
             log.error(msg, e);

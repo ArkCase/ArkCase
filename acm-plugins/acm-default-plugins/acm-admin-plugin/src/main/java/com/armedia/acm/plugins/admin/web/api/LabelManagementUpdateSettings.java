@@ -22,11 +22,12 @@ public class LabelManagementUpdateSettings {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public void updateSettings(@RequestBody String settings) throws AcmLabelManagementException {
+    public String updateSettings(@RequestBody String settings) throws AcmLabelManagementException {
 
         try {
             JSONObject settingsObj = new JSONObject(settings);
-            labelManagementService.updateSettings(settingsObj);
+            JSONObject updatedSettingsObj = labelManagementService.updateSettings(settingsObj);
+            return updatedSettingsObj.toString();
         } catch (Exception e) {
             String msg = "Can't update setitngs";
             log.error(msg, e);

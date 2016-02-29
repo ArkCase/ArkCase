@@ -25,15 +25,14 @@ public class LabelManagementRetrieveDefaultLanguage {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public void retrieveSettings(HttpServletResponse response) throws AcmLabelManagementException {
+    public String retrieveSettings(HttpServletResponse response) throws AcmLabelManagementException {
 
         try {
             // Get Settings file. Create default settings file if missed
             JSONObject jsonSettings = labelManagementService.getSettings(true);
             JSONObject responseObject = new JSONObject();
             responseObject.put("defaultLang", jsonSettings.getString("defaultLang"));
-            response.getOutputStream().print(responseObject.toString());
-            response.getOutputStream().flush();
+            return responseObject.toString();
         } catch (Exception e) {
             String msg = "Can't retrieve default langauage";
             log.error(msg, e);
