@@ -1,30 +1,44 @@
 <panel-view header="{{'admin.application.labels.config.title' | translate}}" collapsible="false">
     <div ng-controller="Admin.LabelsConfigController">
-        <div class="row">
-            <div class="pull-left">
-                <select ng-model="selectedNamespace"
-                        ng-options="option.id as option.name for option in namespacesDropdownOptions"  ng-disabled="disabledInputs">
+        <div class="row well-sm">
+            <div class="col-sm-2">
+                <select ng-model="selectedNamespace" class="form-control input-sm"
+                        ng-options="option.name for option in namespacesDropdownOptions"
+                        ng-change="reloadGrid()"
+                        ng-disabled="disabledInputs">
                 </select>
-                <select ng-model="selectedLanguage"
-                        ng-options="str as str for str in languagesDropdownOptions"  ng-disabled="disabledInputs">
-                </select>
-                <input type="text" ng-model="gridApi.grid.columns[0].filters[0].term"
-                       placeholder="{{'admin.application.labels.config.filterBy' | translate}}">
-                <input type="text" ng-model="gridApi.grid.columns[1].filters[0].term"
-                       placeholder="{{'admin.application.labels.config.filterByValue' | translate}}">
             </div>
-            <div class="pull-right">
-                <span translate>admin.application.labels.config.defaultLabel</span>
-                <select ng-model="selectedDefaultLanguage"
-                        ng-options="str as str for str in languagesDropdownOptions"  ng-disabled="disabledInputs">
+            <div class="col-sm-2">
+                 <select ng-model="selectedLanguage" class="form-control input-sm"
+                         ng-options="lang for lang in languagesDropdownOptions"
+                         ng-change="reloadGrid()"
+                         ng-disabled="disabledInputs">
                 </select>
+            </div>
 
-                <button class="btn btn-sm btn-default" ng-click="changeDefaultLng()" ng-disabled="disabledInputs">
-                    <span translate>admin.application.labels.config.applyBtn</span>
-                </button>
+            <div class="col-sm-4">
+                <div class="col-sm-4">
+                    <label translate>admin.application.labels.config.defaultLabel</label>
+                </div>
+                <div class="col-sm-4">
+                    <select ng-model="selectedDefaultLanguage" class="form-control input-sm"
+                            ng-options="lang for lang in languagesDropdownOptions"
+                            ng-disabled="disabledInputs">
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <button class="btn btn-sm btn-default" ng-click="changeDefaultLng(selectedDefaultLanguage)" ng-disabled="disabledInputs">
+                        <span translate>admin.application.labels.config.applyBtn</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-sm-2">
                 <button class="btn btn-sm btn-default" ng-click="resetCurrentModuleResources()" ng-disabled="disabledInputs">
                     <span translate>admin.application.labels.config.resetlModule</span>
                 </button>
+            </div>
+            <div class="col-sm-2">
                 <button class="btn btn-sm btn-default" ng-click="resetAllResources()" ng-disabled="disabledInputs">
                     <span translate>admin.application.labels.config.resetAll</span>
                 </button>

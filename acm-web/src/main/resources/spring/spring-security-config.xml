@@ -38,7 +38,6 @@
 		<form-login
                 login-page="/login"
                 default-target-url="/home.html#!/welcome"
-                always-use-default-target="true"
                 authentication-details-source-ref="acmAuthenticationDetailsFactory"
                 authentication-failure-url="/login?login_error=1"
                 authentication-success-handler-ref="acmLoginSuccessHandler"/>
