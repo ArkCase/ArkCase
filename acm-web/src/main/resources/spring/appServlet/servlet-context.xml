@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
-    xmlns:security="http://www.springframework.org/schema/security"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-	<!--
-		DispatcherServlet Context: defines this servlet's request-processing infrastructure
-	-->
+    <!--
+        DispatcherServlet Context: defines this servlet's request-processing infrastructure
+    -->
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/views/"/>
@@ -17,13 +17,14 @@
     </bean>
 
     <!-- Imports user-defined @Controller beans that process client requests -->
-	<!--<import resource="controllers.xml" />-->
+    <!--<import resource="controllers.xml" />-->
     <mvc:view-controller path="/login" view-name="login"/>
     <mvc:view-controller path="/logout" view-name="login"/>
     <mvc:view-controller path="/login.html" view-name="login"/>
+    <mvc:view-controller path="/" view-name="redirect:/home.html#!/welcome"/>
 
-	<!-- Scan for Spring beans declared via annotations. -->
-	<!--<context:component-scan base-package="com.armedia.acm.web"/>-->
+    <!-- Scan for Spring beans declared via annotations. -->
+    <!--<context:component-scan base-package="com.armedia.acm.web"/>-->
 
     <!-- set JSON date format to ISO-8601 e.g. 1970-01-01T00:00:00.000+0000 -->
     <bean id="sourceObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
@@ -48,14 +49,14 @@
         <property name="validating" value="false"/>
         <property name="suppressNamespaces" value="true"/>
     </bean>
-    
+
     <bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
         <property name="packagesToScan" value="com.armedia.**"/>
     </bean>
 
     <bean id="contentNegotiationManager"
           class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
-        <property name="defaultContentType" value="application/json" />
+        <property name="defaultContentType" value="application/json"/>
         <property name="favorPathExtension" value="true"/>
         <property name="mediaTypes">
             <props>
@@ -66,8 +67,8 @@
         </property>
     </bean>
 
-	<!-- Enables the Spring MVC @Controller programming model -->
-	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">
+    <!-- Enables the Spring MVC @Controller programming model -->
+    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">
         <mvc:message-converters>
             <!-- We configure the Jackson mapper to output dates in ISO801 format. This requires adding our
             customized Jackson mapper to the list of Spring MVC message converters. But, if we just add our bean here
@@ -118,13 +119,12 @@
         Enable serving of classpath with Spring 3 resource serving mechanism. For example:
         /webflow-primefaces-showcase/app/resources/styles/blueprint/print.css
     -->
-	<mvc:resources mapping="/resources/**" location="/resources/"  />
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
 
     <mvc:default-servlet-handler/>
 
     <!-- File upload support -->
-    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
-
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
 
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
@@ -132,19 +132,19 @@
     </bean>
 
     <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-        <property name="paramName" value="lang" />
+        <property name="paramName" value="lang"/>
     </bean>
 
     <bean id="handlerMapping" class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
         <property name="interceptors">
-            <ref bean="localeChangeInterceptor" />
+            <ref bean="localeChangeInterceptor"/>
         </property>
     </bean>
 
     <bean id="messageSource"
           class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="classpath:messages" />
-        <property name="defaultEncoding" value="UTF-8" />
+        <property name="basename" value="classpath:messages"/>
+        <property name="defaultEncoding" value="UTF-8"/>
     </bean>
 
     <!-- data access control -->
