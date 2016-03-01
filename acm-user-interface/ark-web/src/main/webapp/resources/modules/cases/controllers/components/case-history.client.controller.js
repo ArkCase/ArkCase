@@ -15,7 +15,10 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
+            }
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
@@ -26,23 +29,28 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
-            gridHelper.setExternalPaging(config, $scope.retrieveGridData);
+            gridHelper.setExternalPaging(config, retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
 
-            $scope.retrieveGridData();
         };
 
-        $scope.retrieveGridData = function () {
-            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+            retrieveGridData();
+        };
+
+        var retrieveGridData = function () {
+            var currentObjectId = Util.goodMapValue(objectInfo, "id");
+            if (Util.goodPositive(currentObjectId, false)) {
                 var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.CASE_FILE
-                    , componentHelper.currentObjectId
+                    , currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodMapValue($scope.sort, "by")
                     , Util.goodMapValue($scope.sort, "dir")
                 );
 
-                $q.all([promiseQueryAudit, promiseUsers, componentHelper.promiseConfig]).then(function (data) {
+                $q.all([promiseQueryAudit, promiseUsers]).then(function (data) {
                     var auditData = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = auditData.resultPage;
@@ -51,5 +59,6 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
                 });
             }
         };
+
     }
 ]);

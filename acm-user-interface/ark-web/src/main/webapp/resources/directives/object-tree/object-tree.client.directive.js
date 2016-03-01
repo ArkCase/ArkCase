@@ -268,6 +268,20 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 }
                 return components;
             }
+            , getLeadComponentByKey: function (key) {
+                var leadComponent = null;
+                if (!Util.isEmpty(key)) {
+                    var nodeType = Tree.Key.getNodeTypeByKey(key);
+                    var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
+                    for (var i = 0; i < nodeTypes.length; i++) {
+                        if (nodeType == nodeTypes[i].type) {
+                            leadComponent = nodeTypes[i].leadComponent;
+                            break;
+                        }
+                    }
+                }
+                return leadComponent;
+            }
 
             , _getDefaultTreeArgs: function (treeArgs) {
                 return {
@@ -315,13 +329,13 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 } else {
                     var activeKey = Tree.getActiveKey();
                     var nodeId = Tree.Key.getNodeIdByKey(activeKey);
-                    var nodeType = Tree.Key.getNodeTypeByKey(activeKey);
+                    var nodeTypePath = Tree.Key.getNodeTypeByKey(activeKey);
 
                     var previousKey = Tree.getPreviousKey();
                     var previousNodeId = Tree.Key.getNodeIdByKey(previousKey);
-                    var previousNodeType = Tree.Key.getNodeTypeByKey(previousKey);
+                    var previousNodeTypePath = Tree.Key.getNodeTypeByKey(previousKey);
 
-                    if (nodeId != previousNodeId || nodeType != previousNodeType) {
+                    if (nodeId != previousNodeId || nodeTypePath != previousNodeTypePath) {
                         Tree.onSelect()(node.data);
                     }
                 }
@@ -357,6 +371,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     if (nodeId && nodeType) {
                         var objKey = Tree.Key.getKeyByObjWithPage(treeInfo.start, nodeType, nodeId);
                         var components = Tree.getComponentsByKey(objKey);
+                        var leadComponent = Tree.getLeadComponentByKey(objKey);
                         builder.addLeaf({
                             key: objKey
                             , title: nodeTitle
@@ -366,6 +381,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                             , lazy: true
                             , cache: false
                             , components: components
+                            , leadComponent: leadComponent
                             , nodeType: nodeType
                             , nodeId: nodeId
                         });
@@ -396,11 +412,12 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 var nodeTypePath = Tree.Key.getNodeTypeByKey(key);
                 var arr = nodeTypePath.split(Tree.Key.KEY_SEPARATOR);
                 if (Util.isArray(arr) && 2 == arr.length) {
-                    var nodeType = arr[1];
+                    var nodeDataType = arr[1];
                     _.each(nodeTypes, function (nodeType) {
                         var type = Util.goodValue(nodeType.type);
                         var label = Util.goodValue(nodeType.label);
                         var components = Util.goodArray(nodeType.components);
+                        var leadComponent = nodeType.leadComponent;
                         if (0 == type.indexOf(nodeTypePath)) {
                             var lastSep = type.lastIndexOf(Tree.Key.KEY_SEPARATOR);
                             if (nodeTypePath.length == lastSep) {
@@ -409,7 +426,8 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                                     key: key + subPart
                                     , title: label
                                     , components: components
-                                    , nodeType: nodeType
+                                    , leadComponent: leadComponent
+                                    , nodeType: nodeDataType
                                     , nodeId: nodeId
                                 });
                             }

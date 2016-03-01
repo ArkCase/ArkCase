@@ -24,6 +24,12 @@
     "url": "#!/tasks/:type/:id/main"
   },
   {
+    "type": "ADHOC",
+    "description": "ADHOC Task",
+    "iconName": "i i-checkmark",
+    "url": "#!/tasks/:type/:id/main"
+  },
+  {
     "type": "DOCUMENT",
     "description": "Document",
     "iconName": "",

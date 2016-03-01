@@ -122,6 +122,7 @@
           "correspondence",
           "time",
           "cost",
+          "tags",
           "calendar"
         ]
       },
@@ -222,6 +223,14 @@
         ]
       },
       {
+        "type": "p/COMPLAINT/tags",
+        "label": "Tags",
+        "icon": "fa fa-tags",
+        "components": [
+          "tags"
+        ]
+      },
+      {
         "type": "p/COMPLAINT/calendar",
         "label": "Calendar",
         "icon": "fa fa-calendar",
@@ -230,12 +239,6 @@
         ]
       }
     ]
-  },
-  "docTree": {
-    "emailSubject": "Complaint $complaintNumber",
-    "subjectRegex": "(.*)\\$([^\\s]+)",
-    "objectTypeRegexGroup": 1,
-    "objectNumberRegexGroup": 2
   },
   "components": [
     {
@@ -430,6 +433,10 @@
         },
         {
           "id": "cost",
+          "type": "component"
+        },
+        {
+          "id": "tags",
           "type": "component"
         },
         {
@@ -778,7 +785,13 @@
       "title": "Documents",
       "icon": "fa fa-file",
       "enabled": true,
-      "type": "empty"
+      "type": "empty",
+      "docTree": {
+        "emailSubject": "Complaint $complaintNumber",
+        "subjectRegex": "(.*)\\$([^\\s]+)",
+        "objectTypeRegexGroup": 1,
+        "objectNumberRegexGroup": 2
+      }
     },
     {
       "id": "participants",
@@ -905,16 +918,11 @@
       "paginationPageSize": 5,
       "columnDefs": [
         {
-          "name": "taskId",
-          "field": "object_id_s",
-          "displayName": "complaints.comp.tasks.table.columns.taskId",
-          "headerCellFilter": "translate"
-        },
-        {
           "name": "title",
           "field": "title_parseable",
           "displayName": "complaints.comp.tasks.table.columns.title",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
         },
         {
           "name": "assignee",
@@ -1164,6 +1172,43 @@
           "headerCellFilter": "translate"
         }
       ]
+    },
+    {
+      "id": "tags",
+      "title": "Tags",
+      "icon": "fa fa-tags",
+      "enabled": true,
+      "type": "grid",
+      "typeAheadColumn": "tags_s",
+      "dateFormat": "MM/DD/YYYY",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "tagName",
+          "displayName": "complaints.comp.tags.table.columns.tag",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "created",
+          "displayName": "complaints.comp.tags.table.columns.created",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'MM/dd/yyyy'}}</div>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "creator",
+          "displayName": "complaints.comp.tags.table.columns.createdBy",
+          "headerCellFilter": "translate"
+        }
+      ],
+       "filters": "\"Object Type\": TAG",
+       "filterName" : "Object Type"
     },
     {
       "id": "calendar",

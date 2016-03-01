@@ -16,20 +16,98 @@ import java.util.Map;
 /**
  * Created by marjan.stefanoski on 05.02.2015.
  */
-public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<EcmFile> {
+public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<EcmFile>
+{
 
     private EcmFileDao ecmFileDao;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
+    // whether to index file contents or just store document-related metadata
+    private Boolean enableContentFileIndexing;
 
     @Override
-    public List<EcmFile> getObjectsModifiedSince(Date lastModified, int start, int pageSize) {
+    public List<EcmFile> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
+    {
         return getEcmFileDao().findModifiedSince(lastModified, start, pageSize);
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(EcmFile in) {
+    public SolrAdvancedSearchDocument toContentFileIndex(EcmFile in)
+    {
+        if (enableContentFileIndexing)
+        {
+            return mapDocumentProperties(in);
+        } else
+        {
+            return null;
+        }
+    }
+
+    @Override
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(EcmFile in)
+    {
+        if (enableContentFileIndexing)
+        {
+            return null;
+        } else
+        {
+            return mapDocumentProperties(in);
+        }
+    }
+
+    @Override
+    public SolrDocument toSolrQuickSearch(EcmFile in)
+    {
+        SolrDocument doc = new SolrDocument();
+
+        // no access control on files (yet)
+        doc.setPublic_doc_b(true);
+        doc.setProtected_object_b(false);
+
+        doc.setAuthor_s(in.getCreator());
+        doc.setAuthor(in.getCreator());
+        doc.setObject_type_s(in.getObjectType());
+        doc.setObject_id_s("" + in.getId());
+        doc.setCreate_tdt(in.getCreated());
+        doc.setId(in.getId() + "-" + in.getObjectType());
+        doc.setLast_modified_tdt(in.getModified());
+        doc.setName(in.getFileName());
+        doc.setModifier_s(in.getModifier());
+
+        doc.setParent_object_id_i(in.getContainer().getContainerObjectId());
+        doc.setParent_object_id_s("" + in.getContainer().getContainerObjectId());
+        doc.setParent_object_type_s(in.getContainer().getContainerObjectType());
+
+        doc.setParent_ref_s(in.getContainer().getContainerObjectId() + "-" + in.getContainer().getContainerObjectType());
+
+        doc.setTitle_parseable(in.getFileName());
+        doc.setTitle_t(in.getFileName());
+
+        doc.setParent_folder_id_i(in.getFolder().getId());
+
+        doc.setVersion_s(in.getActiveVersionTag());
+        doc.setType_s(in.getFileType());
+        doc.setCategory_s(in.getCategory());
+
+        // need an _lcs field for sorting
+        doc.setName_lcs(in.getFileName());
+
+        doc.setCmis_version_series_id_s(in.getVersionSeriesId());
+
+        doc.setMime_type_s(in.getFileMimeType());
+
+        doc.setStatus_s(in.getStatus());
+
+        doc.setHidden_b(isHidden(in));
+
+        mapAdditionalProperties(in, doc.getAdditionalProperties());
+
+        return doc;
+    }
+
+    private SolrAdvancedSearchDocument mapDocumentProperties(EcmFile in)
+    {
 
         // NOTE!!!! For EcmFile, if you need to add a field to the Solr content model, you must take an extra
         // step!!!  Update the contentFileToSolrFlow.xml to also include the new field!!!
@@ -67,61 +145,6 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         return solr;
     }
 
-    //No implementation needed
-    @Override
-    public SolrAdvancedSearchDocument toSolrAdvancedSearch(EcmFile in) {
-        return null;
-    }
-
-    @Override
-    public SolrDocument toSolrQuickSearch(EcmFile in) {
-        SolrDocument doc = new SolrDocument();
-
-        // no access control on files (yet)
-        doc.setPublic_doc_b(true);
-        doc.setProtected_object_b(false);
-
-        doc.setAuthor_s(in.getCreator());
-        doc.setAuthor(in.getCreator());
-        doc.setObject_type_s(in.getObjectType());
-        doc.setObject_id_s("" + in.getId());
-        doc.setCreate_tdt(in.getCreated());
-        doc.setId(in.getId() + "-" + in.getObjectType());
-        doc.setLast_modified_tdt(in.getModified());
-        doc.setName(in.getFileName());
-        doc.setModifier_s(in.getModifier());
-
-        doc.setParent_object_id_i(in.getContainer().getContainerObjectId());
-        doc.setParent_object_id_s("" + in.getContainer().getContainerObjectId());
-        doc.setParent_object_type_s(in.getContainer().getContainerObjectType());
-
-        doc.setParent_ref_s(in.getContainer().getContainerObjectId() + "-" + in.getContainer().getContainerObjectType());
-
-        doc.setTitle_parseable(in.getFileName());
-        doc.setTitle_t(in.getFileName());
-
-        doc.setParent_folder_id_i(in.getFolder().getId());
-
-        doc.setVersion_s(in.getActiveVersionTag());
-        doc.setType_s(in.getFileType());
-        doc.setCategory_s(in.getCategory());
-
-        // need an _lcs field for sorting
-        doc.setName_lcs(in.getFileName());
-
-        doc.setCmis_version_series_id_s(in.getVersionSeriesId());
-        
-        doc.setMime_type_s(in.getFileMimeType());
-        
-        doc.setStatus_s(in.getStatus());
-        
-        doc.setHidden_b(isHidden(in));
-
-        mapAdditionalProperties(in, doc.getAdditionalProperties());
-
-        return doc;
-    }
-
     private void mapAdditionalProperties(EcmFile in, Map<String, Object> additionalProperties)
     {
         if (in.getFileSource() != null)
@@ -133,7 +156,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     }
 
     @Override
-    public boolean isAcmObjectTypeSupported(Class acmObjectType) {
+    public boolean isAcmObjectTypeSupported(Class acmObjectType)
+    {
 
         boolean objectNotNull = acmObjectType != null;
         String ourClassName = EcmFile.class.getName();
@@ -143,27 +167,39 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         return isSupported;
     }
-    
+
     private boolean isHidden(EcmFile file)
     {
-    	if (file != null)
-    	{
-	    	String mimeType = file.getFileMimeType();
-	    	
-	    	if (mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_XML) && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_URL))
-	    	{
-	    		return true;
-	    	}
-    	}
-    	
-    	return false;
+        if (file != null)
+        {
+            String mimeType = file.getFileMimeType();
+
+            if (mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_XML) && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_URL))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    public EcmFileDao getEcmFileDao() {
+    public EcmFileDao getEcmFileDao()
+    {
         return ecmFileDao;
     }
 
-    public void setEcmFileDao(EcmFileDao ecmFileDao) {
+    public void setEcmFileDao(EcmFileDao ecmFileDao)
+    {
         this.ecmFileDao = ecmFileDao;
+    }
+
+    public Boolean getEnableContentFileIndexing()
+    {
+        return enableContentFileIndexing;
+    }
+
+    public void setEnableContentFileIndexing(Boolean enableContentFileIndexing)
+    {
+        this.enableContentFileIndexing = enableContentFileIndexing;
     }
 }

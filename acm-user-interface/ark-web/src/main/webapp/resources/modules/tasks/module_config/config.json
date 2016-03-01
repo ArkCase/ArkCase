@@ -112,7 +112,8 @@
           "notes",
           "workflow",
           "history",
-          "signatures"
+          "signatures",
+          "tags"
         ]
       },
       {
@@ -180,6 +181,14 @@
         ]
       },
       {
+        "type": "p/TASK/tags",
+        "label": "Tags",
+        "icon": "fa fa-tags",
+        "components": [
+          "tags"
+        ]
+      },
+      {
         "type": "p/ADHOC",
         "icon": "fa fa-check-circle",
         "components": [
@@ -189,7 +198,8 @@
           "notes",
           "workflow",
           "history",
-          "signatures"
+          "signatures",
+          "tags"
         ]
       },
       {
@@ -247,14 +257,16 @@
         "components": [
           "signatures"
         ]
+      },
+      {
+        "type": "p/ADHOC/tags",
+        "label": "Tags",
+        "icon": "fa fa-tags",
+        "components": [
+          "tags"
+        ]
       }
     ]
-  },
-  "docTree": {
-    "emailSubject": "Task $taskId",
-    "subjectRegex": "(.*)\\$([^\\s]+)",
-    "objectTypeRegexGroup": 1,
-    "objectNumberRegexGroup": 2
   },
   "components": [
     {
@@ -422,6 +434,10 @@
               "lookup": "userFullNames"
             }
           ]
+        },
+        {
+          "id": "tags",
+          "type": "component"
         }
       ],
       "widgetsAdhoc": [
@@ -522,6 +538,10 @@
               "lookup": "userFullNames"
             }
           ]
+        },
+        {
+          "id": "tags",
+          "type": "component"
         }
       ]
     },
@@ -649,7 +669,13 @@
       "title": "Attachments",
       "icon": "fa fa-file",
       "enabled": true,
-      "type": "empty"
+      "type": "empty",
+      "docTree": {
+        "emailSubject": "Task $taskId",
+        "subjectRegex": "(.*)\\$([^\\s]+)",
+        "objectTypeRegexGroup": 1,
+        "objectNumberRegexGroup": 2
+      }
     },
     {
       "id": "notes",
@@ -801,6 +827,43 @@
       ]
     },
     {
+      "id": "tags",
+      "title": "Tags",
+      "icon": "fa fa-tags",
+      "enabled": true,
+      "type": "grid",
+      "typeAheadColumn": "tags_s",
+      "dateFormat": "MM/DD/YYYY",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "tagName",
+          "displayName": "tasks.comp.tags.table.columns.tag",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "created",
+          "displayName": "tasks.comp.tags.table.columns.created",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'MM/dd/yyyy'}}</div>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "creator",
+          "displayName": "tasks.comp.tags.table.columns.createdBy",
+          "headerCellFilter": "translate"
+        }
+      ],
+       "filters": "\"Object Type\": TAG",
+       "filterName" : "Object Type"
+    },
+    {
       "id": "userSearch",
       "title": "Select users",
       "enabled": "true",
@@ -854,6 +917,14 @@
         {
           "name": "Active",
           "id": "Active"
+        },
+        {
+          "name": "Inactive",
+          "id": "Inactive"
+        },
+        {
+          "name": "Closed",
+          "id": "Closed"
         }
       ],
       "priority": [
@@ -884,7 +955,7 @@
         "completed": "",
         "details": "",
         "dueDate": "",
-        "percentComplete": "",
+        "percentComplete": "0",
         "priority": "",
         "status": "",
         "taskDurationInMillis": "",

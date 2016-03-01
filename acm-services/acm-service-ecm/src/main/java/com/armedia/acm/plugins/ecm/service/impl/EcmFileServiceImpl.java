@@ -164,16 +164,29 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Override
     public EcmFile update(EcmFile ecmFile, MultipartFile file, Authentication authentication) throws AcmCreateObjectFailedException
     {
+        try
+        {
+            return update(ecmFile, file.getInputStream(), authentication);
+        } catch (IOException e)
+        {
+            throw new AcmCreateObjectFailedException(ecmFile.getFileName(), e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public EcmFile update(EcmFile ecmFile, InputStream inputStream,
+                          Authentication authentication) throws AcmCreateObjectFailedException
+    {
         if (log.isInfoEnabled())
         {
-            log.info("The user '" + authentication.getName() + "' updating file: '" + file.getOriginalFilename() + "'");
+            log.info("The user '" + authentication.getName() + "' updating file: '" + ecmFile.getFileName() + "'");
         }
 
         EcmFileUpdatedEvent event = null;
 
         try
         {
-            EcmFile updated = getEcmFileTransaction().updateFileTransaction(authentication, ecmFile, file.getInputStream());
+            EcmFile updated = getEcmFileTransaction().updateFileTransaction(authentication, ecmFile, inputStream);
 
             event = new EcmFileUpdatedEvent(updated, authentication);
 
@@ -181,7 +194,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             applicationEventPublisher.publishEvent(event);
 
             return updated;
-        } catch (IOException | MuleException e)
+        } catch (MuleException e)
         {
             if (event != null)
             {
@@ -189,7 +202,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 applicationEventPublisher.publishEvent(event);
             }
             log.error("Could not update file: " + e.getMessage(), e);
-            throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
+            throw new AcmCreateObjectFailedException(ecmFile.getFileName(), e.getMessage(), e);
         }
     }
 

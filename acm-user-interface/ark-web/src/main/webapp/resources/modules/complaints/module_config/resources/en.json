@@ -130,7 +130,6 @@
   "complaints.comp.tasks": {
     "title": "Tasks",
     "table.columns": {
-      "taskId": "ID",
       "title": "Title",
       "assignee": "Assignee",
       "created": "Created",
@@ -187,6 +186,24 @@
       "status": "Status"
     },
     "formNamePrefix": "Costsheet"
+  },
+  "complaints.comp.tags": {
+    "title": "Tags",
+    "table.columns": {
+      "tag": "Tag",
+      "created": "Created",
+      "createdBy": "Created By"
+    },
+    "modal": {
+    "title": "Tag",
+    "search": "Search for Tag",
+    "buttons": {
+          "cancel": "Cancel",
+          "ok": "Add Tag"
+     }
+    },
+    "message.tagExists": "Tag with that name or description or text already exists",
+    "message.tagAssociated": "already associated"
   },
   "complaints.comp.calendar": {
     "title": "Calendar"

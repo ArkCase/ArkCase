@@ -13,6 +13,8 @@ import com.armedia.acm.service.outlook.model.*;
 import com.armedia.acm.service.outlook.service.OutlookEventPublisher;
 import com.armedia.acm.service.outlook.service.OutlookFolderService;
 import com.armedia.acm.service.outlook.service.OutlookService;
+import com.armedia.acm.services.users.model.AcmUser;
+
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
@@ -52,7 +54,14 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     private OutlookDao dao;
     private EcmFileService ecmFileService;
+
     private OutlookEventPublisher outlookEventPublisher;
+
+    private Boolean sendFromSystemUser = false;
+    private String systemUserEmail;
+    private String systemUserPass;
+    private String systemUserId;
+
 
     @Override
     public OutlookResults<OutlookMailItem> findMailItems(AcmOutlookUser user, int start, int maxItems, String sortField,
@@ -293,7 +302,12 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     @Override
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user) throws Exception{
-        ExchangeService service = connect(user);
+
+        if (getSendFromSystemUser()) {
+            user = new AcmOutlookUser(getSystemUserId(), getSystemUserEmail(), getSystemUserPass());
+        }
+        
+        ExchangeService service = connect(user); 
         EmailMessage emailMessage = new EmailMessage(service);
         emailMessage.setSubject(emailWithAttachmentsDTO.getSubject());
         emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getHeader() + "\r\r"
@@ -731,4 +745,45 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     {
         this.outlookEventPublisher = outlookEventPublisher;
     }
+
+    public Boolean getSendFromSystemUser()
+    {
+        return sendFromSystemUser;
+    }
+
+    public void setSendFromSystemUser(Boolean sendFromSystemUser)
+    {
+        this.sendFromSystemUser = sendFromSystemUser;
+    }
+
+    public String getSystemUserEmail()
+    {
+        return systemUserEmail;
+    }
+
+    public void setSystemUserEmail(String systemUserEmail)
+    {
+        this.systemUserEmail = systemUserEmail;
+    }
+
+    public String getSystemUserPass()
+    {
+        return systemUserPass;
+    }
+
+    public void setSystemUserPass(String systemUserPass)
+    {
+        this.systemUserPass = systemUserPass;
+    }
+
+    public String getSystemUserId()
+    {
+        return systemUserId;
+    }
+
+    public void setSystemUserId(String systemUserId)
+    {
+        this.systemUserId = systemUserId;
+    }
+
 }

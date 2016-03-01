@@ -15,7 +15,7 @@ angular.module('tasks').controller('Tasks.SignaturesController', ['$scope', '$st
             , retrieveObjectInfo: TaskInfoService.getTaskInfo
             , validateObjectInfo: TaskInfoService.validateTaskInfo
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
             }
         });
 

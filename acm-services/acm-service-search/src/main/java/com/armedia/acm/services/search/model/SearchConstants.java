@@ -66,28 +66,30 @@ public interface SearchConstants
      * Date format for date-only fields, where the UI does not send a time component, but only the date.
      */
     String ISO_DATE_FORMAT = "yyyy-MM-dd";
-    
+
     String SORT_ASC = "ASC";
     String SORT_DESC = "DESC";
-    
+
     /**
      * Key that keeping information which objects to exclude from the search
      */
     String OBJECTS_TO_EXCLUDE = "objects.to.exclude";
-    
+
     /**
      * Query operators
      */
     String OPERATOR_AND = "AND";
     String OPERATOR_OR = "OR";
-    
+
     /**
      * Key in the properties file that hold name of the Solr properties for search objects by query
      */
     String SEARCH_QUERY_PROPERTIES_KEY = "search.tree.searchQuery";
-    
+
     String TIME_ZONE_UTC = "UTC";
 
     String EVENT_TYPE = "eventType.";
-    
+
+    String FACETED_SEARCH_ENCODING = "UTF-8";
+
 }

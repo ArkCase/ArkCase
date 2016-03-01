@@ -117,7 +117,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                     , table: {
                         indentation: 10,      // indent 20px per node level
-                        nodeColumnIdx: 2,     // render the node title into the 2nd column
+                        nodeColumnIdx: 1,     // render the node title into the 2nd column
                         checkboxColumnIdx: 0  // render the checkboxes into the 1st column
                     }
                     , gridnav: {
@@ -128,12 +128,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         var node = data.node;
                         var $tdList = $(node.tr).find(">td");
                         // (index #0 is rendered by fancytree by adding the checkbox)
-                        // (index #2 is rendered by fancytree)
+                        // (index #1 is rendered by fancytree)
 
-                        //$tdList.eq(1).html(DocTree.Source.getHtmlDocLink(node));
-                        var $td1 = $("<td/>");
-                        DocTree.Source.getHtmlDocLink(node).appendTo($td1);
-                        $tdList.eq(1).replaceWith($td1);
+                        ////$tdList.eq(1).html(DocTree.Source.getHtmlDocLink(node));
+                        //var $td1 = $("<td/>");
+                        //DocTree.Source.getHtmlDocLink(node).appendTo($td1);
+                        //$tdList.eq(1).replaceWith($td1);
 
 
                         if (DocTree.isFolderNode(node)) {
@@ -143,7 +143,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             var typeColumn = (DocTree.getDocumentTypeDisplayLabel(node.data.type));
                             var filteredType = filter(typeColumn);
 
-                            $tdList.eq(3).text(filteredType); // document type is mapped (afdp-1249)
+                            $tdList.eq(2).text(filteredType); // document type is mapped (afdp-1249)
 
                             var versionDate = UtilDateService.getDatePart(node.data.created);
                             var versionUser = Util.goodValue(node.data.creator);
@@ -151,17 +151,17 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             var $td6 = $("<td/>");
                             var $span = $("<span/>").appendTo($td6);
                             var $select = $("<select/>")
-                                    .addClass('docversion inline')
-                                    .appendTo($span)
+                                .addClass('docversion inline')
+                                .appendTo($span)
                                 ;
 
                             if (Util.isArray(node.data.versionList)) {
                                 for (var i = 0; i < node.data.versionList.length; i++) {
                                     var versionTag = node.data.versionList[i].versionTag;
                                     var $option = $("<option/>")
-                                            .val(versionTag)
-                                            .text(versionTag)
-                                            .appendTo($select)
+                                        .val(versionTag)
+                                        .text(versionTag)
+                                        .appendTo($select)
                                         ;
 
                                     if (Util.goodValue(node.data.version) == versionTag) {
@@ -172,18 +172,18 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     }
                                 }
                             }
-                            $tdList.eq(4).text(versionDate);
+                            $tdList.eq(3).text(versionDate);
 
                             promiseGetUserFullName.then(function (userFullNames) {
                                 var found = _.find(userFullNames, {id: versionUser});
-                                $tdList.eq(5).text(Util.goodMapValue(found, "name"));
+                                $tdList.eq(4).text(Util.goodMapValue(found, "name"));
                             });
 
-                            $tdList.eq(6).replaceWith($td6);
+                            $tdList.eq(5).replaceWith($td6);
 
-                            $tdList.eq(7).text(node.data.status);
+                            $tdList.eq(6).text(node.data.status);
 
-                            $tdList.eq(1).addClass("");
+                            //$tdList.eq(1).addClass("");
 
                         } else {  //non file, non folder
                             $tdList.eq(0).text("");
@@ -658,10 +658,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.jqFormDownloadDoc.attr("action", url);
                 this.$input = $('<input>').attr({
                     id: 'fileId',
-                    name: 'ecmFileId',
+                    name: 'ecmFileId'
                 });
                 this.$input.val(node.data.objectId).appendTo(this.jqFormDownloadDoc);
                 DocTree.jqFormDownloadDoc.submit();
+                // empty jqFormDownloadDoc because everytime first input is selected and same file is downloaded
+                this.jqFormDownloadDoc.empty();
             }
 
             // Find oldest parent in the array(not include top node).
@@ -2511,20 +2513,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         } else {
                             var cacheKey = DocTree.getCacheKeyByNode(parent);
                             var fileId = node.data.objectId;
-                            var name = fileName;
-                            var ext = "";
-                            var ar = fileName.split(".");
-                            if (Util.isArray(ar) && 1 < ar.length) {
-                                ext = ar[ar.length - 1];
-                                name = fileName.substring(0, fileName.length - ext.length - 1);
-                            }
 
                             Util.serviceCall({
                                 service: Ecm.renameFile
                                 , param: {
-                                    fileId: fileId
-                                    , name: name
-                                    , ext: ext
+                                    fileId: fileId,
+                                    name: fileName
                                 }
                                 , data: {}
                                 , onSuccess: function (data) {
@@ -3353,7 +3347,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 var subject = Util.goodMapValue(DocTree, "treeConfig.emailSubject");
                 var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.subjectRegex"));
                 var match = subject.match(regex);
-                if(match && match[Util.goodMapValue(DocTree, "treeConfig.objectTypeRegexGroup")] && match[Util.goodMapValue(DocTree, "treeConfig.objectNumberRegexGroup")]) {
+                if (match && match[Util.goodMapValue(DocTree, "treeConfig.objectTypeRegexGroup")] && match[Util.goodMapValue(DocTree, "treeConfig.objectNumberRegexGroup")]) {
                     var objectType = match[DocTree.treeConfig.objectTypeRegexGroup];
                     var objectNumber = match[DocTree.treeConfig.objectNumberRegexGroup];
                     emailData.subject = objectType + DocTree.objectInfo[objectNumber];

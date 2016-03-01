@@ -80,15 +80,6 @@
           "searchPlaceholder": "Enter to search for members."
         }
       },
-      "addMembers": {
-        "title": "Add Supervisor",
-        "btn": {
-          "search": "Go!",
-          "cancel": "Cancel",
-          "ok": "Add",
-          "searchPlaceholder": "Enter to search for supervisor."
-        }
-      },
       "addMembersGridColumns": {
         "name": "Name",
         "type": "Type",
@@ -201,10 +192,10 @@
     "application": {
       "title": "Application",
       "labels.config": {
-        "defaultLabel": "Default Language",
+        "defaultLabel": "Default",
         "applyBtn": "Apply",
-        "resetlModule": "Reset Current Module Resource",
-        "resetAll": "Reset All Resources",
+        "resetlModule": "Reset Current Module",
+        "resetAll": "Reset All",
         "title": "Label Configuration",
         "filterBy": "Filter By Id",
         "filterByValue": "Filter By Value",
