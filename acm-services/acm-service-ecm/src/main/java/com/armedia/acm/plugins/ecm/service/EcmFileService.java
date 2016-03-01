@@ -67,7 +67,20 @@ public interface EcmFileService
     		EcmFile ecmFile,
             MultipartFile file,
             Authentication authentication) throws AcmCreateObjectFailedException;
-    
+
+    /**
+     *
+     * @param ecmFile
+     * @param inputStream
+     * @param authentication
+     * @return
+     * @throws AcmCreateObjectFailedException
+     */
+    EcmFile update(
+            EcmFile ecmFile,
+            InputStream inputStream,
+            Authentication authentication) throws AcmCreateObjectFailedException;
+
     /**
      * 
      * @param id - id of EcmFile

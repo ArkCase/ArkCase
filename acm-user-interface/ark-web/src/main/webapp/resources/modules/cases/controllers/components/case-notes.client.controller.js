@@ -15,7 +15,10 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
+            }
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
@@ -38,14 +41,29 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
             gridHelper.setInPlaceEditing(config, $scope.updateRow);
             gridHelper.setUserNameFilter(promiseUsers);
 
-            $scope.retrieveGridData();
+            //$scope.retrieveGridData();
             return config;
         };
 
-        $scope.retrieveGridData = function () {
-            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
-                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.CASE_FILE, componentHelper.currentObjectId);
-                $q.all([promiseQueryNotes, promiseUsers, componentHelper.promiseConfig]).then(function (data) {
+        //$scope.retrieveGridData = function () {
+        //    if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+        //        var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.CASE_FILE, componentHelper.currentObjectId);
+        //        $q.all([promiseQueryNotes, promiseUsers, componentHelper.promiseConfig]).then(function (data) {
+        //            var notes = data[0];
+        //            $scope.gridOptions = $scope.gridOptions || {};
+        //            $scope.gridOptions.data = notes;
+        //            $scope.gridOptions.totalItems = notes.length;
+        //            //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
+        //        });
+        //    }
+        //};
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+
+            var currentObjectId = Util.goodMapValue(objectInfo, "id");
+            if (Util.goodPositive(currentObjectId, false)) {
+                var promiseQueryNotes = ObjectNoteService.queryNotes(ObjectService.ObjectTypes.CASE_FILE, currentObjectId);
+                $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
                     var notes = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = notes;

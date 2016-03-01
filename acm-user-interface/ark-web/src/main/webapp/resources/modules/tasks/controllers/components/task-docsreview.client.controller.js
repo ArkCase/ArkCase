@@ -15,7 +15,7 @@ angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
                 onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
             }
         });
 

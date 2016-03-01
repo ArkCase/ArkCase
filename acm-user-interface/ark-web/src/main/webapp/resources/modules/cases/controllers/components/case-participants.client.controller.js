@@ -14,11 +14,11 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             , componentId: "participants"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onConfigRetrieved: function (componentConfig) {
+                return onConfigRetrieved(componentConfig);
+            }
             , onObjectInfoRetrieved: function (objectInfo) {
                 onObjectInfoRetrieved(objectInfo);
-            }
-            , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
             }
         });
 
@@ -86,6 +86,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
             $q.all([promiseTypes, promiseUsers, promiseGroups]).then(function (data) {
                 gridHelper.setLookupDropDown(HelperUiGridService.Lookups.PARTICIPANT_TYPES, "type", "name", $scope.participantTypes);
 
+                $scope.gridOptions.enableRowSelection = false;    //need to turn off for inline edit
                 for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                     if (HelperUiGridService.Lookups.PARTICIPANT_NAMES == $scope.config.columnDefs[i].lookup) {
                         //$scope.gridOptions.columnDefs[i].enableCellEdit = true;
@@ -96,7 +97,11 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
                         $scope.gridOptions.columnDefs[i].cellTemplate = "<div class='ui-grid-cell-contents' ng-click='grid.appScope.pickParticipant(row.entity)'>{{row.entity[col.field] | mapKeyValue: row.entity.acm$_participantNames:'id':'name'}}</div>";
                     }
                 }
+
+                componentHelper.doneConfig(config);
             });
+
+            return false; //wait, I am not done. I'll call doneConfig() a bit later when I am
         };
 
         $scope.pickParticipant = function (rowEntity) {
@@ -136,7 +141,8 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $q.all([promiseTypes, promiseUsers, promiseGroups, componentHelper.promiseConfig]).then(function () {
+            //$q.all([promiseTypes, promiseUsers, promiseGroups, componentHelper.promiseConfig]).then(function () {
+            $q.all([promiseTypes, promiseUsers, promiseGroups]).then(function () {
                 var participants = objectInfo.participants;
                 _.each(participants, function (participant) {
                     if ("*" === participant.participantType) {

@@ -50,7 +50,7 @@ angular.module('services').factory('Case.ListService', ['$resource', '$translate
          *
          * @returns {Object} Promise
          */
-        Service.queryCasesTreeData = function (start, n, sort, filters, query) {
+        Service.queryCasesTreeData = function (start, n, sort, filters, query, nodeMaker) {
             var param = {};
             param.objectType = "CASE_FILE";
             param.start = Util.goodValue(start, 0);
@@ -71,12 +71,18 @@ angular.module('services').factory('Case.ListService', ['$resource', '$translate
                         treeData = {docs: [], total: data.response.numFound};
                         var docs = data.response.docs;
                         _.forEach(docs, function (doc) {
-                            treeData.docs.push({
-                                nodeId: Util.goodValue(doc.object_id_s, 0)
-                                , nodeType: ObjectService.ObjectTypes.CASE_FILE
-                                , nodeTitle: Util.goodValue(doc.title_parseable)
-                                , nodeToolTip: Util.goodValue(doc.title_parseable)
-                            });
+                            var node;
+                            if (nodeMaker) {
+                                node = nodeMaker(doc);
+                            } else {
+                                node = {
+                                    nodeId: Util.goodValue(doc.object_id_s, 0)
+                                    , nodeType: ObjectService.ObjectTypes.CASE_FILE
+                                    , nodeTitle: Util.goodValue(doc.title_parseable)
+                                    , nodeToolTip: Util.goodValue(doc.title_parseable)
+                                };
+                            }
+                            treeData.docs.push(node);
                         });
                         cacheCaseList.put(cacheKey, treeData);
                         return treeData;

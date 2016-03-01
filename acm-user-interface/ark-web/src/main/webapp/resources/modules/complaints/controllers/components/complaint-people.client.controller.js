@@ -18,7 +18,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 onObjectInfoRetrieved(objectInfo);
             }
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
             }
         });
 

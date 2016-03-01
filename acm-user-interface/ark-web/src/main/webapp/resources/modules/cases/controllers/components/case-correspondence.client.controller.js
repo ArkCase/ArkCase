@@ -15,7 +15,10 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
             , onConfigRetrieved: function (componentConfig) {
-                onConfigRetrieved(componentConfig);
+                return onConfigRetrieved(componentConfig);
+            }
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
@@ -34,10 +37,9 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
-            gridHelper.setExternalPaging(config, $scope.retrieveGridData);
+            gridHelper.setExternalPaging(config, retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
 
-            $scope.retrieveGridData();
         };
 
 
@@ -54,8 +56,14 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
             }
         );
 
-        $scope.retrieveGridData = function () {
-            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+            retrieveGridData();
+        };
+
+        var retrieveGridData = function () {
+            var currentObjectId = Util.goodMapValue(objectInfo, "id");
+            if (Util.goodPositive(currentObjectId, false)) {
                 var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.CASE_FILE
                     , componentHelper.currentObjectId
                     , Util.goodValue($scope.start, 0)

@@ -104,24 +104,29 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
 
         // Add menu item object
         this.addMenuItems = function (menuObjects) {
-
+            var context = this;
             for (var i = 0; i < menuObjects.length; i++) {
                 var menuObj = menuObjects[i];
                 // Validate that the menu exists
                 this.validateMenuExistance(menuObj.menuId);
-                var context = this;
-
-                // Push new menu item
-                context.menus[menuObj.menuId].items.push({
-                    title: menuObj.menuItemTitle,
-                    link: menuObj.menuItemURL,
-                    menuItemType: 'item',
-                    uiRoute: '/' + menuObj.menuItemURL,
-                    isPublic: true,
-                    position: menuObj.position || 0,
-                    iconClass: menuObj.iconClass,
-                    permissionAction: menuObj.permissionAction || 'noAction'
-                });
+                // Check if we have defined permission rule with name of menu
+                (function processMenuPermission(menuObj) {
+                    PermissionsService.getActionPermission(menuObj.menuItemURL, null).then(function(moduleAllowed){
+                        if (moduleAllowed) {
+                            // Push new menu item
+                            context.menus[menuObj.menuId].items.push({
+                                title: menuObj.menuItemTitle,
+                                link: menuObj.menuItemURL,
+                                menuItemType: 'item',
+                                uiRoute: '/' + menuObj.menuItemURL,
+                                isPublic: true,
+                                position: menuObj.position || 0,
+                                iconClass: menuObj.iconClass,
+                                permissionAction: menuObj.permissionAction || 'noAction'
+                            });
+                        }
+                    });
+                })(menuObj);
             }
         };
 

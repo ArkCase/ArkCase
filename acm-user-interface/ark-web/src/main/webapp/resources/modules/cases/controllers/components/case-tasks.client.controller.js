@@ -14,29 +14,33 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             , componentId: "tasks"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
+            , onConfigRetrieved: function (componentConfig) {
+                return onConfigRetrieved(componentConfig);
+            }
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
+            }
         });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
         var promiseMyTasks = ObjectTaskService.queryCurrentUserTasks();
 
-        $q.all([componentHelper.promiseConfig, promiseMyTasks]).then(function (data) {
-            var config = data[0];
-            //var myTasks = data[1];
-
+        var onConfigRetrieved = function (config) {
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
-            gridHelper.setExternalPaging(config, $scope.retrieveGridData);
+            gridHelper.setExternalPaging(config, retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
 
-            promiseMyTasks.then(function (data) {
+            $q.all([promiseMyTasks]).then(function (data) {
                 for (var i = 0; i < $scope.config.columnDefs.length; i++) {
-                    if ("taskId" == $scope.config.columnDefs[i].name) {
-                        $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.object_id_s}}</a>";
-                        //$scope.gridOptions.columnDefs[i].cellTemplate = "<a ui-sref='tasks.id({type: \"TASK\", id: row.entity.object_id_s})'>{{row.entity.object_id_s}}</a>";
-
-                    } else if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
+                    //if ("taskId" == $scope.config.columnDefs[i].name) {
+                    //    $scope.gridOptions.columnDefs[i].cellTemplate = "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.object_id_s}}</a>";
+                    //    //$scope.gridOptions.columnDefs[i].cellTemplate = "<a ui-sref='tasks.id({type: \"TASK\", id: row.entity.object_id_s})'>{{row.entity.object_id_s}}</a>";
+                    //
+                    //} else
+                    if (HelperUiGridService.Lookups.TASK_OUTCOMES == $scope.config.columnDefs[i].lookup) {
                         $scope.gridOptions.columnDefs[i].cellTemplate = '<span ng-hide="row.entity.acm$_taskActionDone"><select'
                             + ' ng-options="option.value for option in row.entity.acm$_taskOutcomes track by option.id"'
                             + ' ng-model="row.entity.acm$_taskOutcome">'
@@ -44,17 +48,24 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                             + ' <span ng-hide="\'noop\'==row.entity.acm$_taskOutcome.id"><i class="fa fa-gear fa-lg" ng-click="grid.appScope.action(row.entity)"></i></span></span>';
                     }
                 }
+
+                componentHelper.doneConfig(config);
             });
 
-            $scope.retrieveGridData();
-            return config;
-        });
+            return false;
+        };
 
 
-        $scope.retrieveGridData = function () {
-            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+        var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
+            retrieveGridData();
+        };
+
+        var retrieveGridData = function() {
+            var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
+            if (Util.goodPositive(currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
-                    , componentHelper.currentObjectId
+                    , currentObjectId
                     , Util.goodValue($scope.start, 0)
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)
