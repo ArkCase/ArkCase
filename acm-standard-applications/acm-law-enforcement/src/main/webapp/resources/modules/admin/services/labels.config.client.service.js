@@ -94,7 +94,7 @@ angular.module('admin').factory('Admin.LabelsConfigService', ['$resource',
              */
             retrieveSettings: {
                 method: "GET",
-                url: "proxy/arkcase/api/latest/plugin/admin/labelmanagement/settings",
+                url: "api/latest/plugin/admin/labelmanagement/settings",
                 cache: false,
                 isArray: false
             },
