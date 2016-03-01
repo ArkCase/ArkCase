@@ -1,12 +1,15 @@
 package com.armedia.acm.core;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by armdev on 7/7/14.
  */
-public class AcmObjectState
+public class AcmObjectState implements Serializable
 {
+    private static final long serialVersionUID = -7841794567269231445L;
+
     private String name;
     private String description;
     private List<AcmUserAction> validActions;
