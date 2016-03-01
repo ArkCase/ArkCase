@@ -75,6 +75,7 @@ public interface TaskDao
      * user tries to claim already claimed task
      *
      * @param userId
+     * @param taskId
      * @return
      * @throws AcmTaskException
      */
