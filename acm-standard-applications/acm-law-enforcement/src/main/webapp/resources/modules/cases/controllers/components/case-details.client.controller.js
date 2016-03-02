@@ -14,11 +14,11 @@ angular.module('cases').controller('Cases.DetailsController', ['$scope', '$state
             , validateObjectInfo: CaseInfoService.validateCaseInfo
         });
 
-
         $scope.options = {
-            focus: true
-			//,height: 120
-		};
+            focus: true,
+            dialogsInBody:true
+            //,height: 120
+        };
 
         //$scope.editDetails = function() {
         //    $scope.editor.summernote({focus: true});

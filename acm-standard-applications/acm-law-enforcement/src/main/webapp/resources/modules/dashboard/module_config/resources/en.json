@@ -27,7 +27,7 @@
         "noDataMessage": "Currently there are no cases info",
         "table": {
           "header": {
-            "caseId": "Number",
+            "caseId": "ID",
             "title": "Title",
             "priority": "Priority",
             "status": "Status"
