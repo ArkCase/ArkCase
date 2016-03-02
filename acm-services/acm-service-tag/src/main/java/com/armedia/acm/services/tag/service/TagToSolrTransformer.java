@@ -5,6 +5,8 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.tag.dao.TagDao;
 import com.armedia.acm.services.tag.model.AcmTag;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
 import java.util.List;
@@ -17,6 +19,7 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
 {
 
     private TagDao tagDao;
+    private UserDao userDao;
 
     @Override
     public List<AcmTag> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -33,7 +36,7 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
 
         solr.setObject_id_s(in.getId() + "");
         solr.setObject_type_s(in.getObjectType());
-        
+
         solr.setTitle_parseable(in.getTagText());
         solr.setDescription_parseable(in.getTagDescription());
         solr.setName(in.getTagName());
@@ -44,6 +47,19 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
         solr.setModifier_lcs(in.getModifier());
 
         solr.setAdditionalProperty("tags_s", in.getTagName());
+
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            solr.setAdditionalProperty("modifier_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
 
         return solr;
     }
@@ -89,6 +105,11 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
     public void setTagDao(TagDao tagDao)
     {
         this.tagDao = tagDao;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
     }
 
 }

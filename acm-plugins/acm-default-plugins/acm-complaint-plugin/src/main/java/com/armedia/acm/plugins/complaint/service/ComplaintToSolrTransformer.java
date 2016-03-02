@@ -2,15 +2,13 @@ package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
-import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
+import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
-import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.model.AcmUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.List;
@@ -23,8 +21,6 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
     private UserDao userDao;
     private ComplaintDao complaintDao;
     private SearchAccessControlFields searchAccessControlFields;
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public List<Complaint> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -63,11 +59,24 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
 
         AcmUser assignee = getUserDao().quietFindByUserId(assigneeUserId);
 
-        if ( assignee != null )
+        if (assignee != null)
         {
             solr.setAssignee_first_name_lcs(assignee.getFirstName());
             solr.setAssignee_last_name_lcs(assignee.getLastName());
-            solr.setAssignee_full_name_lcs(assignee.getFirstName()+" "+assignee.getLastName());
+            solr.setAssignee_full_name_lcs(assignee.getFirstName() + " " + assignee.getLastName());
+        }
+
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            solr.setAdditionalProperty("modifier_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
         }
 
         return solr;
@@ -95,11 +104,10 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setDescription_no_html_tags_parseable(in.getDetails());
         solr.setStatus_s(in.getStatus());
 
-        if ( in.getDisposition() !=null && in.getDisposition().getId() != null )
+        if (in.getDisposition() != null && in.getDisposition().getId() != null)
         {
             solr.setDisposition_id_s(in.getDisposition().getId() + "-" + in.getDisposition().getObjectType());
         }
-
 
         String assigneeUserId = findAssigneeUserId(in);
         solr.setAssignee_s(assigneeUserId);
@@ -108,18 +116,19 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(Complaint in) {
-        //No implementation needed
+    public SolrAdvancedSearchDocument toContentFileIndex(Complaint in)
+    {
+        // No implementation needed
         return null;
     }
 
     private String findAssigneeUserId(Complaint in)
     {
-        if ( in.getParticipants() != null )
+        if (in.getParticipants() != null)
         {
-            for ( AcmParticipant participant : in.getParticipants() )
+            for (AcmParticipant participant : in.getParticipants())
             {
-                if ( "assignee".equals(participant.getParticipantType()) )
+                if ("assignee".equals(participant.getParticipantType()))
                 {
                     return participant.getParticipantLdapId();
                 }
@@ -128,7 +137,6 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
 
         return null;
     }
-
 
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)

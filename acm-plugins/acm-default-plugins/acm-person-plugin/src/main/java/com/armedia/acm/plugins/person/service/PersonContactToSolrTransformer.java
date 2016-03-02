@@ -7,6 +7,9 @@ import com.armedia.acm.plugins.person.model.PersonContact;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +24,7 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private PersonContactDao personContactDao;
-
+    private UserDao userDao;
 
     @Override
     public List<PersonContact> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -45,8 +48,7 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
         if (personContact.getCompanyName() != null && !personContact.getCompanyName().isEmpty())
         {
             solrDoc.setName(personContact.getCompanyName());
-        }
-        else if (personContact.getPersonName() != null && !personContact.getPersonName().isEmpty())
+        } else if (personContact.getPersonName() != null && !personContact.getPersonName().isEmpty())
         {
             solrDoc.setName(personContact.getPersonName());
         }
@@ -58,21 +60,35 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
 
         addAddresses(personContact, solrDoc);
 
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(personContact.getCreator());
+        if (creator != null)
+        {
+            solrDoc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(personContact.getModifier());
+        if (modifier != null)
+        {
+            solrDoc.setAdditionalProperty("modifier_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
         return solrDoc;
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(PersonContact in) {
-        //No implementation needed
+    public SolrAdvancedSearchDocument toContentFileIndex(PersonContact in)
+    {
+        // No implementation needed
         return null;
     }
 
     private void addAddresses(PersonContact personContact, SolrAdvancedSearchDocument solrDoc)
     {
         List<String> addressIds = new ArrayList<String>();
-        if ( personContact.getAddresses() != null )
+        if (personContact.getAddresses() != null)
         {
-            for ( PostalAddress address : personContact.getAddresses() )
+            for (PostalAddress address : personContact.getAddresses())
             {
                 addressIds.add(address.getId() + "-LOCATION");
             }
@@ -81,13 +97,12 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
         solrDoc.setPostal_address_id_ss(addressIds);
     }
 
-
     private void addContactMethods(PersonContact personContact, SolrAdvancedSearchDocument solrDoc)
     {
         List<String> contactMethodIds = new ArrayList<>();
-        if ( personContact.getContactMethods() != null )
+        if (personContact.getContactMethods() != null)
         {
-            for ( ContactMethod cm : personContact.getContactMethods() )
+            for (ContactMethod cm : personContact.getContactMethods())
             {
                 contactMethodIds.add(cm.getId() + "-CONTACT-METHOD");
             }
@@ -105,16 +120,12 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
         if (in.getCompanyName() != null && !in.getCompanyName().isEmpty())
         {
             solrDoc.setName(in.getCompanyName());
-        }
-        else if (in.getPersonName() != null && !in.getPersonName().isEmpty())
+        } else if (in.getPersonName() != null && !in.getPersonName().isEmpty())
         {
             solrDoc.setName(in.getPersonName());
         }
 
         solrDoc.setName((in.getFirstName() + " " + in.getLastName()).trim());
-
-
-
 
         solrDoc.setObject_id_s(in.getId() + "");
 
@@ -143,5 +154,10 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
     public void setPersonContactDao(PersonContactDao personContactDao)
     {
         this.personContactDao = personContactDao;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
     }
 }
