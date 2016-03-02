@@ -21,8 +21,9 @@ import java.util.List;
  * Created by sergey on 3/2/16.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class LabelManagementRefreshResource {
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+public class LabelManagementRefreshResource
+{
     private Logger log = LoggerFactory.getLogger(getClass());
     private LabelManagementService labelManagementService;
 
@@ -30,22 +31,27 @@ public class LabelManagementRefreshResource {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public String updateResource(@RequestBody String resource) throws IOException, AcmLabelManagementException {
+    public String updateResource(@RequestBody String resource) throws IOException, AcmLabelManagementException
+    {
 
         List<String> ns = new ArrayList<>();
         List<String> langs = new ArrayList<>();
 
-        try {
+        try
+        {
             JSONObject resourceObject = new JSONObject(resource);
             JSONArray nsJsonArray = resourceObject.getJSONArray("ns");
-            for (int i = 0; i < nsJsonArray.length(); i++) {
+            for (int i = 0; i < nsJsonArray.length(); i++)
+            {
                 ns.add(nsJsonArray.getString(i));
             }
             JSONArray langJsonArray = resourceObject.getJSONArray("lng");
-            for (int i = 0; i < langJsonArray.length(); i++) {
+            for (int i = 0; i < langJsonArray.length(); i++)
+            {
                 langs.add(langJsonArray.getString(i));
             }
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             log.error(String.format("Wrong refresh parameter '%s' ", resource));
             throw new AcmLabelManagementException("Reset resource error", e);
         }
@@ -54,7 +60,8 @@ public class LabelManagementRefreshResource {
         return (new JSONObject()).toString();
     }
 
-    public void setLabelManagementService(LabelManagementService labelManagementService) {
+    public void setLabelManagementService(LabelManagementService labelManagementService)
+    {
         this.labelManagementService = labelManagementService;
     }
 
