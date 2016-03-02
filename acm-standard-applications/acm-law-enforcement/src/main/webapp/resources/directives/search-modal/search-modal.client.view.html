@@ -11,12 +11,13 @@
                        ng-keydown="keyUp($event)"
                        ng-model="searchQuery"
                        placeholder="{{searchPlaceholder}}"
+                       ng-disabled="disableSearchControls"
                 >
                     <span class="input-group-btn">
                         <button class="btn btn-md btn-primary"
                                 type="button"
                                 ng-click="queryExistingItems()"
-                                ng-disabled="searchQuery.length < minSearchLength">
+                                ng-disabled="disableSearchControls || (searchQuery.length < minSearchLength)">
                             {{search}}
                         </button>
                     </span>
@@ -34,6 +35,7 @@
                             <li ng-repeat="field in facet.fields">
                                 <div class="checkbox" ng-if="field.count > 0">
                                     <label><input type="checkbox"
+                                                  ng-disabled="disableSearchControls"
                                                   ng-model="currentFacetSelection[field.name + '|' + facet.name]"
                                                   ng-click="selectFacet($event.target.checked,facet.name,field.name)"/>{{field.name}}<span
                                             class="pull-right label label-info">{{field.count}}</span></label>
@@ -68,4 +70,3 @@
         {{ok}}
     </button>
 </div>
-
