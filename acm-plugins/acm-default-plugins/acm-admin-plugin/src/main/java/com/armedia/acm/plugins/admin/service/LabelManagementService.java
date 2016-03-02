@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.admin.exception.AcmLabelManagementException;
 import com.armedia.acm.plugins.admin.model.ModuleConfig;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +23,14 @@ public class LabelManagementService {
     private String customResourcesLocation;
     private String customResourceFile;
     private String modulesLocation;
+    private String moduleConfigLocation;
     private String moduleResourcesLocation;
     private String resourcesLocation;
     private String resourceFile;
     private String settingsFileLocation;
+
+
+    private final String MODULE_CORE_ID = "core";
 
 
     /**
@@ -48,7 +53,7 @@ public class LabelManagementService {
      */
     public List<String> getLanguages() {
         // Languages list is stored in XML configuration
-        return new ArrayList(languages);
+        return languages;
     }
 
     /**
@@ -105,6 +110,13 @@ public class LabelManagementService {
     public JSONObject getAdminResource(String moduleId, String lang) throws AcmLabelManagementException {
         // 1. Load module's resource file
         JSONObject moduleResource = normalizeResource(loadModuleResource(moduleId, lang));
+
+        // If module is core, them inject information about menus that are stored in configuration file
+        if (MODULE_CORE_ID.equals(moduleId)) {
+            JSONObject menusInfo = normalizeResource(loadMenusResources());
+            JSONObject coreModuleResource = mergeResources(moduleResource, menusInfo);
+            moduleResource = coreModuleResource;
+        }
 
         // 2. Load custom resource file
         JSONObject customResource = normalizeResource(loadCustomResource(moduleId, lang));
@@ -166,6 +178,21 @@ public class LabelManagementService {
     }
 
     /**
+     * Batch refresh of modules
+     *
+     * @param modules
+     * @param langs
+     * @throws AcmLabelManagementException
+     */
+    public void refresh(List<String> modules, List<String> langs) throws AcmLabelManagementException {
+        for (String lang : langs) {
+            for (String module : modules) {
+                updateResource(module, lang);
+            }
+        }
+    }
+
+    /**
      * Remove module's custom resource
      *
      * @param moduleId
@@ -196,11 +223,18 @@ public class LabelManagementService {
         // 1. Load module's resource file
         JSONObject moduleResource = normalizeResource(loadModuleResource(moduleId, lang));
 
+        // If module is core, them inject information about menus that are stored in configuration file
+        if (MODULE_CORE_ID.equals(moduleId)) {
+            JSONObject menusInfo = normalizeResource(loadMenusResources());
+            JSONObject coreModuleResource = mergeResources(moduleResource, menusInfo);
+            moduleResource = coreModuleResource;
+        }
+
         // 2. Load custom resource file
         JSONObject customResource = normalizeResource(loadCustomResource(moduleId, lang));
 
         // 3. Merge Module's and custom resources
-        JSONObject resource = mergeResources(moduleResource, customResource);
+        JSONObject resource = extendResources(moduleResource, customResource);
 
         // 4. Save updated resource
         String fileName = String.format(resourcesLocation + resourceFile, moduleId, lang);
@@ -306,13 +340,13 @@ public class LabelManagementService {
     }
 
     /**
-     * Merge normalized module and custom resources to produce resource
+     * Extend normalized module and custom resources to produce new resource
      *
      * @param moduleRes
      * @param customRes
      * @return
      */
-    private JSONObject mergeResources(JSONObject moduleRes, JSONObject customRes) {
+    private JSONObject extendResources(JSONObject moduleRes, JSONObject customRes) {
         JSONObject res = new JSONObject();
         if (moduleRes != null) {
             Iterator<String> keys = moduleRes.keys();
@@ -328,6 +362,33 @@ public class LabelManagementService {
             }
         }
 
+        return res;
+    }
+
+    /**
+     * Merge normalized resources
+     *
+     * @param baseRes
+     * @param extRes
+     * @return
+     */
+    private JSONObject mergeResources(JSONObject baseRes, JSONObject extRes) {
+        JSONObject res;
+        // If Base resource is not null then use it as base for merged resources
+        if (baseRes != null) {
+            res = new JSONObject(baseRes.toString());
+        } else {
+            res = new JSONObject();
+        }
+
+        if (extRes != null)  {
+            Iterator<String> keys = extRes.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                String value = extRes.getString(key);
+                res.put(key, value);
+            }
+        }
         return res;
     }
 
@@ -410,6 +471,38 @@ public class LabelManagementService {
 
     }
 
+    /**
+     * Load information about all modules menus
+     *
+     * @return
+     * @throws AcmLabelManagementException
+     */
+    private JSONObject loadMenusResources() throws AcmLabelManagementException {
+        // 1. Get list of modules
+        List<String> modulesNames = getModulesNames();
+        JSONObject modulesMenus = new JSONObject();
+
+        // 2. Load modules configuration file and retrieve information about menus
+        for (String moduleName : modulesNames) {
+            String configFileName = String.format(moduleConfigLocation, moduleName);
+            JSONObject configResource = loadResource(configFileName);
+            if (configResource.has("menus")) {
+                JSONArray menus = configResource.getJSONArray("menus");
+                for (int i = 0; i < menus.length(); i++) {
+                    JSONObject menuInfo = menus.getJSONObject(i);
+                    // 3. Combine menus information into the one object
+                    if (menuInfo.has("menuId") && menuInfo.has("menuItemTitle") && menuInfo.has("menuItemURL")) {
+                        String key = MODULE_CORE_ID + ".menus." + menuInfo.getString("menuId") + "." + menuInfo.getString("menuItemURL");
+                        modulesMenus.put(key, menuInfo.get("menuItemTitle"));
+                    }
+                }
+            }
+        }
+
+        return modulesMenus;
+    }
+
+
     public void setLanguages(List<String> languages) {
         this.languages = languages;
     }
@@ -424,6 +517,10 @@ public class LabelManagementService {
 
     public void setCustomResourceFile(String customResourceFile) {
         this.customResourceFile = customResourceFile;
+    }
+
+    public void setModuleConfigLocation(String moduleConfigLocation) {
+        this.moduleConfigLocation = moduleConfigLocation;
     }
 
     public void setModuleResourcesLocation(String moduleResourcesLocation) {
