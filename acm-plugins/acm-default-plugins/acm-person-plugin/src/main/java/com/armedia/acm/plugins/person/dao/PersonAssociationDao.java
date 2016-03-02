@@ -30,7 +30,7 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
     @Override
     public PersonAssociation save(PersonAssociation toSave)
     {
-        if (toSave.getPerson() != null)
+        if (toSave.getId() != null && toSave.getPerson() != null)
         {
             Optional<PersonAssociation> found = toSave.getPerson().getPersonAssociations().stream().filter(pa -> pa.getId().equals(toSave.getId())).findFirst();
             if (found == null || !found.isPresent())
@@ -38,9 +38,7 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
                 toSave.getPerson().getPersonAssociations().add(toSave);
             }
         }
-        PersonAssociation saved = super.save(toSave);
-
-        return saved;
+        return super.save(toSave);
     }
 
     public List<Person> findPersonByParentIdAndParentType(String parentType, Long parentId)

@@ -28,17 +28,18 @@ public class ComplaintDao extends AcmAbstractDao<Complaint>
     @Override
     public Complaint save(Complaint toSave)
     {
-        for (PersonAssociation personAssoc : toSave.getPersonAssociations())
+        if (toSave.getId() != null)
         {
-            Optional<PersonAssociation> found = personAssoc.getPerson().getPersonAssociations().stream().filter(pa -> pa.getId().equals(personAssoc.getId())).findFirst();
-            if (found == null || !found.isPresent())
+            for (PersonAssociation personAssoc : toSave.getPersonAssociations())
             {
-                personAssoc.getPerson().getPersonAssociations().add(personAssoc);
+                Optional<PersonAssociation> found = personAssoc.getPerson().getPersonAssociations().stream().filter(pa -> pa.getId().equals(personAssoc.getId())).findFirst();
+                if (found == null || !found.isPresent())
+                {
+                    personAssoc.getPerson().getPersonAssociations().add(personAssoc);
+                }
             }
         }
-        Complaint saved = super.save(toSave);
-
-        return saved;
+        return super.save(toSave);
     }
 
     public List<ComplaintListView> listAllComplaints()

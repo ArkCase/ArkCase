@@ -30,15 +30,17 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
     @Override
     public CaseFile save(CaseFile toSave)
     {
-        for (PersonAssociation personAssoc : toSave.getPersonAssociations())
+        if (toSave.getId() != null)
         {
-            Optional<PersonAssociation> found = personAssoc.getPerson().getPersonAssociations().stream().filter(pa -> pa.getId().equals(personAssoc.getId())).findFirst();
-            if (found == null || !found.isPresent())
+            for (PersonAssociation personAssoc : toSave.getPersonAssociations())
             {
-                personAssoc.getPerson().getPersonAssociations().add(personAssoc);
+                Optional<PersonAssociation> found = personAssoc.getPerson().getPersonAssociations().stream().filter(pa -> pa.getId().equals(personAssoc.getId())).findFirst();
+                if (found == null || !found.isPresent())
+                {
+                    personAssoc.getPerson().getPersonAssociations().add(personAssoc);
+                }
             }
         }
-
         return super.save(toSave);
     }
 
