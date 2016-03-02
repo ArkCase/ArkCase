@@ -21,10 +21,9 @@ import org.slf4j.MDC;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import java.io.BufferedReader;
-import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -58,7 +57,7 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
     final String cookieName2 = "JSESSIONID";
     final String cookieValue2 = "123456";
     final Cookie[] cookies = { new Cookie(cookieName1, cookieValue1), new Cookie(cookieName2, cookieValue2) };
-    final String body = "some body";
+    final String body = "param: [value]";
 
     @Before
     public void setUp() throws Exception
@@ -245,9 +244,10 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         expect(mockRequest.getHeader(headerName1)).andReturn(headerValue1);
         expect(mockRequest.getHeader(headerName2)).andReturn(headerValue2);
         expect(mockRequest.getHeader(headerName3)).andReturn(headerValue3);
-        expect(mockRequest.getHeader("content-type")).andReturn(null);
         expect(mockRequest.getCookies()).andReturn(cookies).anyTimes();
-        expect(mockRequest.getReader()).andReturn(new BufferedReader(new StringReader(body)));
+        HashMap<String, String[]> parameterMap = new HashMap<>();
+        parameterMap.put("param", new String[] { "value" });
+        expect(mockRequest.getParameterMap()).andReturn(parameterMap);
         Capture<AuditEvent> capturedAuditEvent = newCapture();
         mockAuditService.audit(capture(capturedAuditEvent));
         expectLastCall();

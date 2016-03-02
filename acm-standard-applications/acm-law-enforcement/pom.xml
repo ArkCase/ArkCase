@@ -348,6 +348,11 @@
             <artifactId>acm-object-lock-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-user-interface</groupId>
+            <artifactId>ark-angular-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>
