@@ -6,6 +6,8 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.Map;
 public class QueueToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmQueue>
 {
     private AcmQueueDao acmQueueDao;
+    private UserDao userDao;
 
     @Override
     public List<AcmQueue> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -44,6 +47,19 @@ public class QueueToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         properties.put(SearchConstants.PROPERTY_QUEUE_ID_S, in.getId().toString());
         properties.put(SearchConstants.PROPERTY_QUEUE_NAME_S, in.getName());
         properties.put(SearchConstants.PROPERTY_QUEUE_ORDER_S, in.getDisplayOrder());
+
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            solr.setAdditionalProperty("modifier_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
 
         return solr;
     }
@@ -88,6 +104,11 @@ public class QueueToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         boolean isSupported = objectNotNull && classNames;
 
         return isSupported;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
     }
 
     public AcmQueueDao getAcmQueueDao()

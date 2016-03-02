@@ -2,30 +2,26 @@ package com.armedia.acm.plugins.casefile.service;
 
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
-import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
-import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.model.AcmUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.persistence.PersistenceException;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by marjan.stefanoski on 08.11.2014.
  */
-public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<CaseFile> {
+public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<CaseFile>
+{
 
     private UserDao userDao;
     private CaseFileDao caseFileDao;
     private SearchAccessControlFields searchAccessControlFields;
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public List<CaseFile> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -62,12 +58,25 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         String assigneeUserId = findAssigneeUserId(in);
         solr.setAssignee_id_lcs(assigneeUserId);
 
-        AcmUser assignee = findAssignee(assigneeUserId);
-        if ( assignee != null )
+        AcmUser assignee = getUserDao().quietFindByUserId(assigneeUserId);
+        if (assignee != null)
         {
             solr.setAssignee_first_name_lcs(assignee.getFirstName());
             solr.setAssignee_last_name_lcs(assignee.getLastName());
-            solr.setAssignee_full_name_lcs(assignee.getFirstName()+" "+assignee.getLastName());
+            solr.setAssignee_full_name_lcs(assignee.getFirstName() + " " + assignee.getLastName());
+        }
+
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            solr.setAdditionalProperty("modifier_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
         }
 
         return solr;
@@ -102,42 +111,19 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(CaseFile in) {
-        //No implementation needed
-        return null;
-    }
-
-    private AcmUser findAssignee(String assigneeUserId)
+    public SolrAdvancedSearchDocument toContentFileIndex(CaseFile in)
     {
-        if ( assigneeUserId == null || assigneeUserId.trim().isEmpty() )
-        {
-            return null;
-        }
-
-        try
-        {
-            AcmUser user = getUserDao().findByUserId(assigneeUserId);
-            if (user != null)
-            {
-                return user;
-            }
-        }
-        catch (PersistenceException pe)
-        {
-            log.error("Could not find user record: " + pe.getMessage(), pe);
-        }
-
-
+        // No implementation needed
         return null;
     }
 
     private String findAssigneeUserId(CaseFile in)
     {
-        if ( in.getParticipants() != null )
+        if (in.getParticipants() != null)
         {
-            for ( AcmParticipant participant : in.getParticipants() )
+            for (AcmParticipant participant : in.getParticipants())
             {
-                if ( "assignee".equals(participant.getParticipantType()) )
+                if ("assignee".equals(participant.getParticipantType()))
                 {
                     return participant.getParticipantLdapId();
                 }
@@ -146,7 +132,6 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
         return null;
     }
-
 
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
@@ -160,19 +145,23 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         return isSupported;
     }
 
-    public UserDao getUserDao() {
+    public UserDao getUserDao()
+    {
         return userDao;
     }
 
-    public void setUserDao(UserDao userDao) {
+    public void setUserDao(UserDao userDao)
+    {
         this.userDao = userDao;
     }
 
-    public CaseFileDao getCaseFileDao() {
+    public CaseFileDao getCaseFileDao()
+    {
         return caseFileDao;
     }
 
-    public void setCaseFileDao(CaseFileDao caseFileDao) {
+    public void setCaseFileDao(CaseFileDao caseFileDao)
+    {
         this.caseFileDao = caseFileDao;
     }
 
