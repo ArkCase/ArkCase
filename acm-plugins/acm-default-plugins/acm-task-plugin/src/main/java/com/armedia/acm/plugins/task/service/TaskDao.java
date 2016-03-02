@@ -70,6 +70,27 @@ public interface TaskDao
      */
     List<AcmTask> pastDueTasks();
 
+    /**
+     * The given user is made assignee for the task. An exception is thrown if another
+     * user tries to claim already claimed task
+     *
+     * @param userId
+     * @param taskId
+     * @return
+     * @throws AcmTaskException
+     */
+    AcmTask claimTask(Long taskId, String userId) throws AcmTaskException;
+
+
+    /**
+     * Unclaim a task i.e. the assignee will be set null.
+     *
+     * @param taskId
+     * @return
+     * @throws AcmTaskException
+     */
+    AcmTask unclaimTask(Long taskId) throws AcmTaskException;
+
     AcmTask findById(Long taskId) throws AcmTaskException;
 
     AcmTask save(AcmTask in) throws AcmTaskException;
