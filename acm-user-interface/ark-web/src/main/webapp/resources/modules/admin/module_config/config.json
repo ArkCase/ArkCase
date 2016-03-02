@@ -140,7 +140,7 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
-      "columnDefs": [
+      "columnDefs":[
         {
           "name": "id",
           "displayName": "admin.application.labels.config.data.id",
