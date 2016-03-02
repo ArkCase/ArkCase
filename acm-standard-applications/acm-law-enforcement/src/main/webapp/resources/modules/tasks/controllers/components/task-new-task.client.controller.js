@@ -7,6 +7,12 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.config = null;
         $scope.userSearchConfig = null;
 
+        $scope.options = {
+            focus: true,
+            dialogsInBody:true
+            //,height: 120
+        };
+
         Authentication.queryUserInfo().then(
             function (userInfo) {
                 $scope.userFullName = userInfo.fullName;
