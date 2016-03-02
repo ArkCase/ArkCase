@@ -51,6 +51,11 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
         };
 
+        $scope.validatePercentComplete = function(value) {
+            if(value < 0 || value > 100) {
+                return "Invalid value";
+            }
+        };
 
         $scope.updateTitle = function () {
             saveTask();
