@@ -1,0 +1,47 @@
+<panel-view header="{{'admin.branding.logo' | translate}}" collapsible="false">
+    <div ng-controller="Admin.BrandingLogoController">
+        <div class="clearfix">
+            <!-- Header logo -->
+            <div class="col-lg-6">
+                <h4 translate>admin.branding.logo.header.title</h4>
+                <img class="img-responsive thumbnail" id="imgCustomHeaderLogo" src="branding/headerlogo.png"/>
+                <div>
+                    <button name="headerLogo" accept="image/png" ng-disabled="uploadingInProgress" ngf-select
+                            data-ng-model="selectedHeaderFile"
+                            class="btn btn-sm btn-default">
+                        <i class="fa fa-folder-open-o"></i>
+                        <span translate>admin.branding.logo.btn.chooseHeader</span>
+                    </button>
+                     <div ng-bind="selectedHeaderFile.name"></div>
+                </div>
+            </div>
+
+            <!-- Login logo -->
+            <div class="col-lg-6">
+                <h4 translate>admin.branding.logo.login.title</h4>
+                <img class="img-responsive thumbnail" id="imgCustomLoginLogo" src="branding/loginlogo.png"/>
+                <div>
+                    <button name="loginLogo" accept="image/png" ng-disabled="uploadingInProgress"
+                            ng-model="selectedLoginFile" ngf-select
+                            class="btn btn-sm btn-default">
+                        <i class="fa fa-folder-open-o"></i>
+                        <span translate>admin.branding.logo.btn.chooseLogin</span>
+                    </button>
+                    <div>{{selectedLoginFile.name}}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save button -->
+        <div class="well-sm">
+            <p class="text-danger" translate>
+                admin.branding.logo.warningMessage
+            </p>
+
+            <button class="btn btn-sm btn-default" ng-click="saveFiles()">
+                <i class="fa fa-save"/>
+                <span translate>admin.branding.logo.btn.saveFiles</span>
+            </button>
+        </div>
+    </div>
+</panel-view>
