@@ -1,6 +1,10 @@
 package com.armedia.acm.plugins.person.web.api;
 
-import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,9 +23,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -39,6 +43,8 @@ public class DeletePersonAssocByIdAPIControllerTest extends EasyMockSupport
 
     private PersonAssociationDao mockPersonAssociationDao;
     private Authentication mockAuthentication;
+    private PersonAssociation mockPersonAssociation;
+    private PersonAssociationEventPublisher mockPersonAssociationEventPublisher;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -50,11 +56,14 @@ public class DeletePersonAssocByIdAPIControllerTest extends EasyMockSupport
         mockPersonAssociationDao = createMock(PersonAssociationDao.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
-
+        mockPersonAssociation = createMock(PersonAssociation.class);
+        mockPersonAssociationEventPublisher = createMock(PersonAssociationEventPublisher.class);
+        
         unit = new DeletePersonAssocByIdAPIController();
 
         unit.setPersonAssociationDao(mockPersonAssociationDao);
         unit.setPersonAssociationDao(mockPersonAssociationDao);
+        unit.setPersonAssociationEventPublisher(mockPersonAssociationEventPublisher);
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
 
@@ -62,7 +71,10 @@ public class DeletePersonAssocByIdAPIControllerTest extends EasyMockSupport
     public void deletePersonAssociationById() throws Exception
     {                        
         Long personAssocId =958L;
-
+        
+        expect(mockPersonAssociationDao.find(personAssocId)).andReturn(mockPersonAssociation);
+        mockPersonAssociationEventPublisher.publishPersonAssociationDeletedEvent(mockPersonAssociation);
+        expectLastCall();      
         mockPersonAssociationDao.deletePersonAssociationById(personAssocId);
 
         // MVC test classes must call getName() somehow
