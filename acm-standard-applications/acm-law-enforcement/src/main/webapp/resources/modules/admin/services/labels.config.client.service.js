@@ -186,7 +186,7 @@ angular.module('admin').factory('Admin.LabelsConfigService', ['$resource',
              */
             refreshResource: {
                 method: "POST",
-                url: "proxy/arkcase/api/latest/plugin/admin/labelmanagement/admin-resource/refresh",
+                url: "api/latest/plugin/admin/labelmanagement/admin-resource/refresh",
                 cache: false
             }
 
