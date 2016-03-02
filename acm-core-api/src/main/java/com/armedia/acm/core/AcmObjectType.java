@@ -1,12 +1,15 @@
 package com.armedia.acm.core;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by armdev on 7/7/14.
  */
-public class AcmObjectType
+public class AcmObjectType implements Serializable
 {
+    private static final long serialVersionUID = 5721242123910985279L;
+
     private String name;
     private String description;
     private String url;
@@ -14,7 +17,6 @@ public class AcmObjectType
     private String iconName;
     private List<AcmObjectState> states;
     private List<AcmParticipantType> participantTypes;
-
 
     public String getName()
     {
@@ -36,31 +38,37 @@ public class AcmObjectType
         this.description = description;
     }
 
-    public String getUrl() {
+    public String getUrl()
+    {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(String url)
+    {
         this.url = url;
     }
 
-    public String getUrlEnd() {
+    public String getUrlEnd()
+    {
         return urlEnd;
     }
 
-    public void setUrlEnd(String urlEnd) {
+    public void setUrlEnd(String urlEnd)
+    {
         this.urlEnd = urlEnd;
     }
 
-    public String getIconName() {
+    public String getIconName()
+    {
         return iconName;
     }
 
-    public void setIconName(String iconName) {
+    public void setIconName(String iconName)
+    {
         this.iconName = iconName;
     }
 
-//    @JsonIgnore
+    // @JsonIgnore
     public List<AcmObjectState> getStates()
     {
         return states;
@@ -71,7 +79,7 @@ public class AcmObjectType
         this.states = states;
     }
 
-//    @JsonIgnore
+    // @JsonIgnore
     public List<AcmParticipantType> getParticipantTypes()
     {
         return participantTypes;

@@ -1,0 +1,66 @@
+{
+  "costTracking": {
+    "title": "Cost Tracking",
+    "progressNoCostsheet": "[ No costsheet is selected ]",
+    "progressLoading": "Loading costsheet ",
+    "progressError": "Failed to load costsheet"
+  },
+  "costTracking.tree": {
+  },
+  "costTracking.comp.info": {
+    "incidentDate": "Incident Date",
+    "priority": "Priority",
+    "assignedTo": "Assigned To",
+    "subjectType": "Subject Type",
+    "state": "State"
+  },
+  "costTracking.comp.actions": {
+    "new.button": "New Costsheet",
+    "edit.button": "Edit Costsheet"
+  },
+  "costTracking.comp.details": {
+    "title": "Details",
+    "informSaved": "Costsheet details saved",
+    "table.columns": {
+      "title": "Details",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
+    }
+  },
+  "costTracking.comp.people": {
+    "title": "Person",
+    "table.columns": {
+      "fullName": "Full Name",
+      "userId": "Username"
+    }
+  },
+  "costTracking.comp.summary": {
+    "title": "Cost Summary",
+    "table.columns": {
+      "parentId": "ID",
+      "parentNumber": "Parent ID",
+      "parentType": "Parent Type",
+      "value": "Total Cost",
+      "title": "Title",
+      "description": "Description"
+    }
+  },
+  "costTracking.comp.tags": {
+    "title": "Tags",
+    "table.columns": {
+      "tag": "Tag",
+      "created": "Created",
+      "createdBy": "Created By"
+    },
+    "modal": {
+    "title": "Tag",
+    "search": "Search for Tag",
+    "buttons": {
+          "cancel": "Cancel",
+          "ok": "Add Tag"
+     }
+    },
+    "message.tagExists": "Tag with that name or description or text already exists",
+    "message.tagAssociated": "already associated"
+  }
+}
