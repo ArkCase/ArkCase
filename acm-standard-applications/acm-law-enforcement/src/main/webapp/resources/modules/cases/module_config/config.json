@@ -1106,6 +1106,7 @@
         20,
         50
       ],
+       "filters": "\"Object Type\": TAG",
       "paginationPageSize": 5,
       "columnDefs": [
         {
@@ -1122,10 +1123,10 @@
         {
           "name": "creator",
           "displayName": "cases.comp.tags.table.columns.createdBy",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         }
       ],
-       "filters": "\"Object Type\": TAG",
        "filterName" : "Object Type"
     },
     {
