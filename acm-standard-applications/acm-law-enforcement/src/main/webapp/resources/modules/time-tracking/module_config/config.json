@@ -282,7 +282,8 @@
 		        {
 		          "name": "creator",
 		          "displayName": "timeTracking.comp.tags.table.columns.createdBy",
-		          "headerCellFilter": "translate"
+		          "headerCellFilter": "translate",
+                  "lookup": "userFullNames"
 		        }
 		      ],
 		       "filters": "\"Object Type\": TAG",

@@ -202,8 +202,14 @@
           "ok": "Add Tag"
      }
     },
-    "message.tagExists": "Tag with that name or description or text already exists",
-    "message.tagAssociated": "already associated"
+    "message": {
+      "tagExists": "Tag with that name or description or text already exists",
+      "tagAssociated": "already associated",
+      "delete": {
+        "success": "Tag deleted successfully",
+        "error": "Error deleting tag"
+      }
+    }
   },
   "complaints.comp.calendar": {
     "title": "Calendar"
