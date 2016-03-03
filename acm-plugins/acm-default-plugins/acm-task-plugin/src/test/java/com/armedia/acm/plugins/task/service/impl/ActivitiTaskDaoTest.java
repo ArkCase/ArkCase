@@ -274,7 +274,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
         expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
         expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
-        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
         expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
         expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
         expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
@@ -374,7 +374,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
         expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
         expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
-        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
         expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
         expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
         expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
@@ -463,7 +463,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
         expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
         expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
-        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
         expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
         expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
         expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
@@ -566,7 +566,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
         expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
         expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
-        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
         expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
         expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
         expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
@@ -676,7 +676,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockHistoricTaskInstance.getTaskDefinitionKey()).andReturn(taskDefKey);
         expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
         expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
-        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
         expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
         expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
         expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
@@ -808,7 +808,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
         expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
         expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
-        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
         expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
         expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
         expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
@@ -916,7 +916,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
         expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
         expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
-        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
         expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
         expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
         expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
@@ -1008,7 +1008,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
         expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
         expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
-        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
         expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
         expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
         expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
