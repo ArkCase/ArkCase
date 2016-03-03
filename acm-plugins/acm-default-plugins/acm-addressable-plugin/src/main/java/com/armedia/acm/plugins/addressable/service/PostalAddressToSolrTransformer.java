@@ -70,7 +70,7 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
         AcmUser modifier = getUserDao().quietFindByUserId(address.getModifier());
         if (modifier != null)
         {
-            addrDoc.setAdditionalProperty("modifier_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            addrDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
         return addrDoc;

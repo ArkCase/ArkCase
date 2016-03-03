@@ -70,7 +70,7 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
         AcmUser modifier = getUserDao().quietFindByUserId(personContact.getModifier());
         if (modifier != null)
         {
-            solrDoc.setAdditionalProperty("modifier_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            solrDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
         return solrDoc;

@@ -51,7 +51,7 @@ public class ContactMethodToSolrTransformer implements AcmObjectToSolrDocTransfo
         AcmUser modifier = getUserDao().quietFindByUserId(cm.getModifier());
         if (modifier != null)
         {
-            cmDoc.setAdditionalProperty("modifier_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            cmDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
         return cmDoc;
