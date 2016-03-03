@@ -1,10 +1,8 @@
 'use strict';
 
 //Setting up route
-angular.module('complaints').config(['$stateProvider', '$urlRouterProvider',
-    function ($stateProvider, $urlRouterProvider) {
-        // For any unmatched url redirect to  /agents
-        $urlRouterProvider.otherwise('/complaints');
+angular.module('complaints').config(['$stateProvider',
+    function ($stateProvider) {
 
         // Project state routing
         $stateProvider
