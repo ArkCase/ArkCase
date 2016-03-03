@@ -398,6 +398,18 @@
         </list>
     </property>
 </bean>
+<bean id="acmTaskClaimPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+    <property name="privilegeName" value="acm-task-claim"/>
+    <property name="applicationRolesWithPrivilege">
+        <list>
+        <#if acmTaskClaimPrivilege??>
+            <#list acmTaskClaimPrivilege as role>
+                <value>${role}</value>
+            </#list>
+        </#if>
+        </list>
+    </property>
+</bean>
 
 <!--Save Notification Service Plugin-->
 <bean id="acmNotificationModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
