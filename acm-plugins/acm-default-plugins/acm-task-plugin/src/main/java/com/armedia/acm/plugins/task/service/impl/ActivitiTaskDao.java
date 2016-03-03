@@ -30,7 +30,10 @@ import org.activiti.bpmn.model.FormProperty;
 import org.activiti.bpmn.model.FormValue;
 import org.activiti.bpmn.model.Process;
 import org.activiti.bpmn.model.UserTask;
-import org.activiti.engine.*;
+import org.activiti.engine.ActivitiException;
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -44,6 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -477,9 +481,12 @@ public class ActivitiTaskDao implements TaskDao
     }
 
     @Override
-    public AcmTask claimTask(Long taskId, String userId) throws AcmTaskException {
-        if(taskId != null && userId != null) {
-            try {
+    public AcmTask claimTask(Long taskId, String userId) throws AcmTaskException
+    {
+        if (taskId != null && userId != null)
+        {
+            try
+            {
                 getActivitiTaskService().claim(String.valueOf(taskId), userId);
                 Task existingTask = getActivitiTaskService().
                         createTaskQuery().
@@ -495,13 +502,16 @@ public class ActivitiTaskDao implements TaskDao
                 throw new AcmTaskException(e.getMessage(), e);
             }
         }
-        throw new AcmTaskException("Task with ID '" + taskId + "' does not exist. Verify the supplied arguments (taskId: " + taskId + " and userId: " + userId +")");
+        throw new AcmTaskException("Task with ID '" + taskId + "' does not exist. Verify the supplied arguments (taskId: " + taskId + " and userId: " + userId + ")");
     }
 
     @Override
-    public AcmTask unclaimTask(Long taskId) throws AcmTaskException {
-        if(taskId != null){
-            try {
+    public AcmTask unclaimTask(Long taskId) throws AcmTaskException
+    {
+        if (taskId != null)
+        {
+            try
+            {
                 getActivitiTaskService().unclaim(String.valueOf(taskId));
                 Task existingTask = getActivitiTaskService().
                         createTaskQuery().
@@ -900,15 +910,19 @@ public class ActivitiTaskDao implements TaskDao
 
         Process p = processes.get(0);
 
-        FlowElement taskFlowElement = p.getFlowElement(taskDefinitionKey);
+        FlowElement taskFlowElement = p.getFlowElementRecursive(taskDefinitionKey);
 
         log.debug("task flow type: " + taskFlowElement.getClass().getName());
 
-        UserTask ut = (UserTask) taskFlowElement;
+        if (taskFlowElement instanceof UserTask)
+        {
+            UserTask ut = (UserTask) taskFlowElement;
 
-        List<FormProperty> formProperties = ut.getFormProperties();
+            List<FormProperty> formProperties = ut.getFormProperties();
 
-        return formProperties;
+            return formProperties;
+        }
+        return Collections.emptyList();
 
     }
 
