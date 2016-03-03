@@ -4,7 +4,6 @@ var ACM_SETTINGS = {
     LANG: 'en'
 };
 
-
 //Start by defining the main module and adding the module dependencies
 var app = angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfiguration.applicationModuleVendorDependencies);
 
@@ -52,7 +51,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).config([
 
 // Load language info before start Angular application
 angular.element(document).ready(function () {
-    $.getJSON('proxy/arkcase/api/latest/plugin/admin/labelmanagement/default-language', function (result) {
+    $.getJSON('api/latest/plugin/admin/labelmanagement/default-language', function (result) {
         ACM_SETTINGS.LANG = result.defaultLang || ACM_SETTINGS.LANG;
         angular.bootstrap(document, [ApplicationConfiguration.applicationModuleName]);
     }).fail(function () {
