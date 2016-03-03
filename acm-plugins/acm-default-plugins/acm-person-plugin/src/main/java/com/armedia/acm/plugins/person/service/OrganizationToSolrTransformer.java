@@ -54,7 +54,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         AcmUser modifier = getUserDao().quietFindByUserId(org.getModifier());
         if (modifier != null)
         {
-            orgDoc.setAdditionalProperty("modifier_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            orgDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
         return orgDoc;

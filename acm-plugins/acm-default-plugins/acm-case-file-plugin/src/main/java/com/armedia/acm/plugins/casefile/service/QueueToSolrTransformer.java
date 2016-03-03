@@ -58,7 +58,7 @@ public class QueueToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
-            solr.setAdditionalProperty("modifier_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
         return solr;

@@ -69,7 +69,7 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
         AcmUser modifier = getUserDao().quietFindByUserId(person.getModifier());
         if (modifier != null)
         {
-            solrDoc.setAdditionalProperty("modifier_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            solrDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
         return solrDoc;

@@ -47,6 +47,19 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
 
         solr.setTag_token_lcs(in.getTag().getTagToken());
 
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+        }
+
         return solr;
     }
 
@@ -81,7 +94,7 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
-            solr.setAdditionalProperty("modifier_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
         return solr;
