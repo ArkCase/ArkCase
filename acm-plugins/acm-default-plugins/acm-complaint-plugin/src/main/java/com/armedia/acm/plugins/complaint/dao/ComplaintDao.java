@@ -4,6 +4,7 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintListView;
 import com.armedia.acm.plugins.complaint.model.TimePeriod;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,12 +17,31 @@ import javax.persistence.criteria.Subquery;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by armdev on 4/4/14.
  */
 public class ComplaintDao extends AcmAbstractDao<Complaint>
 {
+
+    @Override
+    public Complaint save(Complaint toSave)
+    {
+        if (toSave.getId() != null)
+        {
+            for (PersonAssociation personAssoc : toSave.getPersonAssociations())
+            {
+                Optional<PersonAssociation> found = personAssoc.getPerson().getPersonAssociations().stream().filter(pa -> pa.getId().equals(personAssoc.getId())).findFirst();
+                if (found == null || !found.isPresent())
+                {
+                    personAssoc.getPerson().getPersonAssociations().add(personAssoc);
+                }
+            }
+        }
+        return super.save(toSave);
+    }
+
     public List<ComplaintListView> listAllComplaints()
     {
         CriteriaBuilder builder = getEm().getCriteriaBuilder();
@@ -40,7 +60,8 @@ public class ComplaintDao extends AcmAbstractDao<Complaint>
 
     }
 
-    public List<ComplaintListView> listComplaintsByTimePeriod(TimePeriod timePeriod) {
+    public List<ComplaintListView> listComplaintsByTimePeriod(TimePeriod timePeriod)
+    {
         CriteriaBuilder builder = getEm().getCriteriaBuilder();
         CriteriaQuery<ComplaintListView> query = builder.createQuery(ComplaintListView.class);
         Root<ComplaintListView> clv = query.from(ComplaintListView.class);
@@ -53,7 +74,8 @@ public class ComplaintDao extends AcmAbstractDao<Complaint>
         return results;
     }
 
-    public List<ComplaintListView> listAllUserComplaints(String userId) {
+    public List<ComplaintListView> listAllUserComplaints(String userId)
+    {
         CriteriaBuilder builder = getEm().getCriteriaBuilder();
         CriteriaQuery<ComplaintListView> query = builder.createQuery(ComplaintListView.class);
         Root<ComplaintListView> clv = query.from(ComplaintListView.class);
@@ -103,12 +125,13 @@ public class ComplaintDao extends AcmAbstractDao<Complaint>
         return Complaint.class;
     }
 
-    private Date shiftDateFromToday(int daysFromToday){
+    private Date shiftDateFromToday(int daysFromToday)
+    {
         Date nextDate;
         Date today = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(today);
-        cal.add(Calendar.DATE,-daysFromToday);
+        cal.add(Calendar.DATE, -daysFromToday);
         nextDate = cal.getTime();
         return nextDate;
     }
