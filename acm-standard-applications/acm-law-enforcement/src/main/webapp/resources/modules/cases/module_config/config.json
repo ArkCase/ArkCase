@@ -1107,7 +1107,6 @@
         20,
         50
       ],
-       "filters": "\"Object Type\": TAG",
       "paginationPageSize": 5,
       "columnDefs": [
         {
@@ -1128,14 +1127,16 @@
           "lookup": "userFullNames"
         }
       ],
-       "filterName" : "Object Type"
+      "filters": "\"Object Type\": TAG",
+      "filterName": "Object Type"
     },
     {
       "id": "calendar",
       "title": "Calendar",
       "icon": "fa fa-calendar",
       "enabled": true,
-      "type": "empty"
+      "type": "empty",
+      "dateFormat": "MM/DD/YYYY HH:mm"
     },
     {
       "id": "merge",

@@ -116,5 +116,10 @@
     "modal.notes.label": "Note",
     "modal.btnOk.text": "Save",
     "modal.btnCancel.text": "Cancel"
+  },
+  "common.directive.coreCalendar": {
+    "title": "Calendar",
+    "start.label": "Start: ",
+    "end.label": "End: "
   }
 }

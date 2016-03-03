@@ -7,7 +7,7 @@
   },
   "complaints.comp.info": {
     "complaintId": "Complaint id:",
-    "complaintNumber": "Complaint Number:",
+    "complaintNumber": "Complaint ID:",
     "courtRoomName": "Court Room Name:"
   },
   "complaints.comp.actions": {

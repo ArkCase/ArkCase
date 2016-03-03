@@ -224,8 +224,8 @@
                 "description": ""
             },
             "complaint-number": {
-                "value": "Complaint Number",
-                "defaultValue": "Complaint Number",
+                "value": "ID",
+                "defaultValue": "ID",
                 "description": ""
             },
             "title": {
@@ -263,8 +263,8 @@
                 "description": ""
             },
             "task-id": {
-                "value": "Task ID",
-                "defaultValue": "Task ID",
+                "value": "ID",
+                "defaultValue": "ID",
                 "description": ""
             },
             "title": {
@@ -288,8 +288,8 @@
                 "description": ""
             },
             "case-id": {
-                "value": "Case ID",
-                "defaultValue": "Case ID",
+                "value": "ID",
+                "defaultValue": "ID",
                 "description": ""
             }
         }
@@ -312,8 +312,8 @@
                 "description": ""
             },
             "number": {
-                "value": "Number",
-                "defaultValue": "Number",
+                "value": "ID",
+                "defaultValue": "ID",
                 "description": ""
             },
             "title": {
