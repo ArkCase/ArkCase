@@ -25,11 +25,9 @@
  angular.module('AppModule').controller('AppController', ['$scope', 'ConfigService'
  , function ($scope, ConfigService) {
         $scope.folderId = 'somefolderid';
-        ConfigService.getComponentConfig("module", "calendar").then(function (config) {
-
-            $scope.config = config;
-            return config;
-        });
+        $scope.config = {
+                "dateFormat": "MM/DD/YYYY HH:mm"
+            }
     }
  ]);
  </file>
