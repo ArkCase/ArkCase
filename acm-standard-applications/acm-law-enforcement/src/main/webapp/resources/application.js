@@ -4,7 +4,6 @@ var ACM_SETTINGS = {
     LANG: 'en'
 };
 
-
 //Start by defining the main module and adding the module dependencies
 var app = angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfiguration.applicationModuleVendorDependencies);
 
