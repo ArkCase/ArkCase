@@ -174,7 +174,8 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'StoreSer
                         var noteInfo = data;
                         var cacheKey = Util.goodValue(noteInfo.parentType) + "." + Util.goodValue(noteInfo.parentId, 0);
                         var cacheNotes = new Store.CacheFifo(Service.CacheNames.NOTES);
-                        cacheNotes.put(cacheKey, noteInfo);
+                        //remove it from cache so next query will go for data in backend
+                        cacheNotes.remove(cacheKey);
                         return noteInfo;
                     }
                 }

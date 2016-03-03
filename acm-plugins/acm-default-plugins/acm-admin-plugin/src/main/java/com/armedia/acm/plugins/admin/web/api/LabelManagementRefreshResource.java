@@ -18,16 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sergey on 2/10/16.
+ * Created by sergey on 3/2/16.
  */
 @Controller
 @RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
-public class LabelManagementResetResource
+public class LabelManagementRefreshResource
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private LabelManagementService labelManagementService;
 
-    @RequestMapping(value = "/labelmanagement/admin-resource/reset", method = RequestMethod.POST, produces = {
+    @RequestMapping(value = "/labelmanagement/admin-resource/refresh", method = RequestMethod.POST, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
@@ -52,11 +52,11 @@ public class LabelManagementResetResource
             }
         } catch (Exception e)
         {
-            log.error(String.format("Wrong reset parameter '%s' ", resource));
+            log.error(String.format("Wrong refresh parameter '%s' ", resource));
             throw new AcmLabelManagementException("Reset resource error", e);
         }
 
-        labelManagementService.reset(ns, langs);
+        labelManagementService.refresh(ns, langs);
         return (new JSONObject()).toString();
     }
 

@@ -18,8 +18,9 @@ import javax.servlet.http.HttpServletResponse;
  * Created by sergey on 2/14/16.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class LabelManagementRetrieveResource {
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+public class LabelManagementRetrieveResource
+{
     private Logger log = LoggerFactory.getLogger(getClass());
     private LabelManagementService labelManagementService;
 
@@ -30,25 +31,30 @@ public class LabelManagementRetrieveResource {
     public String retrieveResource(
             @RequestParam("lang") String lang,
             @RequestParam("ns") String ns,
-            HttpServletResponse response) throws AcmLabelManagementException {
+            HttpServletResponse response) throws AcmLabelManagementException
+    {
 
-        try {
+        try
+        {
             // Retrieve resource, third parameter indicates that we have to try create resource it it is absent
             JSONObject jsonResource = labelManagementService.getResource(ns, lang, true);
 
             // Return empty JSON if resource is absent
-            if (jsonResource == null) {
+            if (jsonResource == null)
+            {
                 jsonResource = new JSONObject();
             }
             return jsonResource.toString();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             String msg = String.format("Can't retrieve resource %s:%s", lang, ns);
             log.error(msg, e);
             throw new AcmLabelManagementException(msg, e);
         }
     }
 
-    public void setLabelManagementService(LabelManagementService labelManagementService) {
+    public void setLabelManagementService(LabelManagementService labelManagementService)
+    {
         this.labelManagementService = labelManagementService;
     }
 

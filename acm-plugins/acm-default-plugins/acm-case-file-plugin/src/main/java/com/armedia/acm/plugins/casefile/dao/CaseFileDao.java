@@ -6,28 +6,44 @@ import com.armedia.acm.plugins.casefile.model.CaseByStatusDto;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.model.TimePeriod;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.services.participants.model.ParticipantTypes;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
-import com.armedia.acm.services.participants.model.ParticipantTypes;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by armdev on 8/26/14.
  */
 public class CaseFileDao extends AcmAbstractDao<CaseFile>
 {
+
+    @Override
+    public CaseFile save(CaseFile toSave)
+    {
+        if (toSave.getId() != null)
+        {
+            for (PersonAssociation personAssoc : toSave.getPersonAssociations())
+            {
+                Optional<PersonAssociation> found = personAssoc.getPerson().getPersonAssociations().stream().filter(pa -> pa.getId().equals(personAssoc.getId())).findFirst();
+                if (found == null || !found.isPresent())
+                {
+                    personAssoc.getPerson().getPersonAssociations().add(personAssoc);
+                }
+            }
+        }
+        return super.save(toSave);
+    }
+
     @Override
     protected Class<CaseFile> getPersistenceClass()
     {
@@ -53,7 +69,8 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
 
     }
 
-    public List<CaseByStatusDto> getAllCasesByStatus() {
+    public List<CaseByStatusDto> getAllCasesByStatus()
+    {
         String queryText = "SELECT cf.status, COUNT(cf) as counted FROM CaseFile cf GROUP BY cf.status";
         Query caseGroupedByStatus = getEm().createQuery(queryText);
 
@@ -62,27 +79,32 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
 
         List<CaseByStatusDto> result = new ArrayList<CaseByStatusDto>();
 
-        for(Object[] caseStatus : caseGroupedByS){
+        for (Object[] caseStatus : caseGroupedByS)
+        {
             CaseByStatusDto caseByS = new CaseByStatusDto();
             caseByS.setStatus((String) caseStatus[0]);
-            caseByS.setCount(((Number)caseStatus[1]).intValue());
+            caseByS.setCount(((Number) caseStatus[1]).intValue());
             result.add(caseByS);
         }
         return result;
     }
 
-    public List<CaseFile> getCaseFilesByUser(String user) throws AcmObjectNotFoundException{
+    public List<CaseFile> getCaseFilesByUser(String user) throws AcmObjectNotFoundException
+    {
         String queryText = "SELECT cf FROM CaseFile cf " +
                 "WHERE cf.creator = :user";
         Query casesByUser = getEm().createQuery(queryText);
-        casesByUser.setParameter("user",user);
+        casesByUser.setParameter("user", user);
         List<CaseFile> retval = casesByUser.getResultList();
-        if(retval.isEmpty()) {
-            throw new AcmObjectNotFoundException("Case File",null, "Cases not found for the user: "+user+"",null);
+        if (retval.isEmpty())
+        {
+            throw new AcmObjectNotFoundException("Case File", null, "Cases not found for the user: " + user + "", null);
         }
         return retval;
     }
-    public List<CaseFile> getNotClosedCaseFilesByUser(String user) throws AcmObjectNotFoundException{
+
+    public List<CaseFile> getNotClosedCaseFilesByUser(String user) throws AcmObjectNotFoundException
+    {
         String queryText =
                 "SELECT cf " +
                         "FROM CaseFile cf, " +
@@ -96,28 +118,32 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
                         "ORDER BY " +
                         "     cf.dueDate ASC";
         Query casesByUser = getEm().createQuery(queryText);
-        casesByUser.setParameter("user",user);
-        casesByUser.setParameter("statusName","CLOSED");
+        casesByUser.setParameter("user", user);
+        casesByUser.setParameter("statusName", "CLOSED");
         List<CaseFile> retval = casesByUser.getResultList();
-        if(retval.isEmpty()) {
-            throw new AcmObjectNotFoundException("Case File",null, "Cases not found for the user: "+user+"",null);
+        if (retval.isEmpty())
+        {
+            throw new AcmObjectNotFoundException("Case File", null, "Cases not found for the user: " + user + "", null);
         }
         return retval;
     }
-        public List<CaseByStatusDto> getCasesByStatusAndByTimePeriod(TimePeriod numberOfDaysFromToday) {
+
+    public List<CaseByStatusDto> getCasesByStatusAndByTimePeriod(TimePeriod numberOfDaysFromToday)
+    {
         String queryText = "SELECT cf.status, COUNT(cf) as counted FROM CaseFile cf WHERE cf.created >= :created GROUP BY cf.status";
         Query caseGroupedByStatus = getEm().createQuery(queryText);
 
-        caseGroupedByStatus.setParameter("created",shiftDateFromToday(numberOfDaysFromToday.getNumOfDays()));
+        caseGroupedByStatus.setParameter("created", shiftDateFromToday(numberOfDaysFromToday.getNumOfDays()));
 
         List<Object[]> caseGroupedByS = caseGroupedByStatus.getResultList();
 
         List<CaseByStatusDto> result = new ArrayList<CaseByStatusDto>();
 
-        for(Object[] caseStatus : caseGroupedByS){
+        for (Object[] caseStatus : caseGroupedByS)
+        {
             CaseByStatusDto caseByS = new CaseByStatusDto();
             caseByS.setStatus((String) caseStatus[0]);
-            caseByS.setCount(((Number)caseStatus[1]).intValue());
+            caseByS.setCount(((Number) caseStatus[1]).intValue());
             result.add(caseByS);
         }
         return result;
@@ -133,30 +159,31 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
 
         return (CaseFile) findByCaseNumber.getSingleResult();
     }
-    
-    public List<CaseFile> findByCaseNumberKeyword(String expression) {
-    	CriteriaBuilder builder = getEm().getCriteriaBuilder();
-    	CriteriaQuery<CaseFile> query = builder.createQuery(CaseFile.class);
-    	Root<CaseFile> cf = query.from(CaseFile.class);
-    	
-    	query.select(cf);
-    	
-    	query.where(
-    			builder.and(
-    					builder.like(
-    							builder.lower(cf.<String>get("caseNumber")), "%" + expression.toLowerCase() + "%"
-    					)
-    			)
-    	);
-    	
-    	query.orderBy(builder.asc(cf.get("caseNumber")));
-    	
-    	TypedQuery<CaseFile> dbQuery = getEm().createQuery(query);
-    	List<CaseFile> results = dbQuery.getResultList();
-    	
-    	return results;
+
+    public List<CaseFile> findByCaseNumberKeyword(String expression)
+    {
+        CriteriaBuilder builder = getEm().getCriteriaBuilder();
+        CriteriaQuery<CaseFile> query = builder.createQuery(CaseFile.class);
+        Root<CaseFile> cf = query.from(CaseFile.class);
+
+        query.select(cf);
+
+        query.where(
+                builder.and(
+                        builder.like(
+                                builder.lower(cf.<String>get("caseNumber")), "%" + expression.toLowerCase() + "%"
+                        )
+                )
+        );
+
+        query.orderBy(builder.asc(cf.get("caseNumber")));
+
+        TypedQuery<CaseFile> dbQuery = getEm().createQuery(query);
+        List<CaseFile> results = dbQuery.getResultList();
+
+        return results;
     }
-    
+
     @Transactional
     public int updateComplaintStatus(Long caseId, String newStatus, String modifier, Date date)
     {
@@ -173,13 +200,14 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
 
         return updateStatusQuery.executeUpdate();
     }
-    
-    private Date shiftDateFromToday(int daysFromToday){
+
+    private Date shiftDateFromToday(int daysFromToday)
+    {
         Date nextDate;
         Date today = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(today);
-        cal.add(Calendar.DATE,-daysFromToday);
+        cal.add(Calendar.DATE, -daysFromToday);
         nextDate = cal.getTime();
         return nextDate;
     }

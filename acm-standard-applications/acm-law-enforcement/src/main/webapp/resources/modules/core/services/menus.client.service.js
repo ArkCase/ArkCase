@@ -115,7 +115,7 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
                         if (moduleAllowed) {
                             // Push new menu item
                             context.menus[menuObj.menuId].items.push({
-                                title: menuObj.menuItemTitle,
+                                title: 'core.menus.' + menuObj.menuId + '.' + menuObj.menuItemURL,
                                 link: menuObj.menuItemURL,
                                 menuItemType: 'item',
                                 uiRoute: '/' + menuObj.menuItemURL,
@@ -141,7 +141,7 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
                 if (this.menus[menuId].items[itemIndex].link === rootMenuItemURL) {
                     // Push new submenu item
                     this.menus[menuId].items[itemIndex].items.push({
-                        title: menuItemTitle,
+                        title: 'core.menus.' + menuId + '.' + menuItemURL,
                         link: menuItemURL,
                         uiRoute: menuItemUIRoute || ('/' + menuItemURL),
                         isPublic: ((isPublic === null || typeof isPublic === 'undefined') ? this.menus[menuId].items[itemIndex].isPublic : isPublic),
@@ -198,6 +198,5 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService',
 
         //Adding the user menu
         this.addMenu('usermenu');
-
     }
 ]);

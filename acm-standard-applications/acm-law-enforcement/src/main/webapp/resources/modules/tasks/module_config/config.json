@@ -356,7 +356,8 @@
             {
               "name": "note",
               "displayName": "tasks.comp.notes.table.columns.note",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "enableCellEdit": false
             },
             {
               "name": "created",

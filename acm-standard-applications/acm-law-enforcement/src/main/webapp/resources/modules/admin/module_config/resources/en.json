@@ -195,7 +195,8 @@
         "defaultLabel": "Default",
         "applyBtn": "Apply",
         "resetlModule": "Reset Current Module",
-        "resetAll": "Reset All",
+        "resetAll.title": "Reset all resources (delete all custom resources)",
+        "refreshAll.title": "Refresh all resources (keep custom resources)",
         "title": "Label Configuration",
         "filterBy": "Filter By Id",
         "filterByValue": "Filter By Value",
@@ -216,11 +217,9 @@
       "upload.success": "Custom logo files updated. Refresh browser page to see result.",
       "upload.error": "Error uploading custom logo files."
     },
-
     "branding.logo.header.title": "Header",
     "branding.logo.login.title": "Login Page",
     "branding.logo.warningMessage": "Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
-
     "branding.logo.btn": {
       "chooseHeader": "Choose Header logo",
       "chooseLogin": "Choose Login logo",

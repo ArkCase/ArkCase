@@ -18,8 +18,9 @@ import java.util.List;
  * Created by sergey on 2/14/15.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class LabelManagementRetrieveLanguages {
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+public class LabelManagementRetrieveLanguages
+{
     private Logger log = LoggerFactory.getLogger(getClass());
     private LabelManagementService labelManagementService;
 
@@ -28,18 +29,22 @@ public class LabelManagementRetrieveLanguages {
     })
     @ResponseBody
     public List<String> retrieveLanguages(
-            HttpServletResponse response) throws IOException, AcmLabelManagementException {
+            HttpServletResponse response) throws IOException, AcmLabelManagementException
+    {
 
-        try {
+        try
+        {
             return labelManagementService.getLanguages();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             String msg = "Can't retrieve languages";
             log.error(msg, e);
             throw new AcmLabelManagementException(msg, e);
         }
     }
 
-    public void setLabelManagementService(LabelManagementService labelManagementService) {
+    public void setLabelManagementService(LabelManagementService labelManagementService)
+    {
         this.labelManagementService = labelManagementService;
     }
 }
