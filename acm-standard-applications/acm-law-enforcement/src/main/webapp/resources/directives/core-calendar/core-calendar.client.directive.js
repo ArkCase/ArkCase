@@ -124,7 +124,7 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                     var dateFormat = scope.config.dateFormat;
                     var startLabel = $translate.instant('common.directive.coreCalendar.start.label');
                     var endLabel = $translate.instant('common.directive.coreCalendar.end.label');
-                    var body = Util.goodValue(calendarItem.body, '');
+                    var body = calendarItem.body;
                     var startDateTime = Util.getDateTimeFromDatetime(calendarItem.startDate, dateFormat);
                     var endDateTime = Util.getDateTimeFromDatetime(calendarItem.endDate, dateFormat);
                     var detail = body + '</br>' + startLabel + startDateTime + '</br>' + endLabel + endDateTime;
