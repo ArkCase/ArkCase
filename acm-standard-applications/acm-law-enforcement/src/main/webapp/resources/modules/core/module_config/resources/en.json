@@ -5,6 +5,14 @@
         "help": "Help",
         "logout": "Logout"
       }
+    },
+    "leftNav":{
+      "title": "Navigation"
+    },
+    "topBar":{
+      "new": "New",
+      "toggle.btn": "Toggle navigation",
+      "search.placeholder": "Search"
     }
   }
 }

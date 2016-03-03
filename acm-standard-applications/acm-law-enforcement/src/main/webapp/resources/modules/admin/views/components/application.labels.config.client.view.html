@@ -39,8 +39,11 @@
                 </button>
             </div>
             <div class="col-sm-2">
-                <button class="btn btn-sm btn-default" ng-click="resetAllResources()" ng-disabled="disabledInputs">
-                    <span translate>admin.application.labels.config.resetAll</span>
+                <button class="btn btn-sm btn-info" ng-click="refreshAllResources()" ng-disabled="disabledInputs" title="{{'admin.application.labels.config.refreshAll.title' | translate}}">
+                    <i class="fa fa-refresh"></i>
+                </button>
+                <button class="btn btn-sm btn-danger pull-right" ng-click="resetAllResources()" ng-disabled="disabledInputs" title="{{'admin.application.labels.config.resetAll.title' | translate}}">
+                    <i class="fa fa-trash-o"></i>
                 </button>
             </div>
         </div>

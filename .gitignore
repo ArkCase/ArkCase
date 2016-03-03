@@ -12,6 +12,7 @@ atlassian-ide-plugin.xml
 .springBeans
 .externalToolBuilders/
 .checkstyle
+.mule/
 
 # Package Files #
 *.jar
