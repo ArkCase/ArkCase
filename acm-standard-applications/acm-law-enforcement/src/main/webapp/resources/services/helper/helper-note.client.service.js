@@ -22,7 +22,7 @@ angular.module('services').factory('Helper.NoteService', ['UtilService', 'Object
              * @description
              * Helper.NoteService.Note provides common functionality for the notes controllers
              */
-            Note: function() {
+            Note: function () {
             }
         };
 
@@ -41,7 +41,7 @@ angular.module('services').factory('Helper.NoteService', ['UtilService', 'Object
              * @param {String} userId the internal username of the note creator
              * @returns {Object} note metadata used to populate a row in the notes table
              */
-            createNote: function(parentObjId, parentObjType, userId) {
+            createNote: function (parentObjId, parentObjType, userId) {
                 return {
                     parentId: parentObjId,
                     parentType: parentObjType,
@@ -61,8 +61,7 @@ angular.module('services').factory('Helper.NoteService', ['UtilService', 'Object
              * @param {Object} note object which contains the note metadata
              * @param {Object} rowEntity contains the metadata for one row of the notes table
              */
-            , saveNote: function(note, rowEntity) {
-
+            , saveNote: function (note, rowEntity) {
                 // The date string needs to be reformatted so that it can be accepted by the backend
                 // It is expected to be in ISO format
                 note.created = Util.dateToIsoString(new Date(note.created));
@@ -70,8 +69,10 @@ angular.module('services').factory('Helper.NoteService', ['UtilService', 'Object
                 // Persists the note in the ArkCase database
                 ObjectNoteService.saveNote(note).then(
                     function (noteAdded) {
-                        if (Util.isEmpty(rowEntity.id)) {
-                            rowEntity.id = noteAdded.id;
+                        if (rowEntity) {
+                            if (Util.isEmpty(rowEntity.id)) {
+                                rowEntity.id = noteAdded.id;
+                            }
                         }
                     }
                 );
