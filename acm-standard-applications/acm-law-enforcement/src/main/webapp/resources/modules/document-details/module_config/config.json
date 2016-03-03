@@ -195,22 +195,24 @@
       "icon": "fa fa-tags",
       "enabled": true,
       "type": "grid",
-      "enableFiltering": false,
+      "dateFormat": "MM/DD/YYYY",
+      "enableFiltering": true,
       "paginationPageSizes": [
         5,
         10,
         20,
         50
       ],
-      "paginationPageSize": 20,
+      "paginationPageSize": 5,
       "columnDefs": [
         {
           "name": "tagName",
-          "displayName": "documentDetails.comp.tags.table.columns.name",
-          "headerCellFilter": "translate",
-          "enableCellEdit": false
+          "displayName": "documentDetails.comp.tags.table.columns.tag",
+          "headerCellFilter": "translate"
         }
-      ]
+      ],
+      "filters": "\"Object Type\": TAG",
+      "filterName" : "Object Type"
     }
   ]
 }

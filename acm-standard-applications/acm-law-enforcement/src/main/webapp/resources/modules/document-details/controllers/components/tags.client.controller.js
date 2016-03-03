@@ -4,17 +4,11 @@ angular.module('document-details').controller('Document.TagsController', ['$scop
     , '$modal', 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.TagsService', 'MessageService', '$translate',
     function ($scope, $filter, $stateParams, $q, $modal, Util, ConfigService, HelperUiGridService, ObjectService, ObjectTagsService, messageService, $translate) {
 
-        $scope.selectedTag = {};
+        $scope.tags = [];
+
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        var promiseTypes = ObjectTagsService.getTags().then(
-            function (tags) {
-                $scope.createdTags = tags;
-                return tags;
-            }
-        );
-
-        var promiseConfig = ConfigService.getComponentConfig("document-details", "tags").then(function (config) {
+        ConfigService.getComponentConfig("document-details", "tags").then(function (config) {
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
@@ -26,7 +20,7 @@ angular.module('document-details').controller('Document.TagsController', ['$scop
         $scope.retrieveGridData = function () {
             if (Util.goodPositive($stateParams.id)) {
                 var promiseQueryTags = ObjectTagsService.getAssociateTags($stateParams.id, ObjectService.ObjectTypes.FILE);
-                $q.all([promiseQueryTags, promiseConfig]).then(function (data) {
+                $q.all([promiseQueryTags]).then(function (data) {
                     $scope.tags = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = $scope.tags;
@@ -40,54 +34,46 @@ angular.module('document-details').controller('Document.TagsController', ['$scop
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/document-details/views/components/tags-modal.client.view.html',
                 controller: 'Document.TagsModalController',
-                size: 'lg',
-                resolve: {
-                    scopeTag: function () {
-                        return $scope;
-                    }
-                }
+                size: 'lg'
             });
 
-            modalInstance.result.then(function (data) {
-                if ($scope.selectedTag) {
-                    var tagsFound = _.filter($scope.tags, function (tag) {
-                        return tag.id == $scope.selectedTag.id;
-                    });
-                    if (tagsFound.length == 0) {
-                        ObjectTagsService.associateTag($stateParams.id, ObjectService.ObjectTypes.FILE, $scope.selectedTag.id).then(
-                            function () {
-                                $scope.tags.push($scope.selectedTag);
-                                $scope.gridOptions.data = $scope.tags;
-                                $scope.gridOptions.totalItems = $scope.tags.length;
-                            }
-                        );
-                    }
-                    else {
-                        messageService.info($translate.instant('documentDetails.comp.tags.message.tagAssociated'));
-                    }
-                }
-                else {
-                    var tagsCreated = _.filter($scope.createdTags, function (tag) {
-                        return tag.tagName == data.tag.name || tag.tagDescription == data.tag.description
-                            || tag.tagText == data.tag.text;
-                    });
-                    if (tagsCreated.length == 0) {
-                        ObjectTagsService.createTag(data.tag.name, data.tag.description, data.tag.text).then(
-                            function (tagCreated) {
-                                ObjectTagsService.associateTag($stateParams.id, ObjectService.ObjectTypes.FILE, tagCreated.id).then(
-                                    function () {
-                                        $scope.tags.push(tagCreated);
+            modalInstance.result.then(function (tags) {
+                _.forEach(tags, function(tag) {
+                    if(tag.id){
+                        if(tag.object_id_s){
+                            var tagsFound = _.filter($scope.tags, function (tagAss) {
+                                return tagAss.id == tag.object_id_s;
+                            });
+                            if(tagsFound.length == 0) {
+                                ObjectTagsService.associateTag($stateParams.id, ObjectService.ObjectTypes.FILE, tag.object_id_s).then(
+                                    function (returnedTag) {
+                                        var tagToAdd = angular.copy(returnedTag);
+                                        tagToAdd.tagName = tag.tags_s;
+                                        tagToAdd.id = returnedTag.tagId;
+                                        $scope.tags.push(tagToAdd);
                                         $scope.gridOptions.data = $scope.tags;
                                         $scope.gridOptions.totalItems = $scope.tags.length;
                                     }
                                 );
                             }
-                        )
+                            else {
+                                messageService.info(tag.tags_s + " " + $translate.instant('documentDetails.comp.tags.message.tagAssociated'));
+                                _.remove(tagsFound, function(){
+                                    return tag;
+                                });
+                            }
+                        }
+                        else {
+                            ObjectTagsService.associateTag($stateParams.id, ObjectService.ObjectTypes.FILE, tag.id).then(
+                                function () {
+                                    $scope.tags.push(tag);
+                                    $scope.gridOptions.data = $scope.tags;
+                                    $scope.gridOptions.totalItems = $scope.tags.length;
+                                }
+                            );
+                        }
                     }
-                    else {
-                        messageService.info($translate.instant('documentDetails.comp.tags.message.tagExists'));
-                    }
-                }
+                });
 
             }, function () {
                 // Cancel button was clicked.
