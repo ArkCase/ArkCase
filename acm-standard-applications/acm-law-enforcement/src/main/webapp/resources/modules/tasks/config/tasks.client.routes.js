@@ -1,10 +1,8 @@
 'use strict';
 
 //Setting up route
-angular.module('tasks').config(['$stateProvider', '$urlRouterProvider',
-    function ($stateProvider, $urlRouterProvider) {
-        // For any unmatched url redirect to  /agents
-        $urlRouterProvider.otherwise('/tasks');
+angular.module('tasks').config(['$stateProvider',
+    function ($stateProvider) {
 
         // Project state routing
         $stateProvider
@@ -101,7 +99,7 @@ angular.module('tasks').config(['$stateProvider', '$urlRouterProvider',
                 url: '/:type/:id/signatures',
                 templateUrl: 'modules/tasks/views/components/task-signatures.client.view.html'
             })
-            
+
             .state('tasks.tags', {
                 url: '/:type/:id/tags',
                 templateUrl: 'modules/tasks/views/components/task-tags.client.view.html'

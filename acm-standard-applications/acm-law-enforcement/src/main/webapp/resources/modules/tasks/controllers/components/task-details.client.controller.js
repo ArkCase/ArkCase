@@ -16,7 +16,8 @@ angular.module('tasks').controller('Tasks.DetailsController', ['$scope', '$state
 
 
         $scope.options = {
-            focus: true
+            focus: true,
+            dialogsInBody:true
             //,height: 120
         };
 

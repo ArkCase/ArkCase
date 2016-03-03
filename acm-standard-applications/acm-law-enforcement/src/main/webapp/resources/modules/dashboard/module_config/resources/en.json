@@ -27,7 +27,7 @@
         "noDataMessage": "Currently there are no cases info",
         "table": {
           "header": {
-            "caseId": "Number",
+            "caseId": "ID",
             "title": "Title",
             "priority": "Priority",
             "status": "Status"
@@ -39,7 +39,7 @@
         "description": "Displays my complaints",
         "table": {
           "header": {
-            "number": "Complaint Number",
+            "number": "ID",
             "title": "Title",
             "priority": "Priority",
             "created": "Created",
@@ -55,7 +55,7 @@
         "rowNumbers.placeholder": "Enter Default Row Numbers",
         "table": {
           "header": {
-            "taskId": "Task ID",
+            "taskId": "ID",
             "title": "Title",
             "priority": "Priority",
             "dueDate": "Due",
