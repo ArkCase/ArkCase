@@ -66,7 +66,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
              * @description
              * This function returns itself only it is a positive number; else 'replacement' is used.
              */
-            ,goodArray: function (val, replacement) {
+            , goodArray: function (val, replacement) {
                 var replacedWith = (undefined === replacement) ? [] : replacement;
                 return this.isArray(val) ? val : replacedWith;
             }
@@ -199,7 +199,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
             //function parseLodash(str){
             //    return _.attempt(JSON.parse.bind(null, str));
             //}
-            ,goodJsonObj: function (str, replacement)  {
+            , goodJsonObj: function (str, replacement) {
                 var replacedWith = (undefined === replacement) ? {} : replacement;
                 var json = replacedWith;
                 try {
@@ -220,7 +220,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
              * @description
              * Return true if 'val' is undefined, null, "", or "null"; false otherwise
              */
-            ,isEmpty: function (val) {
+            , isEmpty: function (val) {
                 if (undefined == val) {
                     return true;
                 } else if ("" === val) {
@@ -243,7 +243,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
              * @description
              * Return true if 'arr' is an array
              */
-            ,isArray: function(arr) {
+            , isArray: function (arr) {
                 if (arr) {
                     if (arr instanceof Array) {
                         return true;
@@ -262,8 +262,8 @@ angular.module('services').factory('UtilService', ['$q', '$log'
              * @description
              * Return true for empty array or it is not an array at all
              */
-            ,isArrayEmpty: function (arr) {
-                if(!this.isArray(arr)) {
+            , isArrayEmpty: function (arr) {
+                if (!this.isArray(arr)) {
                     return true;
                 }
                 return arr.length === 0;
@@ -390,8 +390,8 @@ angular.module('services').factory('UtilService', ['$q', '$log'
                 return d.promise;
             }
 
-            ,forEachStripNg: function(data, callback) {
-                _.forEach(data, function(v, k) {
+            , forEachStripNg: function (data, callback) {
+                _.forEach(data, function (v, k) {
                     if (_.isString(k) && !k.startsWith("$")) {
                         callback(v, k);
                     }
@@ -404,7 +404,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
             //
             , omitNg: function (obj) {
                 var copy = _.cloneDeep(obj);
-                _.cloneDeep(copy, function(v, k, o) {
+                _.cloneDeep(copy, function (v, k, o) {
                     if (_.isString(k)) {
                         if (k.startsWith("$") || k.startsWith("acm$_")) {
                             delete o[k];
@@ -415,7 +415,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
                 return copy;
                 //return this.deepOmit(copy, blackList);
             }
-            ,deepOmit: function(item, blackList) {
+            , deepOmit: function (item, blackList) {
                 if (!_.isArray(blackList)) {
                     blackList = [];
                 }
@@ -428,7 +428,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
                 }
                 return res;
             }
-            ,_deepOmitObj: function(obj, blackList) {
+            , _deepOmitObj: function (obj, blackList) {
                 var copy = _.omit(obj, blackList);
                 //var copy = _.omit(obj, function(v, k, o, d) {
                 //    if (_.contains(blackList, k)) {
@@ -438,18 +438,18 @@ angular.module('services').factory('UtilService', ['$q', '$log'
                 //    }
                 //});
                 var that = this;
-                _.each(blackList, function(arg) {
+                _.each(blackList, function (arg) {
                     if (_.contains(arg, '.')) {
-                        var key  = _.first(arg.split('.'));
+                        var key = _.first(arg.split('.'));
                         var rest = arg.split('.').slice(1).join(".");
                         copy[key] = that.deepOmit(copy[key], [rest]);
                     }
                 });
                 return copy;
             }
-            ,_deepOmitArray: function(arr, blackList) {
+            , _deepOmitArray: function (arr, blackList) {
                 var that = this;
-                return _.map(arr, function(item) {
+                return _.map(arr, function (item) {
                     return that.deepOmit(item, blackList);
                 });
             }
@@ -545,7 +545,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
                 }
             }
 
-            , _padZero: function(i) {
+            , _padZero: function (i) {
                 return (10 > i) ? "0" + i : "" + i;
             }
 
@@ -560,7 +560,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
              * @param {Date} Date object
              * @Returns {String} ISO formatted date string YYYY-MM-DDTHH:mm:ss.SSSZZ
              */
-            , dateToIsoString: function(d) {
+            , dateToIsoString: function (d) {
 
                 console.log("Compatibility warning: UtilService.dateToIsoString() phase out. Please use Util.DateService.dateToIso()");
 
@@ -572,11 +572,11 @@ angular.module('services').factory('UtilService', ['$q', '$log'
 
             //get day string in "yyyy-mm-dd" format
             //parameter d is java Date() format; for some reason getDate() is 1 based while getMonth() is zero based
-            , dateToString: function(d) {
+            , dateToString: function (d) {
                 if (null == d) {
                     return "";
                 }
-                var month = d.getMonth()+1;
+                var month = d.getMonth() + 1;
                 var day = d.getDate();
                 var year = d.getFullYear();
                 return this._padZero(month)
@@ -584,20 +584,28 @@ angular.module('services').factory('UtilService', ['$q', '$log'
                     + "/" + year;
             }
 
-            , getCurrentDay: function() {
+            , getCurrentDay: function () {
                 var d = new Date();
                 return this.dateToString(d);
             }
+            //Get date and time from format: "2014-04-30T16:51:33.914+0000"
+            , getDateTimeFromDatetime: function (dt, format) {
+                var d = "";
+                if (!this.isEmpty(dt) && !this.isEmpty(format)) {
+                    d = moment(dt).format(format);
+                }
+                return d;
+            }
 
-            , filterWidgets: function(model, allowedWidgets) {
-                var filteredModel  = model;
+            , filterWidgets: function (model, allowedWidgets) {
+                var filteredModel = model;
                 //Assume that we aren't using more than 1 row
                 var rowLength = filteredModel.rows.length - 1;
                 _.forEach(filteredModel.rows[rowLength].columns, function (col, key) {
-                    _.forEach(col, function(widgets, wKey) {
-                        if(wKey == 'widgets') {
-                            _.remove(widgets, function(widget) {
-                                if(!(_.includes(allowedWidgets, widget.title))){
+                    _.forEach(col, function (widgets, wKey) {
+                        if (wKey == 'widgets') {
+                            _.remove(widgets, function (widget) {
+                                if (!(_.includes(allowedWidgets, widget.title))) {
                                     return true;
                                 }
                             });
@@ -616,7 +624,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
         // It's currently unsupported outside of Chrome 41+, and Firefox 17+.
         //
         if (!String.prototype.startsWith) {
-            String.prototype.startsWith = function(searchString, position) {
+            String.prototype.startsWith = function (searchString, position) {
                 position = position || 0;
                 return this.indexOf(searchString, position) === position;
             };

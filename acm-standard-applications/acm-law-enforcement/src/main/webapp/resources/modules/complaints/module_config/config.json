@@ -1207,15 +1207,16 @@
           "headerCellFilter": "translate"
         }
       ],
-       "filters": "\"Object Type\": TAG",
-       "filterName" : "Object Type"
+      "filters": "\"Object Type\": TAG",
+      "filterName": "Object Type"
     },
     {
       "id": "calendar",
       "title": "Calendar",
       "icon": "fa fa-calendar",
       "enabled": true,
-      "type": "empty"
+      "type": "empty",
+      "dateFormat": "MM/DD/YYYY HH:mm"
     }
   ]
 }
