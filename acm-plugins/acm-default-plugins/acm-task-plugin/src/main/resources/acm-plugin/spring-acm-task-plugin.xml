@@ -13,6 +13,7 @@
                 <ref bean="acmTaskListPrivilege"/>
                 <ref bean="acmTaskCompletePrivilege"/>
                 <ref bean="acmTaskDeletePrivilege"/>
+                <ref bean="acmTaskClaimPrivilege"/>
             </list>
         </property>
         <property name="urlPrivileges">
@@ -81,6 +82,16 @@
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/task/history/{id}/{adhoc}"/>
                     <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
+                </bean>
+                <bean id="claimTaskUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/task/claim/{taskId}"/>
+                    <property name="requiredPrivilege" ref="acmTaskClaimPrivilege"/>
+                </bean>
+                <bean id="unclaimTaskUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/task/unclaim/{taskId}"/>
+                    <property name="requiredPrivilege" ref="acmTaskClaimPrivilege"/>
                 </bean>
             </list>
         </property>

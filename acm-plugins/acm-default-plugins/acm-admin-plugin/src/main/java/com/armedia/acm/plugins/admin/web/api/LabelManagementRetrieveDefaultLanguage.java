@@ -17,8 +17,9 @@ import javax.servlet.http.HttpServletResponse;
  * Created by sergey on 2/14/16.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class LabelManagementRetrieveDefaultLanguage {
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+public class LabelManagementRetrieveDefaultLanguage
+{
     private Logger log = LoggerFactory.getLogger(getClass());
     private LabelManagementService labelManagementService;
 
@@ -26,22 +27,26 @@ public class LabelManagementRetrieveDefaultLanguage {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public String retrieveSettings(HttpServletResponse response) throws AcmLabelManagementException {
+    public String retrieveSettings(HttpServletResponse response) throws AcmLabelManagementException
+    {
 
-        try {
+        try
+        {
             // Get Settings file. Create default settings file if missed
             JSONObject jsonSettings = labelManagementService.getSettings(true);
             JSONObject responseObject = new JSONObject();
             responseObject.put("defaultLang", jsonSettings.getString("defaultLang"));
             return responseObject.toString();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             String msg = "Can't retrieve default langauage";
             log.error(msg, e);
             throw new AcmLabelManagementException(msg, e);
         }
     }
 
-    public void setLabelManagementService(LabelManagementService labelManagementService) {
+    public void setLabelManagementService(LabelManagementService labelManagementService)
+    {
         this.labelManagementService = labelManagementService;
     }
 

@@ -102,6 +102,19 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             });
         };
 
+        $scope.refreshAllResources = function(){
+            var allNamespaces = _.pluck($scope.namespacesDropdownOptions, 'id');
+            $scope.disabledInputs = true;
+            LabelsConfigService.refreshResource({
+                lng: [$scope.selectedLanguage],
+                ns: allNamespaces
+            }, function () {
+                reloadGrid();
+            }, function(){
+                $scope.disabledInputs = false;
+            });
+        };
+
         //updating value for Description for selected record in grid
         $scope.updateLabelDesc = function (desc, rowEntity) {
             LabelsConfigService.updateResource({

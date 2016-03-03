@@ -19,8 +19,9 @@ import java.util.List;
  * Created by sergey on 2/14/16.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class LabelManagementRetrieveNamespaces {
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+public class LabelManagementRetrieveNamespaces
+{
     private Logger log = LoggerFactory.getLogger(getClass());
     private LabelManagementService labelManagementService;
 
@@ -29,18 +30,22 @@ public class LabelManagementRetrieveNamespaces {
     })
     @ResponseBody
     public List<ModuleConfig> retrieveNamespaces(
-            HttpServletResponse response) throws IOException, AcmLabelManagementException {
+            HttpServletResponse response) throws IOException, AcmLabelManagementException
+    {
 
-        try {
+        try
+        {
             return labelManagementService.getModules();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             String msg = "Can't retrieve namespaces";
             log.error(msg, e);
             throw new AcmLabelManagementException(msg, e);
         }
     }
 
-    public void setLabelManagementService(LabelManagementService labelManagementService) {
+    public void setLabelManagementService(LabelManagementService labelManagementService)
+    {
         this.labelManagementService = labelManagementService;
     }
 }
