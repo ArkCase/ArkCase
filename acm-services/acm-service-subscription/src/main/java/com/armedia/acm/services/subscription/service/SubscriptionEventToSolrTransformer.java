@@ -170,4 +170,9 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
     {
         return userDao;
     }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
 }

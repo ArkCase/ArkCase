@@ -50,6 +50,7 @@
     <bean id="notificationToSolrTransformer"
           class="com.armedia.acm.services.notification.service.NotificationToSolrTransformer">
         <property name="notificationDao" ref="notificationDao"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
     <!-- Executors -->

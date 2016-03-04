@@ -97,4 +97,9 @@ public class ContactMethodToSolrTransformer implements AcmObjectToSolrDocTransfo
     {
         return userDao;
     }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
 }

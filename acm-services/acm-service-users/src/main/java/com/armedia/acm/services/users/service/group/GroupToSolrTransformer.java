@@ -178,4 +178,8 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         return userDao;
     }
 
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
 }
