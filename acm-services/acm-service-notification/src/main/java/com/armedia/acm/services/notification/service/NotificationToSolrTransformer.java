@@ -154,4 +154,8 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
         return userDao;
     }
 
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
 }

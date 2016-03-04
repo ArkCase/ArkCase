@@ -112,4 +112,10 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
         return userDao;
     }
 
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
+
+
 }
