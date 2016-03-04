@@ -9,7 +9,6 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,7 +84,7 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
 
     private void addAddresses(PersonContact personContact, SolrAdvancedSearchDocument solrDoc)
     {
-        List<String> addressIds = new ArrayList<String>();
+        List<String> addressIds = new ArrayList<>();
         if (personContact.getAddresses() != null)
         {
             for (PostalAddress address : personContact.getAddresses())
@@ -159,5 +158,10 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
     public UserDao getUserDao()
     {
         return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 }
