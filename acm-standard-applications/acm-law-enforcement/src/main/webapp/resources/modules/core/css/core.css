@@ -1,5 +1,6 @@
 /* @override http://dev.jsapn.armedianet.com/arkcase/modules/core/css/core.css
-	http://localhost:8080/arkcase/modules/core/css/core.css */
+	http://localhost:8080/arkcase/modules/core/css/core.css
+	http://10.21.4.149/arkcase/modules/core/css/core.css */
 
 /* @override http://sharecaredev.armedianet.com/arkcase/modules/core/css/core.css */
 
@@ -97,7 +98,7 @@ body {
 .navbar-arkcase .dropdown-menu {
     text-align: center;
     width: 275px;
-    z-index: 1001 !important;
+    z-index: 3001 !important;
 }
 
 .navbar-arkcase .dropdown-menu .col-xs-4 {

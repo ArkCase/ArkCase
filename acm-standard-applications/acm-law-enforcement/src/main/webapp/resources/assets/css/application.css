@@ -89,7 +89,7 @@ iframe {
     outline: 0px;
     padding: 0px;
     margin: 0px;
-    overflow-x: hidden;
+    overflow: hidden !important;
     width: 100%;
 }
 
@@ -433,7 +433,6 @@ span.fancytree-title {
 .module-content .left-sidebar header.header .btn-group.select.pull-right {
     position: relative;
     top: -90px;
-    z-index: 1000 !important;
 
 }
 
