@@ -156,8 +156,6 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                 scope.objectInfoLoaded = false;
                 var onObjectInfoRetrieved = function (objectInfo) {
                     if (!scope.objectInfoLoaded) {
-                        console.log('stinga object info');
-                        console.log(objectInfo);
                         scope.objectInfo = objectInfo;
                         scope.objectInfoLoaded = true;
                         //$q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, componentHelper.promiseConfig]).then(function () {
