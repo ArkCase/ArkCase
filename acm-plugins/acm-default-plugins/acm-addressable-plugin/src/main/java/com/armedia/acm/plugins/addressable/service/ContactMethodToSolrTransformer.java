@@ -2,9 +2,11 @@ package com.armedia.acm.plugins.addressable.service;
 
 import com.armedia.acm.plugins.addressable.dao.ContactMethodDao;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
-import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
+import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.List;
 public class ContactMethodToSolrTransformer implements AcmObjectToSolrDocTransformer<ContactMethod>
 {
     private ContactMethodDao contactMethodDao;
+    private UserDao userDao;
 
     @Override
     public List<ContactMethod> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -38,16 +41,30 @@ public class ContactMethodToSolrTransformer implements AcmObjectToSolrDocTransfo
 
         cmDoc.setName(cm.getValue());
 
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(cm.getCreator());
+        if (creator != null)
+        {
+            cmDoc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(cm.getModifier());
+        if (modifier != null)
+        {
+            cmDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+        }
+
         return cmDoc;
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(ContactMethod in) {
-        //No implementation needed
+    public SolrAdvancedSearchDocument toContentFileIndex(ContactMethod in)
+    {
+        // No implementation needed
         return null;
     }
 
-    //  No implementation needed  because we don't want ContactMethod indexed in the SolrQuickSearch
+    // No implementation needed because we don't want ContactMethod indexed in the SolrQuickSearch
     @Override
     public SolrDocument toSolrQuickSearch(ContactMethod in)
     {
@@ -74,5 +91,10 @@ public class ContactMethodToSolrTransformer implements AcmObjectToSolrDocTransfo
     public void setContactMethodDao(ContactMethodDao contactMethodDao)
     {
         this.contactMethodDao = contactMethodDao;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
     }
 }

@@ -2,9 +2,11 @@ package com.armedia.acm.plugins.addressable.service;
 
 import com.armedia.acm.plugins.addressable.dao.PostalAddressDao;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
+import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.List;
 public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransformer<PostalAddress>
 {
     private PostalAddressDao postalAddressDao;
+    private UserDao userDao;
 
     @Override
     public List<PostalAddress> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -46,9 +49,9 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
         boolean hasZip = address.getZip() != null;
 
         name.append(hasAddress1 ? address.getStreetAddress() : "");
-        name.append(hasAddress1 && ( hasAddress2 || hasCity || hasState) ? ", " : "");
+        name.append(hasAddress1 && (hasAddress2 || hasCity || hasState) ? ", " : "");
         name.append(hasAddress2 ? address.getStreetAddress2() : "");
-        name.append(hasAddress2 && ( hasCity || hasState) ? ", " : "");
+        name.append(hasAddress2 && (hasCity || hasState) ? ", " : "");
         name.append(hasCity ? address.getCity() : "");
         name.append(hasCity && hasState ? ", " : "");
         name.append(hasState ? address.getState() : "");
@@ -57,17 +60,31 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
 
         addrDoc.setName(name.toString());
 
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(address.getCreator());
+        if (creator != null)
+        {
+            addrDoc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(address.getModifier());
+        if (modifier != null)
+        {
+            addrDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+        }
+
         return addrDoc;
 
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(PostalAddress in) {
-        //No implementation needed
+    public SolrAdvancedSearchDocument toContentFileIndex(PostalAddress in)
+    {
+        // No implementation needed
         return null;
     }
 
-    //  No implementation needed  because we don't want PostalAddress indexed in the SolrQuickSearch
+    // No implementation needed because we don't want PostalAddress indexed in the SolrQuickSearch
     @Override
     public SolrDocument toSolrQuickSearch(PostalAddress in)
     {
@@ -83,7 +100,7 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
         boolean classNames = theirClassName.equals(ourClassName);
         boolean isSupported = objectNotNull && classNames;
 
-         return isSupported;
+        return isSupported;
     }
 
     public PostalAddressDao getPostalAddressDao()
@@ -94,5 +111,10 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
     public void setPostalAddressDao(PostalAddressDao postalAddressDao)
     {
         this.postalAddressDao = postalAddressDao;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
     }
 }
