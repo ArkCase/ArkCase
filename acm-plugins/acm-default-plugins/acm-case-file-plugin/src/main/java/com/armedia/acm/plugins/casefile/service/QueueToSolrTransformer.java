@@ -120,4 +120,9 @@ public class QueueToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     {
         this.acmQueueDao = acmQueueDao;
     }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
 }

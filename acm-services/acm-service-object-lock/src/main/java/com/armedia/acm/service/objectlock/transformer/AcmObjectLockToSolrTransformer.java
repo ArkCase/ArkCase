@@ -108,4 +108,8 @@ public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransfo
         return userDao;
     }
 
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
 }

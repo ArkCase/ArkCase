@@ -134,4 +134,9 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
     {
         return userDao;
     }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
 }

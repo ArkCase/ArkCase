@@ -224,4 +224,9 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     {
         return userDao;
     }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
 }
