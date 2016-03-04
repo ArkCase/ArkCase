@@ -5,6 +5,8 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.tag.dao.AssociatedTagDao;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
 import java.util.List;
@@ -12,21 +14,25 @@ import java.util.List;
 /**
  * Created by marjan.stefanoski on 13.04.2015.
  */
-public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmAssociatedTag> {
+public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmAssociatedTag>
+{
 
     private AssociatedTagDao associatedTagDao;
+    private UserDao userDao;
 
     @Override
-    public List<AcmAssociatedTag> getObjectsModifiedSince(Date lastModified, int start, int pageSize) {
-        return getAssociatedTagDao().findModifiedSince(lastModified,start,pageSize);
+    public List<AcmAssociatedTag> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
+    {
+        return getAssociatedTagDao().findModifiedSince(lastModified, start, pageSize);
     }
 
     @Override
-    public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmAssociatedTag in) {
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmAssociatedTag in)
+    {
 
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
-        solr.setId(in.getId() + "-"+in.getObjectType());
+        solr.setId(in.getId() + "-" + in.getObjectType());
 
         solr.setObject_id_s(in.getId() + "");
         solr.setObject_type_s(in.getObjectType());
@@ -41,15 +47,29 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
 
         solr.setTag_token_lcs(in.getTag().getTagToken());
 
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+        }
+
         return solr;
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(AcmAssociatedTag in) {
+    public SolrDocument toSolrQuickSearch(AcmAssociatedTag in)
+    {
 
         SolrDocument solr = new SolrDocument();
 
-        solr.setId(in.getId() + "-"+in.getObjectType());
+        solr.setId(in.getId() + "-" + in.getObjectType());
         solr.setObject_id_s(in.getId() + "");
         solr.setObject_type_s(in.getObjectType());
 
@@ -58,24 +78,38 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
         solr.setLast_modified_tdt(in.getModified());
         solr.setModifier_s(in.getModifier());
 
-
         solr.setParent_object_id_s(Long.toString(in.getParentId()));
 
         solr.setParent_object_type_s(in.getParentType());
 
         solr.setTag_token_lcs(in.getTag().getTagToken());
 
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+        }
+
         return solr;
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmAssociatedTag in) {
+    public SolrAdvancedSearchDocument toContentFileIndex(AcmAssociatedTag in)
+    {
         // No implementation needed
         return null;
     }
 
     @Override
-    public boolean isAcmObjectTypeSupported(Class acmObjectType) {
+    public boolean isAcmObjectTypeSupported(Class acmObjectType)
+    {
 
         boolean objectNotNull = acmObjectType != null;
         String ourClassName = AcmAssociatedTag.class.getName();
@@ -86,11 +120,18 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
         return isSupported;
     }
 
-    public AssociatedTagDao getAssociatedTagDao() {
+    public AssociatedTagDao getAssociatedTagDao()
+    {
         return associatedTagDao;
     }
 
-    public void setAssociatedTagDao(AssociatedTagDao associatedTagDao) {
+    public void setAssociatedTagDao(AssociatedTagDao associatedTagDao)
+    {
         this.associatedTagDao = associatedTagDao;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
     }
 }

@@ -2,9 +2,11 @@ package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
-import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
+import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
 import java.util.List;
@@ -16,7 +18,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
 {
 
     private OrganizationDao organizationDao;
-
+    private UserDao userDao;
 
     @Override
     public List<Organization> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -40,12 +42,25 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         orgDoc.setType_lcs(org.getOrganizationType());
         orgDoc.setValue_parseable(org.getOrganizationValue());
 
-          orgDoc.setName(org.getOrganizationValue());
+        orgDoc.setName(org.getOrganizationValue());
+
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(org.getCreator());
+        if (creator != null)
+        {
+            orgDoc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(org.getModifier());
+        if (modifier != null)
+        {
+            orgDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+        }
 
         return orgDoc;
     }
 
-    //  No implementation needed because we don't want Organization indexed in the SolrQuickSearch
+    // No implementation needed because we don't want Organization indexed in the SolrQuickSearch
     @Override
     public SolrDocument toSolrQuickSearch(Organization in)
     {
@@ -53,8 +68,9 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(Organization in) {
-        //No implementation needed
+    public SolrAdvancedSearchDocument toContentFileIndex(Organization in)
+    {
+        // No implementation needed
         return null;
     }
 
@@ -78,5 +94,10 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
     public void setOrganizationDao(OrganizationDao organizationDao)
     {
         this.organizationDao = organizationDao;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
     }
 }

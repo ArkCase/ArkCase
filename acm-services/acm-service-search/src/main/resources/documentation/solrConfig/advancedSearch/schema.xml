@@ -243,6 +243,15 @@
     <dynamicField name="*_sdo" type="text_numbersonly" indexed="true" stored="true"/>
     <dynamicField name="*_parseable" type="text_parseable" indexed="true" stored="true"/>
     <dynamicField name="*_no_html_tags_parseable" type="text_no_html_tags_parseable" indexed="true" stored="true"/>
+    
+    <!--Used for mapping facets in searchPlugin.properties. Field is not stored for performance factors. -->
+    <dynamicField name="*_facet" type="string" indexed="true" stored="false"/>
+    
+    <!--acm copy fields -->
+    <!--Used for mapping facets in searchPlugin.properties. -->
+    <copyField source="*_lcs" dest="*_facet"/>
+    <copyField source="*_s" dest="*_facet"/>
+    
 
     <!-- uncomment the following to ignore any fields that don't already match an existing
     field name or dynamic field, rather than reporting them as an error.
