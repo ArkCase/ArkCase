@@ -9,11 +9,11 @@ var nunjucks = require('nunjucks'),
 
 module.exports = function (grunt) {
     var config = require('./config/env/all');
-    try{
+    try {
         var customConfig = require('./config/env/customConfig');
         _.merge(config, customConfig);
     }
-    catch(ex){
+    catch (ex) {
         console.log('Custom config does not exist..continuing..');
     }
 
@@ -31,7 +31,8 @@ module.exports = function (grunt) {
         uglify: {
             production: {
                 options: {
-                    mangle: false
+                    mangle: false,
+                    sourceMap: true
                 },
                 files: {
                     'assets/dist/application.min.js': 'assets/dist/application.js'
