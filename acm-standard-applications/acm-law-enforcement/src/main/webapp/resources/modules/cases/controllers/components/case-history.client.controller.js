@@ -40,7 +40,7 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
         };
 
         var retrieveGridData = function () {
-            var currentObjectId = Util.goodMapValue(objectInfo, "id");
+            var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
                 var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.CASE_FILE
                     , currentObjectId
