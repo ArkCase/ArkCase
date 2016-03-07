@@ -12,6 +12,13 @@
  * The "Core-People" directive add people grid functionality
  *
  * @param {Object} peopleInit object containing data for directive to work
+ * @param {string} peopleInit.moduleId string for the id of the module
+ * @param {string} peopleInit.componentId string for the id of the component
+ * @param {function} peopleInit.retrieveObjectInfo function to retrieve objectInfo
+ * @param {function} peopleInit.saveObjectInfo function to save objectInfo
+ * @param {string} peopleInit.objectType string for the type of the object
+ * @param {string} peopleInit.objectInfoId string for the name of the property representing the id of the object
+
  *
  * @example
  <example>
@@ -121,7 +128,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     });
 
                     //scope.gridOptions is defined by above setBasicOptions()
-                    scope.gridOptions.expandableRowTemplate = "directives/core-people/core-people.sub.client.view.html";
+                    scope.gridOptions.expandableRowTemplate = "directives/core-people/core-people-sub.client.view.html";
                     scope.gridOptions.expandableRowHeight = 305;
                     scope.gridOptions.expandableRowScope = {       //from sample. what is it for?
                         subGridVariable: 'subGridScopeVariable'
@@ -155,8 +162,8 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
 
                 scope.objectInfoLoaded = false;
                 var onObjectInfoRetrieved = function (objectInfo) {
+                    scope.objectInfo = objectInfo;
                     if (!scope.objectInfoLoaded) {
-                        scope.objectInfo = objectInfo;
                         scope.objectInfoLoaded = true;
                         //$q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes, promiseSecurityTagTypes, componentHelper.promiseConfig]).then(function () {
                         $q.all([promiseUsers, promisePersonTypes, promiseContactMethodTypes, promiseOrganizationTypes, promiseAddressTypes, promiseAliasTypes]).then(function () {
@@ -279,7 +286,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
 
                 };
                 scope.editRowContactMethods = function (rowEntity) {
-                    scope.contactmethod = rowEntity;
+                    scope.contactMethod = rowEntity;
                     var item = {
                         id: rowEntity.id,
                         parentId: rowEntity.acm$_paId,
@@ -461,8 +468,8 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     var modalInstance = $modal.open({
                         scope: modalScope,
                         animation: true,
-                        templateUrl: 'directives/core-people/core-people.modal.client.view.html',
-                        controller: function ($scope, $modalInstance) {
+                        templateUrl: 'directives/core-people/core-people-modal.client.view.html',
+                        controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
                             $scope.onClickOk = function () {
                                 $modalInstance.close({
                                     person: $scope.person,
@@ -472,8 +479,8 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             $scope.onClickCancel = function () {
                                 $modalInstance.dismiss('cancel');
                             }
-                        },
-                        size: 'lg',
+                        }],
+                        size: 'lg'
                     });
                     modalInstance.result.then(function (data) {
                         scope.personAssociation.person.givenName = data.person.givenName;
@@ -503,8 +510,8 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     var modalInstance = $modal.open({
                         scope: modalScope,
                         animation: true,
-                        templateUrl: 'directives/core-people/core-people.contact-methods.modal.client.view.html',
-                        controller: function ($scope, $modalInstance) {
+                        templateUrl: 'directives/core-people/core-people-contact-methods-modal.client.view.html',
+                        controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
                             $scope.onClickOk = function () {
                                 $modalInstance.close({
                                     contact: $scope.contact,
@@ -514,28 +521,27 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             $scope.onClickCancel = function () {
                                 $modalInstance.dismiss('cancel');
                             }
-                        },
-                        size: 'lg',
+                        }],
+                        size: 'lg'
                     });
                     modalInstance.result.then(function (data) {
                         var contactMethod;
+                        var personAssociation = _.find(scope.objectInfo.personAssociations, function (pa) {
+                            return Util.compare(pa.id, data.contact.parentId);
+                        });
                         if (!data.isEdit)
                             contactMethod = scope.contactMethod;
                         else {
-                            var idxPa = _.findIndex(scope.objectInfo.personAssociations, function (pa) {
-                                return Util.compare(pa.id, data.contact.parentId);
-                            });
-                            var personAssociation = scope.objectInfo.personAssociations[idxPa];
                             contactMethod = _.find(personAssociation.person.contactMethods, {id: data.contact.id});
                         }
                         contactMethod.type = data.contact.contactMethodType;
                         contactMethod.value = data.contact.value;
                         if (!data.isEdit) {
-                            var idxPa = _.findIndex(scope.objectInfo.personAssociations, function (pa) {
-                                return Util.compare(pa.id, data.contact.parentId);
-                            });
-                            var personAssociation = scope.objectInfo.personAssociations[idxPa];
                             personAssociation.person.contactMethods.push(contactMethod);
+                            //set objectInfoLoaded to false
+                            // so it will reload when new saved object info with id for contact method
+                            //come from database
+                            scope.objectInfoLoaded = false;
                         }
                         saveObjectInfoAndRefresh();
                     });
@@ -548,8 +554,8 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     var modalInstance = $modal.open({
                         scope: modalScope,
                         animation: true,
-                        templateUrl: 'directives/core-people/core-people.organizations.modal.client.view.html',
-                        controller: function ($scope, $modalInstance) {
+                        templateUrl: 'directives/core-people/core-people-organizations-modal.client.view.html',
+                        controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
                             $scope.onClickOk = function () {
                                 $modalInstance.close({
                                     organization: $scope.organization,
@@ -559,29 +565,28 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             $scope.onClickCancel = function () {
                                 $modalInstance.dismiss('cancel');
                             }
-                        },
+                        }],
                         size: 'lg'
                     });
 
                     modalInstance.result.then(function (data) {
                         var organization;
+                        var personAssociation = _.find(scope.objectInfo.personAssociations, function (pa) {
+                            return Util.compare(pa.id, data.organization.parentId);
+                        });
                         if (!data.isEdit)
                             organization = scope.organization;
                         else {
-                            var idxPa = _.findIndex(scope.objectInfo.personAssociations, function (pa) {
-                                return Util.compare(pa.id, data.organization.parentId);
-                            });
-                            var personAssociation = scope.objectInfo.personAssociations[idxPa];
                             organization = _.find(personAssociation.person.organizations, {organizationId: data.organization.organizationId});
                         }
                         organization.organizationType = data.organization.organizationType;
                         organization.organizationValue = data.organization.organizationValue;
                         if (!data.isEdit) {
-                            var idxPa = _.findIndex(scope.objectInfo.personAssociations, function (pa) {
-                                return Util.compare(pa.id, data.organization.parentId);
-                            });
-                            var personAssociation = scope.objectInfo.personAssociations[idxPa];
                             personAssociation.person.organizations.push(organization);
+                            //set objectInfoLoaded to false
+                            // so it will reload when new saved object info with id for organization
+                            //come from database
+                            scope.objectInfoLoaded = false;
                         }
                         saveObjectInfoAndRefresh();
                     });
@@ -594,8 +599,8 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     var modalInstance = $modal.open({
                         scope: modalScope,
                         animation: true,
-                        templateUrl: 'directives/core-people/core-people.addresses.modal.client.view.html',
-                        controller: function ($scope, $modalInstance) {
+                        templateUrl: 'directives/core-people/core-people-addresses-modal.client.view.html',
+                        controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
                             $scope.onClickOk = function () {
                                 $modalInstance.close({
                                     address: $scope.address,
@@ -605,20 +610,18 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             $scope.onClickCancel = function () {
                                 $modalInstance.dismiss('cancel');
                             }
-                        },
-                        size: 'lg',
+                        }],
+                        size: 'lg'
                     });
 
                     modalInstance.result.then(function (data) {
                         var address;
+                        var personAssociation = _.find(scope.objectInfo.personAssociations, function (pa) {
+                            return Util.compare(pa.id, data.address.parentId);
+                        });
                         if (!data.isEdit)
                             address = scope.address;
                         else {
-                            var idxPa = _.findIndex(scope.objectInfo.personAssociations, function (pa) {
-                                return Util.compare(pa.id, data.address.parentId);
-                            });
-                            var personAssociation = scope.objectInfo.personAssociations[idxPa];
-                            //find the contact and update changed properties
                             address = _.find(personAssociation.person.addresses, {id: data.address.id});
                         }
                         address.type = data.address.addressType;
@@ -628,11 +631,11 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                         address.zip = data.address.zip;
                         address.country = data.address.country;
                         if (!data.isEdit) {
-                            var idxPa = _.findIndex(scope.objectInfo.personAssociations, function (pa) {
-                                return Util.compare(pa.id, data.address.parentId);
-                            });
-                            var personAssociation = scope.objectInfo.personAssociations[idxPa];
                             personAssociation.person.addresses.push(address);
+                            //set objectInfoLoaded to false
+                            // so it will reload when new saved object info with id for address
+                            //come from database
+                            scope.objectInfoLoaded = false;
                         }
                         saveObjectInfoAndRefresh();
                     });
@@ -645,8 +648,8 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     var modalInstance = $modal.open({
                         scope: modalScope,
                         animation: true,
-                        templateUrl: 'directives/core-people/core-people.aliases.modal.client.view.html',
-                        controller: function ($scope, $modalInstance) {
+                        templateUrl: 'directives/core-people/core-people-aliases-modal.client.view.html',
+                        controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
                             $scope.onClickOk = function () {
                                 $modalInstance.close({
                                     alias: $scope.alias,
@@ -656,29 +659,28 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                             $scope.onClickCancel = function () {
                                 $modalInstance.dismiss('cancel');
                             }
-                        },
-                        size: 'lg',
+                        }],
+                        size: 'lg'
                     });
 
                     modalInstance.result.then(function (data) {
                         var alias;
+                        var personAssociation = _.find(scope.objectInfo.personAssociations, function (pa) {
+                            return Util.compare(pa.id, data.alias.parentId);
+                        });
                         if (!data.isEdit)
                             alias = scope.alias;
                         else {
-                            var idxPa = _.findIndex(scope.objectInfo.personAssociations, function (pa) {
-                                return Util.compare(pa.id, data.alias.parentId);
-                            });
-                            var personAssociation = scope.objectInfo.personAssociations[idxPa];
                             alias = _.find(personAssociation.person.personAliases, {id: data.alias.id});
                         }
                         alias.aliasType = data.alias.aliasType;
                         alias.aliasValue = data.alias.aliasValue;
                         if (!data.isEdit) {
-                            var idxPa = _.findIndex(scope.objectInfo.personAssociations, function (pa) {
-                                return Util.compare(pa.id, data.alias.parentId);
-                            });
-                            var personAssociation = scope.objectInfo.personAssociations[idxPa];
                             personAssociation.person.personAliases.push(alias);
+                            //set objectInfoLoaded to false
+                            // so it will reload when new saved object info with id for alias
+                            //come from database
+                            scope.objectInfoLoaded = false;
                         }
                         saveObjectInfoAndRefresh();
                     });
