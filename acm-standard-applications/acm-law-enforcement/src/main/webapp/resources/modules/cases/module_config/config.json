@@ -455,10 +455,12 @@
       "enabled": true,
       "type": "empty",
       "docTree": {
-        "emailSubject": "Case $caseNumber",
-        "subjectRegex": "(.*)\\$([^\\s]+)",
-        "objectTypeRegexGroup": 1,
-        "objectNumberRegexGroup": 2
+        "email": {
+          "emailSubject": "Case $caseNumber",
+          "subjectRegex": "(.*)\\$([^\\s]+)",
+          "objectTypeRegexGroup": 1,
+          "objectNumberRegexGroup": 2
+        }
       }
     },
     {
