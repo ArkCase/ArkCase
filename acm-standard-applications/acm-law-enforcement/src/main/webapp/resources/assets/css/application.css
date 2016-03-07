@@ -358,6 +358,10 @@ span.fancytree-title {
     z-index: 999;
 }
 
+.ui-contextmenu {
+	z-index: 3001;
+}
+
 .module-header .btn-group {
     margin-right: 15px;
 }
