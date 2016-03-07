@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.complaint.model.ComplaintListView;
 import com.armedia.acm.plugins.complaint.model.TimePeriod;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
@@ -24,7 +25,7 @@ import java.util.Optional;
  */
 public class ComplaintDao extends AcmAbstractDao<Complaint>
 {
-
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public Complaint save(Complaint toSave)
     {
