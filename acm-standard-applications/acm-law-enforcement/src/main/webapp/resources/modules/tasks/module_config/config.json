@@ -672,10 +672,12 @@
       "enabled": true,
       "type": "empty",
       "docTree": {
-        "emailSubject": "Task $taskId",
-        "subjectRegex": "(.*)\\$([^\\s]+)",
-        "objectTypeRegexGroup": 1,
-        "objectNumberRegexGroup": 2
+        "email": {
+          "emailSubject": "Task $taskId",
+          "subjectRegex": "(.*)\\$([^\\s]+)",
+          "objectTypeRegexGroup": 1,
+          "objectNumberRegexGroup": 2
+        }
       }
     },
     {

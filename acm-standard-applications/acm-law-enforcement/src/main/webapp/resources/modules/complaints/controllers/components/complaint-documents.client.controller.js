@@ -22,10 +22,6 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             }
         });
 
-        //ConfigService.getModuleConfig("complaints").then(function (config) {
-        //    $scope.treeConfig = config.docTree;
-        //    return config;
-        //});
         var onConfigRetrieved = function (config) {
             $scope.config = config;
             $scope.treeConfig = config.docTree;
@@ -62,5 +58,13 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             $scope.treeControl.refreshTree();
         };
 
+        $scope.onAllowCmd = function (cmd) {
+        };
+
+        $scope.onPreCmd = function (cmd) {
+        };
+
+        $scope.onPostCmd = function (cmd) {
+        };
     }
 ]);
