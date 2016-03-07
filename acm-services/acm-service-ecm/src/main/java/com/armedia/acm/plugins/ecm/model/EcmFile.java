@@ -105,6 +105,9 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @JoinColumn(name = "cm_parent_object_id")
     private List<AcmAssociatedTag> tags = new ArrayList<>();
 
+    @Column(name = "cm_file_locked")
+    private String locked;
+
     @PrePersist
     protected void beforeInsert()
     {
@@ -339,5 +342,13 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public String toString()
     {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    public String getLocked() {
+        return locked;
+    }
+
+    public void setLocked(String locked) {
+        this.locked = locked;
     }
 }

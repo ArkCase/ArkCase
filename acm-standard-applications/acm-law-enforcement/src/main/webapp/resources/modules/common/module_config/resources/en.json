@@ -61,6 +61,12 @@
         "email": "Email"
       }
     },
+    "comment": {
+      "title": "Add note",
+      "addComent": "Add comment",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Add Note"
+    },
     "error": {
       "nodeTitle": "(Error)"
     }

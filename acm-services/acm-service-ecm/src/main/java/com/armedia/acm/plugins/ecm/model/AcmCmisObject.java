@@ -26,6 +26,7 @@ public class AcmCmisObject implements Serializable
     private String mimeType;
     private String status;
     private Integer pageCount;
+    private Boolean locked;
 
     public Long getObjectId()
     {
@@ -175,5 +176,13 @@ public class AcmCmisObject implements Serializable
     public void setPageCount(Integer pageCount)
     {
         this.pageCount = pageCount;
+    }
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
     }
 }

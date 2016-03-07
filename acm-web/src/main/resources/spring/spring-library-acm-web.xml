@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
     <bean id="corsFilter" class="com.armedia.acm.web.api.CorsFilter"/>
     <!--
@@ -29,5 +30,14 @@
         </property>
     </bean>
     -->
+    <!-- data access control -->
+    <security:global-method-security pre-post-annotations="enabled">
+        <security:expression-handler ref="serviceExceptionHandler"/>
+    </security:global-method-security>
+
+    <bean id="serviceExceptionHandler" class=
+            "org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+        <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
+    </bean>
 
 </beans>

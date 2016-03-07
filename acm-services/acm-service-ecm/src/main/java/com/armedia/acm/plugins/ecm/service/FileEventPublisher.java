@@ -93,4 +93,22 @@ public class FileEventPublisher implements ApplicationEventPublisherAware {
         eventPublisher.publishEvent(fileActiveVersionSetEvent);
     }
 
+    public void publishFileLockEvent(EcmFile source, Authentication auth, String ipAddress, boolean succeeded ) {
+        if ( log.isDebugEnabled() ) {
+            log.debug("Publishing a file lock event.");
+        }
+        EcmFileLockEvent fileLockEvent = new EcmFileLockEvent(source,auth.getName(),ipAddress);
+        fileLockEvent.setSucceeded(succeeded);
+        eventPublisher.publishEvent(fileLockEvent);
+    }
+
+    public void publishFileUnLockEvent(EcmFile source, Authentication auth, String ipAddress, boolean succeeded ) {
+        if ( log.isDebugEnabled() ) {
+            log.debug("Publishing a file unlock event.");
+        }
+        EcmFileUnlockEvent fileUnlockEvent = new EcmFileUnlockEvent(source,auth.getName(),ipAddress);
+        fileUnlockEvent.setSucceeded(succeeded);
+        eventPublisher.publishEvent(fileUnlockEvent);
+    }
+
 }

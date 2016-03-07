@@ -380,5 +380,11 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="47-acm_file-add-file_locked" author="bojan.mickoski">
+        <addColumn tableName="acm_file">
+            <column name="cm_file_locked" type="VARCHAR(255)" defaultValue="false"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 
