@@ -22,10 +22,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             }
         });
 
-        //ConfigService.getModuleConfig("cases").then(function (config) {
-        //    $scope.treeConfig = config.docTree;
-        //    return config;
-        //});
+
         var onConfigRetrieved = function (config) {
             $scope.config = config;
             $scope.treeConfig = config.docTree;
@@ -61,6 +58,27 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
         $scope.onClickRefresh = function () {
             $scope.treeControl.refreshTree();
+        };
+
+        $scope.onAllowCmd = function (cmd) {
+            //console.log("onAllowCmd");
+            //if ("paste" == cmd) {
+            //    return "invisible";
+            //} else if ("newFolder" == cmd) {
+            //    return "disable";
+            //}
+        };
+
+        $scope.onPreCmd = function (cmd) {
+            //console.log("onPreCmd:" + cmd);
+            //if ("newFolder" == cmd) {
+            //    return true;
+            //}
+
+        };
+
+        $scope.onPostCmd = function (cmd) {
+            //console.log("onPostCmd:" + cmd);
         };
     }
 ]);

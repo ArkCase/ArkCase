@@ -46,17 +46,6 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             }
         );
 
-        //$scope.objectType = ObjectService.ObjectTypes.TASK;
-        //$scope.objectId = $stateParams.id;
-        //var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-        //if (Util.goodPositive(currentObjectId, false)) {
-        //    TaskInfoService.getTaskInfo(currentObjectId).then(function (taskInfo) {
-        //        $scope.objectInfo = taskInfo;
-        //        $scope.objectInfo = taskInfo;
-        //        $scope.objectId = taskInfo.taskId;
-        //        return taskInfo;
-        //    });
-        //}
         $scope.objectType = ObjectService.ObjectTypes.TASK;
         $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
         var onObjectInfoRetrieved = function (objectInfo) {
@@ -70,6 +59,15 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
 
         $scope.onClickRefresh = function () {
             $scope.treeControl.refreshTree();
+        };
+
+        $scope.onAllowCmd = function (cmd) {
+        };
+
+        $scope.onPreCmd = function (cmd) {
+        };
+
+        $scope.onPostCmd = function (cmd) {
         };
 
     }
