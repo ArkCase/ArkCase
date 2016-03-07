@@ -8,6 +8,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +46,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setCreator_lcs(in.getOwner());
         doc.setDescription_no_html_tags_parseable(in.getDetails());
         doc.setDueDate_tdt(in.getDueDate());
-        doc.setModified_date_tdt(new Date());  // theoretically it's being indexed b/c it just changed
+        doc.setModified_date_tdt(new Date()); // theoretically it's being indexed b/c it just changed
         // activiti does not keep a last modified field
         doc.setObject_id_s(Long.toString(in.getId()));
         doc.setObject_type_s("TASK");
@@ -82,6 +83,13 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setBusiness_process_name_lcs(in.getBusinessProcessName());
 
         doc.setAdditionalProperty("candidate_group_ss", in.getCandidateGroups());
+
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getOwner());
+        if (creator != null)
+        {
+            doc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
 
         log.trace("returning an advanced search doc");
 
@@ -134,7 +142,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
     @Override
     public SolrAdvancedSearchDocument toContentFileIndex(AcmTask in)
     {
-        //No implementation needed
+        // No implementation needed
         return null;
     }
 
