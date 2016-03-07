@@ -64,10 +64,10 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         $scope.onAllowCmd = function (cmd) {
         };
 
-        $scope.onPreCmd = function (cmd) {
+        $scope.onPreCmd = function (cmd, nodes) {
         };
 
-        $scope.onPostCmd = function (cmd) {
+        $scope.onPostCmd = function (cmd, nodes) {
         };
 
     }

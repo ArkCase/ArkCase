@@ -69,7 +69,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             //}
         };
 
-        $scope.onPreCmd = function (cmd) {
+        $scope.onPreCmd = function (cmd, nodes) {
             //console.log("onPreCmd:" + cmd);
             //if ("newFolder" == cmd) {
             //    return true;
@@ -77,7 +77,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
         };
 
-        $scope.onPostCmd = function (cmd) {
+        $scope.onPostCmd = function (cmd, nodes) {
             //console.log("onPostCmd:" + cmd);
         };
     }
