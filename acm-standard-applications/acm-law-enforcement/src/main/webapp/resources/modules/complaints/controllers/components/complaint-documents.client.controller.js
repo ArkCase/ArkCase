@@ -58,7 +58,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             $scope.treeControl.refreshTree();
         };
 
-        $scope.onAllowCmd = function (cmd) {
+        $scope.onAllowCmd = function (cmd, nodes) {
         };
 
         $scope.onPreCmd = function (cmd, nodes) {
