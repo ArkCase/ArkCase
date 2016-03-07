@@ -8,50 +8,59 @@
     <bean id="acmPersonAliasDao" class="com.armedia.acm.plugins.person.dao.PersonAliasDao"/>
     <bean id="acmPersonAssociationDao" class="com.armedia.acm.plugins.person.dao.PersonAssociationDao"/>
     <bean id="acmIdentificationDao" class="com.armedia.acm.plugins.person.dao.IdentificationDao"/>
-    <bean id="acmOrganizationDao" class ="com.armedia.acm.plugins.person.dao.OrganizationDao"/>
-    
+    <bean id="acmOrganizationDao" class="com.armedia.acm.plugins.person.dao.OrganizationDao"/>
+
     <bean id="personService" class="com.armedia.acm.plugins.person.service.PersonServiceImpl">
-    	<property name="personDao" ref="acmPersonDao" />
+        <property name="personDao" ref="acmPersonDao"/>
     </bean>
-    
+
     <bean id="savePersonTransaction" class="com.armedia.acm.plugins.person.service.SavePersonTransaction">
         <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
-    
+
     <bean id="personEventPublisher" class="com.armedia.acm.plugins.person.service.PersonEventPublisher"/>
-    
-    <bean id="savePersonAssociationTransaction" class="com.armedia.acm.plugins.person.service.SavePersonAssociationTransaction">
+
+    <bean id="savePersonAssociationTransaction"
+          class="com.armedia.acm.plugins.person.service.SavePersonAssociationTransaction">
         <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
-    
-    <bean id="personAssociationEventPublisher" class="com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher"/>
+
+    <bean id="personAssociationEventPublisher"
+          class="com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher"/>
 
     <bean id="personToSolrTransformer" class="com.armedia.acm.plugins.person.service.PersonToSolrTransformer">
         <property name="personDao" ref="acmPersonDao"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
-    <bean id="organizationToSolrTransformer" class="com.armedia.acm.plugins.person.service.OrganizationToSolrTransformer">
+    <bean id="organizationToSolrTransformer"
+          class="com.armedia.acm.plugins.person.service.OrganizationToSolrTransformer">
         <property name="organizationDao" ref="acmOrganizationDao"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
-    <bean id="personAssociationToSolrTransformer" class="com.armedia.acm.plugins.person.service.PersonAssociationToSolrTransformer">
+    <bean id="personAssociationToSolrTransformer"
+          class="com.armedia.acm.plugins.person.service.PersonAssociationToSolrTransformer">
         <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
-    <bean id="personContactToSolrTransformer" class="com.armedia.acm.plugins.person.service.PersonContactToSolrTransformer">
+    <bean id="personContactToSolrTransformer"
+          class="com.armedia.acm.plugins.person.service.PersonContactToSolrTransformer">
         <property name="personContactDao" ref="acmPersonContactDao"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
-            
-    <bean id ="personPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
+
+    <bean id="personPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Person Plugin"/>
     </bean>
-    
-            
-    <bean id ="personAssociationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
+
+
+    <bean id="personAssociationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="PersonAssocaition Plugin"/>
     </bean>
 
     <bean id="personPluginProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -60,7 +69,9 @@
         <property name="localOverride" value="false"/>
         <property name="properties">
             <props>
-                <prop key="person.types">Complaintant,Subject,Witness,Wrongdoer,Other,Initiator,Primary Victim,Victim,Defendant,Investigating Officer,Police Witness</prop>
+                <prop key="person.types">Complaintant,Subject,Witness,Wrongdoer,Other,Initiator,Primary
+                    Victim,Victim,Defendant,Investigating Officer,Police Witness
+                </prop>
             </props>
         </property>
     </bean>

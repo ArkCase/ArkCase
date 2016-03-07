@@ -3,7 +3,7 @@ vvConfig = {
     servletPath: "/VirtualViewerJavaHTML5/AjaxServlet",
 
     // Defines the intervals at which to zoom
-    zoomLevels : [ 2, 3, 4, 6, 8, 10, 15, 20, 30, 40, 50, 75, 100, 150, 200, 300, 400, 600,
+    zoomLevels: [2, 3, 4, 6, 8, 10, 15, 20, 30, 40, 50, 75, 100, 150, 200, 300, 400, 600,
         800, 1000, 1500, 2000, 3000],
 
     // Percentage to stop allowing users to zoom the image
@@ -44,8 +44,9 @@ vvConfig = {
     // switching between pages
     retainViewOptionsBetweenPages: true,
 
-    // The default zoom mode 
-    defaultZoomMode: vvDefines.zoomModes.fitWindow,
+    // The default zoom mode
+    defaultZoomMode: vvDefines.zoomModes.fitWidth,  // SBI-1159 make "fit-width" the default
+    // defaultZoomMode: vvDefines.zoomModes.fitWindow,
 
     // Should the text inside of text annotations rotate along with the
     // document?
@@ -158,7 +159,7 @@ vvConfig = {
     copySelectedText: true,
 
     // Allows notification of unsaved changes (Dialog Box) to appear when closing a tab or browser
-    unsavedChangesNotification : true,
+    unsavedChangesNotification: true,
 
     // Allow the use of "sticky" Annotation Buttons. The Annotation will stay "on" until it is clicked again.
     stickyAnnButtons: false,
@@ -166,136 +167,136 @@ vvConfig = {
     // Configure the keyboard shortcuts 
     hotkeys: [
         {
-            key:'ctrl+shift+=,ctrl+shift+i,ctrl+shift+plusKeypad', // ctrl+shift+= will not work in IE 9 or IE 10
-            method: function() {
+            key: 'ctrl+shift+=,ctrl+shift+i,ctrl+shift+plusKeypad', // ctrl+shift+= will not work in IE 9 or IE 10
+            method: function () {
                 virtualViewer.zoomIn();
             },
             localizedValue: 'hotkeyHints.zoomIn',
             defaultValue: 'Zoom In'
         },
         {
-            key:'ctrl+shift+-,ctrl+shift+o,ctrl+shift+minusKeypad', // ctrl+shift+- will not work in IE 9 or IE 10
-            method: function() {
+            key: 'ctrl+shift+-,ctrl+shift+o,ctrl+shift+minusKeypad', // ctrl+shift+- will not work in IE 9 or IE 10
+            method: function () {
                 virtualViewer.zoomOut();
             },
             localizedValue: 'hotkeyHints.zoomOut',
             defaultValue: 'Zoom Out'
         },
         {
-            key:'ctrl+shift+e',
-            method: function() {
+            key: 'ctrl+shift+e',
+            method: function () {
                 virtualViewer.exportDocument();
             },
             localizedValue: 'hotkeyHints.exportDocument',
             defaultValue: 'Export Document'
         },
         {
-            key:'ctrl+shift+p',
-            method: function() {
+            key: 'ctrl+shift+p',
+            method: function () {
                 virtualViewer.printDocument();
             },
             localizedValue: 'hotkeyHints.printDocument',
             defaultValue: 'Print Document'
         },
         {
-            key:'end',
-            method: function() {
+            key: 'end',
+            method: function () {
                 virtualViewer.lastPage();
             },
             localizedValue: 'hotkeyHints.lastPage',
             defaultValue: 'Last Page'
         },
         {
-            key:'home',
-            method: function() {
+            key: 'home',
+            method: function () {
                 virtualViewer.firstPage();
             },
             localizedValue: 'hotkeyHints.firstPage',
             defaultValue: 'First Page'
         },
         {
-            key:'ctrl+shift+pageup',
-            method: function() {
+            key: 'ctrl+shift+pageup',
+            method: function () {
                 virtualViewer.previousPage();
             },
             localizedValue: 'hotkeyHints.previousPage',
             defaultValue: 'Previous Page'
         },
         {
-            key:'ctrl+shift+pagedown',
-            method: function() {
+            key: 'ctrl+shift+pagedown',
+            method: function () {
                 virtualViewer.nextPage();
             },
             localizedValue: 'hotkeyHints.nextPage',
             defaultValue: 'Next Page'
         },
         {
-            key:'ctrl+shift+l',
-            method: function() {
+            key: 'ctrl+shift+l',
+            method: function () {
                 virtualViewer.rotateCounter();
             },
             localizedValue: 'hotkeyHints.rotateCounter',
             defaultValue: 'Rotate Left'
         },
         {
-            key:'ctrl+shift+r',
-            method: function() {
+            key: 'ctrl+shift+r',
+            method: function () {
                 virtualViewer.rotateClock();
             },
             localizedValue: 'hotkeyHints.rotateClock',
             defaultValue: 'Rotate Right'
         },
         {
-            key:'ctrl+shift+t',
-            method: function() {
+            key: 'ctrl+shift+t',
+            method: function () {
                 virtualViewer.toggleThumbnailPanel();
             },
             localizedValue: 'hotkeyHints.toggleThumbnailPanel',
             defaultValue: 'Toggle Thumbnail Panel'
         },
         {
-            key:'ctrl+shift+c',
-            method: function() {
+            key: 'ctrl+shift+c',
+            method: function () {
                 virtualViewer.copySelectedText();
             },
             localizedValue: 'hotkeyHints.copyText',
             defaultValue: 'Copy Selected Text'
         },
         {
-            key:'ctrl+shift+d',
-            method: function() {
+            key: 'ctrl+shift+d',
+            method: function () {
                 virtualViewer.toggleColumnSelectionMode();
             },
             localizedValue: 'hotkeyHints.toggleTextSelectionMode',
             defaultValue: 'Toggle Column Text Selection'
         },
         {
-            key:'ctrl+shift+u',
-            method: function() {
+            key: 'ctrl+shift+u',
+            method: function () {
                 virtualViewer.toggleImageInfo();
             },
             localizedValue: 'hotkeyHints.toggleImageInfo',
             defaultValue: 'Toggle Image Info Dialog'
         },
         {
-            key:'ctrl+shift+g',
-            method: function() {
-                virtualViewer.collapseAllStickyNotes(true,true);
+            key: 'ctrl+shift+g',
+            method: function () {
+                virtualViewer.collapseAllStickyNotes(true, true);
             },
             localizedValue: 'hotkeyHints.collapseStickyNotes',
             defaultValue: 'Collapse Sticky Notes'
         },
         {
-            key:'ctrl+shift+n',
-            method: function() {
-                virtualViewer.collapseAllStickyNotes(false,true);
+            key: 'ctrl+shift+n',
+            method: function () {
+                virtualViewer.collapseAllStickyNotes(false, true);
             },
             localizedValue: 'hotkeyHints.expandStickyNotes',
             defaultValue: 'Expand Sticky Notes'
         },
         {
-            key:'ctrl+/',
-            method: function() {
+            key: 'ctrl+/',
+            method: function () {
                 virtualViewer.toggleKeyboardHints();
             },
             localizedValue: 'hotkeyHints.showKeyboardHints',
@@ -308,21 +309,24 @@ vvConfig = {
 
         {
             key: 'ctrl+shift+z',
-            method: function() { virtualViewer.undoAnnotation(); }
+            method: function () {
+                virtualViewer.undoAnnotation();
+            }
         },
         {
-            key:'ctrl+shift+y',
-            method: function() {
-                virtualViewer.redoAnnotation(); }
+            key: 'ctrl+shift+y',
+            method: function () {
+                virtualViewer.redoAnnotation();
+            }
         }
 
     ],
 
     emailDefaults: {
         prepopulateFrom: "prepopulatedEmail@domain.com",
-        prepopulateTo : "",
-        prepopulateCC : "",
-        prepopulateBCC : "",
+        prepopulateTo: "",
+        prepopulateCC: "",
+        prepopulateBCC: "",
         prepopulateSubject: "VirtualViewer Document attached",
         prepopulateBody: "Please see the attached document sent from VirtualViewer."
     },
@@ -351,41 +355,65 @@ vvConfig = {
         fontColor: "000000"
     },
 
-    maxInfoFieldLength : 128,
+    maxInfoFieldLength: 128,
 
-    guideLineWidth : 2,
-    activeGuideColor : "#000099",
-    lockedGuideColor : "#990000",
+    guideLineWidth: 2,
+    activeGuideColor: "#000099",
+    lockedGuideColor: "#990000",
 
     // Define the fields that will be displayed in the Image Info Dialog     
-    imageInfoFields : [
+    imageInfoFields: [
         // Define the *Document-Specific* properties here in the order they are to be displayed
-        { fieldId: "documentId",
-            fieldCaption: "Document ID"},
-        { fieldId: "documentDisplayName",
-            fieldCaption: "Document Name" },
-        { fieldId: "documentByteSize",
-            fieldCaption: "File Size (Bytes)" },
-        { fieldId: "pageCount",
-            fieldCaption: "Page Count" },
-        { fieldId: "documentFormat",
-            fieldCaption: "File Format" },
+        {
+            fieldId: "documentId",
+            fieldCaption: "Document ID"
+        },
+        {
+            fieldId: "documentDisplayName",
+            fieldCaption: "Document Name"
+        },
+        {
+            fieldId: "documentByteSize",
+            fieldCaption: "File Size (Bytes)"
+        },
+        {
+            fieldId: "pageCount",
+            fieldCaption: "Page Count"
+        },
+        {
+            fieldId: "documentFormat",
+            fieldCaption: "File Format"
+        },
 
         // Define the *Page-Specific* properties here in the order they are to be displayed
 
-        { fieldId: "compressionType", // This is only for Tiff files and will be 'TIFF_G4_FAX', 'TIFF_JPEG', 'TIFF_LZW', etc
-            fieldCaption: "Compression Type" },
-        { fieldId: "imageSizePixels",
-            fieldCaption: "Size in Pixels" },
-        { fieldId: "imageSizeInches",
-            fieldCaption: "Image Size" },
-        { fieldId: "dpi",
-            fieldCaption: "DPI" },
-        { fieldId: "bitDepth",
-            fieldCaption: "Bit Depth" },
-        { fieldId: "pageNumber",
-            fieldCaption: "Page Number" },
-        { fieldId: "tiffTag315",
-            fieldCaption: "Copyright" }
+        {
+            fieldId: "compressionType", // This is only for Tiff files and will be 'TIFF_G4_FAX', 'TIFF_JPEG', 'TIFF_LZW', etc
+            fieldCaption: "Compression Type"
+        },
+        {
+            fieldId: "imageSizePixels",
+            fieldCaption: "Size in Pixels"
+        },
+        {
+            fieldId: "imageSizeInches",
+            fieldCaption: "Image Size"
+        },
+        {
+            fieldId: "dpi",
+            fieldCaption: "DPI"
+        },
+        {
+            fieldId: "bitDepth",
+            fieldCaption: "Bit Depth"
+        },
+        {
+            fieldId: "pageNumber",
+            fieldCaption: "Page Number"
+        },
+        {
+            fieldId: "tiffTag315",
+            fieldCaption: "Copyright"
+        }
     ]
 };
