@@ -34,15 +34,15 @@ angular.module(ApplicationConfiguration.applicationModuleName).config([
             function responseError(response) {
                 // Send error message to MessageService
                 // Only throw http error as last resort
-                if(response.data){
+                if (response.data) {
                     //e.g. Task already claimed .. exception type is ...
                     MessageService.error(response.data);
                 }
-                else if(response.statusText){
+                else if (response.statusText) {
                     //e.g. Unknown Error
                     MessageService.error(response.statusText);
                 }
-                else{
+                else {
                     //e.g. Error 404 /api/latest..
                     MessageService.httpError(response);
                 }
