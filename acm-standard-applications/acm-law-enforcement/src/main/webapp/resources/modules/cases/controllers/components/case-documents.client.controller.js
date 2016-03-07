@@ -60,12 +60,14 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             $scope.treeControl.refreshTree();
         };
 
-        $scope.onAllowCmd = function (cmd) {
+        $scope.onAllowCmd = function (cmd, nodes) {
             //console.log("onAllowCmd");
-            //if ("paste" == cmd) {
-            //    return "invisible";
-            //} else if ("newFolder" == cmd) {
-            //    return "disable";
+            //if (1 == nodes.length) {
+            //    if ("paste" == cmd) {
+            //        return "invisible";
+            //    } else if ("newFolder" == cmd) {
+            //        return "disable";
+            //    }
             //}
         };
 

@@ -1118,6 +1118,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             var menuResource = null;
                             var selNodes = DocTree.getSelectedNodes();
                             var batchMode = !Util.isArrayEmpty(selNodes);
+                            var actNodes = (batchMode)? selNodes: [node];
                             if (batchMode) {
                                 menuResource = DocTree.Menu.getBatchResource(selNodes);
                             } else if ("RECORD" == Util.goodValue(node.data.status)) {
@@ -1125,7 +1126,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             } else {
                                 menuResource = DocTree.Menu.getBasicResource(node);
                             }
-                            var menu = DocTree.Menu.makeContextMenu(menuResource);
+                            var menu = DocTree.Menu.makeContextMenu(menuResource, actNodes);
 
                             $s.contextmenu("replaceMenu", menu);
 
@@ -1195,7 +1196,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return menuResource;
                 }
-                , makeContextMenu: function (menuResource) {
+                , makeContextMenu: function (menuResource, nodes) {
                     var menu;
                     if (menuResource) {
                         menu = Util.goodMapValue(DocTree.treeConfig, menuResource, []);
@@ -1216,7 +1217,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     _.each(menu, function(item) {
                         var allow = true;
                         if (item.cmd) {
-                            allow = DocTree.Command.onAllowCmd(item.cmd);
+                            allow = DocTree.Command.onAllowCmd(item.cmd, nodes);
                         }
 
                         if ("invisible" == allow) {

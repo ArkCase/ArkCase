@@ -61,7 +61,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             $scope.treeControl.refreshTree();
         };
 
-        $scope.onAllowCmd = function (cmd) {
+        $scope.onAllowCmd = function (cmd, nodes) {
         };
 
         $scope.onPreCmd = function (cmd, nodes) {
