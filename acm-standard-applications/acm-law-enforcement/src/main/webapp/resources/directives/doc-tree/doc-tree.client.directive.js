@@ -23,7 +23,7 @@
  * "disable" to disable the command; Anything else or undefined means the command will be show as normal.
  * @param {Function} on-pre-cmd (Optional)Callback function before a command is executed to give doc tree
  * consumer to run additional code before the command is executed or to override implemented command.
- * Return "true" would prevent the directive to run the command.
+ * Return "fasle" prevents the command execution; "true" or "undefined" to continue the command
  * @param {Function} on-post-cmd (Optional)Callback function after a command is executed to give doc tree
  * consumer to run additional code after the command is executed.
  * @param {Object} tree-control Tree API functions exposed to user. Following is the list:
@@ -874,7 +874,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     var actNodes = (batch)? selNodes : [node];
 
 
-                    if (DocTree.Command.onPreCmd(data.cmd, actNodes)) {
+                    //prevent command if return "false"; contine when return "true" or "undefined"
+                    if (!Util.goodValue(DocTree.Command.onPreCmd(data.cmd, actNodes), true)) {
                         return;
                     }
 
