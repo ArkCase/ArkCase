@@ -7,9 +7,9 @@
     "maximumOpen": 5
   },
   "docTree": {
-    "multiSelect": true,
     "emailDialog": {
       "enableFiltering": false,
+      "multiSelect": true,
       "columnDefs": [
         {
           "name": "name",

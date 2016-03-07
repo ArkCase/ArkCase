@@ -61,10 +61,10 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         $scope.onAllowCmd = function (cmd) {
         };
 
-        $scope.onPreCmd = function (cmd) {
+        $scope.onPreCmd = function (cmd, nodes) {
         };
 
-        $scope.onPostCmd = function (cmd) {
+        $scope.onPostCmd = function (cmd, nodes) {
         };
     }
 ]);
