@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -27,6 +28,7 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
         return PersonAssociation.class;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public PersonAssociation save(PersonAssociation toSave)
     {
