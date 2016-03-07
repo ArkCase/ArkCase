@@ -1,52 +1,58 @@
 'use strict';
 
+//Start by defining the main module and adding the module dependencies
+var app = angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfiguration.applicationModuleVendorDependencies);
+
 var ACM_SETTINGS = {
     LANG: 'en'
 };
 
-//Start by defining the main module and adding the module dependencies
-var app = angular.module(ApplicationConfiguration.applicationModuleName, ApplicationConfiguration.applicationModuleVendorDependencies);
-
 
 // Setting HTML5 Location Mode
 angular.module(ApplicationConfiguration.applicationModuleName).config([
-        '$locationProvider', '$translateProvider', '$translatePartialLoaderProvider', '$httpProvider',
-        function ($locationProvider, $translateProvider, $translatePartialLoaderProvider, $httpProvider) {
-            $locationProvider.hashPrefix('!');
+    '$locationProvider', '$translateProvider', '$translatePartialLoaderProvider', '$httpProvider',
+    function ($locationProvider, $translateProvider, $translatePartialLoaderProvider, $httpProvider) {
+        $locationProvider.hashPrefix('!');
 
-            $httpProvider.interceptors.push(httpInterceptor);
+        $httpProvider.interceptors.push(httpInterceptor);
 
-            // Initialize angular-translate
-            $translateProvider.useLoader('$translatePartialLoader', {
-                urlTemplate: 'api/latest/plugin/admin/labelmanagement/resource?ns={part}&lang={lang}'
-            });
+        // Initialize angular-translate
+        $translateProvider.useLoader('$translatePartialLoader', {
+            urlTemplate: 'api/latest/plugin/admin/labelmanagement/resource?ns={part}&lang={lang}'
+        });
 
-            $translateProvider.preferredLanguage(ACM_SETTINGS.LANG);
-            //$translateProvider.useSanitizeValueStrategy('sanitize');
+        $translateProvider.preferredLanguage(ACM_SETTINGS.LANG);
+        //$translateProvider.useSanitizeValueStrategy('sanitize');
 
-            // Add HTTP error interceptor
-            function httpInterceptor($q, MessageService) {
-                return {
-                    responseError: responseError
-                };
+        // Add HTTP error interceptor
+        function httpInterceptor($q, MessageService) {
+            return {
+                responseError: responseError
+            };
 
-                // Intercept the failed response.
-                function responseError(response) {
-                    // Send error message to MessageService
-                    MessageService.httpError(response);
-                    return (
-                        $q.reject(response)
-                    );
+            // Intercept the failed response.
+            function responseError(response) {
+                // Send error message to MessageService
+                // Only throw http error as last resort
+                if(response.data){
+                    //e.g. Task already claimed .. exception type is ...
+                    MessageService.error(response.data);
                 }
+                else if(response.statusText){
+                    //e.g. Unknown Error
+                    MessageService.error(response.statusText);
+                }
+                else{
+                    //e.g. Error 404 /api/latest..
+                    MessageService.httpError(response);
+                }
+                return (
+                    $q.reject(response)
+                );
             }
         }
-    ])
-    .run(['$translate', '$translatePartialLoader',
-        function ($translate, $translatePartialLoader) {
-            $translatePartialLoader.addPart('core');
-            $translate.refresh();
-        }
-    ]);
+    }
+]);
 
 
 // Load language info before start Angular application

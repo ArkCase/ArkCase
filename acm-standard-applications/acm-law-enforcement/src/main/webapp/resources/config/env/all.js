@@ -123,6 +123,14 @@ module.exports = {
         jsCustomModules: [
             'custom_modules/*/*.js',
             'custom_modules/*/**/*.js'
+        ],
+        jsDirectives: [
+            'directives/*/*.js',
+            'directives/*/**/*.js'
+        ],
+        jsCustomDirectives: [
+            'custom_directives/*/*.js',
+            'custom_directives/*/**/*.js'
         ]
     }
 };
