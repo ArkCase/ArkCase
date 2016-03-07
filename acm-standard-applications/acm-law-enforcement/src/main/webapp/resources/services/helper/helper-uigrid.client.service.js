@@ -466,14 +466,10 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              */
             , addEditButton: function (columnDefs, onClickEdit) {
                 var columnDef = {
-                    name: "edit"
-                    ,
-                    cellEditableCondition: false
-                    ,
-                    width: 40
-                    ,
-                    headerCellTemplate: "<span></span>"
-                    ,
+                    name: "edit",
+                    cellEditableCondition: false,
+                    width: 40,
+                    headerCellTemplate: "<span></span>",
                     cellTemplate: "<span><i class='fa fa-pencil fa-lg' style='cursor :pointer' ng-click='" + onClickEdit + "'></i></span>"
                 };
                 columnDefs.push(columnDef);
