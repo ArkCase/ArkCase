@@ -38,7 +38,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -622,6 +624,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             {
                 object.setVersionList(file.getVersions());
                 object.setPageCount(file.getPageCount());
+                object.setLocked(Boolean.valueOf(file.getLocked()));
             }
         }
 
@@ -804,6 +807,37 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
 
         return totalCount;
+    }
+
+    @PreAuthorize("hasPermission(#file.container.containerObjectId, #file.container.containerObjectType,'uploadOrReplaceFile')")
+    @Override
+    public EcmFile lock(EcmFile file) throws AcmObjectNotFoundException
+    {
+        if(file == null) {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, -1L, "File not found", null);
+        }
+
+        if (!Boolean.valueOf(file.getLocked()))
+        {
+            file.setLocked("true");
+            file = getEcmFileDao().save(file);
+        }
+
+        return file;
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR') or #file.creator == #auth.name or #file.modifier == #auth.name")
+    @Override
+    public EcmFile unlock(EcmFile file, Authentication auth) throws AcmObjectNotFoundException
+    {
+        if(file == null) {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, -1L, "File not found", null);
+        }
+
+        file.setLocked("false");
+        file = getEcmFileDao().save(file);
+
+        return file;
     }
 
     private String createQueryFormListAndOperator(List<String> elements, String operator)

@@ -2,10 +2,24 @@
 
 angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'DocTreeService'
-    , 'Helper.ObjectBrowserService'
+    , 'Helper.ObjectBrowserService', 'Authentication'
     , function ($scope, $stateParams, $modal
         , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
-        , HelperObjectBrowserService) {
+        , HelperObjectBrowserService, Authentication) {
+
+        var adminRole = false;
+
+        Authentication.queryUserInfo().then(
+            function(userInfo) {
+                $scope.user = userInfo.userId;
+                _.forEach(userInfo.authorities, function (authority) {
+                    if (authority === 'ROLE_ADMINISTRATOR') {
+                        adminRole = true;
+                    }
+                });
+                return userInfo;
+            }
+        );
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -61,14 +75,21 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         };
 
         $scope.onAllowCmd = function (cmd, nodes) {
-            //console.log("onAllowCmd");
-            //if (1 == nodes.length) {
-            //    if ("paste" == cmd) {
-            //        return "invisible";
-            //    } else if ("newFolder" == cmd) {
-            //        return "disable";
-            //    }
-            //}
+            if (1 == nodes.length) {
+                if ("checkin" == cmd || "cancelEditing" == cmd) {
+                    if (!nodes[0].data.locked) {
+                        return "disable";
+                    }
+                    else if (nodes[0].data.locked && nodes[0].data.creator !== $scope.user && nodes[0].data.modifier !== $scope.user || !adminRole) {
+                        return "disable";
+                    }
+                }
+                else if ("checkout" == cmd) {
+                    if (nodes[0].data.locked) {
+                        return "disable";
+                    }
+                }
+            }
         };
 
         $scope.onPreCmd = function (cmd, nodes) {

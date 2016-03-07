@@ -11,7 +11,7 @@
  * EcmService contains functions to related to document management.
  */
 angular.module('services').factory('EcmService', ['$resource', 'StoreService', 'UtilService'
-    , function ($resource, StoreService, UtilService) {
+    , function ($resource, StoreService, Util) {
 
         var Service = $resource('api/latest/service', {}, {
             retrieveFolderList: {
@@ -103,7 +103,73 @@ angular.module('services').factory('EcmService', ['$resource', 'StoreService', '
                 cache: false,
                 isArray: false
             }
+            , _lockFile: {
+                method: 'POST',
+                url: 'api/latest/service/ecm/file/lock/:fileId'
+            }
+            , _unlockFile: {
+                method: 'POST',
+                url: 'api/latest/service/ecm/file/unlock/:fileId'
+            }
         });
+
+        Service.lockFile = function (fileId) {
+            var failed = "";
+            return Util.serviceCall({
+                service: Service._lockFile
+                , param: {
+                    fileId: fileId
+                }
+                , data: {}
+                , onSuccess: function (data) {
+                    if (Service.validateLockFile(data)) {
+                        return data;
+                    }
+                }
+                , onInvalid: function (data) {
+                    return failed;
+                }
+            });
+        };
+
+        Service.unlockFile = function (fileId) {
+            var failed = "";
+            return Util.serviceCall({
+                service: Service._unlockFile
+                , param: {
+                    fileId: fileId
+                }
+                , data: {}
+                , onSuccess: function (data) {
+                    if (Service.validateUnlockFile(data)) {
+                        return data;
+                    }
+                }
+                , onInvalid: function (data) {
+                    return failed;
+                }
+            });
+        };
+
+        Service.validateLockFile = function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.fileId)) {
+                return false;
+            }
+            return true;
+        };
+
+        Service.validateUnlockFile = function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (Util.isEmpty(data.fileId)) {
+                return false;
+            }
+            return true;
+        };
 
         return Service;
     }

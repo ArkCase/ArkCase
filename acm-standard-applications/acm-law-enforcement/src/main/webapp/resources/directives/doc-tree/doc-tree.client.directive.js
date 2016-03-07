@@ -81,9 +81,18 @@
  </example>
  */
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', 'StoreService', 'UtilService'
-    , 'Util.DateService', 'ConfigService', 'LookupService', 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService'
+    , 'Util.DateService', 'ConfigService', 'LookupService', 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService',
+    'Authentication', 'Helper.NoteService', 'Object.NoteService'
     , function ($q, $translate, $modal, $filter, Store, Util
-        , UtilDateService, ConfigService, LookupService, Ecm, EcmEmailService, EcmRecordService) {
+        , UtilDateService, ConfigService, LookupService, Ecm, EcmEmailService, EcmRecordService,
+                Authentication, HelperNoteService,ObjectNoteService) {
+        var user = "";
+        Authentication.queryUserInfo().then(
+            function (userInfo) {
+                user = userInfo.userId;
+                return userInfo;
+            }
+        );
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
         var promiseGetUserFullName = LookupService.getUserFullNames();
@@ -153,11 +162,19 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         if (DocTree.isFolderNode(node)) {
                             ;
                         } else if (DocTree.isFileNode(node)) {
+                            if (node.data.locked) {
+                                var $span = $("<span class='ui-icon ui-icon-locked' title='This document is locked.'/>").appendTo($tdList.eq(1));
+                                $span.hover(function(){
+                                    $(this).tooltip('show');
+                                }, function(){
+                                    $(this).tooltip('hide');
+                                });
+                            }
                             var filter = $filter('capitalizeFirst');
                             var typeColumn = (DocTree.getDocumentTypeDisplayLabel(node.data.type));
                             var filteredType = filter(typeColumn);
 
-                            $tdList.eq(2).text(filteredType); // document type is mapped (afdp-1249)
+                            $tdList.eq(3).text(filteredType); // document type is mapped (afdp-1249)
 
                             var versionDate = UtilDateService.getDatePart(node.data.created);
                             var versionUser = Util.goodValue(node.data.creator);
@@ -186,18 +203,18 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     }
                                 }
                             }
-                            $tdList.eq(3).text(versionDate);
+                            $tdList.eq(4).text(versionDate);
 
                             promiseGetUserFullName.then(function (userFullNames) {
                                 var found = _.find(userFullNames, {id: versionUser});
-                                $tdList.eq(4).text(Util.goodMapValue(found, "name"));
+                                $tdList.eq(5).text(Util.goodMapValue(found, "name"));
                             });
 
-                            $tdList.eq(5).replaceWith($td6);
+                            $tdList.eq(6).replaceWith($td6);
 
-                            $tdList.eq(6).text(node.data.status);
+                            $tdList.eq(7).text(node.data.status);
 
-                            //$tdList.eq(1).addClass("");
+                            $tdList.eq(1).addClass("");
 
                         } else {  //non file, non folder
                             $tdList.eq(0).text("");
@@ -937,7 +954,35 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 DocTree.uploadFile(node);
                             }
                             break;
-
+                        case "checkout":
+                            var fileId = node.data.objectId;
+                            Ecm.lockFile(fileId).then(
+                                function(lockedFile) {
+                                    DocTree._doDownload(node);
+                                    DocTree.refreshTree();
+                                }
+                            );
+                            break;
+                        case "checkin":
+                            var fileId = node.data.objectId;
+                            Ecm.unlockFile(fileId).then(
+                                function(unlockedFile) {
+                                    //DocTree.replaceFile(node);
+                                    var noteHelper = new HelperNoteService.Note();
+                                    var note = noteHelper.createNote(fileId, "FILE", user);
+                                    Comment.openModal(note, node);
+                                }
+                            );
+                            break;
+                        case "cancelEditing":
+                            var fileId = node.data.objectId;
+                            Ecm.unlockFile(fileId).then(
+                                function(unlockedFile) {
+                                    // file is unlocked
+                                    DocTree.refreshTree();
+                                }
+                            );
+                            break;
                         case "cut":
                             var nodes = (batch) ? selNodes : [node];
                             if (batch) {
@@ -2669,6 +2714,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     nodeData.data.status = Util.goodValue(fileData.status);
                     nodeData.data.category = Util.goodValue(fileData.category);
                     nodeData.data.version = Util.goodValue(fileData.version);
+                    nodeData.data.locked = Util.goodValue(fileData.locked);
+                    nodeData.data.modifier = Util.goodValue(fileData.modifier);
                     if (Util.isArray(fileData.versionList)) {
                         nodeData.data.versionList = [];
                         for (var i = 0; i < fileData.versionList.length; i++) {
@@ -3174,6 +3221,36 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             //}
 
         }; // end Email
+
+        var Comment = {
+            openModal: function (note, node) {
+
+                var params = {
+                    config : Util.goodMapValue(DocTree.treeConfig, "emailDialog", {}),
+                    note : note
+                };
+
+                var modalInstance = $modal.open({
+                    templateUrl: "directives/doc-tree/doc-tree.comment.dialog.html"
+                    , controller: 'directives.DocTreeCommentDialogController'
+                    , animation: true
+                    , size: 'lg'
+                    , resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+                modalInstance.result.then(function (data) {
+                    console.log("VIkam save not");
+                    data.note.created = Util.dateToIsoString(new Date(note.created));
+                    ObjectNoteService.saveNote(data.note).then(function () {
+                        DocTree.replaceFile(node);
+                    }, function () {
+                    });
+                });
+            }
+        };
 
         var Ui = {
             dlgModal: function ($s, onClickBtnPrimary, onClickBtnDefault) {
@@ -3934,6 +4011,24 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
                 return Util.isEmpty($scope.recipientsStr);
             };
 
+        }
+    ]
+);
+
+angular.module('directives').controller('directives.DocTreeCommentDialogController', ['$scope', '$modalInstance'
+        , 'UtilService', 'params'
+        , function ($scope, $modalInstance, Util, params) {
+            $scope.modalInstance = $modalInstance;
+
+            $scope.config = params.config;
+            $scope.note = params.note;
+
+            $scope.onClickCancel = function () {
+                $modalInstance.close(false);
+            };
+            $scope.onClickOk = function () {
+                $modalInstance.close({note : $scope.note});
+            };
         }
     ]
 );
