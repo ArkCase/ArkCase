@@ -8,6 +8,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.model.TimePeriod;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
@@ -26,7 +27,7 @@ import java.util.Optional;
  */
 public class CaseFileDao extends AcmAbstractDao<CaseFile>
 {
-
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public CaseFile save(CaseFile toSave)
     {
