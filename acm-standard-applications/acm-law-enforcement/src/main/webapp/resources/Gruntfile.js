@@ -52,6 +52,12 @@ module.exports = function (grunt) {
                     'assets/dist/application.js': '<%= applicationJavaScriptFiles %>'
                 }
             }
+        },
+        concat: {
+            dist: {
+                src: '<%= vendorsJavaScriptFiles %>',
+                dest: 'assets/dist/vendors.min.js'
+            }
         }
     });
 
@@ -67,6 +73,7 @@ module.exports = function (grunt) {
         //var init = require('./config/init')();
         var configUtil = require('./config/config');
         grunt.config.set('applicationJavaScriptFiles', configUtil.assets.js.concat(configUtil.getModulesJavaScriptAssets()));
+        grunt.config.set('vendorsJavaScriptFiles', configUtil.assets.lib.js);
         grunt.config.set('applicationCSSFiles', configUtil.getCSSAssets());
     });
 
@@ -80,9 +87,8 @@ module.exports = function (grunt) {
         var cssFiles = [];
 
         if (process.env.NODE_ENV == 'production') {
-            jsFiles = config.assets.lib.js.concat(config.assets.distJs, config.assets.lib.customJs);
+            jsFiles = config.assets.distJs.concat(config.assets.lib.customJs);
             cssFiles = configUtil.getCSSAssets();
-            //cssFiles = config.assets.lib.css.concat(config.assets.distCss);
         } else {
             jsFiles = configUtil.getJavaScriptAssets().concat(configUtil.getModulesJavaScriptAssets());
             cssFiles = configUtil.getCSSAssets();
@@ -191,5 +197,5 @@ module.exports = function (grunt) {
 
     // Build task.
     //grunt.registerTask('build', ['renderHome', 'sass', 'lint', 'loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
-    grunt.registerTask('default', ['loadConfig', 'ngAnnotate', 'uglify', 'cssmin', 'renderHome', 'updateModulesConfig']);
+    grunt.registerTask('default', ['loadConfig', 'ngAnnotate', 'uglify', 'concat', 'cssmin', 'renderHome', 'updateModulesConfig']);
 };
