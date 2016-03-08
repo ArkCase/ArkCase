@@ -140,7 +140,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                     , table: {
                         indentation: 10,      // indent 20px per node level
-                        nodeColumnIdx: 1,     // render the node title into the 2nd column
+                        nodeColumnIdx: 2,     // render the node title into the 2nd column
                         checkboxColumnIdx: 0  // render the checkboxes into the 1st column
                     }
                     , gridnav: {
@@ -1693,6 +1693,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     fileNode.setStatus("ok");
                                 }
                                 dfd.resolve();
+                                DocTree.refreshTree();
                             }
                             , function (errorData) {
                                 //fixme: App.View.MessageBoard.show($.t("doctree:error.replace-file"), Util.goodValue(response.errorMsg));
@@ -3226,7 +3227,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             openModal: function (note, node) {
 
                 var params = {
-                    config : Util.goodMapValue(DocTree.treeConfig, "emailDialog", {}),
+                    config : Util.goodMapValue(DocTree.treeConfig, "comment", {}),
                     note : note
                 };
 
@@ -3242,12 +3243,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                 });
                 modalInstance.result.then(function (data) {
-                    console.log("VIkam save not");
                     data.note.created = Util.dateToIsoString(new Date(note.created));
                     ObjectNoteService.saveNote(data.note).then(function () {
-                        DocTree.replaceFile(node);
-                    }, function () {
                     });
+                    //replace file after comment is added
+                    DocTree.replaceFile(node);
+                }, function () {
+                    // comment is not added, replace file
+                    DocTree.replaceFile(node);
                 });
             }
         };
@@ -4024,7 +4027,7 @@ angular.module('directives').controller('directives.DocTreeCommentDialogControll
             $scope.note = params.note;
 
             $scope.onClickCancel = function () {
-                $modalInstance.close(false);
+                $modalInstance.dismiss();
             };
             $scope.onClickOk = function () {
                 $modalInstance.close({note : $scope.note});
