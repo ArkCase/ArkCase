@@ -1,6 +1,7 @@
 /* @override http://dev.jsapn.armedianet.com/arkcase/assets/css/application.css
 	http://localhost:8080/arkcase/assets/css/application.css
-	http://10.21.4.149/arkcase/assets/css/application.css */
+	http://10.21.4.149/arkcase/assets/css/application.css
+	http://acm-arkcase:8080/arkcase/assets/css/application.css */
 
 /* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
 
@@ -1078,4 +1079,24 @@ div.tabbed-footer .overview-tabs li:hover span:before {
 
 div.tabbed-footer .overview-tabs li:hover:last-child span:before {
     left: 58px;
+}
+
+
+
+tags-input .host {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+tags-input .tags {
+  box-shadow: none;
+  padding-top: 1px;
+  padding-bottom: 2px;
+}
+
+
+.module-header tags-input .tags{
+	border: none;
+	box-shadow: none;
+	padding-top: 1px;
+	padding-bottom: 3px;
 }
