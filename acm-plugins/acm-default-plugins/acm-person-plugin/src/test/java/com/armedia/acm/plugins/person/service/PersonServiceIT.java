@@ -10,11 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
-import java.util.Date;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
@@ -22,10 +18,11 @@ import static org.junit.Assert.assertNull;
         "/spring/spring-library-person-plugin-test-mule.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
-        "/spring/spring-library-acm-encryption.xml"
+        "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-user-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
-public class PersonServiceIT {
+public class PersonServiceIT
+{
 
     @Autowired
     PersonService personService;
@@ -37,7 +34,8 @@ public class PersonServiceIT {
     AuditPropertyEntityAdapter adapter;
 
     @Test
-    public void addNewPersonTest() {
+    public void addNewPersonTest()
+    {
         Person person = new Person();
         String auth = "ann";
         adapter.setUserId(auth);

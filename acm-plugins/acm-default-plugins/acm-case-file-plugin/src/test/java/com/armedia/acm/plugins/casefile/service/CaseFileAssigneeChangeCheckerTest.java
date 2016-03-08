@@ -55,13 +55,13 @@ public class CaseFileAssigneeChangeCheckerTest extends EasyMockSupport {
 		AcmObjectHistory currentHistory = new AcmObjectHistory();
 		currentHistory.setObjectType(objectType);
 		
-		String currentHistoryJson = "{\"id\":" + objectId.toString() + ",\"className\": \"com.armedia.acm.plugins.casefile.model.CaseFile\", \"caseNumber\":\"" + objectName + "\",\"title\":\"" + objectTitle + "\",\"participants\":[{\"participantType\":\"assignee\",\"participantLdapId\":\"" + newAssignee + "\"}]}";
+		String currentHistoryJson = "{\"id\":" + objectId.toString() + ",\"className\": \"com.armedia.acm.plugins.casefile.model.CaseFile\",\"caseNumber\":\"" + objectName + "\",\"title\":\"" + objectTitle + "\",\"participants\":[{\"className\":\"com.armedia.acm.services.participants.model.AcmParticipant\",\"participantType\":\"assignee\",\"participantLdapId\":\"" + newAssignee + "\"}]}";
 		currentHistory.setObjectString(currentHistoryJson);
 		
 		AcmObjectHistory previousHistory = new AcmObjectHistory();
 		previousHistory.setObjectType(objectType);
 		
-		String previousHistoryJson = "{\"id\":" + objectId.toString() + ",\"className\": \"com.armedia.acm.plugins.casefile.model.CaseFile\", \"caseNumber\":\"" + objectName + "\",\"title\":\"" + objectTitle + "\",\"participants\":[{\"participantType\":\"assignee\",\"participantLdapId\":\"" + oldAssignee + "\"}]}";
+		String previousHistoryJson = "{\"id\":" + objectId.toString() + ",\"className\": \"com.armedia.acm.plugins.casefile.model.CaseFile\", \"caseNumber\":\"" + objectName + "\",\"title\":\"" + objectTitle + "\",\"participants\":[{\"className\":\"com.armedia.acm.services.participants.model.AcmParticipant\",\"participantType\":\"assignee\",\"participantLdapId\":\"" + oldAssignee + "\"}]}";
 		previousHistory.setObjectString(previousHistoryJson);
 		
 		AcmObjectHistoryEvent event = new AcmObjectHistoryEvent(currentHistory);

@@ -21,8 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
@@ -30,10 +29,11 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-person-plugin-test-mule.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
-        "/spring/spring-library-acm-encryption.xml"
+        "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-user-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
-public class OrganizationIT {
+public class OrganizationIT
+{
 
     @PersistenceContext
     private EntityManager em;
@@ -47,13 +47,15 @@ public class OrganizationIT {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
-    public void setUp() {
+    public void setUp()
+    {
         auditAdapter.setUserId("auditUser");
     }
 
     @Test
     @Transactional
-    public void saveOrganization() throws Exception {
+    public void saveOrganization() throws Exception
+    {
         Organization org = new Organization();
 
         org.setOrganizationType("sample");
@@ -103,7 +105,7 @@ public class OrganizationIT {
         assertEquals(2, saved.getContactMethods().size());
         assertEquals(2, saved.getAddresses().size());
 
-        assertEquals("com.armedia.acm.plugins.person.model.Organization",saved.getClassName());
+        assertEquals("com.armedia.acm.plugins.person.model.Organization", saved.getClassName());
 
         assertEquals("sample", org.getOrganizationType());
 

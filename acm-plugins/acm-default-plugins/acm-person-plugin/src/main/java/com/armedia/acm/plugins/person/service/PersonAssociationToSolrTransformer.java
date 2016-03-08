@@ -2,9 +2,11 @@ package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
+import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +20,7 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private PersonAssociationDao personAssociationDao;
-
+    private UserDao userDao;
 
     @Override
     public List<PersonAssociation> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -44,16 +46,26 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
 
         solrDoc.setType_lcs(personAssociation.getPersonType());
 
-        solrDoc.setName(personAssociation.getPerson().getGivenName() + " " +
-            personAssociation.getPerson().getFamilyName() + " (" +
-            personAssociation.getPersonType() + ")");
+        solrDoc.setName(personAssociation.getPerson().getGivenName() + " " + personAssociation.getPerson().getFamilyName() + " (" + personAssociation.getPersonType() + ")");
 
         solrDoc.setParent_ref_s(personAssociation.getParentId() + "-" + personAssociation.getParentType());
-
 
         solrDoc.setDescription_parseable(personAssociation.getPersonDescription());
 
         solrDoc.setNotes_no_html_tags_parseable(personAssociation.getNotes());
+
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(personAssociation.getCreator());
+        if (creator != null)
+        {
+            solrDoc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(personAssociation.getModifier());
+        if (modifier != null)
+        {
+            solrDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+        }
 
         return solrDoc;
     }
@@ -66,8 +78,9 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(PersonAssociation in) {
-        //No implementation needed
+    public SolrAdvancedSearchDocument toContentFileIndex(PersonAssociation in)
+    {
+        // No implementation needed
         return null;
     }
 
@@ -93,5 +106,15 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
     public void setPersonAssociationDao(PersonAssociationDao personAssociationDao)
     {
         this.personAssociationDao = personAssociationDao;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 }

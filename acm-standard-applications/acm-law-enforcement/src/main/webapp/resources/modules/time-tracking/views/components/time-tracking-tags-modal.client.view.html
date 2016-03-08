@@ -1,0 +1,29 @@
+<div class="modal-header">
+    <h3>
+        <span translate>timeTracking.comp.tags.modal.title</span>
+    </h3>
+
+</div>
+
+<div class="modal-body">
+    <div>
+    	<span translate>timeTracking.comp.tags.modal.search</span>
+        <tags-input
+                ng-model="tags"
+                display-property="tags_s"
+                key-property="id"
+                replace-spaces-with-dashes="false"
+                on-tag-adding="checkTag($tag)">
+            <auto-complete min-length="1" max-results-to-show="10" source="loadTags($query)"></auto-complete>
+		</tags-input>
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="onClickCancel()">
+        <span translate>timeTracking.comp.tags.modal.buttons.cancel</span>
+    </button>
+    <button class="btn btn-default" ng-click="onClickOk()">
+        <span translate>timeTracking.comp.tags.modal.buttons.ok</span>
+    </button>
+</div>

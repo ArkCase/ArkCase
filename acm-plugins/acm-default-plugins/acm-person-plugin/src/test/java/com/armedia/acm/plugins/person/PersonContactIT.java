@@ -19,11 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
@@ -31,10 +29,11 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-person-plugin-test-mule.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
-        "/spring/spring-library-acm-encryption.xml"
+        "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-user-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
-public class PersonContactIT {
+public class PersonContactIT
+{
     @Autowired
     private PersonContactDao personContactDao;
 
@@ -47,13 +46,15 @@ public class PersonContactIT {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
-    public void setUp() {
+    public void setUp()
+    {
         auditAdapter.setUserId("auditUser");
     }
 
     @Test
     @Transactional
-    public void savePersonContact() throws Exception {
+    public void savePersonContact() throws Exception
+    {
         PersonContact pc = new PersonContact();
         pc.setAttention("Attention");
         pc.setCompanyName("Company name");
@@ -99,10 +100,10 @@ public class PersonContactIT {
         assertEquals("Company name", saved.getCompanyName());
         assertEquals("Person name", saved.getPersonName());
 
-        assertEquals(1,saved.getIdentifications().size());
-        assertEquals(2,saved.getContactMethods().size());
-        assertEquals(2,saved.getAddresses().size());
-        assertEquals("com.armedia.acm.plugins.person.model.PersonContact",saved.getClassName());
+        assertEquals(1, saved.getIdentifications().size());
+        assertEquals(2, saved.getContactMethods().size());
+        assertEquals(2, saved.getAddresses().size());
+        assertEquals("com.armedia.acm.plugins.person.model.PersonContact", saved.getClassName());
 
         assertNotNull(saved.getId());
 

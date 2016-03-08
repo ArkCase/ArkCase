@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+<web-app version="3.1" xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
 
     <display-name>ACM Law Enforcement</display-name>
 
@@ -28,16 +28,6 @@
     </filter>
     <filter-mapping>
         <filter-name>RequestMDCFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
-    <!-- wraps the HTTP request so that its body can be read multiple times -->
-    <filter>
-        <filter-name>RequestWrapperFilter</filter-name>
-        <filter-class>com.armedia.acm.web.api.RequestWrapperFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>RequestWrapperFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
