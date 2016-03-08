@@ -444,11 +444,11 @@ public class FacetedSearchService
 
             // AFDP-1101: the filter line says, "if the user specifically requested a certain object type, then do not
             // exclude it after all".  We have to check for the URL-encoded search term... Value sent to SOLR is like:
-            // {!field f=object_type_s}NOTIFICATION - meaning to include objects of type NOTIFICATION.  The
-            // URL-encoded version of this search term is "%21field+f%3Dobject_type_s%7DNOTIFICATION"... so that's
+            // {!field f=object_type_facet}NOTIFICATION - meaning to include objects of type NOTIFICATION.  The
+            // URL-encoded version of this search term is "%21field+f%3Dobject_type_facet%7DNOTIFICATION"... so that's
             // what we exclude from the results of this stream.
             subQuery = Arrays.stream(objectsToExcludeArray)
-                    .filter((String element) -> !queryParameters.contains("%21field+f%3D" + SearchConstants.PROPERTY_OBJECT_TYPE + "%7D" + element))
+                    .filter((String element) -> !queryParameters.contains("%21field+f%3D" + SearchConstants.PROPERTY_OBJECT_TYPE_FACET + "%7D" + element))
                     .map((String element) -> "-" + SearchConstants.PROPERTY_OBJECT_TYPE + ":" + element)
                     .reduce((String left, String right) -> left + " " + SearchConstants.OPERATOR_AND + " " + right)
                     .orElse("");
