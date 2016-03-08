@@ -31,6 +31,26 @@ public class FacetedSearchServiceTest
 
         // this property copied straight from searchPlugin.properties
         p.put("search.time.period", "[{\"desc\": \"Previous Week\", \"value\":\"[NOW/DAY-7DAY TO *]\"}]");
+
+        p.put("objects.to.exclude", "BAND,AUTHOR");
+    }
+
+    @Test
+    public void updateQueryWithExcludedObjects_excludeByDefault()
+    {
+        String query = "ann.*";
+        String updatedQuery = unit.updateQueryWithExcludedObjects(query, "filter=fq=myfield:myvalue");
+
+        assertEquals("ann.* AND -object_type_s:BAND AND -object_type_s:AUTHOR", updatedQuery);
+    }
+
+    @Test
+    public void updateQueryWithExcludedObjects_includeIfSpecificallyRequested() throws Exception
+    {
+        String query = "ann.*";
+        String updatedQuery = unit.updateQueryWithExcludedObjects(query, URLEncoder.encode("{!field f=object_type_facet}BAND", SearchConstants.FACETED_SEARCH_ENCODING));
+
+        assertEquals("ann.* AND -object_type_s:AUTHOR", updatedQuery);
     }
 
     @Test
