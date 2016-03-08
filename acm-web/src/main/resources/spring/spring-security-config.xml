@@ -46,6 +46,10 @@
                 delete-cookies="JSESSIONID"
                 success-handler-ref="acmLogoutSuccessHandler"
                 invalidate-session="true"/>
+        <session-management invalid-session-url="/login?login_error=1">
+            <!--this will throw error to 3rd login attempt -->
+            <!--<concurrency-control max-sessions="3" error-if-maximum-exceeded="true" /> -->
+        </session-management>
 	</http>
    
 </beans:beans>
