@@ -1,0 +1,71 @@
+<div ng-controller="Tasks.InfoController">
+    <div class="clearfix">
+        <div class="row">
+            <div class="col-xs-6">
+                <h4><a href="#" editable-text="objectInfo.title" onaftersave="updateTitle()">{{objectInfo.title ||
+                    "Unknown"}}</a></h4>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <a href="#" editable-number="objectInfo.percentComplete" onbeforesave="validatePercentComplete($data)" onaftersave="updatePercentage()">
+                        {{ objectInfo.percentComplete }}
+                    </a>
+                </div>
+                <small class="text-muted">"% of Completion"</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <a href="#" editable-select="assignee" onaftersave="updateAssignee()"
+                       e-ng-options="a.object_id_s as a.name for a in assignableUsers">
+                        {{assignee | mapKeyValue: assignableUsers:'object_id_s':'name' || 'Unknown'}}</a>
+                </div>
+                <small class="text-muted">Assignee</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <a href="#" editable-select="objectInfo.priority" onaftersave="updatePriority()"
+                       e-ng-options="p.value as p.text for p in priorities">{{ objectInfo.priority ||
+                        'Unknown'}}</a>
+                </div>
+                <small class="text-muted">Priority</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <a href="#"
+                       editable-date="taskStartDate"
+                       onaftersave="updateStartDate(taskStartDate)">
+                        {{ (taskStartDate | date: "MM/dd/yyyy") || 'Unknown' }}
+                    </a>
+                </div>
+                <small class="text-muted">Start Date</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">
+                    <a href="#"
+                       editable-date="dueDate"
+                       onaftersave="updateDueDate(dueDate)">
+                        {{ (dueDate | date: "MM/dd/yyyy") || 'Unknown' }}
+                    </a>
+                </div>
+                <small class="text-muted">Due Date</small>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="h4 font-bold">{{objectInfo.status || 'Unknown'}}</div>
+                <small class="text-muted">State</small>
+            </div>
+
+        </div>
+        <!--<div class="row">-->
+        <!--<div class="col-xs-12 col-md-4">-->
+        <!--<div class="h4 font-bold">-->
+        <!--<a href="#" editable-select="owningGroup" onaftersave="updateOwningGroup()"-->
+        <!--e-ng-options="o.value as o.text for o in owningGroups"> {{owningGroup || 'Unknown'}}</a>-->
+        <!--</div>-->
+        <!--<small class="text-muted">Owning Group</small>-->
+        <!--</div>-->
+        <!--</div>-->
+    </div>
+</div>

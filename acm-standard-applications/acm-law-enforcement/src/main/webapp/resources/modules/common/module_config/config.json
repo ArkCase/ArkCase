@@ -1,0 +1,349 @@
+{
+  "id": "common",
+  "title": "Common settings",
+  "notifyMessage": {
+    "duration": 5000,
+    "position": "right",
+    "maximumOpen": 5
+  },
+  "docTree": {
+    "emailDialog": {
+      "enableFiltering": false,
+      "multiSelect": true,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "common.directive.docTree.emailDialog.gridColumns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "email_lcs",
+          "displayName": "common.directive.docTree.emailDialog.gridColumns.email",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0
+    },
+    "menu": {
+      "basic": {
+        "root": [
+          {
+            "title": "New Folder <kbd>Ctrl+N</kbd>",
+            "cmd": "newFolder",
+            "uiIcon": "ui-icon-plus"
+          }
+        , {
+            "title": "New Document",
+            "cmd": "subMenuFileTypes",
+            "___children": [
+              {"title": "Electronic Communication", "cmd": "form/electronicCommunicationFormUrl"}
+            ,{"title": "Report of Investigation", "cmd": "form/roiFormUrl"}
+            ,{"title": "Medical Release", "cmd": "file/mr"}
+            ,{"title": "General Release", "cmd": "file/gr"}
+            ,{"title": "eDelivery", "cmd": "file/ev"}
+            ,{"title": "SF86 Signature", "cmd": "file/sig"}
+            ,{"title": "Notice of Investigation", "cmd": "file/noi"}
+            ,{"title": "Witness Interview Request", "cmd": "file/wir"}
+            ,{"title": "Other", "cmd": "file/other"}
+            ]
+          }
+        , {"title": "----"}
+        , {
+            "title": "Paste <kbd>Ctrl+V</kbd>",
+            "cmd": "paste",
+            "uiIcon": "ui-icon-clipboard",
+            "disabled": true
+          }
+        ]
+      , "folder": [
+          {
+            "title": "New Folder <kbd>Ctrl+N</kbd>",
+            "cmd": "newFolder",
+            "uiIcon": "ui-icon-plus"
+          }
+        , {
+            "title": "New Document",
+            "cmd": "subMenuFileTypes"
+          }
+        , {"title": "----"}
+        , {
+            "title": "Cut <kbd>Ctrl+X</kbd>",
+            "cmd": "cut",
+            "uiIcon": "ui-icon-scissors"
+          }
+        , {
+            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "cmd": "copy",
+            "uiIcon": "ui-icon-copy"
+          }
+        , {
+            "title": "Paste <kbd>Ctrl+V</kbd>",
+            "cmd": "paste",
+            "uiIcon": "ui-icon-clipboard",
+            "disabled": true
+          }
+        , {"title": "----"}
+        , {
+            "title": "Rename <kbd>[F2]</kbd>",
+            "cmd": "rename",
+            "uiIcon": "ui-icon-pencil"
+          }
+        , {
+            "title": "Delete <kbd>Ctrl+D</kbd>",
+            "cmd": "remove",
+            "uiIcon": "ui-icon-trash"
+          }
+        , {
+            "title": "Declare as Record(s)",
+            "cmd": "declare",
+            "uiIcon": "ui-icon-locked"
+          }
+        ]
+      , "file": [
+          {
+            "title": "Open",
+            "cmd": "open",
+            "uiIcon": "ui-icon-folder-open"
+          }
+        , {
+            "title": "Email",
+            "cmd": "email",
+            "uiIcon": "ui-icon-mail-closed"
+          }
+        , {"title": "----"}
+        , {
+            "title": "Cut <kbd>Ctrl+X</kbd>",
+            "cmd": "cut",
+            "uiIcon": "ui-icon-scissors"
+          }
+        , {
+            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "cmd": "copy",
+            "uiIcon": "ui-icon-copy"
+          }
+        , {
+            "title": "Paste <kbd>Ctrl+V</kbd>",
+            "cmd": "paste",
+            "uiIcon": "ui-icon-clipboard",
+            "disabled": true
+          }
+        , {"title": "----"}
+        , {
+            "title": "Rename <kbd>[F2]</kbd>",
+            "cmd": "rename",
+            "uiIcon": "ui-icon-pencil"
+          }
+        , {
+            "title": "Delete <kbd>Ctrl+D</kbd>",
+            "cmd": "remove",
+            "uiIcon": "ui-icon-trash"
+          }
+        , {"title": "----"}
+        , {
+            "title": "Download",
+            "cmd": "download",
+            "uiIcon": "ui-icon-arrowthickstop-1-s"
+          }
+        , {
+            "title": "Replace",
+            "cmd": "replace",
+            "uiIcon": ""
+          }
+        , {
+            "title": "Declare as Record(s)",
+            "cmd": "declare",
+            "uiIcon": "ui-icon-locked"
+          }
+        ]
+      }
+
+    , "record": {
+        "root": [
+          {
+            "title": "New Folder <kbd>Ctrl+N</kbd>",
+            "cmd": "newFolder",
+            "uiIcon": "ui-icon-plus"
+          }
+        , {
+            "title": "New Document",
+            "cmd": "subMenuFileTypes"
+          }
+        , {
+            "title": "----"
+          }
+        , {
+            "title": "Paste <kbd>Ctrl+V</kbd>",
+            "cmd": "paste",
+            "uiIcon": "ui-icon-clipboard",
+            "disabled": true
+          }
+        ]
+      , "folder": [
+          {
+            "title": "New Folder <kbd>Ctrl+N</kbd>",
+            "cmd": "newFolder",
+            "uiIcon": "ui-icon-plus"
+          }
+        , {
+            "title": "New Document",
+            "cmd": "subMenuFileTypes"
+          }
+        , {
+            "title": "----"
+          }
+        , {
+            "title": "Rename <kbd>[F2]</kbd>",
+            "cmd": "rename",
+            "uiIcon": "ui-icon-pencil"
+          }
+        , {
+            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "cmd": "copy",
+            "uiIcon": "ui-icon-copy"
+          }
+        , {
+            "title": "Paste <kbd>Ctrl+V</kbd>",
+            "cmd": "paste",
+            "uiIcon": "ui-icon-clipboard",
+            "disabled": true
+          }
+        , {
+            "title": "----"
+          }
+        ]
+      , "file": [
+          {
+            "title": "Open",
+            "cmd": "open",
+            "uiIcon": "ui-icon-folder-open"
+          }
+        , {
+            "title": "Rename <kbd>[F2]</kbd>",
+            "cmd": "rename",
+            "uiIcon": "ui-icon-pencil"
+          }
+        , {
+            "title": "Email",
+            "cmd": "email",
+            "uiIcon": "ui-icon-mail-closed"
+          }
+        , {
+            "title": "----"
+          }
+        , {
+            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "cmd": "copy",
+            "uiIcon": "ui-icon-copy"
+          }
+        , {
+            "title": "----"
+          }
+        , {
+            "title": "Download",
+            "cmd": "download",
+            "uiIcon": "ui-icon-arrowthickstop-1-s"
+          }
+        ]
+      }
+
+    , "batch": {
+        "files": [
+          {
+            "title": "Email",
+            "cmd": "email",
+            "uiIcon": "ui-icon-mail-closed"
+          }
+        , {"title": "----"}
+        , {
+            "title": "Cut",
+            "cmd": "cut",
+            "uiIcon": "ui-icon-scissors"
+          }
+        , {
+            "title": "Copy",
+            "cmd": "copy",
+            "uiIcon": "ui-icon-copy"
+          }
+        , {
+            "title": "Delete",
+            "cmd": "remove",
+            "uiIcon": "ui-icon-trash"
+          }
+        , {
+            "title": "Declare as Record(s)",
+            "cmd": "declare",
+            "uiIcon": "ui-icon-locked"
+          }
+        ]
+      , "folders": [
+          {
+            "title": "Cut <kbd>Ctrl+X</kbd>",
+            "cmd": "cut",
+            "uiIcon": "ui-icon-scissors"
+          }
+        , {
+            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "cmd": "copy",
+            "uiIcon": "ui-icon-copy"
+          }
+        , {
+            "title": "Delete <kbd>Ctrl+D</kbd>",
+            "cmd": "remove",
+            "uiIcon": "ui-icon-trash"
+          }
+        , {
+            "title": "Declare as Record(s)",
+            "cmd": "declare",
+            "uiIcon": "ui-icon-locked"
+          }
+        ]
+      , "filesAndFolders": [
+          {
+            "title": "Cut <kbd>Ctrl+X</kbd>",
+            "cmd": "cut",
+            "uiIcon": "ui-icon-scissors"
+          }
+        , {
+            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "cmd": "copy",
+            "uiIcon": "ui-icon-copy"
+          }
+        , {
+            "title": "Delete <kbd>Ctrl+D</kbd>",
+            "cmd": "remove",
+            "uiIcon": "ui-icon-trash"
+          }
+        , {
+            "title": "Declare as Record(s)",
+            "cmd": "declare",
+            "uiIcon": "ui-icon-locked"
+          }
+        ]
+      }
+
+    , "noop": {
+      "title": "(Select Item)",
+      "cmd": "noop",
+      "uiIcon": ""
+    }
+
+    , "___menu_item_to_be_implemented_print": {
+        "title": "Print <kbd>Ctrl+P</kbd>",
+        "cmd": "print",
+        "uiIcon": "ui-icon-print"
+      }
+    , "___menu_item_to_be_implemented_edit": {
+        "title": "Edit",
+        "cmd": "edit",
+        "uiIcon": "ui-icon-pencil"
+      }
+    }
+  }
+}

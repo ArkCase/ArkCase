@@ -14,7 +14,8 @@
                     #{ systemProperties['os.name'].startsWith('Windows') ? 'cmd /C ' : '' }
                 </prop>
                 <prop key="frontEndCommandPath">
-                    #{ systemProperties['os.name'].startsWith('Windows') ? 'node_modules\\.bin\\' : 'node_modules/.bin/' }
+                    #{ 'true'.equals(systemProperties['arkcase.external.bower-grunt']) ? ''
+                      : systemProperties['os.name'].startsWith('Windows') ? 'node_modules\\.bin\\' : 'node_modules/.bin/' }
                 </prop>
             </props>
         </property>
