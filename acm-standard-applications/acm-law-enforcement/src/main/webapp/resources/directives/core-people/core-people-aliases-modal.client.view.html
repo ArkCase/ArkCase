@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h3 ng-hide="isEdit">
+        <span translate>common.directive.corePeople.aliases.modal.addAlias</span>
+    </h3>
+
+    <h3 ng-show="isEdit">
+        <span translate>common.directive.corePeople.aliases.modal.editAlias</span>
+    </h3>
+
+</div>
+<div class="modal-body">
+    <form name="aliasesForm">
+        <div>
+            <span translate>common.directive.corePeople.aliases.modal.aliasTypes.label</span>
+        </div>
+        <select
+                ng-model="alias.aliasType"
+                ng-options="item.type as item.name for item in alias.aliasTypes"></select>
+
+        <div>
+            <span translate>common.directive.corePeople.aliases.modal.value.label</span>
+        </div>
+        <input type="text" ng-model="alias.aliasValue">
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="onClickCancel()">
+        <span translate>common.directive.corePeople.aliases.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-default" ng-click="onClickOk()" ng-disabled="aliasesForm.$invalid">
+        <span translate>common.directive.corePeople.aliases.modal.btnOk.text</span>
+    </button>
+</div>
