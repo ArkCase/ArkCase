@@ -46,4 +46,9 @@
     	<property name="taskDao" ref="acmTaskDao" />
     </bean>
 
+    <bean id="claimTaskAPIController" class="com.armedia.acm.plugins.task.web.api.ClaimTaskAPIController">
+        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="taskEventPublisher" ref="taskEventPublisher"/>
+    </bean>
+
 </beans>

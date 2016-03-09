@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by nebojsha on 25.08.2015.
@@ -23,10 +23,11 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-search.xml",
-        "/spring/spring-library-object-lock-mule-test.xml"
+        "/spring/spring-library-object-lock-mule-test.xml", "/spring/spring-library-user-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
-public class AcmObjectLockDaoIT {
+public class AcmObjectLockDaoIT
+{
 
     @Autowired
     AcmObjectLockDao acmObjectLockDao;
@@ -35,14 +36,16 @@ public class AcmObjectLockDaoIT {
     private AuditPropertyEntityAdapter auditAdapter;
 
     @Before
-    public void beforeEachTest() {
+    public void beforeEachTest()
+    {
         auditAdapter.setUserId("auditUser");
         assertNotNull(acmObjectLockDao);
     }
 
     @Test
     @Transactional
-    public void testFindLock() throws Exception {
+    public void testFindLock() throws Exception
+    {
         long objectId = 1l;
         String objectType = "COMPLAINT";
         acmObjectLockDao.save(new AcmObjectLock(objectId, objectType));
@@ -52,13 +55,15 @@ public class AcmObjectLockDaoIT {
 
     @Test
     @Transactional
-    public void testRemove() throws Exception {
+    public void testRemove() throws Exception
+    {
         AcmObjectLock ol = acmObjectLockDao.save(new AcmObjectLock(1l, "CASE_FILE"));
     }
 
     @Test(expected = Exception.class)
     @Transactional
-    public void testInsertLockForSameObjet() throws Exception {
+    public void testInsertLockForSameObjet() throws Exception
+    {
         acmObjectLockDao.save(new AcmObjectLock(1l, "CASE_FILE"));
         acmObjectLockDao.getEm().flush();
         acmObjectLockDao.save(new AcmObjectLock(1l, "CASE_FILE"));

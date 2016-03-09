@@ -21,8 +21,9 @@ import java.util.Iterator;
  * Created by sergey on 2/14/16.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class LabelManagementRetrieveAdminResource {
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+public class LabelManagementRetrieveAdminResource
+{
     private Logger log = LoggerFactory.getLogger(getClass());
     private LabelManagementService labelManagementService;
 
@@ -33,28 +34,33 @@ public class LabelManagementRetrieveAdminResource {
     public String retrieveResource(
             @RequestParam("lang") String lang,
             @RequestParam("ns") String ns,
-            HttpServletResponse response) throws IOException, AcmLabelManagementException {
+            HttpServletResponse response) throws IOException, AcmLabelManagementException
+    {
 
-        try {
+        try
+        {
             JSONObject jsonResource = labelManagementService.getAdminResource(ns, lang);
             JSONArray jsonResourceArray = new JSONArray();
             // Convert json object to the array
             Iterator<String> keys = jsonResource.keys();
-            while (keys.hasNext()) {
+            while (keys.hasNext())
+            {
                 String key = (String) keys.next();
-                JSONObject node = (JSONObject)jsonResource.get(key);
+                JSONObject node = (JSONObject) jsonResource.get(key);
                 node.put("id", key);
                 jsonResourceArray.put(node);
             }
             return jsonResourceArray.toString();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             String msg = String.format("Can't retrieve admin resource %s:%s", lang, ns);
             log.error(msg, e);
             throw new AcmLabelManagementException(msg, e);
         }
     }
 
-    public void setLabelManagementService(LabelManagementService labelManagementService) {
+    public void setLabelManagementService(LabelManagementService labelManagementService)
+    {
         this.labelManagementService = labelManagementService;
     }
 

@@ -1,0 +1,20 @@
+<div ng-controller="Complaints.DocumentsController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>complaints.comp.documents.title</span>
+
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-click="onClickRefresh()"><i
+                            class="fa fa-lg fa-refresh"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <doc-tree object-type="objectType" object-id="objectId" tree-control="treeControl" file-types="fileTypes"
+                      upload-form="uploadForm" tree-config="treeConfig" object-info="objectInfo"
+                      on-allow-cmd="onAllowCmd" on-pre-cmd="onPreCmd" on-post-cmd="onPostCmd">
+            </doc-tree>
+        </div>
+    </div>
+</div>

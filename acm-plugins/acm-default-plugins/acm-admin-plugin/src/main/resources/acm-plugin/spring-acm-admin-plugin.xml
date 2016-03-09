@@ -113,6 +113,11 @@
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/admin/labelmanagement/admin-resource/refresh"/>
+                    <property name="requiredPrivilege" ref="adminPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/admin/labelmanagement/languages"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
@@ -132,7 +137,6 @@
                     <property name="url" value="/api/{version}/plugin/admin/labelmanagement/namespaces"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
                 </bean>
-
 
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
