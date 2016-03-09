@@ -170,6 +170,7 @@
 
     <bean id="queueToSolrTranformer" class="com.armedia.acm.plugins.casefile.service.QueueToSolrTransformer">
         <property name="acmQueueDao" ref="acmQueueDao"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
 </beans>

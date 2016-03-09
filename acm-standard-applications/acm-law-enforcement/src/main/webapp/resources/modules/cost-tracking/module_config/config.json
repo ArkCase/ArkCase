@@ -283,7 +283,8 @@
         {
           "name": "creator",
           "displayName": "costTracking.comp.tags.table.columns.createdBy",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         }
       ],
        "filters": "\"Object Type\": TAG",

@@ -305,7 +305,8 @@
             {
               "name": "note",
               "displayName": "cases.comp.notes.table.columns.note",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "enableCellEdit": false
             },
             {
               "name": "created",
@@ -454,10 +455,12 @@
       "enabled": true,
       "type": "empty",
       "docTree": {
-        "emailSubject": "Case $caseNumber",
-        "subjectRegex": "(.*)\\$([^\\s]+)",
-        "objectTypeRegexGroup": 1,
-        "objectNumberRegexGroup": 2
+        "email": {
+          "emailSubject": "Case $caseNumber",
+          "subjectRegex": "(.*)\\$([^\\s]+)",
+          "objectTypeRegexGroup": 1,
+          "objectNumberRegexGroup": 2
+        }
       }
     },
     {
@@ -1122,18 +1125,20 @@
         {
           "name": "creator",
           "displayName": "cases.comp.tags.table.columns.createdBy",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         }
       ],
-       "filters": "\"Object Type\": TAG",
-       "filterName" : "Object Type"
+      "filters": "\"Object Type\": TAG",
+      "filterName": "Object Type"
     },
     {
       "id": "calendar",
       "title": "Calendar",
       "icon": "fa fa-calendar",
       "enabled": true,
-      "type": "empty"
+      "type": "empty",
+      "dateFormat": "MM/DD/YYYY HH:mm"
     },
     {
       "id": "merge",

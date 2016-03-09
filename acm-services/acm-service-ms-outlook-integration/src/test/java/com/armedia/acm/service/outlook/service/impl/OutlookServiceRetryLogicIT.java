@@ -21,7 +21,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -34,7 +34,7 @@ import static org.junit.Assert.fail;
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-context-holder.xml",
-        "/spring/spring-library-acm-encryption.xml"
+        "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-user-service.xml"
 })
 public class OutlookServiceRetryLogicIT extends EasyMockSupport
 {

@@ -1,12 +1,3 @@
 <div ng-controller="Cases.CalendarController">
-    <div class="panel panel-success">
-        <div class="panel-heading">
-            <div class="panel-title">
-                <span translate>cases.comp.calendar.title</span>
-            </div>
-        </div>
-        <div class="panel-body">
-            <div ui-calendar="uiConfig.calendar" ng-model="eventSources" calendar="casesCalendar"></div>
-        </div>
-    </div>
+    <core-calendar config="config" folder-id="folderId"/>
 </div>

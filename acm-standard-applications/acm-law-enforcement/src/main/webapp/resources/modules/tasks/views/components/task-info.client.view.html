@@ -10,8 +10,9 @@
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-text="objectInfo.percentComplete" onaftersave="updatePercentage()">
-                        {{objectInfo.percentComplete || 'Unknown'}}</a>
+                    <a href="#" editable-number="objectInfo.percentComplete" onbeforesave="validatePercentComplete($data)" onaftersave="updatePercentage()">
+                        {{ objectInfo.percentComplete }}
+                    </a>
                 </div>
                 <small class="text-muted">"% of Completion"</small>
             </div>

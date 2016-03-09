@@ -40,21 +40,7 @@
       "footerForAttachment": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
     },
     "menu": {
-      "noop": "(Select Item)",
-      "newFolder": "New Folder <kbd>Ctrl+N</kbd>",
-      "newFile": "New Document",
-      "rename": "Rename <kbd>[F2]</kbd>",
-      "cut": "Cut <kbd>Ctrl+X</kbd>",
-      "copy": "Copy <kbd>Ctrl+C</kbd>",
-      "paste": "Paste <kbd>Ctrl+V</kbd>",
-      "delete": "Delete <kbd>Ctrl+D</kbd>",
-      "open": "Open",
-      "edit": "Edit",
-      "download": "Download",
-      "replace": "Replace",
-      "email": "Email",
-      "print": "Print <kbd>Ctrl+P</kbd>",
-      "declare": "Declare as Record(s)"
+      "noop": "(Select Item)"
     },
     "dndDialog": {
       "title": "Drag and Drop",
@@ -108,5 +94,18 @@
     "btnOk.text": "OK",
     "btnCancel.text": "Cancel",
     "edtPlaceholder": "Type in to search"
+  },
+  "common.directive.coreNotes": {
+    "title": "Notes",
+    "modal.addNote": "Add Note",
+    "modal.editNote": "Edit Record",
+    "modal.notes.label": "Note",
+    "modal.btnOk.text": "Save",
+    "modal.btnCancel.text": "Cancel"
+  },
+  "common.directive.coreCalendar": {
+    "title": "Calendar",
+    "start.label": "Start: ",
+    "end.label": "End: "
   }
 }

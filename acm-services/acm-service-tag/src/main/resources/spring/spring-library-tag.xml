@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 
     <bean id="tagProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -44,12 +44,15 @@
         <property name="tagPlugin" ref="tagPlugin"/>
     </bean>
 
-    <bean id="associatedTagToSolrTransformer" class="com.armedia.acm.services.tag.service.AssociatedTagToSolrTransformer">
+    <bean id="associatedTagToSolrTransformer"
+          class="com.armedia.acm.services.tag.service.AssociatedTagToSolrTransformer">
         <property name="associatedTagDao" ref="associatedTagDao"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
-    
+
     <bean id="tagToSolrTransformer" class="com.armedia.acm.services.tag.service.TagToSolrTransformer">
         <property name="tagDao" ref="tagDao"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
 </beans>

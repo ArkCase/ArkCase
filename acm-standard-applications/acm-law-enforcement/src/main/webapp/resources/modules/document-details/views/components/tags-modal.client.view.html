@@ -6,30 +6,16 @@
 </div>
 
 <div class="modal-body">
-    <form name="tagForm">
-        <div>
-            <span translate>documentDetails.comp.tags.modal.name</span>
-        </div>
-        <input type="text" ng-model="tag.name" required>
-
-        <div>
-            <span translate>documentDetails.comp.tags.modal.description</span>
-        </div>
-        <input type="text" ng-model="tag.description" required>
-
-        <div>
-            <span translate>documentDetails.comp.tags.modal.text</span>
-        </div>
-
-        <input type="text" ng-model="tag.text" required>
-    </form>
     <div>
-        <select class="form-control" ng-model="selectedTag"
-                ng-options="option.tagName for option in tags track by option.id">
-            <option value="" translate>
-                documentDetails.comp.tags.modal.dropdownLabel
-            </option>
-        </select>
+        <span translate>documentDetails.comp.tags.modal.search</span>
+        <tags-input
+                ng-model="tags"
+                display-property="tags_s"
+                key-property="id"
+                replace-spaces-with-dashes="false"
+                on-tag-adding="checkTag($tag)">
+            <auto-complete min-length="1" max-results-to-show="10" source="loadTags($query)"></auto-complete>
+        </tags-input>
     </div>
 
 </div>
@@ -37,7 +23,7 @@
     <button class="btn btn-default" ng-click="onClickCancel()">
         <span translate>documentDetails.comp.tags.modal.buttons.cancel</span>
     </button>
-    <button class="btn btn-default" ng-click="onClickOk()" ng-disabled="tagForm.$invalid && !selectedTag">
+    <button class="btn btn-default" ng-click="onClickOk()">
         <span translate>documentDetails.comp.tags.modal.buttons.ok</span>
     </button>
 </div>

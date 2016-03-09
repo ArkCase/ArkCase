@@ -18,6 +18,7 @@
  * @param {String} searchPlaceholder - (Optional)label for the input placeholder. If not specified, default value is used
  * @param {Object} filter - filter required to send to the faceted search by default (e.g. for client : "\"Object Sub Type\":CLIENT")
  * @param {String} defaultFilter  - (Optional) Used to  retrieve data by default.
+ * @param {Boolean} disableSearch  - (Optional) Used to disable search controls (input, filter and search button).
  * @param {Object} config - config of the parent scope used mostly for the UI-grid and to retrieve other params
  * @param {Object} modalInstance - (Optional)current modalInstance in the parentScope, required to pass data when modal closes with "Add".
  * If not specified, this directive only show the content part of the dialog. Header and footer are not shown. And user has to handle the
@@ -42,6 +43,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 searchPlaceholder: '@',
                 filter: '@',
                 defaultFilter: '@',
+                disableSearch: '@',
                 config: '&',            //& : one way binding (read-only, can return key, value pair via a getter function)
                 modalInstance: '=',     //= : two way binding (read-write both, parent scope and directive's isolated scope have two way binding)
                 searchControl: '=',
@@ -56,7 +58,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.cancel = Util.goodValue(scope.cancel, $translate.instant("common.directive.searchModal.btnCancel.text"));
                 scope.searchPlaceholder = Util.goodValue(scope.searchPlaceholder, $translate.instant("common.directive.searchModal.edtPlaceholder"));
                 scope.showHeaderFooter = !Util.isEmpty(scope.modalInstance);
-
+                scope.disableSearchControls = (scope.disableSearch === 'true') ? true : false;
                 scope.searchQuery = '';
                 scope.minSearchLength = 3;
                 //if (scope.multiSelect == undefined || scope.multiSelect == '') {

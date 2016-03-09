@@ -47,6 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -480,6 +481,55 @@ public class ActivitiTaskDao implements TaskDao
     }
 
     @Override
+    public AcmTask claimTask(Long taskId, String userId) throws AcmTaskException
+    {
+        if (taskId != null && userId != null)
+        {
+            try
+            {
+                getActivitiTaskService().claim(String.valueOf(taskId), userId);
+                Task existingTask = getActivitiTaskService().
+                        createTaskQuery().
+                        includeProcessVariables().
+                        includeTaskLocalVariables().
+                        taskId(String.valueOf(taskId)).
+                        singleResult();
+                return acmTaskFromActivitiTask(existingTask);
+
+            } catch (ActivitiException e)
+            {
+                log.info("Claiming task failed for task with ID: [{}]", taskId);
+                throw new AcmTaskException(e.getMessage(), e);
+            }
+        }
+        throw new AcmTaskException("Task with ID '" + taskId + "' does not exist. Verify the supplied arguments (taskId: " + taskId + " and userId: " + userId + ")");
+    }
+
+    @Override
+    public AcmTask unclaimTask(Long taskId) throws AcmTaskException
+    {
+        if (taskId != null)
+        {
+            try
+            {
+                getActivitiTaskService().unclaim(String.valueOf(taskId));
+                Task existingTask = getActivitiTaskService().
+                        createTaskQuery().
+                        includeProcessVariables().
+                        includeTaskLocalVariables().
+                        taskId(String.valueOf(taskId)).
+                        singleResult();
+                return acmTaskFromActivitiTask(existingTask);
+            } catch (ActivitiException e)
+            {
+                log.info("Unclaiming task failed for task with ID: [{}]", taskId);
+                throw new AcmTaskException(e.getMessage(), e);
+            }
+        }
+        throw new AcmTaskException("Task with ID '" + taskId + "' does not exist. Verify the supplied arguments (taskId: " + taskId + ")");
+    }
+
+    @Override
     public List<AcmTask> dueSpecificDateTasks(NumberOfDays numberOfDaysFromToday)
     {
         if (log.isInfoEnabled())
@@ -860,15 +910,19 @@ public class ActivitiTaskDao implements TaskDao
 
         Process p = processes.get(0);
 
-        FlowElement taskFlowElement = p.getFlowElement(taskDefinitionKey);
+        FlowElement taskFlowElement = p.getFlowElementRecursive(taskDefinitionKey);
 
         log.debug("task flow type: " + taskFlowElement.getClass().getName());
 
-        UserTask ut = (UserTask) taskFlowElement;
+        if (taskFlowElement instanceof UserTask)
+        {
+            UserTask ut = (UserTask) taskFlowElement;
 
-        List<FormProperty> formProperties = ut.getFormProperties();
+            List<FormProperty> formProperties = ut.getFormProperties();
 
-        return formProperties;
+            return formProperties;
+        }
+        return Collections.emptyList();
 
     }
 
