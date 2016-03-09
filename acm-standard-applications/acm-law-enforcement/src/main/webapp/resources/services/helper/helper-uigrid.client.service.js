@@ -66,6 +66,19 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
 
             /**
              * @ngdoc method
+             * @name getGridOptions
+             * @methodOf services:Helper.UiGridService
+             *
+             *
+             * @description
+             * Get ui-grid gridOptions that were set previously.
+             */
+            getGridOptions: function () {
+                return this.scope.gridOptions;
+            },
+
+            /**
+             * @ngdoc method
              * @name setBasicOptions
              * @methodOf services:Helper.UiGridService
              *
@@ -101,7 +114,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * @description
              * Disabling vertical and horizontal scrolling to ui-grid options.
              */
-            , disableGridScrolling: function(config) {
+            , disableGridScrolling: function (config) {
                 var that = this;
                 that.scope.config = config;
                 that.scope.gridOptions.enableHorizontalScrollbar = uiGridConstants.scrollbars.NEVER;
@@ -453,11 +466,11 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              */
             , addEditButton: function (columnDefs, onClickEdit) {
                 var columnDef = {
-                    name: "edit"
-                    , cellEditableCondition: false
-                    , width: 40
-                    , headerCellTemplate: "<span></span>"
-                    , cellTemplate: "<span><i class='fa fa-pencil fa-lg' style='cursor :pointer' ng-click='" + onClickEdit + "'></i></span>"
+                    name: "edit",
+                    cellEditableCondition: false,
+                    width: 40,
+                    headerCellTemplate: "<span></span>",
+                    cellTemplate: "<span><i class='fa fa-pencil fa-lg' style='cursor :pointer' ng-click='" + onClickEdit + "'></i></span>"
                 };
                 columnDefs.push(columnDef);
             }

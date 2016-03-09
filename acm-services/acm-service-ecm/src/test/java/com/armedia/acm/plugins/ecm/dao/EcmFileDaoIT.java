@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by armdev on 4/22/14.
@@ -28,7 +28,7 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration(name = "spring", locations = {"/spring/spring-library-data-source.xml", "/spring/spring-library-ecm-file.xml", "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-search.xml", "/spring/spring-library-property-file-manager.xml", "/spring/spring-library-data-access-control.xml", "/spring/spring-library-particpants.xml",
         "/spring/spring-library-folder-watcher.xml", "/spring/spring-library-activiti-configuration.xml", "/spring/spring-library-drools-monitor.xml",
-        "/spring/spring-library-ecm-plugin-test-mule.xml", "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-audit-service.xml"})
+        "/spring/spring-library-ecm-plugin-test-mule.xml", "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-audit-service.xml", "/spring/spring-library-user-service.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class EcmFileDaoIT
 {

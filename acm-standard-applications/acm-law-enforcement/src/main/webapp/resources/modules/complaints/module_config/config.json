@@ -788,10 +788,12 @@
       "enabled": true,
       "type": "empty",
       "docTree": {
-        "emailSubject": "Complaint $complaintNumber",
-        "subjectRegex": "(.*)\\$([^\\s]+)",
-        "objectTypeRegexGroup": 1,
-        "objectNumberRegexGroup": 2
+        "email": {
+          "emailSubject": "Complaint $complaintNumber",
+          "subjectRegex": "(.*)\\$([^\\s]+)",
+          "objectTypeRegexGroup": 1,
+          "objectNumberRegexGroup": 2
+        }
       }
     },
     {
