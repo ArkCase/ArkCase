@@ -6,6 +6,8 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.subscription.dao.SubscriptionEventDao;
 import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
 import java.util.List;
@@ -13,22 +15,26 @@ import java.util.List;
 /**
  * Created by marjan.stefanoski on 29.01.2015.
  */
-public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmSubscriptionEvent> {
+public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmSubscriptionEvent>
+{
 
     private SubscriptionEventDao subscriptionEventDao;
     private AcmPlugin subscriptionEventPlugin;
+    private UserDao userDao;
 
     @Override
-    public List<AcmSubscriptionEvent> getObjectsModifiedSince(Date lastModified, int start, int pageSize) {
+    public List<AcmSubscriptionEvent> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
+    {
         return getSubscriptionEventDao().findModifiedSince(lastModified, start, pageSize);
     }
 
     @Override
-    public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmSubscriptionEvent in) {
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmSubscriptionEvent in)
+    {
 
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
-        solr.setId(in.getId() + "-"+in.getObjectType());
+        solr.setId(in.getId() + "-" + in.getObjectType());
         solr.setObject_id_s(in.getId() + "");
         solr.setObject_type_s(in.getObjectType());
 
@@ -38,18 +44,23 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         solr.setModifier_lcs(in.getModifier());
 
         String title;
-        if( in.getEventType() !=null && getSubscriptionEventPlugin().getPluginProperties().containsKey(in.getEventType()) ){
-            title = (String)getSubscriptionEventPlugin().getPluginProperties().get(in.getEventType());
-        } else if (in.getEventType() !=null) {
-                title = in.getEventType();
-        } else {
+        if (in.getEventType() != null && getSubscriptionEventPlugin().getPluginProperties().containsKey(in.getEventType()))
+        {
+            title = (String) getSubscriptionEventPlugin().getPluginProperties().get(in.getEventType());
+        } else if (in.getEventType() != null)
+        {
+            title = in.getEventType();
+        } else
+        {
             title = "";
         }
         solr.setTitle_parseable(title);
 
-        if( in.getEventObjectId()!=null ) {
+        if (in.getEventObjectId() != null)
+        {
             solr.setParent_id_s(Long.toString(in.getEventObjectId()));
-        } else {
+        } else
+        {
             solr.setParent_id_s("");
         }
 
@@ -61,23 +72,36 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
 
         solr.setOwner_lcs(in.getSubscriptionOwner());
 
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+        }
+
         return solr;
     }
 
-
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmSubscriptionEvent in) {
-        //No implementation needed
+    public SolrAdvancedSearchDocument toContentFileIndex(AcmSubscriptionEvent in)
+    {
+        // No implementation needed
         return null;
     }
 
-
     @Override
-    public SolrDocument toSolrQuickSearch(AcmSubscriptionEvent in) {
+    public SolrDocument toSolrQuickSearch(AcmSubscriptionEvent in)
+    {
 
         SolrDocument solr = new SolrDocument();
 
-        solr.setId(in.getId() + "-"+in.getObjectType());
+        solr.setId(in.getId() + "-" + in.getObjectType());
         solr.setObject_id_s(in.getId() + "");
         solr.setObject_type_s(in.getObjectType());
 
@@ -87,11 +111,14 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         solr.setModifier_s(in.getModifier());
 
         String title;
-        if( in.getEventType() !=null && getSubscriptionEventPlugin().getPluginProperties().containsKey(in.getEventType()) ){
-            title = (String)getSubscriptionEventPlugin().getPluginProperties().get(in.getEventType());
-        } else if (in.getEventType() !=null) {
+        if (in.getEventType() != null && getSubscriptionEventPlugin().getPluginProperties().containsKey(in.getEventType()))
+        {
+            title = (String) getSubscriptionEventPlugin().getPluginProperties().get(in.getEventType());
+        } else if (in.getEventType() != null)
+        {
             title = in.getEventType();
-        } else {
+        } else
+        {
             title = "";
         }
         solr.setTitle_parseable(title);
@@ -107,7 +134,8 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
     }
 
     @Override
-    public boolean isAcmObjectTypeSupported(Class acmObjectType) {
+    public boolean isAcmObjectTypeSupported(Class acmObjectType)
+    {
 
         boolean objectNotNull = acmObjectType != null;
         String ourClassName = AcmSubscriptionEvent.class.getName();
@@ -118,19 +146,33 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         return isSupported;
     }
 
-    public SubscriptionEventDao getSubscriptionEventDao() {
+    public SubscriptionEventDao getSubscriptionEventDao()
+    {
         return subscriptionEventDao;
     }
 
-    public void setSubscriptionEventDao(SubscriptionEventDao subscriptionEventDao) {
+    public void setSubscriptionEventDao(SubscriptionEventDao subscriptionEventDao)
+    {
         this.subscriptionEventDao = subscriptionEventDao;
     }
 
-    public AcmPlugin getSubscriptionEventPlugin() {
+    public AcmPlugin getSubscriptionEventPlugin()
+    {
         return subscriptionEventPlugin;
     }
 
-    public void setSubscriptionEventPlugin(AcmPlugin subscriptionEventPlugin) {
+    public void setSubscriptionEventPlugin(AcmPlugin subscriptionEventPlugin)
+    {
         this.subscriptionEventPlugin = subscriptionEventPlugin;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 }
