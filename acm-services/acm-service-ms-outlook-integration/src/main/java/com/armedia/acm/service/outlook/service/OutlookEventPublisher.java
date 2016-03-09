@@ -17,8 +17,8 @@ public class OutlookEventPublisher implements ApplicationEventPublisherAware
         
     }
     
-    public void publishCalendarEventAdded(OutlookCalendarItem source, String userId){
-        CalendarEventAddedEvent event = new CalendarEventAddedEvent(source, userId);
+    public void publishCalendarEventAdded(OutlookCalendarItem source, String userId, Long objectId, String objectType){
+        CalendarEventAddedEvent event = new CalendarEventAddedEvent(source, userId, objectId, objectType);
         event.setSucceeded(true);
         eventPublisher.publishEvent(event);
     }

@@ -4,139 +4,123 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import org.springframework.context.ApplicationListener;
 
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.complaint.model.ComplaintPersistenceEvent;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
+import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
-public class ComplaintEventListener implements ApplicationListener<ComplaintPersistenceEvent>
-{
-
-    private static final String OBJECT_TYPE = "COMPLAINT";
-    private static final String EVENT_TYPE = "com.armedia.acm.complaint.updated";
+public class ComplaintEventListener implements ApplicationListener<AcmObjectHistoryEvent> {
 
     private AcmObjectHistoryService acmObjectHistoryService;
     private ComplaintEventPublisher complaintEventPublisher;
 
     @Override
-    public void onApplicationEvent(ComplaintPersistenceEvent event)
-    {
-        if (event != null)
-        {
-            boolean execute = checkExecution(event.getEventType());
+    public void onApplicationEvent(AcmObjectHistoryEvent event) {
+        if (event != null) {
+            AcmObjectHistory acmObjectHistory = (AcmObjectHistory) event.getSource();
 
-            if (execute)
-            {
-                Complaint updatedComplaint = (Complaint) event.getSource();
+            boolean execute = checkExecution(acmObjectHistory.getObjectType());
 
-                AcmObjectHistory acmObjectHistory = getAcmObjectHistoryService().getAcmObjectHistory(updatedComplaint.getComplaintId(),
-                        OBJECT_TYPE);
-
-                String json = acmObjectHistory.getObjectString();
-
-                // Convert JSON string to Object
+            if (execute) {
+                // Converter for JSON string to Object
                 AcmUnmarshaller converter = ObjectConverter.createJSONUnmarshaller();
-                Complaint exsisting = (Complaint) converter.unmarshall(json, Complaint.class);
 
-                if (priorityChanged(exsisting, updatedComplaint))
-                {
-                    getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "priority.changed");
+                String jsonUpdatedComplaint = acmObjectHistory.getObjectString();
+                Complaint updatedComplaint = (Complaint) converter.unmarshall(jsonUpdatedComplaint, Complaint.class);
+
+                AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService().getAcmObjectHistory(updatedComplaint.getComplaintId(),
+                        ComplaintConstants.OBJECT_TYPE);
+
+                if (acmObjectHistoryExisting != null) {
+
+                    String json = acmObjectHistoryExisting.getObjectString();
+                    Complaint existing = (Complaint) converter.unmarshall(json, Complaint.class);
+
+                    if (isPriorityChanged(existing, updatedComplaint)) {
+                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "priority.changed");
+                    }
+
+                    if (isDetailsChanged(existing, updatedComplaint)) {
+                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "details.changed");
+                    }
+
+                    if (isStatusChanged(existing, updatedComplaint)) {
+                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "status.changed");
+                    }
+
+                    checkParticipants(existing, updatedComplaint);
                 }
-
-                if (detailsChanged(exsisting, updatedComplaint))
-                {
-                    getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "details.changed");
-                }
-
-                if (statusChanged(exsisting, updatedComplaint))
-                {
-                    getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "status.updated");
-                }
-
-                checkParticipants(exsisting, updatedComplaint, event);
             }
         }
     }
 
-    private boolean priorityChanged(Complaint complaint, Complaint updatedComplaint)
-    {
+    private boolean isPriorityChanged(Complaint complaint, Complaint updatedComplaint) {
         String updatedPriority = updatedComplaint.getPriority();
         String priority = complaint.getPriority();
         return !updatedPriority.equals(priority);
     }
 
-    private boolean detailsChanged(Complaint complaint, Complaint updatedComplaint)
-    {
+    private boolean isDetailsChanged(Complaint complaint, Complaint updatedComplaint) {
         String updatedDetails = updatedComplaint.getDetails();
         String details = complaint.getDetails();
-        if (updatedDetails != null && details != null)
-        {
+        if (updatedDetails != null && details != null) {
             return !details.equals(updatedDetails);
-        } else if (updatedDetails != null)
-        {
+        } else if (updatedDetails != null) {
             return true;
         }
         return false;
     }
 
-    private boolean statusChanged(Complaint complaint, Complaint updatedComplaint)
-    {
-        String updatedStatus = updatedComplaint.getStatus();
-        String status = complaint.getStatus();
-        return !updatedStatus.equals(status);
-    }
-
-    private void checkParticipants(Complaint complaint, Complaint updatedComplaint, ComplaintPersistenceEvent event)
-    {
+    private void checkParticipants(Complaint complaint, Complaint updatedComplaint) {
         List<AcmParticipant> existing = complaint.getParticipants();
         List<AcmParticipant> updated = updatedComplaint.getParticipants();
 
         Set<AcmParticipant> es = new HashSet<>(existing);
         Set<AcmParticipant> us = new HashSet<>(updated);
 
-        if (es.addAll(us))
-        {
+        if (es.addAll(us)) {
             // participants added
-            getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "participants.added");
+            getComplaintEventPublisher().publishComplaintModified(updatedComplaint, "", "participants.added");
         }
-        
+
         // set is mutable
         es = new HashSet<>(existing);
-       
-        if (us.addAll(es))
-        {
+
+        if (us.addAll(es)) {
             // participants deleted
-            getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "participants.deleted");
+            getComplaintEventPublisher().publishComplaintModified(updatedComplaint, "", "participants.deleted");
         }
     }
 
-    private boolean checkExecution(String eventType)
-    {
-        return EVENT_TYPE.equals(eventType);
+    private boolean isStatusChanged(Complaint complaint, Complaint updatedComplaint) {
+        String updatedStatus = updatedComplaint.getStatus();
+        String status = complaint.getStatus();
+        return !updatedStatus.equals(status);
     }
 
-    public AcmObjectHistoryService getAcmObjectHistoryService()
-    {
+    private boolean checkExecution(String objectType) {
+        return objectType.equals(ComplaintConstants.OBJECT_TYPE);
+    }
+
+    public AcmObjectHistoryService getAcmObjectHistoryService() {
         return acmObjectHistoryService;
     }
 
-    public void setAcmObjectHistoryService(AcmObjectHistoryService acmObjectHistoryService)
-    {
+    public void setAcmObjectHistoryService(AcmObjectHistoryService acmObjectHistoryService) {
         this.acmObjectHistoryService = acmObjectHistoryService;
     }
 
-    public ComplaintEventPublisher getComplaintEventPublisher()
-    {
+    public ComplaintEventPublisher getComplaintEventPublisher() {
         return complaintEventPublisher;
     }
 
-    public void setComplaintEventPublisher(ComplaintEventPublisher complaintEventPublisher)
-    {
+    public void setComplaintEventPublisher(ComplaintEventPublisher complaintEventPublisher) {
         this.complaintEventPublisher = complaintEventPublisher;
     }
 }
