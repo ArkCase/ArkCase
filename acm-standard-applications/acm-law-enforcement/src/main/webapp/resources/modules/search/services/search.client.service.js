@@ -9,10 +9,10 @@
  *
  * The SearchService provides "Faceted Search" REST call functionality
  */
-angular.module('search').factory('SearchService', ['$resource', 'UtilService',
-    function ($resource, Util) {
+angular.module('search').factory('SearchService', ['$resource', 'UtilService', '$filter',
+    function ($resource, Util, $filter) {
         var Service = $resource('api/latest/plugin/search', {}, {
-			/**
+            /**
              * @ngdoc method
              * @name queryFilteredSearchForUser
              * @methodOf services:Search.SearchService
@@ -23,7 +23,7 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService',
              * @param {String} query Query to send to the server
              * @returns {HttpPromise} Future info about faceted search
              */
-			queryFilteredSearchForUser: {
+            queryFilteredSearchForUser: {
                 method: 'GET',
                 url: "api/v1/plugin/search/advancedSearch?q=:query&startRow=:start&n=:maxRows",
                 cache: true,
@@ -32,7 +32,6 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService',
                     if (Service.validateSolrData(JSON.parse(data))) {
                         var result = {};
                         var searchObj = JSON.parse(data);
-
                         // Process Faceted fields
                         if (searchObj && searchObj.facet_counts && searchObj.facet_counts.facet_fields) {
                             var fields = searchObj.facet_counts.facet_fields;
@@ -57,7 +56,7 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService',
                     }
                 }
             },
-			
+
             /**
              * @ngdoc method
              * @name queryFilteredSearch
@@ -78,6 +77,7 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService',
                     if (Service.validateSolrData(JSON.parse(data))) {
                         var result = {};
                         var searchObj = JSON.parse(data);
+                        var filter = $filter('capitalizeFirst');
 
                         // Process Faceted fields
                         if (searchObj && searchObj.facet_counts && searchObj.facet_counts.facet_fields) {
@@ -89,7 +89,11 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService',
                                 for (var i = 0; i < items.length; i += 2) {
                                     if (items[i + 1] > 0) {
                                         newItems.push({
-                                            name: items[i],
+                                            //name: filter(items[i]),
+                                            name: {
+                                                nameValue: items[i],
+                                                nameFiltered: filter(items[i])
+                                            },
                                             count: items[i + 1]
                                         });
                                     }
@@ -97,6 +101,42 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService',
                                 newFields[fieldName] = newItems;
                             });
 
+                            searchObj.facet_counts.facet_fields = newFields;
+                        }
+                        // Process queries for faceting date range
+                        if (searchObj && searchObj.facet_counts && searchObj.facet_counts.facet_queries) {
+                            var fields = searchObj.facet_counts.facet_queries;
+                            var splitField;
+                            var dateRangeType;
+                            var dateRangeValue;
+
+                            _.forEach(fields, function (count, fieldName) {
+                            	if(count > 0) {
+                            		splitField = fieldName.split(",");
+                            		dateRangeType = filter(splitField[0]);
+                            		dateRangeValue = filter(splitField[1]);
+
+                            		if(!newFields[dateRangeType]) {
+                            			newFields[dateRangeType] = [];
+                            			newFields[dateRangeType].push({
+                            				name: {
+                            					nameValue: dateRangeValue,
+                            					nameFiltered: filter(dateRangeValue)
+                            				},
+                            				count: count
+                            			});
+                            		}
+                            		else {
+                            			newFields[dateRangeType].push({
+                            				name: {
+                            					nameValue: dateRangeValue,
+                            					nameFiltered: filter(dateRangeValue)
+                            				},
+                            				count: count
+                            			});
+                            		}
+                            	}
+                            });
                             searchObj.facet_counts.facet_fields = newFields;
                         }
                         return searchObj;
@@ -127,9 +167,9 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService',
             if (Util.isEmpty(data.responseHeader.status)) {
                 return false;
             }
-//            if (0 != responseHeader.status) {
-//                return false;
-//            }
+            //            if (0 != responseHeader.status) {
+            //                return false;
+            //            }
             if (Util.isEmpty(data.responseHeader.params)) {
                 return false;
             }

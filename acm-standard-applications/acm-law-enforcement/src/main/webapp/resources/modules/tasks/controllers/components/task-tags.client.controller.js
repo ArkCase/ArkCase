@@ -25,6 +25,7 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
         });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+        var promiseUsers = gridHelper.getUsers();
         
         $scope.addNew = function () {
             var modalInstance = $modal.open({
@@ -46,6 +47,7 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
 			                            function (returnedTag) {
 			                            	var tagToAdd = angular.copy(returnedTag);
 											tagToAdd.tagName = tag.tags_s;
+                                            tagToAdd.id = returnedTag.tagId;
 			                                $scope.tags.push(tagToAdd);
 			                                $scope.gridOptions.data = $scope.tags;
 			                                $scope.gridOptions.totalItems = $scope.tags.length;
@@ -79,9 +81,11 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
         var onConfigRetrieved = function (config) {
 
         	$scope.config = config;
+            gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
+            gridHelper.setUserNameFilter(promiseUsers);
 
         };
 
@@ -96,6 +100,19 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = $scope.tags;
                     $scope.gridOptions.totalItems = $scope.tags.length;
+                });
+            }
+        };
+
+        $scope.deleteRow = function (rowEntity) {
+            gridHelper.deleteRow(rowEntity);
+
+            var id = Util.goodMapValue(rowEntity, "id", 0);
+            if (0 < id) {    //do not need to call service when deleting a new row with id==0
+                ObjectTagsService.removeAssociateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TASK, rowEntity.id).then(function () {
+                    messageService.info($translate.instant('tasks.comp.tags.message.delete.success'));
+                }, function () {
+                    messageService.error($translate.instant('tasks.comp.tags.message.delete.error'));
                 });
             }
         };

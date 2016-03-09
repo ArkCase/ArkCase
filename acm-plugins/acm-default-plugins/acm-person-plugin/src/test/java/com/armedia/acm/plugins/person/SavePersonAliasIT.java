@@ -4,14 +4,6 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,20 +15,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.*;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
-                                   "/spring/spring-library-person.xml",
-                                   "/spring/spring-library-person-plugin-test-mule.xml",
-                                   "/spring/spring-library-context-holder.xml",
-                                   "/spring/spring-library-property-file-manager.xml",
-                                   "/spring/spring-library-acm-encryption.xml"
-                                  })
+        "/spring/spring-library-person.xml",
+        "/spring/spring-library-person-plugin-test-mule.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-user-service.xml"
+})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class SavePersonAliasIT
 {
     @Autowired
     private PersonDao personDao;
-    
+
     @PersistenceContext
     private EntityManager em;
 
@@ -56,27 +55,26 @@ public class SavePersonAliasIT
     public void savePersonAliasOnPersonTable() throws Exception
     {
         Person person = new Person();
-        
+
 
         person.setFamilyName("Person");
         person.setGivenName("ACM");
         person.setStatus("testStatus");
-        
-        
-        
+
+
         PersonAlias pa = new PersonAlias();
-        
-       
+
+
         pa.setAliasType("Nick Name");
         pa.setAliasValue("ACM");
         pa.setPerson(person);
-                
+
         List<PersonAlias> personAlias = new ArrayList<>();
         personAlias.add(pa);
-        
+
         person.setPersonAliases(personAlias);
-                     
-        Person saved =personDao.save(person);
+
+        Person saved = personDao.save(person);
 
 
         em.flush();

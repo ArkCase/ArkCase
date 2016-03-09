@@ -16,7 +16,8 @@ angular.module('complaints').controller('Complaints.DetailsController', ['$scope
 
 
         $scope.options = {
-            focus: true
+            focus: true,
+            dialogsInBody:true
             //,height: 120
         };
 

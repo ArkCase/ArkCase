@@ -59,6 +59,11 @@ angular.module('dashboard.documents', ['adf.provider'])
                 params.objId = $stateParams.id;
                 params.objType = module.objectType;
 
+                // to pass the access control check based on object type "TASK"
+                if (params.objType === "ADHOC") {
+                    params.objType = "TASK";
+                }
+                
                 Ecm.getFolderDocumentCounts(params,
                     function (data) {
                         var chartData = [];

@@ -11,18 +11,32 @@
  *
  * The docTree directive renders a FancyTree to browse ArkCase objects with support of paging, filter and sort
  *
- * @param {String} object-type Object type of document container
- * @param {Number} object-id Object ID of document container
+ * @param {String} object-type Object type of document container object
+ * @param {Number} object-id Object ID of document container object
  * @param {Number} file-types List of file types and form types the tree can upload
  * @param {Function} upload-form (Optional)Function used to upload Frevvo form
- * @param {Object} treeControl Tree API functions exposed to user. Following is the list:
+ * @param {Object} tree-config Tree configuration used to add to default configuration. Default doc tree configuration
+ * is saved in config.json file of common module.
+ * @param {Object} object-info Metadata of document container object
+ * @param {Function} on-allow-cmd (Optional)Callback function before a command is shown on Menu, to allow doc tree
+ * consummer to have a chance to modify menu items. Return "invisible" to remove the command from menu;
+ * "disable" to disable the command; Anything else or undefined means the command will be show as normal.
+ * @param {Function} on-pre-cmd (Optional)Callback function before a command is executed to give doc tree
+ * consumer to run additional code before the command is executed or to override implemented command.
+ * Return "fasle" prevents the command execution; "true" or "undefined" to continue the command
+ * @param {Function} on-post-cmd (Optional)Callback function after a command is executed to give doc tree
+ * consumer to run additional code after the command is executed.
+ * @param {Object} tree-control Tree API functions exposed to user. Following is the list:
  * @param {Function} treeControl.refreshTree Refresh the tree
+ * @param {Function} treeControl.getSelectedNodes Get list of selected tree nodes
+ *
  *
  * @example
  <example>
  <file name="index.html">
  <doc-tree object-type="objectType" object-id="objectId" tree-control="treeControl" file-types="fileTypes"
- upload-form="uploadForm">
+ upload-form="uploadForm" tree-config="treeConfig" object-info="objectInfo"
+ on-allow-cmd="onAllowCmd" on-pre-cmd="onPreCmd" on-post-cmd="onPostCmd">
  </doc-tree>
  </file>
  <file name="app.js">
@@ -66,10 +80,10 @@
  </file>
  </example>
  */
-angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', 'StoreService', 'UtilService'
-    , 'Util.DateService', 'LookupService', 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', '$filter'
-    , function ($q, $translate, $modal, Store, Util
-        , UtilDateService, LookupService, Ecm, EcmEmailService, EcmRecordService, $filter) {
+angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', 'StoreService', 'UtilService'
+    , 'Util.DateService', 'ConfigService', 'LookupService', 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService'
+    , function ($q, $translate, $modal, $filter, Store, Util
+        , UtilDateService, ConfigService, LookupService, Ecm, EcmEmailService, EcmRecordService) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
         var promiseGetUserFullName = LookupService.getUserFullNames();
@@ -750,28 +764,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return src;
                 }
-                , getHtmlDocLink: function (node) {
-                    var $div = $("<div/>").addClass("btn-group");
-                    var itemId = node.data.objectId;
-                    if (itemId) {
-                        //var url = "#";
-                        //if (DocTree.isFileNode(node)) {
-                        //    url = "/home.html#!/documents/" + itemId + "/main";
-                        //}
-                        //var $a = $("<a/>")
-                        //    .attr("href", url)
-                        //    .text(itemId)
-                        //    .appendTo($div);
-                        //??  //"<a href='#' ng-click='grid.appScope.showUrl($event, row.entity)'>{{row.entity.object_id_s}}</a>";
 
-
-                        //
-                        // Disable link for JSAP
-                        //
-                        $div.text(itemId);
-                    }
-                    return $div;
-                }
                 , _makeChildNodes: function (folderList) {
                     var builder = Util.FancyTreeBuilder.reset();
                     if (Validator.validateFolderList(folderList)) {
@@ -878,18 +871,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     } else if (!Validator.validateNode(node)) {
                         return;
                     }
+                    var actNodes = (batch)? selNodes : [node];
 
 
-                    if (0 == data.cmd.indexOf("form/")) {
-                        var fileType = data.cmd.substring(5);
-                        DocTree.uploadForm(node, fileType);
+                    //prevent command if return "false"; contine when return "true" or "undefined"
+                    if (!Util.goodValue(DocTree.Command.onPreCmd(data.cmd, actNodes), true)) {
                         return;
                     }
-                    if (0 == data.cmd.indexOf("file/")) {
-                        var fileType = data.cmd.substring(5);
-                        DocTree.uploadFile(node, fileType);
-                        return;
-                    }
+
                     switch (data.cmd) {
                         case "moveUp":
                             refNode = node.getPrevSibling();
@@ -1017,20 +1006,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         case "edit":
                             break;
                         case "email":
-                            if (batch) {
-                                Email.openModal(selNodes);
-                            }
-                            else {
-                                Email.openModal([node]);
-                            }
+                            Email.openModal(actNodes);
                             break;
                         case "declare":
                             var declareAsRecordData = [];
-                            var nodesToDeclare = (batch) ? selNodes : [node];
-                            for (var i = 0; i < nodesToDeclare.length; i++) {
+                            for (var i = 0; i < actNodes.length; i++) {
                                 var declareAsRecord = {};
-                                declareAsRecord.id = Util.goodValue(nodesToDeclare[i].data.objectId);
-                                declareAsRecord.type = Util.goodValue(nodesToDeclare[i].data.objectType.toUpperCase());
+                                declareAsRecord.id = Util.goodValue(actNodes[i].data.objectId);
+                                declareAsRecord.type = Util.goodValue(actNodes[i].data.objectType.toUpperCase());
                                 declareAsRecordData.push(declareAsRecord);
                             }
 
@@ -1041,9 +1024,20 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         case "print":
                             break;
                         default:
-                            Util.log("Unhandled command: " + data.cmd);
-                            return;
+                            if (0 == data.cmd.indexOf("form/")) {
+                                var fileType = data.cmd.substring(5);
+                                DocTree.uploadForm(node, fileType);
+                            } else if (0 == data.cmd.indexOf("file/")) {
+                                var fileType = data.cmd.substring(5);
+                                DocTree.uploadFile(node, fileType);
+                            } else {
+                                Util.log("Unhandled command: " + data.cmd);
+                            }
+                            break;
                     }
+
+
+                    DocTree.Command.onPostCmd(data.cmd, actNodes);
                 }
                 , onKeyDown: function (event, data) {
                     var cmd = null;
@@ -1110,35 +1104,37 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
 
             , Menu: {
-                MENU_SEPARATOR: "----"
-
-                , useContextMenu: function ($s) {
-                    this.docSubMenu = this.makeDocSubMenu(DocTree.fileTypes);
+                useContextMenu: function ($s) {
 
                     $s.contextmenu({
                         menu: []
                         //,delegate: "span.fancytree-node"
                         , delegate: "tr"
                         , beforeOpen: function (event, ui) {
-                            var selNodes = DocTree.getSelectedNodes();
-                            if (!Util.isArrayEmpty(selNodes)) {
-                                $s.contextmenu("replaceMenu", DocTree.Menu.getBatchMenu(selNodes));
-                                return true;
-                            }
-
-                            var node = $.ui.fancytree.getNode(ui.target);
-                            if ("RECORD" == Util.goodValue(node.data.status)) {
-                                $s.contextmenu("replaceMenu", DocTree.Menu.getMenuForRecords(node));
-                                return true;
-                            }
-
                             var node = $.ui.fancytree.getNode(ui.target);
                             if (DocTree.isSpecialNode(node)) {
                                 return false;
                             }
-                            $s.contextmenu("replaceMenu", DocTree.Menu.getContextMenu(node));
-                            $s.contextmenu("enableEntry", "paste", !!DocTree.CLIPBOARD);
-                            node.setActive();
+
+                            var menuResource = null;
+                            var selNodes = DocTree.getSelectedNodes();
+                            var batchMode = !Util.isArrayEmpty(selNodes);
+                            var actNodes = (batchMode)? selNodes: [node];
+                            if (batchMode) {
+                                menuResource = DocTree.Menu.getBatchResource(selNodes);
+                            } else if ("RECORD" == Util.goodValue(node.data.status)) {
+                                menuResource = DocTree.Menu.getRecordResource(node);
+                            } else {
+                                menuResource = DocTree.Menu.getBasicResource(node);
+                            }
+                            var menu = DocTree.Menu.makeContextMenu(menuResource, actNodes);
+
+                            $s.contextmenu("replaceMenu", menu);
+
+                            if (!batchMode) {
+                                $s.contextmenu("enableEntry", "paste", !!DocTree.CLIPBOARD);
+                                node.setActive();
+                            }
                         }
                         , select: function (event, ui) {
                             // delay the event, so the menu can close and the click event does
@@ -1151,12 +1147,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     });
                 }
 
-                , getBatchMenu: function (nodes) {
-                    var menu = [{
-                        title: $translate.instant("common.directive.docTree.menu.noop"),
-                        cmd: "noop",
-                        uiIcon: ""
-                    }];
+                , getBatchResource: function (nodes) {
+                    var menuResource = null;
                     if (Validator.validateNodes(nodes)) {
                         var countFolder = 0;
                         var countFile = 0;
@@ -1169,324 +1161,78 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
 
                         if (0 < countFile && 0 >= countFolder) {              //file only menu
-                            menu = [
-                                {
-                                    title: $translate.instant("common.directive.docTree.menu.email"),
-                                    cmd: "email",
-                                    uiIcon: "ui-icon-mail-closed"
-                                }
-                                //, {
-                                //    title: $translate.instant("common.directive.docTree.menu.print"),
-                                //    cmd: "print",
-                                //    uiIcon: "ui-icon-print"
-                                //}
-                                , {title: this.MENU_SEPARATOR}
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.cut"),
-                                    cmd: "cut",
-                                    uiIcon: "ui-icon-scissors"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.copy"),
-                                    cmd: "copy",
-                                    uiIcon: "ui-icon-copy"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.delete"),
-                                    cmd: "remove",
-                                    uiIcon: "ui-icon-trash"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.declare"),
-                                    cmd: "declare",
-                                    uiIcon: "ui-icon-locked"
-                                }
-                            ];
+                            menuResource = "menu.batch.files";
                         } else if (0 >= countFile || 0 < countFolder) {       //folder only menu
-                            menu = [
-                                {
-                                    title: $translate.instant("common.directive.docTree.menu.cut"),
-                                    cmd: "cut",
-                                    uiIcon: "ui-icon-scissors"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.copy"),
-                                    cmd: "copy",
-                                    uiIcon: "ui-icon-copy"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.delete"),
-                                    cmd: "remove",
-                                    uiIcon: "ui-icon-trash"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.declare"),
-                                    cmd: "declare",
-                                    uiIcon: "ui-icon-locked"
-                                }
-                            ];
+                            menuResource = "menu.batch.folders";
                         } else if (0 < countFile || 0 < countFolder) {        //mix file and folder menu
-                            menu = [
-                                {
-                                    title: $translate.instant("common.directive.docTree.menu.cut"),
-                                    cmd: "cut",
-                                    uiIcon: "ui-icon-scissors"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.copy"),
-                                    cmd: "copy",
-                                    uiIcon: "ui-icon-copy"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.delete"),
-                                    cmd: "remove",
-                                    uiIcon: "ui-icon-trash"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.declare"),
-                                    cmd: "declare",
-                                    uiIcon: "ui-icon-locked"
-                                }
-                            ];
+                            menuResource = "menu.batch.filesAndFolders";
+
                         }
                     }
-                    return menu;
+                    return menuResource;
                 }
-                , getMenuForRecords: function (node) {
-                    var menu = [{
-                        title: $translate.instant("common.directive.docTree.menu.noop"),
-                        cmd: "noop",
-                        uiIcon: ""
-                    }];
+                , getRecordResource: function(node) {
+                    var menuResource = null;
                     if (node) {
                         if (DocTree.isTopNode(node)) {
-                            menu = [
-                                {
-                                    title: $translate.instant("common.directive.docTree.menu.newFolder"),
-                                    cmd: "newFolder",
-                                    uiIcon: "ui-icon-plus"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.newFile"),
-                                    children: DocTree.Menu.docSubMenu
-                                }
-                                , {title: this.MENU_SEPARATOR}
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.paste"),
-                                    cmd: "paste",
-                                    uiIcon: "ui-icon-clipboard",
-                                    disabled: true
-                                }
-                            ];
+                            menuResource = "menu.record.root";
                         } else if (DocTree.isFolderNode(node)) {
-                            menu = [
-                                {
-                                    title: $translate.instant("common.directive.docTree.menu.newFolder"),
-                                    cmd: "newFolder",
-                                    uiIcon: "ui-icon-plus"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.newFile"),
-                                    children: DocTree.Menu.docSubMenu
-                                }
-                                , {title: this.MENU_SEPARATOR}
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.rename"),
-                                    cmd: "rename",
-                                    uiIcon: "ui-icon-pencil"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.copy"),
-                                    cmd: "copy",
-                                    uiIcon: "ui-icon-copy"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.paste"),
-                                    cmd: "paste",
-                                    uiIcon: "ui-icon-clipboard",
-                                    disabled: true
-                                }
-                                , {title: this.MENU_SEPARATOR}
-                            ];
+                            menuResource = "menu.record.folder";
                         } else if (DocTree.isFileNode(node)) {
-                            menu = [
-                                {
-                                    title: $translate.instant("common.directive.docTree.menu.open"),
-                                    cmd: "open",
-                                    uiIcon: "ui-icon-folder-open"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.rename"),
-                                    cmd: "rename",
-                                    uiIcon: "ui-icon-pencil"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.email"),
-                                    cmd: "email",
-                                    uiIcon: "ui-icon-mail-closed"
-                                }
-                                //, {
-                                //    title: $translate.instant("common.directive.docTree.menu.print"),
-                                //    cmd: "print",
-                                //    uiIcon: "ui-icon-print"
-                                //}
-                                , {title: this.MENU_SEPARATOR}
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.copy"),
-                                    cmd: "copy",
-                                    uiIcon: "ui-icon-copy"
-                                }
-                                , {title: this.MENU_SEPARATOR}
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.download"),
-                                    cmd: "download",
-                                    uiIcon: "ui-icon-arrowthickstop-1-s"
-                                }
-                            ];
+                            menuResource = "menu.record.file";
                         }
                     }
-                    return menu;
+                    return menuResource;
                 }
-                , getContextMenu: function (node) {
-                    var menu = [{
-                        title: $translate.instant("common.directive.docTree.menu.noop"),
-                        cmd: "noop",
-                        uiIcon: ""
-                    }];
+                , getBasicResource: function(node) {
+                    var menuResource = null;
                     if (node) {
                         if (DocTree.isTopNode(node)) {
-                            menu = [
-                                {
-                                    title: $translate.instant("common.directive.docTree.menu.newFolder"),
-                                    cmd: "newFolder",
-                                    uiIcon: "ui-icon-plus"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.newFile"),
-                                    children: DocTree.Menu.docSubMenu
-                                }
-                                , {title: this.MENU_SEPARATOR}
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.paste"),
-                                    cmd: "paste",
-                                    uiIcon: "ui-icon-clipboard",
-                                    disabled: true
-                                }
-                            ];
+                            menuResource = "menu.basic.root";
                         } else if (DocTree.isFolderNode(node)) {
-                            menu = [
-                                {
-                                    title: $translate.instant("common.directive.docTree.menu.newFolder"),
-                                    cmd: "newFolder",
-                                    uiIcon: "ui-icon-plus"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.newFile"),
-                                    children: DocTree.Menu.docSubMenu
-                                }
-                                , {title: this.MENU_SEPARATOR}
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.cut"),
-                                    cmd: "cut",
-                                    uiIcon: "ui-icon-scissors"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.copy"),
-                                    cmd: "copy",
-                                    uiIcon: "ui-icon-copy"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.paste"),
-                                    cmd: "paste",
-                                    uiIcon: "ui-icon-clipboard",
-                                    disabled: true
-                                }
-                                , {title: this.MENU_SEPARATOR}
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.rename"),
-                                    cmd: "rename",
-                                    uiIcon: "ui-icon-pencil"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.delete"),
-                                    cmd: "remove",
-                                    uiIcon: "ui-icon-trash"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.declare"),
-                                    cmd: "declare",
-                                    uiIcon: "ui-icon-locked"
-                                }
-                            ];
+                            menuResource = "menu.basic.folder";
                         } else if (DocTree.isFileNode(node)) {
-                            menu = [
-                                {
-                                    title: $translate.instant("common.directive.docTree.menu.open"),
-                                    cmd: "open",
-                                    uiIcon: "ui-icon-folder-open"
-                                }
-                                //, {
-                                //    title: $translate.instant("common.directive.docTree.menu.edit"),
-                                //    cmd: "edit",
-                                //    uiIcon: "ui-icon-pencil"
-                                //}
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.email"),
-                                    cmd: "email",
-                                    uiIcon: "ui-icon-mail-closed"
-                                }
-                                //, {
-                                //    title: $translate.instant("common.directive.docTree.menu.print"),
-                                //    cmd: "print",
-                                //    uiIcon: "ui-icon-print"
-                                //}
-                                , {title: this.MENU_SEPARATOR}
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.cut"),
-                                    cmd: "cut",
-                                    uiIcon: "ui-icon-scissors"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.copy"),
-                                    cmd: "copy",
-                                    uiIcon: "ui-icon-copy"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.paste"),
-                                    cmd: "paste",
-                                    uiIcon: "ui-icon-clipboard",
-                                    disabled: true
-                                }
-                                , {title: this.MENU_SEPARATOR}
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.rename"),
-                                    cmd: "rename",
-                                    uiIcon: "ui-icon-pencil"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.delete"),
-                                    cmd: "remove",
-                                    uiIcon: "ui-icon-trash"
-                                }
-                                , {title: this.MENU_SEPARATOR}
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.download"),
-                                    cmd: "download",
-                                    uiIcon: "ui-icon-arrowthickstop-1-s"
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.replace"),
-                                    cmd: "replace",
-                                    uiIcon: ""
-                                }
-                                , {
-                                    title: $translate.instant("common.directive.docTree.menu.declare"),
-                                    cmd: "declare",
-                                    uiIcon: "ui-icon-locked"
-                                }
-                            ];
+                            menuResource = "menu.basic.file";
                         }
                     }
+                    return menuResource;
+                }
+                , makeContextMenu: function (menuResource, nodes) {
+                    var menu;
+                    if (menuResource) {
+                        menu = Util.goodMapValue(DocTree.treeConfig, menuResource, []);
+                        menu = _.clone(menu);
+                        var menuFileTypes = _.find(menu, {"cmd": "subMenuFileTypes"});
+                        if (menuFileTypes) {
+                            menuFileTypes.children = this.makeMenuFileTypes();
+                        }
+                    //} else {
+                    //    var menu0 = [Util.goodMapValue(DocTree.treeConfig, "noop")];
+                    //    menu = [{
+                    //        title: $translate.instant("common.directive.docTree.menu.noop"),
+                    //        cmd: "noop",
+                    //        uiIcon: ""
+                    //    }];
+                    }
+
+                    _.each(menu, function(item) {
+                        var allow = true;
+                        if (item.cmd) {
+                            allow = DocTree.Command.onAllowCmd(item.cmd, nodes);
+                        }
+
+                        if ("invisible" == allow) {
+                            item.invisible = true;
+                        }  else if ("disable" == allow) {
+                            item.disabled = true;
+                        } else {
+                            item.disabled = false;
+                        }
+                    });
+                    menu = _.filter(menu, function(item) {
+                        return !item.invisible;
+                    });
+
                     return menu;
                 }
 
@@ -1503,7 +1249,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 //            ,{title: "Witness Interview Request", cmd: "file/wir"}
                 //            ,{title: "Other", cmd: "file/other"}
                 //        ];
-                , makeDocSubMenu: function (fileTypes) {
+                , makeMenuFileTypes: function () {
+                    var fileTypes = DocTree.fileTypes;
                     var menu = [], item;
                     if (Util.isArray(fileTypes)) {
                         for (var i = 0; i < fileTypes.length; i++) {
@@ -3293,7 +3040,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             , API_DOWNLOAD_DOCUMENT: "/api/v1/plugin/ecm/download?ecmFileId="
 
             , openModal: function (nodes) {
-                var params = {};
+                var params = {
+                    config: Util.goodMapValue(DocTree.treeConfig, "emailDialog", {})
+                };
 
                 var modalInstance = $modal.open({
                     templateUrl: "directives/doc-tree/doc-tree.email.dialog.html"
@@ -3344,10 +3093,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             }
             , _makeEmailDataForEmailWithAttachments: function (emailAddresses, nodes) {
                 var emailData = {};
-                var subject = Util.goodMapValue(DocTree, "treeConfig.emailSubject");
-                var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.subjectRegex"));
+                var subject = Util.goodMapValue(DocTree, "treeConfig.email.emailSubject");
+                var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.email.subjectRegex"));
                 var match = subject.match(regex);
-                if (match && match[Util.goodMapValue(DocTree, "treeConfig.objectTypeRegexGroup")] && match[Util.goodMapValue(DocTree, "treeConfig.objectNumberRegexGroup")]) {
+                if (match && match[Util.goodMapValue(DocTree, "treeConfig.email.objectTypeRegexGroup")] && match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")]) {
                     var objectType = match[DocTree.treeConfig.objectTypeRegexGroup];
                     var objectNumber = match[DocTree.treeConfig.objectNumberRegexGroup];
                     emailData.subject = objectType + DocTree.objectInfo[objectNumber];
@@ -4025,6 +3774,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 , objectId: '='
                 , fileTypes: '='
                 , uploadForm: '&'
+                , onAllowCmd: '&'
+                , onPreCmd: '&'
+                , onPostCmd: '&'
             }
 
             , link: function (scope, element, attrs) {
@@ -4033,21 +3785,30 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.jqTree = $(element).find("table");
                 DocTree.setObjType(scope.objectType);
                 DocTree.setObjId(scope.objectId);
-                DocTree.treeConfig = null;
+                DocTree.treeConfig = {};
                 DocTree.objectInfo = null;
-                DocTree.doUploadForm = (scope.uploadForm) ? scope.uploadForm()
-                    : (function () {
-                }); //if not defined, do nothing
+                DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function (){}); //if not defined, do nothing
 
                 scope.treeControl = {
                     refreshTree: DocTree.refreshTree
                     , getSelectedNodes: DocTree.getSelectedNodes
                 };
 
+                DocTree.Command.onAllowCmd = ("undefined" != typeof attrs.onAllowCmd) ? scope.onAllowCmd() : (function (){});
+                DocTree.Command.onPreCmd = ("undefined" != typeof attrs.onPreCmd) ? scope.onPreCmd() : (function (){});
+                DocTree.Command.onPostCmd = ("undefined" != typeof attrs.onPostCmd) ? scope.onPostCmd() : (function (){});
+
+                ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+                    var treeConfig = Util.goodMapValue(moduleConfig, "docTree", {});
+                    DocTree.treeConfig = _.merge(treeConfig, DocTree.treeConfig);
+                    return moduleConfig;
+                });
+
                 scope.$watchGroup(['treeConfig', 'objectInfo'], function (newValues, oldValues, scope) {
                     var treeConfig = newValues[0];
+                    _.merge(DocTree.treeConfig, treeConfig);
+
                     var objectInfo = newValues[1];
-                    DocTree.treeConfig = treeConfig;
                     DocTree.objectInfo = objectInfo;
                 });
 
@@ -4060,7 +3821,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         DocTree.fileTypes = newValue;
                         var jqTreeBody = DocTree.jqTree.find("tbody");
                         DocTree.Menu.useContextMenu(jqTreeBody);
-                        //DialogDnd.create(DocTree.fileTypes);
                     }
                 }, true);
             }
@@ -4112,15 +3872,17 @@ angular.module('directives').controller('directives.DocTreeDndDialogController',
 
 
 angular.module('directives').controller('directives.DocTreeEmailDialogController', ['$scope', '$modalInstance'
-        , 'UtilService', 'params', 'ConfigService'
-        , function ($scope, $modalInstance, Util, params, ConfigService) {
+        , 'UtilService', 'params'
+        , function ($scope, $modalInstance, Util, params) {
             $scope.modalInstance = $modalInstance;
 
-            ConfigService.getModuleConfig("common").then(function (moduleConfig) {
-                $scope.config = Util.goodMapValue(moduleConfig, "docTree.emailDialog");
-                //$scope.filter = $scope.config.userFacetFilter;
-                return moduleConfig;
-            });
+            //ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+            //    $scope.config = Util.goodMapValue(moduleConfig, "docTree.emailDialog");
+            //    //$scope.filter = $scope.config.userFacetFilter;
+            //    return moduleConfig;
+            //});
+
+            $scope.config = params.config;
 
             $scope.recipients = [];
             $scope.onItemsSelected = function (selectedItems, lastSelectedItems, isSelected) {

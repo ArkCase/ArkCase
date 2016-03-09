@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-notification-plugin-test.xml",
         "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-library-authentication-token.xml"
+        "/spring/spring-library-authentication-token.xml", "/spring/spring-library-user-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class NotificationIT

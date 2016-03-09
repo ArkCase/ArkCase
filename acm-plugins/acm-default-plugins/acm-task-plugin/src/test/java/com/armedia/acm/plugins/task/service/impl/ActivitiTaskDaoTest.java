@@ -274,7 +274,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
         expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
         expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
-        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
         expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
         expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
         expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
@@ -374,7 +374,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
         expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
         expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
-        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
         expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
         expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
         expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
@@ -463,7 +463,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
         expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
         expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
-        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
         expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
         expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
         expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
@@ -566,7 +566,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
         expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
         expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
-        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
         expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
         expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
         expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
@@ -676,7 +676,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockHistoricTaskInstance.getTaskDefinitionKey()).andReturn(taskDefKey);
         expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
         expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
-        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
         expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
         expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
         expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
@@ -808,7 +808,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
         expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
         expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
-        expect(mockProcess.getFlowElement(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
         expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
         expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
         expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
@@ -853,5 +853,182 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals(partList, found.getParticipants());
 
 
+    }
+
+    @Test
+    public void claimTask() throws Exception
+    {
+        String user = "user";
+        Long taskId = 500L;
+        Date dueDate = new Date();
+        int activitiPriority = 50;
+        String title = "task Title";
+        String processId = "processId";
+        String processName = "processName";
+
+        Long objectId = 250L;
+        String objectType = "objectType";
+        String objectName = "objectName";
+
+        Map<String, Object> pvars = new HashMap<>();
+        pvars.put("OBJECT_ID", objectId);
+        pvars.put("OBJECT_TYPE", objectType);
+        pvars.put("OBJECT_NAME", objectName);
+
+
+        Map<String, Object> taskLocalVars = new HashMap<>();
+        taskLocalVars.put("START_DATE", new Date());
+        taskLocalVars.put("PERCENT_COMPLETE", 50);
+        taskLocalVars.put("DETAILS", "task details");
+
+        List<AcmParticipant> partList = new ArrayList<>();
+        partList.add(new AcmParticipant());
+
+        expect(mockTaskService.createTaskQuery()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.taskId(String.valueOf(taskId))).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.includeProcessVariables()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.includeTaskLocalVariables()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.singleResult()).andReturn(mockTask);
+
+        // claim task
+        mockTaskService.claim(String.valueOf(taskId), user);
+
+
+        expect(mockTask.getId()).andReturn(taskId.toString()).atLeastOnce();
+        expect(mockTask.getDueDate()).andReturn(dueDate);
+        expect(mockTask.getPriority()).andReturn(activitiPriority);
+        expect(mockTask.getName()).andReturn(title);
+        expect(mockTask.getProcessVariables()).andReturn(pvars).atLeastOnce();
+        expect(mockTask.getTaskLocalVariables()).andReturn(taskLocalVars).atLeastOnce();
+        expect(mockTask.getAssignee()).andReturn(user);
+        expect(mockTask.getProcessDefinitionId()).andReturn(processId);
+        expect(mockTask.getCreateTime()).andReturn(null);
+        expect(mockTask.getOwner()).andReturn(user);
+        expect(mockTask.getProcessInstanceId()).andReturn("250").atLeastOnce();
+
+        expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.singleResult()).andReturn(mockProcessDefinition);
+
+        expect(mockProcessDefinition.getName()).andReturn(processName);
+
+        String taskDefKey = "taskDefinitionKey";
+        expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
+        expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
+        expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
+        expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
+        expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
+        expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
+        expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
+        expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+
+        replayAll();
+
+        AcmTask task = unit.claimTask(taskId, user);
+
+        verifyAll();
+
+        assertEquals(taskId, task.getTaskId());
+        //assignee should not be null
+        assertNotNull(task.getAssignee());
+        assertEquals(task.getAssignee(), user);
+        assertFalse(task.isAdhocTask());
+        //task should be still open and active
+        assertFalse(task.isCompleted());
+        assertEquals(TaskConstants.STATE_ACTIVE, task.getStatus());
+    }
+
+    @Test
+    public void unclaimTask() throws Exception
+    {
+        String user = "user";
+        Long taskId = 500L;
+        Date dueDate = new Date();
+        int activitiPriority = 50;
+        String title = "task Title";
+        String processId = "processId";
+        String processName = "processName";
+        String candidateGroup = "candidateGroup";
+
+        Long objectId = 250L;
+        String objectType = "objectType";
+        String objectName = "objectName";
+
+        Map<String, Object> pvars = new HashMap<>();
+        pvars.put("OBJECT_ID", objectId);
+        pvars.put("OBJECT_TYPE", objectType);
+        pvars.put("OBJECT_NAME", objectName);
+
+
+        Map<String, Object> taskLocalVars = new HashMap<>();
+        taskLocalVars.put("START_DATE", new Date());
+        taskLocalVars.put("PERCENT_COMPLETE", 50);
+        taskLocalVars.put("DETAILS", "task details");
+
+        List<AcmParticipant> partList = new ArrayList<>();
+        partList.add(new AcmParticipant());
+
+        expect(mockTaskService.createTaskQuery()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.taskId(String.valueOf(taskId))).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.includeProcessVariables()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.includeTaskLocalVariables()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.singleResult()).andReturn(mockTask);
+
+        // find the candidate group
+        expect(mockTaskService.getIdentityLinksForTask(String.valueOf(taskId))).andReturn(Arrays.asList(mockCandidateGroup));
+        expect(mockCandidateGroup.getType()).andReturn(TaskConstants.IDENTITY_LINK_TYPE_CANDIDATE);
+        expect(mockCandidateGroup.getGroupId()).andReturn(candidateGroup).atLeastOnce();
+
+        // unclaim task
+        mockTaskService.unclaim(String.valueOf(taskId));
+
+
+        expect(mockTask.getId()).andReturn(taskId.toString()).atLeastOnce();
+        expect(mockTask.getDueDate()).andReturn(dueDate);
+        expect(mockTask.getPriority()).andReturn(activitiPriority);
+        expect(mockTask.getName()).andReturn(title);
+        expect(mockTask.getProcessVariables()).andReturn(pvars).atLeastOnce();
+        expect(mockTask.getTaskLocalVariables()).andReturn(taskLocalVars).atLeastOnce();
+        expect(mockTask.getAssignee()).andReturn(null);
+        expect(mockTask.getProcessDefinitionId()).andReturn(processId);
+        expect(mockTask.getCreateTime()).andReturn(null);
+        expect(mockTask.getOwner()).andReturn(user);
+        expect(mockTask.getProcessInstanceId()).andReturn("250").atLeastOnce();
+
+        expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.singleResult()).andReturn(mockProcessDefinition);
+
+        expect(mockProcessDefinition.getName()).andReturn(processName);
+
+        String taskDefKey = "taskDefinitionKey";
+        expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
+        expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
+        expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
+        expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
+        expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
+        expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
+        expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
+        expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+
+        replayAll();
+
+        AcmTask task = unit.unclaimTask(taskId);
+
+        verifyAll();
+
+        assertEquals(taskId, task.getTaskId());
+        //assignee should be null
+        assertNull(task.getAssignee());
+        assertFalse(task.isAdhocTask());
+        //task should be still open and active
+        assertFalse(task.isCompleted());
+        assertEquals(TaskConstants.STATE_ACTIVE, task.getStatus());
     }
 }

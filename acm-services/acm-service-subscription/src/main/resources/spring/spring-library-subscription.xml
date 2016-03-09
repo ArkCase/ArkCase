@@ -2,10 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:task="http://www.springframework.org/schema/task"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
     <!--<task:scheduler id="subscriptionEventTaskScheduler" pool-size="1"/>-->
@@ -18,7 +16,8 @@
                 fixed-delay="${subscription.batchUpdateFrequencyInMilliseconds}"/>
     </task:scheduled-tasks>
 
-    <bean id="arm_subscriptionEventBatchInsertJob" class="com.armedia.acm.services.subscription.service.SubscriptionEventBatchInsertService">
+    <bean id="arm_subscriptionEventBatchInsertJob"
+          class="com.armedia.acm.services.subscription.service.SubscriptionEventBatchInsertService">
         <property name="userHomeDir" value="${user.home}"/>
         <property name="lastBatchInsertPropertyFileLocation" value="/.acm/subscriptionEventLastBatchInsert.properties"/>
         <property name="propertyFileManager">
@@ -31,23 +30,27 @@
         <property name="subscriptionEventPublisher" ref="subscriptionEventPublisher"/>
     </bean>
 
-    <bean id="subscriptionEventPublisher" class="com.armedia.acm.services.subscription.service.SubscriptionEventPublisher"/>
+    <bean id="subscriptionEventPublisher"
+          class="com.armedia.acm.services.subscription.service.SubscriptionEventPublisher"/>
 
     <bean id="subscriptionDao" class="com.armedia.acm.services.subscription.dao.SubscriptionDao"/>
 
     <bean id="subscriptionEventDao" class="com.armedia.acm.services.subscription.dao.SubscriptionEventDao"/>
 
-    <bean id="subscriptionEventToSolrTransformer" class="com.armedia.acm.services.subscription.service.SubscriptionEventToSolrTransformer">
+    <bean id="subscriptionEventToSolrTransformer"
+          class="com.armedia.acm.services.subscription.service.SubscriptionEventToSolrTransformer">
         <property name="subscriptionEventDao" ref="subscriptionEventDao"/>
         <property name="subscriptionEventPlugin" ref="subscriptionPlugin"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
-    <bean id="subscriptionToSolrTransformer" class="com.armedia.acm.services.subscription.service.SubscriptionToSolrTransformer">
+    <bean id="subscriptionToSolrTransformer"
+          class="com.armedia.acm.services.subscription.service.SubscriptionToSolrTransformer">
         <property name="subscriptiontDao" ref="subscriptionDao"/>
     </bean>
 
     <bean id="subscriptionProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->

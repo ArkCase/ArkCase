@@ -16,19 +16,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
-                                   "/spring/spring-library-person.xml",
-                                   "/spring/spring-library-person-plugin-test-mule.xml",
-                                   "/spring/spring-library-context-holder.xml",
-                                   "/spring/spring-library-property-file-manager.xml",
-                                   "/spring/spring-library-acm-encryption.xml"
-                                   })
+        "/spring/spring-library-person.xml",
+        "/spring/spring-library-person-plugin-test-mule.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-user-service.xml"
+})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class PersonIT
 {
@@ -64,11 +62,11 @@ public class PersonIT
         em.flush();
 
         assertNotNull(saved.getId());
-        assertEquals("com.armedia.acm.plugins.person.model.Person",saved.getClassName());
+        assertEquals("com.armedia.acm.plugins.person.model.Person", saved.getClassName());
         personDao.deletePersonById(saved.getId());
 
         em.flush();
     }
- 
-    
+
+
 }
