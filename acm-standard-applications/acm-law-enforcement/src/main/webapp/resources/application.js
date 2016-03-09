@@ -31,11 +31,27 @@ angular.module(ApplicationConfiguration.applicationModuleName).config([
 
                 // Intercept the failed response.
                 function responseError(response) {
-                    // Send error message to MessageService
-                    MessageService.httpError(response);
-                    return (
-                        $q.reject(response)
-                    );
+                    // Send error message to MessageService if is not suppressed
+                    if (isErrorSuppressed(response)) {
+                        return (
+                            $q.reject(null)
+                        );
+                    } else {
+                        MessageService.httpError(response);
+                        return (
+                            $q.reject(response)
+                        );
+                    }
+                }
+
+                function isErrorSuppressed(response) {
+                    var isSuppressed = false;
+                    angular.forEach(ApplicationConfiguration.suppressedErrorList, function (error) {
+                        if (error.url == response.config.url && error.status == response.status) {
+                            isSuppressed = true;
+                        }
+                    });
+                    return isSuppressed;
                 }
             }
         }
