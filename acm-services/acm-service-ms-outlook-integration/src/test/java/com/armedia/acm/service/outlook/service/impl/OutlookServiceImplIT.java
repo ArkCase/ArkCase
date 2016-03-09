@@ -20,8 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -34,7 +33,7 @@ import static org.junit.Assert.assertNull;
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-context-holder.xml",
-        "/spring/spring-library-acm-encryption.xml"
+        "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-user-service.xml"
 })
 public class OutlookServiceImplIT
 {
