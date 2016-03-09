@@ -32,6 +32,7 @@
 
     <bean id="outlookService" class="com.armedia.acm.service.outlook.service.impl.OutlookServiceImpl">
         <property name="dao" ref="exchangeWebServicesOutlookDao"/>
+        <property name="acmContainerDao" ref="acmContainerFolderDao"/>
         <property name="ecmFileService" ref="ecmFileService" />
         <property name="outlookEventPublisher" ref="outlookEventPublisher" />
         <property name="sendFromSystemUser" value="${notification.send.from.system.user}" />

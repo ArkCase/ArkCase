@@ -1,18 +1,17 @@
 package com.armedia.acm.plugins.ecm.dao;
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.NamedQuery;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 
 /**
  * Created by armdev on 3/11/15.
@@ -70,6 +69,24 @@ public class AcmContainerDao extends AcmAbstractDao<AcmContainer>
     	}
     	
     	return container;
+    }
+    
+    public AcmContainer findByCalendarFolderId(String folderId){
+        
+        TypedQuery<AcmContainer> query = getEm().createQuery(EcmFileConstants.FIND_CONTAINER_BY_CALENDAR_FOLDER_QUERY, getPersistenceClass());
+        query.setParameter("folderId", folderId);
+        
+        try
+        {
+            AcmContainer found = query.getSingleResult();
+            log.info("Found existing folder " + found.getId() + "for calendar folder" + folderId);
+            return found;
+        }
+        catch ( NoResultException e )
+        {
+            // no result is found
+            return null;
+        }
     }
 
     @Override

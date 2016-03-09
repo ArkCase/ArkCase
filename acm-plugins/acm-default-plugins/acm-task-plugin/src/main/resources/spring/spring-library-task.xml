@@ -217,6 +217,11 @@
 
     <bean id="taskEventPublisher" class="com.armedia.acm.plugins.task.service.TaskEventPublisher"/>
     
+    <bean id="acmApplicationTaskEventListener" class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventListener">
+        <property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>
+        <property name="taskEventPublisher" ref="taskEventPublisher"/>
+    </bean>
+    
     <bean id="extractAcmTaskFromEvent" class="com.armedia.acm.plugins.task.service.impl.ExtractAcmTaskFromEvent">
         <property name="dao" ref="acmTaskDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
