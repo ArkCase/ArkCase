@@ -31,23 +31,39 @@ angular.module(ApplicationConfiguration.applicationModuleName).config([
 
                 // Intercept the failed response.
                 function responseError(response) {
-                    // Send error message to MessageService
-                    // Only throw http error as last resort
-                    if (response.data) {
-                        //e.g. Task already claimed .. exception type is ...
-                        MessageService.error(response.data);
+                    // Send error message to MessageService if is not suppressed
+                    if (isErrorSuppressed(response)) {
+                        return (
+                            $q.reject(null)
+                        );
+                    } else {
+                        // Only throw http error as last resort
+                        if (response.data) {
+                            //e.g. Task already claimed .. exception type is ...
+                            MessageService.error(response.data);
+                        }
+                        else if (response.statusText) {
+                            //e.g. Unknown Error
+                            MessageService.error(response.statusText);
+                        }
+                        else {
+                            //e.g. Error 404 /api/latest..
+                            MessageService.httpError(response);
+                        }
+                        return (
+                            $q.reject(response)
+                        );
                     }
-                    else if (response.statusText) {
-                        //e.g. Unknown Error
-                        MessageService.error(response.statusText);
-                    }
-                    else {
-                        //e.g. Error 404 /api/latest..
-                        MessageService.httpError(response);
-                    }
-                    return (
-                        $q.reject(response)
-                    );
+                }
+
+                function isErrorSuppressed(response) {
+                    var isSuppressed = false;
+                    angular.forEach(ApplicationConfiguration.suppressedErrorList, function (error) {
+                        if (error.url == response.config.url && error.status == response.status) {
+                            isSuppressed = true;
+                        }
+                    });
+                    return isSuppressed;
                 }
             }
         }

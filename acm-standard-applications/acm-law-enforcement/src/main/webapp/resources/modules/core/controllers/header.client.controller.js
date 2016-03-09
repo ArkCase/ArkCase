@@ -11,6 +11,8 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         $scope.start = '';
         $scope.count = '';
         $scope.inputQuery = '';
+        $scope.data = {};
+        $scope.data.inputQuery = '';
         $scope.$on('component-config', applyConfig);
         function applyConfig(e, componentId, config) {
             if (componentId == 'header') {
@@ -34,14 +36,14 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 
         $scope.search = function () {
             $state.go('quick-search', {
-                query: $scope.inputQuery
+                query: $scope.data.inputQuery
             });
         };
 
         $scope.keyDown = function (event) {
             if (event.keyCode == 13) {
                 $state.go('quick-search', {
-                    query: $scope.inputQuery
+                    query: $scope.data.inputQuery
                 });
             }
         };
