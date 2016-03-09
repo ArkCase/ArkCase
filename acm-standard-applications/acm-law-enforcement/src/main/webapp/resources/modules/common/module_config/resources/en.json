@@ -121,5 +121,16 @@
     "title": "Calendar",
     "start.label": "Start: ",
     "end.label": "End: "
+  },
+  "common.directive.coreParticipants": {
+    "title": "Participants",
+    "modal.addParticipant.label": "Add Participant",
+    "modal.editParticipant.label": "Edit Record",
+    "modal.participantType.label": "Participant Type ",
+    "modal.participantName.label": "Participant Name",
+    "modal.btnOk.text": "Save",
+    "modal.btnCancel.text": "Cancel",
+    "modal.dialogUserPicker.header": "Search User",
+    "modal.dialogGroupPicker.header": "Search Group"
   }
 }
