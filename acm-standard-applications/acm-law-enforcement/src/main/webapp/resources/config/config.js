@@ -62,8 +62,12 @@ module.exports.getModulesJavaScriptAssets = function(){
     var jsModules = this.getGlobbedFiles(this.assets.jsModules, 'modules/');
     var jsCustomModules = this.getGlobbedFiles(this.assets.jsCustomModules, 'custom_modules/');
 
+    var jsDirectives = this.getGlobbedFiles(this.assets.jsDirectives, 'directives/');
+    var jsCustomDirectives = this.getGlobbedFiles(this.assets.jsCustomDirectives, 'custom_directives/');
+
     //  Remove duplicated JS files from modules
     jsModules = _.difference(jsModules, jsCustomModules);
+    jsDirectives = _.difference(jsDirectives, jsCustomDirectives);
 
     _.forEach(jsModules, function (item, index, arr) {
         item = 'modules/' + item;
@@ -75,9 +79,21 @@ module.exports.getModulesJavaScriptAssets = function(){
         arr[index] = item;
     });
 
+    _.forEach(jsDirectives, function (item, index, arr) {
+        item = 'directives/' + item;
+        arr[index] = item;
+    });
+
+    _.forEach(jsCustomDirectives, function (item, index, arr) {
+        item = 'custom_directives/' + item;
+        arr[index] = item;
+    });
+
 
     output = output.concat(jsModules);
     output = output.concat(jsCustomModules);
+    output = output.concat(jsDirectives);
+    output = output.concat(jsCustomDirectives);
     return output;
 };
 
