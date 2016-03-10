@@ -63,9 +63,10 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         $scope.updatePercentage = function () {
             saveTask();
         };
-        $scope.updateAssignee = function () {
+        $scope.updateAssignee = function (assignee) {
             //var taskInfo = Util.omitNg($scope.objectInfo);
             //TasksModelsService.setAssignee($scope.objectInfo, $scope.assignee);
+        	$scope.objectInfo.assignee = assignee;
             saveTask();
         };
         $scope.updatePriority = function () {
