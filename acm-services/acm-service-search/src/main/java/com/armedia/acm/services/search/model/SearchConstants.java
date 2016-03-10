@@ -43,6 +43,7 @@ public interface SearchConstants
     String PROPERTY_CREATOR = "author";
     String PROPERTY_MODIFIER = "modifier_s";
     String PROPERTY_OBJECT_TYPE = "object_type_s";
+    String PROPERTY_OBJECT_TYPE_FACET = "object_type_facet";
     String PROPERTY_VERSION = "version_s";
     String PROPERTY_CMIS_VERSION_SERIES_ID = "cmis_version_series_id_s";
     String PROPERTY_MIME_TYPE = "mime_type_s";
