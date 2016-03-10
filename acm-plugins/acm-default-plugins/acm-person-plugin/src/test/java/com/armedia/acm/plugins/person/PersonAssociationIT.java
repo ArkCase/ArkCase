@@ -4,14 +4,6 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,16 +15,23 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.*;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
-                                   "/spring/spring-library-person.xml",
-                                   "/spring/spring-library-person-plugin-test-mule.xml",
-                                   "/spring/spring-library-context-holder.xml",
-                                   "/spring/spring-library-property-file-manager.xml",
-                                   "/spring/spring-library-acm-encryption.xml"
-                                  })
+        "/spring/spring-library-person.xml",
+        "/spring/spring-library-person-plugin-test-mule.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-user-service.xml"
+})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
-public class PersonAssociationIT 
+public class PersonAssociationIT
 {
 
     @Autowired
@@ -51,28 +50,28 @@ public class PersonAssociationIT
     {
         auditAdapter.setUserId("auditUser");
     }
-     
+
     @Test
     @Transactional
-    public void savePersonAssociation() throws Exception 
+    public void savePersonAssociation() throws Exception
     {
-       
+
 
         Person person = new Person();
-        
+
         person.setId(952L);
         person.setFamilyName("Person");
         person.setGivenName("ACM");
         person.setStatus("testStatus");
 
-        
-         Person per = new Person();
-        
+
+        Person per = new Person();
+
         per.setId(950L);
         per.setFamilyName("Person");
         per.setGivenName("ACM");
         per.setStatus("testStatus");
-        
+
 
         PersonAssociation perAssoc = new PersonAssociation();
 
@@ -83,7 +82,7 @@ public class PersonAssociationIT
         perAssoc.setPersonDescription("long and athletic");
         perAssoc.setNotes("here a we can write our note");
         perAssoc.setTags(Arrays.asList("tag 1", "tag 2"));
-        
+
         PersonAssociation personAssoc = new PersonAssociation();
 
         personAssoc.setParentId(999L);
@@ -95,22 +94,22 @@ public class PersonAssociationIT
         personAssoc.setTags(Arrays.asList("tag 3", "tag 4"));
 
         PersonAssociation saved = personAssocDao.save(perAssoc);
-                                  personAssocDao.save(personAssoc);
-        
+        personAssocDao.save(personAssoc);
+
         List<Person> personList = personAssocDao.findPersonByParentIdAndParentType("COMPLAINT", 999L);
-        
-        log.debug(" the size of list returned: " + personList.size());     
-        
-        for ( Person pn : personList )
+
+        log.debug(" the size of list returned: " + personList.size());
+
+        for (Person pn : personList)
         {
-            log.debug("person id " + pn.getId());           
+            log.debug("person id " + pn.getId());
         }
-                
+
         assertNotNull(saved.getId());
 
         personAssocDao.deletePersonAssociationById(saved.getId());
 
         em.flush();
-        
+
     }
 }
