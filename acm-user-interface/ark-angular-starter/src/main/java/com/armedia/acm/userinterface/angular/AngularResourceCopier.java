@@ -90,6 +90,7 @@ public class AngularResourceCopier implements ServletContextAware
             copyResources(resolver, rootPath, tmpDir, "custom_modules", "modules");
             copyResources(resolver, rootPath, tmpDir, "custom_assets", "assets");
             copyResources(resolver, rootPath, tmpDir, "custom_config", "config");
+            copyResources(resolver, rootPath, tmpDir, "custom_directives", "directives");
 
             for (String frontEndCommand : getFrontEndCommandsToBeExecuted())
             {

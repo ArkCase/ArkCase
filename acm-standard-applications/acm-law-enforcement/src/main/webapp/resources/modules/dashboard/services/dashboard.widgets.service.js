@@ -10,8 +10,8 @@
  *
  *  The WidgetService is used for fetching data from weather api service and for fetching RSS data.
  */
-angular.module('dashboard').factory('Dashboard.WidgetService', ['$http', '$log',
-    function ($http, $log) {
+angular.module('dashboard').factory('Dashboard.WidgetService', ['$http', '$log', '$window',
+    function ($http, $log, $window) {
 
         var data = {
             'getNews': getNews,
@@ -96,26 +96,35 @@ angular.module('dashboard').factory('Dashboard.WidgetService', ['$http', '$log',
 
             return makeRequest(url, configObj).then(function (response) {
                 var weather = {location: {}, temp: {}, clouds: null};
-                if (response.data) {
+                if (response.data ) {
                     if (response.data.main) {
+
                         weather.temp.current = response.data.main.temp;
                         weather.temp.min = response.data.main.temp_min;
                         weather.temp.max = response.data.main.temp_max;
                         weather.location.city = response.data.name;
                         weather.location.country = response.data.sys.country;
+
                     }
+
                     weather.imgId = response.data.weather[0].icon ? response.data.weather[0].icon : undefined;
+
+                    $window.localStorage['lastWeatherData'] = JSON.stringify(weather);
+
+                    return response.data && 200 === response.data.cod ? weather : null;
+
+                } else {
+                    return JSON.parse($window.localStorage['lastWeatherData'] || '{}');
                 }
-                return response.data && 200 === response.data.cod ? weather : null;
             });
         }
 
         return data;
 
         function serviceError(errorResponse) {
-            $log.error("JSONP failed for Dashboard.WidgetService");
+            $log.error("JSONP request failed for Dashboard.WidgetService");
             $log.error(errorResponse);
-            return null;
+            return $q.reject(errorResponse);
         }
     }
 ]);
