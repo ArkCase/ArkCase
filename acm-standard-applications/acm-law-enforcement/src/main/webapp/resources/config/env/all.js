@@ -108,8 +108,7 @@ module.exports = {
             'scripts/*/**/*.js',
             'services/*.js',
             'services/*/*.js',
-            'directives/*.js',
-            'directives/*/*.js',
+            'directives/*.js', // Includes directives/directives.client.js file only
             'filters/*.js',
             'filters/*/*.js'
         ],
@@ -132,4 +131,5 @@ module.exports = {
             'custom_directives/*/**/*.js'
         ]
     }
-};
+}
+;
