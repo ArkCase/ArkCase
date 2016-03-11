@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module("dashboard.weather").controller("Dashboard.WeatherController", ["$scope", "location", "Dashboard.WidgetService",
-    function ($scope, location, WidgetService) {
+angular.module("dashboard.weather").controller("Dashboard.WeatherController", ["$scope", "$window", "location", "Dashboard.WidgetService",
+    function ($scope, $window, location, WidgetService) {
         var vm = this;
 
         $scope.$on('component-config', applyConfig);
@@ -18,6 +18,9 @@ angular.module("dashboard.weather").controller("Dashboard.WeatherController", ["
 
                 if (location != null) {
                     WidgetService.getWeather(url, appid, location, units).then(function (weather) {
+                        var oldWeather = JSON.parse($window.localStorage['lastWeatherData'] || '{}');
+                        weather != null ? weather : oldWeather;
+
                         vm.weather = weather;
                     });
                 }
