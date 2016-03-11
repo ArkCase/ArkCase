@@ -28,10 +28,7 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
 
     public void publishComplaintEvent(Complaint source, Authentication authentication, boolean newComplaint, boolean succeeded)
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("Publishing a complaint event.");
-        }
+        log.debug("Publishing a complaint event.");
 
         ComplaintPersistenceEvent complaintPersistenceEvent = newComplaint ? new ComplaintCreatedEvent(source)
                 : new ComplaintUpdatedEvent(source);

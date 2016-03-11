@@ -78,9 +78,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     private String systemUserPass;
     private String systemUserId;
 
-    @Override
-    public OutlookResults<OutlookMailItem> findMailItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-            boolean sortAscending, SearchFilter filter) throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
+    @Override public OutlookResults<OutlookMailItem> findMailItems(AcmOutlookUser user, int start, int maxItems, String sortField, boolean sortAscending, SearchFilter filter)
+            throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
     {
         ExchangeService service = connect(user);
 
@@ -90,8 +89,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
         try
         {
-            FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Inbox, mailProperties, start, maxItems,
-                    sortField, sortAscending, filter);
+            FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Inbox, mailProperties, start, maxItems, sortField, sortAscending, filter);
 
             populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(), items.isMoreAvailable(),
                     items.getNextPageOffset() == null ? -1 : items.getNextPageOffset());
@@ -106,21 +104,18 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         return results;
     }
 
-    @Override
-    public OutlookResults<OutlookTaskItem> findTaskItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-            boolean sortAscending, SearchFilter filter) throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
+    @Override public OutlookResults<OutlookTaskItem> findTaskItems(AcmOutlookUser user, int start, int maxItems, String sortField, boolean sortAscending, SearchFilter filter)
+            throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
     {
         ExchangeService service = connect(user);
 
-        PropertySet taskProperties = new PropertySet(TaskSchema.DueDate, TaskSchema.StartDate, TaskSchema.CompleteDate,
-                TaskSchema.IsComplete, TaskSchema.PercentComplete);
+        PropertySet taskProperties = new PropertySet(TaskSchema.DueDate, TaskSchema.StartDate, TaskSchema.CompleteDate, TaskSchema.IsComplete, TaskSchema.PercentComplete);
 
         OutlookResults<OutlookTaskItem> results = new OutlookResults<>();
 
         try
         {
-            FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Tasks, taskProperties, start, maxItems,
-                    sortField, sortAscending, filter);
+            FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Tasks, taskProperties, start, maxItems, sortField, sortAscending, filter);
 
             populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(), items.isMoreAvailable(),
                     items.getNextPageOffset() == null ? -1 : items.getNextPageOffset());
@@ -136,8 +131,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     }
 
-    private void populateResultHeaderFields(OutlookResults<? extends OutlookItem> results, int start, int maxItems, String sortField,
-            boolean sortAscending, int totalCount, boolean isMoreAvailable, int nextStartRow)
+    private void populateResultHeaderFields(OutlookResults<? extends OutlookItem> results, int start, int maxItems, String sortField, boolean sortAscending, int totalCount, boolean isMoreAvailable,
+            int nextStartRow)
     {
         results.setTotalItems(totalCount);
         results.setMoreItemsAvailable(isMoreAvailable);
@@ -256,25 +251,21 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         coreItem.setSize(fromOutlook.getSize());
     }
 
-    @Override
-    public OutlookResults<OutlookCalendarItem> findCalendarItems(String folderId, AcmOutlookUser user, int start, int maxItems,
-            String sortField, boolean sortAscending, SearchFilter filter)
-                    throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
+    @Override public OutlookResults<OutlookCalendarItem> findCalendarItems(String folderId, AcmOutlookUser user, int start, int maxItems, String sortField, boolean sortAscending, SearchFilter filter)
+            throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
     {
         ExchangeService service = connect(user);
 
-        PropertySet calendarProperties = new PropertySet(AppointmentSchema.IsAllDayEvent, AppointmentSchema.IsCancelled,
-                AppointmentSchema.IsMeeting, AppointmentSchema.IsRecurring, AppointmentSchema.Start, AppointmentSchema.End,
-                ItemSchema.ParentFolderId);
+        PropertySet calendarProperties = new PropertySet(AppointmentSchema.IsAllDayEvent, AppointmentSchema.IsCancelled, AppointmentSchema.IsMeeting, AppointmentSchema.IsRecurring,
+                AppointmentSchema.Start, AppointmentSchema.End, ItemSchema.ParentFolderId);
 
         OutlookResults<OutlookCalendarItem> results = new OutlookResults<>();
 
         try
         {
-            FindItemsResults<Item> items = folderId != null
-                    ? getDao().findItems(service, folderId, calendarProperties, start, maxItems, sortField, sortAscending, filter)
-                    : getDao().findItems(service, WellKnownFolderName.Calendar, calendarProperties, start, maxItems, sortField,
-                            sortAscending, filter);
+            FindItemsResults<Item> items = folderId != null ?
+                    getDao().findItems(service, folderId, calendarProperties, start, maxItems, sortField, sortAscending, filter) :
+                    getDao().findItems(service, WellKnownFolderName.Calendar, calendarProperties, start, maxItems, sortField, sortAscending, filter);
 
             populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(), items.isMoreAvailable(),
                     items.getNextPageOffset() == null ? -1 : items.getNextPageOffset());
@@ -290,8 +281,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     }
 
-    @Override
-    public void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user) throws Exception
+    @Override public void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user) throws Exception
     {
 
         if (getSendFromSystemUser())
@@ -302,8 +292,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         ExchangeService service = connect(user);
         EmailMessage emailMessage = new EmailMessage(service);
         emailMessage.setSubject(emailWithAttachmentsDTO.getSubject());
-        emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getHeader() + "\r\r"
-                + emailWithAttachmentsDTO.getBody() + "\r\r\r" + emailWithAttachmentsDTO.getFooter()));
+        emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getHeader() + "\r\r" + emailWithAttachmentsDTO.getBody() + "\r\r\r" + emailWithAttachmentsDTO.getFooter()));
         emailMessage.getBody().setBodyType(BodyType.Text);
         for (String emailAddress : emailWithAttachmentsDTO.getEmailAddresses())
         {
@@ -324,21 +313,19 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         // emailMessage.sendAndSaveCopy();
     }
 
-    @Override
-    public OutlookResults<OutlookContactItem> findContactItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-            boolean sortAscending, SearchFilter filter) throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
+    @Override public OutlookResults<OutlookContactItem> findContactItems(AcmOutlookUser user, int start, int maxItems, String sortField, boolean sortAscending, SearchFilter filter)
+            throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
     {
         ExchangeService service = connect(user);
 
-        PropertySet contactProperties = new PropertySet(ContactSchema.Surname, ContactSchema.DisplayName, ContactSchema.CompleteName,
-                ContactSchema.CompanyName, ContactSchema.PrimaryPhone, ContactSchema.EmailAddress1, ContactSchema.EmailAddress2);
+        PropertySet contactProperties = new PropertySet(ContactSchema.Surname, ContactSchema.DisplayName, ContactSchema.CompleteName, ContactSchema.CompanyName, ContactSchema.PrimaryPhone,
+                ContactSchema.EmailAddress1, ContactSchema.EmailAddress2);
 
         OutlookResults<OutlookContactItem> results = new OutlookResults<>();
 
         try
         {
-            FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Contacts, contactProperties, start, maxItems,
-                    sortField, sortAscending, filter);
+            FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Contacts, contactProperties, start, maxItems, sortField, sortAscending, filter);
 
             populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(), items.isMoreAvailable(),
                     items.getNextPageOffset() == null ? -1 : items.getNextPageOffset());
@@ -354,9 +341,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     }
 
-    @Override
-    public OutlookCalendarItem createOutlookAppointment(AcmOutlookUser user, OutlookCalendarItem calendarItem)
-            throws AcmOutlookConnectionFailedException, AcmOutlookCreateItemFailedException
+    @Override public OutlookCalendarItem createOutlookAppointment(AcmOutlookUser user, OutlookCalendarItem calendarItem) throws AcmOutlookConnectionFailedException, AcmOutlookCreateItemFailedException
     {
 
         ExchangeService service = connect(user);
@@ -368,8 +353,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         {
             try
             {
-                folder = calendarItem.getFolderId() == null ? Folder.bind(service, WellKnownFolderName.Calendar)
-                        : Folder.bind(service, new FolderId(calendarItem.getFolderId()));
+                folder = calendarItem.getFolderId() == null ? Folder.bind(service, WellKnownFolderName.Calendar) : Folder.bind(service, new FolderId(calendarItem.getFolderId()));
             } catch (Exception e)
             {
                 throw new AcmOutlookException("Can't bind to folder id [" + calendarItem.getFolderId() + " ]!", e);
@@ -377,13 +361,15 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
             retval = getDao().createCalendarAppointment(service, folder, calendarItem);
 
-            AcmContainer container = getAcmContainerDao().findByCalendarFolderId(calendarItem.getFolderId());
+            List<AcmContainer> containers = getAcmContainerDao().findByCalendarFolderId(calendarItem.getFolderId());
 
-            if (container != null)
+            // we expect that exactly one container is returned
+            if (containers.size() == 1)
             {
-
-                getOutlookEventPublisher().publishCalendarEventAdded(retval, user.getUserId(), container.getContainerObjectId(),
-                        container.getContainerObjectType());
+                getOutlookEventPublisher().publishCalendarEventAdded(retval, user.getUserId(), containers.get(0).getContainerObjectId(), containers.get(0).getContainerObjectType());
+            } else
+            {
+                log.error(String.format("Unexpected number of containers=%d returned for calendarFolderId=%d", containers.size(), calendarItem.getFolderId()));
             }
 
         } catch (AcmOutlookException e)
@@ -406,8 +392,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         throw e;
     }
 
-    @Override
-    public OutlookTaskItem createOutlookTaskItem(AcmOutlookUser user, WellKnownFolderName folderName, OutlookTaskItem taskItem)
+    @Override public OutlookTaskItem createOutlookTaskItem(AcmOutlookUser user, WellKnownFolderName folderName, OutlookTaskItem taskItem)
             throws AcmOutlookConnectionFailedException, AcmOutlookCreateItemFailedException
     {
         ExchangeService service = connect(user);
@@ -433,8 +418,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     }
 
-    @Override
-    public OutlookContactItem createOutlookContactItem(AcmOutlookUser user, WellKnownFolderName folderName, OutlookContactItem contactItem)
+    @Override public OutlookContactItem createOutlookContactItem(AcmOutlookUser user, WellKnownFolderName folderName, OutlookContactItem contactItem)
             throws AcmOutlookConnectionFailedException, AcmOutlookCreateItemFailedException
     {
 
@@ -462,8 +446,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     }
 
-    @Override
-    public void deleteItem(AcmOutlookUser user, String itemId, DeleteMode deleteMode) throws AcmOutlookException
+    @Override public void deleteItem(AcmOutlookUser user, String itemId, DeleteMode deleteMode) throws AcmOutlookException
     {
         ExchangeService service = connect(user);
 
@@ -477,9 +460,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     }
 
-    @Override
-    public void deleteAllItemsFoundByExtendedProperty(String folderId, AcmOutlookUser user,
-            ExtendedPropertyDefinition extendedPropertyDefinition, Object extendedPropertyValue)
+    @Override public void deleteAllItemsFoundByExtendedProperty(String folderId, AcmOutlookUser user, ExtendedPropertyDefinition extendedPropertyDefinition, Object extendedPropertyValue)
     {
         // disconnectAndRetry is not needed here since this method calls other public methods in this service class,
         // and does not call any DAO methods.
@@ -507,8 +488,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     }
 
-    @Override
-    public void deleteAppointmentItem(AcmOutlookUser user, String appointmentId, Boolean recurring, DeleteMode deleteMode)
+    @Override public void deleteAppointmentItem(AcmOutlookUser user, String appointmentId, Boolean recurring, DeleteMode deleteMode)
     {
         ExchangeService service = connect(user);
 
@@ -522,8 +502,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     }
 
-    @Override
-    public OutlookFolder createFolder(AcmOutlookUser user, WellKnownFolderName parentFolderName, OutlookFolder newFolder)
+    @Override public OutlookFolder createFolder(AcmOutlookUser user, WellKnownFolderName parentFolderName, OutlookFolder newFolder)
             throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException
     {
         ExchangeService service = connect(user);
@@ -542,9 +521,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     }
 
-    @Override
-    public OutlookFolder getFolder(AcmOutlookUser user, String folderId)
-            throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException
+    @Override public OutlookFolder getFolder(AcmOutlookUser user, String folderId) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException
     {
 
         ExchangeService service = connect(user);
@@ -569,8 +546,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         return retval;
     }
 
-    @Override
-    public void deleteFolder(AcmOutlookUser user, String folderId, DeleteMode deleteMode) throws AcmOutlookItemNotFoundException
+    @Override public void deleteFolder(AcmOutlookUser user, String folderId, DeleteMode deleteMode) throws AcmOutlookItemNotFoundException
     {
 
         ExchangeService service = connect(user);
@@ -584,9 +560,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         }
     }
 
-    @Override
-    public void addFolderPermission(AcmOutlookUser user, String folderId, OutlookFolderPermission permission)
-            throws AcmOutlookItemNotFoundException
+    @Override public void addFolderPermission(AcmOutlookUser user, String folderId, OutlookFolderPermission permission) throws AcmOutlookItemNotFoundException
     {
         ExchangeService service = connect(user);
 
@@ -599,9 +573,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         }
     }
 
-    @Override
-    public void removeFolderPermission(AcmOutlookUser user, String folderId, OutlookFolderPermission permission)
-            throws AcmOutlookItemNotFoundException
+    @Override public void removeFolderPermission(AcmOutlookUser user, String folderId, OutlookFolderPermission permission) throws AcmOutlookItemNotFoundException
     {
         ExchangeService service = connect(user);
 
@@ -615,8 +587,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     }
 
-    @Override
-    public void updateFolderPermissions(AcmOutlookUser user, String calendarFolderId, List<OutlookFolderPermission> folderPermissions)
+    @Override public void updateFolderPermissions(AcmOutlookUser user, String calendarFolderId, List<OutlookFolderPermission> folderPermissions)
     {
 
         List<OutlookFolderPermission> existingFolderPermissions = getFolder(user, calendarFolderId).getPermissions();
@@ -667,8 +638,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         of.setId(folder.getId().getUniqueId());
         of.setParentId(folder.getParentFolderId().getUniqueId());
 
-        List<OutlookFolderPermission> permissions = folder.getPermissions().getItems().stream().map(this::mapFolderPermission)
-                .collect(Collectors.toCollection(() -> new LinkedList<>()));
+        List<OutlookFolderPermission> permissions = folder.getPermissions().getItems().stream().map(this::mapFolderPermission).collect(Collectors.toCollection(() -> new LinkedList<>()));
         of.setPermissions(permissions);
 
         return of;
@@ -697,8 +667,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         return dao;
     }
 
-    @Override
-    public void setDao(OutlookDao dao)
+    @Override public void setDao(OutlookDao dao)
     {
         this.dao = dao;
     }
