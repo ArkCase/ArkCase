@@ -219,7 +219,9 @@
     
     <bean id="acmApplicationTaskEventListener" class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventListener">
         <property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>
+        <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher" />
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
+        <property name="acmAssignmentDao" ref="acmAssignmentDao" />
     </bean>
     
     <bean id="extractAcmTaskFromEvent" class="com.armedia.acm.plugins.task.service.impl.ExtractAcmTaskFromEvent">
@@ -241,12 +243,6 @@
     	<property name="muleContextManager" ref="muleContextManager"/>
     </bean>
     
-    <bean id="taskAssigneeChangeChecker" class="com.armedia.acm.plugins.task.service.TaskAssigneeChangeChecker">
-    	<property name="acmObjectHistoryDao" ref="acmObjectHistoryDao" />
-    	<property name="eventPublisher" ref="acmObjectHistoryEventPublisher" />
-    	<property name="acmAssignmentDao" ref="acmAssignmentDao" />
-    </bean>
-
     <bean id="taskDataAccessUpdateLocator" class="com.armedia.acm.plugins.task.service.impl.TaskDataAccessUpdateLocator">
         <property name="taskDao" ref="acmTaskDao"/>
     </bean>
