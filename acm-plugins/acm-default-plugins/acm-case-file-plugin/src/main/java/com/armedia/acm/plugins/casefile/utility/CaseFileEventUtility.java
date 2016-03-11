@@ -40,7 +40,7 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         applicationEventPublisher.publishEvent(fileAddedEvent);
     }
     
-    public void raiseFileModifiedEvent(CaseFile source, String ipAddress, String eventStatus) {
+    public void raiseCaseFileModifiedEvent(CaseFile source, String ipAddress, String eventStatus) {
 
         CaseFileModifiedEvent event = new CaseFileModifiedEvent(source);
         event.setSucceeded(true);

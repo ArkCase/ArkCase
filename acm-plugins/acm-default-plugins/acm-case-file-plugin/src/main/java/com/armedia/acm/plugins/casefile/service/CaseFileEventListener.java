@@ -44,17 +44,17 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                     CaseFile existing = (CaseFile) converter.unmarshall(json, CaseFile.class);
 
                     if (isPriorityChanged(existing, updatedCaseFile)) {
-                        getCaseFileEventUtility().raiseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "priority.changed");
+                        getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "priority.changed");
                     }
 
                     if (isDetailsChanged(existing, updatedCaseFile)) {
-                        getCaseFileEventUtility().raiseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "details.changed");
+                        getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "details.changed");
                     }
 
                     checkParticipants(existing, updatedCaseFile);
 
                     if (isStatusChanged(existing, updatedCaseFile)) {
-                        getCaseFileEventUtility().raiseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "status.changed");
+                        getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "status.changed");
                     }
                 }
             }
@@ -87,7 +87,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
 
         if (es.addAll(us)) {
             // participants added
-            getCaseFileEventUtility().raiseFileModifiedEvent(updatedCaseFile, "", "participants.added");
+            getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, "", "participants.added");
         }
 
         // set is mutable
@@ -95,7 +95,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
 
         if (us.addAll(es)) {
             // participants deleted
-            getCaseFileEventUtility().raiseFileModifiedEvent(updatedCaseFile, "", "participants.deleted");
+            getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, "", "participants.deleted");
         }
     }
 

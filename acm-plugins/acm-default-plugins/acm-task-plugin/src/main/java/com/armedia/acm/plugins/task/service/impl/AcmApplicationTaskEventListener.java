@@ -36,21 +36,22 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
                 
                 AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService().getAcmObjectHistory(updatedTask.getId(), TaskConstants.OBJECT_TYPE);
 
-                String json = acmObjectHistoryExisting.getObjectString();
-                AcmTask existing = (AcmTask) converter.unmarshall(json, AcmTask.class);
-
-                if (detailsChanged(existing, updatedTask))
+                if(acmObjectHistoryExisting != null)
                 {
-                    AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "details.changed", event.getUserId(), true,
-                            event.getIpAddress());
-                    getTaskEventPublisher().publishTaskEvent(taskEvent);
-                }
+                    String json = acmObjectHistoryExisting.getObjectString();
+                    AcmTask existing = (AcmTask) converter.unmarshall(json, AcmTask.class);
 
-                if (priorityChanged(existing, updatedTask))
-                {
-                    AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "priority.changed", event.getUserId(),
-                            true, event.getIpAddress());
-                    getTaskEventPublisher().publishTaskEvent(taskEvent);
+                    if (detailsChanged(existing, updatedTask))
+                    {
+                        AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "details.changed", event.getUserId(), true, event.getIpAddress());
+                        getTaskEventPublisher().publishTaskEvent(taskEvent);
+                    }
+
+                    if (priorityChanged(existing, updatedTask))
+                    {
+                        AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "priority.changed", event.getUserId(), true, event.getIpAddress());
+                        getTaskEventPublisher().publishTaskEvent(taskEvent);
+                    }
                 }
             }
         }
