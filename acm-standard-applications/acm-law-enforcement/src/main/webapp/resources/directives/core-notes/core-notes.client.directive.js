@@ -123,9 +123,6 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                     });
 
                     modalInstance.result.then(function (data) {
-                            // The date string needs to be reformatted so that it can be accepted by the backend
-                            // It is expected to be in ISO format
-                            data.note.created = Util.dateToIsoString(new Date(note.created));
                             ObjectNoteService.saveNote(data.note).then(function () {
                                 scope.retrieveGridData();
                             }, function () {
