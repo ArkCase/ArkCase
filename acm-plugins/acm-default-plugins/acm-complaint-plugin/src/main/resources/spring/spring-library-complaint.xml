@@ -197,13 +197,8 @@
     
     <bean id="complaintEventListener" class="com.armedia.acm.plugins.complaint.service.ComplaintEventListener">
         <property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>
+        <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher"/>
         <property name="complaintEventPublisher" ref="complaintEventPublisher"/>
-    </bean>
-
-    <bean id="complaintAssigneeChangeChecker"
-          class="com.armedia.acm.plugins.complaint.service.ComplaintAssigneeChangeChecker">
-        <property name="acmObjectHistoryDao" ref="acmObjectHistoryDao"/>
-        <property name="eventPublisher" ref="acmObjectHistoryEventPublisher"/>
         <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
     </bean>
 
