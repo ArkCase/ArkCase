@@ -2,7 +2,7 @@
     <div class="clearfix">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a href="#" editable-text="objectInfo.title" onaftersave="saveTask()">{{objectInfo.title ||
+                <h4><a href="#" editable-text="objectInfo.title" onaftersave="updateTitle()">{{objectInfo.title ||
                     "Unknown"}}</a></h4>
             </div>
 
@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-number="objectInfo.percentComplete" onbeforesave="validatePercentComplete($data)" onaftersave="saveTask()">
+                    <a href="#" editable-number="objectInfo.percentComplete" onbeforesave="validatePercentComplete($data)" onaftersave="updatePercentage()">
                         {{ objectInfo.percentComplete }}
                     </a>
                 </div>
@@ -18,7 +18,7 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-select="assignee" onaftersave="saveTask()"
+                    <a href="#" editable-select="assignee" onaftersave="updateAssignee(assignee)"
                        e-ng-options="a.object_id_s as a.name for a in assignableUsers">
                         {{assignee | mapKeyValue: assignableUsers:'object_id_s':'name' || 'Unknown'}}</a>
                 </div>
@@ -26,7 +26,7 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-select="objectInfo.priority" onaftersave="saveTask()"
+                    <a href="#" editable-select="objectInfo.priority" onaftersave="updatePriority()"
                        e-ng-options="p.value as p.text for p in priorities">{{ objectInfo.priority ||
                         'Unknown'}}</a>
                 </div>
@@ -35,9 +35,9 @@
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="#"
-                       editable-date="dateInfo.taskStartDate"
-                       onaftersave="updateStartDate(dateInfo.taskStartDate)">
-                        {{ (dateInfo.taskStartDate | date: "MM/dd/yyyy") || 'Unknown' }}
+                       editable-date="taskStartDate"
+                       onaftersave="updateStartDate(taskStartDate)">
+                        {{ (taskStartDate | date: "MM/dd/yyyy") || 'Unknown' }}
                     </a>
                 </div>
                 <small class="text-muted">Start Date</small>
@@ -45,9 +45,9 @@
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="#"
-                       editable-date="dateInfo.dueDate"
-                       onaftersave="updateDueDate(dateInfo.dueDate)">
-                        {{ (dateInfo.dueDate | date: "MM/dd/yyyy") || 'Unknown' }}
+                       editable-date="dueDate"
+                       onaftersave="updateDueDate(dueDate)">
+                        {{ (dueDate | date: "MM/dd/yyyy") || 'Unknown' }}
                     </a>
                 </div>
                 <small class="text-muted">Due Date</small>
