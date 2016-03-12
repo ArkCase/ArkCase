@@ -31,6 +31,9 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
             , resetTreeData: function () {
                 return TimeTrackingListService.resetTimeTrackingTreeData();
             }
+            , updateTreeData: function (start, n, sort, filters, query, nodeData) {
+                return TimeTrackingListService.updateTimeTrackingTreeData(start, n, sort, filters, query, nodeData);
+            }
             , getTreeData: function (start, n, sort, filters, query) {
                 var dfd = $q.defer();
                 Authentication.queryUserInfo().then(

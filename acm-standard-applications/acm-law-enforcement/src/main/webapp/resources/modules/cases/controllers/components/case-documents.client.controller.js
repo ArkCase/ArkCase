@@ -24,7 +24,6 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
 
         var onConfigRetrieved = function (config) {
-            $scope.config = config;
             $scope.treeConfig = config.docTree;
         };
 
@@ -47,7 +46,6 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
         $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
         var onObjectInfoRetrieved = function (objectInfo) {
-            $scope.objectInfo = objectInfo;
             $scope.objectId = objectInfo.id;
         };
 

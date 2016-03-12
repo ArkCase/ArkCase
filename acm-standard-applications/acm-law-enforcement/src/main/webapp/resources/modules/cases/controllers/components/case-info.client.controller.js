@@ -1,9 +1,11 @@
 'use strict';
 
-angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', 'UtilService', 'ConfigService'
-    , 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, Util, ConfigService
-        , ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService) {
+angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', '$translate'
+    , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService'
+    , 'Object.ModelService', 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $translate
+        , Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService
+        , ObjectModelService, HelperObjectBrowserService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -51,10 +53,11 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        $scope.dueDate = null;
+        //$scope.dueDate = null;
         var onObjectInfoRetrieved = function (data) {
-            $scope.objectInfo = data;
-            $scope.dueDate = ($scope.objectInfo.dueDate) ? moment($scope.objectInfo.dueDate).toDate() : null;
+            //$scope.dueDate = ($scope.objectInfo.dueDate) ? moment($scope.objectInfo.dueDate).toDate() : null;
+            $scope.dateInfo = $scope.dateInfo || {};
+            $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
             $scope.owningGroup = ObjectModelService.getGroup(data);
             $scope.assignee = ObjectModelService.getAssignee(data);
             CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
@@ -74,45 +77,50 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
          * Persists the updated casefile metadata to the ArkCase database
          */
         function saveCase() {
-            var caseInfo = Util.omitNg($scope.objectInfo);
-            if (CaseInfoService.validateCaseInfo(caseInfo)) {
-                CaseInfoService.saveCaseInfo(caseInfo).then(
+            var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+            if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
+                var objectInfo = Util.omitNg($scope.objectInfo);
+                promiseSaveInfo = CaseInfoService.saveCaseInfo(objectInfo);
+                promiseSaveInfo.then(
                     function (caseInfo) {
-                        //update tree node tittle
-                        $scope.$emit("report-object-update", caseInfo);
+                        $scope.$emit("report-object-updated", caseInfo);
                         return caseInfo;
                     }
                     , function (error) {
-                        //set error to x-editable title
-                        //update tree node tittle
+                        $scope.$emit("report-object-update-failed", error);
                         return error;
                     }
                 );
             }
+            return promiseSaveInfo;
         }
 
 
         // Updates the ArkCase database when the user changes a case attribute
         // in a case top bar menu item and clicks the save check button
-        $scope.updateTitle = function() {
+        $scope.saveCase = function() {
             saveCase();
         };
+        //$scope.updateTitle = function() {
+        //    saveCase();
+        //};
         $scope.updateOwningGroup = function() {
             ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
             saveCase();
         };
-        $scope.updatePriority = function() {
-            saveCase();
-        };
-        $scope.updateCaseType = function() {
-            saveCase();
-        };
+        //$scope.updatePriority = function() {
+        //    saveCase();
+        //};
+        //$scope.updateCaseType = function() {
+        //    saveCase();
+        //};
         $scope.updateAssignee = function() {
             ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
             saveCase();
         };
         $scope.updateDueDate = function(dueDate) {
-            $scope.objectInfo.dueDate = (dueDate) ? moment(dueDate).format($scope.config.dateFormat): null;
+            //$scope.objectInfo.dueDate = (dueDate) ? moment(dueDate).format($scope.config.dateFormat): null;
+            $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
             saveCase();
         };
 

@@ -36,6 +36,47 @@ angular.module('services').factory('Case.ListService', ['$resource', '$translate
 
         /**
          * @ngdoc method
+         * @name updateCasesTreeData
+         * @methodOf services:Case.ListService
+         *
+         * @description
+         * Update a node data in tree.
+         *
+         * @param {Number} start  Zero based index of result starts from
+         * @param {Number} n max Number of list to return
+         * @param {String} sort  Sort value. Allowed choice is based on backend specification
+         * @param {String} filters  Filter value. Allowed choice is based on backend specification
+         * @param {String} query  Search term for tree entry to match
+         * @param {Object} nodeData  Node data
+         *
+         * @returns {Object} Promise
+         */
+        Service.updateCasesTreeData = function (start, n, sort, filters, query, nodeData) {
+            var a1 = ObjectListService;
+
+            ObjectListService.updateObjectTreeData(Service.CacheNames.CASE_LIST
+                , start, n, sort, filters, query, nodeData
+            );
+            //var param = {};
+            //param.objectType = "CASE_FILE";
+            //param.start = Util.goodValue(start, 0);
+            //param.n = Util.goodValue(n, 32);
+            //param.sort = Util.goodValue(sort);
+            //param.filters = Util.goodValue(filters);
+            //param.query = Util.goodValue(query);
+            //var cacheCaseList = new Store.CacheFifo(Service.CacheNames.CASE_LIST);
+            //var cacheKey = param.start + "." + param.n + "." + param.sort + "." + param.filters + "." + param.query;
+            //var treeData = cacheCaseList.get(cacheKey);
+            //var found = _.find(treeData.docs, {"nodeId": nodeData.nodeId});
+            //if (found) {
+            //    found.nodeType = nodeData.nodeType;
+            //    found.nodeTitle = nodeData.nodeTitle;
+            //    found.nodeToolTip = nodeData.nodeToolTip;
+            //}
+        };
+
+        /**
+         * @ngdoc method
          * @name queryCasesTreeData
          * @methodOf services:Case.ListService
          *
@@ -89,7 +130,7 @@ angular.module('services').factory('Case.ListService', ['$resource', '$translate
                     }
                 }
             });
-        }
+        };
 
 
         /**

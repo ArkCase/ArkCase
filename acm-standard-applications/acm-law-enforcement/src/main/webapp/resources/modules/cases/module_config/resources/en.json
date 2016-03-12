@@ -5,7 +5,8 @@
     "progressLoading": "Loading case file ",
     "progressError": "Failed to load case file"
   },
-  "cases.tree": {
+  "cases.error": {
+    "invalidData": ""
   },
   "cases.comp.info": {
     "caseId": "Case id:",
@@ -216,7 +217,6 @@
       "search.placeholder": "Search for case file.",
       "search.btn": "Search",
       "enabled": true,
-      "___xxx__clientFacetFilter": "\"Object Type\": CASE_FILE",
       "table.columns": {
               "incident": "Type",
               "name": "Name",
