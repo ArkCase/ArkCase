@@ -164,8 +164,14 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 //Tree.refreshTree(key);
                 //Tree.tree.activateKey(key);
 
-            }, setTitle: function (nodeType, nodeId, title, toolTip) {
-                console.log("tree setTitle");
+            }
+            , setTitle: function (nodeType, nodeId, nodeTitle, nodeToolTip) {
+                var key = Tree.Key.getKeyByObj(nodeType, nodeId);
+                var node = Tree.tree.getNodeByKey(key);
+                if (node) {
+                    node.setTitle(nodeTitle);
+                    Tree.fixNodeIcon(node);
+                }
             }
 
             , refreshTree: function (key) {

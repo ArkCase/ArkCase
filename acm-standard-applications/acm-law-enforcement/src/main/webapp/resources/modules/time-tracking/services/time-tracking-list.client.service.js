@@ -65,6 +65,29 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
 
         /**
          * @ngdoc method
+         * @name updateTimeTrackingTreeData
+         * @methodOf services:TimeTracking.ListService
+         *
+         * @description
+         * Update a node data in tree.
+         *
+         * @param {Number} start  Zero based index of result starts from
+         * @param {Number} n max Number of list to return
+         * @param {String} sort  Sort value. Allowed choice is based on backend specification
+         * @param {String} filters  Filter value. Allowed choice is based on backend specification
+         * @param {String} query  Search term for tree entry to match
+         * @param {Object} nodeData  Node data
+         *
+         * @returns {Object} Promise
+         */
+        Service.updateTimeTrackingTreeData = function (start, n, sort, filters, query, nodeData) {
+            ObjectListService.updateObjectTreeData(Service.CacheNames.TIMESHEET_LIST
+                , start, n, sort, filters, query, nodeData
+            );
+        };
+
+        /**
+         * @ngdoc method
          * @name queryTimeTrackingTreeData
          * @methodOf service:TimeTracking.ListService
          *

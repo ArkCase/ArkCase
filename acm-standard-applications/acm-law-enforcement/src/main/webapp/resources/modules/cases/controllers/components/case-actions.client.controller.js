@@ -30,8 +30,6 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         var promiseGetGroups = ObjectLookupService.getGroups();
 
         var onObjectInfoRetrieved = function (objectInfo) {
-            $scope.objectInfo = objectInfo;
-
             var group = ObjectModelService.getGroup(objectInfo);
             var assignee = ObjectModelService.getAssignee(objectInfo);
             var promiseGetApprovers = CaseLookupService.getApprovers(group, assignee);

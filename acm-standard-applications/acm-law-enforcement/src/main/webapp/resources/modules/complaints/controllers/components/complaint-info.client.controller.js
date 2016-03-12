@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams'
-    , 'UtilService', 'ConfigService', 'Object.LookupService', 'Complaint.LookupService', 'Complaint.InfoService'
+    , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Complaint.LookupService', 'Complaint.InfoService'
     , 'Object.ModelService', 'Helper.ObjectBrowserService'
     , function ($scope, $stateParams
-        , Util, ConfigService, ObjectLookupService, ComplaintLookupService, ComplaintInfoService
+        , Util, UtilDateService, ConfigService, ObjectLookupService, ComplaintLookupService, ComplaintInfoService
         , ObjectModelService, HelperObjectBrowserService) {
 
         new HelperObjectBrowserService.Component({
@@ -54,10 +54,10 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
         );
 
 
-        $scope.dueDate = null;
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $scope.dueDate = ($scope.objectInfo.dueDate) ? moment($scope.objectInfo.dueDate).toDate() : null;
+            $scope.dateInfo = $scope.dateInfo || {};
+            $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
             $scope.assignee = ObjectModelService.getAssignee(objectInfo);
             $scope.owningGroup = ObjectModelService.getGroup(objectInfo);
             //if (previousId != objectId) {
@@ -77,36 +77,29 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
          * Persists the updated complaint metadata to the ArkComplaint data
          */
         function saveComplaint() {
-            var complaintInfo = Util.omitNg($scope.objectInfo);
-            if (ComplaintInfoService.validateComplaintInfo(complaintInfo)) {
-                ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
+            var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+            if (ComplaintInfoService.validateComplaintInfo($scope.objectInfo)) {
+                var objectInfo = Util.omitNg($scope.objectInfo);
+                promiseSaveInfo = ComplaintInfoService.saveComplaintInfo(objectInfo);
+                promiseSaveInfo.then(
                     function (complaintInfo) {
-                        //update tree node tittle
                         $scope.$emit("report-object-updated", complaintInfo);
                         return complaintInfo;
                     }
                     , function (error) {
-                        //set error to x-editable title
-                        //update tree node tittle
+                        $scope.$emit("report-object-update-failed", error);
                         return error;
                     }
                 );
             }
+            return promiseSaveInfo;
         }
 
-        // Updates the ArkComplaint data when the user changes a complaint attribute
-        // in a complaint top bar menu item and clicks the save check button
-        $scope.updateTitle = function () {
+        $scope.saveComplaint = function () {
             saveComplaint();
         };
         $scope.updateOwningGroup = function () {
             ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
-            saveComplaint();
-        };
-        $scope.updatePriority = function () {
-            saveComplaint();
-        };
-        $scope.updateComplaintType = function () {
             saveComplaint();
         };
         $scope.updateAssignee = function () {
@@ -114,7 +107,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             saveComplaint();
         };
         $scope.updateDueDate = function (dueDate) {
-            $scope.objectInfo.dueDate = (dueDate) ? moment(dueDate).format($scope.config.dateFormat): null;
+            $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
             saveComplaint();
         };
 

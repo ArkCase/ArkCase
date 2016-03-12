@@ -33,7 +33,6 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         );
 
         var onConfigRetrieved = function (config) {
-            $scope.config = config;
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -57,7 +56,6 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         );
 
         var onObjectInfoRetrieved = function (objectInfo) {
-            $scope.objectInfo = objectInfo;
             retrieveGridData();
         };
 

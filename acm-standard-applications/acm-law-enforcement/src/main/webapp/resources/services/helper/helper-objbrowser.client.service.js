@@ -28,10 +28,15 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
              *
              * @param {Object} arg Map arguments
              * @param {Object} arg.scope Angular $scope
-             * @param {number} arg.nodeId Node II of initial selected tree node. If null or zero, first tree node is selected
-             * @param {Object} arg.getNodeData Promise object of a function that query list of tree nodes.
-             * @param {Object} arg.getNodeData Promise object of a function that query data of a specified node
-             * @param {Function} arg.makeTreeNode Function to make tree node from object data
+             * @param {Object} arg.state Angular $state
+             * @param {Object} arg.stateParams Angular stateParams
+             * @param {String} arg.moduleId Module ID
+             * @param {Function} arg.resetTreeData Function to reset tree data
+             * @param {Function} arg.updateTreeData Function to update a tree node data in a tree
+             * @param {Function} arg.resetTreeData Function to reset tree data
+             * @param {Function} arg.getTreeData Function to retrieve tree data
+             * @param {Function} arg.getNodeData Function to retrieve a tree node data
+             * @param {Function} arg.makeTreeNode Function to make tree node from object info
              *
              * @description
              * Helper.ObjectBrowserService.Tree is to help a typical usage of 'object-tree' directive.
@@ -45,6 +50,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.stateParams = arg.stateParams;
                 that.moduleId = arg.moduleId;
                 that.resetTreeData = arg.resetTreeData;
+                that.updateTreeData = arg.updateTreeData;
                 that.getTreeData = arg.getTreeData;
                 that.getNodeData = arg.getNodeData;
                 that.makeTreeNode = arg.makeTreeNode;
@@ -87,15 +93,37 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 };
 
                 that.scope.onLoad = function (start, n, sort, filters, query) {
+                    that.treeParams = {};
+                    that.treeParams.start = start;
+                    that.treeParams.n = n;
+                    that.treeParams.sort = sort;
+                    that.treeParams.filters = filters;
+                    that.treeParams.query = query;
                     that.onLoad(start, n, sort, filters, query);
                 };
 
                 that.scope.onSelect = function (selectedObject) {
+                    that.selectedObject = selectedObject;
                     that.onSelect(selectedObject);
                 };
 
-                that.scope.$on('refresh-content', function (e, selectedObject) {
-                    console.log("helper.Tree: refresh-content");
+                that.scope.$on("object-updated", function (e, objectInfo) {
+                    var node = that.makeTreeNode(objectInfo);
+                    that.scope.treeControl.setTitle(node.nodeType, node.nodeId, node.nodeTitle, node.nodeToolTip);
+                    if (that.updateTreeData && that.treeParams) {
+                        that.updateTreeData(that.treeParams.start, that.treeParams.n, that.treeParams.sort, that.treeParams.filters, that.treeParams.query, node);
+                    }
+                });
+
+                that.scope.$on("object-update-failed", function (e, error) {
+                    if (that.selectedObject) {
+                        var nodeType = Util.goodValue(that.selectedObject.nodeType);
+                        var nodeId = Util.goodValue(that.selectedObject.nodeId);
+                        that.scope.treeControl.setTitle(nodeType, nodeId
+                            , $translate.instant("common.directive.objectTree.errorNode.title")
+                            , $translate.instant("common.directive.objectTree.errorNode.toolTip")
+                        );
+                    }
                 });
             }
 
@@ -197,6 +225,10 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     that.scope.$broadcast('object-updated', objectInfo);
                 });
 
+                that.scope.$on('report-object-update-failed', function (e, objectInfo) {
+                    that.scope.$broadcast('object-update-failed', objectInfo);
+                });
+
                 that.scope.$on('req-select-object', function (e, selectedObject) {
                     that.scope.$broadcast('object-selected', selectedObject);
 
@@ -230,7 +262,6 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                             that.scope.objectInfo = null;
                         }
                         that.scope.progressMsg = $translate.instant("common.objects.progressLoading") + " " + id + "...";
-
                         that.getObjectInfo(id).then(
                             function (objectInfo) {
                                 that.scope.progressMsg = null;
@@ -241,6 +272,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                             , function (error) {
                                 that.scope.objectInfo = null;
                                 that.scope.progressMsg = $translate.instant("common.objects.progressError") + " " + id;
+                                that.scope.$broadcast('object-update-failed', error);
                                 return error;
                             }
                         );
@@ -300,11 +332,17 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.validateObjectInfo = (arg.validateObjectInfo) ? arg.validateObjectInfo : function (data) {
                     return (!Util.isEmpty(data));
                 };
-                that.onObjectInfoRetrieved = (arg.onObjectInfoRetrieved) ? arg.onObjectInfoRetrieved : function (objectInfo) {
+                that.onObjectInfoRetrieved = function (objectInfo) {
                     that.scope.objectInfo = objectInfo;
+                    if (arg.onObjectInfoRetrieved) {
+                        arg.onObjectInfoRetrieved(objectInfo);
+                    }
                 };
-                that.onConfigRetrieved = (arg.onConfigRetrieved) ? arg.onConfigRetrieved : function (componentConfig) {
+                that.onConfigRetrieved = function (componentConfig) {
                     that.scope.config = componentConfig;
+                    if (arg.onConfigRetrieved) {
+                        return arg.onConfigRetrieved(componentConfig);
+                    }
                 };
 
                 that.deferConfigDone = $q.defer();
@@ -560,7 +598,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
             /**
              * @ngdoc method
-             * @name onLoad
+             * @name doneConfig
              * @methodOf services:Helper.ObjectBrowserService
              *
              * @param {Object} config Component configuration JSON object

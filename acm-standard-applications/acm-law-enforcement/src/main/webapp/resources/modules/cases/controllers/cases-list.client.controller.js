@@ -27,6 +27,9 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
             , resetTreeData: function () {
                 return CaseListService.resetCasesTreeData();
             }
+            , updateTreeData: function (start, n, sort, filters, query, nodeData) {
+                return CaseListService.updateCasesTreeData(start, n, sort, filters, query, nodeData);
+            }
             , getTreeData: function (start, n, sort, filters, query) {
                 return CaseListService.queryCasesTreeData(start, n, sort, filters, query);
             }

@@ -2,7 +2,7 @@
     <div class="clearfix">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a href="#" editable-text="objectInfo.title" onaftersave="updateTitle()">{{objectInfo.title || "Unknown"
+                <h4><a href="#" editable-text="objectInfo.title" onaftersave="saveCase()">{{objectInfo.title || "Unknown"
                     }}</a> ({{objectInfo.status}})</h4></div>
             <div class="col-xs-6  text-right">
                 <h4>{{objectInfo.caseNumber}}</h4>
@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-select="objectInfo.caseType" onaftersave="updateCaseType()"
+                    <a href="#" editable-select="objectInfo.caseType" onaftersave="saveCase()"
                        e-ng-options="c.value as c.text for c in caseTypes">{{objectInfo.caseType ||
                         'Unknown'}}</a>
                 </div>
@@ -25,16 +25,12 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-select="objectInfo.priority" onaftersave="updatePriority()"
+                    <a href="#" editable-select="objectInfo.priority" onaftersave="saveCase()"
                        e-ng-options="p.value as p.text for p in priorities">{{ objectInfo.priority ||
                         'Unknown'}}</a>
                 </div>
                 <small class="text-muted">Priority</small>
             </div>
-		  <!--<b>Due Date: </b><a href="#" editable-bsdate="objectInfo.dueDate" e-datepicker-popup="MM/dd/yyyy">{{ objectInfo.dueDate | date: "MM/dd/yyyy" || 'Unknown' }}</a>-->
-		  <!--<div class="clearfix">-->
-          <!--<div class="col-md-4"><b>{{'cases.comp.info.courtRoomName' | translate}}</b> {{objectInfo.courtroomName}}</div>-->
-          <!--</div>-->
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-4">
@@ -54,8 +50,8 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-date="dueDate" onaftersave="updateDueDate(dueDate)">
-                        {{ (dueDate | date: "MM/dd/yyyy") || 'Unknown' }}</a>
+                    <a href="#" editable-date="dateInfo.dueDate" onaftersave="updateDueDate(dateInfo.dueDate)">
+                        {{ (dateInfo.dueDate | date: "MM/dd/yyyy") || 'Unknown' }}</a>
                 </div>
                 <small class="text-muted">Due Date</small>
             </div>
