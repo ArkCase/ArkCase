@@ -1,6 +1,7 @@
 /* @override http://dev.jsapn.armedianet.com/arkcase/assets/css/application.css
 	http://localhost:8080/arkcase/assets/css/application.css
-	http://10.21.4.149/arkcase/assets/css/application.css */
+	http://10.21.4.149/arkcase/assets/css/application.css
+	http://acm-arkcase:8080/arkcase/assets/css/application.css */
 
 /* @override http://sharecaredev.armedianet.com/arkcase/assets/css/application.css */
 
@@ -89,7 +90,7 @@ iframe {
     outline: 0px;
     padding: 0px;
     margin: 0px;
-    overflow-x: hidden;
+    overflow: hidden !important;
     width: 100%;
 }
 
@@ -355,7 +356,10 @@ span.fancytree-title {
     border-left: 0px;
     border-right: 0px;
     position: relative;
-    z-index: 999;
+}
+
+.ui-contextmenu {
+	z-index: 3001;
 }
 
 .module-header .btn-group {
@@ -433,7 +437,6 @@ span.fancytree-title {
 .module-content .left-sidebar header.header .btn-group.select.pull-right {
     position: relative;
     top: -90px;
-    z-index: 1000 !important;
 
 }
 
@@ -1075,4 +1078,24 @@ div.tabbed-footer .overview-tabs li:hover span:before {
 
 div.tabbed-footer .overview-tabs li:hover:last-child span:before {
     left: 58px;
+}
+
+
+
+tags-input .host {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+tags-input .tags {
+  box-shadow: none;
+  padding-top: 1px;
+  padding-bottom: 2px;
+}
+
+
+.module-header tags-input .tags{
+	border: none;
+	box-shadow: none;
+	padding-top: 1px;
+	padding-bottom: 3px;
 }
