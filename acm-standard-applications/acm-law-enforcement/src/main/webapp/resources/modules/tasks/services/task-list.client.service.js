@@ -36,6 +36,29 @@ angular.module('tasks').factory('Task.ListService', ['$resource', '$translate', 
 
         /**
          * @ngdoc method
+         * @name updateTasksTreeData
+         * @methodOf services:Task.ListService
+         *
+         * @description
+         * Update a node data in tree.
+         *
+         * @param {Number} start  Zero based index of result starts from
+         * @param {Number} n max Number of list to return
+         * @param {String} sort  Sort value. Allowed choice is based on backend specification
+         * @param {String} filters  Filter value. Allowed choice is based on backend specification
+         * @param {String} query  Search term for tree entry to match
+         * @param {Object} nodeData  Node data
+         *
+         * @returns {Object} Promise
+         */
+        Service.updateTasksTreeData = function (start, n, sort, filters, query, nodeData) {
+            ObjectListService.updateObjectTreeData(Service.CacheNames.TASK_LIST
+                , start, n, sort, filters, query, nodeData
+            );
+        };
+
+        /**
+         * @ngdoc method
          * @name queryTasksTreeData
          * @methodOf tasks.service:Task.ListService
          *
