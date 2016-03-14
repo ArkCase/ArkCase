@@ -87,19 +87,20 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
     public boolean isAssigneeChanged(AcmAssignment assignment)
     {
-        if (assignment.getNewAssignee() != null && assignment.getOldAssignee() == null)
-        {
-            return true;
-        }
-
         if (assignment.getNewAssignee() != null && assignment.getOldAssignee() != null)
         {
-            if (!assignment.getNewAssignee().equals(assignment.getOldAssignee()))
+            if (assignment.getNewAssignee().equals(assignment.getOldAssignee()))
             {
-                return true;
+                return false;
             }
         }
-        return false;
+
+        if (assignment.getNewAssignee() == null && assignment.getOldAssignee() == null)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private AcmAssignment createAcmAssignment(Complaint updatedComplaint)
