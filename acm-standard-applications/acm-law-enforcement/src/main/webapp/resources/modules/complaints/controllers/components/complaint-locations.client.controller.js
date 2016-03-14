@@ -51,30 +51,12 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
             var location = {};
             //put location to scope, we will need it when we return from popup
             $scope.location = location;
-            var item = {
-                id: '',
-                streetAddress: '',
-                type: '',
-                city: '',
-                state: '',
-                zip: '',
-                addressTypes: $scope.addressTypes
-            };
-            showModal(item, false);
+            showModal(false);
         };
 
         $scope.editRow = function (rowEntity) {
-            $scope.location = rowEntity;
-            var item = {
-                id: rowEntity.id,
-                streetAddress: rowEntity.streetAddress,
-                type: rowEntity.type,
-                city: rowEntity.city,
-                state: rowEntity.state,
-                zip: rowEntity.zip,
-                addressTypes: $scope.addressTypes
-            };
-            showModal(item, true);
+            $scope.location = angular.copy(rowEntity);
+            showModal(true);
         };
 
         $scope.deleteRow = function (rowEntity) {
@@ -87,10 +69,11 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
             }
         };
 
-        var showModal = function (location, isEdit) {
+        var showModal = function (isEdit) {
             var modalScope = $scope.$new();
-            modalScope.location = location || {};
+            modalScope.location = $scope.location || {};
             modalScope.isEdit = isEdit || false;
+            modalScope.addressTypes = $scope.addressTypes;
 
             var modalInstance = $modal.open({
                 scope: modalScope,
@@ -111,21 +94,7 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
             });
 
             modalInstance.result.then(function (data) {
-                var location;
-                if (!data.isEdit)
-                    location = $scope.location;
-                else {
-                    location = $scope.objectInfo.location;
-                }
-                location.type = data.location.type;
-                location.streetAddress = data.location.streetAddress;
-                location.city = data.location.city;
-                location.state = data.location.state;
-                location.zip = data.location.zip;
-                location.country = data.location.country;
-                if (!data.isEdit) {
-                    $scope.objectInfo.location = location;
-                }
+                $scope.objectInfo.location = data.location;
                 saveObjectInfoAndRefresh();
             });
         };
