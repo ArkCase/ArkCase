@@ -16,4 +16,5 @@ public interface AcmObjectHistoryService {
 	public AcmObjectHistory save(AcmObjectHistory acmObjectHistory, String ipAddress);
 	public AcmObjectHistory save(String userId, String type, Object obj, Long objectId, String objectType, Date date, String ipAddress);
 	
+	public AcmObjectHistory getAcmObjectHistory(Long objectId, String objectType);
 }

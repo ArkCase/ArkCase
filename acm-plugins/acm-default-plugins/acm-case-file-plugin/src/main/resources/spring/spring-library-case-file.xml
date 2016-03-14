@@ -27,6 +27,13 @@
     <bean id="dispositionDao" class="com.armedia.acm.plugins.casefile.dao.DispositionDao"/>
 
     <bean id="caseFileEventUtility" class="com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility"/>
+    
+     <bean id="caseFileEventListener" class="com.armedia.acm.plugins.casefile.service.CaseFileEventListener">
+        <property name="acmObjectHistoryService" ref="acmObjectHistoryService" />
+         <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher"/>
+         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+         <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
+     </bean>
 
     <bean id="changeCaseFileStateService" class="com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService">
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
@@ -143,13 +150,6 @@
                 <value>com.armedia.acm.casefile.event.search</value>
             </list>
         </property>
-    </bean>
-
-    <bean id="caseFileAssigneeChangeChecker"
-          class="com.armedia.acm.plugins.casefile.service.CaseFileAssigneeChangeChecker">
-        <property name="acmObjectHistoryDao" ref="acmObjectHistoryDao"/>
-        <property name="eventPublisher" ref="acmObjectHistoryEventPublisher"/>
-        <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
     </bean>
 
     <bean id="caseFileDataAccessUpdateLocator"
