@@ -112,6 +112,7 @@ public class CaseFileService extends FrevvoFormAbstractService
 
         // Save Attachments
         FrevvoUploadedFiles frevvoFiles = saveAttachments(
+                getAttachmentFileType(form),
                 attachments,
                 form.getCmisFolderId(),
                 FrevvoFormName.CASE_FILE.toUpperCase(),
