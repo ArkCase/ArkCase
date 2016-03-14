@@ -1134,6 +1134,14 @@
                         <groupId>org.springframework</groupId>
                         <artifactId>spring-aop</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>org.python</groupId>
+                        <artifactId>jython-standalone</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jruby</groupId>
+                        <artifactId>jruby-core</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
