@@ -34,7 +34,8 @@
     <bean id="correspondenceService" class="com.armedia.acm.correspondence.service.CorrespondenceService">
         <property name="correspondenceGenerator" ref="correspondenceGenerator"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="eventPublisher" ref="correspondenceEventPublisher"/>
     </bean>
 
-
+    <bean id="correspondenceEventPublisher" class="com.armedia.acm.correspondence.service.CorrespondenceEventPublisher"/>
 </beans>

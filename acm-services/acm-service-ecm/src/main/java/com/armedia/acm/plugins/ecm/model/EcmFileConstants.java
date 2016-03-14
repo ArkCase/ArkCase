@@ -88,4 +88,6 @@ public interface EcmFileConstants
     String COPY_FILE_EXCEPTION_INBOUND_PROPERTY = "copyFileException";
 
     String ACTIVE = "ACTIVE";
+
+    String FIND_CONTAINER_BY_CALENDAR_FOLDER_QUERY = "SELECT c FROM AcmContainer c WHERE c.calendarFolderId = :folderId";
 }

@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.person.service;
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociationAddEvent;
+import com.armedia.acm.plugins.person.model.PersonAssociationDeletedEvent;
 import com.armedia.acm.plugins.person.model.PersonAssociationPersistenceEvent;
 import com.armedia.acm.plugins.person.model.PersonAssociationUpdatedEvent;
 import org.slf4j.Logger;
@@ -46,6 +47,12 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
         }
 
         eventPublisher.publishEvent(personAssociationPersistenceEvent);
+    }
+    
+    public void publishPersonAssociationDeletedEvent(PersonAssociation source){
+       PersonAssociationDeletedEvent event = new PersonAssociationDeletedEvent(source);
+       event.setSucceeded(true);
+       eventPublisher.publishEvent(event);
     }
 
 }
