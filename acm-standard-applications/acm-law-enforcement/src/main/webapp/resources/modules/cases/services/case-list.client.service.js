@@ -52,27 +52,9 @@ angular.module('services').factory('Case.ListService', ['$resource', '$translate
          * @returns {Object} Promise
          */
         Service.updateCasesTreeData = function (start, n, sort, filters, query, nodeData) {
-            var a1 = ObjectListService;
-
             ObjectListService.updateObjectTreeData(Service.CacheNames.CASE_LIST
                 , start, n, sort, filters, query, nodeData
             );
-            //var param = {};
-            //param.objectType = "CASE_FILE";
-            //param.start = Util.goodValue(start, 0);
-            //param.n = Util.goodValue(n, 32);
-            //param.sort = Util.goodValue(sort);
-            //param.filters = Util.goodValue(filters);
-            //param.query = Util.goodValue(query);
-            //var cacheCaseList = new Store.CacheFifo(Service.CacheNames.CASE_LIST);
-            //var cacheKey = param.start + "." + param.n + "." + param.sort + "." + param.filters + "." + param.query;
-            //var treeData = cacheCaseList.get(cacheKey);
-            //var found = _.find(treeData.docs, {"nodeId": nodeData.nodeId});
-            //if (found) {
-            //    found.nodeType = nodeData.nodeType;
-            //    found.nodeTitle = nodeData.nodeTitle;
-            //    found.nodeToolTip = nodeData.nodeToolTip;
-            //}
         };
 
         /**
