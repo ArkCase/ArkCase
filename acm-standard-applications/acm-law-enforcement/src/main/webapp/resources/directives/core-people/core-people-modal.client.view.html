@@ -11,21 +11,21 @@
 <div class="modal-body">
     <form name="peopleForm">
         <div>
-            <span translate>common.directive.corePeople.people.modal.personTypes.label</span>
+            <label for="personTypes" translate>common.directive.corePeople.people.modal.personTypes.label</label>
         </div>
-        <select
+        <select id="personTypes"
                 ng-model="person.personType"
                 ng-options="item.type as item.name for item in person.personTypes"></select>
 
         <div>
-            <span translate>common.directive.corePeople.people.modal.givenName.label</span>
+            <label for="givenName" translate>common.directive.corePeople.people.modal.givenName.label</label>
         </div>
-        <input type="text" ng-model="person.givenName">
+        <input id="givenName" type="text" ng-model="person.givenName">
 
         <div>
-            <span translate>common.directive.corePeople.people.modal.familyName.label</span>
+            <label for="familyName" translate>common.directive.corePeople.people.modal.familyName.label</label>
         </div>
-        <input type="text" ng-model="person.familyName">
+        <input id="familyName" type="text" ng-model="person.familyName">
 
     </form>
 </div>
@@ -33,7 +33,7 @@
     <button class="btn btn-default" ng-click="onClickCancel()">
         <span translate>common.directive.corePeople.people.modal.btnCancel.text</span>
     </button>
-    <button class="btn btn-default" ng-click="onClickOk()" ng-disabled="peopleForm.$invalid">
+    <button class="btn btn-primay" ng-click="onClickOk()" ng-disabled="peopleForm.$invalid">
         <span translate>common.directive.corePeople.people.modal.btnOk.text</span>
     </button>
 </div>
