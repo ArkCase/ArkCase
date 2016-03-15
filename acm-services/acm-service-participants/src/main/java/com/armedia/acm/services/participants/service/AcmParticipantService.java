@@ -23,6 +23,8 @@ public class AcmParticipantService {
         participant.setObjectType(objectType);
 
         AcmParticipant savedParticipant = getParticipantDao().save(participant);
+        
+        System.out.println("PARTICIPANT ADDED");
 
         return savedParticipant;
     }
