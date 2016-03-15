@@ -9,7 +9,7 @@
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
-        <property name="location" value="file:${user.home}/.acm/complaintPlugin.properties"/>
+        <property name="location" value="file:${user.home}/.arkcase/acm/complaintPlugin.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
@@ -217,6 +217,6 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="loadingDocumentsSeconds" value="${ephesoft.load.documents.seconds}"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="OXMFilePath" value="${user.home}/.acm${capture.oxm.file.path}"/>
+        <property name="OXMFilePath" value="${user.home}/.arkcase/acm${capture.oxm.file.path}"/>
     </bean>
 </beans>

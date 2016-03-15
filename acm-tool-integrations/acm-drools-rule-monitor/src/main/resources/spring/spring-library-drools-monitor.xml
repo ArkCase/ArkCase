@@ -5,7 +5,7 @@
 
 
     <bean id="drlDeployFolder" class="java.io.File">
-        <constructor-arg value="${user.home}/.acm/rules"/>
+        <constructor-arg value="${user.home}/.arkcase/acm/rules"/>
     </bean>
 
     <bean id="drlResourceExpression" class="java.lang.String">

@@ -13,7 +13,7 @@
 
     <amq:broker id="broker" useJmx="false" persistent="true" >
         <amq:persistenceAdapter>
-            <amq:kahaDB directory="${user.home}/.acm/activemq" />
+            <amq:kahaDB directory="${user.home}/.arkcase/acm/activemq" />
         </amq:persistenceAdapter>
         <amq:systemUsage>
             <amq:systemUsage>

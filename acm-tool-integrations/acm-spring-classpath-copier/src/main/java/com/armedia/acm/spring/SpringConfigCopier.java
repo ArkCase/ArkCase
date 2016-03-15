@@ -33,11 +33,11 @@ public class SpringConfigCopier implements ApplicationContextAware
         String customRoot = "/.acm/custom";
 
         // built-in Spring configuration files are copied to this folder
-        String builtinFolderPath = System.getProperty("user.home") + "/.acm/default-config/spring";
+        String builtinFolderPath = System.getProperty("user.home") + "/.arkcase/acm/default-config/spring";
         File builtinFolder = new File(builtinFolderPath);
 
         // custom Spring configuration files are copied to this folder
-        String customFolderPath = System.getProperty("user.home") + "/.acm/custom-config/spring";
+        String customFolderPath = System.getProperty("user.home") + "/.arkcase/acm/custom-config/spring";
         File customFolder = new File(customFolderPath);
 
         try

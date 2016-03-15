@@ -30,14 +30,13 @@ import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring/spring-library-test-activiti-process-definition-service.xml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class AcmBpmnServiceTest extends EasyMockSupport {
+public class AcmBpmnServiceTest extends EasyMockSupport
+{
 
     @Autowired
     AcmBpmnServiceImpl processDefinitionManagementService;
@@ -55,11 +54,14 @@ public class AcmBpmnServiceTest extends EasyMockSupport {
     private String resourceFileChangedMD5Sum;
 
     @BeforeClass
-    public static void initialCleanUp() {
+    public static void initialCleanUp()
+    {
         String userHome = System.getProperty("user.home");
-        File versionsFolder = new File(userHome + "/.acm/activiti/versions");
-        if(versionsFolder.exists()) {
-            for (File f : versionsFolder.listFiles()) {
+        File versionsFolder = new File(userHome + "/.arkcase/acm/activiti/versions");
+        if (versionsFolder.exists())
+        {
+            for (File f : versionsFolder.listFiles())
+            {
                 if (f.isFile() && f.getName().startsWith("Test"))
                     f.delete();
             }
@@ -67,36 +69,41 @@ public class AcmBpmnServiceTest extends EasyMockSupport {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
         filesToDelete = new HashSet<>();
         resourceFile = new ClassPathResource("/activiti/TestActivitiSpringProcess.bpmn20.xml");
-        resourceFileMD5Sum  = getDigest(resourceFile.getFile());
+        resourceFileMD5Sum = getDigest(resourceFile.getFile());
         resourceFileNotChanged = new ClassPathResource("/activiti/TestActivitiSpringProcessNotChanged.bpmn20.xml");
-        resourceFileNotChangedMD5Sum  = getDigest(resourceFileNotChanged.getFile());
+        resourceFileNotChangedMD5Sum = getDigest(resourceFileNotChanged.getFile());
         resourceFileChanged = new ClassPathResource("/activiti/TestActivitiSpringProcessChanged.bpmn20.xml");
-        resourceFileChangedMD5Sum  = getDigest(resourceFileChanged.getFile());
+        resourceFileChangedMD5Sum = getDigest(resourceFileChanged.getFile());
         processEngine = ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration().buildProcessEngine();
         processDefinitionManagementService.setActivitiRepositoryService(processEngine.getRepositoryService());
         acmBpmnDao = createMock(AcmBpmnDao.class);
         processDefinitionManagementService.setAcmBpmnDao(acmBpmnDao);
         String userHome = System.getProperty("user.home");
-        processDefinitionsFolder = userHome + "/.acm/activiti/versions";
+        processDefinitionsFolder = userHome + "/.arkcase/acm/activiti/versions";
         processDefinitionManagementService.setProcessDefinitionsFolder(processDefinitionsFolder);
     }
 
     @After
-    public void destroy() {
+    public void destroy()
+    {
         processEngine.close();
     }
 
     @Test
-    public void deployProcessDefinitionTest() throws IOException, URISyntaxException {
+    public void deployProcessDefinitionTest() throws IOException, URISyntaxException
+    {
         File f = resourceFile.getFile();
         assertTrue(f.exists());
         EasyMock.expect(acmBpmnDao.getByKeyAndDigest("TestActivitiSpringProcessUnitTest", resourceFileMD5Sum)).andReturn(null);
-        capture = new Capture<AcmProcessDefinition>();
-        EasyMock.expect(acmBpmnDao.save(EasyMock.capture(capture))).andAnswer(new IAnswer<AcmProcessDefinition>() {
-            public AcmProcessDefinition answer() throws Throwable {
+        capture = new Capture<>();
+        EasyMock.expect(acmBpmnDao.save(EasyMock.capture(capture))).andAnswer(new IAnswer<AcmProcessDefinition>()
+        {
+            public AcmProcessDefinition answer() throws Throwable
+            {
                 capture.getValue().setId(1l);
                 return capture.getValue();
             }
@@ -127,7 +134,8 @@ public class AcmBpmnServiceTest extends EasyMockSupport {
     }
 
     @Test
-    public void deployExistingProcessDefinitionTest() throws IOException, URISyntaxException {
+    public void deployExistingProcessDefinitionTest() throws IOException, URISyntaxException
+    {
         File f = resourceFile.getFile();
         File f1 = resourceFileNotChanged.getFile();
 
@@ -143,9 +151,11 @@ public class AcmBpmnServiceTest extends EasyMockSupport {
         fromDBExisting.setMd5Hash("ecf918b65e9ad2b6aaf51166aa3cac9a");
         fromDBExisting.setKey("TestActivitiSpringProcessUnitTest");
         EasyMock.expect(acmBpmnDao.getByKeyAndDigest("TestActivitiSpringProcessUnitTest", resourceFileNotChangedMD5Sum)).andReturn(fromDBExisting);
-        capture = new Capture<AcmProcessDefinition>();
-        EasyMock.expect(acmBpmnDao.save(EasyMock.capture(capture))).andAnswer(new IAnswer<AcmProcessDefinition>() {
-            public AcmProcessDefinition answer() throws Throwable {
+        capture = new Capture<>();
+        EasyMock.expect(acmBpmnDao.save(EasyMock.capture(capture))).andAnswer(new IAnswer<AcmProcessDefinition>()
+        {
+            public AcmProcessDefinition answer() throws Throwable
+            {
                 capture.getValue().setId(1l);
                 return capture.getValue();
             }
@@ -190,22 +200,27 @@ public class AcmBpmnServiceTest extends EasyMockSupport {
     }
 
     @Test
-    public void deployNotExistingProcessDefinitionTest() throws IOException, URISyntaxException {
+    public void deployNotExistingProcessDefinitionTest() throws IOException, URISyntaxException
+    {
         File f = resourceFile.getFile();
         File f1 = resourceFileChanged.getFile();
 
         assertTrue(f.exists());
-        capture = new Capture<AcmProcessDefinition>();
+        capture = new Capture<>();
         EasyMock.expect(acmBpmnDao.getByKeyAndDigest("TestActivitiSpringProcessUnitTest", resourceFileMD5Sum)).andReturn(null);
         EasyMock.expect(acmBpmnDao.getByKeyAndDigest("TestActivitiSpringProcessUnitTest", resourceFileChangedMD5Sum)).andReturn(null);
-        EasyMock.expect(acmBpmnDao.save(EasyMock.capture(capture))).andAnswer(new IAnswer<AcmProcessDefinition>() {
-            public AcmProcessDefinition answer() throws Throwable {
+        EasyMock.expect(acmBpmnDao.save(EasyMock.capture(capture))).andAnswer(new IAnswer<AcmProcessDefinition>()
+        {
+            public AcmProcessDefinition answer() throws Throwable
+            {
                 capture.getValue().setId(1l);
                 return capture.getValue();
             }
         });
-        EasyMock.expect(acmBpmnDao.save(EasyMock.capture(capture))).andAnswer(new IAnswer<AcmProcessDefinition>() {
-            public AcmProcessDefinition answer() throws Throwable {
+        EasyMock.expect(acmBpmnDao.save(EasyMock.capture(capture))).andAnswer(new IAnswer<AcmProcessDefinition>()
+        {
+            public AcmProcessDefinition answer() throws Throwable
+            {
                 capture.getValue().setId(2l);
                 return capture.getValue();
             }
@@ -252,48 +267,60 @@ public class AcmBpmnServiceTest extends EasyMockSupport {
     }
 
     @Test
-    public void countProcessDefinitionsEmptyTest() {
+    public void countProcessDefinitionsEmptyTest()
+    {
         EasyMock.expect(acmBpmnDao.count()).andReturn(0l);
         EasyMock.replay(acmBpmnDao);
         assertEquals(0, processDefinitionManagementService.count());
     }
 
     @Test
-    public void countProcessDefinitionsTest() throws URISyntaxException {
+    public void countProcessDefinitionsTest() throws URISyntaxException
+    {
         EasyMock.expect(acmBpmnDao.count()).andReturn(1l);
         EasyMock.replay(acmBpmnDao);
         assertEquals(1, processDefinitionManagementService.count());
     }
 
     @After
-    public void cleanUp() {
+    public void cleanUp()
+    {
         //in case of failed test or exception, database will rollback, and files and deployments are cleaned manually
         String userHome = System.getProperty("user.home");
-        String processDefinitionsFolder = userHome + "/.acm/activiti/versions";
+        String processDefinitionsFolder = userHome + "/.arkcase/acm/activiti/versions";
         //delete created files
-        for (String file : filesToDelete) {
+        for (String file : filesToDelete)
+        {
             File toBeDeleted = new File(processDefinitionsFolder + "/" + file);
             if (toBeDeleted.exists())
                 toBeDeleted.delete();
         }
     }
 
-    public String getDigest(File processDefinitionFile) {
-        try {
+    public String getDigest(File processDefinitionFile)
+    {
+        try
+        {
             FileInputStream stream = new FileInputStream(processDefinitionFile);
 
             String md5Hex = DigestUtils.md5Hex(stream);
             closeStream(stream);
             return md5Hex;
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             throw new AcmBpmnException("Error performing file digest!", e);
         }
     }
-    private void closeStream(Closeable stream) {
-        if (stream != null) {
-            try {
+
+    private void closeStream(Closeable stream)
+    {
+        if (stream != null)
+        {
+            try
+            {
                 stream.close();
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
 
             }
         }

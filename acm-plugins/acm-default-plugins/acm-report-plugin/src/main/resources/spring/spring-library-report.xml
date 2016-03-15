@@ -11,7 +11,7 @@
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
-        <property name="location" value="file:${user.home}/.acm/acm-reports.properties"/>
+        <property name="location" value="file:${user.home}/.arkcase/acm/acm-reports.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
@@ -25,7 +25,7 @@
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
-        <property name="location" value="file:${user.home}/.acm/reportToGroupsMap.properties"/>
+        <property name="location" value="file:${user.home}/.arkcase/acm/reportToGroupsMap.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
@@ -39,7 +39,7 @@
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
-        <property name="location" value="file:${user.home}/.acm/acm-reports-server-config.properties"/>
+        <property name="location" value="file:${user.home}/.arkcase/acm/acm-reports-server-config.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
@@ -60,9 +60,9 @@
     	<property name="propertyFileManager">
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>
-        <property name="reportsPropertiesFileLocation" value="${user.home}/.acm/acm-reports.properties"/>
-        <property name="reportToGroupsMapPropertiesFileLocation" value="${user.home}/.acm/reportToGroupsMap.properties"/>
-        <property name="reportServerConfigPropertiesFileLocation" value="${user.home}/.acm/acm-reports-server-config.properties"/>
+        <property name="reportsPropertiesFileLocation" value="${user.home}/.arkcase/acm/acm-reports.properties"/>
+        <property name="reportToGroupsMapPropertiesFileLocation" value="${user.home}/.arkcase/acm/reportToGroupsMap.properties"/>
+        <property name="reportServerConfigPropertiesFileLocation" value="${user.home}/.arkcase/acm/acm-reports-server-config.properties"/>
         <property name="reportPluginProperties" ref="reportPluginProperties"/>
         <property name="reportToGroupsMapProperties" ref="reportToGroupsMapProperties"/>
         <property name="executeSolrQuery" ref="executeSolrQuery" />
