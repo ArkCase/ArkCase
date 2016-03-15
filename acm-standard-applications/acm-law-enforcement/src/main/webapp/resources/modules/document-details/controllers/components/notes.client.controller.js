@@ -4,7 +4,7 @@ angular.module('document-details').controller('Document.NotesController', ['$sco
     , function ($scope, $stateParams, ConfigService, ObjectService) {
 
         ConfigService.getComponentConfig("document-details", "notes").then(function (config) {
-            $scope.objectInfo = {
+            $scope.notesInit = {
                 objectType: ObjectService.ObjectTypes.FILE,
                 currentObjectId: $stateParams.id
             };
