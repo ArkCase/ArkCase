@@ -18,22 +18,28 @@ public class ConfigFileController
 
     public void initBean()
     {
-        if ( log.isDebugEnabled() )
-        {
-            try
-            {
-                log.debug("Monitoring config folder " + getConfigFolder().getURL());
-            }
-            catch ( FileSystemException fse ) {}
 
+        try
+        {
+            log.error("Monitoring config folder " + getConfigFolder().getURL());
+            System.out.println("Monitoring config folder " + getConfigFolder().getURL());
+        } catch (FileSystemException fse)
+        {
         }
+
+        System.out.println("Adding config folder");
+
         getConfigFolderMonitor().addFile(getConfigFolder());
+
+        System.out.println("added config folder");
         getConfigFolderMonitor().start();
+        System.out.println("started");
+
     }
 
     public void stopBean()
     {
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
             log.debug("Stopping monitoring of folder " + getConfigFolder().getName());
         }
