@@ -11,43 +11,43 @@
 <div class="modal-body">
     <form name="addressesForm">
         <div>
-            <span translate>common.directive.corePeople.addresses.modal.addressTypes.label</span>
+            <label for="addressTypes" translate>common.directive.corePeople.addresses.modal.addressTypes.label</label>
         </div>
-        <select
+        <select id="addressTypes"
                 ng-model="address.addressType"
                 ng-options="item.type as item.name for item in address.addressTypes"></select>
 
         <div>
-            <span translate>common.directive.corePeople.addresses.modal.street.label</span>
+            <label for="streetAddress" translate>common.directive.corePeople.addresses.modal.street.label</label>
         </div>
-        <input type="text" ng-model="address.streetAddress">
+        <input type="text" id="streetAddress" ng-model="address.streetAddress">
 
         <div>
-            <span translate>common.directive.corePeople.addresses.modal.city.label</span>
+            <label for="city" translate>common.directive.corePeople.addresses.modal.city.label</label>
         </div>
-        <input type="text" ng-model="address.city">
+        <input type="text" id="city" ng-model="address.city">
 
         <div>
-            <span translate>common.directive.corePeople.addresses.modal.state.label</span>
+            <label for="state" translate>common.directive.corePeople.addresses.modal.state.label</label>
         </div>
-        <input type="text" ng-model="address.state">
+        <input id="state" type="text" ng-model="address.state">
 
         <div>
-            <span translate>common.directive.corePeople.addresses.modal.zip.label</span>
+            <label for="zip" translate>common.directive.corePeople.addresses.modal.zip.label</label>
         </div>
-        <input type="text" ng-model="address.zip">
+        <input id="zip" type="text" ng-model="address.zip">
 
         <div>
-            <span translate>common.directive.corePeople.addresses.modal.country.label</span>
+            <label for="country" translate>common.directive.corePeople.addresses.modal.country.label</label>
         </div>
-        <input type="text" ng-model="address.country">
+        <input id="country" type="text" ng-model="address.country">
     </form>
 </div>
 <div class="modal-footer">
     <button class="btn btn-default" ng-click="onClickCancel()">
         <span translate>common.directive.corePeople.addresses.modal.btnCancel.text</span>
     </button>
-    <button class="btn btn-default" ng-click="onClickOk()" ng-disabled="addressesForm.$invalid">
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addressesForm.$invalid">
         <span translate>common.directive.corePeople.addresses.modal.btnOk.text</span>
     </button>
 </div>

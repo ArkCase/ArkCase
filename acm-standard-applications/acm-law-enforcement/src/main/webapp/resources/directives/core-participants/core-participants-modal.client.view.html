@@ -11,14 +11,14 @@
 <div class="modal-body">
     <form name="participantsForm">
         <div>
-            <span translate>common.directive.coreParticipants.modal.participantType.label</span>
-            <select class="form-control"
+            <label for="participantType" translate>common.directive.coreParticipants.modal.participantType.label</label>
+            <select id="participantType" class="form-control"
                     ng-model="participant.participantType" required
                     ng-options="item.type as item.name for item in participant.participantTypes"></select>
         </div>
         <div>
-            <span translate>common.directive.coreParticipants.modal.participantName.label</span>
-            <input class="form-control" type="text" ng-model="participant.participantLdapId"
+            <label for="participantName" translate>common.directive.coreParticipants.modal.participantName.label</label>
+            <input id="participantName" class="form-control" type="text" ng-model="participant.participantLdapId"
                    ng-click="pickParticipant()" required>
 
             </input>
@@ -29,7 +29,7 @@
     <button class="btn btn-default" ng-click="onClickCancel()">
         <span translate>common.directive.coreParticipants.modal.btnCancel.text</span>
     </button>
-    <button class="btn btn-default" ng-click="onClickOk()" ng-disabled="participantsForm.$invalid">
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="participantsForm.$invalid">
         <span translate>common.directive.coreParticipants.modal.btnOk.text</span>
     </button>
 </div>
