@@ -10,8 +10,8 @@
 
  * Helper.NoteService provides common functionality related to the notes tables throughout the application
  */
-angular.module('services').factory('Helper.NoteService', ['UtilService', 'Object.NoteService'
-    , function (Util, ObjectNoteService) {
+angular.module('services').factory('Helper.NoteService', ['UtilService', 'Object.NoteService', 'Util.DateService'
+    , function (Util, ObjectNoteService, UtilDateService) {
         var Service = {
 
             /**
@@ -45,7 +45,7 @@ angular.module('services').factory('Helper.NoteService', ['UtilService', 'Object
                 return {
                     parentId: parentObjId,
                     parentType: parentObjType,
-                    created: new Date(),
+                    created: UtilDateService.dateToIso(new Date()),
                     creator: userId
                 };
             }

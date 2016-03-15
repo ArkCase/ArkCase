@@ -37,7 +37,19 @@ angular.module(ApplicationConfiguration.applicationModuleName).config([
                             $q.reject(null)
                         );
                     } else {
-                        MessageService.httpError(response);
+                        // Only throw http error as last resort
+                        if (response.data) {
+                            //e.g. Task already claimed .. exception type is ...
+                            MessageService.error(response.data);
+                        }
+                        else if (response.statusText) {
+                            //e.g. Unknown Error
+                            MessageService.error(response.statusText);
+                        }
+                        else {
+                            //e.g. Error 404 /api/latest..
+                            MessageService.httpError(response);
+                        }
                         return (
                             $q.reject(response)
                         );

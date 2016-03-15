@@ -25,7 +25,6 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
         var onConfigRetrieved = function (config) {
-            $scope.config = config;
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -39,30 +38,7 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
             }
         };
 
-        //if (Util.goodPositive(componentHelper.currentObjectId, false)) {
-        //    ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.CASE_FILE, componentHelper.currentObjectId).then(
-        //        function (costsheets) {
-        //            componentHelper.promiseConfig.then(function (config) {
-        //                for (var i = 0; i < costsheets.length; i++) {
-        //                    costsheets[i].acm$_formName = $translate.instant("cases.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
-        //                    costsheets[i].acm$_costs = _.reduce(Util.goodArray(costsheets[i].costs), function (total, n) {
-        //                        return total + Util.goodValue(n.value, 0);
-        //                    }, 0);
-        //                }
-        //
-        //                $scope.gridOptions = $scope.gridOptions || {};
-        //                $scope.gridOptions.data = costsheets;
-        //                $scope.gridOptions.totalItems = Util.goodValue(costsheets.length, 0);
-        //                //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.totalItems);
-        //                return config;
-        //            });
-        //            return costsheets;
-        //        }
-        //    );
-        //}
         var onObjectInfoRetrieved = function (objectInfo) {
-            $scope.objectInfo = objectInfo;
-
             var currentObjectId = Util.goodMapValue(objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
                 ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.CASE_FILE, currentObjectId).then(

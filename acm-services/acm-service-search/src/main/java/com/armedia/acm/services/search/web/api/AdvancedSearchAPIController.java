@@ -40,6 +40,24 @@ public class AdvancedSearchAPIController
             log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
         }
 
+
+        // Solr wants the '+' sign in the "facet.range.gap" part of the query to be encoded
+        // It is because the '+' shouldn't be interpreted/used as a space but as '+'  on solr side and that's why need to be sent as %2B.
+        //
+        //
+        // Encoding the entire content of the query does not work and it is possible to brake other queries also. That's
+        // why we are replacing only the '+' sign in the "facet.range.gap=+" part of the query with "facet.range.gap=%2B".
+        //
+        // Example UI -> ArkCase (advancedSearch) request that is using facet.range in the query:
+        //
+        //..advancedSearch?q=object_type_s:COMPLAINT+AND+creator_lcs:ann-acm%26facet.range=create_date_tdt%26facet.range.start=NOW-6MONTHS%26facet.range.end=NOW%26facet.range.gap=%2B1MONTH
+        //
+
+        if (query.contains("facet.range.gap=+"))
+        {
+            query = query.replace("facet.range.gap=+", "facet.range.gap=%2B");
+        }
+
         return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort);
     }
 
