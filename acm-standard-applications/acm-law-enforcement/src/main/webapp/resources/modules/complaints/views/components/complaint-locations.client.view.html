@@ -3,7 +3,8 @@
         <div class="panel-heading">
             <div class="panel-title">{{"complaints.comp.locations.title" | translate}}
                 <div class="pull-right">
-                        <button class="btn btn-default btn-xs" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
+                    <button class="btn btn-default btn-xs" ng-hide="objectInfo.location" ng-click="addNew()"><i
+                            class="fa fa-lg fa-plus"></i></button>
                     <!--<span class=""><i class='fa fa-save' ng-click='saveRow(row)'></i></span>-->
                     <!--<span class=""><i class='fa fa-pencil' ng-click='addRow()'></i></span>-->
                 </div>
@@ -14,7 +15,6 @@
             <div ui-grid="gridOptions"
                  ui-grid-resize-columns
                  ui-grid-auto-resize
-                 ui-grid-edit
                  adjust-table-height="gridOptions.data.length"
                  class="grid"></div>
         </div>
