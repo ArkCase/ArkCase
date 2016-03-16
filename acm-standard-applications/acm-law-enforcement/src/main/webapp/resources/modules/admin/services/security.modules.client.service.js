@@ -14,7 +14,7 @@
  *
  * The Admin.ModulesService provides Modules REST calls functionality
  */
-angular.module('admin').service('Admin.ModulesService', function ($http) {
+angular.module('admin').service('Admin.ModulesService', function ($http, UtilService) {
     return ({
         getAppModules: getAppModules,
         getRolesForModulePrivilege: getRolesForModulePrivilege,
@@ -35,7 +35,7 @@ angular.module('admin').service('Admin.ModulesService', function ($http) {
     function getAppModules() {
         return $http({
             method: 'GET',
-            url: 'api/latest/plugin/admin/moduleconfiguration/modules'
+            url: UtilService.noCacheUrl('api/latest/plugin/admin/moduleconfiguration/modules')
         });
     };
 
@@ -55,7 +55,7 @@ angular.module('admin').service('Admin.ModulesService', function ($http) {
     function getRolesForModulePrivilege(modulePrivilege) {
         return $http({
             method: 'GET',
-            url: 'api/latest/plugin/admin/rolesprivileges/privileges/' + modulePrivilege + '/roles'
+            url: UtilService.noCacheUrl('api/latest/plugin/admin/rolesprivileges/privileges/' + modulePrivilege + '/roles')
         });
     };
 
@@ -101,7 +101,7 @@ angular.module('admin').service('Admin.ModulesService', function ($http) {
         var url = 'api/latest/plugin/admin/rolesprivileges/roles/' + roles.join() + '/privileges/' + modulePrivilege;
         return $http({
             method: 'DELETE',
-            url: url,
+            url: url
         });
     };
 
