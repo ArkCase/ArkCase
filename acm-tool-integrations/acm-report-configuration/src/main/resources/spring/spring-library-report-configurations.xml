@@ -11,7 +11,7 @@
     </bean>
     
 	<bean id="acm-reports-properties" class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
-		<property name="location" value="file:${user.home}/.acm/acm-reports.properties"/>
+		<property name="location" value="file:${user.home}/.arkcase/acm/acm-reports.properties"/>
 	</bean>
     
 </beans>

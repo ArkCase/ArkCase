@@ -8,7 +8,7 @@
 
 
     <bean id="acmBpmnService" class="com.armedia.acm.activiti.services.AcmBpmnServiceImpl">
-        <property name="processDefinitionsFolder" value="${user.home}/.acm/activiti/versions"/>
+        <property name="processDefinitionsFolder" value="${user.home}/.arkcase/acm/activiti/versions"/>
     </bean>
 
     <bean id="acmActivitiListener_processStart" class="com.armedia.acm.activiti.AcmActivitiListener">
