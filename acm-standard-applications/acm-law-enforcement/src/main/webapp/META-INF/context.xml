@@ -3,12 +3,7 @@
     <Resources className="org.apache.catalina.webresources.StandardRoot">
         <!-- map $HOME/.acm/custom to the root of web application -->
         <PostResources className="org.apache.catalina.webresources.DirResourceSet"
-                       base="${user.home}/.acm/custom/"
-                       internalPath="/"
-                       webAppMount="/"/>
-        <!-- map $HOME/.acm-ui/custom to the root of web application -->
-        <PostResources className="org.apache.catalina.webresources.DirResourceSet"
-                       base="${user.home}/.acm-ui/custom/"
+                       base="${user.home}/.arkcase/acm/custom/"
                        internalPath="/"
                        webAppMount="/"/>
     </Resources>

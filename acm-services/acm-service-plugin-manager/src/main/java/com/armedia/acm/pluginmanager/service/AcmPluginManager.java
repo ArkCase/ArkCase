@@ -52,7 +52,7 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
 
     private void addPluginUrlPrivileges(AcmPlugin plugin)
     {
-        if ( plugin.getUrlPrivileges() != null )
+        if (plugin.getUrlPrivileges() != null)
         {
             urlPrivileges.addAll(plugin.getUrlPrivileges());
             configurableUrlPrivileges.addAll(plugin.getUrlPrivileges());
@@ -61,11 +61,11 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
 
     private void addPluginPrivileges(AcmPlugin plugin)
     {
-        if ( plugin.getPrivileges() != null )
+        if (plugin.getPrivileges() != null)
         {
-            for ( AcmPluginPrivilege privilege : plugin.getPrivileges() )
+            for (AcmPluginPrivilege privilege : plugin.getPrivileges())
             {
-                if ( privilege.getApplicationRolesWithPrivilege() != null )
+                if (privilege.getApplicationRolesWithPrivilege() != null)
                 {
                     mapRolesToPrivileges(privilege);
                     mapRolesToConfigurablePrivileges(privilege);
@@ -73,12 +73,13 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
             }
         }
     }
+
     private void mapRolesToConfigurablePrivileges(AcmPluginPrivilege privilege)
     {
-        for ( String role : privilege.getApplicationRolesWithPrivilege() )
+        for (String role : privilege.getApplicationRolesWithPrivilege())
         {
             List<String> rolePrivileges = configurablePrivilegesByRole.get(role);
-            rolePrivileges = rolePrivileges == null ? new ArrayList<String>() : rolePrivileges;
+            rolePrivileges = rolePrivileges == null ? new ArrayList<>() : rolePrivileges;
             String privilegeName = privilege.getPrivilegeName();
             addConfigurablePrivilegeIfNecessary(role, rolePrivileges, privilegeName);
         }
@@ -86,7 +87,7 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
 
     private void addConfigurablePrivilegeIfNecessary(String role, List<String> rolePrivileges, String privilegeName)
     {
-        if ( ! rolePrivileges.contains(privilegeName) )
+        if (!rolePrivileges.contains(privilegeName))
         {
             rolePrivileges.add(privilegeName);
             configurablePrivilegesByRole.put(role, rolePrivileges);
@@ -95,10 +96,10 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
 
     private void mapRolesToPrivileges(AcmPluginPrivilege privilege)
     {
-        for ( String role : privilege.getApplicationRolesWithPrivilege() )
+        for (String role : privilege.getApplicationRolesWithPrivilege())
         {
             List<String> rolePrivileges = privilegesByRole.get(role);
-            rolePrivileges = rolePrivileges == null ? new ArrayList<String>() : rolePrivileges;
+            rolePrivileges = rolePrivileges == null ? new ArrayList<>() : rolePrivileges;
             String privilegeName = privilege.getPrivilegeName();
             addPrivilegeIfNecessary(role, rolePrivileges, privilegeName);
         }
@@ -106,7 +107,7 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
 
     private void addPrivilegeIfNecessary(String role, List<String> rolePrivileges, String privilegeName)
     {
-        if ( ! rolePrivileges.contains(privilegeName) )
+        if (!rolePrivileges.contains(privilegeName))
         {
             rolePrivileges.add(privilegeName);
             privilegesByRole.put(role, rolePrivileges);
@@ -121,14 +122,14 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
     {
         Map<String, AcmPlugin> plugins = applicationContext.getBeansOfType(AcmPlugin.class);
 
-        if ( log.isInfoEnabled() )
+        if (log.isInfoEnabled())
         {
             log.info(plugins.size() + " plugin(s) found.");
         }
 
-        for ( Map.Entry<String, AcmPlugin> plugin : plugins.entrySet() )
+        for (Map.Entry<String, AcmPlugin> plugin : plugins.entrySet())
         {
-            if ( log.isDebugEnabled() )
+            if (log.isDebugEnabled())
             {
                 log.debug("Registering plugin '" + plugin.getKey() + "' of type '" +
                         plugin.getValue().getClass().getName() + "'.");
@@ -140,11 +141,10 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
 
     public List<String> getPrivilegesForRole(String role)
     {
-        if ( configurablePrivilegesByRole.containsKey(role) )
+        if (configurablePrivilegesByRole.containsKey(role))
         {
             return Collections.unmodifiableList(configurablePrivilegesByRole.get(role));
-        }
-        else
+        } else
         {
             return Collections.emptyList();
         }
@@ -161,9 +161,9 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
         // map key) is included in the return list.
         List<String> retval = new LinkedList<>();
 
-        for ( Map.Entry<String, List<String>> roleToPrivileges : configurablePrivilegesByRole.entrySet() )
+        for (Map.Entry<String, List<String>> roleToPrivileges : configurablePrivilegesByRole.entrySet())
         {
-            if ( roleToPrivileges.getValue() != null
+            if (roleToPrivileges.getValue() != null
                     && roleToPrivileges.getValue().contains(privilege)
                     && !retval.contains(roleToPrivileges.getKey()))
             {
@@ -184,18 +184,19 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
 
     private void addPluginUrlConfigurablePrivileges(AcmPluginPrivileges pluginPrivileges)
     {
-        if ( pluginPrivileges.getUrlPrivileges() != null )
+        if (pluginPrivileges.getUrlPrivileges() != null)
         {
             configurableUrlPrivileges.addAll(pluginPrivileges.getUrlPrivileges());
         }
     }
+
     private void addPluginConfigurablePrivileges(AcmPluginPrivileges pluginPrivileges)
     {
-        if ( pluginPrivileges.getPrivileges() != null )
+        if (pluginPrivileges.getPrivileges() != null)
         {
-            for ( AcmPluginPrivilege privilege : pluginPrivileges.getPrivileges() )
+            for (AcmPluginPrivilege privilege : pluginPrivileges.getPrivileges())
             {
-                if ( privilege.getApplicationRolesWithPrivilege() != null )
+                if (privilege.getApplicationRolesWithPrivilege() != null)
                 {
                     mapRolesToConfigurablePrivileges(privilege);
                 }
@@ -203,32 +204,39 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
         }
     }
 
-    public void setSpringContextHolder(SpringContextHolder springContextHolder) {
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
         this.springContextHolder = springContextHolder;
     }
 
     @Override
-    public void onApplicationEvent(AbstractContextHolderEvent event) {
+    public void onApplicationEvent(AbstractContextHolderEvent event)
+    {
 
         String eventFile = event.getContextName();
-        if ((event instanceof ContextRemovedEvent) && eventFile.equals(PLUGINS_PRIVILEGES_FOLDER_NAME)) {
+        if ((event instanceof ContextRemovedEvent) && eventFile.equals(PLUGINS_PRIVILEGES_FOLDER_NAME))
+        {
             //clear all privileges
             configurablePrivilegesByRole.clear();
             configurableUrlPrivileges.clear();
             //add non configurable privileges
             configurablePrivilegesByRole.putAll(privilegesByRole);
             configurableUrlPrivileges.addAll(urlPrivileges);
-        } else if ((event instanceof ContextAddedEvent) && eventFile.equals(PLUGINS_PRIVILEGES_FOLDER_NAME)) {
+        } else if ((event instanceof ContextAddedEvent) && eventFile.equals(PLUGINS_PRIVILEGES_FOLDER_NAME))
+        {
             //read all privileges
             Map<String, AcmPluginPrivileges> pluginsPrivileges = springContextHolder.getAllBeansOfType(AcmPluginPrivileges.class);
 
-            if (log.isInfoEnabled()) {
+            if (log.isInfoEnabled())
+            {
                 log.info(pluginsPrivileges.size() + " plugins privileges(s) found.");
             }
 
-            //get privileges from configuration files located in ${user.home}/.acm
-            for (Map.Entry<String, AcmPluginPrivileges> privilegesForPlugin : pluginsPrivileges.entrySet()) {
-                if (log.isDebugEnabled()) {
+            //get privileges from configuration files located in ${user.home}/.arkcase/acm
+            for (Map.Entry<String, AcmPluginPrivileges> privilegesForPlugin : pluginsPrivileges.entrySet())
+            {
+                if (log.isDebugEnabled())
+                {
                     log.debug("Registering plugins privileges '" + privilegesForPlugin.getKey() + "'.");
                 }
                 registerPluginPrivileges(privilegesForPlugin.getValue());

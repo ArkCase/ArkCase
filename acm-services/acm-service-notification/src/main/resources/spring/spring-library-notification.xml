@@ -9,7 +9,7 @@
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
-        <property name="location" value="file:${user.home}/.acm/notification.properties"/>
+        <property name="location" value="file:${user.home}/.arkcase/acm/notification.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
@@ -37,7 +37,7 @@
         <constructor-arg value="${notification.user.batch.frequency}"/>
     </bean>
     <bean id="notificationPropertyFileLocation" class="java.lang.String">
-        <constructor-arg value="${user.home}/.acm/notification.properties"/>
+        <constructor-arg value="${user.home}/.arkcase/acm/notification.properties"/>
     </bean>
     <bean id="notificationPurgeDays" class="java.lang.Long">
         <constructor-arg value="${notification.purge.days}"/>
