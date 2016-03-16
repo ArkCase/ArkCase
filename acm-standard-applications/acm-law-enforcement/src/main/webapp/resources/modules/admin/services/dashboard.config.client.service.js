@@ -13,7 +13,7 @@
  *
  * The Admin.DashboardConfigService provides Dashboard Config REST calls functionality
  */
-angular.module('admin').service('Admin.DashboardConfigService', function ($http) {
+angular.module('admin').service('Admin.DashboardConfigService', function ($http, UtilService) {
     return ({
         getRolesByWidgets: getRolesByWidgets,
         authorizeRolesForWidget: authorizeRolesForWidget
@@ -31,7 +31,7 @@ angular.module('admin').service('Admin.DashboardConfigService', function ($http)
     function getRolesByWidgets() {
         return $http({
             method: "GET",
-            url: "api/latest/plugin/dashboard/widgets/rolesByWidget/all"
+            url: UtilService.noCacheUrl("api/latest/plugin/dashboard/widgets/rolesByWidget/all")
         });
     };
 
