@@ -11,23 +11,23 @@
 <div class="modal-body">
     <form name="organizationForm">
         <div>
-            <span translate>common.directive.corePeople.organizations.modal.organizationTypes.label</span>
+            <label for="organizationTypes_{{::$id}}" translate>common.directive.corePeople.organizations.modal.organizationTypes.label</label>
         </div>
-        <select
+        <select id="organizationTypes_{{::$id}}"
                 ng-model="organization.organizationType"
                 ng-options="item.type as item.name for item in organization.organizationTypes"></select>
 
         <div>
-            <span translate>common.directive.corePeople.organizations.modal.value.label</span>
+            <label for="organizationValue_{{::$id}}" translate>common.directive.corePeople.organizations.modal.value.label</label>
         </div>
-        <input type="text" ng-model="organization.organizationValue">
+        <input id="organizationValue_{{::$id}}" type="text" ng-model="organization.organizationValue">
     </form>
 </div>
 <div class="modal-footer">
     <button class="btn btn-default" ng-click="onClickCancel()">
         <span translate>common.directive.corePeople.organizations.modal.btnCancel.text</span>
     </button>
-    <button class="btn btn-default" ng-click="onClickOk()" ng-disabled="organizationForm.$invalid">
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="organizationForm.$invalid">
         <span translate>common.directive.corePeople.organizations.modal.btnOk.text</span>
     </button>
 </div>
