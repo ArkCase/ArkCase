@@ -18,7 +18,7 @@ public class ConfigFileController
     public void initBean()
     {
 
-        log.info("Monitoring config folder: {}", getConfigFolder().getName());
+        log.info("Monitoring config folder [{}]", getConfigFolder().getName());
 
         getConfigFolderMonitor().addFile(getConfigFolder());
         getConfigFolderMonitor().start();
@@ -28,7 +28,7 @@ public class ConfigFileController
     public void stopBean()
     {
 
-        log.info("Stopping monitoring of folder " + getConfigFolder().getName());
+        log.info("Stopping monitoring of folder [{}]", getConfigFolder().getName());
 
         getConfigFolderMonitor().stop();
     }
