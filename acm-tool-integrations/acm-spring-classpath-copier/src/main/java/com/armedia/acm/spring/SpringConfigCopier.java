@@ -30,7 +30,7 @@ public class SpringConfigCopier implements ApplicationContextAware
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
     {
         // root custom folder, mapper to web application root
-        String customRoot = "/.acm/custom";
+        String customRoot = "/.arkcase/acm/custom";
 
         // built-in Spring configuration files are copied to this folder
         String builtinFolderPath = System.getProperty("user.home") + "/.arkcase/acm/default-config/spring";
@@ -50,6 +50,8 @@ public class SpringConfigCopier implements ApplicationContextAware
             }
             // clean-up the folder from potential residue
             FileUtils.cleanDirectory(builtinFolder);
+            // re-create .gitkeep file
+            new File(builtinFolderPath + "/.gitkeep").createNewFile();
 
             // create custom folder if it don't exist
             if (!customFolder.exists())
@@ -59,6 +61,8 @@ public class SpringConfigCopier implements ApplicationContextAware
             }
             // clean-up the folder from potential residue
             FileUtils.cleanDirectory(customFolder);
+            // re-create .gitkeep file
+            new File(customFolderPath + "/.gitkeep").createNewFile();
 
             // copy all the Spring configurations provided with the WAR into the built-in folder
             for (String resourcePattern : resourcePatterns)
