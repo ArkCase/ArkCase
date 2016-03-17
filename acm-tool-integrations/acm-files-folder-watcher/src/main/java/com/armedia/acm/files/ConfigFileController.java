@@ -1,7 +1,6 @@
 package com.armedia.acm.files;
 
 import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.impl.DefaultFileMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,30 +18,18 @@ public class ConfigFileController
     public void initBean()
     {
 
-        try
-        {
-            log.error("Monitoring config folder " + getConfigFolder().getURL());
-            System.out.println("Monitoring config folder " + getConfigFolder().getURL());
-        } catch (FileSystemException fse)
-        {
-        }
-
-        System.out.println("Adding config folder");
+        log.info("Monitoring config folder [{}]", getConfigFolder().getName());
 
         getConfigFolderMonitor().addFile(getConfigFolder());
-
-        System.out.println("added config folder");
         getConfigFolderMonitor().start();
-        System.out.println("started");
 
     }
 
     public void stopBean()
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("Stopping monitoring of folder " + getConfigFolder().getName());
-        }
+
+        log.info("Stopping monitoring of folder [{}]", getConfigFolder().getName());
+
         getConfigFolderMonitor().stop();
     }
 
