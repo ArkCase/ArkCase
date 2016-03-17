@@ -29,7 +29,7 @@ public class AcmParticipantService
 
         AcmParticipant savedParticipant = getParticipantDao().save(participant);
 
-        log.debug("PARTICIPANT ADDED: {} to object type {} with object id {}", userId, objectType, objectId);
+        log.debug("Added participant [{}] to object type [{}] with object id [{}]", userId, objectType, objectId);
 
         return savedParticipant;
     }
