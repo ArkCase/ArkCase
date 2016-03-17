@@ -613,17 +613,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
                     });
                 });
                 return filteredModel;
-            },
-            /**
-             * Appends url with timestamp to avoid caching issues on IE
-             * @param url {string} The original url to be appended
-             * @returns {string} The modified url with appended timestamp as query string
-             */
-            noCacheUrl : function(url) {
-                var separator = url.indexOf('?') === -1 ? '?' : '&';
-                return url + separator + 'noCache=' + new Date().getTime();
             }
-
         };
 
 

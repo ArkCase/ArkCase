@@ -15,6 +15,25 @@ angular.module(ApplicationConfiguration.applicationModuleName).config([
 
             $httpProvider.interceptors.push(httpInterceptor);
 
+            $httpProvider.interceptors.push(noCacheInterceptor);
+
+            function noCacheInterceptor() {
+                return {
+                    request: function (config) {
+                        // Appends timestamp to url to avoid caching issues on IE
+                        // only on GET requests with no explicit cache=true
+                        if (config.method == 'GET') {
+                            if (!config.cache) {
+                                var separator = config.url.indexOf('?') === -1 ? '?' : '&';
+                                config.url += separator + 'noCache=' + new Date().getTime();
+                            }
+                        }
+                        return config;
+                    }
+                }
+            }
+
+
             // Initialize angular-translate
             $translateProvider.useLoader('$translatePartialLoader', {
                 urlTemplate: 'api/latest/plugin/admin/labelmanagement/resource?ns={part}&lang={lang}'
