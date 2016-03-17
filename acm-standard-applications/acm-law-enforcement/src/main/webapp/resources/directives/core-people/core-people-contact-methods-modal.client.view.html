@@ -11,23 +11,23 @@
 <div class="modal-body">
     <form name="contactForm">
         <div>
-            <label for="contactMethodTypes" translate>common.directive.corePeople.contactMethods.modal.contactMethodTypes.label</label>
+            <label for="contactMethodTypes_{{::$id}}" translate>common.directive.corePeople.contactMethods.modal.contactMethodTypes.label</label>
         </div>
-        <select id="contactMethodTypes"
+        <select id="contactMethodTypes_{{::$id}}"
                 ng-model="contact.contactMethodType"
                 ng-options="item.type as item.name for item in contact.contactMethodTypes"></select>
 
         <div>
-            <label translate>common.directive.corePeople.contactMethods.modal.value.label</label>
+            <label for="contactMethods_{{::$id}}" translate>common.directive.corePeople.contactMethods.modal.value.label</label>
         </div>
-        <input type="text" ng-model="contact.value">
+        <input id="contactMethods_{{::$id}}" type="text" ng-model="contact.value">
     </form>
 </div>
 <div class="modal-footer">
     <button class="btn btn-default" ng-click="onClickCancel()">
         <span translate>common.directive.corePeople.contactMethods.modal.btnCancel.text</span>
     </button>
-    <button class="btn btn-primay" ng-click="onClickOk()" ng-disabled="contactForm.$invalid">
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="contactForm.$invalid">
         <span translate>common.directive.corePeople.contactMethods.modal.btnOk.text</span>
     </button>
 </div>
