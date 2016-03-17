@@ -244,7 +244,13 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             var url = Util.goodValue(found.url);
                             var id = objectId;
                             url = url.replace(":id", id);
-                            $window.location.href = url;
+
+                            // Target property is used to control open mode: _parent, _blank
+                            if (found.target) {
+                                $window.open(url, found.target);
+                            } else {
+                                $window.location.href = url;
+                            }
                         }
                     });
                 };
