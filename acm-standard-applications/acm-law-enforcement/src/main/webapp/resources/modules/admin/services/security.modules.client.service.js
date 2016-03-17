@@ -14,7 +14,7 @@
  *
  * The Admin.ModulesService provides Modules REST calls functionality
  */
-angular.module('admin').service('Admin.ModulesService', function ($http, UtilService) {
+angular.module('admin').service('Admin.ModulesService', function ($http) {
     return ({
         getAppModules: getAppModules,
         getRolesForModulePrivilege: getRolesForModulePrivilege,
@@ -35,7 +35,7 @@ angular.module('admin').service('Admin.ModulesService', function ($http, UtilSer
     function getAppModules() {
         return $http({
             method: 'GET',
-            url: UtilService.noCacheUrl('api/latest/plugin/admin/moduleconfiguration/modules')
+            url: 'api/latest/plugin/admin/moduleconfiguration/modules'
         });
     };
 
@@ -55,7 +55,7 @@ angular.module('admin').service('Admin.ModulesService', function ($http, UtilSer
     function getRolesForModulePrivilege(modulePrivilege) {
         return $http({
             method: 'GET',
-            url: UtilService.noCacheUrl('api/latest/plugin/admin/rolesprivileges/privileges/' + modulePrivilege + '/roles')
+            url: 'api/latest/plugin/admin/rolesprivileges/privileges/' + modulePrivilege + '/roles'
         });
     };
 
