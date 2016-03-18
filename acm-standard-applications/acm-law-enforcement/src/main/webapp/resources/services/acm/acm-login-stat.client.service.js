@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/acm/login-stat.client.service.js services/acm/login-stat.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/login-stat.client.service.js services/acm/login-stat.client.service.js}
  *
  * This service is used to hold login information, for example login status, idle time, error statistics, etc.
  */
