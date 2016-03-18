@@ -1,9 +1,11 @@
 package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
+import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.model.TaskOutcome;
+import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
@@ -14,11 +16,16 @@ import org.activiti.bpmn.model.Process;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
@@ -44,6 +51,9 @@ import static org.junit.Assert.*;
 public class ActivitiTaskDaoTest extends EasyMockSupport
 {
     private TaskService mockTaskService;
+    private ProcessInstanceQuery mockProcessInstanceQuery;
+    private ProcessInstance mockProcessInstance;
+    private RuntimeService mockRuntimeService;
     private RepositoryService mockRepositoryService;
     private Task mockTask;
     private TaskQuery mockTaskQuery;
@@ -52,6 +62,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     private Authentication mockAuthentication;
     private HistoryService mockHistoryService;
     private HistoricTaskInstance mockHistoricTaskInstance;
+    private HistoricProcessInstance mockHistoricProcessInstance;
+    private HistoricProcessInstanceQuery mockHistoricProcessInstanceQuery;
     private HistoricTaskInstanceQuery mockHistoricTaskInstanceQuery;
     private AcmParticipantDao mockParticipantDao;
     private DataAccessPrivilegeListener mockDataAccessPrivilegeListener;
@@ -63,11 +75,15 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     private UserTask mockFlowElement;
     private FormProperty mockFormProperty;
     private FormValue mockFormValue;
+    private TaskEventPublisher mockTaskEventPublisher;
 
     @Before
     public void setUp() throws Exception
     {
         mockTaskService = createMock(TaskService.class);
+        mockProcessInstance = createMock(ProcessInstance.class);
+        mockProcessInstanceQuery = createMock(ProcessInstanceQuery.class);
+        mockRuntimeService = createMock(RuntimeService.class);
         mockTask = createMock(Task.class);
         mockTaskQuery = createMock(TaskQuery.class);
         mockRepositoryService = createMock(RepositoryService.class);
@@ -85,8 +101,9 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockParticipantDao = createMock(AcmParticipantDao.class);
         mockDataAccessPrivilegeListener = createMock(DataAccessPrivilegeListener.class);
         mockCandidateGroup = createMock(IdentityLink.class);
-
-
+        mockTaskEventPublisher = createMock(TaskEventPublisher.class);
+        mockHistoricProcessInstance = createMock(HistoricProcessInstance.class);
+        mockHistoricProcessInstanceQuery = createMock(HistoricProcessInstanceQuery.class);
         unit = new ActivitiTaskDao();
 
         Map<String, Integer> acmPriorityToActivitiPriority = new HashMap<>();
@@ -94,12 +111,14 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         acmPriorityToActivitiPriority.put("Low", 30);
 
         unit.setActivitiTaskService(mockTaskService);
+        unit.setActivitiRuntimeService(mockRuntimeService);
         unit.setActivitiRepositoryService(mockRepositoryService);
         unit.setActivitiHistoryService(mockHistoryService);
         unit.setParticipantDao(mockParticipantDao);
         unit.setDataAccessPrivilegeListener(mockDataAccessPrivilegeListener);
         unit.setPriorityLevelToNumberMap(acmPriorityToActivitiPriority);
         unit.setRequiredFieldsPerOutcomeMap(new HashMap<>());
+        unit.setTaskEventPublisher(mockTaskEventPublisher);
     }
 
     @Test
@@ -1030,5 +1049,106 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         //task should be still open and active
         assertFalse(task.isCompleted());
         assertEquals(TaskConstants.STATE_ACTIVE, task.getStatus());
+    }
+
+    @Test
+    public void deleteProcessInstance() throws Exception
+    {
+        Long taskId = 500L;
+        Date dueDate = new Date();
+        Date started = new Date();
+        Date ended = new Date();
+        long taskDuration = 9876543L;
+        String deleteReason = "TERMINATED";
+        String assignee = "assignee";
+        int activitiPriority = 50;
+        String title = "task Title";
+        String userId = "userId";
+        String processId = "500";
+        String processName = "processName";
+        Long objectId = 250L;
+        String objectType = "objectType";
+        String objectName = "objectName";
+        String taskDefKey = "taskDefinitionKey";
+        Map<String, Object> pvars = new HashMap<>();
+        pvars.put("OBJECT_ID", objectId);
+        pvars.put("OBJECT_TYPE", objectType);
+        pvars.put("OBJECT_NAME", objectName);
+
+        Map<String, Object> taskLocalVars = new HashMap<>();
+        taskLocalVars.put("START_DATE", new Date());
+        taskLocalVars.put("PERCENT_COMPLETE", 75);
+        taskLocalVars.put("DETAILS", "task details");
+
+        String ipAddress = "ipAddress";
+
+        List<AcmParticipant> partList = new ArrayList<>();
+        partList.add(new AcmParticipant());
+
+        Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
+
+        mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
+
+        expect(mockRuntimeService.createProcessInstanceQuery()).andReturn(mockProcessInstanceQuery);
+        expect(mockProcessInstanceQuery.processInstanceId(processId)).andReturn(mockProcessInstanceQuery);
+        expect(mockProcessInstanceQuery.singleResult()).andReturn(mockProcessInstance);
+        expect(mockAuthentication.getName()).andReturn(userId).atLeastOnce();
+
+        expect(mockRuntimeService.getVariable(processId, TaskConstants.VARIABLE_NAME_OBJECT_ID)).andReturn(objectId);
+
+        mockRuntimeService.deleteProcessInstance(processId, deleteReason);
+
+        expect(mockHistoryService.createHistoricTaskInstanceQuery()).andReturn(mockHistoricTaskInstanceQuery);
+
+        expect(mockHistoricTaskInstanceQuery.processInstanceId(processId)).andReturn(mockHistoricTaskInstanceQuery);
+        expect(mockHistoricTaskInstanceQuery.includeProcessVariables()).andReturn(mockHistoricTaskInstanceQuery);
+        expect(mockHistoricTaskInstanceQuery.includeTaskLocalVariables()).andReturn(mockHistoricTaskInstanceQuery);
+        expect(mockHistoricTaskInstanceQuery.list()).andReturn(Arrays.asList(mockHistoricTaskInstance));
+
+        expect(mockHistoricTaskInstance.getDeleteReason()).andReturn(deleteReason).times(2);
+
+        expect(mockHistoryService.createHistoricProcessInstanceQuery()).andReturn(mockHistoricProcessInstanceQuery);
+        expect(mockHistoricProcessInstanceQuery.processInstanceId(processId)).andReturn(mockHistoricProcessInstanceQuery);
+        expect(mockHistoricProcessInstanceQuery.singleResult()).andReturn(mockHistoricProcessInstance);
+        expect(mockHistoricProcessInstance.getEndTime()).andReturn(ended).times(2);
+
+        expect(mockHistoricTaskInstance.getStartTime()).andReturn(started);
+        expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended).times(4);
+        expect(mockHistoricTaskInstance.getId()).andReturn(taskId.toString());
+        expect(mockHistoricTaskInstance.getDurationInMillis()).andReturn(taskDuration);
+        expect(mockHistoricTaskInstance.getDueDate()).andReturn(dueDate);
+        expect(mockHistoricTaskInstance.getPriority()).andReturn(activitiPriority);
+        expect(mockHistoricTaskInstance.getName()).andReturn(title);
+        expect(mockHistoricTaskInstance.getAssignee()).andReturn(assignee);
+        expect(mockHistoricTaskInstance.getTaskLocalVariables()).andReturn(pvars).atLeastOnce();
+        expect(mockHistoricTaskInstance.getProcessVariables()).andReturn(pvars).atLeastOnce();
+        expect(mockHistoricTaskInstance.getProcessInstanceId()).andReturn(processId).times(2);
+        expect(mockHistoricTaskInstance.getProcessDefinitionId()).andReturn(processId);
+        expect(mockHistoricTaskInstance.getTaskDefinitionKey()).andReturn(taskDefKey);
+
+        expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.singleResult()).andReturn(mockProcessDefinition);
+
+        expect(mockProcessDefinition.getName()).andReturn(processName);
+
+
+        expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
+        expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
+        expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
+        expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
+        expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
+        expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
+        expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+
+        replayAll();
+
+
+        unit.deleteProcessInstance(objectId.toString(), processId, deleteReason, mockAuthentication, ipAddress);
+
+        verifyAll();
     }
 }
