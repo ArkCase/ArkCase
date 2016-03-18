@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', '$timeout'
+angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', '$timeout', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'DocTreeService'
     , 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, $modal, $timeout
+    , function ($scope, $stateParams, $modal, $timeout, $q
         , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
         , HelperObjectBrowserService) {
 
@@ -59,7 +59,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         };
 
         $scope.onAllowCmd = function (cmd, nodes) {
-            //console.log("onAllowCmd");
+            //Usage example
             //if (1 == nodes.length) {
             //    if ("paste" == cmd) {
             //        return "invisible";
@@ -70,25 +70,23 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         };
 
         $scope.onPreCmd = function (cmd, nodes) {
-            //console.log("onPreCmd:" + cmd);
+            //Usage example
             //if ("newFolder" == cmd) {
-            //    return true;
+            //    //custom cmd process
+            //    return false; //false indicates don't do default command in core
             //}
-
-            //if ("newFolder" == cmd) {
-            //    console.log("timeout 1");
-            //    $timeout(function() {
-            //        console.log("timeout 2");
-            //    }, 2000);
-            //    console.log("timeout 3");
             //
-            //    return false;
+            //if ("newFolder" == cmd) {
+            //    var df = $q.defer();
+            //    $timeout(function() {
+            //        //lengthy custom cmd process
+            //        df.resolve(true); //true to indicate continue with default command execution
+            //    }, 8000);
+            //    return df.promise;
             //}
-
         };
 
         $scope.onPostCmd = function (cmd, nodes) {
-            //console.log("onPostCmd:" + cmd);
         };
     }
 ]);
