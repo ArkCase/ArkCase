@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', '$timeout', '$q'
+angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'DocTreeService'
     , 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, $modal, $timeout, $q
+    , function ($scope, $stateParams, $modal
         , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
         , HelperObjectBrowserService) {
 
