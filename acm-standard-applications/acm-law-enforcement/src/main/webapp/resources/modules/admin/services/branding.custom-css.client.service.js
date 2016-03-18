@@ -10,7 +10,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/branding.custom-css.client.service.js modules/admin/services/branding.custom-css.client.service.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/branding.custom-css.client.service.js modules/admin/services/branding.custom-css.client.service.js}
  *
  * The Admin.BrandingCustomCss provides Branding custom css calls functionality
  */
