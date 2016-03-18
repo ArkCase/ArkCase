@@ -22,6 +22,7 @@ public class CorrespondenceService
 {
     private SpringContextHolder springContextHolder;
     private CorrespondenceGenerator correspondenceGenerator;
+    private CorrespondenceEventPublisher eventPublisher;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -75,9 +76,7 @@ public class CorrespondenceService
 
             log.debug("Correspondence CMIS ID: " + retval.getVersionSeriesId());
 
-            // TODO: raise event with IP address
-
-
+            getEventPublisher().publishCorrespondenceAdded(retval, authentication, true);
 
             return retval;
         }
@@ -141,5 +140,13 @@ public class CorrespondenceService
     public void setCorrespondenceGenerator(CorrespondenceGenerator correspondenceGenerator)
     {
         this.correspondenceGenerator = correspondenceGenerator;
+    }
+
+    public CorrespondenceEventPublisher getEventPublisher() {
+        return eventPublisher;
+    }
+
+    public void setEventPublisher(CorrespondenceEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
     }
 }

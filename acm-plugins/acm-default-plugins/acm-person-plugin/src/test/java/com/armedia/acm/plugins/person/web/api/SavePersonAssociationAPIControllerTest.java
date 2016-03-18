@@ -1,23 +1,18 @@
 package com.armedia.acm.plugins.person.web.api;
 
-import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.PersonAlias;
-import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher;
-import com.armedia.acm.plugins.person.service.SavePersonAssociationTransaction;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Date;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
-
-import static org.easymock.EasyMock.*;
-
 import org.easymock.EasyMockSupport;
-
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,13 +26,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
+
+import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher;
+import com.armedia.acm.plugins.person.service.SavePersonAssociationTransaction;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -107,7 +103,7 @@ public class SavePersonAssociationAPIControllerTest extends EasyMockSupport
 
         log.debug("Input JSON: " + in);
 
-        Capture<PersonAssociation> found = new Capture<>();
+        Capture<PersonAssociation> found = Capture.newInstance();
 
         expect(mockSaveTransaction.savePersonAsssociation(capture(found), eq(mockAuthentication))).andReturn(saved);
         mockEventPublisher.publishPersonAssociationEvent(capture(found), eq(mockAuthentication), eq(false), eq(true));

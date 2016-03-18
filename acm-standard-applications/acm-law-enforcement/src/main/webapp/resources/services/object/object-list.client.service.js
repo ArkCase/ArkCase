@@ -6,12 +6,12 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/object/object-list.client.service.js services/object/object-list.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-list.client.service.js services/object/object-list.client.service.js}
 
  * Object.ListService includes REST calls related to object list in SOLR
  */
-angular.module('services').factory('Object.ListService', ['$resource', 'UtilService', 'SearchService'
-    , function ($resource, Util, SearchService) {
+angular.module('services').factory('Object.ListService', ['$resource', 'StoreService', 'UtilService', 'SearchService'
+    , function ($resource, Store, Util, SearchService) {
         var Service = $resource('api/latest/plugin', {}, {
             /**
              * @ngdoc method
@@ -86,6 +86,44 @@ angular.module('services').factory('Object.ListService', ['$resource', 'UtilServ
                 return false;
             }
             return true;
+        };
+
+        /**
+         * @ngdoc method
+         * @name updateObjectTreeData
+         * @methodOf services:Object.ListService
+         *
+         * @description
+         * Common help function to update a node data in tree.
+         *
+         * @param {String} cacheName  Tree cache name
+         * @param {Number} start  Zero based index of result starts from
+         * @param {Number} n max Number of list to return
+         * @param {String} sort  Sort value. Allowed choice is based on backend specification
+         * @param {String} filters  Filter value. Allowed choice is based on backend specification
+         * @param {String} query  Search term for tree entry to match
+         * @param {Object} nodeData  Node data
+         *
+         * @returns {Object} Promise
+         */
+        Service.updateObjectTreeData = function (cacheName, start, n, sort, filters, query, nodeData) {
+            var param = {};
+            param.objectType = nodeData.nodeType;
+            param.start = Util.goodValue(start, 0);
+            param.n = Util.goodValue(n, 32);
+            param.sort = Util.goodValue(sort);
+            param.filters = Util.goodValue(filters);
+            param.query = Util.goodValue(query);
+            var cacheObjectList = new Store.CacheFifo(cacheName);
+            var cacheKey = param.start + "." + param.n + "." + param.sort + "." + param.filters + "." + param.query;
+            var treeData = cacheObjectList.get(cacheKey);
+            var docs = Util.goodMapValue(treeData, "docs", []);
+            var found = _.find(docs, {"nodeId": nodeData.nodeId});
+            if (found) {
+                found.nodeType = nodeData.nodeType;
+                found.nodeTitle = nodeData.nodeTitle;
+                found.nodeToolTip = nodeData.nodeToolTip;
+            }
         };
 
         return Service;

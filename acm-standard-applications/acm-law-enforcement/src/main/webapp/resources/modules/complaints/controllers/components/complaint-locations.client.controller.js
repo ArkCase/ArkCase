@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.LocationsController', ['$scope', '$stateParams', '$q'
+angular.module('complaints').controller('Complaints.LocationsController', ['$scope', '$stateParams', '$q', '$modal'
     , 'UtilService', 'Helper.UiGridService', 'ConfigService', 'Complaint.InfoService'
     , 'Object.LookupService', 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, $q, Util, HelperUiGridService, ConfigService, ComplaintInfoService
+    , function ($scope, $stateParams, $q, $modal, Util, HelperUiGridService, ConfigService, ComplaintInfoService
         , ObjectLookupService, HelperObjectBrowserService) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
@@ -23,7 +23,7 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        var promiseAddressTypes = ObjectLookupService.getAddressTypes().then(
+        ObjectLookupService.getAddressTypes().then(
             function (addressTypes) {
                 $scope.addressTypes = addressTypes;
                 return addressTypes;
@@ -32,65 +32,90 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
+            gridHelper.addEditButton(config.columnDefs, "grid.appScope.editRow(row.entity)");
             gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
-            gridHelper.setInPlaceEditing(config, $scope.updateRow);
-
-            $q.all([promiseAddressTypes]).then(function (data) {
-                gridHelper.setLookupDropDown(HelperUiGridService.Lookups.ADDRESS_TYPES, "type", "name", $scope.addressTypes);
-            });
         };
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $q.all([componentHelper.promiseConfig]).then(function () {
                 $scope.objectInfo = objectInfo;
                 var location = Util.goodMapValue($scope.objectInfo, "location", null);
-                $scope.gridOptions.data = (location)? [location] : [];
-                //gridHelper.hidePagingControlsIfAllDataShown($scope.gridOptions.data.length);
+                $scope.gridOptions.data = (location) ? [location] : [];
             });
         };
 
-
         $scope.addNew = function () {
-            $scope.gridOptions.data.push({});
+            var location = {};
+            //put location to scope, we will need it when we return from popup
+            $scope.location = location;
+            showModal(false);
         };
-        $scope.updateRow = function (rowEntity) {
-            var complaintInfo = Util.omitNg($scope.objectInfo);
-            complaintInfo.location = complaintInfo.location || {};
-            complaintInfo.location.streetAddress = rowEntity.streetAddress;
-            complaintInfo.location.type = rowEntity.type;
-            complaintInfo.location.city = rowEntity.city;
-            complaintInfo.location.state = rowEntity.state;
-            complaintInfo.location.zip = rowEntity.zip;
-            if (ComplaintInfoService.validateLocation(complaintInfo.location)) {
-                ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
-                    function (complaintSaved) {
-                        $scope.$emit("report-object-updated", complaintSaved);
-                        return complaintSaved;
-                    }
-                );
-            }
+
+        $scope.editRow = function (rowEntity) {
+            $scope.location = angular.copy(rowEntity);
+            showModal(true);
         };
+
         $scope.deleteRow = function (rowEntity) {
             gridHelper.deleteRow(rowEntity);
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row
-                var complaintInfo = Util.omitNg($scope.objectInfo);
-                complaintInfo.location = null;
-                ComplaintInfoService.saveComplaintInfo(complaintInfo).then(
-                    function (complaintSaved) {
-                        $scope.$emit("report-object-updated", complaintSaved);
-                        return complaintSaved;
-                    }
-                );
+                $scope.objectInfo.location = null;
+                saveObjectInfoAndRefresh();
             }
         };
-    }
-])
 
-;
+        var showModal = function (isEdit) {
+            var modalScope = $scope.$new();
+            modalScope.location = $scope.location || {};
+            modalScope.isEdit = isEdit || false;
+            modalScope.addressTypes = $scope.addressTypes;
+
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                animation: true,
+                templateUrl: 'modules/complaints/views/components/complaint-locations-modal.client.view.html',
+                controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+                    $scope.onClickOk = function () {
+                        $modalInstance.close({
+                            location: $scope.location,
+                            isEdit: $scope.isEdit
+                        });
+                    };
+                    $scope.onClickCancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    }
+                }],
+                size: 'lg'
+            });
+
+            modalInstance.result.then(function (data) {
+                $scope.objectInfo.location = data.location;
+                saveObjectInfoAndRefresh();
+            });
+        };
+
+        var saveObjectInfoAndRefresh = function () {
+            var saveObject = Util.omitNg($scope.objectInfo);
+            ComplaintInfoService.saveComplaintInfo(saveObject).then(
+                function (objectSaved) {
+                    refresh();
+                    return objectSaved;
+                },
+                function (error) {
+                    return error;
+                }
+            );
+        };
+
+        var refresh = function () {
+            $scope.$emit('report-object-refreshed', $stateParams.id);
+        };
+    }
+]);
 
 

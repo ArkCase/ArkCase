@@ -29,6 +29,7 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.complaint.model.ComplaintUpdatedEvent;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.users.model.AcmUserActionName;
 
@@ -135,7 +136,11 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		// Update Status to "IN APPROVAL"
 		if (!complaint.getStatus().equals("IN APPROVAL") && !"edit".equals(mode)){
 			complaint.setStatus("IN APPROVAL");
-			getComplaintDao().save(complaint);
+			Complaint updatedComplaint = getComplaintDao().save(complaint);
+
+			ComplaintUpdatedEvent complaintUpdatedEvent = new ComplaintUpdatedEvent(updatedComplaint);
+			complaintUpdatedEvent.setSucceeded(true);
+			getApplicationEventPublisher().publishEvent(complaintUpdatedEvent);
 		}
 		
 		// Save attachments (or update XML form and PDF form if the mode is "edit")

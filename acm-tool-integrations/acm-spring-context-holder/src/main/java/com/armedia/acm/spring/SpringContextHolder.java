@@ -36,10 +36,13 @@ public class SpringContextHolder implements ApplicationContextAware, Application
 {
     private ApplicationContext toplevelContext;
     private Map<String, AbstractApplicationContext> childContextMap =
-            new ConcurrentHashMap<String, AbstractApplicationContext>();
+            new ConcurrentHashMap<>();
 
     private Logger log = LoggerFactory.getLogger(getClass());
     private ApplicationEventPublisher applicationEventPublisher;
+
+    // parent folder is "spring" and name is like spring-config-*[-*].xml
+    private Pattern pattern = Pattern.compile(".*\\.arkcase/acm/spring/spring-config(-\\w+)+\\.xml");
 
     @Override
     public void onApplicationEvent(AbstractConfigurationFileEvent fileEvent)
@@ -112,9 +115,6 @@ public class SpringContextHolder implements ApplicationContextAware, Application
             }
         }
     }
-
-    // parent folder is "spring" and name is like spring-config-*[-*].xml
-    Pattern pattern = Pattern.compile(".*\\.acm/spring/spring-config(-\\w+)+\\.xml");
 
     private boolean isSpringConfigFile(File eventFile)
     {

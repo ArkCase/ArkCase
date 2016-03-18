@@ -1,9 +1,12 @@
 'use strict';
 
-angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', '$q', '$state', 'StoreService', 'Authentication'
-    , 'ConfigService', 'LookupService', 'Object.LookupService', 'Case.LookupService', 'Complaint.LookupService'
-    , function ($scope, $window, $q, $state, Store, Authentication
-        , ConfigService, LookupService, ObjectLookupService, CaseLookupService, ComplaintLookupService) {
+angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', '$q', '$state'
+    , 'StoreService', 'Authentication', 'ConfigService', 'UtilService', 'LookupService', 'Object.LookupService'
+    , 'Case.LookupService', 'Complaint.LookupService', 'Acm.LoginStatService'
+    , function ($scope, $window, $q, $state
+        , Store, Authentication, ConfigService, Util, LookupService, ObjectLookupService
+        , CaseLookupService, ComplaintLookupService, AcmLoginStatService
+    ) {
 
         var sessionCacheNamesList = [
             Authentication.SessionCacheNames
@@ -22,6 +25,8 @@ angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', 
         }
 
 
+        AcmLoginStatService.setLogin(false);
         $window.location.href = "/arkcase/logout";
+        //$window.location.href = Util.noneCacheUrl("/arkcase/logout");
     }
 ]);

@@ -19,7 +19,7 @@
      -->
     
     <bean id="acm-forms-properties" class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
-		<property name="location" value="file:${user.home}/.acm/acm-forms.properties"/>
+		<property name="location" value="file:${user.home}/.arkcase/acm/acm-forms.properties"/>
 	</bean>
 
 	<bean id="frevvoService" class="com.armedia.acm.frevvo.config.FrevvoServiceImpl">

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,8 +25,9 @@ import java.util.List;
  * Created by manoj.dhungana on 12/8/2014.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class ListAllTemplatesControllerAPI {
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+public class ListAllTemplatesControllerAPI
+{
     private Logger log = LoggerFactory.getLogger(getClass());
     List<Object> templateUploadList = new ArrayList<>();
 
@@ -36,15 +36,18 @@ public class ListAllTemplatesControllerAPI {
     })
     @ResponseBody
     public List<Object> listTemplates(
-            Authentication authentication) throws Exception {
+            Authentication authentication) throws Exception
+    {
 
         String userHome = System.getProperty("user.home");
-        String pathName = userHome + "/.acm/correspondenceTemplates";
+        String pathName = userHome + "/.arkcase/acm/correspondenceTemplates";
         File templateFolder = new File(pathName);
         File[] templates = templateFolder.listFiles();
         getUploadedTemplates().clear();
-        if(templates != null){
-            for (File template : templates) {
+        if (templates != null)
+        {
+            for (File template : templates)
+            {
                 //access creation and last modified date via file attributes
                 TemplateUpload templateUpload = new TemplateUpload();
                 Path path = Paths.get(pathName + "/" + template.getName());
@@ -65,11 +68,13 @@ public class ListAllTemplatesControllerAPI {
     }
 
 
-    public List<Object> getUploadedTemplates() {
+    public List<Object> getUploadedTemplates()
+    {
         return templateUploadList;
     }
 
-    public void setUploadedTemplates(List<Object> templateUploadList) {
+    public void setUploadedTemplates(List<Object> templateUploadList)
+    {
         this.templateUploadList = templateUploadList;
     }
 }

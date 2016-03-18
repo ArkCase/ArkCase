@@ -6,7 +6,7 @@
  *
  * @description
  *
- *{@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/directives/search-modal/search-modal.client.directive.js directives/search-modal/search-modal.client.directive.js}
+ *{@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/search-modal/search-modal.client.directive.js directives/search-modal/search-modal.client.directive.js}
  *
  * The "Search" modal with faceted search functionality
  *
@@ -46,8 +46,8 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 disableSearch: '@',
                 config: '&',            //& : one way binding (read-only, can return key, value pair via a getter function)
                 modalInstance: '=',     //= : two way binding (read-write both, parent scope and directive's isolated scope have two way binding)
-                searchControl: '=',
-                onItemsSelected: '='
+                searchControl: '=?',    //=? : two way binding but property is optional
+                onItemsSelected: '=?'   //=? : two way binding but property is optional
             },
 
             link: function (scope, el, attrs) {

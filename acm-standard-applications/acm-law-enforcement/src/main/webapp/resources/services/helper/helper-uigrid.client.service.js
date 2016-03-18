@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/helper/helper-uigrid.client.service.js services/helper/helper-uigrid.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/helper/helper-uigrid.client.service.js services/helper/helper-uigrid.client.service.js}
 
  * Helper.UiGridService has functions for typical usage in ArCase of 'ui-grid' directive
  */
@@ -66,6 +66,19 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
 
             /**
              * @ngdoc method
+             * @name getGridOptions
+             * @methodOf services:Helper.UiGridService
+             *
+             *
+             * @description
+             * Get ui-grid gridOptions that were set previously.
+             */
+            getGridOptions: function () {
+                return this.scope.gridOptions;
+            },
+
+            /**
+             * @ngdoc method
              * @name setBasicOptions
              * @methodOf services:Helper.UiGridService
              *
@@ -101,7 +114,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * @description
              * Disabling vertical and horizontal scrolling to ui-grid options.
              */
-            , disableGridScrolling: function(config) {
+            , disableGridScrolling: function (config) {
                 var that = this;
                 that.scope.config = config;
                 that.scope.gridOptions.enableHorizontalScrollbar = uiGridConstants.scrollbars.NEVER;
@@ -453,11 +466,11 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              */
             , addEditButton: function (columnDefs, onClickEdit) {
                 var columnDef = {
-                    name: "edit"
-                    , cellEditableCondition: false
-                    , width: 40
-                    , headerCellTemplate: "<span></span>"
-                    , cellTemplate: "<span><i class='fa fa-pencil fa-lg' style='cursor :pointer' ng-click='" + onClickEdit + "'></i></span>"
+                    name: "edit",
+                    cellEditableCondition: false,
+                    width: 40,
+                    headerCellTemplate: "<span></span>",
+                    cellTemplate: "<span><i class='fa fa-pencil fa-lg' style='cursor :pointer' ng-click='" + onClickEdit + "'></i></span>"
                 };
                 columnDefs.push(columnDef);
             }

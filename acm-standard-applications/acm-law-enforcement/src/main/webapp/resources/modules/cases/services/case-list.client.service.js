@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/services/case-info.client.service.js modules/cases/services/case-info.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/cases/services/case-info.client.service.js modules/cases/services/case-info.client.service.js}
  *
  * Case.ListService provides functions for Case database data
  */
@@ -32,6 +32,29 @@ angular.module('services').factory('Case.ListService', ['$resource', '$translate
         Service.resetCasesTreeData = function () {
             var cacheCaseList = new Store.CacheFifo(Service.CacheNames.CASE_LIST);
             cacheCaseList.reset();
+        };
+
+        /**
+         * @ngdoc method
+         * @name updateCasesTreeData
+         * @methodOf services:Case.ListService
+         *
+         * @description
+         * Update a node data in tree.
+         *
+         * @param {Number} start  Zero based index of result starts from
+         * @param {Number} n max Number of list to return
+         * @param {String} sort  Sort value. Allowed choice is based on backend specification
+         * @param {String} filters  Filter value. Allowed choice is based on backend specification
+         * @param {String} query  Search term for tree entry to match
+         * @param {Object} nodeData  Node data
+         *
+         * @returns {Object} Promise
+         */
+        Service.updateCasesTreeData = function (start, n, sort, filters, query, nodeData) {
+            ObjectListService.updateObjectTreeData(Service.CacheNames.CASE_LIST
+                , start, n, sort, filters, query, nodeData
+            );
         };
 
         /**
@@ -89,7 +112,7 @@ angular.module('services').factory('Case.ListService', ['$resource', '$translate
                     }
                 }
             });
-        }
+        };
 
 
         /**

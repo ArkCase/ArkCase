@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/dashboard/directives/weather.client.directive.js modules/dashboard/directives/weather.client.directive.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/dashboard/directives/weather.client.directive.js modules/dashboard/directives/weather.client.directive.js}
  *
  * The weatherIcon directive renders simple weather icon insisde weather widget
  *

@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/directives/doc-tree/doc-tree.client.directive.js directives/doc-tree/doc-tree.client.directive.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree.client.directive.js directives/doc-tree/doc-tree.client.directive.js}
  *
  * The docTree directive renders a FancyTree to browse ArkCase objects with support of paging, filter and sort
  *
@@ -1010,6 +1010,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             break;
                         case "declare":
                             var declareAsRecordData = [];
+                            var nodesToDeclare = (batch) ? selNodes : [node];
                             for (var i = 0; i < actNodes.length; i++) {
                                 var declareAsRecord = {};
                                 declareAsRecord.id = Util.goodValue(actNodes[i].data.objectId);
@@ -2439,6 +2440,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 nodes[j].renderTitle();
                             }
                         }
+                        DocTree.refreshTree();
                         return data;
                     });
                 }

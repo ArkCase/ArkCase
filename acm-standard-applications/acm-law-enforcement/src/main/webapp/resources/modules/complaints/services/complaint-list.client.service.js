@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/complaints/services/complaint-info.client.service.js modules/complaints/services/complaint-info.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/complaints/services/complaint-info.client.service.js modules/complaints/services/complaint-info.client.service.js}
  *
  * Complaint.ListService provides functions for Complaint database data
  */
@@ -32,6 +32,29 @@ angular.module('services').factory('Complaint.ListService', ['$resource', '$tran
         Service.resetComplaintsTreeData = function () {
             var cacheComplaintList = new Store.CacheFifo(Service.CacheNames.COMPLAINT_LIST);
             cacheComplaintList.reset();
+        };
+
+        /**
+         * @ngdoc method
+         * @name updateComplaintsTreeData
+         * @methodOf services:Complaint.ListService
+         *
+         * @description
+         * Update a node data in tree.
+         *
+         * @param {Number} start  Zero based index of result starts from
+         * @param {Number} n max Number of list to return
+         * @param {String} sort  Sort value. Allowed choice is based on backend specification
+         * @param {String} filters  Filter value. Allowed choice is based on backend specification
+         * @param {String} query  Search term for tree entry to match
+         * @param {Object} nodeData  Node data
+         *
+         * @returns {Object} Promise
+         */
+        Service.updateComplaintsTreeData = function (start, n, sort, filters, query, nodeData) {
+            ObjectListService.updateObjectTreeData(Service.CacheNames.COMPLAINT_LIST
+                , start, n, sort, filters, query, nodeData
+            );
         };
 
         /**

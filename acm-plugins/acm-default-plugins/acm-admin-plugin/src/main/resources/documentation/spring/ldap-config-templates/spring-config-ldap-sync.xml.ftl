@@ -10,11 +10,11 @@
     </bean>
 
     <bean id="${id}_RoleToGroupProperties"
-                class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
              to be able to read the file; otherwise it will try to read from the
              classpath -->
-        <property name="location" value="file:${r'${user.home}'}/.acm/applicationRoleToUserGroup.properties"/>
+        <property name="location" value="file:${r'${user.home}'}/.arkcase/acm/applicationRoleToUserGroup.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
     </bean>
 
@@ -27,7 +27,8 @@
     </task:scheduled-tasks>
 
     <!-- ensure this bean id is unique across all the LDAP sync beans. -->
-    <bean id="${id}_ldapSyncJob" class="com.armedia.acm.services.users.service.ldap.LdapSyncService" init-method="ldapSync">
+    <bean id="${id}_ldapSyncJob" class="com.armedia.acm.services.users.service.ldap.LdapSyncService"
+          init-method="ldapSync">
         <!-- directoryName: must be unique across all LDAP sync beans -->
         <property name="directoryName" value='${r"${ldapConfig.directoryName}"}'/>
         <!-- ldapSyncConfig: ref must match an AcmLdapSyncConfig bean, which should be defined below. -->
@@ -55,9 +56,9 @@
         <property name="ldapUrl" value='${r"${ldapConfig.ldapUrl}"}'/>
         <!-- referral: "follow" if you want to follow LDAP referrals, "ignore" otherwise (search "ldap referral" for more info). -->
         <property name="referral" value="follow"/>
-	    <!-- mailAttributeName: use "mail"  Most  LDAP servers use "mail". -->
-    	<property name="mailAttributeName" value="mail"/>
-		        
+        <!-- mailAttributeName: use "mail"  Most  LDAP servers use "mail". -->
+        <property name="mailAttributeName" value="mail"/>
+
         <!-- userIdAttributeName: use "samAccountName" if your LDAP server is Active Directory.  Most other LDAP
              servers use "uid". -->
         <property name="userIdAttributeName" value='${r"${ldapConfig.userIdAttributeName}"}'/>

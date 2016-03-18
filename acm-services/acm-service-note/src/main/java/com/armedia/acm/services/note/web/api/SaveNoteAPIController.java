@@ -94,7 +94,7 @@ public class SaveNoteAPIController
             boolean succeeded)
     {
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
-        ApplicationNoteEvent event = new ApplicationNoteEvent(note, "note", succeeded, ipAddress);
+        ApplicationNoteEvent event = new ApplicationNoteEvent(note, "added", succeeded, ipAddress);
         getNoteEventPublisher().publishNoteEvent(event);
     }
 

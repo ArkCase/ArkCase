@@ -4,7 +4,7 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
     , function ($scope, $stateParams, ConfigService, ObjectService) {
 
         ConfigService.getComponentConfig("tasks", "notes").then(function (config) {
-            $scope.objectInfo = {
+            $scope.notesInit = {
                 objectType: ObjectService.ObjectTypes.TASK,
                 currentObjectId: $stateParams.id
             };

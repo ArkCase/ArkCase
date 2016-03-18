@@ -10,9 +10,6 @@ angular.module('cases').controller('Cases.CalendarController', ['$scope', '$stat
             , componentId: "calendar"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
-            , onConfigRetrieved: function (componentConfig) {
-                return onConfigRetrieved(componentConfig);
-            }
         });
 
         $scope.$watchCollection('objectInfo', function (newValue, oldValue) {
@@ -20,10 +17,5 @@ angular.module('cases').controller('Cases.CalendarController', ['$scope', '$stat
                 $scope.folderId = newValue.container.calendarFolderId;
             }
         });
-
-        var onConfigRetrieved = function (config) {
-            $scope.config = config;
-            return config;
-        };
     }
 ]);
