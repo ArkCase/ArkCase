@@ -11,7 +11,8 @@
 <div class="modal-body">
     <form name="notesForm">
         <div>
-            <label for="notesText_{{::$id}}" translate>common.directive.coreNotes.modal.notes.label <span class="required-asterisk">*</span></label>
+            <label for="notesText_{{::$id}}" translate>common.directive.coreNotes.modal.notes.label</label>
+            <span class="required-asterisk">*</span>
             <textarea id="notesText_{{::$id}}" ng-model="note.note" required class="form-control">
 
             </textarea>
