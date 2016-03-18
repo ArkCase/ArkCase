@@ -1010,6 +1010,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             break;
                         case "declare":
                             var declareAsRecordData = [];
+                            var nodesToDeclare = (batch) ? selNodes : [node];
                             for (var i = 0; i < actNodes.length; i++) {
                                 var declareAsRecord = {};
                                 declareAsRecord.id = Util.goodValue(actNodes[i].data.objectId);
@@ -2439,6 +2440,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 nodes[j].renderTitle();
                             }
                         }
+                        DocTree.refreshTree();
                         return data;
                     });
                 }
