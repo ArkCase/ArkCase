@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="taskPluginProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -108,6 +108,17 @@
         <property name="respondPredicate" ref="eventSucceededPredicate"/>
     </bean>
 
+
+    <bean id="sendAdHocTaskTerminateToSolrAction" class="com.armedia.acm.event.EventResponse">
+        <property name="eventName" value="com.armedia.acm.app.task.terminate"/>
+        <property name="action" ref="sendTasksSolrAction"/>
+        <property name="enabled" value="true"/>
+        <property name="parameters">
+            <map/>
+        </property>
+        <property name="respondPredicate" ref="eventSucceededPredicate"/>
+    </bean>
+
     <bean id="sendActivitiTaskCreateToSolrAction" class="com.armedia.acm.event.EventResponse">
         <property name="eventName" value="com.armedia.acm.activiti.task.create"/>
         <property name="action" ref="sendActivitiTasksToSolrAction"/>
@@ -182,10 +193,11 @@
     </bean>
 
     <bean id="acmTaskDao" class="com.armedia.acm.plugins.task.service.impl.ActivitiTaskDao">
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiRepositoryService" ref="activitiRepositoryService"/>
         <property name="activitiHistoryService" ref="activitiHistoryService"/>
-        <property name="userDao" ref="userJpaDao" />
+        <property name="userDao" ref="userJpaDao"/>
         <property name="participantDao" ref="acmParticipantDao"/>
         <property name="dataAccessPrivilegeListener" ref="dataAccessPrivilegeListener"/>
         <property name="containerFolderDao" ref="acmContainerFolderDao"/>
@@ -195,6 +207,7 @@
         <property name="taskExtractor" ref="extractAcmTaskFromEvent"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="priorityLevelToNumberMap" ref="priorityLevelToNumberMap"/>
+        <property name="taskEventPublisher" ref="taskEventPublisher"/>
         <property name="requiredFieldsPerOutcomeMap">
             <map>
                 <entry key="APPROVE">
@@ -216,14 +229,15 @@
     </bean>
 
     <bean id="taskEventPublisher" class="com.armedia.acm.plugins.task.service.TaskEventPublisher"/>
-    
-    <bean id="acmApplicationTaskEventListener" class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventListener">
+
+    <bean id="acmApplicationTaskEventListener"
+          class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventListener">
         <property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>
-        <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher" />
+        <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
-        <property name="acmAssignmentDao" ref="acmAssignmentDao" />
+        <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
     </bean>
-    
+
     <bean id="extractAcmTaskFromEvent" class="com.armedia.acm.plugins.task.service.impl.ExtractAcmTaskFromEvent">
         <property name="dao" ref="acmTaskDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
@@ -235,15 +249,16 @@
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
     </bean>
 
-	<bean id="taskHistoryListener" class="com.armedia.acm.plugins.task.service.TaskHistoryListener">
-    	<property name="acmObjectHistoryService" ref="acmObjectHistoryService" />
+    <bean id="taskHistoryListener" class="com.armedia.acm.plugins.task.service.TaskHistoryListener">
+        <property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>
     </bean>
-    
+
     <bean id="taskChangeStatusListener" class="com.armedia.acm.plugins.task.service.TaskChangeStatusListener">
-    	<property name="muleContextManager" ref="muleContextManager"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
-    
-    <bean id="taskDataAccessUpdateLocator" class="com.armedia.acm.plugins.task.service.impl.TaskDataAccessUpdateLocator">
+
+    <bean id="taskDataAccessUpdateLocator"
+          class="com.armedia.acm.plugins.task.service.impl.TaskDataAccessUpdateLocator">
         <property name="taskDao" ref="acmTaskDao"/>
     </bean>
 
