@@ -155,7 +155,7 @@ angular.module('services').factory('Util.TimerService', ['UtilService'
              * Register a timer listener
              */
             ,useTimer: function(name, interval, callback) {
-                Service.startWorker("services/util/acmTimer.js");
+                Service.startWorker("assets/js/acmTimer.js");
                 Service.registerListener(name, interval, callback);
             }
         };
