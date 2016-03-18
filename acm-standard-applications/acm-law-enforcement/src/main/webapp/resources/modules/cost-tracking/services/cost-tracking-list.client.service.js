@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cost-tracking/services/cost-tracking-info.client.service.js modules/cost-tracking/services/cost-tracking-info.client.service.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/cost-tracking/services/cost-tracking-info.client.service.js modules/cost-tracking/services/cost-tracking-info.client.service.js}
 
  * CostTracking.ListService provides functions for Costsheet database data
  */
@@ -62,6 +62,29 @@ angular.module('services').factory('CostTracking.ListService', ['$resource', '$t
         Service.resetCostTrackingTreeData = function () {
             var cacheCostTrackingList = new Store.CacheFifo(Service.CacheNames.COSTSHEET_LIST);
             cacheCostTrackingList.reset();
+        };
+
+        /**
+         * @ngdoc method
+         * @name updateCostTrackingTreeData
+         * @methodOf services:CostTracking.ListService
+         *
+         * @description
+         * Update a node data in tree.
+         *
+         * @param {Number} start  Zero based index of result starts from
+         * @param {Number} n max Number of list to return
+         * @param {String} sort  Sort value. Allowed choice is based on backend specification
+         * @param {String} filters  Filter value. Allowed choice is based on backend specification
+         * @param {String} query  Search term for tree entry to match
+         * @param {Object} nodeData  Node data
+         *
+         * @returns {Object} Promise
+         */
+        Service.updateCostTrackingTreeData = function (start, n, sort, filters, query, nodeData) {
+            ObjectListService.updateObjectTreeData(Service.CacheNames.COSTSHEET_LIST
+                , start, n, sort, filters, query, nodeData
+            );
         };
 
         /**

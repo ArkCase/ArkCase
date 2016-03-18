@@ -46,7 +46,7 @@
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="frevvoService" ref="frevvoService" />
         <property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory" />
-        <property name="plainFormPropertiesLocation" value="#{ systemProperties ['user.home'] }/.acm/acm-forms-plain.properties"/>
+        <property name="plainFormPropertiesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/acm-forms-plain.properties"/>
         <property name="propertyFileManager">
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>

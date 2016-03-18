@@ -35,7 +35,6 @@ angular.module('cases').controller('Cases.HistoryController', ['$scope', '$state
         };
 
         var onObjectInfoRetrieved = function (objectInfo) {
-            $scope.objectInfo = objectInfo;
             retrieveGridData();
         };
 

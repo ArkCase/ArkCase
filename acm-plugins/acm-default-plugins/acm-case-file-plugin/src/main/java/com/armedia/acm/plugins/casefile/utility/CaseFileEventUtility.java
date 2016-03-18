@@ -1,15 +1,17 @@
 package com.armedia.acm.plugins.casefile.utility;
 
-import com.armedia.acm.plugins.casefile.model.CaseEvent;
-import com.armedia.acm.plugins.casefile.model.CaseFile;
-import com.armedia.acm.plugins.casefile.model.FileAddedEvent;
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 
-import java.util.Date;
+import com.armedia.acm.plugins.casefile.model.CaseEvent;
+import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.CaseFileModifiedEvent;
+import com.armedia.acm.plugins.casefile.model.FileAddedEvent;
 
 /**
  * Created by armdev on 9/4/14.
@@ -36,6 +38,15 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         fileAddedEvent.setUserId(userId);
 
         applicationEventPublisher.publishEvent(fileAddedEvent);
+    }
+    
+    public void raiseCaseFileModifiedEvent(CaseFile source, String ipAddress, String eventStatus) {
+
+        CaseFileModifiedEvent event = new CaseFileModifiedEvent(source);
+        event.setSucceeded(true);
+        event.setIpAddress(ipAddress);
+        event.setEventStatus(eventStatus);
+        applicationEventPublisher.publishEvent(event);
     }
 
     @Override

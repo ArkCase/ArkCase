@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal'
+angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', '$timeout'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'DocTreeService'
     , 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, $modal
+    , function ($scope, $stateParams, $modal, $timeout
         , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
         , HelperObjectBrowserService) {
 
@@ -24,7 +24,6 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
 
         var onConfigRetrieved = function (config) {
-            $scope.config = config;
             $scope.treeConfig = config.docTree;
         };
 
@@ -47,7 +46,6 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
         $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
         var onObjectInfoRetrieved = function (objectInfo) {
-            $scope.objectInfo = objectInfo;
             $scope.objectId = objectInfo.id;
         };
 
@@ -75,6 +73,16 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             //console.log("onPreCmd:" + cmd);
             //if ("newFolder" == cmd) {
             //    return true;
+            //}
+
+            //if ("newFolder" == cmd) {
+            //    console.log("timeout 1");
+            //    $timeout(function() {
+            //        console.log("timeout 2");
+            //    }, 2000);
+            //    console.log("timeout 3");
+            //
+            //    return false;
             //}
 
         };

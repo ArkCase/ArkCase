@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/directives/search/search.client.directive.js directives/search/search.client.directive.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/search/search.client.directive.js directives/search/search.client.directive.js}
  *
  * The "Search" directive triggers the faceted search functionality
  *
@@ -244,7 +244,13 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             var url = Util.goodValue(found.url);
                             var id = objectId;
                             url = url.replace(":id", id);
-                            $window.location.href = url;
+
+                            // Target property is used to control open mode: _parent, _blank
+                            if (found.target) {
+                                $window.open(url, found.target);
+                            } else {
+                                $window.location.href = url;
+                            }
                         }
                     });
                 };

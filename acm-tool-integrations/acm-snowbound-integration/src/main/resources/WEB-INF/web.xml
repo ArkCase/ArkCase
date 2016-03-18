@@ -185,7 +185,7 @@
         </init-param>
         <init-param>
             <param-name>customImageRubberStamps</param-name>
-            <param-value>Approved,Confidential,Denied,InitialHere,Pending,Received,SignHere,Urgent,DateTime
+            <param-value>Approved,Confidential,Denied,InitialHere,Pending,Received,SignHere,Urgent,DateTime,Signature Small,Signature Medium,Signature Large
             </param-value>
         </init-param>
         <init-param>
@@ -235,6 +235,21 @@
             <param-name>DateTime</param-name>
             <param-value>Current
                 Date/Time,300,30,http://localhost:8080/VirtualViewerJavaHTML5/resources/stamps/DateTime.png
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>Signature Small</param-name>
+            <param-value>Signature Small,100,41,http://localhost:8080/VirtualViewerJavaHTML5/resources/stamps/SignatureSmall.png
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>Signature Medium</param-name>
+            <param-value>Signature Medium,300,144,http://localhost:8080/VirtualViewerJavaHTML5/resources/stamps/SignatureMedium.png
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>Signature Large</param-name>
+            <param-value>Signature Large,500,237,http://localhost:8080/VirtualViewerJavaHTML5/resources/stamps/SignatureLarge.png
             </param-value>
         </init-param>
         <init-param>

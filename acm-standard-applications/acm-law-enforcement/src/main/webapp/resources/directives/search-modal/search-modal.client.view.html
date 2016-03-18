@@ -36,8 +36,8 @@
                                 <div class="checkbox" ng-if="field.count > 0">
                                     <label><input type="checkbox"
                                                   ng-disabled="disableSearchControls"
-                                                  ng-model="currentFacetSelection[field.name + '|' + facet.name]"
-                                                  ng-click="selectFacet($event.target.checked,facet.name,field.name)"/>{{field.name}}<span
+                                                  ng-model="currentFacetSelection[field.name.nameValue + '|' + facet.name]"
+                                                  ng-click="selectFacet($event.target.checked,facet.name,field.name.nameValue)"/>{{field.name.nameFiltered}}<span
                                             class="pull-right label label-info">{{field.count}}</span></label>
                                 </div>
                             </li>

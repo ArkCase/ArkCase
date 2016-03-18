@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.0.49</version>
+    <version>3.0.50</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -1133,6 +1133,14 @@
                     <exclusion>
                         <groupId>org.springframework</groupId>
                         <artifactId>spring-aop</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.python</groupId>
+                        <artifactId>jython-standalone</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jruby</groupId>
+                        <artifactId>jruby-core</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

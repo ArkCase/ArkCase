@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context>
+<!--
+  sessionCookiePathUsesTrailingSlash: set to false, so the session cookie path does not end with /.  During SSO
+  implementation, the trailing slash caused some problems:
+    1. Logged in user accesses 'http://server/arkcase' (no trailing slash), they will be logged out.  That is
+       bad - they should stay logged in.
+    2. Before login, user opens 'http://server/arkcase' (no trailing slash), they get the login page.  In SSO
+       environments, after login they are redirected to '/arkcase' (no trailing slash) and immediately logged back
+       out.  That's bad!  They should be logged in.
+
+  Setting this value to false resolves both these issues, and still seems to work OK in non-SSO environments.
+-->
+<Context sessionCookiePathUsesTrailingSlash="false">
     <Resources className="org.apache.catalina.webresources.StandardRoot">
         <!-- map $HOME/.acm/custom to the root of web application -->
         <PostResources className="org.apache.catalina.webresources.DirResourceSet"
-                       base="${user.home}/.acm/custom/"
-                       internalPath="/"
-                       webAppMount="/"/>
-        <!-- map $HOME/.acm-ui/custom to the root of web application -->
-        <PostResources className="org.apache.catalina.webresources.DirResourceSet"
-                       base="${user.home}/.acm-ui/custom/"
+                       base="${user.home}/.arkcase/acm/custom/"
                        internalPath="/"
                        webAppMount="/"/>
     </Resources>

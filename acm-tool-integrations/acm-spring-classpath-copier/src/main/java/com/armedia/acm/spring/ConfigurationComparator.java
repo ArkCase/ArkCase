@@ -30,11 +30,11 @@ import java.nio.file.Paths;
 /**
  * Compare custom Spring bean configurations with built-in configurations.
  * Whenever ArkCase is upgraded, there might be changes in Spring configuration files (which reside inside the WAR
- * archive, but at boot are copied to $HOME/.acm/default-config/spring folder), which must be propagated to custom
+ * archive, but at boot are copied to $HOME/.arkcase/acm/default-config/spring folder), which must be propagated to custom
  * Spring configuration files.
  * <p>
  * Currently we are checking if there are beans defined in custom Spring configuration files (delivered with custom
- * JAR modules dropped in $HOME/.acm/custom/WEB-INF/lib folder) which are overriding the built-in defined beans.
+ * JAR modules dropped in $HOME/.arkcase/acm/custom/WEB-INF/lib folder) which are overriding the built-in defined beans.
  * All those built-in beans are written to a DIFF file, and it is up to the customers to merge the differences in
  * their custom files.
  * <p>
@@ -80,7 +80,7 @@ public class ConfigurationComparator implements ApplicationContextAware
             NodeList builtinBeans = getBuiltinBeans();
 
             // custom Spring configuration files are copied to this folder
-            String customFolderPath = System.getProperty("user.home") + "/.acm/custom-config/spring";
+            String customFolderPath = System.getProperty("user.home") + "/.arkcase/acm/custom-config/spring";
             // retrieve all custom bean configurations
             Files.walk(Paths.get(customFolderPath)).forEach(filePath -> {
                 if (Files.isRegularFile(filePath))
@@ -118,7 +118,7 @@ public class ConfigurationComparator implements ApplicationContextAware
         allBuiltinBeans.appendChild(beans);
 
         // built-in Spring configuration files are copied to this folder
-        String builtinFolderPath = System.getProperty("user.home") + "/.acm/default-config/spring";
+        String builtinFolderPath = System.getProperty("user.home") + "/.arkcase/acm/default-config/spring";
         // retrieve all built-in beans from all configurations
         Files.walk(Paths.get(builtinFolderPath)).forEach(filePath -> {
             if (Files.isRegularFile(filePath))

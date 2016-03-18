@@ -117,6 +117,17 @@
       "zip": "Zip",
       "modified": "Date Last Modified",
       "modifier": "User Last Modified"
+    },
+    "modal": {
+      "addLocation": "Add Location",
+      "editLocation": "Edit Record",
+      "type.label": "Type",
+      "street.label": "Street",
+      "city.label": "City",
+      "state.label": "State",
+      "zip.label": "Zip",
+      "btnOk.text": "Save",
+      "btnCancel.text": "Cancel"
     }
   },
   "complaints.comp.notes": {
@@ -195,12 +206,12 @@
       "createdBy": "Created By"
     },
     "modal": {
-    "title": "Tag",
-    "search": "Search for Tag",
-    "buttons": {
-          "cancel": "Cancel",
-          "ok": "Add Tag"
-     }
+      "title": "Tag",
+      "search": "Search for Tag",
+      "buttons": {
+        "cancel": "Cancel",
+        "ok": "Add Tag"
+      }
     },
     "message": {
       "tagExists": "Tag with that name or description or text already exists",

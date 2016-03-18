@@ -19,7 +19,8 @@
     <bean id="arm_subscriptionEventBatchInsertJob"
           class="com.armedia.acm.services.subscription.service.SubscriptionEventBatchInsertService">
         <property name="userHomeDir" value="${user.home}"/>
-        <property name="lastBatchInsertPropertyFileLocation" value="/.acm/subscriptionEventLastBatchInsert.properties"/>
+        <property name="lastBatchInsertPropertyFileLocation"
+                  value="/.arkcase/acm/subscriptionEventLastBatchInsert.properties"/>
         <property name="propertyFileManager">
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>
@@ -54,7 +55,7 @@
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
-        <property name="location" value="file:${user.home}/.acm/subscriptionPlugin.properties"/>
+        <property name="location" value="file:${user.home}/.arkcase/acm/subscriptionPlugin.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
