@@ -231,11 +231,12 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         String acmPriority = "Medium";
         int activitiPriority = 50;
         String title = "task Title";
-        String processId = "processId";
+        String processId = "500";
         String processName = "processName";
         Long objectId = 250L;
         String objectType = "objectType";
         String objectName = "objectName";
+        String deleteReason = "CLOSED";
 
         Map<String, Object> pvars = new HashMap<>();
         pvars.put("OBJECT_ID", objectId);
@@ -271,8 +272,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockHistoricTaskInstanceQuery.singleResult()).andReturn(mockHistoricTaskInstance);
 
         expect(mockHistoricTaskInstance.getStartTime()).andReturn(started);
-        expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended);
-        expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended);
+        expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended).times(3);
+        expect(mockHistoricTaskInstance.getDeleteReason()).andReturn(deleteReason).times(2);
 
         expect(mockHistoricTaskInstance.getDurationInMillis()).andReturn(taskDuration);
 
@@ -637,8 +638,9 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         Date ended = new Date();
         long taskDuration = 9876543L;
         String title = "task Title";
-        String processId = "processId";
+        String processId = "500";
         String processName = "processName";
+        String deleteReason = "TERMINATION";
 
         Long objectId = 250L;
         String objectType = "objectType";
@@ -664,6 +666,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockHistoricTaskInstance.getStartTime()).andReturn(started);
         expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended).atLeastOnce();
         expect(mockHistoricTaskInstance.getDurationInMillis()).andReturn(taskDuration);
+        expect(mockHistoricTaskInstance.getDeleteReason()).andReturn(deleteReason).times(2);
 
         Map<String, Object> taskLocalVars = new HashMap<>();
         taskLocalVars.put("START_DATE", new Date());
