@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
 import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
@@ -47,6 +48,7 @@ public interface TaskDao
 
     /**
      * List of open tasks assigned to a user, sorted by descending due date.
+     *
      * @param user
      * @return
      */
@@ -54,18 +56,21 @@ public interface TaskDao
 
     /**
      * List of all open tasks assigned to all users, sorted by descending due date.
+     *
      * @return
      */
     List<AcmTask> allTasks();
 
     /**
      * List of all tasks assigned to all users that due date is until numberOfDaysFromToday.
+     *
      * @return
      */
     List<AcmTask> dueSpecificDateTasks(NumberOfDays numberOfDaysFromToday);
 
     /**
      * List of all tasks assigned to all users that due date is before today, sorted by descending due date.
+     *
      * @return
      */
     List<AcmTask> pastDueTasks();
@@ -91,13 +96,27 @@ public interface TaskDao
      */
     AcmTask unclaimTask(Long taskId) throws AcmTaskException;
 
+    /**
+     * Delete current process instance
+     *
+     * @param parentId
+     * @param processId
+     * @param deleteReason
+     * @param authentication
+     * @param ipAddress
+     * @return
+     * @throws AcmTaskException
+     */
+
+    void deleteProcessInstance(String parentId, String processId, String deleteReason, Authentication authentication, String ipAddress) throws AcmTaskException;
+
     AcmTask findById(Long taskId) throws AcmTaskException;
 
     AcmTask save(AcmTask in) throws AcmTaskException;
 
     AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId, String outcomePropertyName, String outcomeId)
-        throws AcmTaskException;
-    
+            throws AcmTaskException;
+
     List<WorkflowHistoryInstance> getWorkflowHistory(String id, boolean adhoc);
 
     List<AcmTask> getTasksModifiedSince(Date lastModified, int start, int pageSize);
