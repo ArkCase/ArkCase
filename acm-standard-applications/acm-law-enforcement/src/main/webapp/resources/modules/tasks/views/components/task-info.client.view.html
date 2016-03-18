@@ -2,58 +2,60 @@
     <div class="clearfix">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a href="#" editable-text="objectInfo.title" onaftersave="saveTask()">{{objectInfo.title ||
-                    "Unknown"}}</a></h4>
+                <h4><a href="#" editable-text="objectInfo.title" onaftersave="saveTask()" ng-if="!objectInfo.completed">{{objectInfo.title ||
+                    "Unknown"}}</a>
+                    <span ng-if="objectInfo.completed">{{objectInfo.title || "Unknown"}}</span>
+                </h4>
             </div>
 
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-number="objectInfo.percentComplete"
-                       onbeforesave="validatePercentComplete($data)" onaftersave="saveTask()">
+                    <a href="#" editable-number="objectInfo.percentComplete" onbeforesave="validatePercentComplete($data)" onaftersave="saveTask()" ng-if="!objectInfo.completed">
                         {{ objectInfo.percentComplete }}
                     </a>
+                    <span ng-if="objectInfo.completed">{{objectInfo.percentComplete || "Unknown"}}</span>
                 </div>
                 <small class="text-muted">"% of Completion"</small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="#" editable-select="assignee" onaftersave="updateAssignee(assignee)"
-                       e-ng-options="a.object_id_s as a.name for a in assignableUsers">
+                       e-ng-options="a.object_id_s as a.name for a in assignableUsers" ng-if="!objectInfo.completed">
                         {{assignee | mapKeyValue: assignableUsers:'object_id_s':'name' || 'Unknown'}}</a>
+                    <span ng-if="objectInfo.completed">{{assignee | mapKeyValue: assignableUsers:'object_id_s':'name' || "Unknown"}}</span>
                 </div>
                 <small class="text-muted">Assignee</small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="#" editable-select="objectInfo.priority" onaftersave="saveTask()"
-                       e-ng-options="p.value as p.text for p in priorities">{{ objectInfo.priority ||
+                       e-ng-options="p.value as p.text for p in priorities" ng-if="!objectInfo.completed">{{ objectInfo.priority ||
                         'Unknown'}}</a>
+                    <span ng-if="objectInfo.completed">{{objectInfo.priority || "Unknown"}}</span>
                 </div>
                 <small class="text-muted">Priority</small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-bsdate="dateInfo.taskStartDate"
-                       e-datepicker-popup="{{defaultDatePickerFormat}}"
-                       e-ng-click="onPickerClick()" e-is-open="picker.opened"
-                       e-init-date="dateInfo.taskStartDate"
-                       e-on-open-focus="false"
-                       onaftersave="updateStartDate(dateInfo.taskStartDate)">
-                        {{ (dateInfo.taskStartDate | date: defaultDatePickerFormat) || 'Unknown' }}</a>
+                    <a href="#"
+                       editable-date="dateInfo.taskStartDate"
+                       onaftersave="updateStartDate(dateInfo.taskStartDate)" ng-if="!objectInfo.completed">
+                        {{ (dateInfo.taskStartDate | date: "MM/dd/yyyy") || 'Unknown' }}
+                    </a>
+                    <span ng-if="objectInfo.completed">{{ (dateInfo.taskStartDate | date: "MM/dd/yyyy") || 'Unknown' }}</span>
                 </div>
                 <small class="text-muted">Start Date</small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-bsdate="dateInfo.dueDate"
-                       e-datepicker-popup="{{defaultDatePickerFormat}}"
-                       e-ng-click="onPickerClick()" e-is-open="picker.opened"
-                       e-init-date="dateInfo.dueDate"
-                       e-on-open-focus="false"
-                       onaftersave="updateDueDate(dateInfo.dueDate)">
-                        {{ (dateInfo.dueDate | date: defaultDatePickerFormat) || 'Unknown' }}</a>
+                    <a href="#"
+                       editable-date="dateInfo.dueDate"
+                       onaftersave="updateDueDate(dateInfo.dueDate)" ng-if="!objectInfo.completed">
+                        {{ (dateInfo.dueDate | date: "MM/dd/yyyy") || 'Unknown' }}
+                    </a>
+                    <span ng-if="objectInfo.completed">{{ (dateInfo.dueDate | date: "MM/dd/yyyy") || 'Unknown' }}</span>
                 </div>
                 <small class="text-muted">Due Date</small>
             </div>
