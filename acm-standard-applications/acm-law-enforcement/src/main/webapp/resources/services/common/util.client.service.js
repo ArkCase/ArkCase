@@ -642,7 +642,6 @@ angular.module('services').factory('UtilService', ['$q', '$log'
                 });
                 return filteredModel;
             }
-
         };
 
 

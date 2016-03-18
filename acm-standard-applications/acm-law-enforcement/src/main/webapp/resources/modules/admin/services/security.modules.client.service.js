@@ -101,7 +101,7 @@ angular.module('admin').service('Admin.ModulesService', function ($http) {
         var url = 'api/latest/plugin/admin/rolesprivileges/roles/' + roles.join() + '/privileges/' + modulePrivilege;
         return $http({
             method: 'DELETE',
-            url: url,
+            url: url
         });
     };
 
