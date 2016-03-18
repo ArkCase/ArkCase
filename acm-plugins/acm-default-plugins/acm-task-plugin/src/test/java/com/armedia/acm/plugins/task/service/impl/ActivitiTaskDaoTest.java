@@ -18,6 +18,8 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -60,6 +62,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     private Authentication mockAuthentication;
     private HistoryService mockHistoryService;
     private HistoricTaskInstance mockHistoricTaskInstance;
+    private HistoricProcessInstance mockHistoricProcessInstance;
+    private HistoricProcessInstanceQuery mockHistoricProcessInstanceQuery;
     private HistoricTaskInstanceQuery mockHistoricTaskInstanceQuery;
     private AcmParticipantDao mockParticipantDao;
     private DataAccessPrivilegeListener mockDataAccessPrivilegeListener;
@@ -98,8 +102,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockDataAccessPrivilegeListener = createMock(DataAccessPrivilegeListener.class);
         mockCandidateGroup = createMock(IdentityLink.class);
         mockTaskEventPublisher = createMock(TaskEventPublisher.class);
-
-
+        mockHistoricProcessInstance = createMock(HistoricProcessInstance.class);
+        mockHistoricProcessInstanceQuery = createMock(HistoricProcessInstanceQuery.class);
         unit = new ActivitiTaskDao();
 
         Map<String, Integer> acmPriorityToActivitiPriority = new HashMap<>();
@@ -1103,9 +1107,13 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         expect(mockHistoricTaskInstance.getDeleteReason()).andReturn(deleteReason).times(2);
 
+        expect(mockHistoryService.createHistoricProcessInstanceQuery()).andReturn(mockHistoricProcessInstanceQuery);
+        expect(mockHistoricProcessInstanceQuery.processInstanceId(processId)).andReturn(mockHistoricProcessInstanceQuery);
+        expect(mockHistoricProcessInstanceQuery.singleResult()).andReturn(mockHistoricProcessInstance);
+        expect(mockHistoricProcessInstance.getEndTime()).andReturn(ended).times(2);
 
         expect(mockHistoricTaskInstance.getStartTime()).andReturn(started);
-        expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended).times(2);
+        expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended).times(4);
         expect(mockHistoricTaskInstance.getId()).andReturn(taskId.toString());
         expect(mockHistoricTaskInstance.getDurationInMillis()).andReturn(taskDuration);
         expect(mockHistoricTaskInstance.getDueDate()).andReturn(dueDate);
@@ -1114,7 +1122,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockHistoricTaskInstance.getAssignee()).andReturn(assignee);
         expect(mockHistoricTaskInstance.getTaskLocalVariables()).andReturn(pvars).atLeastOnce();
         expect(mockHistoricTaskInstance.getProcessVariables()).andReturn(pvars).atLeastOnce();
-        expect(mockHistoricTaskInstance.getProcessInstanceId()).andReturn(processId);
+        expect(mockHistoricTaskInstance.getProcessInstanceId()).andReturn(processId).times(2);
         expect(mockHistoricTaskInstance.getProcessDefinitionId()).andReturn(processId);
         expect(mockHistoricTaskInstance.getTaskDefinitionKey()).andReturn(taskDefKey);
 
