@@ -290,6 +290,34 @@ angular.module('services').factory('UtilService', ['$q', '$log'
 
             /**
              * @ngdoc method
+             * @name compare
+             * @methodOf services.service:UtilService
+             *
+             * @param {Object} left An object, including value
+             * @param {Object} right An object, including value
+             *
+             * @description
+             * Append random parameter after a url to avoid undesired cached session variables
+             * The function handles input url in following sample cases:
+             * (1):  some.com/some/path
+             * (2):  some.com/some/path/
+             * (3):  some.com/some/path?var=abc
+             */
+            , noneCacheUrl: function(url) {
+                var lastChar = url.slice(-1);
+                var hasQmark = (-1 !== url.indexOf('?'));
+
+                if (hasQmark) {
+                    url += '&'
+                } else {
+                    url += '?';
+                }
+                url += 'rand=' + Math.floor((Math.random()*10000000000));
+                return url;
+            }
+
+            /**
+             * @ngdoc method
              * @name serviceCall
              * @methodOf services.service:UtilService
              *
