@@ -35,6 +35,7 @@
                 <value>file:${user.home}/.arkcase/acm/subscriptionPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/taskPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/activiti.properties</value>
+                <value>file:${user.home}/.arkcase/acm/sso/spring-config-armedia-sso.properties</value>
             </list>
         </property>
     </bean>

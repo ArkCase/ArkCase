@@ -72,16 +72,44 @@
     
     <bean id="acmLoginSuccessHandler" class="com.armedia.acm.auth.AcmLoginSuccessHandler">
         <property name="loginSuccessOperations" ref="acmLoginSuccessOperations"/>
+        <property name="defaultTargetUrl" value="/home.html#!/welcome"/>
+        <property name="alwaysUseDefaultTargetUrl" value="false"></property>
     </bean>
+    
     <bean id="acmLoginFailureListener" class="com.armedia.acm.auth.AcmLoginFailureEventListener"/>
+    
     <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">
-        <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory"/>
-        <!--<property name="defaultTargetUrl" value="/home.html"/>-->
-        <property name="defaultTargetUrl" value="/login"/>
-        <property name="alwaysUseDefaultTargetUrl" value="false"/>
+        <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory" />
+        <property name="defaultTargetUrl" value="/login?logout" />
+        <property name="alwaysUseDefaultTargetUrl" value="false" />
+    </bean>
+    
+    <bean id="acmSamlLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">
+        <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory" />
+        <property name="defaultTargetUrl" value="/sso/loggedout" />
+        <property name="alwaysUseDefaultTargetUrl" value="false" />
     </bean>
 
     <bean id="ssAuthenticationEventPublisher"
           class="org.springframework.security.authentication.DefaultAuthenticationEventPublisher"/>
+    
+    <bean id="ssoProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.arkcase/acm/sso/spring-config-armedia-sso.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+                <prop key="sso.saml.authenticationCheckInterval">3600</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="acmSamlAthenticationCheckFilter" class="com.armedia.acm.auth.AcmSamlAuthenticationCheckFilter">
+        <property name="authenticationCheckInterval" value="${sso.saml.authenticationCheckInterval}"/>
+    </bean>
 
 </beans>

@@ -12,7 +12,7 @@
 -->
 <Context sessionCookiePathUsesTrailingSlash="false">
     <Resources className="org.apache.catalina.webresources.StandardRoot">
-        <!-- map $HOME/.acm/custom to the root of web application -->
+        <!-- map $HOME/.arkcase/custom to the root of web application -->
         <PostResources className="org.apache.catalina.webresources.DirResourceSet"
                        base="${user.home}/.arkcase/acm/custom/"
                        internalPath="/"
