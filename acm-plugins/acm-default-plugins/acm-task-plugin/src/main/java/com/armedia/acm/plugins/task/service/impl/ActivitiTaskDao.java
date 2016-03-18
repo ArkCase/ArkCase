@@ -37,6 +37,7 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -44,6 +45,7 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -529,7 +531,11 @@ public class ActivitiTaskDao implements TaskDao
                 {
                     //validate against provided parentId
                     Long objectId = (Long) getActivitiRuntimeService().getVariable(processId, TaskConstants.VARIABLE_NAME_OBJECT_ID);
-                    if (objectId.toString().equals(parentId))
+                    if (objectId == null)
+                    {
+                        throw new AcmTaskException("No parent object ID is associated with the process instance ID " + processId);
+                    }
+                    if (objectId != null && objectId.toString().equals(parentId))
                     {
                         log.info("provided ID [{}] and object ID from process instance match [{}]", objectId, parentId);
 
@@ -560,7 +566,7 @@ public class ActivitiTaskDao implements TaskDao
                         }
                     } else
                     {
-                        throw new AcmTaskException("Process cannot be deleted as supplied parentId doesn't match with process parentId");
+                        throw new AcmTaskException("Process cannot be deleted as supplied parentId : " + parentId + "doesn't match with process instance object Id : " + objectId);
                     }
                 }
             } catch (ActivitiException e)
@@ -727,10 +733,23 @@ public class ActivitiTaskDao implements TaskDao
     {
         //EDTRM-670	- All tasks should be marked "TERMINATED" instead of "CLOSED"
         //tasks belonging to a "TERMINATED" process will have delete reason set to "TERMINATED"
-        if (historicTaskInstance.getDeleteReason() != null
+        if (historicTaskInstance.getDeleteReason() != null && historicTaskInstance.getEndTime() != null
                 && historicTaskInstance.getDeleteReason().equals(TaskConstants.STATE_TERMINATED))
         {
-            return TaskConstants.STATE_TERMINATED;
+            HistoricProcessInstance historicProcessInstance =
+                    getActivitiHistoryService().createHistoricProcessInstanceQuery()
+                            .processInstanceId(historicTaskInstance.getProcessInstanceId())
+                            .singleResult();
+            //deleted process instance endTime matches terminated tasks endTime to second offset
+            if (historicProcessInstance.getEndTime() != null)
+            {
+                Date processTerminatedDateTime = DateUtils.round(historicProcessInstance.getEndTime(), Calendar.SECOND);
+                Date taskTerminatedDateTime = DateUtils.round(historicTaskInstance.getEndTime(), Calendar.SECOND);
+                if (processTerminatedDateTime.equals(taskTerminatedDateTime))
+                {
+                    return TaskConstants.STATE_TERMINATED;
+                }
+            }
         }
         return historicTaskInstance.getEndTime() == null ? TaskConstants.STATE_ACTIVE : TaskConstants.STATE_CLOSED;
     }
