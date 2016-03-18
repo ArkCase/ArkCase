@@ -55,7 +55,7 @@ public class SendEmailWithAttachmentsAPIController {
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
 
         try{
-            getOutlookService().sendEmailWithAttachments(in,outlookUser);
+            getOutlookService().sendEmailWithAttachments(in, outlookUser, authentication);
         }
         catch(Exception e){
             throw new AcmOutlookSendEmailWithAttachmentsFailedException("Could not send emails with attachment,among other things check your request body. Exception message is : " + e.getMessage(), e);

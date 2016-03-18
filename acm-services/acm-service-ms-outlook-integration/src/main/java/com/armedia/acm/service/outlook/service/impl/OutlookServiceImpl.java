@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.armedia.acm.plugins.ecm.model.EcmFileEmailedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +60,7 @@ import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
+import org.springframework.security.core.Authentication;
 
 /**
  * Created by armdev on 4/20/15.
@@ -281,7 +283,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     }
 
-    @Override public void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user) throws Exception
+    @Override public void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user, Authentication authentication) throws Exception
     {
 
         if (getSendFromSystemUser())
@@ -299,11 +301,13 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             emailMessage.getToRecipients().add(emailAddress);
         }
 
+        List<EcmFile> attachedFiles = new ArrayList<>();
         for (Long attachmentId : emailWithAttachmentsDTO.getAttachmentIds())
         {
             InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
             EcmFile ecmFile = getEcmFileService().findById(attachmentId);
             emailMessage.getAttachments().addFileAttachment(ecmFile.getFileName(), contents);
+            attachedFiles.add(ecmFile);
         }
         emailMessage.sendAndSaveCopy();
 
@@ -311,6 +315,11 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         // use the second if a copy of the sent email is needed
         // emailMessage.send();
         // emailMessage.sendAndSaveCopy();
+
+        // Fires an audit event for each successfully emailed file
+        for (EcmFile emailedFile : attachedFiles) {
+            outlookEventPublisher.publishFileEmailedEvent(emailedFile, authentication);
+        }
     }
 
     @Override public OutlookResults<OutlookContactItem> findContactItems(AcmOutlookUser user, int start, int maxItems, String sortField, boolean sortAscending, SearchFilter filter)
