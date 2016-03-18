@@ -27,6 +27,10 @@
     <c:if test='${not empty sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}'>
         <div class="alert alert-danger">${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}</div>
     </c:if>
+    
+    <c:if test="${param.logout != null}">
+    	<div class="alert alert-success">You have been logged out successfully.</div>
+    </c:if>
 
     <form id="login-form" action="<%= request.getContextPath()%>/j_spring_security_check" method="post">
         <div class="list-group">

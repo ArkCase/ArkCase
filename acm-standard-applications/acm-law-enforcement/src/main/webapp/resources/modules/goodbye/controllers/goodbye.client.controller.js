@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', '$q', '$state', 'StoreService', 'Authentication'
-    , 'ConfigService', 'LookupService', 'Object.LookupService', 'Case.LookupService', 'Complaint.LookupService'
+    , 'ConfigService', 'LookupService', 'Object.LookupService', 'Case.LookupService', 'Complaint.LookupService', '$browser'
     , function ($scope, $window, $q, $state, Store, Authentication
-        , ConfigService, LookupService, ObjectLookupService, CaseLookupService, ComplaintLookupService) {
+        , ConfigService, LookupService, ObjectLookupService, CaseLookupService, ComplaintLookupService, $browser) {
 
         var sessionCacheNamesList = [
             Authentication.SessionCacheNames
@@ -21,7 +21,10 @@ angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', 
             });
         }
 
-
-        $window.location.href = "/arkcase/logout";
+        // Retrieves the app properties from app-config.xml file
+        var appConfig = LookupService.getConfig('app').then(function (data) {
+            // redirect to login page
+            $window.location.href = data['logoutUrl'];
+        });        
     }
 ]);
