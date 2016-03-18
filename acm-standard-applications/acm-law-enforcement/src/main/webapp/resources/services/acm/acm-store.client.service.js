@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
  *
  * This service package contains objects and functions for data storage
  */
@@ -19,7 +19,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              * @description
              *
-             * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
+             * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
              *
              * Variable represents map like data structure. Data are saved in Angular $rootScope.
              */
@@ -54,7 +54,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              * @description
              *
-             * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
+             * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
              *
              * SessionData represent data saved in session. Each data are identified by a name. It persists through the entire login session.
              */
@@ -83,7 +83,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              * @description
              *
-             * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
+             * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
              *
              * LocalData represent data saved in local storage. Each data are identified by a name. It persists on user computer until deleted.
              */
@@ -112,7 +112,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
              *
              * @description
              *
-             * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
+             * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/acm-store.client.service.js services/acm/acm-store.client.service.js}
              *
              * CacheFifo is cache using first in first out aging algorithm. Each cache is identified by a name.
              * Cache data persists in Angular $rootScope. Data is evicted after expiration limit.
