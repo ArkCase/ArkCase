@@ -7,7 +7,8 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
     , function ($scope, $state, $stateParams, $q, $modal
         , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, CaseLookupService
         , ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService
-        , HelperObjectBrowserService) {
+        , HelperObjectBrowserService
+    ) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
