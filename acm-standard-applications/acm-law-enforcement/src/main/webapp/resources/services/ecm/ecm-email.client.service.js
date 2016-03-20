@@ -10,7 +10,7 @@
 
  * Email service for ECM.
  */
-angular.module('services').factory('Ecm.EmailService', ['$resource', 'StoreService', 'UtilService'
+angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreService', 'UtilService'
     , function ($resource, Store, Util) {
 
         var Service = $resource('api/latest/service', {}, {

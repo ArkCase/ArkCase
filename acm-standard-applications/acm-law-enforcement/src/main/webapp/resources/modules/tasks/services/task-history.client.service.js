@@ -10,7 +10,7 @@
  *
  * Task.HistoryService provides functions for Task history
  */
-angular.module('tasks').factory('Task.HistoryService', ['$resource', '$translate', 'StoreService', 'UtilService',
+angular.module('tasks').factory('Task.HistoryService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService',
     function ($resource, $translate, Store, Util) {
         var Service = $resource('api/latest/plugin', {}, {
             /**

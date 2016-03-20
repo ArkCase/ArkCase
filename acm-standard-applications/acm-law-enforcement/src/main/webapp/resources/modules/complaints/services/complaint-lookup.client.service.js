@@ -10,7 +10,7 @@
  *
  * Complaint.LookupService provides functions for Complaint database data
  */
-angular.module('services').factory('Complaint.LookupService', ['$resource', '$translate', 'StoreService', 'UtilService', 'Object.LookupService',
+angular.module('services').factory('Complaint.LookupService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.LookupService',
     function ($resource, $translate, Store, Util, ObjectLookupService) {
         var Service = $resource('api/latest/plugin', {}, {
             /**

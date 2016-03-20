@@ -10,7 +10,7 @@
 
  * Object.TaskService includes functions for object relate to task.
  */
-angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'StoreService', 'UtilService', 'SearchService', 'Authentication'
+angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Acm.StoreService', 'UtilService', 'SearchService', 'Authentication'
     , function ($resource, $q, Store, Util, SearchService, Authentication) {
         var Service = $resource('api/latest/plugin', {}, {
             /**
