@@ -13,7 +13,7 @@
  * Tree helper uses 'object-tree' directive. Content helper includes component links and data loading. Component helper includes common object info handling
  */
 angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resource', '$translate'
-    , 'StoreService', 'UtilService', 'ConfigService', 'ServCommService'
+    , 'Acm.StoreService', 'UtilService', 'ConfigService', 'ServCommService'
     , function ($q, $resource, $translate, Store, Util, ConfigService, ServCommService) {
 
         var Service = {

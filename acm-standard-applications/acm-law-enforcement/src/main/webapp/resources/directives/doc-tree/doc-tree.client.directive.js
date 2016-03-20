@@ -80,7 +80,7 @@
  </file>
  </example>
  */
-angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', 'StoreService', 'UtilService'
+angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', 'Acm.StoreService', 'UtilService'
     , 'Util.DateService', 'ConfigService', 'LookupService', 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService'
     , function ($q, $translate, $modal, $filter, Store, Util
         , UtilDateService, ConfigService, LookupService, Ecm, EcmEmailService, EcmRecordService) {

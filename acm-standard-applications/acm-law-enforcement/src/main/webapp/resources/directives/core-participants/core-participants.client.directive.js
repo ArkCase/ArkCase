@@ -41,7 +41,7 @@
  </example>
  */
 angular.module('directives').directive('coreParticipants', ['$stateParams', '$q', '$translate', '$modal',
-    'StoreService', 'UtilService', 'ConfigService', 'Case.InfoService', 'LookupService', 'Object.LookupService',
+    'Acm.StoreService', 'UtilService', 'ConfigService', 'Case.InfoService', 'LookupService', 'Object.LookupService',
     'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.ParticipantService',
     function ($stateParams, $q, $translate, $modal
         , Store, Util, ConfigService, CaseInfoService, LookupService, ObjectLookupService

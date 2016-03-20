@@ -10,7 +10,7 @@
 
  * Object.NoteService includes group of REST calls related to note.
  */
-angular.module('services').factory('Object.NoteService', ['$resource', 'StoreService', 'UtilService', '$translate',
+angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.StoreService', 'UtilService', '$translate',
     function ($resource, Store, Util, $translate) {
         var Service = $resource('api/latest/plugin', {}, {
             /**
