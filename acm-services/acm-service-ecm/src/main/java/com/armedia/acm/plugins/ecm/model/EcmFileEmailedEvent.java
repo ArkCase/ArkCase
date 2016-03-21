@@ -11,16 +11,13 @@ import java.util.Date;
  */
 public class EcmFileEmailedEvent extends AcmEvent
 {
-    private static final String OBJECT_TYPE = "FILE";
-    private static final String EVENT_TYPE = "com.armedia.acm.ecm.file.emailed";
-
     public EcmFileEmailedEvent(EcmFile uploaded, Authentication authentication)
     {
         super(uploaded);
 
         setEventDate(new Date());
-        setEventType(EVENT_TYPE);
-        setObjectType(OBJECT_TYPE);
+        setEventType(EcmFileConstants.EVENT_TYPE_FILE_EMAILED);
+        setObjectType(EcmFileConstants.OBJECT_FILE_TYPE);
         setObjectId(uploaded.getFileId());
 
         // Obtains the user id and ip address required for audit events
