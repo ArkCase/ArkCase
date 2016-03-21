@@ -191,7 +191,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         {
             String mimeType = file.getFileMimeType();
 
-            if (mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_XML) && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_URL))
+            if ((mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_XML) && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_URL))  ||
+                    (mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_PNG) && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_SIGNATURE_KEY)))
             {
                 return true;
             }
