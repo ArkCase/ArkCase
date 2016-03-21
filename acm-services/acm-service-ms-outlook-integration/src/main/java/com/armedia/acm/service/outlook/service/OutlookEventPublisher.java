@@ -1,10 +1,13 @@
 package com.armedia.acm.service.outlook.service;
 
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileEmailedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
 import com.armedia.acm.service.outlook.model.CalendarEventAddedEvent;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
+import org.springframework.security.core.Authentication;
 
 public class OutlookEventPublisher implements ApplicationEventPublisherAware
 {
@@ -23,4 +26,10 @@ public class OutlookEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(event);
     }
 
+    public void publishFileEmailedEvent(EcmFile emailedFile, Authentication authentication)
+    {
+        EcmFileEmailedEvent event = new EcmFileEmailedEvent(emailedFile, authentication);
+        event.setSucceeded(true);
+        eventPublisher.publishEvent(event);
+    }
 }
