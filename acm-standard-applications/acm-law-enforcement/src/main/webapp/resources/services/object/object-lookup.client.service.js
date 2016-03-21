@@ -452,22 +452,6 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
 
         /**
          * @ngdoc method
-         * @name getCorrespondenceForms
-         * @methodOf services:Object.LookupService
-         *
-         * @description
-         * Query list of correspondence forms; for backwards compatibility, this returns the case file
-         * correspondence forms.  Since each module could have different correspondence forms, in the future please
-         * call the specific module method.
-         *
-         * @returns {Object} An array returned by $resource
-         */
-        Service.getCorrespondenceForms = function () {
-            return LookupService.getLookup("correspondenceForms");
-        };
-
-        /**
-         * @ngdoc method
          * @name getCaseFileCorrespondenceForms
          * @methodOf services:Object.LookupService
          *
@@ -477,7 +461,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Object} An array returned by $resource
          */
         Service.getCaseFileCorrespondenceForms = function () {
-            return LookupService.getLookup("correspondenceForms");
+            return LookupService.getLookup("caseCorrespondenceForms");
         };
 
         /**
@@ -491,7 +475,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Object} An array returned by $resource
          */
         Service.getComplaintCorrespondenceForms = function () {
-            return LookupService.getLookup("correspondenceForms");
+            return LookupService.getLookup("complaintCorrespondenceForms");
         };
 
         return Service;
