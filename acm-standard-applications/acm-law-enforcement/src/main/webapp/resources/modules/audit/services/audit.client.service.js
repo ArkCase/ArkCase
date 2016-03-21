@@ -10,8 +10,8 @@
  *
  * The BuildUrl is used for building audit report url with given parametars.
  */
-angular.module('audit').factory('AuditController.BuildUrl', ['$sce',
-    function ($sce) {
+angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location', '$browser',
+    function ($sce, $location, $browser) {
         return {
 
             /**
@@ -30,9 +30,11 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce',
              * @param {String} objectType String that represents selected value from audit dropdown(default is ALL)
              * @param {String} objectId String that represents value from text input(default is empty string "")
              * @param {String} dateFormat String that represents pentaho date format
+             * @param {Boolean} useBaseUrl boolean that represent should baseUrl should be generated and sent as parameter
              * @returns {String} Builded url for audit report url that will be shown in iframe
              */
-            getUrl: function (pentahoHost, pentahoPort, auditReportUri, startDate, endDate, objectType, objectId, dateFormat) {
+            getUrl: function (pentahoHost, pentahoPort, auditReportUri, startDate, endDate, objectType, objectId, dateFormat, useBaseUrl) {
+                var useUrl = useBaseUrl || false;
                 var amendedPentahoPort = "";
                 if (pentahoPort && pentahoPort.length > 0) {
                     amendedPentahoPort = pentahoPort;
@@ -46,6 +48,13 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce',
                     + "&objectType=" + objectType
                     + "&objectId=" + objectId
                     + "&dateFormat=" + encodeURIComponent(dateFormat);
+                if (useUrl) {
+                    var absUrl = $location.absUrl();
+                    var baseHref = $browser.baseHref();
+                    var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length)
+                    console.log(appUrl);
+                    reportUrl += "&baseUrl=" + encodeURIComponent(appUrl);
+                }
                 return $sce.trustAsResourceUrl(reportUrl);
             }
         }

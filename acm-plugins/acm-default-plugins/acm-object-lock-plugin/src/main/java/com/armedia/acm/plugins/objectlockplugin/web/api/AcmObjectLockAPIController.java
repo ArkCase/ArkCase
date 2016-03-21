@@ -7,6 +7,7 @@ import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ public class AcmObjectLockAPIController
      * @throws MuleException
      * @throws IOException
      */
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'lock')")
     @RequestMapping(value = {"/api/v1/plugin/{objectType}/{objectId}/lock", "/api/latest/plugin/{objectType}/{objectId}/lock"}, method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmObjectLock lockObject(
@@ -57,6 +59,7 @@ public class AcmObjectLockAPIController
      * @throws MuleException
      * @throws IOException
      */
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'unlock')")
     @RequestMapping(value = {"/api/v1/plugin/{objectType}/{objectId}/lock", "/api/latest/plugin/{objectType}/{objectId}/lock"}, method = RequestMethod.DELETE)
     @ResponseBody
     public String unlockObject(
