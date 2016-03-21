@@ -38,7 +38,7 @@ public class AcmObjectLockAPIController
      * @throws MuleException
      * @throws IOException
      */
-    @PreAuthorize("#objectType != 'CASE_FILE' || hasPermission(#objectId, #objectType, 'lock')")
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'lock')")
     @RequestMapping(value = {"/api/v1/plugin/{objectType}/{objectId}/lock", "/api/latest/plugin/{objectType}/{objectId}/lock"}, method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmObjectLock lockObject(
@@ -59,7 +59,7 @@ public class AcmObjectLockAPIController
      * @throws MuleException
      * @throws IOException
      */
-    @PreAuthorize("#objectType != 'CASE_FILE' || hasPermission(#objectId, #objectType, 'unlock')")
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'unlock')")
     @RequestMapping(value = {"/api/v1/plugin/{objectType}/{objectId}/lock", "/api/latest/plugin/{objectType}/{objectId}/lock"}, method = RequestMethod.DELETE)
     @ResponseBody
     public String unlockObject(
