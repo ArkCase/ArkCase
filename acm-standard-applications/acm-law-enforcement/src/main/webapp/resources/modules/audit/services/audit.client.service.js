@@ -30,7 +30,7 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location'
              * @param {String} objectType String that represents selected value from audit dropdown(default is ALL)
              * @param {String} objectId String that represents value from text input(default is empty string "")
              * @param {String} dateFormat String that represents pentaho date format
-             * @param {String} url String that represents baseUrl of arkcase application
+             * @param {Boolean} useBaseUrl boolean that represent should baseUrl should be generated and sent as parameter
              * @returns {String} Builded url for audit report url that will be shown in iframe
              */
             getUrl: function (pentahoHost, pentahoPort, auditReportUri, startDate, endDate, objectType, objectId, dateFormat, useBaseUrl) {
