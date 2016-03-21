@@ -25,22 +25,23 @@ angular.module('services').factory('Acm.AppService', ['$location', 'Acm.StoreSer
              * @methodOf services:Acm.AppService
              *
              * @description
-             * Return current context name of current app. For example, if the url is http://localhost:8080/arkcase/home.html#!/dashboard
-             * The app context name is 'arkcase'
+             * Return current context name of current app.
+             * For example, if the url is http://localhost:8080/home.html#!/dashboard, The app context name is '/'
+             * If the url is http://localhost:8080/arkcase/home.html#!/dashboard, The app context name is 'arkcase'
              */
             , getAppContext: function () {
                 var cacheAppContext = new Store.SessionData(Service.SessionCacheNames.APP_CONTEXT);
                 var appContext = cacheAppContext.get();
                 if (Util.isEmpty(appContext)) {
+                    var host = $location.host();
                     var str = $location.absUrl();
+                    var idxHost = str.indexOf(host);
                     var idxHome = str.indexOf("/home.html");
-                    if (0 < idxHome) {
-                        str = str.substring(0, idxHome);
+                    if (idxHost < idxHome) {
+                        str = str.substring(idxHost, idxHome);
                         var idxSlash = str.lastIndexOf("/");
-                        if (0 < idxSlash) {
-                            appContext = str.substring(idxSlash + 1);
-                            cacheAppContext.set(appContext);
-                        }
+                        appContext = (0 > idxSlash)? "/" : str.substring(idxSlash + 1);
+                        cacheAppContext.set(appContext);
                     }
                 }
                 return appContext;
@@ -53,10 +54,23 @@ angular.module('services').factory('Acm.AppService', ['$location', 'Acm.StoreSer
              *
              * @description
              * Prefix partial url with app context.
-             * For example, with app context 'arkcase', input '/some/url' becomes '/arkcase/some/url'.
+             * For example:
+             * With app context 'arkcase', input '/some/url' or 'some/url' becomes '/arkcase/some/url'.
+             * With app context '/', input '/some/url' or 'some/url' becomes '/some/url'.
              */
             , getAppUrl: function (url) {
-                return "/" + Service.getAppContext() + url;
+                var appUrl = "";
+                var appContext = Service.getAppContext();
+                if (!Util.isEmpty(appContext)) {
+                    if ("/" != appContext) {
+                        appUrl = "/" + appContext;
+                    }
+                    if (0 != url.indexOf("/")) {
+                        appUrl += "/";
+                    }
+                    appUrl += url;
+                }
+                return appUrl;
             }
 
         };
