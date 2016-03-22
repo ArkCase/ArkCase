@@ -1,10 +1,12 @@
 'use strict';
 
-angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', '$q', '$state', 'StoreService', 'Authentication'
-    , 'ConfigService', 'LookupService', 'Object.LookupService', 'Case.LookupService', 'Complaint.LookupService', '$browser'
-    , function ($scope, $window, $q, $state, Store, Authentication
-        , ConfigService, LookupService, ObjectLookupService, CaseLookupService, ComplaintLookupService, $browser) {
-
+angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', '$q', '$state'
+    , 'StoreService', 'Authentication', 'ConfigService', 'UtilService', 'LookupService', 'Object.LookupService'
+    , 'Case.LookupService', 'Complaint.LookupService', 'Acm.LoginStatService'
+    , function ($scope, $window, $q, $state
+        , Store, Authentication, ConfigService, Util, LookupService, ObjectLookupService
+        , CaseLookupService, ComplaintLookupService, AcmLoginStatService
+    ) {
         var sessionCacheNamesList = [
             Authentication.SessionCacheNames
             , ConfigService.SessionCacheNames
@@ -25,6 +27,7 @@ angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', 
         var appConfig = LookupService.getConfig('app').then(function (data) {
             // redirect to login page
             $window.location.href = data['logoutUrl'];
-        });        
+        });
+        AcmLoginStatService.setLogin(false);
     }
 ]);

@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/directives/doc-tree/doc-tree.client.directive.js directives/doc-tree/doc-tree.client.directive.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree.client.directive.js directives/doc-tree/doc-tree.client.directive.js}
  *
  * The docTree directive renders a FancyTree to browse ArkCase objects with support of paging, filter and sort
  *
@@ -23,7 +23,8 @@
  * "disable" to disable the command; Anything else or undefined means the command will be show as normal.
  * @param {Function} on-pre-cmd (Optional)Callback function before a command is executed to give doc tree
  * consumer to run additional code before the command is executed or to override implemented command.
- * Return "fasle" prevents the command execution; "true" or "undefined" to continue the command
+ * Return "fasle" prevents the command execution; "true" or "undefined" to continue the command.
+ * It also accepts promise as return. In that case, promise resolution of "false" prevents command execution.
  * @param {Function} on-post-cmd (Optional)Callback function after a command is executed to give doc tree
  * consumer to run additional code after the command is executed.
  * @param {Object} tree-control Tree API functions exposed to user. Following is the list:
@@ -857,9 +858,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
             , Command: {
                 onCommand: function (event, data) {
-                    var refNode;
-                    var moveMode;
-                    //var tree = $(this).fancytree("getTree");
                     var tree = DocTree.tree;
                     var selNodes = tree.getSelectedNodes();
                     var node = tree.getActiveNode();
@@ -873,11 +871,24 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     var actNodes = (batch)? selNodes : [node];
 
-
-                    //prevent command if return "false"; contine when return "true" or "undefined"
-                    if (!Util.goodValue(DocTree.Command.onPreCmd(data.cmd, actNodes), true)) {
-                        return;
+                    //prevent command process if return "false"; continue when return "true", "undefined" or anything else
+                    var rc = DocTree.Command.onPreCmd(data.cmd, actNodes);
+                    if (false !== rc) {
+                        $q.all([rc]).then(function(preCmdData) {
+                            if (false !== preCmdData[0]) {
+                                DocTree.Command._processCommand(event, data, node, selNodes, batch, actNodes);
+                            }
+                        });
                     }
+
+                }
+                , _processCommand: function (event, data, node, selNodes, batch, actNodes) {
+                    var refNode;
+                    var moveMode;
+
+                    //if (!Util.goodValue(DocTree.Command.onPreCmd(data.cmd, actNodes), true)) {
+                    //    return;
+                    //}
 
                     switch (data.cmd) {
                         case "moveUp":
@@ -1010,6 +1021,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             break;
                         case "declare":
                             var declareAsRecordData = [];
+                            var nodesToDeclare = (batch) ? selNodes : [node];
                             for (var i = 0; i < actNodes.length; i++) {
                                 var declareAsRecord = {};
                                 declareAsRecord.id = Util.goodValue(actNodes[i].data.objectId);
@@ -2439,6 +2451,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 nodes[j].renderTitle();
                             }
                         }
+                        DocTree.refreshTree();
                         return data;
                     });
                 }
