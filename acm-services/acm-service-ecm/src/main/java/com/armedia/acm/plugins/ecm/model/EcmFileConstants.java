@@ -59,10 +59,12 @@ public interface EcmFileConstants
 	String INVALID_CHARACTERS_IN_FOLDER_NAME_REPLACEMENT = "_";
 	
 	/**
-	 * These two properties we need for searching them in mimeType property for the file
+	 * These four properties we need for searching them in mimeType property for the file
 	 */
 	String MIME_TYPE_XML = "text/xml";
 	String MIME_TYPE_FREVVO_URL = "www.frevvo.com";
+    String MIME_TYPE_PNG = "image/png";
+    String MIME_TYPE_FREVVO_SIGNATURE_KEY = "frevvo-signature-image=true";
 
     String OBJECT_FILE_TYPE = "FILE";
 
