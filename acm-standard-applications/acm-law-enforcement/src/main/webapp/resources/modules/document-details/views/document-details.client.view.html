@@ -1,76 +1,76 @@
 <section ng-controller="DocumentDetailsController">
-	<div class="module-content">
-		<div class="module-header">
-			<div class="well-sm clearfix">
-				<div class="col-sm-8">
-					<div class="col-sm-3">
-						<div>
-							<label><span translate>documentDetails.name</span></label>
-							{{ecmFile.fileName || 'Unknown'}}
-						</div>
-					</div>
-					<div class="col-sm-3">
-						<div>
-							<label><span translate>documentDetails.creator</span></label>
-							{{::ecmFile.creator | mapKeyValue: userList:'object_id_s':'name' || 'Unknown'}}
-						</div>
-					</div>
-					<div class="col-sm-3">
-						<div class="no-underline-and-blue-color">
-							<label><span translate>documentDetails.created</span></label>
-							{{::ecmFile.created | date: "MM/dd/yyyy" || 'Unknown'}}
-						</div>
-					</div>
-					<div class="col-sm-3">
-						<!--<div>
-							<label><span translate>documentDetails.assignee</span></label>
-							{{::assignee | mapKeyValue: userList:'object_id_s':'name' || 'Unknown'}}
-						</div>-->
-					</div>
-					<div class="col-sm-3">
-						<div>
-							<label><span translate>documentDetails.fileType</span></label>
-							{{ecmFile.fileType || 'Unknown'}}
-						</div>
-					</div>
-					<div class="col-sm-3">
-						<div>
-							<label><span translate>documentDetails.status</span></label>
-							{{ecmFile.status || 'Unknown'}}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+    <div class="module-content">
+        <div class="module-header">
+            <div class="well-sm clearfix">
+                <div class="col-sm-8">
+                    <div class="col-sm-3">
+                        <div>
+                            <label><span translate>documentDetails.name</span></label>
+                            {{ecmFile.fileName || 'Unknown'}}
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div>
+                            <label><span translate>documentDetails.creator</span></label>
+                            {{::ecmFile.creator | mapKeyValue: userList:'object_id_s':'name' || 'Unknown'}}
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="no-underline-and-blue-color">
+                            <label><span translate>documentDetails.created</span></label>
+                            {{::ecmFile.created | date: defaultDatePickerFormat || 'Unknown'}}
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <!--<div>
+                            <label><span translate>documentDetails.assignee</span></label>
+                            {{::assignee | mapKeyValue: userList:'object_id_s':'name' || 'Unknown'}}
+                        </div>-->
+                    </div>
+                    <div class="col-sm-3">
+                        <div>
+                            <label><span translate>documentDetails.fileType</span></label>
+                            {{ecmFile.fileType || 'Unknown'}}
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div>
+                            <label><span translate>documentDetails.status</span></label>
+                            {{ecmFile.status || 'Unknown'}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-		<div class="content-body well-sm">
-			<div ng-include="'modules/document-details/views/document-viewer.client.view.html'"></div>
-		</div>
-		<div class="right-sidebar well-sm">
-			<ng-form name="docDetails" novalidate>
-				<tabset>
-					<tab heading="{{'documentDetails.comp.versionHistory.title' | translate}}">
-						<div ng-include="'modules/document-details/views/components/version-history.client.view.html'"></div>
-					</tab>
+        <div class="content-body well-sm">
+            <div ng-include="'modules/document-details/views/document-viewer.client.view.html'"></div>
+        </div>
+        <div class="right-sidebar well-sm">
+            <ng-form name="docDetails" novalidate>
+                <tabset>
+                    <tab heading="{{'documentDetails.comp.versionHistory.title' | translate}}">
+                        <div ng-include="'modules/document-details/views/components/version-history.client.view.html'"></div>
+                    </tab>
 
-					<tab heading="{{'documentDetails.comp.eventHistory.title' | translate}}">
-						<div ng-include="'modules/document-details/views/components/event-history.client.view.html'"></div>
-					</tab>
+                    <tab heading="{{'documentDetails.comp.eventHistory.title' | translate}}">
+                        <div ng-include="'modules/document-details/views/components/event-history.client.view.html'"></div>
+                    </tab>
 
-					<tab heading="{{'documentDetails.comp.notes.title' | translate}}">
-						<div ng-include="'modules/document-details/views/components/notes.client.view.html'"></div>
-					</tab>
+                    <tab heading="{{'documentDetails.comp.notes.title' | translate}}">
+                        <div ng-include="'modules/document-details/views/components/notes.client.view.html'"></div>
+                    </tab>
 
-					<tab heading="{{'documentDetails.comp.participants.title' | translate}}">
-						<div ng-include="'modules/document-details/views/components/participants.client.view.html'"></div>
-					</tab>
+                    <tab heading="{{'documentDetails.comp.participants.title' | translate}}">
+                        <div ng-include="'modules/document-details/views/components/participants.client.view.html'"></div>
+                    </tab>
 
-					<tab heading="{{'documentDetails.comp.tags.title' | translate}}">
-						<div ng-include="'modules/document-details/views/components/tags.client.view.html'"></div>
-					</tab>
+                    <tab heading="{{'documentDetails.comp.tags.title' | translate}}">
+                        <div ng-include="'modules/document-details/views/components/tags.client.view.html'"></div>
+                    </tab>
 
-				</tabset>
-			</ng-form>
-		</div>
-	</div>
+                </tabset>
+            </ng-form>
+        </div>
+    </div>
 </section>
