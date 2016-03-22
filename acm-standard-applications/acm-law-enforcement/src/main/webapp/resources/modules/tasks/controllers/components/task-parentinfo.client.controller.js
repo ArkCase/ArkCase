@@ -2,10 +2,10 @@
 
 angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService'
-    , 'Object.ModelService', 'LookupService', 'Helper.ObjectBrowserService', '$log'
+    , 'Object.ModelService', 'LookupService', 'Helper.ObjectBrowserService', '$log', 'Util.DateService'
     , function ($scope, $stateParams
         , Util, ConfigService, ObjectService, CaseInfoService, ComplaintInfoService, TaskInfoService
-        , ObjectModelService, LookupService, HelperObjectBrowserService, $log) {
+        , ObjectModelService, LookupService, HelperObjectBrowserService, $log, UtilDateService) {
 
         new HelperObjectBrowserService.Component({
             moduleId: "tasks"
@@ -30,7 +30,7 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
             }
         );
 
-        $scope.onClickTitle = function() {
+        $scope.onClickTitle = function () {
             if ($scope.parentCaseInfo) {
                 ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, $scope.parentCaseInfo.id);
             } else if ($scope.parentComplaintInfo) {
@@ -40,6 +40,7 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
             }
         };
 
+        $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
