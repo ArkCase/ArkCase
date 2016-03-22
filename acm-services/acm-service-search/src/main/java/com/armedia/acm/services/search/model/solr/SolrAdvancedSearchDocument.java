@@ -114,8 +114,10 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     private List<String> groups_id_ss;
     private boolean adhocTask_b;
     private String owner_lcs;
-    private String business_process_name_lcs;
 
+    ////////////// for business process tasks /////////
+    private String business_process_name_lcs;
+    private String business_process_id_s;
 
     /////////////////////// for content files /////////////////////////////////////////
     private String content_type;
@@ -646,6 +648,16 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         return business_process_name_lcs;
     }
 
+    public String getBusiness_process_id_s()
+    {
+        return business_process_id_s;
+    }
+
+    public void setBusiness_process_id_s(String business_process_id_s)
+    {
+        this.business_process_id_s = business_process_id_s;
+    }
+
     public boolean isPublic_doc_b()
     {
         return public_doc_b;
@@ -828,6 +840,7 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
                 ", adhocTask_b=" + adhocTask_b +
                 ", owner_lcs='" + owner_lcs + '\'' +
                 ", business_process_name_lcs='" + business_process_name_lcs + '\'' +
+                ", business_process_id_s='" + business_process_id_s + '\'' +
                 ", content_type='" + content_type + '\'' +
                 ", ecmFileId='" + ecmFileId + '\'' +
                 ", tags_ss=" + tags_ss +

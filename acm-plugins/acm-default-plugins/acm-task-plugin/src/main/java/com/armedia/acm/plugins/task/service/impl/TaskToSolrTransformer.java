@@ -81,6 +81,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setAdhocTask_b(in.isAdhocTask());
         doc.setOwner_lcs(in.getOwner());
         doc.setBusiness_process_name_lcs(in.getBusinessProcessName());
+        doc.setBusiness_process_id_s(Long.toString(in.getBusinessProcessId()));
 
         doc.setAdditionalProperty("candidate_group_ss", in.getCandidateGroups());
 
@@ -126,6 +127,8 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
             doc.setParent_object_id_i(in.getAttachedToObjectId());
             doc.setParent_ref_s(Long.toString(in.getAttachedToObjectId()) + "-" + in.getAttachedToObjectType());
         }
+        doc.setBusiness_process_name_lcs(in.getBusinessProcessName());
+        doc.setBusiness_process_id_s(Long.toString(in.getBusinessProcessId()));
         doc.setDue_tdt(in.getDueDate());
         doc.setAdhocTask_b(in.isAdhocTask());
         doc.setObject_type_s("TASK");

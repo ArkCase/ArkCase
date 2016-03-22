@@ -310,27 +310,8 @@ public class ActivitiTaskDao implements TaskDao
         verifyUserIsTheAssignee(taskId, user, existingTask);
 
         AcmTask retval = acmTaskFromActivitiTask(existingTask);
-
-        try
-        {
-            getActivitiTaskService().deleteTask(strTaskId);
-
-            HistoricTaskInstance hti =
-                    getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(strTaskId).singleResult();
-
-            retval.setTaskStartDate(hti.getStartTime());
-            retval.setTaskFinishedDate(hti.getEndTime());
-            retval.setTaskDurationInMillis(hti.getDurationInMillis());
-            retval.setCompleted(true);
-            String status = findTaskStatus(hti, true);
-            retval.setStatus(status);
-
-            return retval;
-        } catch (ActivitiException e)
-        {
-            log.error("Could not close task '" + taskId + "' for user '" + user + "': " + e.getMessage(), e);
-            throw new AcmTaskException(e);
-        }
+        retval = deleteTask(retval, user, null);
+        return retval;
     }
 
     protected void verifyCompleteTaskArgs(Principal userThatCompletedTheTask, Long taskId)
@@ -731,6 +712,15 @@ public class ActivitiTaskDao implements TaskDao
 
     private String findTaskStatus(HistoricTaskInstance historicTaskInstance)
     {
+        if (isTaskTerminated(historicTaskInstance))
+        {
+            return TaskConstants.STATE_TERMINATED;
+        }
+        return historicTaskInstance.getEndTime() == null ? TaskConstants.STATE_ACTIVE : TaskConstants.STATE_CLOSED;
+    }
+
+    private boolean isTaskTerminated(HistoricTaskInstance historicTaskInstance)
+    {
         //EDTRM-670	- All tasks should be marked "TERMINATED" instead of "CLOSED"
         //tasks belonging to a "TERMINATED" process will have delete reason set to "TERMINATED"
         if (historicTaskInstance.getDeleteReason() != null && historicTaskInstance.getEndTime() != null
@@ -747,15 +737,19 @@ public class ActivitiTaskDao implements TaskDao
                 Date taskTerminatedDateTime = DateUtils.round(historicTaskInstance.getEndTime(), Calendar.SECOND);
                 if (processTerminatedDateTime.equals(taskTerminatedDateTime))
                 {
-                    return TaskConstants.STATE_TERMINATED;
+                    return true;
                 }
             }
         }
-        return historicTaskInstance.getEndTime() == null ? TaskConstants.STATE_ACTIVE : TaskConstants.STATE_CLOSED;
+        return false;
     }
 
     private String findTaskStatus(HistoricTaskInstance historicTaskInstance, Boolean deleted)
     {
+        if (isTaskTerminated(historicTaskInstance))
+        {
+            return TaskConstants.STATE_TERMINATED;
+        }
         return historicTaskInstance.getEndTime() == null ? TaskConstants.STATE_ACTIVE : TaskConstants.STATE_DELETED;
     }
 
@@ -812,6 +806,31 @@ public class ActivitiTaskDao implements TaskDao
             acmTask.setTaskDurationInMillis(hti.getDurationInMillis());
             acmTask.setCompleted(true);
             String status = findTaskStatus(hti);
+            acmTask.setStatus(status);
+
+            return acmTask;
+        } catch (ActivitiException e)
+        {
+            log.error("Could not close task '" + strTaskId + "' for user '" + user + "': " + e.getMessage(), e);
+            throw new AcmTaskException(e);
+        }
+    }
+
+    protected AcmTask deleteTask(AcmTask acmTask, String user, String deleteReason) throws AcmTaskException
+    {
+        String strTaskId = String.valueOf(acmTask.getId());
+        try
+        {
+            getActivitiTaskService().deleteTask(strTaskId, deleteReason);
+
+            HistoricTaskInstance hti =
+                    getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(strTaskId).singleResult();
+
+            acmTask.setTaskStartDate(hti.getStartTime());
+            acmTask.setTaskFinishedDate(hti.getEndTime());
+            acmTask.setTaskDurationInMillis(hti.getDurationInMillis());
+            acmTask.setCompleted(true);
+            String status = findTaskStatus(hti, true);
             acmTask.setStatus(status);
 
             return acmTask;
