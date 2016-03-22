@@ -10,7 +10,7 @@
 
  * Object.TimeService includes functions for object relate to time.
  */
-angular.module('services').factory('Object.TimeService', ['$resource', '$q', 'StoreService', 'UtilService', 'Object.ListService', 'Authentication'
+angular.module('services').factory('Object.TimeService', ['$resource', '$q', 'Acm.StoreService', 'UtilService', 'Object.ListService', 'Authentication'
     , function ($resource, $q, Store, Util, ObjectListService, Authentication) {
         var Service = $resource('api/latest/service', {}, {
             /**

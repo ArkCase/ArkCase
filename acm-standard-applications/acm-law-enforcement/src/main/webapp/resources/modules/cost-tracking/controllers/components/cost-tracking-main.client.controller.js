@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cost-tracking').controller('CostTracking.MainController', ['$scope', '$translate', 'dashboard', 'Dashboard.DashboardService',
-    'UtilService', 'CostTracking.InfoService', 'ConfigService', 'StoreService',
+    'UtilService', 'CostTracking.InfoService', 'ConfigService', 'Acm.StoreService',
     function ($scope, $translate, dashboard, DashboardService, Util, CostTrackingInfoService, ConfigService, Store) {
 
         ConfigService.getComponentConfig("cost-tracking", "main").then(function (componentConfig) {

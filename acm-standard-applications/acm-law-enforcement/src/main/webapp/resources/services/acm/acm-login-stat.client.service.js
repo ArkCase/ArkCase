@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name services.service:LoginStatService
+ * @name services:Acm.LoginStatService
  *
  * @description
  *
@@ -11,7 +11,7 @@
  * This service is used to hold login information, for example login status, idle time, error statistics, etc.
  */
 
-angular.module('services').factory('Acm.LoginStatService', ['StoreService', 'UtilService'
+angular.module('services').factory('Acm.LoginStatService', ['Acm.StoreService', 'UtilService'
     , function (Store, Util) {
         var Service = {
             LocalCacheNames: {
@@ -21,7 +21,7 @@ angular.module('services').factory('Acm.LoginStatService', ['StoreService', 'Uti
             /**
              * @ngdoc method
              * @name isLogin
-             * @methodOf services.service:LoginStatService
+             * @methodOf services:Acm.LoginStatService
              *
              * @description
              * Return boolean to indicate if current session is in login status
@@ -35,7 +35,7 @@ angular.module('services').factory('Acm.LoginStatService', ['StoreService', 'Uti
             /**
              * @ngdoc method
              * @name setLogin
-             * @methodOf services.service:LoginStatService
+             * @methodOf services:Acm.LoginStatService
              *
              * @param {Boolean} status Login status as boolean. true if login; false if logout
              *
