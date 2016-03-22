@@ -2,8 +2,11 @@
 
 angular.module('welcome').controller('WelcomeController', ['$scope', '$q', '$state', 'StoreService', 'Authentication'
     , 'ConfigService', 'LookupService', 'Object.LookupService', 'Case.LookupService', 'Complaint.LookupService'
+    , 'Acm.LoginStatService'
     , function ($scope, $q, $state, Store, Authentication
-        , ConfigService, LookupService, ObjectLookupService, CaseLookupService, ComplaintLookupService) {
+        , ConfigService, LookupService, ObjectLookupService, CaseLookupService, ComplaintLookupService
+        , AcmLoginStatService
+    ) {
 
         var sessionCacheNamesList = [
             Authentication.SessionCacheNames
@@ -21,6 +24,7 @@ angular.module('welcome').controller('WelcomeController', ['$scope', '$q', '$sta
             });
         }
 
+        AcmLoginStatService.setLogin(true);
 
         $state.go("dashboard");
     }

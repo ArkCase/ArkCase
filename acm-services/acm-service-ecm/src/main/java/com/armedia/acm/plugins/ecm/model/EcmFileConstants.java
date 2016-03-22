@@ -70,7 +70,7 @@ public interface EcmFileConstants
 
     String EVENT_TYPE_TAG_UPDATE = "com.armedia.acm.tag.updated";
     String EVENT_TYPE_ACTIVE_VERSION_SET = "com.armedia.acm.file.version.set";
-
+    String EVENT_TYPE_FILE_EMAILED = "com.armedia.acm.ecm.file.emailed";
 
     String CMIS_OBJECT_ID = "cmisObjectId";
     String SRC_FOLDER_ID = "srcFolderId";

@@ -182,9 +182,14 @@
                     <property name="json" ref="contactMethodTypesJsonConfig"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="correspondenceForms"/>
-                    <property name="configDescription" value="Correspondence Forms"/>
-                    <property name="json" ref="correspondenceFormsJsonConfig"/>
+                    <property name="configName" value="caseCorrespondenceForms"/>
+                    <property name="configDescription" value="Case Correspondence Forms"/>
+                    <property name="json" ref="caseCorrespondenceFormsJsonConfig"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="complaintCorrespondenceForms"/>
+                    <property name="configDescription" value="Complaint Correspondence Forms"/>
+                    <property name="json" ref="complaintCorrespondenceFormsJsonConfig"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.JsonConfig">
                     <property name="configName" value="fileTypes"/>
