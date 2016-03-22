@@ -10,7 +10,7 @@
 
  * TimeTracking.InfoService provides functions for Timesheet database data
  */
-angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$translate', 'StoreService', 'UtilService',
+angular.module('services').factory('TimeTracking.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService',
     function ($resource, $translate, Store, Util) {
         var Service = $resource('api/v1/service/timesheet', {}, {
 

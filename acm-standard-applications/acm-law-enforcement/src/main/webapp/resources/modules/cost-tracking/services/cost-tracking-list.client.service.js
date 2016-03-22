@@ -11,7 +11,7 @@
  * CostTracking.ListService provides functions for Costsheet database data
  */
 angular.module('services').factory('CostTracking.ListService', ['$resource', '$translate'
-    , 'StoreService', 'UtilService', 'ObjectService', 'Object.ListService'
+    , 'Acm.StoreService', 'UtilService', 'ObjectService', 'Object.ListService'
     , function ($resource, $translate, Store, Util, ObjectService, ObjectListService) {
         var Service = $resource('api/v1/service/costsheet', {}, {
 

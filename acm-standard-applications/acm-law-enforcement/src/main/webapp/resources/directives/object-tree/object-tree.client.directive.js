@@ -137,7 +137,7 @@
  </file>
  </example>
  */
-angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilService', 'StoreService',
+angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilService', 'Acm.StoreService',
     function ($q, $translate, Util, Store) {
         var Tree = {
             create: function (treeArgs) {

@@ -10,7 +10,7 @@
 
  * Object.CorrespondenceService includes group of REST calls related to correspondence.
  */
-angular.module('services').factory('Object.CorrespondenceService', ['$resource', 'StoreService', 'UtilService',
+angular.module('services').factory('Object.CorrespondenceService', ['$resource', 'Acm.StoreService', 'UtilService',
     function ($resource, Store, Util) {
         var Service = $resource('api/latest/plugin', {}, {
             /**

@@ -10,7 +10,7 @@
 
  * Object.CalendarService includes group of REST calls to retrieve and save Calendar info;
  */
-angular.module('services').factory('Object.CalendarService', ['$resource', 'UtilService', 'StoreService',
+angular.module('services').factory('Object.CalendarService', ['$resource', 'UtilService', 'Acm.StoreService',
     function ($resource, Util, Store) {
         var Service = this;
         Service.SessionCacheNames = {};

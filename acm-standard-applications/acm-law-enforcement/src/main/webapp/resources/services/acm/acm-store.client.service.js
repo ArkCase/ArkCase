@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc service
- * @name services.service:StoreService
+ * @name services:Acm.StoreService
  *
  * @description
  *
@@ -10,12 +10,12 @@
  *
  * This service package contains objects and functions for data storage
  */
-angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
+angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilService',
     function ($rootScope, Util) {
         var Store = {
             /**
              * @ngdoc service
-             * @name StoreService.Variable
+             * @name Acm.StoreService.Variable
              *
              * @description
              *
@@ -26,7 +26,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name Constructor
-             * @methodOf StoreService.Variable
+             * @methodOf Acm.StoreService.Variable
              *
              * @param {String} name Name
              * @param {Object} initValue Initial value
@@ -50,7 +50,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
 
             /**
              * @ngdoc service
-             * @name StoreService.SessionData
+             * @name Acm.StoreService.SessionData
              *
              * @description
              *
@@ -61,7 +61,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name Constructor
-             * @methodOf StoreService.SessionData
+             * @methodOf Acm.StoreService.SessionData
              *
              * @param {String} name (Optional)Name. If not provided, a random name is generated for use
              *
@@ -79,7 +79,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
 
             /**
              * @ngdoc service
-             * @name StoreService.LocalData
+             * @name Acm.StoreService.LocalData
              *
              * @description
              *
@@ -90,7 +90,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name Constructor
-             * @methodOf StoreService.LocalData
+             * @methodOf Acm.StoreService.LocalData
              *
              * @param {String} name (Optional)Name. If not provided, a random name is generated for use
              *
@@ -108,7 +108,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
 
             /**
              * @ngdoc service
-             * @name StoreService.CacheFifo
+             * @name Acm.StoreService.CacheFifo
              *
              * @description
              *
@@ -120,7 +120,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name Constructor
-             * @methodOf StoreService.CacheFifo
+             * @methodOf Acm.StoreService.CacheFifo
              *
              * @param {Object} arg Argument. It can be an object or a name string. If a string, it is equivalent to {name: arg}
              * @param {String} arg.name (Optional)Name. If not provided, a random name is generated for use
@@ -159,7 +159,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name get
-             * @methodOf StoreService.Variable
+             * @methodOf Acm.StoreService.Variable
              *
              * @description
              * Get value of a Variable.
@@ -177,7 +177,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name set
-             * @methodOf StoreService.Variable
+             * @methodOf Acm.StoreService.Variable
              *
              * @param {Object} value Value to set
              *
@@ -199,7 +199,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name getName
-             * @methodOf StoreService.SessionData
+             * @methodOf Acm.StoreService.SessionData
              *
              * @description
              * Get name of a SessionData reference object.
@@ -211,7 +211,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name get
-             * @methodOf StoreService.SessionData
+             * @methodOf Acm.StoreService.SessionData
              *
              * @description
              * Get value of a SessionData reference object.
@@ -233,7 +233,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name set
-             * @methodOf StoreService.SessionData
+             * @methodOf Acm.StoreService.SessionData
              *
              * @param {Object} data Value to set
              *
@@ -259,7 +259,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name getName
-             * @methodOf StoreService.LocalData
+             * @methodOf Acm.StoreService.LocalData
              *
              * @description
              * Get name of a v reference object.
@@ -271,7 +271,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name get
-             * @methodOf StoreService.LocalData
+             * @methodOf Acm.StoreService.LocalData
              *
              * @description
              * Get value of a LocalData reference object.
@@ -294,7 +294,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name set
-             * @methodOf StoreService.LocalData
+             * @methodOf Acm.StoreService.LocalData
              *
              * @param {Object} data Value to set
              *
@@ -326,7 +326,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name get
-             * @methodOf StoreService.CacheFifo
+             * @methodOf Acm.StoreService.CacheFifo
              *
              * @param {Object} key Key to cache
              *
@@ -371,7 +371,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name put
-             * @methodOf StoreService.CacheFifo
+             * @methodOf Acm.StoreService.CacheFifo
              *
              * @param {Object} key Key to cache
              * @param {Object} item Value to set
@@ -450,7 +450,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name remove
-             * @methodOf StoreService.CacheFifo
+             * @methodOf Acm.StoreService.CacheFifo
              *
              * @param {Object} key Key to cache
              *
@@ -505,7 +505,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name reset
-             * @methodOf StoreService.CacheFifo
+             * @methodOf Acm.StoreService.CacheFifo
              *
              * @description
              * Reset CacheFifo.
@@ -529,7 +529,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name keys
-             * @methodOf StoreService.CacheFifo
+             * @methodOf Acm.StoreService.CacheFifo
              *
              * @description
              * Return keys in array of CacheFifo.
@@ -568,7 +568,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name lock
-             * @methodOf StoreService.CacheFifo
+             * @methodOf Acm.StoreService.CacheFifo
              *
              * @param {Object} key Key to cache
              *
@@ -584,7 +584,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name unlock
-             * @methodOf StoreService.CacheFifo
+             * @methodOf Acm.StoreService.CacheFifo
              *
              * @param {Object} key Key to cache
              *
@@ -605,7 +605,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name isLock
-             * @methodOf StoreService.CacheFifo
+             * @methodOf Acm.StoreService.CacheFifo
              *
              * @param {Object} key Key to cache
              *
@@ -626,7 +626,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name getMaxSize
-             * @methodOf StoreService.CacheFifo
+             * @methodOf Acm.StoreService.CacheFifo
              *
              * @description
              * Get maxSize of CacheFifo setting.
@@ -640,7 +640,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name setMaxSize
-             * @methodOf StoreService.CacheFifo
+             * @methodOf Acm.StoreService.CacheFifo
              *
              * @param {Number} maxSize Max size
              *
@@ -656,7 +656,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name getExpiration
-             * @methodOf StoreService.CacheFifo
+             * @methodOf Acm.StoreService.CacheFifo
              *
              * @description
              * Get expiration of CacheFifo setting.
@@ -670,7 +670,7 @@ angular.module('services').factory('StoreService', ['$rootScope', 'UtilService',
             /**
              * @ngdoc method
              * @name setExpiration
-             * @methodOf StoreService.CacheFifo
+             * @methodOf Acm.StoreService.CacheFifo
              *
              * @param {Number} expiration Expiration in milliseconds
              *

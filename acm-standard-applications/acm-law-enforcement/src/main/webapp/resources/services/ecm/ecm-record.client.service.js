@@ -10,7 +10,7 @@
 
  * Record service for ECM.
  */
-angular.module('services').factory('Ecm.RecordService', ['$resource', 'StoreService', 'UtilService'
+angular.module('services').factory('Ecm.RecordService', ['$resource', 'Acm.StoreService', 'UtilService'
     , function ($resource, Store, Util) {
 
         var Service = $resource('api/latest/service', {}, {
