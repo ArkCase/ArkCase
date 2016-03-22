@@ -1,11 +1,15 @@
 package com.armedia.acm.services.users.service.ldap;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.model.AcmLdapEntity;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,9 +22,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by armdev on 7/3/14.
@@ -63,7 +64,7 @@ public class LdapSyncServiceTest extends EasyMockSupport
 
         String userDnOne = "dn1";
         String userDnTwo = "dn2";
-        String[] memberDns = {userDnOne, userDnTwo};
+        String[] memberDns = { userDnOne, userDnTwo };
         LdapGroup group = new LdapGroup();
         group.setGroupName(groupOne.toLowerCase());
         group.setMemberDistinguishedNames(memberDns);
@@ -77,6 +78,8 @@ public class LdapSyncServiceTest extends EasyMockSupport
         userTwo.setDistinguishedName(userDnTwo);
 
         List<AcmLdapEntity> entities = Arrays.asList(userOne, userTwo);
+
+        unit.setLdapSyncConfig(new AcmLdapSyncConfig());
 
         expect(mockLdapDao.buildLdapTemplate(config)).andReturn(mockLdapTemplate);
         expect(mockLdapDao.findGroups(mockLdapTemplate, config)).andReturn(groups);
@@ -112,7 +115,7 @@ public class LdapSyncServiceTest extends EasyMockSupport
 
         String userDistinguishedName = "dn1";
         String groupDistinguishedName = "dn2";
-        String[] memberDns = {userDistinguishedName, groupDistinguishedName};
+        String[] memberDns = { userDistinguishedName, groupDistinguishedName };
         LdapGroup group = new LdapGroup();
         group.setGroupName(groupName);
         group.setMemberDistinguishedNames(memberDns);
@@ -127,6 +130,8 @@ public class LdapSyncServiceTest extends EasyMockSupport
         role.setDistinguishedName(groupDistinguishedName);
 
         List<AcmLdapEntity> entities = Arrays.asList(user, role);
+
+        unit.setLdapSyncConfig(new AcmLdapSyncConfig());
 
         expect(mockLdapDao.buildLdapTemplate(config)).andReturn(mockLdapTemplate);
         expect(mockLdapDao.findGroups(mockLdapTemplate, config)).andReturn(groups);
@@ -166,7 +171,6 @@ public class LdapSyncServiceTest extends EasyMockSupport
 
         assertEquals(1, usersByApplicationRole.size());
         assertEquals(1, usersByLdapGroup.size());
-
 
     }
 }
