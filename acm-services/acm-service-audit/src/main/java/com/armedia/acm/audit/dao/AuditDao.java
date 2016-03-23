@@ -76,23 +76,28 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         return findAudits.getResultList();
     }
 
-    public List<AuditEvent> findPagedResults(Long objectId, String objectType, int startRow, int maxRows)
+    public List<AuditEvent> findPagedResults(Long objectId, String objectType, int startRow, int maxRows, List<String> eventTypes)
     {
         String queryText =
                 "SELECT ae " +
                         "FROM   AuditEvent ae " +
-                        "WHERE  ae.objectType = :objectType " +
-                        "AND    ae.objectId = :objectId " +
-                        "AND	ae.status != 'DELETE' " +
+                        "WHERE  ae.status != 'DELETE' " +
+                        "AND ((ae.objectType = :objectType AND ae.objectId = :objectId) OR (ae.parentType = :objectType AND ae.parentId = :objectId)) "  +
+                        (eventTypes != null ? "AND ae.fullEventType IN :eventTypes " : "") +
+                        "AND ae.eventResult = 'success' " +
                         "ORDER BY ae.eventDate";
         Query query = getEm().createQuery(queryText);
         query.setFirstResult(startRow);
         query.setMaxResults(maxRows);
         query.setParameter("objectId", objectId);
         query.setParameter("objectType", objectType);
+        if (eventTypes != null)
+        {
+            query.setParameter("eventTypes", eventTypes);
+        }
+
         List<AuditEvent> results = query.getResultList();
         return results;
-
     }
 
     public int countAll(Long objectId, String objectType)

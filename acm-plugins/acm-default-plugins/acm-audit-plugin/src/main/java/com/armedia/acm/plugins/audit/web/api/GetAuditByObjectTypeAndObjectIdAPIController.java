@@ -6,6 +6,7 @@ import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
 
 import com.armedia.acm.plugins.audit.service.ReplaceEventTypeNames;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author riste.tutureski
@@ -25,8 +28,10 @@ import java.util.List;
 public class GetAuditByObjectTypeAndObjectIdAPIController {
 	
     private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private static final String HISTORY_TYPES = "history.event.types";
     
     private AuditDao auditDao;
+    private Map<String, String> auditProperties;
     private ReplaceEventTypeNames replaceEventTypeNames;
     
     @RequestMapping(value = "/{objectType}/{objectId}",method = RequestMethod.GET,produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -43,15 +48,23 @@ public class GetAuditByObjectTypeAndObjectIdAPIController {
             LOG.debug("Finding audit for " + objectType + " with id "  + objectId + "; start row: " + startRow + "; max rows: " + maxRows);
         }
 
-        List<AuditEvent> pagedResult = getAuditDao().findPagedResults(objectId, objectType, startRow, maxRows);
-        int totalCount = getAuditDao().countAll(objectId, objectType);
+        String eventTypesString = getAuditProperties().get(String.format("%s.%s", objectType, HISTORY_TYPES));
+        List<String> eventTypes = null;
+        if (StringUtils.isNotEmpty(eventTypesString))
+        {
+            eventTypes = new ArrayList<>(Arrays.asList(eventTypesString.split("\\s*,\\s*")));
+        }
+
+        List<AuditEvent> pagedResult = getAuditDao().findPagedResults(objectId, objectType, startRow, maxRows, eventTypes);
+
+        int totalCount = pagedResult.size();
 
         QueryResultPageWithTotalCount<AuditEvent> retval = new QueryResultPageWithTotalCount<>();
         retval.setStartRow(startRow);
         retval.setMaxRows(maxRows);
         retval.setTotalCount(totalCount);
         retval.setResultPage(pagedResult);
-        List<AuditEvent> eventList = eventList= new ArrayList<>();
+        List<AuditEvent> eventList = new ArrayList<>();
         List<AuditEvent> auditEvents = retval.getResultPage();
         for (AuditEvent event : auditEvents){
 
@@ -69,6 +82,14 @@ public class GetAuditByObjectTypeAndObjectIdAPIController {
     public void setAuditDao(AuditDao dao)
     {
         this.auditDao = dao;
+    }
+
+    public Map<String, String> getAuditProperties() {
+        return auditProperties;
+    }
+
+    public void setAuditProperties(Map<String, String> auditProperties) {
+        this.auditProperties = auditProperties;
     }
 
     public ReplaceEventTypeNames getReplaceEventTypeNames() {
