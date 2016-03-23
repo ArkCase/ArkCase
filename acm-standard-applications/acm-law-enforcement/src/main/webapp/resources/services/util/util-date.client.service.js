@@ -17,6 +17,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
             defaultDateFormat: $translate.instant("common.defaultDateFormat")
             , defaultTimeFormat: $translate.instant("common.defaultTimeFormat")
             , defaultDateTimeFormat: $translate.instant("common.defaultDateTimeFormat")
+            , defaultDatePickerFormat: $translate.instant("common.defaultDatePickerFormat")
 
 
             /**
@@ -32,7 +33,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              *
              * @Returns {String} ISO formatted date string YYYY-MM-DDTHH:mm:ss.SSSZZ
              */
-            , dateToIso: function(date, replacement) {
+            , dateToIso: function (date, replacement) {
                 var replacedWith = (undefined === replacement) ? "" : replacement;
 
                 if (date && date instanceof Date) {
@@ -61,7 +62,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              *
              * @Returns {Date} Date object
              */
-            , isoToDate: function(isoDateTime, replacement) {
+            , isoToDate: function (isoDateTime, replacement) {
                 var replacedWith = (undefined === replacement) ? null : replacement;
 
                 if (!Util.isEmpty(isoDateTime)) {

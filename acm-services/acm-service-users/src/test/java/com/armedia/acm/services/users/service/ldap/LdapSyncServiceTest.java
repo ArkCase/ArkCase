@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * Created by armdev on 7/3/14.
@@ -43,6 +43,39 @@ public class LdapSyncServiceTest extends EasyMockSupport
     }
 
     @Test
+    public void reverseRoleToGroupMap_multipleGroupsPerRole()
+    {
+        Map<String, String> roleToGroups = new HashMap<>();
+        roleToGroups.put("ROLE ONE", "GROUP A,GROUP B");
+        roleToGroups.put("ROLE TWO", "GROUP B, GROUP C ");
+        roleToGroups.put("ROLE THREE", "GROUP D");
+
+
+        Map<String, List<String>> groupToRoles = unit.reverseRoleToGroupMap(roleToGroups);
+
+        assertNotNull(groupToRoles.get("GROUP A"));
+        assertNotNull(groupToRoles.get("GROUP B"));
+        assertNotNull(groupToRoles.get("GROUP C"));
+        assertNotNull(groupToRoles.get("GROUP D"));
+
+        assertEquals(1, groupToRoles.get("GROUP A").size());
+        assertEquals(2, groupToRoles.get("GROUP B").size());
+        assertEquals(1, groupToRoles.get("GROUP C").size());
+        assertEquals(1, groupToRoles.get("GROUP D").size());
+
+        assertEquals("ROLE ONE", groupToRoles.get("GROUP A").get(0));
+        assertEquals("ROLE TWO", groupToRoles.get("GROUP C").get(0));
+        assertEquals("ROLE THREE", groupToRoles.get("GROUP D").get(0));
+
+        assertTrue(groupToRoles.get("GROUP B").contains("ROLE ONE"));
+        assertTrue(groupToRoles.get("GROUP B").contains("ROLE TWO"));
+
+        assertFalse(groupToRoles.containsKey("GROUP A,GROUP B"));
+        assertFalse(groupToRoles.containsKey("GROUP B, GROUP C "));
+
+    }
+
+    @Test
     public void queryLdapUsers_applicationRoles_differentCases()
     {
         Map<String, String> rolesToGroupMap = new HashMap<>();
@@ -59,7 +92,7 @@ public class LdapSyncServiceTest extends EasyMockSupport
         List<AcmUser> users = new ArrayList<>();
         Map<String, List<AcmUser>> usersByApplicationRole = new HashMap<>();
         Map<String, List<AcmUser>> usersByLdapGroup = new HashMap<>();
-        Map<String, String> childParentPairs = new HashMap<String, String>();
+        Map<String, String> childParentPairs = new HashMap<>();
 
         String userDnOne = "dn1";
         String userDnTwo = "dn2";
@@ -108,7 +141,7 @@ public class LdapSyncServiceTest extends EasyMockSupport
         List<AcmUser> users = new ArrayList<>();
         Map<String, List<AcmUser>> usersByApplicationRole = new HashMap<>();
         Map<String, List<AcmUser>> usersByLdapGroup = new HashMap<>();
-        Map<String, String> childParentPairs = new HashMap<String, String>();
+        Map<String, String> childParentPairs = new HashMap<>();
 
         String userDistinguishedName = "dn1";
         String groupDistinguishedName = "dn2";

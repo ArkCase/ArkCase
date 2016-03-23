@@ -1,15 +1,18 @@
 'use strict';
 
-angular.module('welcome').controller('WelcomeController', ['$scope', '$q', '$state', 'StoreService', 'Authentication'
-    , 'ConfigService', 'LookupService', 'Object.LookupService', 'Case.LookupService', 'Complaint.LookupService'
+angular.module('welcome').controller('WelcomeController', ['$scope', '$q', '$state'
+    , 'Acm.StoreService', 'Authentication', 'Acm.AppService', 'ConfigService'
+    , 'LookupService', 'Object.LookupService', 'Case.LookupService', 'Complaint.LookupService'
     , 'Acm.LoginStatService'
-    , function ($scope, $q, $state, Store, Authentication
-        , ConfigService, LookupService, ObjectLookupService, CaseLookupService, ComplaintLookupService
+    , function ($scope, $q, $state
+        , Store, Authentication, AcmAppService , ConfigService
+        , LookupService, ObjectLookupService, CaseLookupService, ComplaintLookupService
         , AcmLoginStatService
     ) {
 
         var sessionCacheNamesList = [
             Authentication.SessionCacheNames
+            , AcmAppService.SessionCacheNames
             , ConfigService.SessionCacheNames
             , LookupService.SessionCacheNames
             , ObjectLookupService.SessionCacheNames

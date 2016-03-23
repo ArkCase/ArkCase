@@ -4,6 +4,7 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
+import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
@@ -13,12 +14,45 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
+
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "acm_case_file")
@@ -27,18 +61,12 @@ import java.util.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.casefile.model.CaseFile")
-public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity
+public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity
 {
     private static final long serialVersionUID = -6035628455385955008L;
 
     @Id
-    @TableGenerator(name = "case_file_gen",
-            table = "acm_case_file_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_case_file",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "case_file_gen", table = "acm_case_file_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_case_file", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "case_file_gen")
     @Column(name = "cm_case_id")
     private Long id;
@@ -95,10 +123,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     private String className = this.getClass().getName();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumns({
-            @JoinColumn(name = "cm_object_id"),
-            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
-    })
+    @JoinColumns({ @JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @Column(name = "cm_due_date")
@@ -116,17 +141,14 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     private List<String> approvers;
 
     /**
-     * This field is only used when the case file is created. Usually it will be null.  Use the container
-     * to get the CMIS object ID of the case file folder.
+     * This field is only used when the case file is created. Usually it will be null. Use the container to get the CMIS
+     * object ID of the case file folder.
      */
     @Transient
     private String ecmFolderPath;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumns({
-            @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_case_id"),
-            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")
-    })
+    @JoinColumns({ @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_case_id"), @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type") })
     @OrderBy("created ASC")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
@@ -144,11 +166,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = Boolean.FALSE;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumns({
-            @JoinColumn(name = "cm_parent_id"),
-            @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")
-    })
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+    @JoinColumns({ @JoinColumn(name = "cm_parent_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type") })
     private Collection<ObjectAssociation> childObjects = new ArrayList<>();
 
     /**
@@ -169,17 +188,13 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     private Date nextCourtDate;
 
     @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumns({
-            @JoinColumn(name = "cm_case_id", referencedColumnName = "cm_object_id", updatable = false, insertable = false),
-            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", updatable = false, insertable = false)
-    })
+    @JoinColumns({ @JoinColumn(name = "cm_case_id", referencedColumnName = "cm_object_id", updatable = false, insertable = false),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", updatable = false, insertable = false) })
     private AcmObjectLock lock;
-
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_queue_id")
     private AcmQueue queue;
-
 
     @PrePersist
     protected void beforeInsert()
@@ -242,11 +257,13 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
         personAssoc.getPerson().getPersonAssociations().addAll(Arrays.asList(personAssoc));
     }
 
+    @Override
     public Collection<ObjectAssociation> getChildObjects()
     {
         return Collections.unmodifiableCollection(childObjects);
     }
 
+    @Override
     public void addChildObject(ObjectAssociation childObject)
     {
         childObjects.add(childObject);
@@ -293,17 +310,20 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
             setPersonAssociations(new ArrayList<>());
         }
 
-        if(originator != null) {
+        if (originator != null)
+        {
 
             Optional<PersonAssociation> found = getPersonAssociations().stream().filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
-            if (found == null || !found.isPresent()) {
+            if (found == null || !found.isPresent())
+            {
                 getPersonAssociations().add(originator);
             }
         }
 
     }
 
+    @Override
     public Long getId()
     {
         return id;
@@ -494,7 +514,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
         return retval;
     }
 
-
     public ChangeCaseStatus getChangeCaseStatus()
     {
         return changeCaseStatus;
@@ -595,19 +614,23 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
         this.className = className;
     }
 
-    public AcmObjectLock getLock() {
+    public AcmObjectLock getLock()
+    {
         return lock;
     }
 
-    public void setLock(AcmObjectLock lock) {
+    public void setLock(AcmObjectLock lock)
+    {
         this.lock = lock;
     }
 
-    public AcmQueue getQueue() {
+    public AcmQueue getQueue()
+    {
         return queue;
     }
 
-    public void setQueue(AcmQueue queue) {
+    public void setQueue(AcmQueue queue)
+    {
         this.queue = queue;
     }
 
@@ -621,37 +644,11 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     @Override
     public String toString()
     {
-        return "CaseFile{" +
-                "id=" + id +
-                ", caseNumber='" + caseNumber + '\'' +
-                ", caseType='" + caseType + '\'' +
-                ", title='" + title + '\'' +
-                ", status='" + status + '\'' +
-                ", details='" + details + '\'' +
-                ", incidentDate=" + incidentDate +
-                ", created=" + created +
-                ", creator='" + creator + '\'' +
-                ", modified=" + modified +
-                ", modifier='" + modifier + '\'' +
-                ", closed=" + closed +
-                ", disposition='" + disposition + '\'' +
-                ", priority='" + priority + '\'' +
-                ", objectType='" + objectType + '\'' +
-                ", participants=" + participants +
-                ", dueDate=" + dueDate +
-                ", changeCaseStatus=" + changeCaseStatus +
-                ", approvers=" + approvers +
-                ", ecmFolderPath='" + ecmFolderPath + '\'' +
-                ", personAssociations=" + personAssociations +
-                ", milestones=" + milestones +
-                ", originator=" + originator +
-                ", restricted=" + restricted +
-                ", childObjects=" + childObjects +
-                ", container=" + container +
-                ", courtroomName='" + courtroomName + '\'' +
-                ", responsibleOrganization='" + responsibleOrganization + '\'' +
-                ", nextCourtDate=" + nextCourtDate + '\'' +
-                ", className='" + className +
-                '}';
+        return "CaseFile{" + "id=" + id + ", caseNumber='" + caseNumber + '\'' + ", caseType='" + caseType + '\'' + ", title='" + title + '\'' + ", status='" + status + '\'' + ", details='" + details
+                + '\'' + ", incidentDate=" + incidentDate + ", created=" + created + ", creator='" + creator + '\'' + ", modified=" + modified + ", modifier='" + modifier + '\'' + ", closed=" + closed
+                + ", disposition='" + disposition + '\'' + ", priority='" + priority + '\'' + ", objectType='" + objectType + '\'' + ", participants=" + participants + ", dueDate=" + dueDate
+                + ", changeCaseStatus=" + changeCaseStatus + ", approvers=" + approvers + ", ecmFolderPath='" + ecmFolderPath + '\'' + ", personAssociations=" + personAssociations + ", milestones="
+                + milestones + ", originator=" + originator + ", restricted=" + restricted + ", childObjects=" + childObjects + ", container=" + container + ", courtroomName='" + courtroomName + '\''
+                + ", responsibleOrganization='" + responsibleOrganization + '\'' + ", nextCourtDate=" + nextCourtDate + '\'' + ", className='" + className + '}';
     }
 }

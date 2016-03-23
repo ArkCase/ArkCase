@@ -10,7 +10,7 @@
 
  * Object.PersonService includes group of REST calls related to person association.
  */
-angular.module('services').factory('Object.PersonService', ['$resource', 'StoreService', 'UtilService',
+angular.module('services').factory('Object.PersonService', ['$resource', 'Acm.StoreService', 'UtilService',
     function ($resource, Store, Util) {
         var Service = $resource('api/latest/plugin', {}, {
             /**

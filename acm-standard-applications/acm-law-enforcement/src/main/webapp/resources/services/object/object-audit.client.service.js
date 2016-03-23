@@ -10,7 +10,7 @@
 
  * Object.AuditService includes group of audit related REST calls.
  */
-angular.module('services').factory('Object.AuditService', ['$resource', 'StoreService', 'UtilService',
+angular.module('services').factory('Object.AuditService', ['$resource', 'Acm.StoreService', 'UtilService',
     function ($resource, Store, Util) {
         var Service = $resource('api/latest/plugin', {}, {
             /**
