@@ -19,25 +19,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-@Controller
-@RequestMapping({"/api/v1/plugin/note", "/api/latest/plugin/note"})
-public class SaveNoteAPIController
+@Controller @RequestMapping({ "/api/v1/plugin/note", "/api/latest/plugin/note" }) public class SaveNoteAPIController
 {
-
 
     private NoteDao noteDao;
     private NoteEventPublisher noteEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#note.parentId, #note.parentType, 'addComment')")
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public Note addNote(
-            @RequestBody Note note,
-            Authentication authentication,
-            HttpSession httpSession
-    ) throws AcmUserActionFailedException
+    @PreAuthorize("hasPermission(#note.parentId, #note.parentType, 'addComment')") @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE) @ResponseBody public Note addNote(
+            @RequestBody Note note, Authentication authentication, HttpSession httpSession) throws AcmUserActionFailedException
     {
         if (log.isInfoEnabled())
         {
@@ -66,14 +57,8 @@ public class SaveNoteAPIController
 
             Note savedNote = getNoteDao().save(note);
 
-            if(note.getId() == null)
-            {
-                publishNoteEvent(httpSession, savedNote, "added", true);
-            }
-            else
-            {
-                publishNoteEvent(httpSession, savedNote, "updated", true);
-            }
+            String noteEvent = note.getId() == null ? "added" : "updated";
+            publishNoteEvent(httpSession, savedNote, noteEvent, true);
 
             return savedNote;
         } catch (Exception e)
@@ -90,22 +75,13 @@ public class SaveNoteAPIController
             fakeNote.setCreator(note.getCreator());
             fakeNote.setCreated(note.getCreated());
 
-            if(note.getId() == null)
-            {
-                publishNoteEvent(httpSession, fakeNote, "added", false);
-            }
-            else
-            {
-                publishNoteEvent(httpSession, fakeNote, "updated", false);
-            }
+            String noteEvent = note.getId() == null ? "added" : "updated";
+            publishNoteEvent(httpSession, fakeNote, noteEvent, false);
             throw new AcmUserActionFailedException("unable to add note from ", note.getParentType(), note.getParentId(), e.getMessage(), e);
         }
     }
 
-    protected void publishNoteEvent(
-            HttpSession httpSession,
-            Note note, String eventType,
-            boolean succeeded)
+    protected void publishNoteEvent(HttpSession httpSession, Note note, String eventType, boolean succeeded)
     {
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
         ApplicationNoteEvent event = new ApplicationNoteEvent(note, eventType, succeeded, ipAddress);
@@ -117,8 +93,7 @@ public class SaveNoteAPIController
         return noteEventPublisher;
     }
 
-    public void setNoteEventPublisher(
-            NoteEventPublisher noteEventPublisher)
+    public void setNoteEventPublisher(NoteEventPublisher noteEventPublisher)
     {
         this.noteEventPublisher = noteEventPublisher;
     }

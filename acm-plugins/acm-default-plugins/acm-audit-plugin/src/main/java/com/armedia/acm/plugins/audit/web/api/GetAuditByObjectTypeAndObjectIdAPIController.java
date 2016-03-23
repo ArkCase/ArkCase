@@ -28,7 +28,7 @@ import java.util.Map;
 public class GetAuditByObjectTypeAndObjectIdAPIController {
 	
     private final Logger LOG = LoggerFactory.getLogger(getClass());
-    private static final String HISTORY_TYPES = "history.event.types";
+    public static final String HISTORY_TYPES = "history.event.types";
     
     private AuditDao auditDao;
     private Map<String, String> auditProperties;
@@ -36,7 +36,7 @@ public class GetAuditByObjectTypeAndObjectIdAPIController {
     
     @RequestMapping(value = "/{objectType}/{objectId}",method = RequestMethod.GET,produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
-    public QueryResultPageWithTotalCount<AuditEvent> getComplaintEventsById(
+    public QueryResultPageWithTotalCount<AuditEvent> getEventsByObjectTypeAndObjectId(
     		@PathVariable(value = "objectType") String objectType,
             @PathVariable(value = "objectId") Long objectId,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
@@ -57,7 +57,7 @@ public class GetAuditByObjectTypeAndObjectIdAPIController {
 
         List<AuditEvent> pagedResult = getAuditDao().findPagedResults(objectId, objectType, startRow, maxRows, eventTypes);
 
-        int totalCount = pagedResult.size();
+        int totalCount = getAuditDao().countAll(objectId, objectType, eventTypes);
 
         QueryResultPageWithTotalCount<AuditEvent> retval = new QueryResultPageWithTotalCount<>();
         retval.setStartRow(startRow);
