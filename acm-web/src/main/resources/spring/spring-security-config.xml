@@ -40,8 +40,16 @@
     <http
         security="none"
         pattern="/lib/**" />
-          
-    <!-- import filter chains from external configuration file -->
-    <beans:import resource="file:${user.home}/.arkcase/acm/spring/spring-security-config-auth.xml" />
+
+    <!-- import filter chains and other authentication related beans from external configuration file -->
+    <beans:beans profile="ldap">
+        <beans:import resource="file:${user.home}/.arkcase/acm/spring/spring-security-config-ldap.xml" />
+    </beans:beans>
+    
+    <beans:beans profile="ssoSaml">
+        <beans:import resource="file:${user.home}/.arkcase/acm/spring/spring-security-config-saml.xml" />
+    </beans:beans>
+    
+    
     
 </beans:beans>

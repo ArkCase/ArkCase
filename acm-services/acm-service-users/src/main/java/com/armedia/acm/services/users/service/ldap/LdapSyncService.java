@@ -160,12 +160,9 @@ public class LdapSyncService
             List<AcmUser> usersForThisGroup)
     {
         // append user domain name if set. Used in Single Sign-On scenario.
-        String userDoaminSuffix = ((ldapSyncConfig.getUserDomain() == null || ldapSyncConfig.getUserDomain().trim().equals("")) ? ""
+        String userDomainSuffix = ((ldapSyncConfig.getUserDomain() == null || ldapSyncConfig.getUserDomain().trim().equals("")) ? ""
                 : "@" + ldapSyncConfig.getUserDomain());
-        if (log.isDebugEnabled())
-        {
-            log.debug("Adding user domain sufix ti the usernames: " + userDoaminSuffix);
-        }
+        log.debug("Adding user domain sufix to the usernames: {}", userDomainSuffix);
 
         for (AcmLdapEntity found : foundEntities)
         {
@@ -176,7 +173,7 @@ public class LdapSyncService
             else
             {
                 AcmUser acmUser = (AcmUser) found;
-                acmUser.setUserId(acmUser.getUserId() + userDoaminSuffix);
+                acmUser.setUserId(acmUser.getUserId() + userDomainSuffix);
                 usersForThisGroup.add((AcmUser) found);
             }
         }

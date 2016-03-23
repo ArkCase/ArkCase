@@ -12,7 +12,7 @@
 	                        <p class="quiet large">You have been logged out.</p>
 	                        <div class="post-body">
 	                            <p>
-	                                <a href="<c:url value="/" />">Back to index</a>
+	                                <a href="<c:url value="/" />">Back to ArkCase</a>
 	                            </p>
 	                        </div>
 	                    </div>
