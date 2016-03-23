@@ -25,7 +25,7 @@ angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', 
 
         // Retrieves the app properties from app-config.xml file
         var appConfig = LookupService.getConfig('app').then(function (data) {
-            // redirect to login page
+            // redirect to logout page
             $window.location.href = data['logoutUrl'];
         });
         AcmLoginStatService.setLogin(false);

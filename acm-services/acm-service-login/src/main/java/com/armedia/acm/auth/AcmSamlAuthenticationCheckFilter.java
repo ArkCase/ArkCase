@@ -29,7 +29,7 @@ public class AcmSamlAuthenticationCheckFilter extends GenericFilterBean
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private long authenticationCheckInterval;
+    private long authenticationCheckIntervalInSeconds;
 
     private static final String FILTER_APPLIED = "__spring_security_filterAuthenticationCheck_filterApplied";
     private static final String LAST_AUTHENTICATION_CHECK = "acmLastAuthenticationCheck";
@@ -38,68 +38,35 @@ public class AcmSamlAuthenticationCheckFilter extends GenericFilterBean
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
     {
         // if this is not a Single Sign-On scenario (samlAuthenticationProvider is null) don't use the filter
-        ApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
-        if (applicationContext.getBean("samlAuthenticationProvider") == null)
+        // this filter should be executed only when the request comes from the client, not when the response is served
+        if (!samlSSOEnabled() || filterApplied(request))
         {
             chain.doFilter(request, response);
             return;
         }
 
-        boolean debug = log.isDebugEnabled();
-        if (debug)
-        {
-            log.debug("AcmAuthenticationCheckFilter started!");
-        }
-        if ((request != null) && (request.getAttribute(FILTER_APPLIED) != null))
-        {
-            chain.doFilter(request, response);
-        }
-        else
-        {
-            if (request != null)
-            {
-                request.setAttribute(FILTER_APPLIED, Boolean.TRUE);
-            }
-        }
+        log.debug("AcmSamlAuthenticationCheckFilter started!");
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // filter is executing, set FILTER_APPLIED to true
+        request.setAttribute(FILTER_APPLIED, Boolean.TRUE);
 
-        if ((authentication == null) || (!authentication.isAuthenticated()))
+        if (!userAuthentcated())
         {
-            if (debug)
-            {
-                log.debug("User not authenticated yet!");
-            }
             chain.doFilter(request, response);
             return;
         }
+
+        LocalDateTime now = LocalDateTime.now();
+        log.debug("Now: {}", now.toString());
 
         HttpSession session = ((HttpServletRequest) request).getSession();
 
-        LocalDateTime now = LocalDateTime.now();
-        if (debug)
-        {
-            log.debug("Now: " + now.toString());
-        }
-        if (session.getAttribute(LAST_AUTHENTICATION_CHECK) == null)
-        {
-            log.info("Setting LAST_AUTHENTICATION_CHECK: " + now.toString());
-            session.setAttribute(LAST_AUTHENTICATION_CHECK, now);
-        }
+        setLastAuthenticationCheckTime(session, now);
 
         // check user authentication against IDP if LAST_AUTHENTICATION_CHECK has expired
-        LocalDateTime lastAuthenticationCheck = (LocalDateTime) session.getAttribute(LAST_AUTHENTICATION_CHECK);
-        if (debug)
+        if (timeToReauthenticate(session, now))
         {
-            log.debug("LAST_AUTHENTICATION_CHECK: " + lastAuthenticationCheck.toString());
-        }
-        if (lastAuthenticationCheck.plusSeconds(authenticationCheckInterval).isBefore(now))
-        {
-            if (debug)
-            {
-                log.debug("LAST_AUTHENTICATION_CHECK.plusSeconds(authenticationCheckInterval): "
-                        + lastAuthenticationCheck.plusSeconds(authenticationCheckInterval));
-            }
+            log.debug("Reauthenticating user!");
             session.setAttribute(LAST_AUTHENTICATION_CHECK, LocalDateTime.now());
             SecurityContextHolder.getContext().setAuthentication(null);
         }
@@ -107,20 +74,66 @@ public class AcmSamlAuthenticationCheckFilter extends GenericFilterBean
         chain.doFilter(request, response);
     }
 
-    /**
-     * @return the authenticationCheckInterval
-     */
-    public long getAuthenticationCheckInterval()
+    private boolean timeToReauthenticate(HttpSession session, LocalDateTime now)
     {
-        return authenticationCheckInterval;
+        LocalDateTime lastAuthenticationCheck = (LocalDateTime) session.getAttribute(LAST_AUTHENTICATION_CHECK);
+        log.debug("LAST_AUTHENTICATION_CHECK: {}", lastAuthenticationCheck.toString());
+
+        return lastAuthenticationCheck.plusSeconds(authenticationCheckIntervalInSeconds).isBefore(now);
+    }
+
+    private void setLastAuthenticationCheckTime(HttpSession session, LocalDateTime now)
+    {
+        if (session.getAttribute(LAST_AUTHENTICATION_CHECK) == null)
+        {
+            log.debug("Setting LAST_AUTHENTICATION_CHECK: {}", now.toString());
+            session.setAttribute(LAST_AUTHENTICATION_CHECK, now);
+        }
+    }
+
+    private boolean userAuthentcated()
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean authenticated = (authentication != null) && authentication.isAuthenticated();
+
+        if (authenticated)
+        {
+            log.debug("User: {}  authenticated.", authentication.getName());
+        }
+        else
+        {
+            log.debug("User not authenticated yet!");
+        }
+
+        return authenticated;
+    }
+
+    private boolean filterApplied(ServletRequest request)
+    {
+        return (request != null) && (request.getAttribute(FILTER_APPLIED) != null);
+    }
+
+    private boolean samlSSOEnabled()
+    {
+        // TODO Check profile
+        ApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
+        return applicationContext.getBean("samlAuthenticationProvider") != null;
     }
 
     /**
-     * @param authenticationCheckInterval
-     *            the authenticationCheckInterval to set
+     * @return the authenticationCheckIntervalInSeconds
      */
-    public void setAuthenticationCheckInterval(long authenticationCheckInterval)
+    public long getAuthenticationCheckIntervalInSeconds()
     {
-        this.authenticationCheckInterval = authenticationCheckInterval;
+        return authenticationCheckIntervalInSeconds;
+    }
+
+    /**
+     * @param authenticationCheckIntervalInSeconds
+     *            the authenticationCheckIntervalInSeconds to set
+     */
+    public void setAuthenticationCheckIntervalInSeconds(long authenticationCheckIntervalInSeconds)
+    {
+        this.authenticationCheckIntervalInSeconds = authenticationCheckIntervalInSeconds;
     }
 }
