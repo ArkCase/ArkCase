@@ -26,8 +26,8 @@
     </bean>
 
     <bean id="angularResourceCopier" class="com.armedia.acm.userinterface.angular.AngularResourceCopier">
-        <property name="tempFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/acm/tmp"/>
-        <property name="deployFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/acm/custom"/>
+        <property name="tempFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/tmp"/>
+        <property name="deployFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/custom"/>
         <property name="oldDeployFoldersToBeRemovedBeforeBuild">
             <list>
                 <value>/modules_config/config</value>
