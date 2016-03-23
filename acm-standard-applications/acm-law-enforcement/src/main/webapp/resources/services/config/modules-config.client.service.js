@@ -10,7 +10,7 @@
 
  * ConfigService contains wrapper functions of ConfigService to support default error handling, data validation and data cache.
  */
-angular.module('services').factory('ConfigService', ['$resource', 'StoreService', 'UtilService',
+angular.module('services').factory('ConfigService', ['$resource', 'Acm.StoreService', 'UtilService',
     function ($resource, Store, Util) {
         var Service = $resource('api/config/', {}, {
             getModule: {

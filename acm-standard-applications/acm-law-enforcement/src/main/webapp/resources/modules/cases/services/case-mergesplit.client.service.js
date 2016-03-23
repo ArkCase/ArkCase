@@ -11,7 +11,7 @@
  *      MergeSplit Service provides functions for merging and splitting case files.
  *  
  */
-angular.module('services').factory('Case.MergeSplitService', ['$resource', '$translate', 'StoreService', 'UtilService',
+angular.module('services').factory('Case.MergeSplitService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService',
     'Object.InfoService', 'Case.InfoService',
     function ($resource, $translate, Store, Util, ObjectInfoService, CaseInfoService) {
         

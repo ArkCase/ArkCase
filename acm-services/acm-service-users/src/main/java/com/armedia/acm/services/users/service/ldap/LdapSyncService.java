@@ -6,9 +6,7 @@ import com.armedia.acm.services.users.model.AcmLdapEntity;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
-import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
@@ -26,16 +24,16 @@ import java.util.Set;
  * <p/>
  * Both application roles and LDAP groups are synced.
  * <ul>
- *     <li>Application roles drive role-based access control, and
+ * <li>Application roles drive role-based access control, and
  * every deployment has the same application role names regardless of the LDAP group names.  The ldapSyncConfig
  * includes a mapping from the logical role name to the physical LDAP group name.  For each entry in this mapping, the
  * members of the indicated LDAP group are linked to the indicated logical application role.</li>
- *     <li>LDAP groups are also synced, to be available for data access control; this allows users to grant or deny
- *     access to specific groups.  The groups could be more granular than application roles; for example, all case
- *     agents share the same application roles, but different LDAP groups could represent different functional or
- *     geographic areas.  So granting access at the LDAP group level could be more appropriate - i.e., would restrict
- *     access to only those case agents in the appropriate functional or geographic area.
- *     </li>
+ * <li>LDAP groups are also synced, to be available for data access control; this allows users to grant or deny
+ * access to specific groups.  The groups could be more granular than application roles; for example, all case
+ * agents share the same application roles, but different LDAP groups could represent different functional or
+ * geographic areas.  So granting access at the LDAP group level could be more appropriate - i.e., would restrict
+ * access to only those case agents in the appropriate functional or geographic area.
+ * </li>
  * </ul>
  */
 public class LdapSyncService
@@ -54,13 +52,13 @@ public class LdapSyncService
     // folder ($HOME/.acm).
     public void ldapSync()
     {
-        if ( !isSyncEnabled() )
+        if (!isSyncEnabled())
         {
             log.debug("Sync is disabled - stopping now.");
             return;
         }
 
-        if ( log.isInfoEnabled() )
+        if (log.isInfoEnabled())
         {
             log.info("Starting sync of directory: " + getDirectoryName() + "; ldap URL: " +
                     getLdapSyncConfig().getLdapUrl());
@@ -75,14 +73,14 @@ public class LdapSyncService
         List<AcmUser> users = new ArrayList<>();
         Map<String, List<AcmUser>> usersByApplicationRole = new HashMap<>();
         Map<String, List<AcmUser>> usersByLdapGroup = new HashMap<>();
-        Map<String, String> childParentPair = new HashMap<String, String>();
+        Map<String, String> childParentPair = new HashMap<>();
 
         queryLdapUsers(getLdapSyncConfig(),
                 getDirectoryName(),
                 allRoles,
                 users,
                 usersByApplicationRole,
-                usersByLdapGroup, 
+                usersByLdapGroup,
                 childParentPair);
 
         // ldap work is done.  now for the database work.
@@ -95,7 +93,6 @@ public class LdapSyncService
     }
 
 
-
     protected void queryLdapUsers(
             AcmLdapSyncConfig config,
             String directoryName,
@@ -106,7 +103,7 @@ public class LdapSyncService
             Map<String, String> childParentPair)
     {
         boolean debug = log.isDebugEnabled();
-        if ( debug )
+        if (debug)
         {
             log.debug("querying users from directory '" + directoryName + "'");
         }
@@ -122,9 +119,9 @@ public class LdapSyncService
         // role map, as well as to the group map.
         List<LdapGroup> groups = getLdapDao().findGroups(template, config);
 
-        for ( LdapGroup group : groups )
+        for (LdapGroup group : groups)
         {
-            if ( debug )
+            if (debug)
             {
                 log.debug("Found group '" + group.getGroupName() + "', with " +
                         group.getMemberDistinguishedNames().length + " members");
@@ -151,11 +148,11 @@ public class LdapSyncService
         List<AcmLdapEntity> foundEntities = getLdapDao().findGroupMembers(template, config, group);
 
         splitEntitiesIntoNestedGroupsAndUsers(foundEntities, nestedGroups, allUsersForGroup);
-        
+
         populateChildParentPair(group, nestedGroups, childParentPair);
 
         findUsersForNestedGroups(config, template, nestedGroups, allUsersForGroup);
-        
+
         return allUsersForGroup;
     }
 
@@ -166,13 +163,13 @@ public class LdapSyncService
             List<AcmUser> usersForMainGroup)
     {
         List<AcmLdapEntity> foundEntities;
-        while ( !nestedGroups.isEmpty() )
+        while (!nestedGroups.isEmpty())
         {
             List<AcmRole> current = new ArrayList<>(nestedGroups.size());
             current.addAll(nestedGroups);
             nestedGroups.clear();
 
-            for ( AcmRole currentNestedGroup : current )
+            for (AcmRole currentNestedGroup : current)
             {
                 LdapGroup ldapGroup = getLdapDao().findGroup(template, config, currentNestedGroup.getDistinguishedName());
                 foundEntities = getLdapDao().findGroupMembers(template, config, ldapGroup);
@@ -187,13 +184,12 @@ public class LdapSyncService
             List<AcmRole> nestedGroups,
             List<AcmUser> usersForThisGroup)
     {
-        for ( AcmLdapEntity found : foundEntities )
+        for (AcmLdapEntity found : foundEntities)
         {
-            if ( found.isGroup() )
+            if (found.isGroup())
             {
                 nestedGroups.add((AcmRole) found);
-            }
-            else
+            } else
             {
                 usersForThisGroup.add((AcmUser) found);
             }
@@ -205,72 +201,89 @@ public class LdapSyncService
                                            List<AcmUser> foundUsers,
                                            String ucGroupName)
     {
-        if ( groupToRoleMap.containsKey(ucGroupName) )
+        if (groupToRoleMap.containsKey(ucGroupName))
         {
-            if ( log.isDebugEnabled() )
+            if (log.isDebugEnabled())
             {
                 log.debug("Group '" + ucGroupName + "' has roles: " + groupToRoleMap.get(ucGroupName));
             }
-            for ( String applicationRole : groupToRoleMap.get(ucGroupName))
+            for (String applicationRole : groupToRoleMap.get(ucGroupName))
             {
                 addUsersToMap(usersByApplicationRole, applicationRole, foundUsers);
             }
         }
     }
 
-    private Map<String, List<String>> reverseRoleToGroupMap(Map<String, String> roleToGroup)
+    protected Map<String, List<String>> reverseRoleToGroupMap(Map<String, String> roleToGroup)
     {
+
         Map<String, List<String>> groupToRoleMap = new HashMap<>();
         List<String> roles;
-        for ( Map.Entry<String, String> roleMapEntry : roleToGroup.entrySet() )
+        for (Map.Entry<String, String> roleMapEntry : roleToGroup.entrySet())
         {
-            String role = roleMapEntry.getKey().toUpperCase();
-            String group = roleMapEntry.getValue().toUpperCase();
+            String role = roleMapEntry.getKey();
+            if (role != null && !role.trim().isEmpty())
+            {
+                role = role.trim().toUpperCase();
+                String groupList = roleMapEntry.getValue();
+                if (groupList != null && !groupList.trim().isEmpty())
+                {
+                    String[] groups = groupList.split(",");
+                    for (String group : groups)
+                    {
+                        group = group.trim();
+                        if (!group.isEmpty())
+                        {
+                            group = group.toUpperCase();
+                            if (groupToRoleMap.containsKey(group))
+                            {
+                                roles = groupToRoleMap.get(group);
+                            } else
+                            {
+                                roles = new ArrayList<>();
+                            }
+                            roles.add(role);
+                            groupToRoleMap.put(group, roles);
+                        }
 
-            if ( groupToRoleMap.containsKey(group) )
-            {
-                roles = groupToRoleMap.get(group);
+                    }
+                }
             }
-            else
-            {
-                roles = new ArrayList<>();
-            }
-            roles.add(role);
-            groupToRoleMap.put(group, roles);
-        } return groupToRoleMap;
+        }
+        return groupToRoleMap;
     }
 
     private void addUsersToMap(Map<String, List<AcmUser>> userMap, String mapKey, List<AcmUser> users)
     {
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
             log.debug("Adding " + users.size() + " users to map by key " + mapKey);
         }
         // ensure to initialize the map entry with an empty list, then copy from the incoming list into the new list.
-        if ( ! userMap.containsKey(mapKey) )
+        if (!userMap.containsKey(mapKey))
         {
-            userMap.put(mapKey, new ArrayList<AcmUser>());
+            userMap.put(mapKey, new ArrayList<>());
         }
         userMap.get(mapKey).addAll(users);
     }
-    
+
     private void populateChildParentPair(LdapGroup parent, List<AcmRole> children, Map<String, String> childParentPair)
     {
-    	if (children != null && children.size() > 0)
-    	{
-    		for (AcmRole child : children)
-    		{
-    			if (childParentPair == null)
-    			{
-    				childParentPair = new HashMap<String, String>();
-    			}
-    			
-    			if (child.getRoleName() != null && parent.getGroupName() != null)
-    			{
-    				childParentPair.put(child.getRoleName().toUpperCase(), parent.getGroupName().toUpperCase());
-    			}
-    		}
-    	}
+        if (children != null && children.size() > 0)
+        {
+            for (AcmRole child : children)
+            {
+                if (childParentPair == null)
+                {
+                    childParentPair = new HashMap<>();
+                }
+
+                if (child.getRoleName() != null && parent.getGroupName() != null)
+                {
+                    childParentPair.put(child.getRoleName().toUpperCase(), parent.getGroupName().toUpperCase());
+                }
+            }
+        }
     }
 
     public SpringLdapDao getLdapDao()

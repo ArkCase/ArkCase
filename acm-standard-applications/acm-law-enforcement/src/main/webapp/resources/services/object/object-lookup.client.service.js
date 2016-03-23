@@ -10,11 +10,13 @@
 
  * LookupService contains functions to lookup data (typically static data).
  */
-angular.module('services').factory('Object.LookupService', ['$resource', 'StoreService', 'UtilService'
+
+angular.module('services').factory('Object.LookupService', ['$resource', 'Acm.StoreService', 'UtilService'
     , 'LookupService', 'SearchService',
     function ($resource, Store, Util
         , LookupService, SearchService
     ) {
+
         var Service = $resource('api/latest/plugin', {}, {
             /**
              * @ngdoc method

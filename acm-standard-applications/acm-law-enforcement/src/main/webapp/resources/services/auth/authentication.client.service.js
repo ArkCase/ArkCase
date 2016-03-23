@@ -9,7 +9,7 @@
  *
  * The Authentication service retrieves user information from server
  */
-angular.module('services').factory('Authentication', ['$resource', 'StoreService', 'UtilService',
+angular.module('services').factory('Authentication', ['$resource', 'Acm.StoreService', 'UtilService',
     function ($resource, Store, Util) {
         var Service = $resource('api/v1/users/info', {}, {
             /**
