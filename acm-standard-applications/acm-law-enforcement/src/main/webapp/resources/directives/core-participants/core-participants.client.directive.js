@@ -17,6 +17,7 @@
  * @param {function} participantsInit.retrieveObjectInfo function to retrieve objectInfo
  * @param {function} participantsInit.saveObjectInfo function to save objectInfo
  * @param {string} participantsInit.objectType string for the type of the object
+ * @param {string} participantsInit.participantTitle string for the title of participants directive, can be optional
  *
  * @example
  <example>
@@ -77,6 +78,8 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                 );
 
                 var onConfigRetrieved = function (config) {
+                    if (!scope.participantsInit.participantsTitle)
+                        scope.participantsInit.participantsTitle = $translate.instant("common.directive.coreParticipants.title");
                     scope.config = config;
                     gridHelper.addEditButton(config.columnDefs, "grid.appScope.editRow(row.entity)");
                     gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.PeopleController', ['$scope', 'ObjectService', 'Complaint.InfoService'
-    , function ($scope, ObjectService, ComplaintInfoService) {
+angular.module('complaints').controller('Complaints.PeopleController', ['$scope', '$translate', 'ObjectService', 'Complaint.InfoService'
+    , function ($scope, $translate, ObjectService, ComplaintInfoService) {
 
         $scope.peopleInit = {
             moduleId: 'complaints',
@@ -10,7 +10,8 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             validateObjectInfo: ComplaintInfoService.validateComplaintInfo,
             saveObjectInfo: ComplaintInfoService.saveComplaintInfo,
             objectType: ObjectService.ObjectTypes.COMPLAINT,
-            objectInfoId: 'complaintId'
+            objectInfoId: 'complaintId',
+            peopleTitle: $translate.instant("complaints.comp.people.title")
         }
     }
 ]);
