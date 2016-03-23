@@ -18,7 +18,7 @@
  * @param {function} peopleInit.saveObjectInfo function to save objectInfo
  * @param {string} peopleInit.objectType string for the type of the object
  * @param {string} peopleInit.objectInfoId string for the name of the property representing the id of the object
-
+ * @param {string} peopleInit.peopleTitle string for the title of people directive, can be optional
  *
  * @example
  <example>
@@ -109,6 +109,8 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     });
 
                 var onConfigRetrieved = function (config) {
+                    if (!scope.peopleInit.peopleTitle)
+                        scope.peopleInit.peopleTitle = $translate.instant("common.directive.corePeople.title");
                     scope.config = config;
                     configGridMain(config);
                 };
