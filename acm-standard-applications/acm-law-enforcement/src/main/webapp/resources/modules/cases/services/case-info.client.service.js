@@ -10,7 +10,7 @@
  *
  * Case.InfoService provides functions for Case database data
  */
-angular.module('services').factory('Case.InfoService', ['$resource', '$translate', 'StoreService', 'UtilService', 'Object.InfoService',
+angular.module('services').factory('Case.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.InfoService',
     function ($resource, $translate, Store, Util, ObjectInfoService) {
         var Service = $resource('api/latest/plugin', {}, {});
 

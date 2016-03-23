@@ -827,6 +827,7 @@
       "dialogUserPicker": {
         "enableFiltering": false,
         "multiSelect": false,
+        "showFacets": false,
         "columnDefs": [
           {
             "name": "name",
@@ -851,6 +852,7 @@
       "dialogGroupPicker": {
         "enableFiltering": false,
         "multiSelect": false,
+        "showFacets": false,
         "columnDefs": [
           {
             "name": "name",
@@ -1220,6 +1222,68 @@
       "enabled": true,
       "type": "empty",
       "dateFormat": "MM/DD/YYYY HH:mm"
-    }
+    },
+    {
+        "id": "referenceSearchGrid",
+        "title": "Reference Search",
+        "enabled": "true",
+        "type": "grid",
+        "enableFiltering": false,
+        "emptySearch": false,
+        "hideTypeahead": true,
+        "showFacets": false,
+        "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE",
+        "columnDefs": [
+            {
+                "name": "object_id_s",
+                "displayName": "complaints.comp.addreference.grid.columns.id",
+                "headerCellFilter": "translate",
+                "visible": false
+            },
+            {
+                "name": "name",
+                "displayName": "complaints.comp.addreference.grid.columns.name",
+                "headerCellFilter": "translate",
+                "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity.object_type_s, row.entity.object_id_s)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.name}}>{{row.entity.name}}</a>"
+            },
+            {
+                "name": "object_type_s",
+                "displayName": "complaints.comp.addreference.grid.columns.type",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "title_parseable",
+                "displayName": "complaints.comp.addreference.grid.columns.title",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "parent_number_lcs",
+                "displayName": "complaints.comp.addreference.grid.columns.parent",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "assignee_full_name_lcs",
+                "displayName": "complaints.comp.addreference.grid.columns.assignee",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "modified_date_tdt",
+                "displayName": "complaints.comp.addreference.grid.columns.modified",
+                "headerCellFilter": "translate",
+                "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'MM/dd/yyyy h:mm:ss a'}}</div>"
+            }
+        ],
+        "paginationPageSizes": [
+            5,
+            10,
+            20,
+            50
+        ],
+        "paginationPageSize": 20,
+        "start": 0,
+        "filter": "",
+        "filterName": "",
+        "csvFileName": "search.csv"
+      }
   ]
 }

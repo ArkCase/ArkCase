@@ -10,7 +10,7 @@
  *
  * Complaint.ListService provides functions for Complaint database data
  */
-angular.module('services').factory('Complaint.ListService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ObjectService', 'Object.ListService',
+angular.module('services').factory('Complaint.ListService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'ObjectService', 'Object.ListService',
     function ($resource, $translate, Store, Util, ObjectService, ObjectListService) {
         var Service = $resource('api/latest/plugin', {}, {});
 

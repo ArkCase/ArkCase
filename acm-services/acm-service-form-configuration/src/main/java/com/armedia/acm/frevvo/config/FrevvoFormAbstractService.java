@@ -22,6 +22,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
@@ -507,13 +508,20 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
                     {
                         MultipartFile pdfAttachment = pdf.get(0);
                         EcmFile pdfRendition = null;
+                        String _fileType = getFormName();
+
+                        if (pdfAttachment != null && pdfAttachment.getContentType() != null &&
+                                pdfAttachment.getContentType().contains(EcmFileConstants.MIME_TYPE_PNG) && pdfAttachment.getContentType().contains(EcmFileConstants.MIME_TYPE_FREVVO_SIGNATURE_KEY))
+                        {
+                            _fileType += "_signature";
+                        }
 
                         // Update PDF form if the mode is "edit", otherwise create new
                         if ("edit".equals(mode) &&
                                 null != containerIdString && !"".equals(containerIdString) &&
                                 null != folderIdString && !"".equals(folderIdString))
                         {
-                            EcmFile file = getEcmFile(containerIdString, folderIdString, getFormName().toLowerCase());
+                            EcmFile file = getEcmFile(containerIdString, folderIdString, _fileType.toLowerCase());
                             file.setFileName(pdfAttachment.getName());
                             getEcmFileDao().save(file);
 
@@ -524,7 +532,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
                         } else
                         {
                             pdfRendition = uploadFile(
-                                    getFormName(),
+                                    _fileType,
                                     targetCmisFolderId,
                                     parentObjectType,
                                     parentObjectId,

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$state', '$translate', 'StoreService'
+angular.module('tasks').controller('TasksController', ['$scope', '$stateParams', '$state', '$translate', 'Acm.StoreService'
     , 'UtilService', 'ConfigService', 'Task.InfoService', 'ObjectService', 'Helper.ObjectBrowserService'
     , function ($scope, $stateParams, $state, $translate, Store
         , Util, ConfigService, TaskInfoService, ObjectService, HelperObjectBrowserService) {

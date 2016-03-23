@@ -10,8 +10,13 @@
 
  * LookupService contains functions to lookup data (typically static data).
  */
-angular.module('services').factory('Object.LookupService', ['$resource', 'StoreService', 'UtilService', 'SearchService',
-    function ($resource, Store, Util, SearchService) {
+
+angular.module('services').factory('Object.LookupService', ['$resource', 'Acm.StoreService', 'UtilService'
+    , 'LookupService', 'SearchService',
+    function ($resource, Store, Util
+        , LookupService, SearchService
+    ) {
+
         var Service = $resource('api/latest/plugin', {}, {
             /**
              * @ngdoc method
@@ -26,7 +31,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
             _getPriorities: {
                 url: "api/latest/plugin/complaint/priorities"
                 , method: "GET"
-                , cache: true
+                , cache: false
                 , isArray: true
             }
 
@@ -43,24 +48,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
             , _getGroups: {
                 url: "api/latest/service/functionalaccess/groups/acm-complaint-approve?n=1000&s=name asc"
                 , method: "GET"
-                , cache: true
-            }
-
-            /**
-             * @ngdoc method
-             * @name _getFileTypes
-             * @methodOf services:Object.LookupService
-             *
-             * @description
-             * Query list of file types
-             *
-             * @returns {Object} An array returned by $resource
-             */
-            , _getFileTypes: {
-                url: "modules_config/config/modules/cases/resources/fileTypes.json"
-                , method: "GET"
-                , cache: true
-                , isArray: true
+                , cache: false
             }
 
             /**
@@ -76,7 +64,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
             , _getFormTypes: {
                 url: "api/latest/plugin/admin/plainforms/:objType"
                 , method: "GET"
-                , cache: true
+                , cache: false
                 , isArray: true
             }
 
@@ -93,199 +81,17 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
             , _getPersonTypes: {
                 url: "api/latest/plugin/person/types"
                 , method: "GET"
-                , cache: true
+                , cache: false
                 , isArray: true
             }
 
-            /**
-             * @ngdoc method
-             * @name _getParticipantTypes
-             * @methodOf services:Object.LookupService
-             *
-             * @description
-             * Query list of participant types
-             *
-             * @returns {Object} An array returned by $resource
-             */
-            , _getParticipantTypes: {
-                url: "modules_config/config/modules/cases/resources/participantTypes.json"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-
-            }
-
-            /**
-             * @ngdoc method
-             * @name _getPersonTitles
-             * @methodOf services:Object.LookupService
-             *
-             * @description
-             * Query list of person titles
-             *
-             * @returns {Object} An array returned by $resource
-             */
-            , _getPersonTitles: {
-                url: "modules_config/config/modules/cases/resources/personTitles.json"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-            }
-
-            /**
-             * @ngdoc method
-             * @name _getContactMethodTypes
-             * @methodOf services:Object.LookupService
-             *
-             * @description
-             * Query list of contact method types
-             *
-             * @returns {Object} An array returned by $resource
-             */
-            , _getContactMethodTypes: {
-                url: "modules_config/config/modules/cases/resources/contactMethodTypes.json"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-            }
-
-            /**
-             * @ngdoc method
-             * @name _getOrganizationTypes
-             * @methodOf services:Object.LookupService
-             *
-             * @description
-             * Query list of organization types
-             *
-             * @returns {Object} An array returned by $resource
-             */
-            , _getOrganizationTypes: {
-                url: "modules_config/config/modules/cases/resources/organizationTypes.json"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-            }
-
-            /**
-             * @ngdoc method
-             * @name _getAddressTypes
-             * @methodOf services:Object.LookupService
-             *
-             * @description
-             * Query list of address types
-             *
-             * @returns {Object} An array returned by $resource
-             */
-            , _getAddressTypes: {
-                url: "modules_config/config/modules/cases/resources/addressTypes.json"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-            }
-
-            /**
-             * @ngdoc method
-             * @name _getAliasTypes
-             * @methodOf services:Object.LookupService
-             *
-             * @description
-             * Query list of alias types
-             *
-             * @returns {Object} An array returned by $resource
-             */
-            , _getAliasTypes: {
-                url: "modules_config/config/modules/cases/resources/aliasTypes.json"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-            }
-
-            /**
-             * @ngdoc method
-             * @name _getSecurityTagTypes
-             * @methodOf services:Object.LookupService
-             *
-             * @description
-             * Query list of security tag types
-             *
-             * @returns {Object} An array returned by $resource
-             */
-            , _getSecurityTagTypes: {
-                url: "modules_config/config/modules/cases/resources/securityTagTypes.json"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-            }
-
-            /**
-             * @ngdoc method
-             * @name _getObjectTypes
-             * @methodOf services:Object.LookupService
-             *
-             * @description
-             * Query list of object types
-             *
-             * @returns {Object} An array returned by $resource
-             */
-            , _getObjectTypes: {
-                url: "modules_config/config/modules/cases/resources/objectTypes.json"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-            }
-
-            /**
-             * @ngdoc method
-             * @name _getCaseFileCorrespondenceForms
-             * @methodOf services:Object.LookupService
-             *
-             * @description
-             * Query list of correspondence forms for use in the case file module
-             *
-             * @returns {Object} An array returned by $resource
-             */
-            , _getCaseFileCorrespondenceForms: {
-                url: "modules_config/config/modules/cases/resources/correspondenceForms.json"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-            }
-
-            /**
-             * @ngdoc method
-             * @name _getComplaintCorrespondenceForms
-             * @methodOf services:Object.LookupService
-             *
-             * @description
-             * Query list of correspondence forms for use in the complaints module
-             *
-             * @returns {Object} An array returned by $resource
-             */
-            , _getComplaintCorrespondenceForms: {
-                url: "modules_config/config/modules/complaints/resources/correspondenceForms.json"
-                , method: "GET"
-                , cache: true
-                , isArray: true
-            }
         });
 
         Service.SessionCacheNames = {
             PRIORITIES: "AcmPriorities"
             , OWNING_GROUPS: "AcmOwningGroups"
-            , FILE_TYPES: "AcmFileTypes"
             , FORM_TYPE_MAP: "AcmFormTypeMap"
             , PERSON_TYPES: "AcmPersonTypes"
-            , PARTICIPANT_TYPES: "AcmParticipantTypes"
-            , PERSON_TITLES: "AcmPersonTitles"
-            , CONTACT_METHOD_TYPES: "AcmContactMethodTypes"
-            , ORGANIZATION_TYPES: "AcmOrganizationTypes"
-            , ADDRESS_TYPES: "AcmAddressTypes"
-            , ALIAS_TYPES: "AcmAliasTypes"
-            , SECURITY_TAG_TYPES: "AcmSecurityTagTypes"
-            , OBJECT_TYPES: "AcmObjectTypes"
-            , CORRESPONDENCE_FORMS: "AcmCorrespondenceForms"
-            , CASE_FILE_CORRESPONDENCE_FORMS: "AcmCaseFileCorrespondenceForms"
-            , COMPLAINT_CORRESPONDENCE_FORMS: "AcmComplaintCorrespondenceForms"
         };
         Service.CacheNames = {};
 
@@ -378,52 +184,6 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
 
             return true;
         };
-
-
-        /**
-         * @ngdoc method
-         * @name getFileTypes
-         * @methodOf services:Object.LookupService
-         *
-         * @description
-         * Query list of file types
-         *
-         * @returns {Object} An array returned by $resource
-         */
-        Service.getFileTypes = function () {
-            var cacheFileTypes = new Store.SessionData(Service.SessionCacheNames.FILE_TYPES);
-            var fileTypes = cacheFileTypes.get();
-            return Util.serviceCall({
-                service: Service._getFileTypes
-                , result: fileTypes
-                , onSuccess: function (data) {
-                    if (Service.validateFileTypes(data)) {
-                        cacheFileTypes.set(data);
-                        return data;
-                    }
-                }
-            });
-        };
-
-        /**
-         * @ngdoc method
-         * @name validateFileTypes
-         * @methodOf services:Object.LookupService
-         *
-         * @description
-         * Validate list of file types data
-         *
-         * @param {Object} data  Data to be validated
-         *
-         * @returns {Boolean} Return true if data is valid
-         */
-        Service.validateFileTypes = function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        };
-
 
         /**
          * @ngdoc method
@@ -521,6 +281,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
             return true;
         };
 
+
         /**
          * @ngdoc method
          * @name getPersonTypes
@@ -565,6 +326,19 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
             return true;
         };
 
+        /**
+         * @ngdoc method
+         * @name getFileTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of file types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getFileTypes = function () {
+            return LookupService.getLookup("fileTypes");
+        };
 
         /**
          * @ngdoc method
@@ -577,39 +351,8 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Object} An array returned by $resource
          */
         Service.getParticipantTypes = function () {
-            var cacheParticipantTypes = new Store.SessionData(Service.SessionCacheNames.PARTICIPANT_TYPES);
-            var participantTypes = cacheParticipantTypes.get();
-            return Util.serviceCall({
-                service: Service._getParticipantTypes
-                , result: participantTypes
-                , onSuccess: function (data) {
-                    if (Service.validateParticipantTypes(data)) {
-                        cacheParticipantTypes.set(data);
-                        return data;
-                    }
-                }
-            });
+            return LookupService.getLookup("participantTypes");
         };
-
-        /**
-         * @ngdoc method
-         * @name validateParticipantTypes
-         * @methodOf services:Object.LookupService
-         *
-         * @description
-         * Validate list of participant types data
-         *
-         * @param {Object} data  Data to be validated
-         *
-         * @returns {Boolean} Return true if data is valid
-         */
-        Service.validateParticipantTypes = function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        };
-
 
         /**
          * @ngdoc method
@@ -622,39 +365,8 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Object} An array returned by $resource
          */
         Service.getPersonTitles = function () {
-            var cachePersonTitles = new Store.SessionData(Service.SessionCacheNames.FILE_TYPES);
-            var personTitles = cachePersonTitles.get();
-            return Util.serviceCall({
-                service: Service._getPersonTitles
-                , result: personTitles
-                , onSuccess: function (data) {
-                    if (Service.validatePersonTitles(data)) {
-                        cachePersonTitles.set(data);
-                        return data;
-                    }
-                }
-            });
+            return LookupService.getLookup("personTitles");
         };
-
-        /**
-         * @ngdoc method
-         * @name validatePersonTitles
-         * @methodOf services:Object.LookupService
-         *
-         * @description
-         * Validate list of person titles data
-         *
-         * @param {Object} data  Data to be validated
-         *
-         * @returns {Boolean} Return true if data is valid
-         */
-        Service.validatePersonTitles = function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        };
-
 
         /**
          * @ngdoc method
@@ -667,39 +379,8 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Object} An array returned by $resource
          */
         Service.getContactMethodTypes = function () {
-            var cacheContactMethodTypes = new Store.SessionData(Service.SessionCacheNames.CONTACT_METHOD_TYPES);
-            var contactMethodTypes = cacheContactMethodTypes.get();
-            return Util.serviceCall({
-                service: Service._getContactMethodTypes
-                , result: contactMethodTypes
-                , onSuccess: function (data) {
-                    if (Service.validateContactMethodTypes(data)) {
-                        cacheContactMethodTypes.set(data);
-                        return data;
-                    }
-                }
-            });
+            return LookupService.getLookup("contactMethodTypes");
         };
-
-        /**
-         * @ngdoc method
-         * @name validateContactMethodTypes
-         * @methodOf services:Object.LookupService
-         *
-         * @description
-         * Validate list of contact method types data
-         *
-         * @param {Object} data  Data to be validated
-         *
-         * @returns {Boolean} Return true if data is valid
-         */
-        Service.validateContactMethodTypes = function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        };
-
 
         /**
          * @ngdoc method
@@ -712,39 +393,8 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Object} An array returned by $resource
          */
         Service.getOrganizationTypes = function () {
-            var cacheOrganizationTypes = new Store.SessionData(Service.SessionCacheNames.ORGANIZATION_TYPES);
-            var organizationTypes = cacheOrganizationTypes.get();
-            return Util.serviceCall({
-                service: Service._getOrganizationTypes
-                , result: organizationTypes
-                , onSuccess: function (data) {
-                    if (Service.validateOrganizationTypes(data)) {
-                        cacheOrganizationTypes.set(data);
-                        return data;
-                    }
-                }
-            });
+            return LookupService.getLookup("organizationTypes");
         };
-
-        /**
-         * @ngdoc method
-         * @name validateOrganizationTypes
-         * @methodOf services:Object.LookupService
-         *
-         * @description
-         * Validate list of organization types data
-         *
-         * @param {Object} data  Data to be validated
-         *
-         * @returns {Boolean} Return true if data is valid
-         */
-        Service.validateOrganizationTypes = function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        };
-
 
         /**
          * @ngdoc method
@@ -757,39 +407,8 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Object} An array returned by $resource
          */
         Service.getAddressTypes = function () {
-            var cacheAddressTypes = new Store.SessionData(Service.SessionCacheNames.ADDRESS_TYPES);
-            var addressTypes = cacheAddressTypes.get();
-            return Util.serviceCall({
-                service: Service._getAddressTypes
-                , result: addressTypes
-                , onSuccess: function (data) {
-                    if (Service.validateAddressTypes(data)) {
-                        cacheAddressTypes.set(data);
-                        return data;
-                    }
-                }
-            });
+            return LookupService.getLookup("addressTypes");
         };
-
-        /**
-         * @ngdoc method
-         * @name validateAddressTypes
-         * @methodOf services:Object.LookupService
-         *
-         * @description
-         * Validate list of address types data
-         *
-         * @param {Object} data  Data to be validated
-         *
-         * @returns {Boolean} Return true if data is valid
-         */
-        Service.validateAddressTypes = function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        };
-
 
         /**
          * @ngdoc method
@@ -802,39 +421,8 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Object} An array returned by $resource
          */
         Service.getAliasTypes = function () {
-            var cacheAliasTypes = new Store.SessionData(Service.SessionCacheNames.ALIAS_TYPES);
-            var aliasTypes = cacheAliasTypes.get();
-            return Util.serviceCall({
-                service: Service._getAliasTypes
-                , result: aliasTypes
-                , onSuccess: function (data) {
-                    if (Service.validateAliasTypes(data)) {
-                        cacheAliasTypes.set(data);
-                        return data;
-                    }
-                }
-            });
+            return LookupService.getLookup("aliasTypes");
         };
-
-        /**
-         * @ngdoc method
-         * @name validateAliasTypes
-         * @methodOf services:Object.LookupService
-         *
-         * @description
-         * Validate list of alias types data
-         *
-         * @param {Object} data  Data to be validated
-         *
-         * @returns {Boolean} Return true if data is valid
-         */
-        Service.validateAliasTypes = function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        };
-
 
         /**
          * @ngdoc method
@@ -847,37 +435,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Object} An array returned by $resource
          */
         Service.getSecurityTagTypes = function () {
-            var cacheSecurityTagTypes = new Store.SessionData(Service.SessionCacheNames.SECURITY_TAG_TYPES);
-            var securityTagTypes = cacheSecurityTagTypes.get();
-            return Util.serviceCall({
-                service: Service._getSecurityTagTypes
-                , result: securityTagTypes
-                , onSuccess: function (data) {
-                    if (Service.validateSecurityTagTypes(data)) {
-                        cacheSecurityTagTypes.set(data);
-                        return data;
-                    }
-                }
-            });
-        };
-
-        /**
-         * @ngdoc method
-         * @name validateSecurityTagTypes
-         * @methodOf services:Object.LookupService
-         *
-         * @description
-         * Validate list of security tag types data
-         *
-         * @param {Object} data  Data to be validated
-         *
-         * @returns {Boolean} Return true if data is valid
-         */
-        Service.validateSecurityTagTypes = function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
+            return LookupService.getLookup("securityTagTypes");
         };
 
         /**
@@ -891,65 +449,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Object} An array returned by $resource
          */
         Service.getObjectTypes = function () {
-            var cacheObjectTypes = new Store.SessionData(Service.SessionCacheNames.OBJECT_TYPES);
-            var objectTypes = cacheObjectTypes.get();
-            return Util.serviceCall({
-                service: Service._getObjectTypes
-                , result: objectTypes
-                , onSuccess: function (data) {
-                    if (Service.validateObjectTypes(data)) {
-                        cacheObjectTypes.set(data);
-                        return data;
-                    }
-                }
-            });
-        };
-
-        /**
-         * @ngdoc method
-         * @name validateObjectTypes
-         * @methodOf services:Object.LookupService
-         *
-         * @description
-         * Validate list of object types data
-         *
-         * @param {Object} data  Data to be validated
-         *
-         * @returns {Boolean} Return true if data is valid
-         */
-        Service.validateObjectTypes = function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        };
-
-
-        /**
-         * @ngdoc method
-         * @name getCorrespondenceForms
-         * @methodOf services:Object.LookupService
-         *
-         * @description
-         * Query list of correspondence forms; for backwards compatibility, this returns the case file
-         * correspondence forms.  Since each module could have different correspondence forms, in the future please
-         * call the specific module method.
-         *
-         * @returns {Object} An array returned by $resource
-         */
-        Service.getCorrespondenceForms = function () {
-            var cacheCorrespondenceForms = new Store.SessionData(Service.SessionCacheNames.CASE_FILE_CORRESPONDENCE_FORMS);
-            var correspondenceForms = cacheCorrespondenceForms.get();
-            return Util.serviceCall({
-                service: Service._getCaseFileCorrespondenceForms
-                , result: correspondenceForms
-                , onSuccess: function (data) {
-                    if (Service.validateCorrespondenceForms(data)) {
-                        cacheCorrespondenceForms.set(data);
-                        return data;
-                    }
-                }
-            });
+            return LookupService.getLookup("objectTypes");
         };
 
         /**
@@ -963,18 +463,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Object} An array returned by $resource
          */
         Service.getCaseFileCorrespondenceForms = function () {
-            var cacheCorrespondenceForms = new Store.SessionData(Service.SessionCacheNames.CASE_FILE_CORRESPONDENCE_FORMS);
-            var correspondenceForms = cacheCorrespondenceForms.get();
-            return Util.serviceCall({
-                service: Service._getCaseFileCorrespondenceForms
-                , result: correspondenceForms
-                , onSuccess: function (data) {
-                    if (Service.validateCorrespondenceForms(data)) {
-                        cacheCorrespondenceForms.set(data);
-                        return data;
-                    }
-                }
-            });
+            return LookupService.getLookup("caseCorrespondenceForms");
         };
 
         /**
@@ -988,38 +477,7 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'StoreS
          * @returns {Object} An array returned by $resource
          */
         Service.getComplaintCorrespondenceForms = function () {
-            var cacheComplaintCorrespondenceForms = new Store.SessionData(Service.SessionCacheNames.COMPLAINT_CORRESPONDENCE_FORMS);
-            var complaintCorrespondenceForms = cacheComplaintCorrespondenceForms.get();
-            return Util.serviceCall({
-                service: Service._getComplaintCorrespondenceForms
-                , result: complaintCorrespondenceForms
-                , onSuccess: function (data) {
-                    if (Service.validateCorrespondenceForms(data)) {
-                        cacheComplaintCorrespondenceForms.set(data);
-                        return data;
-                    }
-                }
-            });
-        };
-
-
-        /**
-         * @ngdoc method
-         * @name validateCorrespondenceForms
-         * @methodOf services:Object.LookupService
-         *
-         * @description
-         * Validate list of correspondence forms
-         *
-         * @param {Object} data  Data to be validated
-         *
-         * @returns {Boolean} Return true if data is valid
-         */
-        Service.validateCorrespondenceForms = function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
+            return LookupService.getLookup("complaintCorrespondenceForms");
         };
 
         return Service;

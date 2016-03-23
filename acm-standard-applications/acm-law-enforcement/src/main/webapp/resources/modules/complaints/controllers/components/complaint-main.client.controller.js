@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.MainController', ['$scope', '$stateParams', '$translate'
-    , 'StoreService', 'UtilService', 'ConfigService', 'Complaint.InfoService', 'dashboard', 'Dashboard.DashboardService'
+    , 'Acm.StoreService', 'UtilService', 'ConfigService', 'Complaint.InfoService', 'dashboard', 'Dashboard.DashboardService'
     , function ($scope, $stateParams, $translate
         , Store, Util, ConfigService, ComplaintInfoService, dashboard, DashboardService) {
 

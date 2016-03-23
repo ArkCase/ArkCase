@@ -10,7 +10,7 @@
  *
  * Task.ListService provides functions for Task database data
  */
-angular.module('tasks').factory('Task.ListService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ObjectService', 'Object.ListService',
+angular.module('tasks').factory('Task.ListService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'ObjectService', 'Object.ListService',
     function ($resource, $translate, Store, Util, ObjectService, ObjectListService) {
         var Service = $resource('api/latest/plugin', {}, {});
 

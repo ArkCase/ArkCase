@@ -81,6 +81,9 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
     ////for assigned tags/////////////////////
     private String tag_token_lcs;
 
+    ////for tasks associated with business processes/////////////////////
+    private Long business_process_id_i;
+    private String business_process_name_lcs;
 
     @Override
     public String getId()
@@ -558,6 +561,26 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         this.tag_token_lcs = tag_token_lcs;
     }
 
+    public Long getBusiness_process_id_i()
+    {
+        return business_process_id_i;
+    }
+
+    public void setBusiness_process_id_i(Long business_process_id_i)
+    {
+        this.business_process_id_i = business_process_id_i;
+    }
+
+    public String getBusiness_process_name_lcs()
+    {
+        return business_process_name_lcs;
+    }
+
+    public void setBusiness_process_name_lcs(String business_process_name_lcs)
+    {
+        this.business_process_name_lcs = business_process_name_lcs;
+    }
+
     @Override
     public String toString()
     {
@@ -609,6 +632,8 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
                 ", parent_ref_s='" + parent_ref_s + '\'' +
                 ", data_s='" + data_s + '\'' +
                 ", tag_token_lcs='" + tag_token_lcs + '\'' +
+                ", business_process_name_lcs='" + business_process_name_lcs + '\'' +
+                ", business_process_id_i='" + business_process_id_i + '\'' +
                 '}';
     }
 }

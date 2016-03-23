@@ -23,7 +23,8 @@
  * "disable" to disable the command; Anything else or undefined means the command will be show as normal.
  * @param {Function} on-pre-cmd (Optional)Callback function before a command is executed to give doc tree
  * consumer to run additional code before the command is executed or to override implemented command.
- * Return "fasle" prevents the command execution; "true" or "undefined" to continue the command
+ * Return "fasle" prevents the command execution; "true" or "undefined" to continue the command.
+ * It also accepts promise as return. In that case, promise resolution of "false" prevents command execution.
  * @param {Function} on-post-cmd (Optional)Callback function after a command is executed to give doc tree
  * consumer to run additional code after the command is executed.
  * @param {Object} tree-control Tree API functions exposed to user. Following is the list:
@@ -80,7 +81,7 @@
  </file>
  </example>
  */
-angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', 'StoreService', 'UtilService'
+angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', 'Acm.StoreService', 'UtilService'
     , 'Util.DateService', 'ConfigService', 'LookupService', 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService'
     , function ($q, $translate, $modal, $filter, Store, Util
         , UtilDateService, ConfigService, LookupService, Ecm, EcmEmailService, EcmRecordService) {
@@ -857,9 +858,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
             , Command: {
                 onCommand: function (event, data) {
-                    var refNode;
-                    var moveMode;
-                    //var tree = $(this).fancytree("getTree");
                     var tree = DocTree.tree;
                     var selNodes = tree.getSelectedNodes();
                     var node = tree.getActiveNode();
@@ -873,11 +871,24 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     var actNodes = (batch)? selNodes : [node];
 
-
-                    //prevent command if return "false"; contine when return "true" or "undefined"
-                    if (!Util.goodValue(DocTree.Command.onPreCmd(data.cmd, actNodes), true)) {
-                        return;
+                    //prevent command process if return "false"; continue when return "true", "undefined" or anything else
+                    var rc = DocTree.Command.onPreCmd(data.cmd, actNodes);
+                    if (false !== rc) {
+                        $q.all([rc]).then(function(preCmdData) {
+                            if (false !== preCmdData[0]) {
+                                DocTree.Command._processCommand(event, data, node, selNodes, batch, actNodes);
+                            }
+                        });
                     }
+
+                }
+                , _processCommand: function (event, data, node, selNodes, batch, actNodes) {
+                    var refNode;
+                    var moveMode;
+
+                    //if (!Util.goodValue(DocTree.Command.onPreCmd(data.cmd, actNodes), true)) {
+                    //    return;
+                    //}
 
                     switch (data.cmd) {
                         case "moveUp":

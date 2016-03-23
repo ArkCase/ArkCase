@@ -209,26 +209,46 @@
   "cases.comp.calendar": {
     "title": "Calendar"
   },
-    "cases.comp.merge": {
-      "id": "merge",
-      "title": "Merge",
-      "cancel.btn": "Cancel",
-      "merge.btn": "Merge",
-      "search.placeholder": "Search for case file.",
-      "search.btn": "Search",
-      "enabled": true,
-      "table.columns": {
-              "incident": "Type",
-              "name": "Name",
-              "assignee": "Assignee",
-              "title": "Title",
-              "parent": "Parent",
-              "modified": "Modified"
-       }
+"cases.comp.merge": {
+    "id": "merge",
+    "title": "Merge",
+    "cancel.btn": "Cancel",
+    "merge.btn": "Merge",
+    "search.placeholder": "Search for case file.",
+    "search.btn": "Search",
+    "enabled": true,
+    "table.columns": {
+            "incident": "Type",
+            "name": "Name",
+            "assignee": "Assignee",
+            "title": "Title",
+            "parent": "Parent",
+            "modified": "Modified"
+     }
+  },
+  "cases.comp.split":{
+      "title": "Split",
+      "cancel": "Cancel",
+      "split": "Split"
+  },
+  "cases.comp.addreference": {
+    "title": "Add Reference",
+    "cancelButton": "Cancel",
+    "confirmButton": "Add",
+    "search": {
+      "placeholder": "Search for case or complaint",
+      "btn": "Search"
     },
-    "cases.comp.split":{
-        "title": "Split",
-        "cancel": "Cancel",
-        "split": "Split"
+    "grid": {
+      "columns": {
+        "id": "Id",
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "parent": "Parent",
+        "assignee": "Assignee",
+        "modified": "Modified"
+      }
     }
+  }    
 }
