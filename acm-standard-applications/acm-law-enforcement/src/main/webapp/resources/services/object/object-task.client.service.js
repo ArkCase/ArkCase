@@ -68,6 +68,47 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'St
 
         /**
          * @ngdoc method
+         * @name resetChildTasks
+         * @methodOf services:Object.TaskService
+         *
+         * @description
+         * Reset cache of child tasks
+         * If no arguments are given, reset caceh to empty
+         * If Only parent type and parent ID is given, reset entries for the given parent object only
+         * If all arguments are present, reset cache entry to null for the page
+         *
+         * @param {String} parentType  (Optional) Parent type
+         * @param {Number} parentId  (Optional) Parent ID.
+         * @param {String} start  (Optional) Start page
+         * @param {String} n  (Optional) Number of task in the page
+         * @param {String} sortBy  (Optional) Sort field
+         * @param {String} sortDir  (Optional) Sort direction
+         *
+         * @returns None
+         */
+        Service.resetChildTasks = function (parentType, parentId, start, n, sortBy, sortDir) {
+            var cacheChildTaskData = new Store.CacheFifo(Service.CacheNames.CHILD_TASK_DATA);
+            if (!Util.isEmpty(start)) {
+                var cacheKey = parentType + "." + parentId + "." + start + "." + n + "." + sortBy + "." + sortDir;
+                cacheChildTaskData.set(cacheKey, null);
+
+            } else if (!Util.isEmpty(parentId)) {
+                var keys = cacheChildTaskData.keys();
+                var keyBegin = parentType + "." + parentId + ".";
+                var found = _.filter(keys, function(key) {
+                    return (key && key.startsWith(keyBegin));
+                });
+                _.each(found, function(key) {
+                    cacheChildTaskData.set(key, null);
+                });
+
+            } else {
+                cacheChildTaskData.reset();
+            }
+        };
+
+        /**
+         * @ngdoc method
          * @name queryChildTasks
          * @methodOf services:Object.TaskService
          *
