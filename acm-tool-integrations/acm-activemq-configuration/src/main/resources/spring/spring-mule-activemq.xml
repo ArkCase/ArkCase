@@ -11,9 +11,9 @@
     <!-- ActiveMQ Configuration                                                     -->
     <!--*************************************************************************** -->
 
-    <amq:broker id="broker" useJmx="false" persistent="true" >
+    <amq:broker id="broker" useJmx="false" persistent="true">
         <amq:persistenceAdapter>
-            <amq:kahaDB directory="${user.home}/.arkcase/acm/activemq" />
+            <amq:kahaDB directory="${user.home}/.arkcase/activemq"/>
         </amq:persistenceAdapter>
         <amq:systemUsage>
             <amq:systemUsage>
@@ -32,11 +32,11 @@
             </amq:systemUsage>
         </amq:systemUsage>
         <amq:transportConnectors>
-            <amq:transportConnector uri="vm://localhost" />
+            <amq:transportConnector uri="vm://localhost"/>
         </amq:transportConnectors>
     </amq:broker>
 
-    <amq:connectionFactory id="amqConnectionFactory" brokerURL="vm://localhost" />
+    <amq:connectionFactory id="amqConnectionFactory" brokerURL="vm://localhost"/>
 
     <bean id="jmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
           destroy-method="stop" depends-on="broker">
