@@ -66,6 +66,12 @@ public class AuditEvent {
     @Column(name = "cm_object_id")
     private Long objectId;
 
+    @Column(name = "cm_parent_object_type")
+    private String parentType;
+
+    @Column(name = "cm_parent_object_id")
+    private Long parentId;
+
     @Column(name = "cm_audit_status")
     private String status;
 
@@ -160,6 +166,26 @@ public class AuditEvent {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getParentType()
+    {
+        return parentType;
+    }
+
+    public void setParentType(String parentType)
+    {
+        this.parentType = parentType;
+    }
+
+    public Long getParentId()
+    {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId)
+    {
+        this.parentId = parentId;
     }
 
     @Transient

@@ -146,15 +146,6 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
         Set<AcmParticipant> es = new HashSet<>(existing);
         Set<AcmParticipant> us = new HashSet<>(updated);
 
-        if (es.addAll(us))
-        {
-            // participants added
-            getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, "", "participants.added");
-        }
-
-        // set is mutable
-        es = new HashSet<>(existing);
-
         if (us.addAll(es))
         {
             // participants deleted

@@ -43,6 +43,8 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
             auditEvent.setEventResult(acmEvent.isSucceeded() ? AuditConstants.EVENT_RESULT_SUCCESS : AuditConstants.EVENT_RESULT_FAILURE);
             auditEvent.setObjectId(acmEvent.getObjectId());
             auditEvent.setObjectType(acmEvent.getObjectType());
+            auditEvent.setParentId(acmEvent.getParentId());
+            auditEvent.setParentType(acmEvent.getParentType());
             auditEvent.setIpAddress(acmEvent.getIpAddress());
             auditEvent.setStatus("DRAFT");
 

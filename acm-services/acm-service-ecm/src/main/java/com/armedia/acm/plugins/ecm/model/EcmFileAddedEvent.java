@@ -31,6 +31,8 @@ public class EcmFileAddedEvent extends AcmEvent
         setEventDate(new Date());
         setUserId(uploaded.getModifier());
         setEcmFileId(uploaded.getVersionSeriesId());
+        setParentType(uploaded.getContainer().getContainerObjectType());
+        setParentId(uploaded.getContainer().getContainerObjectId());
 
         setParentObjectType(uploaded.getContainer().getContainerObjectType());
         setParentObjectId(uploaded.getContainer().getContainerObjectId());
