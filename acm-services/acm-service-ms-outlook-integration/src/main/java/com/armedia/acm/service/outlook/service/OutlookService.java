@@ -13,6 +13,7 @@ import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyD
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.security.core.Authentication;
 
 /**
  * Created by armdev on 4/20/15.
@@ -57,7 +58,7 @@ public interface OutlookService {
     void deleteAppointmentItem(AcmOutlookUser user, String itemId, Boolean recurring, DeleteMode deleteMode);
 
     @Retryable(maxAttempts = 3, value=AcmOutlookException.class, backoff = @Backoff(delay = 500))
-    void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user) throws Exception;
+    void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user, Authentication authentication) throws Exception;
 
     void setDao(OutlookDao dao);
 }

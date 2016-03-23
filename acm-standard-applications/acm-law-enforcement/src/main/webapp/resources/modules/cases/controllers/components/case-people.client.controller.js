@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.PeopleController', ['$scope', 'ObjectService', 'Case.InfoService'
-    , function ($scope, ObjectService, CaseInfoService) {
+angular.module('cases').controller('Cases.PeopleController', ['$scope', '$translate', 'ObjectService', 'Case.InfoService'
+    , function ($scope, $translate, ObjectService, CaseInfoService) {
 
         $scope.peopleInit = {
             moduleId: 'cases',
@@ -10,7 +10,8 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', 'ObjectS
             validateObjectInfo: CaseInfoService.validateCaseInfo,
             saveObjectInfo: CaseInfoService.saveCaseInfo,
             objectType: ObjectService.ObjectTypes.CASE_FILE,
-            objectInfoId: 'id'
+            objectInfoId: 'id',
+            peopleTitle: $translate.instant("cases.comp.people.title")
         }
     }
 ]);

@@ -338,6 +338,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         String processName = "processName";
         Long objectId = 250L;
         String objectType = "objectType";
+        String deleteReason = null;
 
         Map<String, Object> pvars = new HashMap<>();
         pvars.put("OBJECT_ID", objectId);
@@ -365,17 +366,17 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getOwner()).andReturn(user);
         expect(mockTask.getProcessInstanceId()).andReturn(null);
 
-        mockTaskService.deleteTask(String.valueOf(taskId));
+        mockTaskService.deleteTask(String.valueOf(taskId), deleteReason);
 
         expect(mockHistoryService.createHistoricTaskInstanceQuery()).andReturn(mockHistoricTaskInstanceQuery);
         expect(mockHistoricTaskInstanceQuery.taskId(String.valueOf(taskId))).andReturn(mockHistoricTaskInstanceQuery);
         expect(mockHistoricTaskInstanceQuery.singleResult()).andReturn(mockHistoricTaskInstance);
 
         expect(mockHistoricTaskInstance.getStartTime()).andReturn(started);
-        expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended);
-        expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended);
-
+        expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended).times(2);
         expect(mockHistoricTaskInstance.getDurationInMillis()).andReturn(taskDuration);
+
+        expect(mockHistoricTaskInstance.getDeleteReason()).andReturn(deleteReason).times(1);
 
         expect(mockTask.getId()).andReturn(taskId.toString());
         expect(mockTask.getDueDate()).andReturn(dueDate);
@@ -1125,7 +1126,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockHistoricTaskInstance.getAssignee()).andReturn(assignee);
         expect(mockHistoricTaskInstance.getTaskLocalVariables()).andReturn(pvars).atLeastOnce();
         expect(mockHistoricTaskInstance.getProcessVariables()).andReturn(pvars).atLeastOnce();
-        expect(mockHistoricTaskInstance.getProcessInstanceId()).andReturn(processId).times(2);
+        expect(mockHistoricTaskInstance.getProcessInstanceId()).andReturn(processId).times(3);
         expect(mockHistoricTaskInstance.getProcessDefinitionId()).andReturn(processId);
         expect(mockHistoricTaskInstance.getTaskDefinitionKey()).andReturn(taskDefKey);
 
