@@ -7,6 +7,8 @@ public class AcmParticipantCreatedEvent extends  AcmParticipantPersistenceEvent{
 
     public AcmParticipantCreatedEvent(AcmParticipant source, String userId) {
         super(source,userId);
+        setParentId(source.getObjectId());
+        setParentType(source.getObjectType());
     }
 
     @Override

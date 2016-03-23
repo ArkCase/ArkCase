@@ -66,7 +66,14 @@ public class SaveNoteAPIController
 
             Note savedNote = getNoteDao().save(note);
 
-            publishNoteEvent(httpSession, savedNote, true);
+            if(note.getId() == null)
+            {
+                publishNoteEvent(httpSession, savedNote, "added", true);
+            }
+            else
+            {
+                publishNoteEvent(httpSession, savedNote, "updated", true);
+            }
 
             return savedNote;
         } catch (Exception e)
@@ -83,18 +90,25 @@ public class SaveNoteAPIController
             fakeNote.setCreator(note.getCreator());
             fakeNote.setCreated(note.getCreated());
 
-            publishNoteEvent(httpSession, fakeNote, false);
+            if(note.getId() == null)
+            {
+                publishNoteEvent(httpSession, fakeNote, "added", false);
+            }
+            else
+            {
+                publishNoteEvent(httpSession, fakeNote, "updated", false);
+            }
             throw new AcmUserActionFailedException("unable to add note from ", note.getParentType(), note.getParentId(), e.getMessage(), e);
         }
     }
 
     protected void publishNoteEvent(
             HttpSession httpSession,
-            Note note,
+            Note note, String eventType,
             boolean succeeded)
     {
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
-        ApplicationNoteEvent event = new ApplicationNoteEvent(note, "added", succeeded, ipAddress);
+        ApplicationNoteEvent event = new ApplicationNoteEvent(note, eventType, succeeded, ipAddress);
         getNoteEventPublisher().publishNoteEvent(event);
     }
 

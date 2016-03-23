@@ -152,6 +152,13 @@
                         newDataType="CLOB"
                         tableName="acm_audit_log_property"/>
     </changeSet>
+
+    <changeSet id="11-acm_audit_add_parent_object_type_columns" author="nadica.cuculova">
+        <addColumn tableName="acm_audit_log">
+            <column name="cm_parent_object_id" type="${fkIdType}"/>
+            <column name="cm_parent_object_type" type="VARCHAR(128)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
     
 

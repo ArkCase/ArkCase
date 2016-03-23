@@ -44,6 +44,8 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent {
         setParentObjectId(parentObjectId);
         setParentObjectType(parentObjectType);
         setParentObjectName(parentObjectName);
+        setParentId(parentObjectId);
+        setParentType(parentObjectType);
     }
 
     private String determinePriority(int priority)

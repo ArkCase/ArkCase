@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
@@ -70,6 +71,11 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                         getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "status.changed");
                     }
 
+                    if (isLocationChanged(existing, updatedComplaint))
+                    {
+                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "location.updated");
+                    }
+
                     checkParticipants(existing, updatedComplaint);
                 }
 
@@ -122,6 +128,18 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
         return !updatedPriority.equals(priority);
     }
 
+    private boolean isLocationChanged(Complaint complaint, Complaint updatedComplaint)
+    {
+        PostalAddress updatedLocation = updatedComplaint.getLocation();
+        PostalAddress location = complaint.getLocation();
+        if(location != null){
+            return !location.equals(updatedLocation);
+        }else if (updatedLocation != null){
+            return true;
+        }
+        return false;
+    }
+
     private boolean isDetailsChanged(Complaint complaint, Complaint updatedComplaint)
     {
         String updatedDetails = updatedComplaint.getDetails();
@@ -143,15 +161,6 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
         Set<AcmParticipant> es = new HashSet<>(existing);
         Set<AcmParticipant> us = new HashSet<>(updated);
-
-        if (es.addAll(us))
-        {
-            // participants added
-            getComplaintEventPublisher().publishComplaintModified(updatedComplaint, "", "participants.added");
-        }
-
-        // set is mutable
-        es = new HashSet<>(existing);
 
         if (us.addAll(es))
         {
