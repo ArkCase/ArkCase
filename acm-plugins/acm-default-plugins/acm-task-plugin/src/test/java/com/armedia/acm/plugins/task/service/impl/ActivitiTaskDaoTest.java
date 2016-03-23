@@ -1126,7 +1126,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockHistoricTaskInstance.getAssignee()).andReturn(assignee);
         expect(mockHistoricTaskInstance.getTaskLocalVariables()).andReturn(pvars).atLeastOnce();
         expect(mockHistoricTaskInstance.getProcessVariables()).andReturn(pvars).atLeastOnce();
-        expect(mockHistoricTaskInstance.getProcessInstanceId()).andReturn(processId).times(2);
+        expect(mockHistoricTaskInstance.getProcessInstanceId()).andReturn(processId).times(3);
         expect(mockHistoricTaskInstance.getProcessDefinitionId()).andReturn(processId);
         expect(mockHistoricTaskInstance.getTaskDefinitionKey()).andReturn(taskDefKey);
 
