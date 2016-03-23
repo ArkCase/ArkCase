@@ -726,20 +726,26 @@ public class ActivitiTaskDao implements TaskDao
         if (historicTaskInstance.getDeleteReason() != null && historicTaskInstance.getEndTime() != null
                 && historicTaskInstance.getDeleteReason().equals(TaskConstants.STATE_TERMINATED))
         {
-            HistoricProcessInstance historicProcessInstance =
-                    getActivitiHistoryService().createHistoricProcessInstanceQuery()
-                            .processInstanceId(historicTaskInstance.getProcessInstanceId())
-                            .singleResult();
-            //deleted process instance endTime matches terminated tasks endTime to second offset
-            if (historicProcessInstance.getEndTime() != null)
+            //make a check if the task is ad-hoc or not
+            if (historicTaskInstance.getProcessInstanceId() != null)
             {
-                Date processTerminatedDateTime = DateUtils.round(historicProcessInstance.getEndTime(), Calendar.SECOND);
-                Date taskTerminatedDateTime = DateUtils.round(historicTaskInstance.getEndTime(), Calendar.SECOND);
-                if (processTerminatedDateTime.equals(taskTerminatedDateTime))
+                HistoricProcessInstance historicProcessInstance =
+                        getActivitiHistoryService().createHistoricProcessInstanceQuery()
+                                .processInstanceId(historicTaskInstance.getProcessInstanceId())
+                                .singleResult();
+
+                //deleted process instance endTime matches terminated tasks endTime to second offset
+                if (historicProcessInstance.getEndTime() != null)
                 {
-                    return true;
+                    Date processTerminatedDateTime = DateUtils.round(historicProcessInstance.getEndTime(), Calendar.SECOND);
+                    Date taskTerminatedDateTime = DateUtils.round(historicTaskInstance.getEndTime(), Calendar.SECOND);
+                    if (processTerminatedDateTime.equals(taskTerminatedDateTime))
+                    {
+                        return true;
+                    }
                 }
             }
+            return true;
         }
         return false;
     }
