@@ -51,7 +51,7 @@ angular.module('services').factory('Case.InfoService', ['$resource', '$translate
                 var cacheCaseInfo = new Store.CacheFifo(Service.CacheNames.CASE_INFO);
                 cacheCaseInfo.put(caseInfo.id, caseInfo);
             }
-        }
+        };
 
         /**
          * @ngdoc method
