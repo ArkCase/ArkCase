@@ -5,6 +5,7 @@ import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
 
+import com.armedia.acm.plugins.audit.model.AuditConstants;
 import com.armedia.acm.plugins.audit.service.ReplaceEventTypeNames;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -28,8 +29,7 @@ import java.util.Map;
 public class GetAuditByObjectTypeAndObjectIdAPIController {
 	
     private final Logger LOG = LoggerFactory.getLogger(getClass());
-    public static final String HISTORY_TYPES = "history.event.types";
-    
+
     private AuditDao auditDao;
     private Map<String, String> auditProperties;
     private ReplaceEventTypeNames replaceEventTypeNames;
@@ -47,13 +47,13 @@ public class GetAuditByObjectTypeAndObjectIdAPIController {
         {
             LOG.debug("Finding audit for " + objectType + " with id "  + objectId + "; start row: " + startRow + "; max rows: " + maxRows);
         }
-
-        String eventTypesString = getAuditProperties().get(String.format("%s.%s", objectType, HISTORY_TYPES));
+        String key = String.format("%s.%s", objectType, AuditConstants.HISTORY_TYPES);
+        String eventTypesString = getAuditProperties().get(key);
         List<String> eventTypes = null;
         if (StringUtils.isNotEmpty(eventTypesString))
         {
             eventTypesString.trim();
-            eventTypes = new ArrayList<>(Arrays.asList(eventTypesString.split("\\s*,\\s*")));
+            eventTypes = Arrays.asList(eventTypesString.split("\\s*,\\s*"));
         }
 
         List<AuditEvent> pagedResult = getAuditDao().findPagedResults(objectId, objectType, startRow, maxRows, eventTypes);

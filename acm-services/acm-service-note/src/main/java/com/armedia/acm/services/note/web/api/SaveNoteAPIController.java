@@ -5,6 +5,7 @@ import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.exception.AcmNoteException;
 import com.armedia.acm.services.note.model.ApplicationNoteEvent;
 import com.armedia.acm.services.note.model.Note;
+import com.armedia.acm.services.note.model.NoteConstants;
 import com.armedia.acm.services.note.service.NoteEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +59,10 @@ import javax.servlet.http.HttpSession;
             Note savedNote = getNoteDao().save(note);
 
             String noteEvent = note.getId() == null ? "added" : "updated";
+            if (savedNote.getType().equals(NoteConstants.NOTE_REJECT_COMMENT))
+            {
+                noteEvent = String.format("rejectcomment.%s", noteEvent);
+            }
             publishNoteEvent(httpSession, savedNote, noteEvent, true);
 
             return savedNote;
@@ -74,8 +79,15 @@ import javax.servlet.http.HttpSession;
             fakeNote.setNote(note.getNote());
             fakeNote.setCreator(note.getCreator());
             fakeNote.setCreated(note.getCreated());
+            fakeNote.setType(NoteConstants.NOTE_GENERAL);
 
             String noteEvent = note.getId() == null ? "added" : "updated";
+
+            if (fakeNote.getType().equals(NoteConstants.NOTE_REJECT_COMMENT))
+            {
+                noteEvent = String.format("rejectcomment.%s", noteEvent);
+            }
+
             publishNoteEvent(httpSession, fakeNote, noteEvent, false);
             throw new AcmUserActionFailedException("unable to add note from ", note.getParentType(), note.getParentId(), e.getMessage(), e);
         }

@@ -1,11 +1,11 @@
 package com.armedia.acm.plugins.audit.service;
 
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.audit.dao.AuditLookupDao;
 import com.armedia.acm.plugins.audit.model.AcmAuditLookup;
+import com.armedia.acm.plugins.audit.model.AuditConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
