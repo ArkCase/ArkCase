@@ -52,6 +52,7 @@ public class GetAuditByObjectTypeAndObjectIdAPIController {
         List<String> eventTypes = null;
         if (StringUtils.isNotEmpty(eventTypesString))
         {
+            eventTypesString.trim();
             eventTypes = new ArrayList<>(Arrays.asList(eventTypesString.split("\\s*,\\s*")));
         }
 

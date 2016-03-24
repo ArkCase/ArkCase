@@ -94,12 +94,15 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
                 "AND ((ae.objectType = :objectType AND ae.objectId = :objectId) " +
                 "OR (ae.parentType = :objectType AND ae.parentId = :objectId)) " +
                 (eventTypes != null ? "AND ae.fullEventType IN :eventTypes " : "") +
-                "AND ae.eventResult = 'success' " +
-                "ORDER BY ae.eventDate";
+                "AND ae.eventResult = 'success'";
 
         Query query = getEm().createQuery(queryText);
         query.setParameter("objectId", objectId);
         query.setParameter("objectType", objectType);
+        if (eventTypes != null)
+        {
+            query.setParameter("eventTypes", eventTypes);
+        }
 
         Long count = (Long) query.getSingleResult();
 
