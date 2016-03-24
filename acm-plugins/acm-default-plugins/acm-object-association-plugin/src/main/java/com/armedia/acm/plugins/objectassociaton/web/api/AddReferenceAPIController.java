@@ -40,9 +40,10 @@ public class AddReferenceAPIController
             String referenceNumber = ref.getReferenceNumber();
             String referenceType = ref.getReferenceType();
             String referenceTitle = ref.getReferenceTitle();
-            Long targetId = ref.getTargetId();
-            String targetType = ref.getTargetType();
-            objectAssociationService.addReference(referenceId, referenceNumber, referenceType, referenceTitle, targetId, targetType);
+            String referenceStatus = ref.getReferenceStatus();
+            Long parentId = ref.getParentId();
+            String parentType = ref.getParentType();
+            objectAssociationService.addReference(referenceId, referenceNumber, referenceType, referenceTitle, referenceStatus, parentId, parentType);
             getEventPublisher().publishAddReferenceEvent(ref, auth, true);
             return ref;
 

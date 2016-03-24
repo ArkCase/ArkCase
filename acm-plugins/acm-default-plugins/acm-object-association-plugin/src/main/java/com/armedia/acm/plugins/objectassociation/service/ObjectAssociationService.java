@@ -11,7 +11,7 @@ import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 
 public interface ObjectAssociationService
 {
-    public void addReference(Long id, String number, String type, String title, Long targetId, String targetType);
+    public void addReference(Long id, String number, String type, String title, String status, Long parentId, String parentType);
 
     public AcmAbstractDao<AcmChildObjectEntity> getDaoForChildObjectEntity(String objectType);
 
