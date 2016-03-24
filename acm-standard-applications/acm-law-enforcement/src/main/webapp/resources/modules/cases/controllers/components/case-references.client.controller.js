@@ -70,15 +70,16 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                 }
             });
 
-            modalInstance.result.then(function (chosenFile) {
-                if (chosenFile) {
+            modalInstance.result.then(function (chosenReference) {
+                if (chosenReference) {
                     var reference = {};
-                    reference.referenceId = chosenFile.object_id_s;
-                    reference.referenceTitle = chosenFile.title_parseable;
-                    reference.referenceType = chosenFile.object_type_s;
-                    reference.referenceNumber = chosenFile.name;
-                    reference.targetId = $stateParams.id;
-                    reference.targetType = 'CASE_FILE';
+                    reference.referenceId = chosenReference.object_id_s;
+                    reference.referenceTitle = chosenReference.title_parseable;
+                    reference.referenceType = chosenReference.object_type_s;
+                    reference.referenceNumber = chosenReference.name;
+                    reference.referenceStatus = chosenReference.status_lcs;
+                    reference.parentId = $stateParams.id;
+                    reference.parentType = 'CASE_FILE';
                     referenceService.addReference(reference).then(
                         function (objectSaved) {
                             $scope.refresh();

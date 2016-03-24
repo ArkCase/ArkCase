@@ -16,8 +16,9 @@ public class Reference implements Serializable
     private String referenceNumber;
     private String referenceType;
     private String referenceTitle;
-    private Long targetId;
-    private String targetType;
+    private String referenceStatus;
+    private Long parentId;
+    private String parentType;
 
     public Long getReferenceId()
     {
@@ -59,24 +60,34 @@ public class Reference implements Serializable
         this.referenceTitle = referenceTitle;
     }
 
-    public Long getTargetId()
+    public String getReferenceStatus()
     {
-        return targetId;
+        return referenceStatus;
     }
 
-    public void setTargetId(Long targetId)
+    public void setReferenceStatus(String referenceStatus)
     {
-        this.targetId = targetId;
+        this.referenceStatus = referenceStatus;
     }
 
-    public String getTargetType()
+    public Long getParentId()
     {
-        return targetType;
+        return parentId;
     }
 
-    public void setTargetType(String targetType)
+    public void setParentId(Long parentId)
     {
-        this.targetType = targetType;
+        this.parentId = parentId;
+    }
+
+    public String getParentType()
+    {
+        return parentType;
+    }
+
+    public void setParentType(String parentType)
+    {
+        this.parentType = parentType;
     }
 
 }
