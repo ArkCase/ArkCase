@@ -762,6 +762,11 @@ public class ActivitiTaskDao implements TaskDao
     private String findTaskStatus(Task task)
     {
         // tasks in ACT_RU_TASK table (where Task objects come from) are active by definition
+        // tasks have status unclaimed if assignee is null
+        if (task.getAssignee() == null)
+        {
+            return TaskConstants.STATE_UNCLAIMED;
+        }
         return TaskConstants.STATE_ACTIVE;
     }
 
