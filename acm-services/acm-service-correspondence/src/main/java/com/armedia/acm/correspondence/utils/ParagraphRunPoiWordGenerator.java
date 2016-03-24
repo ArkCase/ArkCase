@@ -82,8 +82,9 @@ public class ParagraphRunPoiWordGenerator implements PoiWordGenerator
                     String placeholder = substitutionPrefix + sub.getKey() + substitutionSuffix;
                     if (newText.contains(placeholder))
                     {
-                        log.debug("replacing '" + placeholder + "' with '" + sub.getValue() + "'");
-                        newText = newText.replace(placeholder, sub.getValue());
+                        String value = StringUtils.isNotEmpty(sub.getValue()) ? sub.getValue() : "";
+                        log.debug("replacing '" + placeholder + "' with '" + value + "'");
+                        newText = newText.replace(placeholder, value);
                         replaced = true;
                     }
                 }
