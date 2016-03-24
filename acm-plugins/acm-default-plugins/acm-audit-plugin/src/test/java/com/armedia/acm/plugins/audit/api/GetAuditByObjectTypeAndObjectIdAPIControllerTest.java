@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.audit.api;
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
+import com.armedia.acm.plugins.audit.model.AuditConstants;
 import com.armedia.acm.plugins.audit.service.ReplaceEventTypeNames;
 import com.armedia.acm.plugins.audit.web.api.GetAuditByObjectTypeAndObjectIdAPIController;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -88,7 +89,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-        key = String.format("%s.%s", objectType, GetAuditByObjectTypeAndObjectIdAPIController.HISTORY_TYPES);
+        key = String.format("%s.%s", objectType, AuditConstants.HISTORY_TYPES);
 
     }
 

@@ -42,7 +42,6 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
     private MockHttpSession mockHttpSession;
 
     private SaveNoteAPIController unit;
-    private NoteEventPublisher mockEventPublisher;
     private Authentication mockAuthentication;
 
 
@@ -75,24 +74,24 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
     @Test
     public void addNote() throws Exception
     {
-        Long parentId = 1329L;
-        String parentType = "COMPLAINT";
+        Note incomingNote = createNote("GENERAL");
+        executeTest(incomingNote);
+    }
 
-        Note incomingNote = new Note();
+    @Test
+    public void addRejectComment() throws Exception
+    {
+        Note incomingNote = createNote("REJECT_COMMENT");
+        executeTest(incomingNote);
+    }
 
-        incomingNote.setId(700L);
-        incomingNote.setCreator("testCreator");
-        incomingNote.setCreated(new Date());
-        incomingNote.setNote("Note");
-        incomingNote.setParentType(parentType);
-        incomingNote.setParentId(parentId);
-
-
+    public void executeTest(Note incomingNote) throws Exception{
         Capture<Note> noteToSave = new Capture<>();
         Capture<ApplicationNoteEvent> capturedEvent = new Capture<>();
 
         expect(mockNoteDao.save(capture(noteToSave))).andReturn(incomingNote);
         mockNoteEventPublisher.publishNoteEvent(capture(capturedEvent));
+
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("userName").atLeastOnce();
 
@@ -112,13 +111,10 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
                         .content(in))
                 .andReturn();
 
-        //log.info("results: " + result.getResponse().getContentAsString());
-
         verifyAll();
 
         assertEquals(incomingNote.getId(), noteToSave.getValue().getId());
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-
     }
    
     @Test
@@ -167,5 +163,21 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
 
         assertEquals(incomingNote.getId(), noteToSave.getValue().getId());
         //assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+    }
+
+    public Note createNote(String noteType){
+        Long parentId = 1329L;
+        String parentType = "COMPLAINT";
+
+        Note incomingNote = new Note();
+
+        incomingNote.setId(700L);
+        incomingNote.setCreator("testCreator");
+        incomingNote.setCreated(new Date());
+        incomingNote.setNote("Note");
+        incomingNote.setParentType(parentType);
+        incomingNote.setParentId(parentId);
+        incomingNote.setType(noteType);
+        return incomingNote;
     }
 }
