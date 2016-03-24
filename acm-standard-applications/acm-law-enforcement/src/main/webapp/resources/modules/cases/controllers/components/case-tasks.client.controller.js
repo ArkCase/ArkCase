@@ -179,5 +179,9 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             var targetId = Util.goodMapValue(rowEntity, "object_id_s");
             gridHelper.showObject(targetType, targetId);
         };
+
+        //$scope.$on("object-refreshed", function (e, objectId) {
+        //    ObjectTaskService.resetChildTasks(ObjectService.ObjectTypes.CASE_FILE, $scope.objectInfo.id);
+        //});
     }
 ]);
