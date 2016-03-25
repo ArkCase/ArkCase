@@ -90,7 +90,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     public EcmFile upload(String originalFileName, String fileType, String fileCategory, InputStream fileContents, String fileContentType, String fileName, Authentication authentication,
-            String targetCmisFolderId, String parentObjectType, Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+                          String targetCmisFolderId, String parentObjectType, Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         if (log.isInfoEnabled())
         {
@@ -418,12 +418,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         String query = "(object_type_s:FILE OR object_type_s:FOLDER) AND parent_folder_id_i:" + folderId;
         String filterQuery = category == null ? "fq=hidden_b:false" : "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in
-                                                                                                                                                                          // case
-                                                                                                                                                                          // some
-                                                                                                                                                                          // bad
-                                                                                                                                                                          // data
-                                                                                                                                                                          // gets
-                                                                                                                                                                          // through
+        // case
+        // some
+        // bad
+        // data
+        // gets
+        // through
 
         AcmCmisObjectList retval = findObjects(auth, container, folderId, EcmFileConstants.CATEGORY_ALL, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
         return retval;
@@ -442,12 +442,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 + container.getContainerObjectType();
 
         String filterQuery = category == null ? "fq=hidden_b:false" : "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in
-                                                                                                                                                                          // case
-                                                                                                                                                                          // some
-                                                                                                                                                                          // bad
-                                                                                                                                                                          // data
-                                                                                                                                                                          // gets
-                                                                                                                                                                          // through
+        // case
+        // some
+        // bad
+        // data
+        // gets
+        // through
 
         return findObjects(auth, container, container.getFolder().getId(), category, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
 
@@ -460,12 +460,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         String query = "parent_object_id_i:" + container.getContainerObjectId() + " AND parent_object_type_s:" + container.getContainerObjectType();
 
         String filterQuery = "fq=(object_type_s:FILE OR object_type_s:FOLDER) AND (category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in
-                                                                                                                                                                                  // case
-                                                                                                                                                                                  // some
-                                                                                                                                                                                  // bad
-                                                                                                                                                                                  // data
-                                                                                                                                                                                  // gets
-                                                                                                                                                                                  // through
+        // case
+        // some
+        // bad
+        // data
+        // gets
+        // through
 
         return findObjects(auth, container, container.getFolder().getId(), category, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
     }
@@ -524,7 +524,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     private AcmCmisObjectList findObjects(Authentication auth, AcmContainer container, Long folderId, String category, String query, String filterQuery, int startRow, int maxRows, String sortBy,
-            String sortDirection) throws AcmListObjectsFailedException
+                                          String sortDirection) throws AcmListObjectsFailedException
     {
         try
         {
@@ -804,6 +804,22 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
 
         return totalCount;
+    }
+
+    @Override
+    public EcmFile updateSecurityField(Long fileId, String securityFieldValue) throws AcmObjectNotFoundException
+    {
+        EcmFile file = getEcmFileDao().find(fileId);
+        if (file == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File  not found", null);
+        }
+
+        file.setSecurityField(securityFieldValue);
+
+        EcmFile saved = getEcmFileDao().save(file);
+
+        return saved;
     }
 
     private String createQueryFormListAndOperator(List<String> elements, String operator)

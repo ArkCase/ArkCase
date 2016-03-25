@@ -8,7 +8,6 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -159,6 +158,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
+        solr.setAdditionalProperty("security_field_lcs", in.getSecurityField());
+
         return solr;
     }
 
@@ -191,7 +192,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         {
             String mimeType = file.getFileMimeType();
 
-            if ((mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_XML) && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_URL))  ||
+            if ((mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_XML) && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_URL)) ||
                     (mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_PNG) && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_SIGNATURE_KEY)))
             {
                 return true;
