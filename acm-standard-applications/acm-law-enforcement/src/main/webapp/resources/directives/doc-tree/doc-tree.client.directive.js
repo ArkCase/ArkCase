@@ -869,12 +869,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     } else if (!Validator.validateNode(node)) {
                         return;
                     }
-                    var actNodes = (batch)? selNodes : [node];
+                    var actNodes = (batch) ? selNodes : [node];
 
                     //prevent command process if return "false"; continue when return "true", "undefined" or anything else
                     var rc = DocTree.Command.onPreCmd(data.cmd, actNodes);
                     if (false !== rc) {
-                        $q.all([rc]).then(function(preCmdData) {
+                        $q.all([rc]).then(function (preCmdData) {
                             if (false !== preCmdData[0]) {
                                 DocTree.Command._processCommand(event, data, node, selNodes, batch, actNodes);
                             }
@@ -1131,7 +1131,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             var menuResource = null;
                             var selNodes = DocTree.getSelectedNodes();
                             var batchMode = !Util.isArrayEmpty(selNodes);
-                            var actNodes = (batchMode)? selNodes: [node];
+                            var actNodes = (batchMode) ? selNodes : [node];
                             if (batchMode) {
                                 menuResource = DocTree.Menu.getBatchResource(selNodes);
                             } else if ("RECORD" == Util.goodValue(node.data.status)) {
@@ -1183,7 +1183,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return menuResource;
                 }
-                , getRecordResource: function(node) {
+                , getRecordResource: function (node) {
                     var menuResource = null;
                     if (node) {
                         if (DocTree.isTopNode(node)) {
@@ -1196,7 +1196,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return menuResource;
                 }
-                , getBasicResource: function(node) {
+                , getBasicResource: function (node) {
                     var menuResource = null;
                     if (node) {
                         if (DocTree.isTopNode(node)) {
@@ -1218,16 +1218,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         if (menuFileTypes) {
                             menuFileTypes.children = this.makeMenuFileTypes();
                         }
-                    //} else {
-                    //    var menu0 = [Util.goodMapValue(DocTree.treeConfig, "noop")];
-                    //    menu = [{
-                    //        title: $translate.instant("common.directive.docTree.menu.noop"),
-                    //        cmd: "noop",
-                    //        uiIcon: ""
-                    //    }];
+                        //} else {
+                        //    var menu0 = [Util.goodMapValue(DocTree.treeConfig, "noop")];
+                        //    menu = [{
+                        //        title: $translate.instant("common.directive.docTree.menu.noop"),
+                        //        cmd: "noop",
+                        //        uiIcon: ""
+                        //    }];
                     }
 
-                    _.each(menu, function(item) {
+                    _.each(menu, function (item) {
                         var allow = true;
                         if (item.cmd) {
                             allow = DocTree.Command.onAllowCmd(item.cmd, nodes);
@@ -1235,13 +1235,13 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                         if ("invisible" == allow) {
                             item.invisible = true;
-                        }  else if ("disable" == allow) {
+                        } else if ("disable" == allow) {
                             item.disabled = true;
                         } else {
                             item.disabled = false;
                         }
                     });
-                    menu = _.filter(menu, function(item) {
+                    menu = _.filter(menu, function (item) {
                         return !item.invisible;
                     });
 
@@ -3092,9 +3092,21 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             //        return Email._makeEmailDataForEmailWithLinks(emailAddresses, nodes, title);
             //    }
             //}
+            , _buildSubject: function () {
+                var subject = Util.goodMapValue(DocTree, "treeConfig.email.emailSubject");
+                var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.email.subjectRegex"));
+                var match = subject.match(regex);
+                if (match && match[Util.goodMapValue(DocTree, "treeConfig.email.objectTypeRegexGroup")] && match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")]) {
+                    var objectType = match[Util.goodMapValue(DocTree, "treeConfig.email.objectTypeRegexGroup")];
+                    var objectNumber = match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")];
+                    return objectType + DocTree.objectInfo[objectNumber];
+                }
+                return "";
+            }
             , _makeEmailDataForEmailWithLinks: function (emailAddresses, nodes, title) {
                 var emailNotifications = [];
                 var emailData = {};
+                emailData.subject = this._buildSubject();
                 emailData.title = Util.goodValue(title, $translate.instant("common.directive.docTree.email.defaultTitle"));
                 emailData.header = $translate.instant("common.directive.docTree.email.headerForLinks");
                 emailData.footer = "\n\n" + $translate.instant("common.directive.docTree.email.footerForLinks");
@@ -3106,14 +3118,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             }
             , _makeEmailDataForEmailWithAttachments: function (emailAddresses, nodes) {
                 var emailData = {};
-                var subject = Util.goodMapValue(DocTree, "treeConfig.email.emailSubject");
-                var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.email.subjectRegex"));
-                var match = subject.match(regex);
-                if (match && match[Util.goodMapValue(DocTree, "treeConfig.email.objectTypeRegexGroup")] && match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")]) {
-                    var objectType = match[DocTree.treeConfig.objectTypeRegexGroup];
-                    var objectNumber = match[DocTree.treeConfig.objectNumberRegexGroup];
-                    emailData.subject = objectType + DocTree.objectInfo[objectNumber];
-                }
+                emailData.subject = this._buildSubject();
                 emailData.body = $translate.instant("common.directive.docTree.email.bodyForAttachment");
                 emailData.header = $translate.instant("common.directive.docTree.email.headerForAttachment");
                 emailData.footer = $translate.instant("common.directive.docTree.email.footerForAttachment");
@@ -3800,16 +3805,20 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.setObjId(scope.objectId);
                 DocTree.treeConfig = {};
                 DocTree.objectInfo = null;
-                DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function (){}); //if not defined, do nothing
+                DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function () {
+                }); //if not defined, do nothing
 
                 scope.treeControl = {
                     refreshTree: DocTree.refreshTree
                     , getSelectedNodes: DocTree.getSelectedNodes
                 };
 
-                DocTree.Command.onAllowCmd = ("undefined" != typeof attrs.onAllowCmd) ? scope.onAllowCmd() : (function (){});
-                DocTree.Command.onPreCmd = ("undefined" != typeof attrs.onPreCmd) ? scope.onPreCmd() : (function (){});
-                DocTree.Command.onPostCmd = ("undefined" != typeof attrs.onPostCmd) ? scope.onPostCmd() : (function (){});
+                DocTree.Command.onAllowCmd = ("undefined" != typeof attrs.onAllowCmd) ? scope.onAllowCmd() : (function () {
+                });
+                DocTree.Command.onPreCmd = ("undefined" != typeof attrs.onPreCmd) ? scope.onPreCmd() : (function () {
+                });
+                DocTree.Command.onPostCmd = ("undefined" != typeof attrs.onPostCmd) ? scope.onPostCmd() : (function () {
+                });
 
                 ConfigService.getModuleConfig("common").then(function (moduleConfig) {
                     var treeConfig = Util.goodMapValue(moduleConfig, "docTree", {});
