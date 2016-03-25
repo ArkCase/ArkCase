@@ -67,10 +67,10 @@ public class AuditEvent {
     private Long objectId;
 
     @Column(name = "cm_parent_object_type")
-    private String parentType;
+    private String parentObjectType;
 
     @Column(name = "cm_parent_object_id")
-    private Long parentId;
+    private Long parentObjectId;
 
     @Column(name = "cm_audit_status")
     private String status;
@@ -142,6 +142,26 @@ public class AuditEvent {
 
     public void setObjectId(Long objectId) {
         this.objectId = objectId;
+    }
+
+    public String getParentObjectType()
+    {
+        return parentObjectType;
+    }
+
+    public void setParentObjectType(String parentObjectType)
+    {
+        this.parentObjectType = parentObjectType;
+    }
+
+    public Long getParentObjectId()
+    {
+        return parentObjectId;
+    }
+
+    public void setParentObjectId(Long parentObjectId)
+    {
+        this.parentObjectId = parentObjectId;
     }
 
     public String getStatus() {
