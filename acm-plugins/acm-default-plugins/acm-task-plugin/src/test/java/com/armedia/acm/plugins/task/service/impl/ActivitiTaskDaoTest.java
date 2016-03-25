@@ -468,7 +468,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getName()).andReturn(title);
         expect(mockTask.getProcessVariables()).andReturn(pvars).atLeastOnce();
         expect(mockTask.getTaskLocalVariables()).andReturn(taskLocalVars).atLeastOnce();
-        expect(mockTask.getAssignee()).andReturn(user);
+        expect(mockTask.getAssignee()).andReturn(user).times(2);
         expect(mockTask.getProcessDefinitionId()).andReturn(processId);
         expect(mockTask.getCreateTime()).andReturn(null);
         expect(mockTask.getOwner()).andReturn(user);
@@ -571,7 +571,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getName()).andReturn(title);
         expect(mockTask.getProcessVariables()).andReturn(pvars).atLeastOnce();
         expect(mockTask.getTaskLocalVariables()).andReturn(taskLocalVars).atLeastOnce();
-        expect(mockTask.getAssignee()).andReturn(null);
+        expect(mockTask.getAssignee()).andReturn(null).times(2);
         expect(mockTask.getProcessDefinitionId()).andReturn(processId);
         expect(mockTask.getCreateTime()).andReturn(null);
         expect(mockTask.getOwner()).andReturn(user);
@@ -615,7 +615,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertFalse(task.isCompleted());
 
         assertNotNull(task.getTaskStartDate());
-        assertEquals(TaskConstants.STATE_ACTIVE, task.getStatus());
+        assertEquals(TaskConstants.STATE_UNCLAIMED, task.getStatus());
         assertEquals("task details", task.getDetails());
         assertEquals(Integer.valueOf(50), task.getPercentComplete());
 
@@ -815,7 +815,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getName()).andReturn(title);
         expect(mockTask.getProcessVariables()).andReturn(pvars).atLeastOnce();
         expect(mockTask.getTaskLocalVariables()).andReturn(taskLocalVars).atLeastOnce();
-        expect(mockTask.getAssignee()).andReturn(user);
+        expect(mockTask.getAssignee()).andReturn(user).times(2);
         expect(mockTask.getProcessDefinitionId()).andReturn(processId);
         expect(mockTask.getCreateTime()).andReturn(null);
         expect(mockTask.getOwner()).andReturn(user);
@@ -923,7 +923,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getName()).andReturn(title);
         expect(mockTask.getProcessVariables()).andReturn(pvars).atLeastOnce();
         expect(mockTask.getTaskLocalVariables()).andReturn(taskLocalVars).atLeastOnce();
-        expect(mockTask.getAssignee()).andReturn(user);
+        expect(mockTask.getAssignee()).andReturn(user).times(2);
         expect(mockTask.getProcessDefinitionId()).andReturn(processId);
         expect(mockTask.getCreateTime()).andReturn(null);
         expect(mockTask.getOwner()).andReturn(user);
@@ -1015,7 +1015,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getName()).andReturn(title);
         expect(mockTask.getProcessVariables()).andReturn(pvars).atLeastOnce();
         expect(mockTask.getTaskLocalVariables()).andReturn(taskLocalVars).atLeastOnce();
-        expect(mockTask.getAssignee()).andReturn(null);
+        expect(mockTask.getAssignee()).andReturn(null).times(2);
         expect(mockTask.getProcessDefinitionId()).andReturn(processId);
         expect(mockTask.getCreateTime()).andReturn(null);
         expect(mockTask.getOwner()).andReturn(user);
@@ -1052,7 +1052,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertFalse(task.isAdhocTask());
         //task should be still open and active
         assertFalse(task.isCompleted());
-        assertEquals(TaskConstants.STATE_ACTIVE, task.getStatus());
+        assertEquals(TaskConstants.STATE_UNCLAIMED, task.getStatus());
     }
 
     @Test
