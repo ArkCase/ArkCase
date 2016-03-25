@@ -90,6 +90,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).config([
     .run(['$translate', '$translatePartialLoader',
         function ($translate, $translatePartialLoader) {
             $translatePartialLoader.addPart('core');
+            $translatePartialLoader.addPart('welcome');
             $translate.refresh();
         }
     ]);
