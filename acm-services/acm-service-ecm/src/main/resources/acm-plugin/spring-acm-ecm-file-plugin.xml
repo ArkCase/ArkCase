@@ -98,12 +98,14 @@
                 </bean>
                 <bean id="declareFileFolder" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/service/ecm/declare/{parentObjectType}/{parentObjectId}"/>
+                    <property name="url"
+                              value="/api/{version}/service/ecm/declare/{parentObjectType}/{parentObjectId}"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
                 <bean id="listCorrespondences" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/service/ecm/bycategory/{parentObjectType}/{parentObjectId}"/>
+                    <property name="url"
+                              value="/api/{version}/service/ecm/bycategory/{parentObjectType}/{parentObjectId}"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
                 <bean id="updateFileTypeUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
@@ -118,11 +120,16 @@
                 </bean>
                 <bean id="getTotalPageCountUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/service/ecm/totalpagecount/{parentObjectType}/{parentObjectId}"/>
+                    <property name="url"
+                              value="/api/{version}/service/ecm/totalpagecount/{parentObjectType}/{parentObjectId}"/>
+                    <property name="requiredPrivilege" ref="filePrivilege"/>
+                </bean>
+                <bean id="updateFileSecurityField" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/v1/service/file/{fileId}/security-field/{securityFieldValue}s"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
             </list>
         </property>
     </bean>
-
 </beans>

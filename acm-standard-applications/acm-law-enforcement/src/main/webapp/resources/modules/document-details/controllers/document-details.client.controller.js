@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('document-details').controller('DocumentDetailsController', ['$scope', '$stateParams', '$sce', '$log', '$q'
-    , 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService'
+    , '$timeout', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService'
     , 'Object.ModelService', 'Case.InfoService', 'Util.DateService',
-    function ($scope, $stateParams, $sce, $log, $q
+    function ($scope, $stateParams, $sce, $log, $q, $timeout
         , TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, UtilDateService) {
 
         $scope.acmTicket = '';
@@ -63,8 +63,10 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
                     $scope.ecmFileEvents = data[5];
                     $scope.ecmFileNotes = data[6];
                     $scope.ecmFileParticipants = data[7];
+                    $timeout(function () {
+                        $scope.$broadcast('document-data', $scope.ecmFile);
+                    }, 1000);
 
-                    $scope.$broadcast('document-data', $scope.ecmFile);
                     // Opens the selected document in the snowbound viewer
                     $scope.openSnowboundViewer();
                 }
