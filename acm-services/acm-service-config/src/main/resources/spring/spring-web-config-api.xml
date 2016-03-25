@@ -221,6 +221,11 @@
                     <property name="configDescription" value="Security Tag Types"/>
                     <property name="json" ref="securityTagTypesJsonConfig"/>
                 </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="securityFieldTypes"/>
+                    <property name="configDescription" value="Security Field Types"/>
+                    <property name="json" ref="securityFieldTypesJsonConfig"/>
+                </bean>
             </list>
         </property>
     </bean>

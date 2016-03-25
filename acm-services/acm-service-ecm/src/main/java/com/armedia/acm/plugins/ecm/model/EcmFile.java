@@ -105,6 +105,9 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @JoinColumn(name = "cm_parent_object_id")
     private List<AcmAssociatedTag> tags = new ArrayList<>();
 
+    @Column(name = "cm_security_field")
+    private String securityField;
+
     @PrePersist
     protected void beforeInsert()
     {
@@ -319,6 +322,16 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public void setFileSource(String fileSource)
     {
         this.fileSource = fileSource;
+    }
+
+    public String getSecurityField()
+    {
+        return securityField;
+    }
+
+    public void setSecurityField(String securityField)
+    {
+        this.securityField = securityField;
     }
 
     @JsonIgnore
