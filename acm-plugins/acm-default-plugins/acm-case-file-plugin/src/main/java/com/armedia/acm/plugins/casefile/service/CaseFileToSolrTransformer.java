@@ -9,6 +9,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -77,6 +78,11 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         if (modifier != null)
         {
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+        }
+
+        if (StringUtils.isNotEmpty(in.getSecurityField()))
+        {
+            solr.setAdditionalProperty("security_field_lcs", in.getSecurityField());
         }
 
         return solr;
