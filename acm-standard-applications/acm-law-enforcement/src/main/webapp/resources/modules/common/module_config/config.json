@@ -154,7 +154,8 @@
         , {
             "title": "Replace",
             "cmd": "replace",
-            "uiIcon": ""
+            "uiIcon": "",
+            "data": {"uploadFile": true}
           }
         , {
             "title": "Declare as Record(s)",
