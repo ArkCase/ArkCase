@@ -10,7 +10,7 @@
  *
  * Server communication. Pardon the incomplete ng doc. For now, it is just temporary code. Complete ng doc will be added after real implementation of UI and backend communication
  */
-angular.module('services').factory('ServCommService', ['$rootScope', '$timeout', 'StoreService', 'UtilService'
+angular.module('services').factory('ServCommService', ['$rootScope', '$timeout', 'Acm.StoreService', 'UtilService'
     , function ($rootScope, $timeout, Store, Util) {
         var Service = {
             CacheNames: {

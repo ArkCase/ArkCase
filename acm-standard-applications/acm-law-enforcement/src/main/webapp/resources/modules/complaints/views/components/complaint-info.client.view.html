@@ -20,7 +20,7 @@
             <!--<b>Priority: </b><a href="#" editable-select="objectInfo.priority" e-ng-options="p as p for p in priorities">{{ objectInfo.priority  || 'Unknown'}}</a>-->
             <!--<select ng-model="myselect" ng-options="o as o for o in myoptions"></select>-->
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{objectInfo.created | date: "MM/dd/yyyy"}}</div>
+                <div class="h4 font-bold">{{objectInfo.created | date: defaultDatePickerFormat}}</div>
                 <small class="text-muted">Created Date</small>
             </div>
             <div class="col-xs-12 col-md-4">
@@ -50,8 +50,13 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-date="dateInfo.dueDate" onaftersave="updateDueDate(dateInfo.dueDate)">
-                        {{ (dateInfo.dueDate | date: "MM/dd/yyyy") || 'Unknown' }}</a>
+                    <a href="#" editable-bsdate="dateInfo.dueDate"
+                       e-datepicker-popup="{{defaultDatePickerFormat}}"
+                       e-ng-click="onPickerClick()" e-is-open="picker.opened"
+                       e-init-date="dateInfo.dueDate"
+                       e-on-open-focus="false"
+                       onaftersave="updateDueDate(dateInfo.dueDate)">
+                        {{ (dateInfo.dueDate | date: defaultDatePickerFormat) || 'Unknown' }}</a>
                 </div>
                 <small class="text-muted">Due Date</small>
             </div>

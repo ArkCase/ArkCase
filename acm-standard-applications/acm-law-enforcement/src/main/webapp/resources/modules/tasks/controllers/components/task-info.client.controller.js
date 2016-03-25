@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', '$translate'
+angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService', 'Object.LookupService', 'Task.InfoService', 'Object.ModelService'
     , 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, $translate
+    , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, LookupService, ObjectLookupService, TaskInfoService, ObjectModelService
         , HelperObjectBrowserService) {
 
@@ -50,8 +50,16 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
         };
 
-        $scope.validatePercentComplete = function(value) {
-            if(value < 0 || value > 100) {
+        $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
+        $scope.picker = {opened: false};
+        $scope.onPickerClick = function () {
+            $timeout(function () {
+                $scope.picker.opened = true;
+            });
+        };
+
+        $scope.validatePercentComplete = function (value) {
+            if (value < 0 || value > 100) {
                 return "Invalid value";
             }
         };

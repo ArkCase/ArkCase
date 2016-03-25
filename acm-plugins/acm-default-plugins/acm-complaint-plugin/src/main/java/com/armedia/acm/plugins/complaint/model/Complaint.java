@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
+import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
@@ -13,6 +14,7 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +31,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -40,8 +41,15 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by armdev on 4/4/14.
@@ -51,19 +59,13 @@ import java.util.*;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.complaint.model.Complaint")
-public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity
+public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity
 {
     private static final long serialVersionUID = -1154137631399833851L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
-    @TableGenerator(name = "complaint_gen",
-            table = "acm_complaint_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_complaint",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "complaint_gen", table = "acm_complaint_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_complaint", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "complaint_gen")
     @Column(name = "cm_complaint_id")
     private Long complaintId;
@@ -110,8 +112,8 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     private PersonAssociation originator;
 
     /**
-     * This field is only used when the complaint is created. Usually it will be null.  Use the container
-     * to get the CMIS object ID of the complaint folder.
+     * This field is only used when the complaint is created. Usually it will be null. Use the container to get the CMIS
+     * object ID of the complaint folder.
      */
     @Transient
     private String ecmFolderPath;
@@ -123,11 +125,8 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     @JoinColumn(name = "cm_container_id")
     private AcmContainer container = new AcmContainer();
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumns({
-            @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id"),
-            @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")
-    })
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+    @JoinColumns({ @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type") })
     private Collection<ObjectAssociation> childObjects = new ArrayList<>();
 
     /**
@@ -138,10 +137,8 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     private List<String> approvers;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumns({
-            @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_complaint_id"),
-            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")
-    })
+    @JoinColumns({ @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_complaint_id"),
+            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type") })
     @OrderBy("created ASC")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
@@ -149,10 +146,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     private String objectType = ComplaintConstants.OBJECT_TYPE;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumns({
-            @JoinColumn(name = "cm_object_id"),
-            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
-    })
+    @JoinColumns({ @JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @Column(name = "cm_due_date")
@@ -170,9 +164,8 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     private PostalAddress location;
 
     /**
-     * Complaint disposition is set only when the close complaint request is approved.
-     * Until then, the requested disposition (if any) is linked from the acm_close_complaint_request table
-     * (CloseComplaintRequest POJO).
+     * Complaint disposition is set only when the close complaint request is approved. Until then, the requested
+     * disposition (if any) is linked from the acm_close_complaint_request table (CloseComplaintRequest POJO).
      */
     @OneToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "cm_disposition_id", insertable = false, updatable = true)
@@ -393,11 +386,13 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
             setPersonAssociations(new ArrayList<>());
         }
 
-        if(originator != null) {
+        if (originator != null)
+        {
 
             Optional<PersonAssociation> found = getPersonAssociations().stream().filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
-            if (found == null || !found.isPresent()) {
+            if (found == null || !found.isPresent())
+            {
                 getPersonAssociations().add(originator);
             }
         }
@@ -413,11 +408,13 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
         this.ecmFolderPath = ecmFolderPath;
     }
 
+    @Override
     public Collection<ObjectAssociation> getChildObjects()
     {
         return Collections.unmodifiableCollection(childObjects);
     }
 
+    @Override
     public void addChildObject(ObjectAssociation childObject)
     {
         childObjects.add(childObject);
@@ -574,32 +571,10 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     @Override
     public String toString()
     {
-        return "Complaint{" +
-                "complaintId=" + complaintId +
-                ", complaintNumber='" + complaintNumber + '\'' +
-                ", complaintType='" + complaintType + '\'' +
-                ", priority='" + priority + '\'' +
-                ", complaintTitle='" + complaintTitle + '\'' +
-                ", details='" + details + '\'' +
-                ", incidentDate=" + incidentDate +
-                ", created=" + created +
-                ", creator='" + creator + '\'' +
-                ", modified=" + modified +
-                ", modifier='" + modifier + '\'' +
-                ", status='" + status + '\'' +
-                ", originator=" + originator +
-                ", ecmFolderPath='" + ecmFolderPath + '\'' +
-                ", container=" + container +
-                ", childObjects=" + childObjects +
-                ", approvers=" + approvers +
-                ", personAssociations=" + personAssociations +
-                ", participants=" + participants +
-                ", dueDate=" + dueDate +
-                ", tag='" + tag + '\'' +
-                ", frequency='" + frequency + '\'' +
-                ", location=" + location +
-                ", disposition=" + disposition +
-                ", restricted=" + restricted +
-                '}';
+        return "Complaint{" + "complaintId=" + complaintId + ", complaintNumber='" + complaintNumber + '\'' + ", complaintType='" + complaintType + '\'' + ", priority='" + priority + '\''
+                + ", complaintTitle='" + complaintTitle + '\'' + ", details='" + details + '\'' + ", incidentDate=" + incidentDate + ", created=" + created + ", creator='" + creator + '\''
+                + ", modified=" + modified + ", modifier='" + modifier + '\'' + ", status='" + status + '\'' + ", originator=" + originator + ", ecmFolderPath='" + ecmFolderPath + '\''
+                + ", container=" + container + ", childObjects=" + childObjects + ", approvers=" + approvers + ", personAssociations=" + personAssociations + ", participants=" + participants
+                + ", dueDate=" + dueDate + ", tag='" + tag + '\'' + ", frequency='" + frequency + '\'' + ", location=" + location + ", disposition=" + disposition + ", restricted=" + restricted + '}';
     }
 }

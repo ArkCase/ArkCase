@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams'
+angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Complaint.LookupService', 'Complaint.InfoService'
     , 'Object.ModelService', 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams
+    , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, ObjectLookupService, ComplaintLookupService, ComplaintInfoService
         , ObjectModelService, HelperObjectBrowserService) {
 
@@ -53,6 +53,13 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             }
         );
 
+        $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
+        $scope.picker = {opened: false};
+        $scope.onPickerClick = function () {
+            $timeout(function () {
+                $scope.picker.opened = true;
+            });
+        };
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;

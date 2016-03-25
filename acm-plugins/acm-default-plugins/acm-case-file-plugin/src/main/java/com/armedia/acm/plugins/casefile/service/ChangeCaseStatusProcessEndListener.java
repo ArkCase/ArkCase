@@ -17,7 +17,7 @@ import com.armedia.acm.activiti.AcmBusinessProcessEvent;
  */
 public class ChangeCaseStatusProcessEndListener implements ApplicationListener<AcmBusinessProcessEvent> {
 
-	private final Logger LOG = LoggerFactory.getLogger(getClass());
+	private transient final Logger log = LoggerFactory.getLogger(getClass());
 	private ChangeCaseFileStateService changeCaseFileStateService;
 	
 	@Override
@@ -29,19 +29,19 @@ public class ChangeCaseStatusProcessEndListener implements ApplicationListener<A
         {
             try
             {
-            	Long caseId = (Long) event.getProcessVariables().get("OBJECT_ID");
+            	Long caseId = (Long) event.getProcessVariables().get("CASE_FILE");
                 Long requestId = (Long) event.getProcessVariables().get("REQUEST_ID");
                 String user = event.getUserId();
-                
-                LOG.debug("Request id: " + requestId);
-                LOG.debug("Case File id: " + caseId);
-                LOG.debug("User: " + user);
+
+                log.debug("Request: [{}]", requestId);
+                log.debug("Case file id: [{}]", caseId);
+                log.debug("User: [{}]", user);
                 
                 getChangeCaseFileStateService().handleChangeCaseStatusApproved(caseId, requestId, user, event.getEventDate(), event.getIpAddress());
             }
             catch ( Exception e)
             {
-                LOG.error("Exception handling completed change case status: " + e.getMessage(), e);
+                log.error("Exception handling completed change case status: " + e.getMessage(), e);
                 throw new RuntimeException(e);
             }
         }
@@ -51,7 +51,7 @@ public class ChangeCaseStatusProcessEndListener implements ApplicationListener<A
 	{
 		if ( ! "com.armedia.acm.activiti.businessProcess.end".equals(event.getEventType()))
         {
-            LOG.debug("Event is not the end of a business process: " + event.getEventType());
+            log.debug("Event is not the end of a business process: [{}]", event.getEventType());
             return false;
         }
 		
@@ -59,29 +59,29 @@ public class ChangeCaseStatusProcessEndListener implements ApplicationListener<A
 
         if ( !pvars.containsKey("REQUEST_TYPE"))
         {
-            LOG.debug("Event does not contain a request type");
+            log.debug("Event does not contain a request type");
             return false;
         }
         
         if ( !"CHANGE_CASE_STATUS".equals(pvars.get("REQUEST_TYPE")))
         {
-            LOG.debug("Request type is not CHANGE_CASE_STATUS: " + pvars.get("REQUEST_TYPE"));
+            log.debug("Request type is not CHANGE_CASE_STATUS: [{}]", pvars.get("REQUEST_TYPE"));
             return false;
         }
         
         if ( !pvars.containsKey("reviewOutcome"))
         {
-            LOG.debug("Event does not contain a review outcome");
+            log.debug("Event does not contain a review outcome");
             return false;
         }
         
         if ( !"APPROVE".equals(pvars.get("reviewOutcome")))
         {
-            LOG.debug("Request type is not APPROVE: " + pvars.get("reviewOutcome"));
+            log.debug("Request type is not APPROVE: [{}]", pvars.get("reviewOutcome"));
             return false;
         }
-        
-        LOG.debug("This event marks the end of an approved change case status.");
+
+        log.debug("This event marks the end of an approved change case status.");
 		
 		return true;
 	}

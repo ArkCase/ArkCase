@@ -10,7 +10,7 @@
 
  * CostTracking.InfoService provides functions for Costsheet database data
  */
-angular.module('services').factory('CostTracking.InfoService', ['$resource', '$translate', 'StoreService', 'UtilService',
+angular.module('services').factory('CostTracking.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService',
     function ($resource, $translate, Store, Util) {
         var Service = $resource('api/v1/service/costsheet', {}, {
 

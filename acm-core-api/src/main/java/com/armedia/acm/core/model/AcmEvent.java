@@ -14,6 +14,9 @@ public abstract class AcmEvent extends ApplicationEvent
     private String ipAddress;
     private String objectType;
     private Long objectId;
+    private Long parentObjectId;
+    private String parentObjectType;
+    private String parentObjectName;
     private Map<String, Object> eventProperties;
 
     public AcmEvent(Object source)
@@ -79,6 +82,36 @@ public abstract class AcmEvent extends ApplicationEvent
     public void setObjectId(Long objectId)
     {
         this.objectId = objectId;
+    }
+
+    public Long getParentObjectId()
+    {
+        return parentObjectId;
+    }
+
+    public void setParentObjectId(Long parentObjectId)
+    {
+        this.parentObjectId = parentObjectId;
+    }
+
+    public String getParentObjectType()
+    {
+        return parentObjectType;
+    }
+
+    public void setParentObjectType(String parentObjectType)
+    {
+        this.parentObjectType = parentObjectType;
+    }
+
+    public String getParentObjectName()
+    {
+        return parentObjectName;
+    }
+
+    public void setParentObjectName(String parentObjectName)
+    {
+        this.parentObjectName = parentObjectName;
     }
 
     public Map<String, Object> getEventProperties()
