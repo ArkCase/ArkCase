@@ -125,7 +125,7 @@
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
                 <bean id="updateFileSecurityField" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="PUT"/>
+                    <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/v1/service/file/{fileId}/security-field/{securityFieldValue}s"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>

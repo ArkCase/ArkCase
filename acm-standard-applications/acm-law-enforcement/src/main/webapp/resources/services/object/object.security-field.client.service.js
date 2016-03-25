@@ -31,7 +31,7 @@ angular.module('services').factory('Object.SecurityFieldService', ['$resource', 
              * @returns {Object} Object returned by $resource
              */
             save: {
-                method: 'PUT',
+                method: 'POST',
                 url: 'api/v1/service/:objectType/:objectId/security-field/:securityFieldValue',
                 cache: false
             }
