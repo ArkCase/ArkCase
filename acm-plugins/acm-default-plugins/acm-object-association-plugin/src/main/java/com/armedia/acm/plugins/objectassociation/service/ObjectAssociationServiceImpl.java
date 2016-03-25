@@ -18,15 +18,15 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
     private SpringContextHolder springContextHolder;
 
     @Override
-    public void addReference(Long id, String number, String type, String title, Long targetId, String targetType)
+    public void addReference(Long id, String number, String type, String title, String status, Long parentId, String parentType)
     {
-        AcmAbstractDao<AcmChildObjectEntity> dao = getDaoForChildObjectEntity(targetType);
+        AcmAbstractDao<AcmChildObjectEntity> dao = getDaoForChildObjectEntity(parentType);
         if (dao != null)
         {
-            AcmChildObjectEntity entity = dao.find(targetId);
+            AcmChildObjectEntity entity = dao.find(parentId);
             if (entity != null)
             {
-                ObjectAssociation oa = makeObjectAssociation(targetId, number, targetType, title);
+                ObjectAssociation oa = makeObjectAssociation(id, number, type, title, status);
                 entity.addChildObject(oa);
                 dao.save(entity);
             }
@@ -54,7 +54,7 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
         return null;
     }
 
-    private ObjectAssociation makeObjectAssociation(Long id, String number, String type, String title)
+    private ObjectAssociation makeObjectAssociation(Long id, String number, String type, String title, String status)
     {
         ObjectAssociation oa = new ObjectAssociation();
 
@@ -62,6 +62,7 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
         oa.setTargetName(number);
         oa.setTargetType(type);
         oa.setTargetTitle(title);
+        oa.setStatus(status);
         oa.setAssociationType("REFERENCE");
 
         return oa;

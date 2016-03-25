@@ -17,9 +17,6 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
     private Date dueDate;
     private String taskEvent;
     private String priority;
-    private Long parentObjectId;
-    private String parentObjectType;
-    private String parentObjectName;
     private boolean adhocTask;
     private String owner;
 //    private String assigneeFullName;
@@ -47,8 +44,8 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
         setDueDate(source.getDueDate());
         setTaskEvent(taskEvent);
         setPriority(source.getPriority());
-        setParentObjectId(source.getAttachedToObjectId());
-        setParentObjectType(source.getAttachedToObjectType());
+        setParentObjectId(source.getParentObjectId() != null ? source.getParentObjectId() : source.getAttachedToObjectId());
+        setParentObjectType(source.getParentObjectType() != null ? source.getParentObjectType() : source.getAttachedToObjectType());
         setParentObjectName(source.getAttachedToObjectName());
         setParentId(source.getAttachedToObjectId());
         setParentType(source.getAttachedToObjectType());
@@ -132,33 +129,6 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
 
     public void setPriority(String priority) {
         this.priority = priority;
-    }
-
-    @Override
-    public Long getParentObjectId() {
-        return parentObjectId;
-    }
-
-    public void setParentObjectId(Long parentObjectId) {
-        this.parentObjectId = parentObjectId;
-    }
-
-    @Override
-    public String getParentObjectType() {
-        return parentObjectType;
-    }
-
-    public void setParentObjectType(String parentObjectType) {
-        this.parentObjectType = parentObjectType;
-    }
-
-    @Override
-    public String getParentObjectName() {
-        return parentObjectName;
-    }
-
-    public void setParentObjectName(String parentObjectName) {
-        this.parentObjectName = parentObjectName;
     }
 
     @Override
