@@ -22,9 +22,9 @@ public class UpdateSecurityFieldAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/{fileId}/security-field/{securityFieldValue}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{fileId}/security-field/{securityFieldValue}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EcmFile updateFileType(
+    public EcmFile updateSecurityField(
             @PathVariable("fileId") Long fileId,
             @PathVariable("securityFieldValue") String securityFieldValue) throws AcmObjectNotFoundException
     {
