@@ -3096,11 +3096,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 var subject = Util.goodMapValue(DocTree, "treeConfig.email.emailSubject");
                 var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.email.subjectRegex"));
                 var match = subject.match(regex);
-                if (match && match[Util.goodMapValue(DocTree, "treeConfig.email.objectTypeRegexGroup")] && match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")]) {
+                if (match) {
                     var objectType = match[Util.goodMapValue(DocTree, "treeConfig.email.objectTypeRegexGroup")];
                     var objectNumber = match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")];
-                    return objectType + DocTree.objectInfo[objectNumber];
+                    if (objectType && objectNumber) {
+                        return objectType + DocTree.objectInfo[objectNumber];
+                    }
                 }
+
                 return "";
             }
             , _makeEmailDataForEmailWithLinks: function (emailAddresses, nodes, title) {
