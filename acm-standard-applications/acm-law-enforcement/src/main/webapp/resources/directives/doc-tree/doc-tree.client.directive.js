@@ -3123,9 +3123,24 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             //        return Email._makeEmailDataForEmailWithLinks(emailAddresses, nodes, title);
             //    }
             //}
+            , _buildSubject: function () {
+                var subject = Util.goodMapValue(DocTree, "treeConfig.email.emailSubject");
+                var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.email.subjectRegex"));
+                var match = subject.match(regex);
+                if (match) {
+                    var objectType = match[Util.goodMapValue(DocTree, "treeConfig.email.objectTypeRegexGroup")];
+                    var objectNumber = match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")];
+                    if (objectType && objectNumber) {
+                        return objectType + DocTree.objectInfo[objectNumber];
+                    }
+                }
+
+                return "";
+            }
             , _makeEmailDataForEmailWithLinks: function (emailAddresses, nodes, title) {
                 var emailNotifications = [];
                 var emailData = {};
+                emailData.subject = this._buildSubject();
                 emailData.title = Util.goodValue(title, $translate.instant("common.directive.docTree.email.defaultTitle"));
                 emailData.header = $translate.instant("common.directive.docTree.email.headerForLinks");
                 emailData.footer = "\n\n" + $translate.instant("common.directive.docTree.email.footerForLinks");
@@ -3137,14 +3152,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             }
             , _makeEmailDataForEmailWithAttachments: function (emailAddresses, nodes) {
                 var emailData = {};
-                var subject = Util.goodMapValue(DocTree, "treeConfig.email.emailSubject");
-                var regex = new RegExp(Util.goodMapValue(DocTree, "treeConfig.email.subjectRegex"));
-                var match = subject.match(regex);
-                if (match && match[Util.goodMapValue(DocTree, "treeConfig.email.objectTypeRegexGroup")] && match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")]) {
-                    var objectType = match[DocTree.treeConfig.objectTypeRegexGroup];
-                    var objectNumber = match[DocTree.treeConfig.objectNumberRegexGroup];
-                    emailData.subject = objectType + DocTree.objectInfo[objectNumber];
-                }
+                emailData.subject = this._buildSubject();
                 emailData.body = $translate.instant("common.directive.docTree.email.bodyForAttachment");
                 emailData.header = $translate.instant("common.directive.docTree.email.headerForAttachment");
                 emailData.footer = $translate.instant("common.directive.docTree.email.footerForAttachment");

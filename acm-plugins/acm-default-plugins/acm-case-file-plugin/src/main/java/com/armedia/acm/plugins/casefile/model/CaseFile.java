@@ -14,7 +14,6 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.CascadeType;
@@ -44,7 +43,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -123,7 +121,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     private String className = this.getClass().getName();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumns({ @JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
+    @JoinColumns({@JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @Column(name = "cm_due_date")
@@ -148,7 +146,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     private String ecmFolderPath;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumns({ @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_case_id"), @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type") })
+    @JoinColumns({@JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_case_id"), @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")})
     @OrderBy("created ASC")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
@@ -166,8 +164,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = Boolean.FALSE;
 
-    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
-    @JoinColumns({ @JoinColumn(name = "cm_parent_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type") })
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumns({@JoinColumn(name = "cm_parent_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
     private Collection<ObjectAssociation> childObjects = new ArrayList<>();
 
     /**
@@ -188,13 +186,16 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     private Date nextCourtDate;
 
     @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumns({ @JoinColumn(name = "cm_case_id", referencedColumnName = "cm_object_id", updatable = false, insertable = false),
-            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", updatable = false, insertable = false) })
+    @JoinColumns({@JoinColumn(name = "cm_case_id", referencedColumnName = "cm_object_id", updatable = false, insertable = false),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", updatable = false, insertable = false)})
     private AcmObjectLock lock;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_queue_id")
     private AcmQueue queue;
+
+    @Column(name = "cm_security_field")
+    private String securityField;
 
     @PrePersist
     protected void beforeInsert()
@@ -632,6 +633,16 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     public void setQueue(AcmQueue queue)
     {
         this.queue = queue;
+    }
+
+    public String getSecurityField()
+    {
+        return securityField;
+    }
+
+    public void setSecurityField(String securityField)
+    {
+        this.securityField = securityField;
     }
 
     @Override
