@@ -8,8 +8,8 @@ public class PersonAssociationUpdatedEvent extends PersonAssociationPersistenceE
     public PersonAssociationUpdatedEvent(PersonAssociation source, String parentType, Long parentId)
     {
         super(source);
-        setParentId(parentId);
-        setParentType(parentType);
+        setParentObjectId(parentId);
+        setParentObjectType(parentType);
     }
 
     @Override

@@ -9,8 +9,8 @@ public class EcmFileReplacedEvent extends  EcmFilePersistenceEvent {
 
     public EcmFileReplacedEvent(EcmFile source, String userId , String ipAddress) {
         super(source,userId,ipAddress);
-        setParentId(source.getContainer().getContainerObjectId());
-        setParentType(source.getContainer().getContainerObjectType());
+        setParentObjectId(source.getContainer().getContainerObjectId());
+        setParentObjectType(source.getContainer().getContainerObjectType());
     }
 
     @Override
