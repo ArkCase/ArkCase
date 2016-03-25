@@ -701,6 +701,7 @@ thead {
 
 /* Modal Window Columns */
 
+
 .modal-search {
     width: 100%;
 }
@@ -724,6 +725,7 @@ thead {
 }
 
 .modal-search .modal-columns .modal-left {
+    float:left;
     width: 200px;
     height:300px;
     overflow-y: auto;

@@ -18,7 +18,7 @@
                     <div class="col-sm-3">
                         <div class="no-underline-and-blue-color">
                             <label><span translate>documentDetails.created</span></label>
-                            {{::ecmFile.created | date: defaultDatePickerFormat || 'Unknown'}}
+                            {{::ecmFile.created | date : ('common.defaultDatePickerFormat' | translate)  || 'Unknown'}}
                         </div>
                     </div>
                     <div class="col-sm-3">

@@ -48,9 +48,9 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
 
         configuration = getFileWorkflowBusinessRule().applyRules(configuration);
 
-        log.debug("start process? " + configuration.isStartProcess() );
+        log.debug("start process? " + configuration.isStartProcess());
 
-        if ( configuration.isStartProcess() )
+        if (configuration.isStartProcess())
         {
             startBusinessProcess(closeComplaintFormEvent, configuration);
         }
@@ -80,9 +80,11 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
         pvars.put("pdfRenditionId", closeComplaintFormEvent.getFrevvoUploadedFiles().getPdfRendition().getFileId());
         pvars.put("formXmlId", closeComplaintFormEvent.getFrevvoUploadedFiles().getFormXml().getFileId());
 
-        pvars.put("OBJECT_TYPE", "COMPLAINT");
-        pvars.put("OBJECT_ID", closeComplaintFormEvent.getComplaintId());
-        pvars.put("OBJECT_NAME", closeComplaintFormEvent.getComplaintNumber());
+        pvars.put("OBJECT_TYPE", "FILE");
+        pvars.put("OBJECT_ID", closeComplaintFormEvent.getFrevvoUploadedFiles().getPdfRendition().getFileId());
+        pvars.put("OBJECT_NAME", closeComplaintFormEvent.getFrevvoUploadedFiles().getPdfRendition().getFileName());
+        pvars.put("PARENT_OBJECT_TYPE", "COMPLAINT");
+        pvars.put("PARENT_OBJECT_ID", closeComplaintFormEvent.getComplaintId());
         pvars.put("COMPLAINT", closeComplaintFormEvent.getComplaintId());
         pvars.put("REQUEST_TYPE", "CLOSE_COMPLAINT_REQUEST");
         pvars.put("REQUEST_ID", closeComplaintFormEvent.getRequest().getId());
@@ -97,9 +99,9 @@ public class CloseComplaintWorkflowListener implements ApplicationListener<Close
     private List<String> findReviewers(CloseComplaintFormEvent closeComplaintFormEvent)
     {
         List<String> reviewers = new ArrayList<>();
-        for ( AcmParticipant participant : closeComplaintFormEvent.getRequest().getParticipants() )
+        for (AcmParticipant participant : closeComplaintFormEvent.getRequest().getParticipants())
         {
-            if ( "approver".equals(participant.getParticipantType() ) )
+            if ("approver".equals(participant.getParticipantType()))
             {
                 reviewers.add(participant.getParticipantLdapId());
             }

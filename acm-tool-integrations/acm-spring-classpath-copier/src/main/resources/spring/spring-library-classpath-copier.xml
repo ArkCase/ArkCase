@@ -8,9 +8,16 @@
 
     <!--
        Copy all Spring configuration files that match this pattern to:
-        1. $HOME/.acm/default-config/spring if they are provided with the WAR file
-        2. $HOME/.acm/custom-config/spring if they are outside the WAR file
+        1. $HOME/.arkcase/acm/default-config/spring if they are provided with the WAR file
+        2. $HOME/.arkcase/acm/custom-config/spring if they are outside the WAR file
     -->
+    <bean id="builtinFolderPath" class="java.lang.String">
+        <constructor-arg value="${user.home}/.arkcase/custom-config/spring"/>
+    </bean>
+    <bean id="customFolderPath" class="java.lang.String">
+        <constructor-arg value="${user.home}/.arkcase/default-config/spring"/>
+    </bean>
+
     <bean id="acmSpringConfigCopier" class="com.armedia.acm.spring.SpringConfigCopier">
         <property name="resolver" ref="acmBuiltinPathMatchingResolver"/>
         <property name="resourcePatterns">
@@ -19,9 +26,15 @@
                 <value>classpath*:/spring/spring-web-*.xml</value>
             </list>
         </property>
+        <property name="builtinFolderPath" ref="builtinFolderPath"/>
+        <property name="customFolderPath" ref="customFolderPath"/>
+        <property name="customRoot" value="/.arkcase/custom/"/>
     </bean>
 
     <!-- compare if there are some customizations and create diff files -->
-    <bean id="acmConfigurationComparator" class="com.armedia.acm.spring.ConfigurationComparator"/>
+    <bean id="acmConfigurationComparator" class="com.armedia.acm.spring.ConfigurationComparator">
+        <property name="builtinFolderPath" ref="builtinFolderPath"/>
+        <property name="customFolderPath" ref="customFolderPath"/>
+    </bean>
 
 </beans>

@@ -240,7 +240,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
         // hopefully the container has it, but sometimes the container isn't set on the parent object
         if (container != null)
         {
-            return container.getAttachmentFolder().getCmisFolderId();
+            // the atttachment folder does not have a not-null constraint :-(  but the folder id is not-null in the db.
+            return container.getAttachmentFolder() == null ? container.getFolder().getCmisFolderId() : container.getAttachmentFolder().getCmisFolderId();
         }
 
         AcmContainer found = null;
