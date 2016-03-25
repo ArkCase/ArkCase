@@ -69,7 +69,7 @@ public class LdapSyncService
         List<AcmUser> users = new ArrayList<>();
         Map<String, List<AcmUser>> usersByApplicationRole = new HashMap<>();
         Map<String, List<AcmUser>> usersByLdapGroup = new HashMap<>();
-        Map<String, String> childParentPair = new HashMap<String, String>();
+        Map<String, String> childParentPair = new HashMap<>();
 
         queryLdapUsers(getLdapSyncConfig(), getDirectoryName(), allRoles, users, usersByApplicationRole, usersByLdapGroup, childParentPair);
 
@@ -195,25 +195,42 @@ public class LdapSyncService
         }
     }
 
-    private Map<String, List<String>> reverseRoleToGroupMap(Map<String, String> roleToGroup)
+    protected Map<String, List<String>> reverseRoleToGroupMap(Map<String, String> roleToGroup)
     {
+
         Map<String, List<String>> groupToRoleMap = new HashMap<>();
         List<String> roles;
         for (Map.Entry<String, String> roleMapEntry : roleToGroup.entrySet())
         {
-            String role = roleMapEntry.getKey().toUpperCase();
-            String group = roleMapEntry.getValue().toUpperCase();
+            String role = roleMapEntry.getKey();
+            if (role != null && !role.trim().isEmpty())
+            {
+                role = role.trim().toUpperCase();
+                String groupList = roleMapEntry.getValue();
+                if (groupList != null && !groupList.trim().isEmpty())
+                {
+                    String[] groups = groupList.split(",");
+                    for (String group : groups)
+                    {
+                        group = group.trim();
+                        if (!group.isEmpty())
+                        {
+                            group = group.toUpperCase();
+                            if (groupToRoleMap.containsKey(group))
+                            {
+                                roles = groupToRoleMap.get(group);
+                            }
+                            else
+                            {
+                                roles = new ArrayList<>();
+                            }
+                            roles.add(role);
+                            groupToRoleMap.put(group, roles);
+                        }
 
-            if (groupToRoleMap.containsKey(group))
-            {
-                roles = groupToRoleMap.get(group);
+                    }
+                }
             }
-            else
-            {
-                roles = new ArrayList<>();
-            }
-            roles.add(role);
-            groupToRoleMap.put(group, roles);
         }
         return groupToRoleMap;
     }
@@ -227,7 +244,7 @@ public class LdapSyncService
         // ensure to initialize the map entry with an empty list, then copy from the incoming list into the new list.
         if (!userMap.containsKey(mapKey))
         {
-            userMap.put(mapKey, new ArrayList<AcmUser>());
+            userMap.put(mapKey, new ArrayList<>());
         }
         userMap.get(mapKey).addAll(users);
     }
@@ -240,7 +257,7 @@ public class LdapSyncService
             {
                 if (childParentPair == null)
                 {
-                    childParentPair = new HashMap<String, String>();
+                    childParentPair = new HashMap<>();
                 }
 
                 if (child.getRoleName() != null && parent.getGroupName() != null)

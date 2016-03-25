@@ -10,7 +10,7 @@
 
  * Object.SubscriptionService includes methods for managing subscriptions
  */
-angular.module('services').factory('Object.SubscriptionService', ['$resource', '$q', 'StoreService', 'UtilService', 'Object.ListService', 'Authentication'
+angular.module('services').factory('Object.SubscriptionService', ['$resource', '$q', 'Acm.StoreService', 'UtilService', 'Object.ListService', 'Authentication'
     , function ($resource, $q, Store, Util, ObjectListService, Authentication) {
         var Service = $resource('api/latest/service', {}, {
             /**

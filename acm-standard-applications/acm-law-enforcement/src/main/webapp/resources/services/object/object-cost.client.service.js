@@ -10,7 +10,7 @@
 
  * Object.CostService includes functions for object relate to cost.
  */
-angular.module('services').factory('Object.CostService', ['$resource', '$q', 'StoreService', 'UtilService', 'Object.ListService', 'Authentication'
+angular.module('services').factory('Object.CostService', ['$resource', '$q', 'Acm.StoreService', 'UtilService', 'Object.ListService', 'Authentication'
     , function ($resource, $q, Store, Util, ObjectListService, Authentication) {
         var Service = $resource('api/latest/service', {}, {
             /**

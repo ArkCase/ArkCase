@@ -10,7 +10,7 @@
  *
  * Case.LookupService provides functions for Case lookup data
  */
-angular.module('services').factory('Case.LookupService', ['$resource', '$translate', 'StoreService', 'UtilService', 'Object.ModelService',
+angular.module('services').factory('Case.LookupService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.ModelService',
     function ($resource, $translate, Store, Util, ObjectModelService) {
         var Service = $resource('api/latest/plugin', {}, {
             /**

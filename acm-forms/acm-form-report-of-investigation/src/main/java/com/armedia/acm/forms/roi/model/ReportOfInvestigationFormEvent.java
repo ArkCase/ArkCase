@@ -23,8 +23,6 @@ public class ReportOfInvestigationFormEvent extends AcmEvent
     private String mode;
 	private String forObjectType;
 	private String forObjectNumber;
-	private Object parentObjectId;
-	private String parentObjectType;
 
 	public ReportOfInvestigationFormEvent(String forObjectType, String forObjectNumber, String parentObjectType, Long parentObjectId, ROIForm source,
 										  FrevvoUploadedFiles files, String userId, String ipAddress, boolean succeeded)
@@ -97,25 +95,5 @@ public class ReportOfInvestigationFormEvent extends AcmEvent
 	public void setForObjectNumber(String forObjectNumber)
 	{
 		this.forObjectNumber = forObjectNumber;
-	}
-
-	public Object getParentObjectId()
-	{
-		return parentObjectId;
-	}
-
-	public void setParentObjectId(Object parentObjectId)
-	{
-		this.parentObjectId = parentObjectId;
-	}
-
-	public String getParentObjectType()
-	{
-		return parentObjectType;
-	}
-
-	public void setParentObjectType(String parentObjectType)
-	{
-		this.parentObjectType = parentObjectType;
 	}
 }
