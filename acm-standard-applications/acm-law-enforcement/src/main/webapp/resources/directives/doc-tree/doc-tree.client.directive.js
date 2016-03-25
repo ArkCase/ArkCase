@@ -81,10 +81,13 @@
  </file>
  </example>
  */
-angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', 'Acm.StoreService', 'UtilService'
-    , 'Util.DateService', 'ConfigService', 'LookupService', 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService'
-    , function ($q, $translate, $modal, $filter, Store, Util
-        , UtilDateService, ConfigService, LookupService, Ecm, EcmEmailService, EcmRecordService) {
+angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log'
+    , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService'
+    , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService'
+    , function ($q, $translate, $modal, $filter, $log
+        , Store, Util, UtilDateService, ConfigService, LookupService
+        , Ecm, EcmEmailService, EcmRecordService
+    ) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
         var promiseGetUserFullName = LookupService.getUserFullNames();
@@ -871,24 +874,30 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     var actNodes = (batch)? selNodes : [node];
 
-                    //prevent command process if return "false"; continue when return "true", "undefined" or anything else
-                    var rc = DocTree.Command.onPreCmd(data.cmd, actNodes);
-                    if (false !== rc) {
-                        $q.all([rc]).then(function(preCmdData) {
-                            if (false !== preCmdData[0]) {
-                                DocTree.Command._processCommand(event, data, node, selNodes, batch, actNodes);
-                            }
-                        });
+                    if (data.uploadFile) {
+                        if (DocTree.uploadingCmd) {
+                            $log.info("Warning: Trying to upload file before previous upload");
+                        }
+                        DocTree.uploadingCmd = {cmd: data.cmd, actNodes: actNodes};
+                        DocTree.Command._processCommand(event, data, node, selNodes, batch, actNodes);
+                        
+                    } else {
+                        //prevent command process if return "false"; continue when return "true", "undefined" or anything else
+                        var rc = DocTree.Command.onPreCmd(data.cmd, actNodes);
+                        if (false !== rc) {
+                            $q.all([rc]).then(function(preCmdData) {
+                                if (false !== preCmdData[0]) {
+                                    DocTree.Command._processCommand(event, data, node, selNodes, batch, actNodes);
+                                }
+                            });
+                        }
                     }
+
 
                 }
                 , _processCommand: function (event, data, node, selNodes, batch, actNodes) {
                     var refNode;
                     var moveMode;
-
-                    //if (!Util.goodValue(DocTree.Command.onPreCmd(data.cmd, actNodes), true)) {
-                    //    return;
-                    //}
 
                     switch (data.cmd) {
                         case "moveUp":
@@ -1048,8 +1057,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             break;
                     }
 
-
-                    DocTree.Command.onPostCmd(data.cmd, actNodes);
+                    if (!data.uploadFile) {
+                        DocTree.Command.onPostCmd(data.cmd, actNodes);
+                    }
                 }
                 , onKeyDown: function (event, data) {
                     var cmd = null;
@@ -1151,9 +1161,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , select: function (event, ui) {
                             // delay the event, so the menu can close and the click event does
                             // not interfere with the edit control
+                            var uploadFile = Util.goodMapValue(ui.item.data(), "uploadFile", false);
                             var that = this;
                             setTimeout(function () {
-                                $(that).trigger("command", {cmd: ui.cmd});
+                                $(that).trigger("command", {cmd: ui.cmd, uploadFile: uploadFile});
                             }, 100);
                         }
                     });
@@ -1273,6 +1284,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     item.cmd = "form/" + fileTypes[i].type;
                                 } else {
                                     item.cmd = "file/" + fileTypes[i].type;
+                                    item.data = {uploadFile: true};
                                 }
                             }
                             menu.push(item);
@@ -2716,8 +2728,19 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             }
             , onSubmitFormUploadFile: function (event, ctrl) {
                 event.preventDefault();
-                var files = DocTree.jqFileInput[0].files;
-                DocTree.doSubmitFormUploadFile(files);
+
+                if (DocTree.uploadingCmd) {
+                    //prevent command process if return "false"; continue when return "true", "undefined" or anything else
+                    var rc = DocTree.Command.onPreCmd(DocTree.uploadingCmd.cmd, DocTree.uploadingCmd.actNodes);
+                    if (false !== rc) {
+                        $q.all([rc]).then(function(preCmdData) {
+                            if (false !== preCmdData[0]) {
+                                var files = DocTree.jqFileInput[0].files;
+                                DocTree.doSubmitFormUploadFile(files);
+                            }
+                        });
+                    }
+                }
             }
             , doSubmitFormUploadFile: function (files) {
                 var folderNode = DocTree.uploadToFolderNode;
@@ -2742,10 +2765,20 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                 var cacheKey = DocTree.getCacheKeyByNode(folderNode);
                 if (DocTree.uploadFileNew) {
-                    DocTree.Op.uploadFiles(fd, folderNode, names, fileType);
+                    DocTree.Op.uploadFiles(fd, folderNode, names, fileType).always(function() {
+                        if (DocTree.uploadingCmd) {
+                            DocTree.Command.onPostCmd(DocTree.uploadingCmd.cmd, DocTree.uploadingCmd.actNodes);
+                            DocTree.uploadingCmd = null;
+                        }
+                    });
                 } else {
                     var replaceNode = DocTree.replaceFileNode;
-                    DocTree.Op.replaceFile(fd, replaceNode, names[0]);
+                    DocTree.Op.replaceFile(fd, replaceNode, names[0]).always(function() {
+                        if (DocTree.uploadingCmd) {
+                            DocTree.Command.onPostCmd(DocTree.uploadingCmd.cmd, DocTree.uploadingCmd.actNodes);
+                            DocTree.uploadingCmd = null;
+                        }
+                    });
                 }
             }
             , _matchFileNode: function (type, name, fileNodes) {
@@ -2884,8 +2917,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return key;
                 }
-
-
             }
 
             , Config: {
