@@ -188,26 +188,6 @@ public class AuditEvent {
         this.id = id;
     }
 
-    public String getParentType()
-    {
-        return parentType;
-    }
-
-    public void setParentType(String parentType)
-    {
-        this.parentType = parentType;
-    }
-
-    public Long getParentId()
-    {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId)
-    {
-        this.parentId = parentId;
-    }
-
     @Transient
     public String getEventType() {
         int lastDot = getFullEventType().lastIndexOf('.');

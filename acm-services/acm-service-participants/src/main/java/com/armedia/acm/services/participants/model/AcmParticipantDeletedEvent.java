@@ -7,8 +7,8 @@ public class AcmParticipantDeletedEvent extends AcmParticipantPersistenceEvent {
     public AcmParticipantDeletedEvent(AcmParticipant source, String userId)
     {
         super(source,userId);
-        setParentId(source.getObjectId());
-        setParentType(source.getObjectType());
+        setParentObjectId(source.getObjectId());
+        setParentObjectType(source.getObjectType());
     }
 
     @Override

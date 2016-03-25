@@ -3,6 +3,7 @@ package com.armedia.acm.services.note.web.api;
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.ApplicationNoteEvent;
 import com.armedia.acm.services.note.model.Note;
+import com.armedia.acm.services.note.model.NoteConstants;
 import com.armedia.acm.services.note.service.NoteEventPublisher;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
@@ -74,14 +75,14 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
     @Test
     public void addNote() throws Exception
     {
-        Note incomingNote = createNote("GENERAL");
+        Note incomingNote = createNote(NoteConstants.NOTE_GENERAL);
         executeTest(incomingNote);
     }
 
     @Test
     public void addRejectComment() throws Exception
     {
-        Note incomingNote = createNote("REJECT_COMMENT");
+        Note incomingNote = createNote(NoteConstants.NOTE_REJECT_COMMENT);
         executeTest(incomingNote);
     }
 

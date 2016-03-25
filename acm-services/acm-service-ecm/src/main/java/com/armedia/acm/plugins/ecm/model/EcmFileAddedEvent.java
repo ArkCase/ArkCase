@@ -14,8 +14,6 @@ public class EcmFileAddedEvent extends AcmEvent
     private String ecmFileId;
     private EcmFile source;
 
-
-
     public EcmFileAddedEvent(EcmFile uploaded, Authentication authentication)
     {
         super(uploaded);
@@ -28,9 +26,6 @@ public class EcmFileAddedEvent extends AcmEvent
         setEventDate(new Date());
         setUserId(uploaded.getModifier());
         setEcmFileId(uploaded.getVersionSeriesId());
-        setParentType(uploaded.getContainer().getContainerObjectType());
-        setParentId(uploaded.getContainer().getContainerObjectId());
-
         setParentObjectType(uploaded.getContainer().getContainerObjectType());
         setParentObjectId(uploaded.getContainer().getContainerObjectId());
 

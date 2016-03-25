@@ -68,7 +68,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
                 "FROM   AuditEvent ae " +
                 "WHERE  ae.status != 'DELETE' " +
                 "AND ((ae.objectType = :objectType AND ae.objectId = :objectId) " +
-                "OR (ae.parentType = :objectType AND ae.parentId = :objectId)) " +
+                "OR (ae.parentObjectType = :objectType AND ae.parentObjectId = :objectId)) " +
                 (eventTypes != null ? "AND ae.fullEventType IN :eventTypes " : "") +
                 "AND ae.eventResult = 'success' " +
                 "ORDER BY ae.eventDate";
@@ -92,7 +92,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
                 "FROM   AuditEvent ae " +
                 "WHERE  ae.status != 'DELETE' " +
                 "AND ((ae.objectType = :objectType AND ae.objectId = :objectId) " +
-                "OR (ae.parentType = :objectType AND ae.parentId = :objectId)) " +
+                "OR (ae.parentObjectType = :objectType AND ae.parentObjectId = :objectId)) " +
                 (eventTypes != null ? "AND ae.fullEventType IN :eventTypes " : "") +
                 "AND ae.eventResult = 'success'";
 
