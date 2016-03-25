@@ -14,8 +14,7 @@
 angular.module('services').factory('Object.LookupService', ['$resource', 'Acm.StoreService', 'UtilService'
     , 'LookupService', 'SearchService',
     function ($resource, Store, Util
-        , LookupService, SearchService
-    ) {
+        , LookupService, SearchService) {
 
         var Service = $resource('api/latest/plugin', {}, {
             /**
@@ -478,6 +477,21 @@ angular.module('services').factory('Object.LookupService', ['$resource', 'Acm.St
          */
         Service.getComplaintCorrespondenceForms = function () {
             return LookupService.getLookup("complaintCorrespondenceForms");
+        };
+
+        /**
+         * @ngdoc method
+         * @name getSecurityFieldTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of object types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getSecurityFieldTypes = function () {
+            var data = LookupService.getLookup("securityFieldTypes");
+            return data;
         };
 
         return Service;
