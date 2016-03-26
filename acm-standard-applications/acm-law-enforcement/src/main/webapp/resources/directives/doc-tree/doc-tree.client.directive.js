@@ -197,7 +197,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 $tdList.eq(4).text(Util.goodMapValue(found, "name"));
                             });
 
-                            $tdList.eq(5).replaceWith($td6);
+                            if (DocTree.isReadOnly()) {
+                                $tdList.eq(5).text(node.data.version);
+                            } else {
+                                $tdList.eq(5).replaceWith($td6);
+                            }
 
                             $tdList.eq(6).text(node.data.status);
 
@@ -232,8 +236,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     , edit: {
                         triggerStart: ["f2", "shift+click", "mac+enter"]
                         , beforeEdit: function (event, data) {
+                            // Return false to prevent edit mode
+                            if (DocTree.isReadOnly()) {
+                                return false;
+                            }
                             if (DocTree.isTopNode(data.node) || DocTree.isSpecialNode(data.node)) {
-                                return false;// Return false to prevent edit mode
+                                return false;
                             }
                             if (data.node.isLoading()) {
                                 return false;
@@ -245,7 +253,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
                         , beforeClose: function (event, data) {
                             // Return false to prevent cancel/save (data.input is available)
-                            var z = 1;
                         }
                         , save: function (event, data) {
                             var parent = data.node.getParent();
@@ -266,7 +273,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     }
 
                                 } else {
-
                                     if (DocTree.isFolderNode(data.node)) {
                                         DocTree.Op.renameFolder(data.node, name);
                                     } else if (DocTree.isFileNode(data.node)) {
@@ -293,6 +299,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         preventVoidMoves: true,       // Prevent dropping nodes 'before self', etc.
                         preventRecursiveMoves: true,  // Prevent dropping nodes on own descendants
                         dragStart: function (node, data) {
+                            if (DocTree.isReadOnly()) {
+                                return false;
+                            }
                             if (DocTree.isTopNode(data.node) || DocTree.isSpecialNode(data.node)) {
                                 return false;
                             }
@@ -300,8 +309,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 return false;
                             }
                             return true;
-                        },
-                        dragEnter: function (node, data) {
+                        }
+                        , dragEnter: function (node, data) {
                             if (node == data.otherNode) {
                                 return ["before", "after"];     //Cannot drop to oneself
                             } else if (DocTree.isTopNode(data.node)) {
@@ -321,8 +330,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             } else {
                                 return ["before", "after"];  // Don't allow dropping *over* a document node (would create a child)
                             }
-                        },
-                        dragDrop: function (node, data) {
+                        }
+                        , dragDrop: function (node, data) {
+                            if (DocTree.isReadOnly()) {
+                                return;
+                            }
+
                             if (("before" != data.hitMode && "after" != data.hitMode) && DocTree.isFolderNode(node)) {
                                 DocTree.expandNode(node).done(function () {
                                     if (DocTree.isFolderNode(data.otherNode)) {
@@ -371,11 +384,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                 DocTree.tree = DocTree.jqTree.fancytree("getTree");
                 var jqTreeBody = DocTree.jqTree.find("tbody");
-                //DocTree.Menu.useContextMenu(jqTreeBody, false);
-                DocTree.ExternalDnd.useExternalDnd(jqTreeBody);
+                DocTree.ExternalDnd.startExternalDnd(jqTreeBody);
 
-                jqTreeBody.delegate("select.docversion", "change", DocTree.onChangeVersion);
-                jqTreeBody.delegate("select.docversion", "dblclick", DocTree.onDblClickVersion);
+                jqTreeBody.on("change", "select.docversion", DocTree.onChangeVersion);
+                jqTreeBody.on("dblclick", "select.docversion", DocTree.onDblClickVersion);
 
                 var jqTreeHead = DocTree.jqTree.find("thead");
                 jqTreeHead.find("input:checkbox").on("click", function (e) {
@@ -1256,6 +1268,17 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         return !item.invisible;
                     });
 
+                    //Under readOnly mode, disable all non-readOnly cmd
+                    if (DocTree.isReadOnly()) {
+                        _.each(menu, function(item) {
+                            var readOnly = Util.goodMapValue(item.data, "readOnly", false);
+                            if (!readOnly) {
+                                item.disabled = true;
+                            }
+                        });
+
+                    }
+
                     return menu;
                 }
 
@@ -1284,7 +1307,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     item.cmd = "form/" + fileTypes[i].type;
                                 } else {
                                     item.cmd = "file/" + fileTypes[i].type;
-                                    item.data = {uploadFile: true};
+                                    item.data = {};
+                                    item.data.uploadFile = true;
                                 }
                             }
                             menu.push(item);
@@ -1345,11 +1369,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
 
             , ExternalDnd: {
-                useExternalDnd: function ($treeBody) {
-                    $treeBody.delegate("tr", "dragenter", this.onDragEnter);
-                    $treeBody.delegate("tr", "dragleave", this.onDragLeave);
-                    $treeBody.delegate("tr", "dragover", this.onDragOver);
-                    $treeBody.delegate("tr", "drop", this.onDragDrop);
+                startExternalDnd: function ($treeBody) {
+                    $treeBody.on("dragenter", "tr", this.onDragEnter);
+                    $treeBody.on("dragleave", "tr", this.onDragLeave);
+                    $treeBody.on("dragover", "tr", this.onDragOver);
+                    $treeBody.on("drop", "tr", this.onDragDrop);
 
                     $(document).on('dragenter', function (e) {
                         e.stopPropagation();
@@ -1384,6 +1408,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     //e.stopPropagation();
                     e.preventDefault();
                     $(this).removeClass("dragover");
+
+                    if (DocTree.isReadOnly()) {
+                        return;
+                    }
 
                     var node = $.ui.fancytree.getNode(e);
                     var files = e.originalEvent.dataTransfer.files;
@@ -2819,6 +2847,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 return nodes;
             }
 
+            , _isReadOnly: false
+            , isReadOnly: function() {
+                return DocTree._isReadOnly;
+            }
+            , setReadOnly: function(isReadOnly) {
+                DocTree._isReadOnly = isReadOnly;
+            }
+
             , _isEditing: false
             , isEditing: function () {
                 return this._isEditing;
@@ -3844,6 +3880,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 scope.treeControl = {
                     refreshTree: DocTree.refreshTree
                     , getSelectedNodes: DocTree.getSelectedNodes
+                    , setReadOnly: DocTree.setReadOnly
                 };
 
                 DocTree.Command.onAllowCmd = ("undefined" != typeof attrs.onAllowCmd) ? scope.onAllowCmd() : (function (){});
