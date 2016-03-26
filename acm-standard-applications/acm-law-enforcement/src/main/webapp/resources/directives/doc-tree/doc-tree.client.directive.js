@@ -30,6 +30,7 @@
  * @param {Object} tree-control Tree API functions exposed to user. Following is the list:
  * @param {Function} treeControl.refreshTree Refresh the tree
  * @param {Function} treeControl.getSelectedNodes Get list of selected tree nodes
+ * @param {Function} treeControl.setReadOnly Set tree to read-only to disable all functions that can modify document
  *
  *
  * @example
