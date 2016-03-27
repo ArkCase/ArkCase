@@ -40,6 +40,7 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
+import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.IdentityLink;
@@ -155,11 +156,19 @@ public class ActivitiTaskDao implements TaskDao
 
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, in.getParentObjectId());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE, in.getParentObjectType());
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE, in.getParentObjectTitle());
 
-            getActivitiTaskService().setVariable(activitiTask.getId(), TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS, in.getReworkInstructions());
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS, in.getReworkInstructions());
 
             if (in.getTaskOutcome() != null)
             {
+                if (in.getTaskOutcome().getName() != null && in.getTaskOutcome().getName().equals("SEND_FOR_REWORK"))
+                {
+                    getActivitiRuntimeService().setVariable(activitiTask.getProcessInstanceId(), TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS, in.getReworkInstructions());
+                } else if (in.getTaskOutcome().getName() != null && !in.getTaskOutcome().getName().equals("SEND_FOR_REWORK"))
+                {
+                    getActivitiRuntimeService().setVariable(activitiTask.getProcessInstanceId(), TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS, null);
+                }
                 getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_OUTCOME, in.getTaskOutcome().getName());
             }
 
@@ -884,7 +893,6 @@ public class ActivitiTaskDao implements TaskDao
             retval.setWorkflowRequestType((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE));
             retval.setReviewDocumentPdfRenditionId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID));
             retval.setReviewDocumentFormXmlId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_XML_RENDITION_ID));
-            retval.setReworkInstructions((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS));
 
             Long parentObjectId = (Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID);
             parentObjectId = parentObjectId == null ? retval.getAttachedToObjectId() : parentObjectId;
@@ -894,6 +902,8 @@ public class ActivitiTaskDao implements TaskDao
             parentObjectType = parentObjectType == null ? retval.getAttachedToObjectType() : parentObjectType;
             retval.setParentObjectType(parentObjectType);
 
+            retval.setParentObjectTitle((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE));
+
         }
 
         if (hti.getTaskLocalVariables() != null)
@@ -901,6 +911,32 @@ public class ActivitiTaskDao implements TaskDao
             Map<String, Object> taskLocal = hti.getTaskLocalVariables();
 
             extractTaskLocalVariables(retval, taskLocal);
+
+            // There seems to be an inconsistency when retrieving details from task local variables map
+            // especially for tasks inside a subprocces, for e.g. when the subprocess ends, the API seems
+            // to retrieve only details from the most recently completed task outside of the subprocess
+            // Using HistoricVariableInstance solves this issue and we'll use this until we find any
+            // better solution for this issue
+
+            HistoricVariableInstance historicVariableInstance = getActivitiHistoryService().
+                    createHistoricVariableInstanceQuery().
+                    taskId(retval.getId().toString()).
+                    variableName(TaskConstants.VARIABLE_NAME_DETAILS).
+                    singleResult();
+            if (historicVariableInstance != null)
+            {
+                retval.setDetails((String) historicVariableInstance.getValue());
+            }
+
+            historicVariableInstance = getActivitiHistoryService().
+                    createHistoricVariableInstanceQuery().
+                    taskId(retval.getId().toString()).
+                    variableName(TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS).
+                    singleResult();
+            if (historicVariableInstance != null)
+            {
+                retval.setReworkInstructions((String) historicVariableInstance.getValue());
+            }
         }
 
         String status = findTaskStatus(hti);
@@ -1082,14 +1118,16 @@ public class ActivitiTaskDao implements TaskDao
             String parentObjectType = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE);
             acmTask.setParentObjectType(parentObjectType);
         }
+        if (acmTask.getParentObjectTitle() == null)
+        {
+            String parentObjectTitle = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE);
+            acmTask.setParentObjectType(parentObjectTitle);
+        }
         Date startDate = (Date) taskLocal.get(TaskConstants.VARIABLE_NAME_START_DATE);
         acmTask.setTaskStartDate(startDate);
 
         Integer percentComplete = (Integer) taskLocal.get(TaskConstants.VARIABLE_NAME_PERCENT_COMPLETE);
         acmTask.setPercentComplete(percentComplete);
-
-        String details = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_DETAILS);
-        acmTask.setDetails(details);
 
         // AFDP-1876 Task next assignee field: for ad-hoc tasks (not part of a business process) the next assignee
         // will be stored here in task local variables.  It's hard to imagine why a "next assignee" is needed for an
@@ -1157,6 +1195,18 @@ public class ActivitiTaskDao implements TaskDao
         if (activitiTask.getTaskLocalVariables() != null)
         {
             extractTaskLocalVariables(acmTask, activitiTask.getTaskLocalVariables());
+
+            String details = (String) activitiTask.getTaskLocalVariables().get(TaskConstants.VARIABLE_NAME_DETAILS);
+            acmTask.setDetails(details);
+
+            //only on rework task, first time rework instructions will be fetched from process variables
+            //otherwise, rework instruction will be fetched via task local variable
+            String reworkInstructions = (String) activitiTask.getTaskLocalVariables().get(TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS);
+            if (reworkInstructions != null)
+            {
+                acmTask.setReworkInstructions(reworkInstructions);
+            }
+
         }
 
         // If start date is not provided, set start date as creation date
@@ -1247,6 +1297,8 @@ public class ActivitiTaskDao implements TaskDao
             String parentObjectType = (String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE);
             parentObjectType = parentObjectType == null ? acmTask.getAttachedToObjectType() : parentObjectType;
             acmTask.setParentObjectType(parentObjectType);
+
+            acmTask.setParentObjectTitle((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE));
 
             acmTask.setWorkflowRequestId((Long) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REQUEST_ID));
             acmTask.setWorkflowRequestType((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE));
