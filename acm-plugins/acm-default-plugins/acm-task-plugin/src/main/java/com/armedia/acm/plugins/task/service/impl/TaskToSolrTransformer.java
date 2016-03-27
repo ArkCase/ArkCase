@@ -91,6 +91,8 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
             doc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
         }
 
+        doc.setAdditionalProperty("parent_title_s", in.getParentObjectTitle());
+
         log.trace("returning an advanced search doc");
 
         return doc;
@@ -135,6 +137,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setLast_modified_tdt(new Date());
 
         doc.setAdditionalProperty("candidate_group_ss", in.getCandidateGroups());
+        doc.setAdditionalProperty("parent_title_s", in.getParentObjectTitle());
 
         log.trace("returning a quick search doc");
 
