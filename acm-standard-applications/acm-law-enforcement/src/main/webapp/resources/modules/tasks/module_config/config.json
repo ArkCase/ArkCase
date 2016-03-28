@@ -158,7 +158,7 @@
       },
       {
         "type": "p/TASK/wkfl",
-        "label": "Workflow Overview",
+        "label": "Workflow",
         "icon": "fa fa-code-fork",
         "components": [
           "workflow"
@@ -236,7 +236,7 @@
       },
       {
         "type": "p/ADHOC/wkfl",
-        "label": "Workflow Overview",
+        "label": "Workflow",
         "icon": "fa fa-code-fork",
         "components": [
           "workflow"
@@ -718,7 +718,7 @@
     },
     {
       "id": "workflow",
-      "title": "Workflow Overview",
+      "title": "Workflow",
       "icon": "fa fa-code-fork",
       "enabled": true,
       "type": "grid",
