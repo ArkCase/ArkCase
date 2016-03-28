@@ -873,6 +873,7 @@ public class ActivitiTaskDao implements TaskDao
         AcmTask retval;
         retval = new AcmTask();
         retval.setTaskStartDate(hti.getStartTime());
+        retval.setCreateDate(hti.getStartTime());
         retval.setTaskFinishedDate(hti.getEndTime());
         retval.setTaskDurationInMillis(hti.getDurationInMillis());
         retval.setCompleted(hti.getEndTime() != null);

@@ -671,7 +671,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockHistoricTaskInstanceQuery.includeTaskLocalVariables()).andReturn(mockHistoricTaskInstanceQuery);
         expect(mockHistoricTaskInstanceQuery.singleResult()).andReturn(mockHistoricTaskInstance);
 
-        expect(mockHistoricTaskInstance.getStartTime()).andReturn(started);
+        expect(mockHistoricTaskInstance.getStartTime()).andReturn(started).times(2);
         expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended).atLeastOnce();
         expect(mockHistoricTaskInstance.getDurationInMillis()).andReturn(taskDuration);
         expect(mockHistoricTaskInstance.getDeleteReason()).andReturn(deleteReason).times(2);
@@ -1135,7 +1135,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockHistoricProcessInstanceQuery.singleResult()).andReturn(mockHistoricProcessInstance);
         expect(mockHistoricProcessInstance.getEndTime()).andReturn(ended).times(2);
 
-        expect(mockHistoricTaskInstance.getStartTime()).andReturn(started);
+        expect(mockHistoricTaskInstance.getStartTime()).andReturn(started).times(2);
         expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended).times(4);
         expect(mockHistoricTaskInstance.getId()).andReturn(taskId.toString());
         expect(mockHistoricTaskInstance.getDurationInMillis()).andReturn(taskDuration);
