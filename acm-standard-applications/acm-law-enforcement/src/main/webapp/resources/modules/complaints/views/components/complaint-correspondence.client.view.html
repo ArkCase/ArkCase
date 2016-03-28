@@ -13,7 +13,7 @@
                                 ng-model="correspondenceForm">
                         </select>
                         <span ng-hide="'noop'==correspondenceForm.value">
-                            <button class="btn btn-default btn-xs" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
+                            <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
                         </span>
                     </span>
 

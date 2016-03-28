@@ -32,8 +32,8 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            gridHelper.addEditButton(config.columnDefs, "grid.appScope.editRow(row.entity)");
-            gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+            gridHelper.addButton(config, "edit");
+            gridHelper.addButton(config, "delete");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
