@@ -68,8 +68,8 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                     if (!scope.notesInit.noteTitle)
                         scope.notesInit.noteTitle = $translate.instant("common.directive.coreNotes.title");
                     if (config) {
-                        gridHelper.addEditButton(config.columnDefs, "grid.appScope.editRow(row.entity)");
-                        gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+                        gridHelper.addButton(config, "edit");
+                        gridHelper.addButton(config, "delete");
                         gridHelper.setColumnDefs(config);
                         gridHelper.setBasicOptions(config);
                         gridHelper.disableGridScrolling(config);
