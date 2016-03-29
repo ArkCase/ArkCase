@@ -90,7 +90,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
             var cacheChildTaskData = new Store.CacheFifo(Service.CacheNames.CHILD_TASK_DATA);
             if (!Util.isEmpty(start)) {
                 var cacheKey = parentType + "." + parentId + "." + start + "." + n + "." + sortBy + "." + sortDir;
-                cacheChildTaskData.set(cacheKey, null);
+                cacheChildTaskData.put(cacheKey, null);
 
             } else if (!Util.isEmpty(parentId)) {
                 var keys = cacheChildTaskData.keys();
@@ -99,7 +99,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
                     return (key && key.startsWith(keyBegin));
                 });
                 _.each(found, function(key) {
-                    cacheChildTaskData.set(key, null);
+                    cacheChildTaskData.put(key, null);
                 });
 
             } else {
