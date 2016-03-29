@@ -115,7 +115,8 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         $scope.addNew = function () {
             $state.go("newTaskFromParentObject", {
                 parentType: ObjectService.ObjectTypes.COMPLAINT,
-                parentObject: $scope.objectInfo.complaintNumber
+                parentObject: $scope.objectInfo.complaintNumber,
+                parentTitle: $scope.objectInfo.title
             });
 
         };
