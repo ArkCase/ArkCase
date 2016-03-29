@@ -22,6 +22,8 @@ public class CorrespondenceAddedEvent extends AcmEvent {
         setEventDate(new Date());
         setUserId(source.getModifier());
         setSucceeded(succeeded);
+        setParentObjectId(source.getContainer().getContainerObjectId());
+        setParentObjectType(source.getContainer().getContainerObjectType());
 
         if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails) {
             setIpAddress(((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress());

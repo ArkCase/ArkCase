@@ -1,6 +1,10 @@
 package com.armedia.acm.services.note.web.api;
 
 import com.armedia.acm.services.note.dao.NoteDao;
+import com.armedia.acm.services.note.model.ApplicationNoteEvent;
+import com.armedia.acm.services.note.model.Note;
+import com.armedia.acm.services.note.service.NoteEventPublisher;
+import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +23,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import static org.easymock.EasyMock.expect;
+import java.util.Date;
+
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
@@ -35,6 +41,7 @@ public class DeleteNoteByIdAPIControllerTest extends EasyMockSupport
     private MockMvc mockMvc;
     private MockHttpSession mockHttpSession;
     private DeleteNoteByIdAPIController unit;
+    private NoteEventPublisher mockNoteEventPublisher;
 
     private NoteDao mockNoteDao;
     private Authentication mockAuthentication;
@@ -42,37 +49,42 @@ public class DeleteNoteByIdAPIControllerTest extends EasyMockSupport
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
     private Logger log = LoggerFactory.getLogger(getClass());
+    private Note mockNote;
 
     @Before
     public void setUp() throws Exception {
+        mockNote = createMock(Note.class);
         mockNoteDao = createMock(NoteDao.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
+        mockNoteEventPublisher = createMock(NoteEventPublisher.class);
 
         unit = new DeleteNoteByIdAPIController();
 
         unit.setNoteDao(mockNoteDao);
+        unit.setNoteEventPublisher(mockNoteEventPublisher);
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
 
     @Test
     public void deleteNoteById() throws Exception
     {
-        /*Long parentId = 1329L;
-        String parentType = "COMPLAINT";
-
-        Note note = new Note();
-
-        note.setId(700L);
-        note.setCreator("testCreator");
-        note.setCreated(new Date());
-        note.setNote("Note");
-        note.setParentType(parentType);
-        note.setParentId(parentId);
-        Long noteId =note.getId();
-        */
         Long noteId = 700L;
-        mockNoteDao.deleteNoteById(noteId);
+        Long parentId = 800L;
+        expect(mockNote.getId()).andReturn(noteId);
+        expect(mockNote.getCreated()).andReturn(new Date());
+        expect(mockNote.getCreator()).andReturn("user");
+        expect(mockNote.getParentId()).andReturn(parentId);
+        expect(mockNote.getParentType()).andReturn("PARENT_TYPE");
+
+        expect(mockNoteDao.find(eq(noteId))).andReturn(mockNote);
+
+        mockNoteDao.deleteNoteById(eq(noteId));
+        expectLastCall();
+
+        Capture<ApplicationNoteEvent> capturedEvent = newCapture();
+        mockNoteEventPublisher.publishNoteEvent(capture(capturedEvent));
+        expectLastCall();
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
@@ -95,6 +107,7 @@ public class DeleteNoteByIdAPIControllerTest extends EasyMockSupport
 
         log.info("log" + result.getResponse().getStatus());
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertEquals(capturedEvent.getValue().getSource(), mockNote);
 
     }
 
@@ -102,8 +115,21 @@ public class DeleteNoteByIdAPIControllerTest extends EasyMockSupport
     public void deleteNoteById_notFound() throws Exception {
 
         Long noteId =234L;
+        Long parentId = 800L;
+        expect(mockNote.getId()).andReturn(noteId);
+        expect(mockNote.getCreated()).andReturn(new Date());
+        expect(mockNote.getCreator()).andReturn("user");
+        expect(mockNote.getParentId()).andReturn(parentId);
+        expect(mockNote.getParentType()).andReturn("PARENT_TYPE");
 
-        mockNoteDao.deleteNoteById(noteId);
+        expect(mockNoteDao.find(eq(noteId))).andReturn(mockNote);
+
+        mockNoteDao.deleteNoteById(eq(noteId));
+        expectLastCall();
+
+        Capture<ApplicationNoteEvent> capturedEvent = newCapture();
+        mockNoteEventPublisher.publishNoteEvent(capture(capturedEvent));
+        expectLastCall();
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
