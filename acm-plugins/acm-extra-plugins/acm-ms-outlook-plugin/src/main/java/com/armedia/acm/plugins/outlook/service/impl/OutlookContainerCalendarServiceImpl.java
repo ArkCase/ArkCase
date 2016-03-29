@@ -1,10 +1,13 @@
 package com.armedia.acm.plugins.outlook.service.impl;
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
+import com.armedia.acm.plugins.profile.model.OutlookDTO;
+import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookFolder;
 import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
@@ -18,6 +21,8 @@ import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +51,9 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
     private String assigneeAccess;
     private String followerAccess;
 
+    private Boolean useSystemUser;
+    private UserOrgService userOrgService;
+
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public OutlookFolder createFolder(
@@ -59,7 +67,7 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
 
         List<OutlookFolderPermission> permissions = mapParticipantsToFolderPermission(participants);
         outlookFolder.setPermissions(permissions);
-        outlookFolder = outlookFolderService.createFolder(getAcmSystemOutlookUser(), WellKnownFolderName.Calendar, outlookFolder);
+        outlookFolder = outlookFolderService.createFolder(getOutlookUser(), WellKnownFolderName.Calendar, outlookFolder);
 
         container.setCalendarFolderId(outlookFolder.getId());
 
@@ -71,7 +79,7 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
     public void deleteFolder(Long containerId,
                              String folderId,
                              DeleteMode deleteMode) throws AcmOutlookItemNotFoundException {
-        outlookFolderService.deleteFolder(getAcmSystemOutlookUser(), folderId, deleteMode);
+        outlookFolderService.deleteFolder(getOutlookUser(), folderId, deleteMode);
         AcmContainer container = acmContainerDao.find(containerId);
         container.setCalendarFolderId(null);
         acmContainerDao.save(container);
@@ -81,7 +89,7 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
     public void updateFolderParticipants(String folderId,
                                          List<AcmParticipant> participants) throws AcmOutlookItemNotFoundException {
 
-        outlookFolderService.updateFolderPermissions(getAcmSystemOutlookUser(), folderId, mapParticipantsToFolderPermission(participants));
+        outlookFolderService.updateFolderPermissions(getOutlookUser(), folderId, mapParticipantsToFolderPermission(participants));
 
     }
 
@@ -164,6 +172,29 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
         this.userDao = userDao;
     }
 
+    private AcmOutlookUser getOutlookUser()
+    {
+        AcmOutlookUser outlookUser = getAcmSystemOutlookUser();
+
+        Authentication auth = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication() : null;
+        if ((getUseSystemUser() == null || !getUseSystemUser()) && auth != null)
+        {
+            try
+            {
+                String userId = auth.getName();
+                AcmUser user = getUserDao().findByUserId(userId);
+                OutlookDTO outlookDTO = getUserOrgService().retrieveOutlookPassword(auth);
+                outlookUser = new AcmOutlookUser(userId, user.getMail(), outlookDTO.getOutlookPassword());
+            }
+            catch (AcmEncryptionException e)
+            {
+                log.warn("Error while retrieving outlook information for logged user. The default system user will be used.");
+            }
+        }
+
+        return outlookUser;
+    }
+
     private AcmOutlookUser getAcmSystemOutlookUser() {
         return new AcmOutlookUser(systemUserId, systemUserEmail, systemUserEmailPassword);
     }
@@ -210,5 +241,30 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
 
     public void setFollowerAccess(String followerAccess) {
         this.followerAccess = followerAccess;
+    }
+
+    public Boolean getUseSystemUser()
+    {
+        return useSystemUser;
+    }
+
+    public void setUseSystemUser(Boolean useSystemUser)
+    {
+        this.useSystemUser = useSystemUser;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public UserOrgService getUserOrgService()
+    {
+        return userOrgService;
+    }
+
+    public void setUserOrgService(UserOrgService userOrgService)
+    {
+        this.userOrgService = userOrgService;
     }
 }
