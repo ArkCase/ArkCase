@@ -39,7 +39,8 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
         }
 
         PersonAssociationPersistenceEvent personAssociationPersistenceEvent =
-                newPersonAssociation ? new PersonAssociationAddEvent(source) : new PersonAssociationUpdatedEvent(source);
+                newPersonAssociation ? new PersonAssociationAddEvent(source, source.getParentType(), source.getParentId()) :
+                        new PersonAssociationUpdatedEvent(source, source.getParentType(), source.getParentId());
         personAssociationPersistenceEvent.setSucceeded(succeeded);
         if ( authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
         {
@@ -50,7 +51,7 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
     }
     
     public void publishPersonAssociationDeletedEvent(PersonAssociation source){
-       PersonAssociationDeletedEvent event = new PersonAssociationDeletedEvent(source);
+       PersonAssociationDeletedEvent event = new PersonAssociationDeletedEvent(source, source.getParentType(), source.getParentId());
        event.setSucceeded(true);
        eventPublisher.publishEvent(event);
     }

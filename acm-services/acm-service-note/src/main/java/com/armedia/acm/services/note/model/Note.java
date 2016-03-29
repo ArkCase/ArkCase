@@ -59,7 +59,7 @@ public class Note implements Serializable, AcmEntity
         setCreated(today);
         
         if (null == getType()) {
-        	setType("GENERAL");
+        	setType(NoteConstants.NOTE_GENERAL);
         }
     }
 

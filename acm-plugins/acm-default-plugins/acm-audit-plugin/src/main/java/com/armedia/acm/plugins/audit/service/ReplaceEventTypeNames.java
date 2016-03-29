@@ -2,8 +2,7 @@ package com.armedia.acm.plugins.audit.service;
 
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
-
-
+import com.armedia.acm.plugins.audit.model.AuditConstants;
 
 public class ReplaceEventTypeNames {
 
