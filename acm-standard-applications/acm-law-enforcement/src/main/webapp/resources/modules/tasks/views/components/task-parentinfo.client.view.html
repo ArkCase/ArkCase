@@ -1,5 +1,5 @@
 <div ng-controller="Tasks.ParentInfoController">
-    <div class="clearfix" ng-show="'CASE_FILE' == objectInfo.parentObjectType">
+    <div class="clearfix" ng-show="'CASE_FILE' == objectInfo.attachedToObjectType">
         <div class="row">
             <div class="col-xs-6">
                 <h4><a ng-click="onClickTitle()">{{parentCaseInfo.title || "Unknown"}}</a> ({{parentCaseInfo.status}})
@@ -49,7 +49,7 @@
         </div>
     </div>
 
-    <div class="clearfix" ng-show="'COMPLAINT' == objectInfo.parentObjectType">
+    <div class="clearfix" ng-show="'COMPLAINT' == objectInfo.attachedToObjectType">
         <div class="row">
             <div class="col-xs-6">
                 <h4><a ng-click="onClickTitle()">{{parentComplaintInfo.complaintTitle || "Unknown"}}</a>
