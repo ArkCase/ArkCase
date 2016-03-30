@@ -83,7 +83,9 @@
         <spring.ldap.version>1.3.2.RELEASE</spring.ldap.version>
         <spring-retry-version>1.1.2.RELEASE</spring-retry-version>
         <spring.security.version>3.2.7.RELEASE</spring.security.version>
-        <spring.security.saml2.core.version>1.0.1.RELEASE</spring.security.saml2.core.version>
+        <spring.security.saml2.core.version>1.0.2.RELEASE</spring.security.saml2.core.version>
+        <!-- by default spring.security.saml2.core uses opensaml version 2.6.1, which uses bouncycastle version 1.46, but we require version 1.54 -->        
+        <opensaml.version>2.6.4</opensaml.version>
         <spring.surf.version>1.0.0</spring.surf.version>
         <spring.version>4.1.6.RELEASE</spring.version>
         <springframework-addons.version>0.1</springframework-addons.version>
@@ -99,7 +101,7 @@
         <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
         <puppycrawl.version>6.8.1</puppycrawl.version>
         <log4j.version>2.2</log4j.version>
-        <bouncycastle.version>1.52</bouncycastle.version>
+        <bouncycastle.version>1.54</bouncycastle.version>
         <zt-exec.version>1.8</zt-exec.version>
         <xmlgraphics.version>2.0.1</xmlgraphics.version>
         <fop.version>2.0</fop.version>
@@ -931,49 +933,12 @@
             <dependency>
                 <groupId>org.springframework.security.extensions</groupId>
                 <artifactId>spring-security-saml2-core</artifactId>
-                <version>${spring.security.saml2.core.version}</version>
-                <exclusions>
-                    <exclusion>
-                   	    <groupId>org.springframework.security</groupId>
-	              	    <artifactId>spring-security-config</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework.security</groupId>
-                        <artifactId>spring-security-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework.security</groupId>
-                        <artifactId>spring-security-web</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>commons-codec</groupId>
-                        <artifactId>commons-codec</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>commons-lang</groupId>
-                        <artifactId>commons-lang</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>commons-beanutils</groupId>
-                        <artifactId>commons-beanutils-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>stax</groupId>
-                        <artifactId>stax-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>stax</groupId>
-                        <artifactId>stax-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>bcprov-jdk15</artifactId>
-                        <groupId>org.bouncycastle</groupId>
-                    </exclusion>
-                </exclusions>
+                <version>${spring.security.saml2.core.version}</version>                
+            </dependency>
+            <dependency>
+                <groupId>org.opensaml</groupId>
+                <artifactId>opensaml</artifactId>
+                <version>${opensaml.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
