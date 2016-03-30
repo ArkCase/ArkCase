@@ -969,6 +969,10 @@
                         <groupId>stax</groupId>
                         <artifactId>stax-api</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <artifactId>bcprov-jdk15</artifactId>
+                        <groupId>org.bouncycastle</groupId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
