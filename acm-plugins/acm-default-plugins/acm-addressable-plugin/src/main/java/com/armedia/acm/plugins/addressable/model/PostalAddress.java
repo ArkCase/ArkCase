@@ -247,4 +247,62 @@ public class PostalAddress implements Serializable, AcmEntity
     {
         return this;
     }
+
+    @Override public boolean equals(Object o)
+    {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        PostalAddress that = (PostalAddress) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null)
+            return false;
+        if (created != null ? !created.equals(that.created) : that.created != null)
+            return false;
+        if (creator != null ? !creator.equals(that.creator) : that.creator != null)
+            return false;
+        if (modified != null ? !modified.equals(that.modified) : that.modified != null)
+            return false;
+        if (modifier != null ? !modifier.equals(that.modifier) : that.modifier != null)
+            return false;
+        if (status != null ? !status.equals(that.status) : that.status != null)
+            return false;
+        if (type != null ? !type.equals(that.type) : that.type != null)
+            return false;
+        if (types != null ? !types.equals(that.types) : that.types != null)
+            return false;
+        if (streetAddress != null ? !streetAddress.equals(that.streetAddress) : that.streetAddress != null)
+            return false;
+        if (streetAddress2 != null ? !streetAddress2.equals(that.streetAddress2) : that.streetAddress2 != null)
+            return false;
+        if (city != null ? !city.equals(that.city) : that.city != null)
+            return false;
+        if (state != null ? !state.equals(that.state) : that.state != null)
+            return false;
+        if (zip != null ? !zip.equals(that.zip) : that.zip != null)
+            return false;
+        return country != null ? country.equals(that.country) : that.country == null;
+
+    }
+
+    @Override public int hashCode()
+    {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (created != null ? created.hashCode() : 0);
+        result = 31 * result + (creator != null ? creator.hashCode() : 0);
+        result = 31 * result + (modified != null ? modified.hashCode() : 0);
+        result = 31 * result + (modifier != null ? modifier.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (types != null ? types.hashCode() : 0);
+        result = 31 * result + (streetAddress != null ? streetAddress.hashCode() : 0);
+        result = 31 * result + (streetAddress2 != null ? streetAddress2.hashCode() : 0);
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (state != null ? state.hashCode() : 0);
+        result = 31 * result + (zip != null ? zip.hashCode() : 0);
+        result = 31 * result + (country != null ? country.hashCode() : 0);
+        return result;
+    }
 }

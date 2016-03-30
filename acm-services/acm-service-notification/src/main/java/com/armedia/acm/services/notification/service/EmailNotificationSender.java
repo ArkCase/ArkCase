@@ -7,6 +7,8 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
@@ -19,8 +21,10 @@ import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,8 +59,9 @@ public class EmailNotificationSender implements NotificationSender {
 		try 
 		{
 			getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
-			
-			Map<String, Object> messageProps = new HashMap<>();
+
+			// TODO: Riste Tutureski 30 March 2016 -  We have problem with using Mule for sending emails to Office365. I've changed to use our outlook service for now.
+			/*Map<String, Object> messageProps = new HashMap<>();
 			messageProps.put("host", getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_HOST_KEY, null));
 			messageProps.put("port", getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PORT_KEY, null));
 			messageProps.put("user", getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY, null));
@@ -64,6 +69,28 @@ public class EmailNotificationSender implements NotificationSender {
 			messageProps.put("from", getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY, null));
 			messageProps.put("to", notification.getUserEmail());
 			messageProps.put("subject", notification.getTitle());
+
+			MuleMessage received = getMuleContextManager().send("vm://sendEmail.in", notification.getNote(), messageProps);*/
+
+			EmailWithAttachmentsDTO emailInfo = new EmailWithAttachmentsDTO();
+			emailInfo.setHeader("");
+			emailInfo.setFooter("");
+			emailInfo.setBody(notification.getNote());
+			emailInfo.setSubject(notification.getTitle());
+			emailInfo.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
+
+			String userId = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY, null);
+			String userEmail = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY, null);
+			String userPass = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY, null);
+
+			AcmOutlookUser user = new AcmOutlookUser(userId, userEmail, userPass);
+
+			Authentication auth = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication() : null;
+
+			Map<String, Object> messageProps = new HashMap<>();
+			messageProps.put("emailInfo", emailInfo);
+			messageProps.put("user", user);
+			messageProps.put("authentication", auth);
 
 			MuleMessage received = getMuleContextManager().send("vm://sendEmail.in", notification.getNote(), messageProps);
 			

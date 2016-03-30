@@ -8,18 +8,7 @@ import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
-import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
-import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
-import com.armedia.acm.plugins.ecm.model.EcmFolderDeclareRequestEvent;
+import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
@@ -27,7 +16,6 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.json.JSONArray;
@@ -43,18 +31,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by armdev on 5/1/14.

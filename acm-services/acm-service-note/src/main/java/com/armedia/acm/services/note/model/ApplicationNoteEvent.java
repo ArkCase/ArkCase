@@ -18,6 +18,8 @@ public class ApplicationNoteEvent extends AcmEvent
         setSucceeded(succeeded);
         setIpAddress(ipAddress);
         setObjectType("NOTIFICATION");
+        setParentObjectId(source.getParentId());
+        setParentObjectType(source.getParentType());
     }
 }
 
