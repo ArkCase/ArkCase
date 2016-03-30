@@ -238,12 +238,15 @@
             {
               "name": "details",
               "displayName": "cases.comp.details.table.columns.title",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.details'></div>"
+
             },
             {
               "name": "modified",
               "displayName": "cases.comp.details.table.columns.modified",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified | date : 'dd/MM/yyyy'}}</div>"
             },
             {
               "name": "modifier",
