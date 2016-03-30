@@ -66,7 +66,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
         //    return true;
         //};
 
-        var retrieveGridData = function() {
+        var retrieveGridData = function () {
             var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
@@ -127,7 +127,8 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
         $scope.addNew = function () {
             $state.go("newTaskFromParentObject", {
                 parentType: ObjectService.ObjectTypes.CASE_FILE,
-                parentObject: $scope.objectInfo.caseNumber
+                parentObject: $scope.objectInfo.caseNumber,
+                parentTitle: $scope.objectInfo.title
             });
         };
 
