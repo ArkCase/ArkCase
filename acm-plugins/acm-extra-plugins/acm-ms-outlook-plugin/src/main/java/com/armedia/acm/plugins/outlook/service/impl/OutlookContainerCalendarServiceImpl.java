@@ -186,7 +186,7 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
                 OutlookDTO outlookDTO = getUserOrgService().retrieveOutlookPassword(auth);
                 outlookUser = new AcmOutlookUser(userId, user.getMail(), outlookDTO.getOutlookPassword());
             }
-            catch (AcmEncryptionException e)
+            catch (Exception e)
             {
                 log.warn("Error while retrieving outlook information for logged user. The default system user will be used.");
             }
