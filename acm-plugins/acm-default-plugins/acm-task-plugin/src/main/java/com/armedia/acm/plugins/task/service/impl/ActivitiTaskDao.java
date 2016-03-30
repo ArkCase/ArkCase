@@ -1122,7 +1122,7 @@ public class ActivitiTaskDao implements TaskDao
         if (acmTask.getParentObjectTitle() == null)
         {
             String parentObjectTitle = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE);
-            acmTask.setParentObjectType(parentObjectTitle);
+            acmTask.setParentObjectTitle(parentObjectTitle);
         }
         Date startDate = (Date) taskLocal.get(TaskConstants.VARIABLE_NAME_START_DATE);
         acmTask.setTaskStartDate(startDate);
