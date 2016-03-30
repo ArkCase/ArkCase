@@ -1122,7 +1122,7 @@ public class ActivitiTaskDao implements TaskDao
         if (acmTask.getParentObjectTitle() == null)
         {
             String parentObjectTitle = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE);
-            acmTask.setParentObjectType(parentObjectTitle);
+            acmTask.setParentObjectTitle(parentObjectTitle);
         }
         Date startDate = (Date) taskLocal.get(TaskConstants.VARIABLE_NAME_START_DATE);
         acmTask.setTaskStartDate(startDate);
@@ -1287,26 +1287,26 @@ public class ActivitiTaskDao implements TaskDao
     {
         if (activitiTask.getProcessVariables() != null)
         {
-            acmTask.setAttachedToObjectId((Long) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_ID));
-            acmTask.setAttachedToObjectType((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_TYPE));
-            acmTask.setAttachedToObjectName((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_NAME));
+            acmTask.setAttachedToObjectId((Long) getActivitiTaskService().getVariables(activitiTask.getId()).get(TaskConstants.VARIABLE_NAME_OBJECT_ID));
+            acmTask.setAttachedToObjectType((String) getActivitiTaskService().getVariables(activitiTask.getId()).get(TaskConstants.VARIABLE_NAME_OBJECT_TYPE));
+            acmTask.setAttachedToObjectName((String) getActivitiTaskService().getVariables(activitiTask.getId()).get(TaskConstants.VARIABLE_NAME_OBJECT_NAME));
 
-            Long parentObjectId = (Long) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID);
+            Long parentObjectId = (Long) getActivitiTaskService().getVariables(activitiTask.getId()).get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID);
             parentObjectId = parentObjectId == null ? acmTask.getAttachedToObjectId() : parentObjectId;
             acmTask.setParentObjectId(parentObjectId);
 
-            String parentObjectType = (String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE);
+            String parentObjectType = (String) getActivitiTaskService().getVariables(activitiTask.getId()).get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE);
             parentObjectType = parentObjectType == null ? acmTask.getAttachedToObjectType() : parentObjectType;
             acmTask.setParentObjectType(parentObjectType);
 
-            acmTask.setParentObjectTitle((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE));
+            acmTask.setParentObjectTitle((String) getActivitiTaskService().getVariables(activitiTask.getId()).get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE));
 
-            acmTask.setWorkflowRequestId((Long) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REQUEST_ID));
-            acmTask.setWorkflowRequestType((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE));
-            acmTask.setReviewDocumentPdfRenditionId((Long) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID));
-            acmTask.setReviewDocumentFormXmlId((Long) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_XML_RENDITION_ID));
-            acmTask.setReworkInstructions((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS));
-            acmTask.setTaskStartDate((Date) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_START_DATE));
+            acmTask.setWorkflowRequestId((Long) getActivitiTaskService().getVariables(activitiTask.getId()).get(TaskConstants.VARIABLE_NAME_REQUEST_ID));
+            acmTask.setWorkflowRequestType((String) getActivitiTaskService().getVariables(activitiTask.getId()).get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE));
+            acmTask.setReviewDocumentPdfRenditionId((Long) getActivitiTaskService().getVariables(activitiTask.getId()).get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID));
+            acmTask.setReviewDocumentFormXmlId((Long) getActivitiTaskService().getVariables(activitiTask.getId()).get(TaskConstants.VARIABLE_NAME_XML_RENDITION_ID));
+            acmTask.setReworkInstructions((String) getActivitiTaskService().getVariables(activitiTask.getId()).get(TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS));
+            acmTask.setTaskStartDate((Date) getActivitiTaskService().getVariables(activitiTask.getId()).get(TaskConstants.VARIABLE_NAME_START_DATE));
 
             if (acmTask.getReviewDocumentPdfRenditionId() != null && acmTask.getReviewDocumentPdfRenditionId() > 0)
             {
@@ -1315,7 +1315,7 @@ public class ActivitiTaskDao implements TaskDao
             }
 
             // AFDP-1876 if the task is part of a business process, the next assignee will be stored in process variables.
-            acmTask.setNextAssignee((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_NEXT_ASSIGNEE));
+            acmTask.setNextAssignee((String) getActivitiTaskService().getVariables(activitiTask.getId()).get(TaskConstants.VARIABLE_NAME_NEXT_ASSIGNEE));
         }
     }
 
