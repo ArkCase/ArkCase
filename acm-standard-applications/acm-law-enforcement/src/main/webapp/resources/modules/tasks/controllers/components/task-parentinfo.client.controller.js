@@ -45,19 +45,19 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
 
-            if (Util.isEmpty($scope.objectInfo.parentObjectId)) {
+            if (Util.isEmpty($scope.objectInfo.attachedToObjectId)) {
                 return;
             }
 
             //for test
             //if (1148 == $scope.objectInfo.taskId) {
-            //    $scope.objectInfo.parentObjectType = "COMPLAINT";
-            //    $scope.objectInfo.parentObjectId = 123;
+            //    $scope.objectInfo.attachedToObjectType = "COMPLAINT";
+            //    $scope.objectInfo.attachedToObjectId = 123;
             //}
 
 
-            if (ObjectService.ObjectTypes.CASE_FILE == $scope.objectInfo.parentObjectType) {
-                CaseInfoService.getCaseInfo($scope.objectInfo.parentObjectId).then(
+            if (ObjectService.ObjectTypes.CASE_FILE == $scope.objectInfo.attachedToObjectType) {
+                CaseInfoService.getCaseInfo($scope.objectInfo.attachedToObjectId).then(
                     function (caseInfo) {
                         $scope.parentCaseInfo = caseInfo;
                         $scope.owningGroup = ObjectModelService.getGroup(caseInfo);
@@ -65,8 +65,8 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
                         return caseInfo;
                     }
                 );
-            } else if (ObjectService.ObjectTypes.COMPLAINT == $scope.objectInfo.parentObjectType) {
-                ComplaintInfoService.getComplaintInfo($scope.objectInfo.parentObjectId).then(
+            } else if (ObjectService.ObjectTypes.COMPLAINT == $scope.objectInfo.attachedToObjectType) {
+                ComplaintInfoService.getComplaintInfo($scope.objectInfo.attachedToObjectId).then(
                     function (complaintInfo) {
                         $scope.parentComplaintInfo = complaintInfo;
                         $scope.owningGroup = ObjectModelService.getGroup(complaintInfo);

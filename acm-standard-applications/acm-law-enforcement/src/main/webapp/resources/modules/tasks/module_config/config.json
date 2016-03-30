@@ -286,14 +286,12 @@
               "displayName": "tasks.comp.details.table.columns.details",
               "headerCellFilter": "translate",
               "cellTemplate": "<div ng-bind-html='row.entity.details'></div>"
-
             },
             {
               "name": "createDate",
               "displayName": "tasks.comp.details.table.columns.modified",
               "headerCellFilter": "translate",
               "cellTemplate": "<div>{{ row.entity.createDate | date : 'dd/MM/yyyy'}}</div>"
-
             },
             {
               "name": "assignee",
@@ -868,8 +866,8 @@
           "lookup": "userFullNames"
         }
       ],
-       "filters": "\"Object Type\": TAG",
-       "filterName" : "Object Type"
+      "filters": "\"Object Type\": TAG",
+      "filterName": "Object Type"
     },
     {
       "id": "userSearch",
