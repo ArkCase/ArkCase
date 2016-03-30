@@ -286,14 +286,12 @@
               "displayName": "tasks.comp.details.table.columns.details",
               "headerCellFilter": "translate",
               "cellTemplate": "<div ng-bind-html='row.entity.details'></div>"
-
             },
             {
               "name": "createDate",
               "displayName": "tasks.comp.details.table.columns.modified",
               "headerCellFilter": "translate",
               "cellTemplate": "<div>{{ row.entity.createDate | date : 'dd/MM/yyyy'}}</div>"
-
             },
             {
               "name": "assignee",
@@ -970,8 +968,7 @@
         "taskFinishedDate": "",
         "taskId": "",
         "taskStartDate": "",
-        "title": "",
-        "parentObjectTitle": ""
+        "title": ""
       },
       "userSearch": {
         "userFacetFilter": "\"Object Type\": USER"
