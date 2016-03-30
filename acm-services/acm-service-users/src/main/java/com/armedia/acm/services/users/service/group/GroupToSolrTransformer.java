@@ -7,7 +7,6 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +41,14 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setObject_id_s(in.getName());
         solr.setObject_type_s("GROUP");
         solr.setTitle_parseable(in.getName());
-        solr.setName(in.getName());
+        if (in.getName().contains("-UUID-"))
+        {
+            solr.setName(in.getName().split("-UUID-")[0]);
+        } else
+        {
+            solr.setName(in.getName());
+        }
+
         solr.setDescription_parseable(in.getDescription());
         solr.setObject_sub_type_s(in.getType());
 
@@ -96,7 +102,13 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setId(in.getName() + "-GROUP");
         solr.setObject_id_s(in.getName());
         solr.setObject_type_s("GROUP");
-        solr.setName(in.getName());
+        if (in.getName().contains("-UUID-"))
+        {
+            solr.setName(in.getName().split("-UUID-")[0]);
+        } else
+        {
+            solr.setName(in.getName());
+        }
 
         solr.setAuthor(in.getCreator());
         solr.setCreate_tdt(in.getCreated());

@@ -40,4 +40,12 @@ public interface GroupService {
 	 * @return LDAP groups
 	 */
 	public String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException;
+
+	/**
+	 * Checks if group with same name exists in the DB on the same tree level
+	 *
+	 * @param group
+	 * @return The new saved group or already existing one if group with given name already exists in the same tree level
+     */
+	AcmGroup checkAndSaveAdHocGroup(AcmGroup group);
 }
