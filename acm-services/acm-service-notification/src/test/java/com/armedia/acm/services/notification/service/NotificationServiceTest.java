@@ -14,6 +14,7 @@ import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.services.notification.model.QueryType;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -171,7 +172,8 @@ public class NotificationServiceTest extends EasyMockSupport
         expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.from"), capture(stringCapture))).andReturn("from").anyTimes();
         try
         {
-            expect(mockMuleContextManager.send(eq("vm://sendEmail.in"), eq("note"), eq(messageProps))).andReturn(mockMuleMessage).anyTimes();
+            Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
+            expect(mockMuleContextManager.send(eq("vm://sendEmail.in"), eq("note"), capture(messagePropsCapture))).andReturn(mockMuleMessage).anyTimes();
         } catch (MuleException e)
         {
 
@@ -293,7 +295,8 @@ public class NotificationServiceTest extends EasyMockSupport
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification2)).andReturn(notification2).atLeastOnce();
         try
         {
-            expect(mockMuleContextManager.send(eq("vm://sendEmail.in"), eq("note"), eq(messageProps))).andReturn(mockMuleMessage).anyTimes();
+            Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
+            expect(mockMuleContextManager.send(eq("vm://sendEmail.in"), eq("note"), capture(messagePropsCapture))).andReturn(mockMuleMessage).anyTimes();
         } catch (MuleException e)
         {
 
