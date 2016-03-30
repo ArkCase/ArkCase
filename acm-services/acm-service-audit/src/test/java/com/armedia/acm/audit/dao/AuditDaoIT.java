@@ -51,13 +51,12 @@ public class AuditDaoIT
         int startRow = 0;
         String objectType = "TASK";
         Long objectId = 100L;   // just want to make sure the query executes, doesn't have to return data
+        List<String> eventTypes = null;
 
-        List<AuditEvent> events = dao.findPagedResults(objectId, objectType, startRow, maxRows);
+        List<AuditEvent> events = dao.findPagedResults(objectId, objectType, startRow, maxRows, eventTypes);
 
         assertNotNull(events);
 
         log.info("# of task events: " + events.size());
-
-
     }
 }

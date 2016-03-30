@@ -81,7 +81,7 @@
     }
   },
   "tasks.comp.workflow": {
-    "title": "Workflow Overview",
+    "title": "Workflow",
     "table.columns": {
       "participant": "Participant",
       "role": "Role",

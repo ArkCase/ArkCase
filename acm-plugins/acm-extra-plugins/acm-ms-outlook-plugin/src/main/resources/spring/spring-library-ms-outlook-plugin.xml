@@ -23,6 +23,9 @@
             <property name="userDao" ref="userJpaDao"/>
             <property name="acmContainerDao" ref="acmContainerFolderDao"/>
             <property name="outlookFolderService" ref="outlookService" />
+
+            <property name="useSystemUser" value="${outlook.exchange.calendar.use.system.user}" />
+            <property name="userOrgService" ref="acmUserOrgService"/>
         </bean>
 
 </beans>
