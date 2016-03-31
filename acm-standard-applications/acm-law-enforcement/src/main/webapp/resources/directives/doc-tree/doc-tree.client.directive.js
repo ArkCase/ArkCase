@@ -18,6 +18,7 @@
  * @param {Object} tree-config Tree configuration used to add to default configuration. Default doc tree configuration
  * is saved in config.json file of common module.
  * @param {Object} object-info Metadata of document container object
+ * @param {Boolean} read-only Value "true" would disable all functions that can modify document. Default value is "false"
  * @param {Function} on-allow-cmd (Optional)Callback function before a command is shown on Menu, to allow doc tree
  * consummer to have a chance to modify menu items. Return "invisible" to remove the command from menu;
  * "disable" to disable the command; Anything else or undefined means the command will be show as normal.
@@ -30,7 +31,6 @@
  * @param {Object} tree-control Tree API functions exposed to user. Following is the list:
  * @param {Function} treeControl.refreshTree Refresh the tree
  * @param {Function} treeControl.getSelectedNodes Get list of selected tree nodes
- * @param {Function} treeControl.setReadOnly Set tree to read-only to disable all functions that can modify document
  *
  *
  * @example
@@ -198,7 +198,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 $tdList.eq(4).text(Util.goodMapValue(found, "name"));
                             });
 
-                            if (DocTree.isReadOnly()) {
+                            if (DocTree.readOnly) {
                                 $tdList.eq(5).text(node.data.version);
                             } else {
                                 $tdList.eq(5).replaceWith($td6);
@@ -238,7 +238,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         triggerStart: ["f2", "shift+click", "mac+enter"]
                         , beforeEdit: function (event, data) {
                             // Return false to prevent edit mode
-                            if (DocTree.isReadOnly()) {
+                            if (DocTree.readOnly) {
                                 return false;
                             }
                             if (DocTree.isTopNode(data.node) || DocTree.isSpecialNode(data.node)) {
@@ -300,7 +300,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         preventVoidMoves: true,       // Prevent dropping nodes 'before self', etc.
                         preventRecursiveMoves: true,  // Prevent dropping nodes on own descendants
                         dragStart: function (node, data) {
-                            if (DocTree.isReadOnly()) {
+                            if (DocTree.readOnly) {
                                 return false;
                             }
                             if (DocTree.isTopNode(data.node) || DocTree.isSpecialNode(data.node)) {
@@ -333,7 +333,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
                         }
                         , dragDrop: function (node, data) {
-                            if (DocTree.isReadOnly()) {
+                            if (DocTree.readOnly) {
                                 return;
                             }
 
@@ -1270,7 +1270,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     });
 
                     //Under readOnly mode, disable all non-readOnly cmd
-                    if (DocTree.isReadOnly()) {
+                    if (DocTree.readOnly) {
                         _.each(menu, function(item) {
                             var readOnly = Util.goodMapValue(item.data, "readOnly", false);
                             if (!readOnly) {
@@ -1410,7 +1410,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     e.preventDefault();
                     $(this).removeClass("dragover");
 
-                    if (DocTree.isReadOnly()) {
+                    if (DocTree.readOnly) {
                         return;
                     }
 
@@ -2848,14 +2848,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 return nodes;
             }
 
-            , _isReadOnly: false
-            , isReadOnly: function() {
-                return DocTree._isReadOnly;
-            }
-            , setReadOnly: function(isReadOnly) {
-                DocTree._isReadOnly = isReadOnly;
-            }
-
             , _isEditing: false
             , isEditing: function () {
                 return this._isEditing;
@@ -3866,6 +3858,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 , onAllowCmd: '&'
                 , onPreCmd: '&'
                 , onPostCmd: '&'
+                , readOnly: '@'
             }
 
             , link: function (scope, element, attrs) {
@@ -3877,16 +3870,15 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.treeConfig = {};
                 DocTree.objectInfo = null;
                 DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function (){}); //if not defined, do nothing
+                DocTree.Command.onAllowCmd = ("undefined" != typeof attrs.onAllowCmd) ? scope.onAllowCmd() : (function (){});
+                DocTree.Command.onPreCmd = ("undefined" != typeof attrs.onPreCmd) ? scope.onPreCmd() : (function (){});
+                DocTree.Command.onPostCmd = ("undefined" != typeof attrs.onPostCmd) ? scope.onPostCmd() : (function (){});
+                DocTree.readOnly = ("true" === attrs.readOnly);
 
                 scope.treeControl = {
                     refreshTree: DocTree.refreshTree
                     , getSelectedNodes: DocTree.getSelectedNodes
-                    , setReadOnly: DocTree.setReadOnly
                 };
-
-                DocTree.Command.onAllowCmd = ("undefined" != typeof attrs.onAllowCmd) ? scope.onAllowCmd() : (function (){});
-                DocTree.Command.onPreCmd = ("undefined" != typeof attrs.onPreCmd) ? scope.onPreCmd() : (function (){});
-                DocTree.Command.onPostCmd = ("undefined" != typeof attrs.onPostCmd) ? scope.onPostCmd() : (function (){});
 
                 ConfigService.getModuleConfig("common").then(function (moduleConfig) {
                     var treeConfig = Util.goodMapValue(moduleConfig, "docTree", {});
