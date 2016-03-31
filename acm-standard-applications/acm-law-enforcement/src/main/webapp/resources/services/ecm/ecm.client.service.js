@@ -6,11 +6,11 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/ecm/ecm.client.service.js services/ecm/ecm.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/ecm/ecm.client.service.js services/ecm/ecm.client.service.js}
 
  * EcmService contains functions to related to document management.
  */
-angular.module('services').factory('EcmService', ['$resource', 'StoreService', 'UtilService'
+angular.module('services').factory('EcmService', ['$resource', 'Acm.StoreService', 'UtilService'
     , function ($resource, StoreService, UtilService) {
 
         var Service = $resource('api/latest/service', {}, {

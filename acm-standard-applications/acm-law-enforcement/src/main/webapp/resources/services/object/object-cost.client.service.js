@@ -6,11 +6,11 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/object/object-cost.client.service.js services/object/object-cost.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-cost.client.service.js services/object/object-cost.client.service.js}
 
  * Object.CostService includes functions for object relate to cost.
  */
-angular.module('services').factory('Object.CostService', ['$resource', '$q', 'StoreService', 'UtilService', 'Object.ListService', 'Authentication'
+angular.module('services').factory('Object.CostService', ['$resource', '$q', 'Acm.StoreService', 'UtilService', 'Object.ListService', 'Authentication'
     , function ($resource, $q, Store, Util, ObjectListService, Authentication) {
         var Service = $resource('api/latest/service', {}, {
             /**

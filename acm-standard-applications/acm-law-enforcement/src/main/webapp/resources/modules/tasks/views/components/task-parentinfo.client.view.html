@@ -1,5 +1,5 @@
 <div ng-controller="Tasks.ParentInfoController">
-    <div class="clearfix" ng-show="'CASE_FILE' == objectInfo.parentObjectType">
+    <div class="clearfix" ng-show="'CASE_FILE' == objectInfo.attachedToObjectType">
         <div class="row">
             <div class="col-xs-6">
                 <h4><a ng-click="onClickTitle()">{{parentCaseInfo.title || "Unknown"}}</a> ({{parentCaseInfo.status}})
@@ -18,7 +18,7 @@
                 </small>
             </div>
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{parentCaseInfo.created | date: "MM/dd/yyyy"}}</div>
+                <div class="h4 font-bold">{{parentCaseInfo.created | date: defaultDatePickerFormat}}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.case.incidentDate.label</span>
                 </small>
@@ -49,10 +49,11 @@
         </div>
     </div>
 
-    <div class="clearfix" ng-show="'COMPLAINT' == objectInfo.parentObjectType">
+    <div class="clearfix" ng-show="'COMPLAINT' == objectInfo.attachedToObjectType">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a ng-click="onClickTitle()">{{parentComplaintInfo.complaintTitle || "Unknown"}}</a> ({{parentComplaintInfo.status}})
+                <h4><a ng-click="onClickTitle()">{{parentComplaintInfo.complaintTitle || "Unknown"}}</a>
+                    ({{parentComplaintInfo.status}})
                 </h4>
             </div>
             <div class="col-xs-6  text-right">
@@ -68,7 +69,7 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <!--<div class="h4 font-bold">{{parentComplaintInfo.created | date: "MM/dd/yyyy"}}</div>-->
-                <div class="h4 font-bold">{{parentComplaintInfo.incidentDate | date: "MM/dd/yyyy"}}</div>
+                <div class="h4 font-bold">{{parentComplaintInfo.incidentDate | date: defaultDatePickerFormat}}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.complaint.incidentDate.label</span>
                 </small>

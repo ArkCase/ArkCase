@@ -6,11 +6,11 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/object/object-list.client.service.js services/object/object-list.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-list.client.service.js services/object/object-list.client.service.js}
 
  * Object.ListService includes REST calls related to object list in SOLR
  */
-angular.module('services').factory('Object.ListService', ['$resource', 'StoreService', 'UtilService', 'SearchService'
+angular.module('services').factory('Object.ListService', ['$resource', 'Acm.StoreService', 'UtilService', 'SearchService'
     , function ($resource, Store, Util, SearchService) {
         var Service = $resource('api/latest/plugin', {}, {
             /**

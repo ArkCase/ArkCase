@@ -7,7 +7,7 @@
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
     </bean>
-    <bean  id="listAllTasksAPIController" class="com.armedia.acm.plugins.task.web.api.ListAllTasksAPIController">
+    <bean id="listAllTasksAPIController" class="com.armedia.acm.plugins.task.web.api.ListAllTasksAPIController">
         <property ref="acmTaskDao" name="taskDao"/>
         <property ref="taskEventPublisher" name="taskEventPublisher"/>
     </bean>
@@ -15,7 +15,8 @@
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
     </bean>
-    <bean id="completeTaskWithOutcomeAPIController" class="com.armedia.acm.plugins.task.web.api.CompleteTaskWithOutcomeAPIController">
+    <bean id="completeTaskWithOutcomeAPIController"
+          class="com.armedia.acm.plugins.task.web.api.CompleteTaskWithOutcomeAPIController">
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
     </bean>
@@ -41,14 +42,19 @@
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
     </bean>
-    
+
     <bean id="workflowHistoryAPIController" class="com.armedia.acm.plugins.task.web.api.WorkflowHistoryAPIController">
-    	<property name="taskDao" ref="acmTaskDao" />
+        <property name="taskDao" ref="acmTaskDao"/>
     </bean>
 
     <bean id="claimTaskAPIController" class="com.armedia.acm.plugins.task.web.api.ClaimTaskAPIController">
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
+    </bean>
+
+    <bean id="deleteProcessInstanceAPIController"
+          class="com.armedia.acm.plugins.task.web.api.DeleteProcessInstanceAPIController">
+        <property name="taskDao" ref="acmTaskDao"/>
     </bean>
 
 </beans>

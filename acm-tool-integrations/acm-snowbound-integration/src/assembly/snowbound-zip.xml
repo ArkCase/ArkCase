@@ -127,6 +127,16 @@
             <outputDirectory>/resources</outputDirectory>
             <filtered>false</filtered>
         </fileSet>
+        <fileSet>
+            <directory>src/main/resources/resources/stamps</directory>
+
+            <includes>
+                <include>/*.png</include>
+                <include>/*.svg</include>
+            </includes>
+            <outputDirectory>/resources/stamps</outputDirectory>
+            <filtered>false</filtered>
+        </fileSet>
     </fileSets>
 
 </assembly>

@@ -3,6 +3,9 @@ package com.armedia.acm.services.note.web.api;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.note.dao.NoteDao;
+import com.armedia.acm.services.note.model.ApplicationNoteEvent;
+import com.armedia.acm.services.note.model.Note;
+import com.armedia.acm.services.note.service.NoteEventPublisher;
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +24,8 @@ import javax.persistence.PersistenceException;
 public class DeleteNoteByIdAPIController {
 
     private NoteDao noteDao;
+    private NoteEventPublisher noteEventPublisher;
+
 //MediaType.APPLICATION_JSON_VALUE
     private Logger log = LoggerFactory.getLogger(getClass());
     @RequestMapping(value = "/{noteId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,10 +37,17 @@ public class DeleteNoteByIdAPIController {
         if (log.isInfoEnabled()) {
             log.info("Finding note with ID: " + id);
         }
+
         if(id != null){
+
+            Note note = getNoteDao().find(id);
             try
             {
                 JSONObject objectToReturnJSON = new JSONObject();
+
+                ApplicationNoteEvent event = new ApplicationNoteEvent(note, "deleted", true, "" );
+                getNoteEventPublisher().publishNoteEvent(event);
+
                 getNoteDao().deleteNoteById(id);
                 log.info("Deleting note by id '" + id + "'");
                 log.debug("Note ID : " + id);
@@ -49,6 +61,8 @@ public class DeleteNoteByIdAPIController {
             }
             catch (PersistenceException e)
             {
+                ApplicationNoteEvent event = new ApplicationNoteEvent(note, "deleted", false, "" );
+                getNoteEventPublisher().publishNoteEvent(event);
                 throw new AcmUserActionFailedException("Delete", "note", id, e.getMessage(), e);
             }
         }
@@ -63,6 +77,16 @@ public class DeleteNoteByIdAPIController {
     public void setNoteDao(NoteDao noteDao)
     {
         this.noteDao = noteDao;
+    }
+
+    public NoteEventPublisher getNoteEventPublisher()
+    {
+        return noteEventPublisher;
+    }
+
+    public void setNoteEventPublisher(NoteEventPublisher noteEventPublisher)
+    {
+        this.noteEventPublisher = noteEventPublisher;
     }
 }
 

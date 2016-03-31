@@ -6,11 +6,11 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/tasks/services/task-info.client.service.js modules/tasks/services/task-info.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/tasks/services/task-info.client.service.js modules/tasks/services/task-info.client.service.js}
  *
  * Task.ListService provides functions for Task database data
  */
-angular.module('tasks').factory('Task.ListService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ObjectService', 'Object.ListService',
+angular.module('tasks').factory('Task.ListService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'ObjectService', 'Object.ListService',
     function ($resource, $translate, Store, Util, ObjectService, ObjectListService) {
         var Service = $resource('api/latest/plugin', {}, {});
 

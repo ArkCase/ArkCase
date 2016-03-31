@@ -10,7 +10,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/directives/core-notes/core-notes.client.directive.js directives/core-notes/core-notes.client.directive.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/core-notes/core-notes.client.directive.js directives/core-notes/core-notes.client.directive.js}
  *
  * The "Core-Notes" directive add notes grid functionality
  *
@@ -68,8 +68,8 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                     if (!scope.notesInit.noteTitle)
                         scope.notesInit.noteTitle = $translate.instant("common.directive.coreNotes.title");
                     if (config) {
-                        gridHelper.addEditButton(config.columnDefs, "grid.appScope.editRow(row.entity)");
-                        gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+                        gridHelper.addButton(config, "edit");
+                        gridHelper.addButton(config, "delete");
                         gridHelper.setColumnDefs(config);
                         gridHelper.setBasicOptions(config);
                         gridHelper.disableGridScrolling(config);

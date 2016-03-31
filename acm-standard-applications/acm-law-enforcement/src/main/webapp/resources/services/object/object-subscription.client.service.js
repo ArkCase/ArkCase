@@ -6,11 +6,11 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/object/object-subscription.client.service.js services/object/object-subscription.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-subscription.client.service.js services/object/object-subscription.client.service.js}
 
  * Object.SubscriptionService includes methods for managing subscriptions
  */
-angular.module('services').factory('Object.SubscriptionService', ['$resource', '$q', 'StoreService', 'UtilService', 'Object.ListService', 'Authentication'
+angular.module('services').factory('Object.SubscriptionService', ['$resource', '$q', 'Acm.StoreService', 'UtilService', 'Object.ListService', 'Authentication'
     , function ($resource, $q, Store, Util, ObjectListService, Authentication) {
         var Service = $resource('api/latest/service', {}, {
             /**

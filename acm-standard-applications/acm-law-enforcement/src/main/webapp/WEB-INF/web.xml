@@ -21,6 +21,12 @@
         </param-value>
     </context-param>
 
+    <!-- The default Spring authentication profile. To use a different profile pass it as system property ex. -Dspring.profiles.active="ssoSaml" -->
+    <context-param>
+       <param-name>spring.profiles.default</param-name>
+       <param-value>ldap</param-value>
+    </context-param>
+
     <!-- Sets RequestId, User Id, Remote address in org.slfj.MDC variables -->
     <filter>
         <filter-name>RequestMDCFilter</filter-name>

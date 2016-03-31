@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.ReferencesController', ['$scope', '$stateParams'
-    , 'UtilService', 'ConfigService', 'Complaint.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , 'UtilService', 'ConfigService', 'Complaint.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'Object.ReferenceService'
     , function ($scope, $stateParams
-        , Util, ConfigService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService) {
+        , Util, ConfigService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService, $modal, referenceService) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -47,6 +47,61 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
             var targetType = Util.goodMapValue(rowEntity, "targetType");
             var targetId = Util.goodMapValue(rowEntity, "targetId");
             gridHelper.showObject(targetType, targetId);
+        };
+
+
+        ConfigService.getModuleConfig("complaints").then(function (moduleConfig) {
+        	$scope.modalConfig = _.find(moduleConfig.components, {id: "referenceSearchGrid"});
+            return moduleConfig;
+        });
+
+        $scope.refresh = function () {
+            $scope.$emit('report-object-refreshed', $stateParams.id);
+        };
+
+        // open addreference modal
+        $scope.addReference = function () {
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/complaints/views/components/complaint-reference-modal.client.view.html',
+                controller: 'Complaints.ReferenceModalController',
+                size: 'lg',
+                resolve: {
+                    $filter: function () {
+                        return $scope.modalConfig.searchFilter;
+                    },
+                    $config: function () {
+                        return $scope.modalConfig;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (chosenReference) {
+                if (chosenReference) {
+                    var reference = {};
+                    reference.referenceId = chosenReference.object_id_s;
+                    reference.referenceTitle = chosenReference.title_parseable;
+                    reference.referenceType = chosenReference.object_type_s;
+                    reference.referenceNumber = chosenReference.name;
+                    reference.referenceStatus = chosenReference.status_lcs;
+                    reference.parentId = $stateParams.id;
+                    reference.parentType = 'COMPLAINT';
+                    referenceService.addReference(reference).then(
+                        function (objectSaved) {
+                            $scope.refresh();
+                            return objectSaved;
+                        },
+                        function (error) {
+                            return error;
+                        }
+                    );
+                    return;
+                }
+            }, function () {
+                // Cancel button was clicked.
+                return [];
+            });
+
         };
 
     }

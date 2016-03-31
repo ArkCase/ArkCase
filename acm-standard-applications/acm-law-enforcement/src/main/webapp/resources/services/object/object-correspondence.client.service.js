@@ -6,11 +6,11 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/object/object-correspondence.client.service.js services/object/object-correspondence.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-correspondence.client.service.js services/object/object-correspondence.client.service.js}
 
  * Object.CorrespondenceService includes group of REST calls related to correspondence.
  */
-angular.module('services').factory('Object.CorrespondenceService', ['$resource', 'StoreService', 'UtilService',
+angular.module('services').factory('Object.CorrespondenceService', ['$resource', 'Acm.StoreService', 'UtilService',
     function ($resource, Store, Util) {
         var Service = $resource('api/latest/plugin', {}, {
             /**
