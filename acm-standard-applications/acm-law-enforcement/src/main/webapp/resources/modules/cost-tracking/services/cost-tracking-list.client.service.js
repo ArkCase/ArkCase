@@ -6,12 +6,12 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cost-tracking/services/cost-tracking-info.client.service.js modules/cost-tracking/services/cost-tracking-info.client.service.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/cost-tracking/services/cost-tracking-info.client.service.js modules/cost-tracking/services/cost-tracking-info.client.service.js}
 
  * CostTracking.ListService provides functions for Costsheet database data
  */
 angular.module('services').factory('CostTracking.ListService', ['$resource', '$translate'
-    , 'StoreService', 'UtilService', 'ObjectService', 'Object.ListService'
+    , 'Acm.StoreService', 'UtilService', 'ObjectService', 'Object.ListService'
     , function ($resource, $translate, Store, Util, ObjectService, ObjectListService) {
         var Service = $resource('api/v1/service/costsheet', {}, {
 

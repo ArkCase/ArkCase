@@ -158,7 +158,7 @@
       },
       {
         "type": "p/TASK/wkfl",
-        "label": "Workflow Overview",
+        "label": "Workflow",
         "icon": "fa fa-code-fork",
         "components": [
           "workflow"
@@ -236,7 +236,7 @@
       },
       {
         "type": "p/ADHOC/wkfl",
-        "label": "Workflow Overview",
+        "label": "Workflow",
         "icon": "fa fa-code-fork",
         "components": [
           "workflow"
@@ -284,12 +284,14 @@
             {
               "name": "details",
               "displayName": "tasks.comp.details.table.columns.details",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.details'></div>"
             },
             {
               "name": "createDate",
               "displayName": "tasks.comp.details.table.columns.modified",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.createDate | date : 'dd/MM/yyyy'}}</div>"
             },
             {
               "name": "assignee",
@@ -718,7 +720,7 @@
     },
     {
       "id": "workflow",
-      "title": "Workflow Overview",
+      "title": "Workflow",
       "icon": "fa fa-code-fork",
       "enabled": true,
       "type": "grid",
@@ -864,8 +866,8 @@
           "lookup": "userFullNames"
         }
       ],
-       "filters": "\"Object Type\": TAG",
-       "filterName" : "Object Type"
+      "filters": "\"Object Type\": TAG",
+      "filterName": "Object Type"
     },
     {
       "id": "userSearch",

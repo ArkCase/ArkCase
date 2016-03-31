@@ -24,23 +24,21 @@ public class CloseComplaintRequestProcessEndHandler implements ApplicationListen
         log.debug("Continue to close complaint processing? " + isCloseComplaintWorkflow);
 
 
-
-        if ( isCloseComplaintWorkflow )
+        if (isCloseComplaintWorkflow)
         {
             try
             {
-                Long complaintId = (Long) acmBusinessProcessEvent.getProcessVariables().get("OBJECT_ID");
+                Long complaintId = (Long) acmBusinessProcessEvent.getProcessVariables().get("COMPLAINT");
                 Long requestId = (Long) acmBusinessProcessEvent.getProcessVariables().get("REQUEST_ID");
                 String user = acmBusinessProcessEvent.getUserId();
 
-                log.debug("Request: " + requestId);
-                log.debug("Complaint: " + complaintId);
-                log.debug("User: " + user);
+                log.debug("Request: [{}]", requestId);
+                log.debug("Complaint: [{}]", complaintId);
+                log.debug("User: [{}]", user);
 
                 getCloseComplaintRequestService().handleCloseComplaintRequestApproved(complaintId, requestId, user,
                         acmBusinessProcessEvent.getEventDate());
-            }
-            catch ( Exception e)
+            } catch (Exception e)
             {
                 // we want to log an exception here so we can see what went wrong.  And we can't throw an
                 // exception from an event handler; plus, we want the exception to propagate, which will roll
@@ -53,35 +51,35 @@ public class CloseComplaintRequestProcessEndHandler implements ApplicationListen
 
     private boolean checkForCloseComplaintProcess(AcmBusinessProcessEvent acmBusinessProcessEvent)
     {
-        if ( ! "com.armedia.acm.activiti.businessProcess.end".equals(acmBusinessProcessEvent.getEventType()))
+        if (!"com.armedia.acm.activiti.businessProcess.end".equals(acmBusinessProcessEvent.getEventType()))
         {
-            log.debug("event is not the end of a business process: " + acmBusinessProcessEvent.getEventType());
+            log.debug("event is not the end of a business process: [{}]", acmBusinessProcessEvent.getEventType());
             return false;
         }
 
         Map<String, Object> pvars = acmBusinessProcessEvent.getProcessVariables();
 
-        if ( !pvars.containsKey("REQUEST_TYPE"))
+        if (!pvars.containsKey("REQUEST_TYPE"))
         {
             log.debug("event does not contain a request type");
             return false;
         }
 
-        if ( !"CLOSE_COMPLAINT_REQUEST".equals(pvars.get("REQUEST_TYPE")))
+        if (!"CLOSE_COMPLAINT_REQUEST".equals(pvars.get("REQUEST_TYPE")))
         {
-            log.debug("request type is not CLOSE_COMPLAINT_REQUEST: " + pvars.get("REQUEST_TYPE"));
+            log.debug("request type is not CLOSE_COMPLAINT_REQUEST: [{}]", pvars.get("REQUEST_TYPE"));
             return false;
         }
 
-        if ( !pvars.containsKey("reviewOutcome"))
+        if (!pvars.containsKey("reviewOutcome"))
         {
             log.debug("event does not contain a review outcome");
             return false;
         }
 
-        if ( !"APPROVE".equals(pvars.get("reviewOutcome")))
+        if (!"APPROVE".equals(pvars.get("reviewOutcome")))
         {
-            log.debug("request type is not APPROVE: " + pvars.get("reviewOutcome"));
+            log.debug("review outcome is not APPROVE: [{}]", pvars.get("reviewOutcome"));
             return false;
         }
 

@@ -1,10 +1,12 @@
 'use strict';
 
-angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', '$q', '$state', 'StoreService', 'Authentication'
-    , 'ConfigService', 'LookupService', 'Object.LookupService', 'Case.LookupService', 'Complaint.LookupService'
-    , function ($scope, $window, $q, $state, Store, Authentication
-        , ConfigService, LookupService, ObjectLookupService, CaseLookupService, ComplaintLookupService) {
-
+angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', '$q', '$state'
+    , 'Acm.StoreService', 'Authentication', 'ConfigService', 'UtilService', 'LookupService', 'Object.LookupService'
+    , 'Case.LookupService', 'Complaint.LookupService', 'Acm.LoginStatService', 'Acm.AppService'
+    , function ($scope, $window, $q, $state
+        , Store, Authentication, ConfigService, Util, LookupService, ObjectLookupService
+        , CaseLookupService, ComplaintLookupService, AcmLoginStatService, AcmAppService
+    ) {
         var sessionCacheNamesList = [
             Authentication.SessionCacheNames
             , ConfigService.SessionCacheNames
@@ -21,7 +23,11 @@ angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', 
             });
         }
 
-
-        $window.location.href = "/arkcase/logout";
+        // Retrieves the app properties from app-config.xml file
+        var appConfig = LookupService.getConfig('app').then(function (data) {
+            // redirect to logout page
+            $window.location.href = AcmAppService.getAppUrl(Util.goodMapValue(data, "logoutUrl", "/logout"));
+        });
+        AcmLoginStatService.setLogin(false);        
     }
 ]);

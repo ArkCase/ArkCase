@@ -6,11 +6,11 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/services/case-info.client.service.js modules/cases/services/case-info.client.service.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/cases/services/case-info.client.service.js modules/cases/services/case-info.client.service.js}
  *
  * Case.InfoService provides functions for Case database data
  */
-angular.module('services').factory('Case.InfoService', ['$resource', '$translate', 'StoreService', 'UtilService', 'Object.InfoService',
+angular.module('services').factory('Case.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.InfoService',
     function ($resource, $translate, Store, Util, ObjectInfoService) {
         var Service = $resource('api/latest/plugin', {}, {});
 
@@ -51,7 +51,7 @@ angular.module('services').factory('Case.InfoService', ['$resource', '$translate
                 var cacheCaseInfo = new Store.CacheFifo(Service.CacheNames.CASE_INFO);
                 cacheCaseInfo.put(caseInfo.id, caseInfo);
             }
-        }
+        };
 
         /**
          * @ngdoc method

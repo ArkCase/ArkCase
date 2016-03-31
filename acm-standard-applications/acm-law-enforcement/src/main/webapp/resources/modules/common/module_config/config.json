@@ -110,12 +110,14 @@
           {
             "title": "Open",
             "cmd": "open",
-            "uiIcon": "ui-icon-folder-open"
+            "uiIcon": "ui-icon-folder-open",
+            "data": {"readOnly": true}
           }
         , {
             "title": "Email",
             "cmd": "email",
-            "uiIcon": "ui-icon-mail-closed"
+            "uiIcon": "ui-icon-mail-closed",
+            "data": {"readOnly": true}
           }
         , {"title": "----"}
         , {
@@ -149,12 +151,14 @@
         , {
             "title": "Download",
             "cmd": "download",
-            "uiIcon": "ui-icon-arrowthickstop-1-s"
+            "uiIcon": "ui-icon-arrowthickstop-1-s",
+            "data": {"readOnly": true}
           }
         , {
             "title": "Replace",
             "cmd": "replace",
-            "uiIcon": ""
+            "uiIcon": "",
+            "data": {"uploadFile": true}
           }
         , {
             "title": "Declare as Record(s)",
@@ -232,7 +236,8 @@
         , {
             "title": "Email",
             "cmd": "email",
-            "uiIcon": "ui-icon-mail-closed"
+            "uiIcon": "ui-icon-mail-closed",
+            "data": {"readOnly": true}
           }
         , {
             "title": "----"
@@ -248,7 +253,8 @@
         , {
             "title": "Download",
             "cmd": "download",
-            "uiIcon": "ui-icon-arrowthickstop-1-s"
+            "uiIcon": "ui-icon-arrowthickstop-1-s",
+            "data": {"readOnly": true}
           }
         ]
       }
@@ -258,7 +264,8 @@
           {
             "title": "Email",
             "cmd": "email",
-            "uiIcon": "ui-icon-mail-closed"
+            "uiIcon": "ui-icon-mail-closed",
+            "data": {"readOnly": true}
           }
         , {"title": "----"}
         , {
@@ -337,7 +344,8 @@
     , "___menu_item_to_be_implemented_print": {
         "title": "Print <kbd>Ctrl+P</kbd>",
         "cmd": "print",
-        "uiIcon": "ui-icon-print"
+        "uiIcon": "ui-icon-print",
+        "data": {"readOnly": true}
       }
     , "___menu_item_to_be_implemented_edit": {
         "title": "Edit",

@@ -1,10 +1,10 @@
 <div class="panel panel-success panel-grid">
     <div class="panel-heading">
         <div class="panel-title">
-            <span translate>common.directive.coreParticipants.title</span>
+            <span>{{participantsInit.participantsTitle}}</span>
 
             <div class="pull-right">
-                <button class="btn btn-default btn-xs" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
+                <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
             </div>
         </div>
     </div>

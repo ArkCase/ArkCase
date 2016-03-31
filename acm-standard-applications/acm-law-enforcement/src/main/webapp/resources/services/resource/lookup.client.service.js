@@ -6,23 +6,24 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/resource/call-lookup.client.service.js services/resource/call-lookup.client.service.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/resource/call-lookup.client.service.js services/resource/call-lookup.client.service.js}
 
  * LookupService contains functions to lookup data (typically static data).
  */
-angular.module('services').factory('LookupService', ['$resource', 'StoreService', 'UtilService', 'SearchService'
+angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreService', 'UtilService', 'SearchService'
     , function ($resource, Store, Util, SearchService) {
         var Service = $resource('api/latest/plugin', {}, {
 
             _getConfig: {
                 url: "api/latest/service/config/:name"
                 , method: "GET"
-                , cache: true
+                , cache: false
             }
-            , getConfig_tmp: {
+            , _getLookup: {
                 url: "api/latest/service/config/:name"
                 , method: "GET"
-                , cache: true
+                , isArray: true
+                , cache: false
             }
 
             /**
@@ -38,8 +39,8 @@ angular.module('services').factory('LookupService', ['$resource', 'StoreService'
             , _getUsers: {
                 url: "api/latest/plugin/search/advanced/USER/all"
                 , method: "GET"
-                , cache: true
                 , isArray: true
+                , cache: false
             }
 
             /**
@@ -55,7 +56,7 @@ angular.module('services').factory('LookupService', ['$resource', 'StoreService'
             , _getUsersBasic: {
                 url: "api/latest/plugin/search/USER?n=1000&s=name asc"
                 , method: "GET"
-                , cache: true
+                , cache: false
             }
 
         });
@@ -254,6 +255,58 @@ angular.module('services').factory('LookupService', ['$resource', 'StoreService'
          */
         Service.validateConfig = function (data, name) {
             if (Util.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        };
+
+        /**
+         * @ngdoc method
+         * @name getLookup
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Query a configuration with array as result
+         *
+         * @param {String} name  Config name
+         *
+         * @returns {Object} Promise
+         */
+        Service.getLookup = function (name) {
+            var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
+            var configMap = cacheConfigMap.get();
+            var config = Util.goodMapValue(configMap, name, null);
+            return Util.serviceCall({
+                service: Service._getLookup
+                , param: {name: name}
+                , result: config
+                , onSuccess: function (data) {
+                    if (Service.validateLookup(data, name)) {
+                        config = Util.omitNg(data);
+                        configMap = configMap || {};
+                        configMap[name] = config;
+                        cacheConfigMap.set(configMap);
+                        return config;
+                    }
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name validateLookup
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Validate lookup data
+         *
+         * @param {Object} data  Data to be validated
+         * @param {String} name  Data name
+         *
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validateLookup = function (data, name) {
+            if (!Util.isArray(data)) {
                 return false;
             }
             return true;

@@ -12,6 +12,7 @@ import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.RoleType;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,51 +34,59 @@ import java.util.List;
  */
 
 @Controller
-@RequestMapping({"/api/v1/plugin/profile", "/api/latest/plugin/profile"})
-public class GetProfileInfoAPIController {
+@RequestMapping({ "/api/v1/plugin/profile", "/api/latest/plugin/profile" })
+public class GetProfileInfoAPIController
+{
 
     private UserDao userDao;
     private UserOrgDao userOrgDao;
     private SaveUserOrgTransaction saveUserOrgTransaction;
 
-
     private Logger log = LoggerFactory.getLogger(getClass());
     private ProfileEventPublisher eventPublisher;
 
-    @RequestMapping(value = "/get/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/get/{userId:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ProfileDTO getProfileInfo(
-            @PathVariable("userId") String userId,
-            Authentication authentication,
-            HttpSession session
-    ) throws AcmProfileException, AcmObjectNotFoundException, AcmCreateObjectFailedException {
-        //String userId = (String) authentication.getName().toLowerCase();
-        if (log.isInfoEnabled()) {
+    public ProfileDTO getProfileInfo(@PathVariable("userId") String userId, Authentication authentication, HttpSession session)
+            throws AcmProfileException, AcmObjectNotFoundException, AcmCreateObjectFailedException
+    {
+        // String userId = (String) authentication.getName().toLowerCase();
+        if (log.isInfoEnabled())
+        {
             log.info("Finding Profile info for user '" + userId + "'");
         }
         AcmUser user = userDao.findByUserId(userId);
-        if (user == null) {
-            throw new AcmObjectNotFoundException("user",null, "Object not found", null);
+        if (user == null)
+        {
+            throw new AcmObjectNotFoundException("user", null, "Object not found", null);
         }
         UserOrg userOrg = null;
         ProfileDTO profileDTO = null;
         List<AcmRole> groups = null;
-        try {
-             userOrg = getUserOrgDao().getUserOrgForUser(user);
-        } catch ( AcmObjectNotFoundException e ){
-            if(log.isInfoEnabled()){
+        try
+        {
+            userOrg = getUserOrgDao().getUserOrgForUser(user);
+        }
+        catch (AcmObjectNotFoundException e)
+        {
+            if (log.isInfoEnabled())
+            {
                 log.info("Profile info for the user: " + userId + "is not found");
             }
-            //add only user data like full name, email, userId , groups
+            // add only user data like full name, email, userId , groups
             userOrg = new UserOrg();
             userOrg.setUser(user);
-            try {
-                    userOrg = getSaveUserOrgTransaction().saveUserOrg(userOrg,authentication);
-            } catch ( MuleException e1 ) {
-                if( log.isErrorEnabled() ) {
-                    log.error("Saving the info for user and organization throw an exception",e);
+            try
+            {
+                userOrg = getSaveUserOrgTransaction().saveUserOrg(userOrg, authentication);
+            }
+            catch (MuleException e1)
+            {
+                if (log.isErrorEnabled())
+                {
+                    log.error("Saving the info for user and organization throw an exception", e);
                 }
-                throw new AcmCreateObjectFailedException("user organization info",e.getMessage(),e.getCause());
+                throw new AcmCreateObjectFailedException("user organization info", e.getMessage(), e.getCause());
             }
         }
         groups = getUserDao().findAllRolesByUserAndRoleType(userId, RoleType.LDAP_GROUP);
@@ -84,12 +94,14 @@ public class GetProfileInfoAPIController {
         return profileDTO;
     }
 
-    private ProfileDTO prepareProfileDto(UserOrg userOrgInfo, List<AcmRole> ldapRoles){
+    private ProfileDTO prepareProfileDto(UserOrg userOrgInfo, List<AcmRole> ldapRoles)
+    {
         ProfileDTO profileDTO = new ProfileDTO();
 
         List<String> groups = new ArrayList<>();
 
-        for (AcmRole role: ldapRoles){
+        for (AcmRole role : ldapRoles)
+        {
             groups.add(role.getRoleName());
         }
 
@@ -107,9 +119,12 @@ public class GetProfileInfoAPIController {
         profileDTO.setFirstAddress(userOrgInfo.getFirstAddress());
         profileDTO.setImAccount(userOrgInfo.getImAccount());
         profileDTO.setImSystem(userOrgInfo.getImSystem());
-        if(userOrgInfo.getOrganization()!=null) {
+        if (userOrgInfo.getOrganization() != null)
+        {
             profileDTO.setCompanyName(userOrgInfo.getOrganization().getOrganizationValue());
-        } else {
+        }
+        else
+        {
             profileDTO.setCompanyName(null);
         }
         profileDTO.setLocation(userOrgInfo.getLocation());
@@ -122,44 +137,55 @@ public class GetProfileInfoAPIController {
         profileDTO.setZip(userOrgInfo.getZip());
         profileDTO.setUserId(userOrgInfo.getUser().getUserId());
         profileDTO.setEcmFileId(userOrgInfo.getEcmFileId());
-        if( userOrgInfo.getTitle() != null ){
+        if (userOrgInfo.getTitle() != null)
+        {
             profileDTO.setTitle(userOrgInfo.getTitle());
-        } else {
+        }
+        else
+        {
             profileDTO.setTitle("");
         }
 
         return profileDTO;
     }
 
-    public UserOrgDao getUserOrgDao() {
+    public UserOrgDao getUserOrgDao()
+    {
         return userOrgDao;
     }
 
-    public void setUserOrgDao(UserOrgDao userOrgDao) {
+    public void setUserOrgDao(UserOrgDao userOrgDao)
+    {
         this.userOrgDao = userOrgDao;
     }
 
-    public UserDao getUserDao() {
+    public UserDao getUserDao()
+    {
         return userDao;
     }
 
-    public void setUserDao(UserDao userDao) {
+    public void setUserDao(UserDao userDao)
+    {
         this.userDao = userDao;
     }
 
-    public ProfileEventPublisher getEventPublisher() {
+    public ProfileEventPublisher getEventPublisher()
+    {
         return eventPublisher;
     }
 
-    public void setEventPublisher(ProfileEventPublisher eventPublisher) {
+    public void setEventPublisher(ProfileEventPublisher eventPublisher)
+    {
         this.eventPublisher = eventPublisher;
     }
 
-    public SaveUserOrgTransaction getSaveUserOrgTransaction() {
+    public SaveUserOrgTransaction getSaveUserOrgTransaction()
+    {
         return saveUserOrgTransaction;
     }
 
-    public void setSaveUserOrgTransaction(SaveUserOrgTransaction saveUserOrgTransaction) {
+    public void setSaveUserOrgTransaction(SaveUserOrgTransaction saveUserOrgTransaction)
+    {
         this.saveUserOrgTransaction = saveUserOrgTransaction;
     }
 }

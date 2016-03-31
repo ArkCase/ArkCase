@@ -9,7 +9,7 @@ angular.module('document-details').controller('Document.TagsController', ['$scop
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
         ConfigService.getComponentConfig("document-details", "tags").then(function (config) {
-            gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+            gridHelper.addButton(config, "delete");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);

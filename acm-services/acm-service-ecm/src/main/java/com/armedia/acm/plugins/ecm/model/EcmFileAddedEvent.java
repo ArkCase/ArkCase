@@ -11,13 +11,8 @@ import java.util.Date;
  */
 public class EcmFileAddedEvent extends AcmEvent
 {
-    private String parentObjectType;
-    private Long parentObjectId;
-    private String parentObjectName;
     private String ecmFileId;
     private EcmFile source;
-
-
 
     public EcmFileAddedEvent(EcmFile uploaded, Authentication authentication)
     {
@@ -31,7 +26,6 @@ public class EcmFileAddedEvent extends AcmEvent
         setEventDate(new Date());
         setUserId(uploaded.getModifier());
         setEcmFileId(uploaded.getVersionSeriesId());
-
         setParentObjectType(uploaded.getContainer().getContainerObjectType());
         setParentObjectId(uploaded.getContainer().getContainerObjectId());
 
@@ -39,38 +33,6 @@ public class EcmFileAddedEvent extends AcmEvent
         {
             setIpAddress(((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress());
         }
-
-
-    }
-
-    public String getParentObjectType()
-    {
-        return parentObjectType;
-    }
-
-    public void setParentObjectType(String parentObjectType)
-    {
-        this.parentObjectType = parentObjectType;
-    }
-
-    public Long getParentObjectId()
-    {
-        return parentObjectId;
-    }
-
-    public void setParentObjectId(Long parentObjectId)
-    {
-        this.parentObjectId = parentObjectId;
-    }
-
-    public String getParentObjectName()
-    {
-        return parentObjectName;
-    }
-
-    public void setParentObjectName(String parentObjectName)
-    {
-        this.parentObjectName = parentObjectName;
     }
 
     public String getEcmFileId()

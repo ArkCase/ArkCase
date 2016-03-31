@@ -136,7 +136,7 @@ public class CorrespondenceGenerator
         {
             Object column = withFormattedNumbers[a];
 
-            String columnValue = column == null ? "null" : column.toString();
+            String columnValue = column == null ? null : column.toString();
 
             retval.put(substitutionVariables.get(a), columnValue);
         }
