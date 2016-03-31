@@ -43,7 +43,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setTitle_parseable(in.getName());
         if (in.getName().contains("-UUID-"))
         {
-            solr.setName(in.getName().split("-UUID-")[0]);
+            solr.setName(in.getName().substring(0, in.getName().lastIndexOf("-UUID-")));
         } else
         {
             solr.setName(in.getName());
@@ -104,7 +104,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setObject_type_s("GROUP");
         if (in.getName().contains("-UUID-"))
         {
-            solr.setName(in.getName().split("-UUID-")[0]);
+            solr.setName(in.getName().substring(0, in.getName().lastIndexOf("-UUID-")));
         } else
         {
             solr.setName(in.getName());
