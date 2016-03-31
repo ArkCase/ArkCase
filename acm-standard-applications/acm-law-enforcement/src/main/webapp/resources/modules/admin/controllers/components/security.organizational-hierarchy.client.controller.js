@@ -105,7 +105,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
                     //name that should be displayed in UI should not be unique across different tree levels,
                     // so the UUID part is removed!
-                    newGroup.name = newGroup.name.split("-UUID-")[0];
+                    newGroup.name = newGroup.name.substring(0,newGroup.name.lastIndexOf("-UUID-"));
 
                     groupsMap[newGroup.object_id_s] = newGroup;
                     if (!groupsMap[newGroup.parent_id_s].child_id_ss) {
@@ -359,7 +359,8 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
                     //name that should be displayed in UI should not be unique across different tree levels,
                     // so the UUID part is removed!
-                    newGroup.name = payload.data.name.split("-UUID-")[0];
+
+                    newGroup.name = payload.data.name.substring(0,payload.data.name.lastIndexOf("-UUID-"));
 
                     groupsMap[payload.data.name] = newGroup;
                     addToTree(newGroup, true);
