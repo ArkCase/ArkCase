@@ -17,7 +17,8 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:/spring/spring-library-*.xml,
-            classpath:/spring/spring-security-config.xml
+            classpath:/spring/spring-security-config.xml,
+            file:${user.home}/.arkcase/acm/spring/spring-security-config-*.xml
         </param-value>
     </context-param>
 

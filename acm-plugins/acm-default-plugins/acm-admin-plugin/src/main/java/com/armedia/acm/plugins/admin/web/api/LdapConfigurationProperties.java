@@ -3,7 +3,8 @@ package com.armedia.acm.plugins.admin.web.api;
 /**
  * Created by admin on 5/28/15.
  */
-public class LdapConfigurationProperties {
+public class LdapConfigurationProperties
+{
     static public String LDAP_PROP_ID = "ldapConfig.id";
     static public String LDAP_PROP_NAME = "ldapConfig.name";
     static public String LDAP_PROP_BASE = "ldapConfig.base";
@@ -15,4 +16,5 @@ public class LdapConfigurationProperties {
     static public String LDAP_PROP_GROUP_SEARCH_BASE_OU = "ldapConfig.groupSearchBaseOU";
     static public String LDAP_PROP_LDAP_URL = "ldapConfig.ldapUrl";
     static public String LDAP_PROP_USER_ID_ATTR_NAME = "ldapConfig.userIdAttributeName";
+    static public String LDAP_PROP_USER_DOMAIN = "ldapConfig.userDomain";
 }
