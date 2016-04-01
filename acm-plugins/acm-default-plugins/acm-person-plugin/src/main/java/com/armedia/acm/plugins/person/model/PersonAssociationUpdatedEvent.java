@@ -5,9 +5,11 @@ public class PersonAssociationUpdatedEvent extends PersonAssociationPersistenceE
 {
     private static final String EVENT_TYPE = "com.armedia.acm.personAssociation.updated";
 
-    public PersonAssociationUpdatedEvent(PersonAssociation source)
+    public PersonAssociationUpdatedEvent(PersonAssociation source, String parentType, Long parentId)
     {
         super(source);
+        setParentObjectId(parentId);
+        setParentObjectType(parentType);
     }
 
     @Override

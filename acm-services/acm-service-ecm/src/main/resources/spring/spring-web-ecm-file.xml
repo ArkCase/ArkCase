@@ -140,4 +140,9 @@
         <property name="fileEventPublisher" ref="fileEventPublisher"/>
     </bean>
 
+    <bean id="updateSecurityFieldAPIController"
+          class="com.armedia.acm.plugins.ecm.web.api.UpdateSecurityFieldAPIController">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+    
 </beans>

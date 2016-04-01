@@ -10,7 +10,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/admin/services/security.modules.client.service.js modules/admin/services/security.modules.client.service.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/admin/services/security.modules.client.service.js modules/admin/services/security.modules.client.service.js}
  *
  * The Admin.ModulesService provides Modules REST calls functionality
  */
@@ -101,7 +101,7 @@ angular.module('admin').service('Admin.ModulesService', function ($http) {
         var url = 'api/latest/plugin/admin/rolesprivileges/roles/' + roles.join() + '/privileges/' + modulePrivilege;
         return $http({
             method: 'DELETE',
-            url: url,
+            url: url
         });
     };
 

@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/directives/core-participants/core-participants.client.directive.js directives/core-participants/core-participants.client.directive.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/core-participants/core-participants.client.directive.js directives/core-participants/core-participants.client.directive.js}
  *
  * The "Core-Participants" directive add participant grid functionality
  *
@@ -17,6 +17,7 @@
  * @param {function} participantsInit.retrieveObjectInfo function to retrieve objectInfo
  * @param {function} participantsInit.saveObjectInfo function to save objectInfo
  * @param {string} participantsInit.objectType string for the type of the object
+ * @param {string} participantsInit.participantTitle string for the title of participants directive, can be optional
  *
  * @example
  <example>
@@ -41,7 +42,7 @@
  </example>
  */
 angular.module('directives').directive('coreParticipants', ['$stateParams', '$q', '$translate', '$modal',
-    'StoreService', 'UtilService', 'ConfigService', 'Case.InfoService', 'LookupService', 'Object.LookupService',
+    'Acm.StoreService', 'UtilService', 'ConfigService', 'Case.InfoService', 'LookupService', 'Object.LookupService',
     'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.ParticipantService',
     function ($stateParams, $q, $translate, $modal
         , Store, Util, ConfigService, CaseInfoService, LookupService, ObjectLookupService
@@ -77,9 +78,11 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                 );
 
                 var onConfigRetrieved = function (config) {
+                    if (!scope.participantsInit.participantsTitle)
+                        scope.participantsInit.participantsTitle = $translate.instant("common.directive.coreParticipants.title");
                     scope.config = config;
-                    gridHelper.addEditButton(config.columnDefs, "grid.appScope.editRow(row.entity)");
-                    gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+                    gridHelper.addButton(config, "edit");
+                    gridHelper.addButton(config, "delete");
                     gridHelper.setColumnDefs(config);
                     gridHelper.setBasicOptions(config);
                     gridHelper.disableGridScrolling(config);

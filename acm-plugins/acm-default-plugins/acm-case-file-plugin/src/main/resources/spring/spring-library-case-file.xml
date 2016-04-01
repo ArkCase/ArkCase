@@ -8,7 +8,7 @@
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
-        <property name="location" value="file:${user.home}/.acm/caseFilePlugin.properties"/>
+        <property name="location" value="file:${user.home}/.arkcase/acm/caseFilePlugin.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
@@ -73,6 +73,9 @@
           class="com.armedia.acm.plugins.casefile.pipeline.presave.CaseFileSetCreatorHandler"/>
 
     <!-- post-save handlers -->
+    <bean id="caseFileEventHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileEventHandler">
+        <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+    </bean>
     <bean id="caseFileRulesHandler" class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileRulesHandler">
         <property name="saveRule" ref="saveCaseFileBusinessRule"/>
     </bean>
@@ -108,6 +111,7 @@
                 <ref bean="caseFileEcmFolderHandler"/>
                 <ref bean="caseFileOutlookHandler"/>
                 <ref bean="caseFileFolderStructureHandler"/>
+                <ref bean="caseFileEventHandler"/>
             </list>
         </property>
     </bean>

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.0.50-SNAPSHOT</version>
+    <version>3.0.51-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -70,7 +73,7 @@
 
         <mule.version>3.7.0</mule.version>
         <mule-cmis-connector.version>1.14.1</mule-cmis-connector.version>
-        <!--<mule-cmis-connector.version>2.0.0</mule-cmis-connector.version>-->
+        <!--<mule-cmis-connector.version>2.0.0</mule-cmis-connector.version> -->
         <oracle.jdbc.version>6</oracle.jdbc.version>
         <org.json.version>20140107</org.json.version>
         <org.mvel.version>2.2.1.Final</org.mvel.version>
@@ -80,6 +83,9 @@
         <spring.ldap.version>1.3.2.RELEASE</spring.ldap.version>
         <spring-retry-version>1.1.2.RELEASE</spring-retry-version>
         <spring.security.version>3.2.7.RELEASE</spring.security.version>
+        <spring.security.saml2.core.version>1.0.2.RELEASE</spring.security.saml2.core.version>
+        <!-- by default spring.security.saml2.core uses opensaml version 2.6.1, which uses bouncycastle version 1.46, but we require version 1.54 -->        
+        <opensaml.version>2.6.4</opensaml.version>
         <spring.surf.version>1.0.0</spring.surf.version>
         <spring.version>4.1.6.RELEASE</spring.version>
         <springframework-addons.version>0.1</springframework-addons.version>
@@ -95,7 +101,7 @@
         <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
         <puppycrawl.version>6.8.1</puppycrawl.version>
         <log4j.version>2.2</log4j.version>
-        <bouncycastle.version>1.52</bouncycastle.version>
+        <bouncycastle.version>1.54</bouncycastle.version>
         <zt-exec.version>1.8</zt-exec.version>
         <xmlgraphics.version>2.0.1</xmlgraphics.version>
         <fop.version>2.0</fop.version>
@@ -210,7 +216,7 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
-		<developer>
+        <developer>
             <name>Bojan Milenkoski</name>
             <email>bojan.milenkoski@armedia.com</email>
             <id>bojan.milenkoski</id>
@@ -221,7 +227,7 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
-		<developer>
+        <developer>
             <name>Nick Ferguson</name>
             <email>nick.ferguson@armedia.com</email>
             <id>nick.ferguson</id>
@@ -232,7 +238,7 @@
             </roles>
             <timezone>-5</timezone>
         </developer>
-		<developer>
+        <developer>
             <name>Lazo Lazarev</name>
             <email>lazo.lazarev@armedia.com</email>
             <id>lazo.lazarev</id>
@@ -243,7 +249,7 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
-		<developer>
+        <developer>
             <name>Maksud Sharif</name>
             <email>maksud.sharif@armedia.com</email>
             <id>maksud.sharif</id>
@@ -254,7 +260,7 @@
             </roles>
             <timezone>-5</timezone>
         </developer>
-		<developer>
+        <developer>
             <name>Bojan Mickoski</name>
             <email>bojan.mickoski@armedia.com</email>
             <id>bojan.mickoski</id>
@@ -265,7 +271,7 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
-		<developer>
+        <developer>
             <name>Vladimir Radeski</name>
             <email>vladimir.radeski@armedia.com</email>
             <id>vladimir.radeski</id>
@@ -276,7 +282,7 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
-		<developer>
+        <developer>
             <name>Nadica Cuculova</name>
             <email>nadica.cuculova@armedia.com</email>
             <id>nadica.cuculova</id>
@@ -287,7 +293,7 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
-		<developer>
+        <developer>
             <name>Dragan Simonovski</name>
             <email>dragan.simonovski@armedia.com</email>
             <id>dragan.simonovski</id>
@@ -298,7 +304,7 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
-		<developer>
+        <developer>
             <name>Bryan Abbe</name>
             <email>bryan.abbe@armedia.com</email>
             <id>bryan.abbe</id>
@@ -309,7 +315,7 @@
             </roles>
             <timezone>-5</timezone>
         </developer>
-		<developer>
+        <developer>
             <name>Joseph McGrady</name>
             <email>joseph.mcgrady@armedia.com</email>
             <id>joseph.mcgrady</id>
@@ -320,7 +326,7 @@
             </roles>
             <timezone>-5</timezone>
         </developer>
-		<developer>
+        <developer>
             <name>David Wu</name>
             <email>david.wu@armedia.com</email>
             <id>david.wu</id>
@@ -384,7 +390,7 @@
             </roles>
             <timezone>-5</timezone>
         </contributor>
-		<contributor>
+        <contributor>
             <name>Milan Jovanovski</name>
             <email>milan.jovanovski@armedia.com</email>
             <organization>Armedia LLC</organization>
@@ -394,7 +400,7 @@
             </roles>
             <timezone>+1</timezone>
         </contributor>
-		<contributor>
+        <contributor>
             <name>Myrtle Engram</name>
             <email>myrtle.engram@armedia.com</email>
             <organization>Armedia LLC</organization>
@@ -404,7 +410,7 @@
             </roles>
             <timezone>-5</timezone>
         </contributor>
-		<contributor>
+        <contributor>
             <name>Perica Veljanovski</name>
             <email>perica.veljanovski@armedia.com</email>
             <organization>Armedia LLC</organization>
@@ -533,8 +539,7 @@
     <build>
         <resources>
             <resource>
-                <!-- Mule Studio puts the flow definitions in the src/main/app folder.
-                     We need to treat them the same as resources from src/main/resources. -->
+                <!-- Mule Studio puts the flow definitions in the src/main/app folder. We need to treat them the same as resources from src/main/resources. -->
                 <directory>src/main/app/</directory>
             </resource>
             <resource>
@@ -583,7 +588,7 @@
                 <configuration>
                     <forkCount>1</forkCount>
                     <reuseForks>false</reuseForks>
-                    <!--<parallel>classes</parallel>-->
+                    <!--<parallel>classes</parallel> -->
                     <threadCount>1</threadCount>
                 </configuration>
             </plugin>
@@ -833,8 +838,7 @@
                 <groupId>org.springframework.ldap</groupId>
                 <artifactId>spring-ldap-core</artifactId>
                 <version>${spring.ldap.version}</version>
-                <!-- exclude commons-lang 2.4 since it has a memory leak; force use of commons-lang 2.6 by
-                     specific dependency-->
+                <!-- exclude commons-lang 2.4 since it has a memory leak; force use of commons-lang 2.6 by specific dependency -->
                 <exclusions>
                     <exclusion>
                         <groupId>commons-lang</groupId>
@@ -927,6 +931,16 @@
                 <version>${spring.security.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework.security.extensions</groupId>
+                <artifactId>spring-security-saml2-core</artifactId>
+                <version>${spring.security.saml2.core.version}</version>                
+            </dependency>
+            <dependency>
+                <groupId>org.opensaml</groupId>
+                <artifactId>opensaml</artifactId>
+                <version>${opensaml.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
                 <version>${spring.security.version}</version>
@@ -963,8 +977,7 @@
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-web</artifactId>
                 <version>${spring.security.version}</version>
-                <!-- spring security web seems to pull in spring-jdbc 3.0.6 but we don't
-                want that version, so we have to exclude it -->
+                <!-- spring security web seems to pull in spring-jdbc 3.0.6 but we don't want that version, so we have to exclude it -->
                 <exclusions>
                     <exclusion>
                         <groupId>org.springframework</groupId>
@@ -1041,8 +1054,7 @@
                 <artifactId>mule-core</artifactId>
                 <version>${mule.version}</version>
                 <scope>compile</scope>
-                <!-- exclude commons-lang 2.4 since it has a memory leak; force use of commons-lang 2.6 by
-                     specific dependency-->
+                <!-- exclude commons-lang 2.4 since it has a memory leak; force use of commons-lang 2.6 by specific dependency -->
                 <exclusions>
                     <exclusion>
                         <groupId>commons-lang</groupId>
@@ -1133,6 +1145,14 @@
                     <exclusion>
                         <groupId>org.springframework</groupId>
                         <artifactId>spring-aop</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.python</groupId>
+                        <artifactId>jython-standalone</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jruby</groupId>
+                        <artifactId>jruby-core</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -1295,7 +1315,7 @@
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-core</artifactId>
                 <version>${liquibase.version}</version>
-                <!-- somehow liquibase wants to pull in jetty.  Jetty should not be needed -->
+                <!-- somehow liquibase wants to pull in jetty. Jetty should not be needed -->
                 <exclusions>
                     <exclusion>
                         <groupId>org.eclipse.jetty</groupId>
@@ -1435,8 +1455,7 @@
                 <version>1.0.1</version>
                 <scope>runtime</scope>
             </dependency>
-            <!-- zt-exec provides an OutputStream wrapper over Slf4j, so we can redirect output streams from process
-            tools to Slj4j -->
+            <!-- zt-exec provides an OutputStream wrapper over Slf4j, so we can redirect output streams from process tools to Slj4j -->
             <dependency>
                 <groupId>org.zeroturnaround</groupId>
                 <artifactId>zt-exec</artifactId>
@@ -1485,7 +1504,7 @@
                 <version>${barcode4j.version}</version>
             </dependency>
 
-            <!-- Image processing-->
+            <!-- Image processing -->
             <dependency>
                 <groupId>com.github.jai-imageio</groupId>
                 <artifactId>jai-imageio-core</artifactId>

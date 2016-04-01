@@ -5,6 +5,7 @@ import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.exception.AcmNoteException;
 import com.armedia.acm.services.note.model.ApplicationNoteEvent;
 import com.armedia.acm.services.note.model.Note;
+import com.armedia.acm.services.note.model.NoteConstants;
 import com.armedia.acm.services.note.service.NoteEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,25 +20,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-@Controller
-@RequestMapping({"/api/v1/plugin/note", "/api/latest/plugin/note"})
-public class SaveNoteAPIController
+@Controller @RequestMapping({ "/api/v1/plugin/note", "/api/latest/plugin/note" }) public class SaveNoteAPIController
 {
-
 
     private NoteDao noteDao;
     private NoteEventPublisher noteEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#note.parentId, #note.parentType, 'addComment')")
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public Note addNote(
-            @RequestBody Note note,
-            Authentication authentication,
-            HttpSession httpSession
-    ) throws AcmUserActionFailedException
+    @PreAuthorize("hasPermission(#note.parentId, #note.parentType, 'addComment')") @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE) @ResponseBody public Note addNote(
+            @RequestBody Note note, Authentication authentication, HttpSession httpSession) throws AcmUserActionFailedException
     {
         if (log.isInfoEnabled())
         {
@@ -66,7 +58,12 @@ public class SaveNoteAPIController
 
             Note savedNote = getNoteDao().save(note);
 
-            publishNoteEvent(httpSession, savedNote, true);
+            String noteEvent = note.getId() == null ? "added" : "updated";
+            if (savedNote.getType().equals(NoteConstants.NOTE_REJECT_COMMENT))
+            {
+                noteEvent = String.format("rejectcomment.%s", noteEvent);
+            }
+            publishNoteEvent(httpSession, savedNote, noteEvent, true);
 
             return savedNote;
         } catch (Exception e)
@@ -82,19 +79,24 @@ public class SaveNoteAPIController
             fakeNote.setNote(note.getNote());
             fakeNote.setCreator(note.getCreator());
             fakeNote.setCreated(note.getCreated());
+            fakeNote.setType(NoteConstants.NOTE_GENERAL);
 
-            publishNoteEvent(httpSession, fakeNote, false);
+            String noteEvent = note.getId() == null ? "added" : "updated";
+
+            if (fakeNote.getType().equals(NoteConstants.NOTE_REJECT_COMMENT))
+            {
+                noteEvent = String.format("rejectcomment.%s", noteEvent);
+            }
+
+            publishNoteEvent(httpSession, fakeNote, noteEvent, false);
             throw new AcmUserActionFailedException("unable to add note from ", note.getParentType(), note.getParentId(), e.getMessage(), e);
         }
     }
 
-    protected void publishNoteEvent(
-            HttpSession httpSession,
-            Note note,
-            boolean succeeded)
+    protected void publishNoteEvent(HttpSession httpSession, Note note, String eventType, boolean succeeded)
     {
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
-        ApplicationNoteEvent event = new ApplicationNoteEvent(note, "added", succeeded, ipAddress);
+        ApplicationNoteEvent event = new ApplicationNoteEvent(note, eventType, succeeded, ipAddress);
         getNoteEventPublisher().publishNoteEvent(event);
     }
 
@@ -103,8 +105,7 @@ public class SaveNoteAPIController
         return noteEventPublisher;
     }
 
-    public void setNoteEventPublisher(
-            NoteEventPublisher noteEventPublisher)
+    public void setNoteEventPublisher(NoteEventPublisher noteEventPublisher)
     {
         this.noteEventPublisher = noteEventPublisher;
     }

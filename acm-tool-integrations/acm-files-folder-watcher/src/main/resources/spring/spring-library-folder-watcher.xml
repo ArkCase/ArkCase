@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="userHomeFolder" class="java.io.File">
-        <constructor-arg value="${user.home}"/>
+        <constructor-arg value="${user.home}/.arkcase"/>
     </bean>
 
     <bean id="vfsManager" class="org.apache.commons.vfs2.VFS" factory-method="getManager"/>
@@ -12,7 +12,7 @@
     <!-- Configuration File -->
     <bean id="configFolder" factory-bean="vfsManager" factory-method="resolveFile">
         <constructor-arg index="0" ref="userHomeFolder"/>
-        <constructor-arg index="1" value=".acm"/>
+        <constructor-arg index="1" value="acm"/>
     </bean>
 
     <bean id="configFileListener" class="com.armedia.acm.files.ConfigFileWatcher"
@@ -22,6 +22,8 @@
             <list>
                 <value>${file.separator}activemq</value>
                 <value>${file.separator}activiti${file.separator}/versions</value>
+                <value>${file.separator}tmp</value>
+                <value>${file.separator}custom</value>
             </list>
         </property>
     </bean>

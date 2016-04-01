@@ -26,18 +26,25 @@ public class SpringConfigCopier implements ApplicationContextAware
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    /**
+     * Built-in Spring configuration files are copied to this folder
+     */
+    String builtinFolderPath;
+
+    /**
+     * Custom Spring configuration files are copied to this folder
+     */
+    String customFolderPath;
+
+    /**
+     * Root custom folder, mapped to web application root (see context.xml)
+     */
+    String customRoot;
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
     {
-        // root custom folder, mapper to web application root
-        String customRoot = "/.acm/custom";
-
-        // built-in Spring configuration files are copied to this folder
-        String builtinFolderPath = System.getProperty("user.home") + "/.acm/default-config/spring";
         File builtinFolder = new File(builtinFolderPath);
-
-        // custom Spring configuration files are copied to this folder
-        String customFolderPath = System.getProperty("user.home") + "/.acm/custom-config/spring";
         File customFolder = new File(customFolderPath);
 
         try
@@ -113,5 +120,35 @@ public class SpringConfigCopier implements ApplicationContextAware
     public void setResolver(PathMatchingResourcePatternResolver resolver)
     {
         this.resolver = resolver;
+    }
+
+    public String getBuiltinFolderPath()
+    {
+        return builtinFolderPath;
+    }
+
+    public void setBuiltinFolderPath(String builtinFolderPath)
+    {
+        this.builtinFolderPath = builtinFolderPath;
+    }
+
+    public String getCustomFolderPath()
+    {
+        return customFolderPath;
+    }
+
+    public void setCustomFolderPath(String customFolderPath)
+    {
+        this.customFolderPath = customFolderPath;
+    }
+
+    public String getCustomRoot()
+    {
+        return customRoot;
+    }
+
+    public void setCustomRoot(String customRoot)
+    {
+        this.customRoot = customRoot;
     }
 }

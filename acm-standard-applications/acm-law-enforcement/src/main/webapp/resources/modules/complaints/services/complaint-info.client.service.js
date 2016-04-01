@@ -6,11 +6,11 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/complaints/services/complaint-info.client.service.js modules/complaints/services/complaint-info.client.service.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/complaints/services/complaint-info.client.service.js modules/complaints/services/complaint-info.client.service.js}
  *
  * Complaint.InfoService provides functions for Complaint database data
  */
-angular.module('services').factory('Complaint.InfoService', ['$resource', '$translate', 'StoreService', 'UtilService', 'Object.InfoService',
+angular.module('services').factory('Complaint.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.InfoService',
     function ($resource, $translate, Store, Util, ObjectInfoService) {
         var Service = $resource('api/latest/plugin', {}, {
             ///**

@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/directives/core-people/core-people.client.directive.js directives/core-people/core-people.client.directive.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/core-people/core-people.client.directive.js directives/core-people/core-people.client.directive.js}
  *
  * The "Core-People" directive add people grid functionality
  *
@@ -18,7 +18,7 @@
  * @param {function} peopleInit.saveObjectInfo function to save objectInfo
  * @param {string} peopleInit.objectType string for the type of the object
  * @param {string} peopleInit.objectInfoId string for the name of the property representing the id of the object
-
+ * @param {string} peopleInit.peopleTitle string for the title of people directive, can be optional
  *
  * @example
  <example>
@@ -109,14 +109,22 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                     });
 
                 var onConfigRetrieved = function (config) {
+                    if (!scope.peopleInit.peopleTitle)
+                        scope.peopleInit.peopleTitle = $translate.instant("common.directive.corePeople.title");
                     scope.config = config;
                     configGridMain(config);
                 };
 
                 var configGridMain = function (config) {
                     gridAddEntityButtons(config.columnDefs);
-                    gridHelper.addEditButton(config.columnDefs, "grid.appScope.editRow(row.entity)");
-                    gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+                    //gridHelper.addEditButton(config.columnDefs, "grid.appScope.editRow(row.entity)");
+                    //gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+
+
+
+                    gridHelper.addButton(config, "edit");
+                    gridHelper.addButton(config, "delete");
+
                     gridHelper.setColumnDefs(config);
                     gridHelper.setBasicOptions(config);
                     gridHelper.disableGridScrolling(config);
@@ -138,7 +146,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                 var gridAddEntityButtons = function (columnDefs) {
                     if ("entity" == Util.goodMapValue(columnDefs, "[0].name")) {
                         var columnDef = columnDefs[0];
-                        columnDef.width = 116;
+                        columnDef.width = 90;
                         columnDef.headerCellTemplate = "<span></span>";
                         columnDef.cellTemplate = "<a ng-click='grid.appScope.expand(\"contactMethods\", row)' title='" + $translate.instant("common.directive.corePeople.contactMethods.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-phone'></i></a>"
                             + "<a ng-click='grid.appScope.expand(\"organizations\", row)' title='" + $translate.instant("common.directive.corePeople.organizations.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-cubes'></i></a>"

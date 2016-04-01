@@ -67,6 +67,7 @@ public class AcmTask implements AcmAssignedObject, Serializable
     private transient String ecmFolderPath;
     private Long parentObjectId;
     private String parentObjectType;
+    private String parentObjectTitle;
 
     /**
      * Names of the groups whose members can claim this task.  If the task has candidate group, but does not have
@@ -449,6 +450,16 @@ public class AcmTask implements AcmAssignedObject, Serializable
         return parentObjectType;
     }
 
+    public String getParentObjectTitle()
+    {
+        return parentObjectTitle;
+    }
+
+    public void setParentObjectTitle(String parentObjectTitle)
+    {
+        this.parentObjectTitle = parentObjectTitle;
+    }
+
     public String getNextAssignee()
     {
         return nextAssignee;
@@ -508,6 +519,7 @@ public class AcmTask implements AcmAssignedObject, Serializable
                 ", ecmFolderPath='" + ecmFolderPath + '\'' +
                 ", parentObjectId=" + parentObjectId +
                 ", parentObjectType='" + parentObjectType + '\'' +
+                ", parentObjectTitle='" + parentObjectTitle + '\'' +
                 ", candidateGroups=" + candidateGroups +
                 ", nextAssignee='" + nextAssignee + '\'' +
                 '}';

@@ -335,4 +335,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="28-add-securityfield-column-extensibility" author="dragan.simonovski">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_security_field" type="VARCHAR(255)" defaultValue="Open"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

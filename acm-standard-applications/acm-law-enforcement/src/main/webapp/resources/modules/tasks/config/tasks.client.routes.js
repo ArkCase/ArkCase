@@ -52,6 +52,9 @@ angular.module('tasks').config(['$stateProvider',
                         $translatePartialLoader.addPart('tasks');
                         return $translate.refresh();
                     }]
+                },
+                params: {
+                    "parentTitle": ":parentTitle"
                 }
             })
 

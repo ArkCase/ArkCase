@@ -79,6 +79,8 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
+        solr.setAdditionalProperty("security_field_lcs", in.getSecurityField());
+
         return solr;
     }
 

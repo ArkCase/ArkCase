@@ -9,7 +9,7 @@
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
-        <property name="location" value="file:${user.home}/.acm/ecmFileService.properties"/>
+        <property name="location" value="file:${user.home}/.arkcase/acm/ecmFileService.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
@@ -185,7 +185,7 @@
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>
 
-        <property name="propertiesLocation" value="${user.home}/.acm/"></property>
+        <property name="propertiesLocation" value="${user.home}/.arkcase/acm/"></property>
         <property name="acmFormsPlainPropertiesFile" value="acm-forms-plain.properties"></property>
         <property name="acmFormsAcmPropertiesFile" value="acm-forms.properties"></property>
         <property name="propertyFiles">

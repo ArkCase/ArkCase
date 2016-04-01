@@ -91,15 +91,23 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         };
 
         $scope.onPreCmd = function (cmd, nodes) {
-            //console.log("onPreCmd:" + cmd);
+            //Usage example
             //if ("newFolder" == cmd) {
-            //    return true;
+            //    //custom cmd process
+            //    return false; //false indicates don't do default command in core
             //}
-
+            //
+            //if ("newFolder" == cmd) {
+            //    var df = $q.defer();
+            //    $timeout(function() {
+            //        //lengthy custom cmd process
+            //        df.resolve(true); //true to indicate continue with default command execution
+            //    }, 8000);
+            //    return df.promise;
+            //}
         };
 
         $scope.onPostCmd = function (cmd, nodes) {
-            //console.log("onPostCmd:" + cmd);
         };
     }
 ]);

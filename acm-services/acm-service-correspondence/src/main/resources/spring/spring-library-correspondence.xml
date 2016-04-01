@@ -10,7 +10,7 @@
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
-        <property name="location" value="file:${user.home}/.acm/correspondencePlugin.properties"/>
+        <property name="location" value="file:${user.home}/.arkcase/acm/correspondencePlugin.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
@@ -28,7 +28,7 @@
     <bean id="correspondenceGenerator" class="com.armedia.acm.correspondence.service.CorrespondenceGenerator">
         <property name="wordGenerator" ref="poiWordGenerator"/>
         <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="correspondenceFolderName" value="${user.home}/.acm/correspondenceTemplates"/>
+        <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
     </bean>
 
     <bean id="correspondenceService" class="com.armedia.acm.correspondence.service.CorrespondenceService">
