@@ -68,7 +68,8 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
 
 
         //changing default language
-        $scope.changeDefaultLng = function (newLang) {
+        $scope.changeDefaultLng = function ($event, newLang) {
+            $event.preventDefault();
             $scope.settings.defaultLang = newLang;
             LabelsConfigService.updateSettings(
                 angular.toJson($scope.settings)
