@@ -11,8 +11,9 @@
 // *
 // * The Audit module main controller
 // */
-angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', 'ConfigService', 'LookupService', 'AuditController.BuildUrl', 'UtilService',
-    function ($scope, $sce, $q, ConfigService, LookupService, BuildUrl, Util) {
+angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', 'ConfigService', 'LookupService',
+    'AuditController.BuildUrl', 'UtilService', 'Util.DateService'
+    , function ($scope, $sce, $q, ConfigService, LookupService, BuildUrl, Util, UtilDateService) {
         var promiseModuleConfig = ConfigService.getModuleConfig("audit").then(function (config) {
             $scope.config = config;
             return config;
@@ -70,8 +71,8 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
          * @param {Object} dateTo Object of type date that represents value for date chosen from dateTo input
          */
         function getDateValues(e, dateFrom, dateTo) {
-            $scope.dateFrom = moment(dateFrom).format($scope.config.dateFormat);
-            $scope.dateTo = moment(dateTo).format($scope.config.dateFormat);
+            $scope.dateFrom = moment(dateFrom).format(UtilDateService.defaultDateFormat);
+            $scope.dateTo = moment(dateTo).format(UtilDateService.defaultDateFormat);
 
             if (moment($scope.dateFrom).isAfter($scope.dateTo)) {
                 $scope.$broadcast('fix-date-values', $scope.dateFrom, $scope.dateFrom);
@@ -106,7 +107,7 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
          */
         $scope.showIframe = function () {
             $scope.auditReportUrl = BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, $scope.auditReportUri,
-                $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, $scope.config.pentahoDateFormat, true);
+                $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, UtilDateService.defaultDateFormat, true);
         }
     }
 ]);

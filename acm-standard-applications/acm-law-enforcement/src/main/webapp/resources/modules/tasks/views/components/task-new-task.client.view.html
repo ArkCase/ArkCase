@@ -53,7 +53,7 @@
                             <div class="input-group">
                                 <input type="text" id="taskStartDate" ng-required="true" class="form-control"
                                        name="taskStartDate"
-                                       datepicker-popup="{{config.datepickerPopupFormat}}"
+                                       datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
                                        ng-model="config.data.taskStartDate"
                                        is-open="opened.openedStart" close-on-date-selection="true"
                                        show-button-bar="true"
@@ -80,7 +80,7 @@
                             <div class="input-group">
                                 <input type="text" id="dueDate" ng-required="true" class="form-control"
                                        name="dueDate"
-                                       datepicker-popup="{{config.datepickerPopupFormat}}"
+                                       datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
                                        ng-model="config.data.dueDate"
                                        is-open="opened.openedEnd" close-on-date-selection="true" show-button-bar="true"
                                        on-open-focus="false"

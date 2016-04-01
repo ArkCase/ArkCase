@@ -10,8 +10,9 @@
  * The Reports module main controller
  */
 
-angular.module('reports').controller('ReportsController', ['$scope', 'UtilService', 'ConfigService', 'LookupService', 'Reports.BuildUrl', '$q', 'Reports.Data',
-    function ($scope, Util, ConfigService, LookupService, BuildUrl, $q, Data) {
+angular.module('reports').controller('ReportsController', ['$scope', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService',
+    'Reports.BuildUrl', '$q', 'Reports.Data'
+    , function ($scope, Util, UtilDateService, ConfigService, LookupService, BuildUrl, $q, Data) {
 
         $scope.$on('req-component-config', function (e, componentId) {
             promiseModuleConfig.then(function (config) {
@@ -42,8 +43,8 @@ angular.module('reports').controller('ReportsController', ['$scope', 'UtilServic
                 delete $scope.data.reports.PENTAHO_SERVER_PORT;
                 $scope.data.reportsHost = reportsConfig['PENTAHO_SERVER_URL'];
                 $scope.data.reportsPort = reportsConfig['PENTAHO_SERVER_PORT'];
-                $scope.data.reportDateFormat = $scope.config.pentahoDateFormat;
-                $scope.data.dateFormat = $scope.config.dateFormat;
+                $scope.data.reportDateFormat = UtilDateService.defaultDateFormat;
+                $scope.data.dateFormat = UtilDateService.defaultDateFormat;
                 $scope.data.reportSelected = null;
             });
 
