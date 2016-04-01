@@ -6,6 +6,7 @@ package com.armedia.acm.services.users.model.group;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.service.group.GroupService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,6 +44,9 @@ public class AcmGroupIT
 
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
+
+    @Autowired
+    private GroupService groupService;
 
     @Before
     public void setUp()
@@ -256,6 +260,16 @@ public class AcmGroupIT
 
         getGroupDao().deleteAcmGroupByName(group.getName());
         getEntityManager().flush();
+    }
+
+    public GroupService getGroupService()
+    {
+        return groupService;
+    }
+
+    public void setGroupService(GroupService groupService)
+    {
+        this.groupService = groupService;
     }
 
     public AcmGroupDao getGroupDao()
