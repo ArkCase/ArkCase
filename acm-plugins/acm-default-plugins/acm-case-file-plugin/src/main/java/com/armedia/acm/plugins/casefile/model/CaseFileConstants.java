@@ -14,4 +14,6 @@ public interface CaseFileConstants {
 	String ACTIVE_CASE_FORM_KEY = "active.case.form";
 	
 	String NEXT_COURT_HEARING_DATE_CALENDAR_ID = "nextCourtHearingDateCalendarId";
+
+	String EVENT_TYPE_CREATED = "com.armedia.acm.casefile.created";
 }

@@ -22,6 +22,8 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
+import org.activiti.engine.history.HistoricVariableInstance;
+import org.activiti.engine.history.HistoricVariableInstanceQuery;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -65,6 +67,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     private HistoricProcessInstance mockHistoricProcessInstance;
     private HistoricProcessInstanceQuery mockHistoricProcessInstanceQuery;
     private HistoricTaskInstanceQuery mockHistoricTaskInstanceQuery;
+    private HistoricVariableInstanceQuery mockHistoricVariableInstanceQuery;
+    private HistoricVariableInstance mockHistoricVariableInstance;
     private AcmParticipantDao mockParticipantDao;
     private DataAccessPrivilegeListener mockDataAccessPrivilegeListener;
     private IdentityLink mockCandidateGroup;
@@ -104,6 +108,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockTaskEventPublisher = createMock(TaskEventPublisher.class);
         mockHistoricProcessInstance = createMock(HistoricProcessInstance.class);
         mockHistoricProcessInstanceQuery = createMock(HistoricProcessInstanceQuery.class);
+        mockHistoricVariableInstanceQuery = createMock(HistoricVariableInstanceQuery.class);
+        mockHistoricVariableInstance = createMock(HistoricVariableInstance.class);
         unit = new ActivitiTaskDao();
 
         Map<String, Integer> acmPriorityToActivitiPriority = new HashMap<>();
@@ -139,7 +145,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         String owner = "owner";
         String candidateGroup = "candidateGroup";
         String nextAssignee = "nextAssignee";
-
+        String processId = "500";
         AcmTask in = new AcmTask();
         in.setTaskId(taskId);
         in.setAssignee(assignee);
@@ -176,9 +182,11 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockTask.setDueDate(due);
         mockTask.setName(title);
         mockTask.setOwner(owner);
+        expect(mockTask.getProcessInstanceId()).andReturn(processId);
         expect(mockTask.getCreateTime()).andReturn(start);
 
         mockTaskService.saveTask(mockTask);
+        mockRuntimeService.setVariable(processId, "REWORK_INSTRUCTIONS", null);
 
         expect(mockTask.getId()).andReturn(taskId.toString()).atLeastOnce();
         mockTaskService.setVariableLocal(taskId.toString(), "OBJECT_TYPE", objectType);
@@ -188,13 +196,12 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockTaskService.setVariableLocal(taskId.toString(), "START_DATE", start);
         mockTaskService.setVariableLocal(taskId.toString(), "PERCENT_COMPLETE", percentComplete);
         mockTaskService.setVariableLocal(taskId.toString(), "DETAILS", details);
-        mockTaskService.setVariable(taskId.toString(), "REWORK_INSTRUCTIONS", in.getReworkInstructions());
+        mockTaskService.setVariableLocal(taskId.toString(), "REWORK_INSTRUCTIONS", in.getReworkInstructions());
         mockTaskService.setVariableLocal(taskId.toString(), "outcome", in.getTaskOutcome().getName());
         mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_ID", 2500L);
         mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_TYPE", "parent object type");
         mockTaskService.setVariable(taskId.toString(), TaskConstants.VARIABLE_NAME_NEXT_ASSIGNEE, in.getNextAssignee());
-
-
+        mockTaskService.setVariableLocal(taskId.toString(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE, null);
         // data access and assignment rules
         mockDataAccessPrivilegeListener.applyAssignmentAndAccessRules(in);
 
@@ -664,7 +671,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockHistoricTaskInstanceQuery.includeTaskLocalVariables()).andReturn(mockHistoricTaskInstanceQuery);
         expect(mockHistoricTaskInstanceQuery.singleResult()).andReturn(mockHistoricTaskInstance);
 
-        expect(mockHistoricTaskInstance.getStartTime()).andReturn(started);
+        expect(mockHistoricTaskInstance.getStartTime()).andReturn(started).times(2);
         expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended).atLeastOnce();
         expect(mockHistoricTaskInstance.getDurationInMillis()).andReturn(taskDuration);
         expect(mockHistoricTaskInstance.getDeleteReason()).andReturn(deleteReason).times(2);
@@ -692,6 +699,18 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
         expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
         expect(mockProcessDefinitionQuery.singleResult()).andReturn(mockProcessDefinition);
+
+        expect(mockHistoryService.createHistoricVariableInstanceQuery()).andReturn(mockHistoricVariableInstanceQuery);
+        expect(mockHistoricVariableInstanceQuery.taskId(taskId.toString())).andReturn(mockHistoricVariableInstanceQuery);
+        expect(mockHistoricVariableInstanceQuery.variableName("DETAILS")).andReturn(mockHistoricVariableInstanceQuery);
+        expect(mockHistoricVariableInstanceQuery.singleResult()).andReturn(mockHistoricVariableInstance);
+        expect(mockHistoricVariableInstance.getValue()).andReturn("details");
+
+        expect(mockHistoryService.createHistoricVariableInstanceQuery()).andReturn(mockHistoricVariableInstanceQuery);
+        expect(mockHistoricVariableInstanceQuery.taskId(taskId.toString())).andReturn(mockHistoricVariableInstanceQuery);
+        expect(mockHistoricVariableInstanceQuery.variableName("REWORK_INSTRUCTIONS")).andReturn(mockHistoricVariableInstanceQuery);
+        expect(mockHistoricVariableInstanceQuery.singleResult()).andReturn(mockHistoricVariableInstance);
+        expect(mockHistoricVariableInstance.getValue()).andReturn(null);
 
         expect(mockProcessDefinition.getName()).andReturn(processName);
 
@@ -1116,7 +1135,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockHistoricProcessInstanceQuery.singleResult()).andReturn(mockHistoricProcessInstance);
         expect(mockHistoricProcessInstance.getEndTime()).andReturn(ended).times(2);
 
-        expect(mockHistoricTaskInstance.getStartTime()).andReturn(started);
+        expect(mockHistoricTaskInstance.getStartTime()).andReturn(started).times(2);
         expect(mockHistoricTaskInstance.getEndTime()).andReturn(ended).times(4);
         expect(mockHistoricTaskInstance.getId()).andReturn(taskId.toString());
         expect(mockHistoricTaskInstance.getDurationInMillis()).andReturn(taskDuration);
@@ -1133,6 +1152,18 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
         expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
         expect(mockProcessDefinitionQuery.singleResult()).andReturn(mockProcessDefinition);
+
+        expect(mockHistoryService.createHistoricVariableInstanceQuery()).andReturn(mockHistoricVariableInstanceQuery);
+        expect(mockHistoricVariableInstanceQuery.taskId(taskId.toString())).andReturn(mockHistoricVariableInstanceQuery);
+        expect(mockHistoricVariableInstanceQuery.variableName("DETAILS")).andReturn(mockHistoricVariableInstanceQuery);
+        expect(mockHistoricVariableInstanceQuery.singleResult()).andReturn(mockHistoricVariableInstance);
+        expect(mockHistoricVariableInstance.getValue()).andReturn("details");
+
+        expect(mockHistoryService.createHistoricVariableInstanceQuery()).andReturn(mockHistoricVariableInstanceQuery);
+        expect(mockHistoricVariableInstanceQuery.taskId(taskId.toString())).andReturn(mockHistoricVariableInstanceQuery);
+        expect(mockHistoricVariableInstanceQuery.variableName("REWORK_INSTRUCTIONS")).andReturn(mockHistoricVariableInstanceQuery);
+        expect(mockHistoricVariableInstanceQuery.singleResult()).andReturn(mockHistoricVariableInstance);
+        expect(mockHistoricVariableInstance.getValue()).andReturn(null);
 
         expect(mockProcessDefinition.getName()).andReturn(processName);
 

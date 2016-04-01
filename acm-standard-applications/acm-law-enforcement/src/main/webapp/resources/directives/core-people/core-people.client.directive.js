@@ -117,8 +117,14 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
 
                 var configGridMain = function (config) {
                     gridAddEntityButtons(config.columnDefs);
-                    gridHelper.addEditButton(config.columnDefs, "grid.appScope.editRow(row.entity)");
-                    gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+                    //gridHelper.addEditButton(config.columnDefs, "grid.appScope.editRow(row.entity)");
+                    //gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+
+
+
+                    gridHelper.addButton(config, "edit");
+                    gridHelper.addButton(config, "delete");
+
                     gridHelper.setColumnDefs(config);
                     gridHelper.setBasicOptions(config);
                     gridHelper.disableGridScrolling(config);
@@ -140,7 +146,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                 var gridAddEntityButtons = function (columnDefs) {
                     if ("entity" == Util.goodMapValue(columnDefs, "[0].name")) {
                         var columnDef = columnDefs[0];
-                        columnDef.width = 116;
+                        columnDef.width = 90;
                         columnDef.headerCellTemplate = "<span></span>";
                         columnDef.cellTemplate = "<a ng-click='grid.appScope.expand(\"contactMethods\", row)' title='" + $translate.instant("common.directive.corePeople.contactMethods.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-phone'></i></a>"
                             + "<a ng-click='grid.appScope.expand(\"organizations\", row)' title='" + $translate.instant("common.directive.corePeople.organizations.title") + "' class='inline animated btn btn-default btn-xs'><i class='fa fa-cubes'></i></a>"

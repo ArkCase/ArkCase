@@ -12,6 +12,6 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$transl
             objectType: ObjectService.ObjectTypes.CASE_FILE,
             objectInfoId: 'id',
             peopleTitle: $translate.instant("cases.comp.people.title")
-        }
+        };
     }
 ]);

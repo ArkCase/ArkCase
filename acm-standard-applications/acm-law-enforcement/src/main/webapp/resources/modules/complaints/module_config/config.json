@@ -256,12 +256,14 @@
             {
               "name": "details",
               "displayName": "complaints.comp.details.table.columns.title",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.details'></div>"
             },
             {
               "name": "modified",
               "displayName": "complaints.comp.details.table.columns.modified",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             },
             {
               "name": "modifier",

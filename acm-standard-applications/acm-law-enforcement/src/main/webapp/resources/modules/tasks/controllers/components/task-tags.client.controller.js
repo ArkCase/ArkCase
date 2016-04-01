@@ -81,7 +81,7 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
         var onConfigRetrieved = function (config) {
 
         	$scope.config = config;
-            gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+            gridHelper.addButton(config, "delete");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);

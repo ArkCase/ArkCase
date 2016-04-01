@@ -7,7 +7,6 @@ angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', 
         , Store, Authentication, ConfigService, Util, LookupService, ObjectLookupService
         , CaseLookupService, ComplaintLookupService, AcmLoginStatService, AcmAppService
     ) {
-
         var sessionCacheNamesList = [
             Authentication.SessionCacheNames
             , ConfigService.SessionCacheNames
@@ -24,8 +23,11 @@ angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', 
             });
         }
 
-
-        AcmLoginStatService.setLogin(false);
-        $window.location.href = AcmAppService.getAppUrl("/logout");
+        // Retrieves the app properties from app-config.xml file
+        var appConfig = LookupService.getConfig('app').then(function (data) {
+            // redirect to logout page
+            $window.location.href = AcmAppService.getAppUrl(Util.goodMapValue(data, "logoutUrl", "/logout"));
+        });
+        AcmLoginStatService.setLogin(false);        
     }
 ]);
