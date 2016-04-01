@@ -70,10 +70,10 @@ public class NotificationFormatter
                 // The parent object (eg. Person association) is nested in top level object = relatedObjectType
                 {
                     // Find the target container url
-                    if (relatedObjectType.equals("CASE_FILE"))
+                    if (relatedObjectType.equals(NotificationConstants.NOTIFICATION_CONTAINER_CASE))
                     {
                         objectUrl = objectType.getUrlContainerCase();
-                    } else if (relatedObjectType.equals("COMPLAINT"))
+                    } else if (relatedObjectType.equals(NotificationConstants.NOTIFICATION_CONTAINER_COMPLAINT))
                     {
                         objectUrl = objectType.getUrlContainerComplaint();
                     }
@@ -85,10 +85,10 @@ public class NotificationFormatter
             if (relatedObjectType != null && objectUrl.isEmpty() && objectType.getName().equals(relatedObjectType))
             {
                 // Find the target container url
-                if (parentType.equals("CASE_FILE"))
+                if (parentType.equals(NotificationConstants.NOTIFICATION_CONTAINER_CASE))
                 {
                     objectUrl = objectType.getUrlContainerCase();
-                } else if (parentType.equals("COMPLAINT"))
+                } else if (parentType.equals(NotificationConstants.NOTIFICATION_CONTAINER_COMPLAINT))
                 {
                     objectUrl = objectType.getUrlContainerComplaint();
                 }
