@@ -1179,7 +1179,7 @@
           "name": "modified_date_tdt",
           "displayName": "cases.comp.merge.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
         }
       ],
       "paginationPageSizes": [
@@ -1239,7 +1239,7 @@
           "name": "modified_date_tdt",
           "displayName": "cases.comp.addreference.grid.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
         }
       ],
       "paginationPageSizes": [

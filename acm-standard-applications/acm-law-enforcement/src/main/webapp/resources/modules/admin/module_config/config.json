@@ -140,7 +140,7 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
-      "columnDefs":[
+      "columnDefs": [
         {
           "name": "id",
           "displayName": "admin.application.labels.config.data.id",
@@ -368,7 +368,7 @@
           "name": "modified_date_tdt",
           "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.modified",
           "headerCellFilter": "translate",
-		  "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
         }
       ],
       "paginationPageSizes": [

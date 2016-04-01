@@ -1269,7 +1269,7 @@
           "name": "modified_date_tdt",
           "displayName": "complaints.comp.addreference.grid.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
         }
       ],
       "paginationPageSizes": [
