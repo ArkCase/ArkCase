@@ -51,8 +51,7 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location'
                 if (useUrl) {
                     var absUrl = $location.absUrl();
                     var baseHref = $browser.baseHref();
-                    var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length)
-                    console.log(appUrl);
+                    var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
                     reportUrl += "&baseUrl=" + encodeURIComponent(appUrl);
                 }
                 return $sce.trustAsResourceUrl(reportUrl);

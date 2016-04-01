@@ -102,6 +102,7 @@
           "name": "dueDate",
           "displayName": "dashboard.widgets.myTasks.table.header.dueDate",
           "headerCellFilter": "translate",
+		  "cellTemplate": "<div>{{ row.entity.dueDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "width": 70
         },
         {

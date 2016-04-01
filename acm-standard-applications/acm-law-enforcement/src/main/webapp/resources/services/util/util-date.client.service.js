@@ -18,6 +18,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
             , defaultTimeFormat: $translate.instant("common.defaultTimeFormat")
             , defaultDateTimeFormat: $translate.instant("common.defaultDateTimeFormat")
             , defaultDatePickerFormat: $translate.instant("common.defaultDatePickerFormat")
+			, defaultDateUIFormat: $translate.instant("common.defaultDateUIFormat")
 
 
             /**

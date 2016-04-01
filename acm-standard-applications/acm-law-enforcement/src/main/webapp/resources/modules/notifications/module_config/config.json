@@ -50,7 +50,7 @@
                     "type": "date",
                     "displayName": "notifications.comp.grid.columns.modified",
                     "headerCellFilter": "translate",
-                    "cellFilter": "date : 'MM/dd/yyyy HH:MM'"
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}}</div>"
                 }
             ],
             "paginationPageSizes": [

@@ -158,8 +158,7 @@
       "title": "Info",
       "enabled": false,
       "type": "empty",
-      "editable": false,
-      "parentDateFormat": "DD/MM/YYYY"
+      "editable": false
     },
     {
       "id": "actions",
@@ -259,7 +258,6 @@
       "enabled": true,
       "type": "grid",
       "typeAheadColumn": "tags_s",
-      "dateFormat": "MM/DD/YYYY",
       "enableFiltering": true,
       "paginationPageSizes": [
         5,
@@ -277,7 +275,7 @@
         {
           "name": "created",
           "displayName": "costTracking.comp.tags.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : 'MM/dd/yyyy'}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "headerCellFilter": "translate"
         },
         {
@@ -287,8 +285,8 @@
           "lookup": "userFullNames"
         }
       ],
-       "filters": "\"Object Type\": TAG",
-       "filterName" : "Object Type"
+      "filters": "\"Object Type\": TAG",
+      "filterName": "Object Type"
     }
   ]
 }
