@@ -118,7 +118,8 @@
             {
               "name": "modified",
               "displayName": "timeTracking.comp.details.table.columns.modified",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+			  "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             },
             {
               "name": "modifier",
