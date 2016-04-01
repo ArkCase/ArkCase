@@ -22,24 +22,24 @@ public class NotificationFormatter
         String objectTypeLabelPlaceholder = NotificationConstants.OBJECT_TYPE_LABEL_PLACEHOLDER;
         String anchorPlaceholder = NotificationConstants.ANCHOR_PLACEHOLDER;
 
-        if ( notification.getTitle() != null && notification.getTitle().contains(objectTypeLabelPlaceholder))
+        if (notification.getTitle() != null && notification.getTitle().contains(objectTypeLabelPlaceholder))
         {
             String updatedTitle = replaceObjectTypeLabel(notification.getTitle(), objectTypeLabelPlaceholder,
                     notification.getParentType());
             notification.setTitle(updatedTitle);
         }
 
-        if ( notification.getNote() != null && notification.getNote().contains(objectTypeLabelPlaceholder))
+        if (notification.getNote() != null && notification.getNote().contains(objectTypeLabelPlaceholder))
         {
             String updatedNote = replaceObjectTypeLabel(notification.getNote(), objectTypeLabelPlaceholder,
                     notification.getParentType());
             notification.setNote(updatedNote);
         }
 
-        if ( notification.getNote() != null && notification.getNote().contains(anchorPlaceholder))
+        if (notification.getNote() != null && notification.getNote().contains(anchorPlaceholder))
         {
             String updatedNote = replaceAnchor(notification.getNote(), anchorPlaceholder, notification.getParentType(),
-                    notification.getParentId());
+                    notification.getParentId(), notification.getRelatedObjectType(), notification.getRelatedObjectId());
             notification.setNote(updatedNote);
         }
 
@@ -48,23 +48,58 @@ public class NotificationFormatter
 
     }
 
-    private String replaceAnchor(String withPlaceholder, String anchorPlaceholder, String parentType, Long parentId)
+    private String replaceAnchor(String withPlaceholder, String anchorPlaceholder, String parentType, Long parentId, String relatedObjectType, Long relatedObjectId)
     {
         String keyBaseUrl = "arkcase.url.base";
 
         String baseUrl = getNotificationProperties().getProperty(keyBaseUrl);
 
+        String url = "";
         // find the object type from the ACM application configuration, and get the URL from the object type
-        for ( AcmObjectType objectType : getAcmAppConfiguration().getObjectTypes() )
+        for (AcmObjectType objectType : getAcmAppConfiguration().getObjectTypes())
         {
-            if ( objectType.getName().equals(parentType) )
-            {
-                String objectUrl = objectType.getUrl() + parentId;
-                String url = baseUrl + objectUrl;
+            String objectUrl = objectType.getUrl();
 
-                String withAnchor = withPlaceholder.replace(anchorPlaceholder, url);
-                return withAnchor;
+            if (objectType.getName().equals(parentType))
+            {
+                if (!objectUrl.isEmpty())
+                {
+                    // The parent object is top level (Case File or Complaint)
+                    url = String.format("%s%s/%d", baseUrl, objectUrl, parentId);
+                } else if (objectUrl.isEmpty() && relatedObjectType != null)
+                // The parent object (eg. Person association) is nested in top level object = relatedObjectType
+                {
+                    // Find the target container url
+                    if (relatedObjectType.equals("CASE_FILE"))
+                    {
+                        objectUrl = objectType.getUrlContainerCase();
+                    } else if (relatedObjectType.equals("COMPLAINT"))
+                    {
+                        objectUrl = objectType.getUrlContainerComplaint();
+                    }
+                    url = String.format("%s%s/%d%s", baseUrl, objectUrl, relatedObjectId, objectType.getUrlEnd());
+                }
             }
+
+            // The parent object is top level, but has nested object = relatedObjectType (eg. NOTE)
+            if (relatedObjectType != null && objectUrl.isEmpty() && objectType.getName().equals(relatedObjectType))
+            {
+                // Find the target container url
+                if (parentType.equals("CASE_FILE"))
+                {
+                    objectUrl = objectType.getUrlContainerCase();
+                } else if (parentType.equals("COMPLAINT"))
+                {
+                    objectUrl = objectType.getUrlContainerComplaint();
+                }
+                url = String.format("%s%s/%d%s", baseUrl, objectUrl, parentId, objectType.getUrlEnd());
+            }
+        }
+
+        if (!url.isEmpty())
+        {
+            String withAnchor = withPlaceholder.replace(anchorPlaceholder, url);
+            return withAnchor;
         }
 
         return withPlaceholder;

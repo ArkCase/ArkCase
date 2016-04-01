@@ -51,7 +51,8 @@
     </changeSet>
 
     <changeSet id="02-4-change-ID-type-mssql" author="riste.tutureski" dbms="mssql">
-        <addNotNullConstraint tableName="acm_notification" columnName="cm_notification_id" columnDataType="${fkIdType}"/>
+        <addNotNullConstraint tableName="acm_notification" columnName="cm_notification_id"
+                              columnDataType="${fkIdType}"/>
         <addPrimaryKey tableName="acm_notification" columnNames="cm_notification_id" constraintName="pk_notification"/>
     </changeSet>
 
@@ -87,50 +88,54 @@
 
     <changeSet id="06-notification-drop-not-null-constraints" author="manojd">
         <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_note" columnDataType="CLOB"/>
-        <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_data" columnDataType="VARCHAR(1024)"/>
-        <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_auto" columnDataType="VARCHAR(1024)"/>
-        <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_user" columnDataType="VARCHAR(1024)"/>
+        <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_data"
+                               columnDataType="VARCHAR(1024)"/>
+        <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_auto"
+                               columnDataType="VARCHAR(1024)"/>
+        <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_user"
+                               columnDataType="VARCHAR(1024)"/>
     </changeSet>
 
     <changeSet id="07-notification-drop-comment-column" author="manojd">
         <dropColumn tableName="acm_notification" columnName="cm_notification_comment"/>
     </changeSet>
-    
+
     <changeSet id="08-add-title-column-notification-table" author="riste.tutureski">
-    	<addColumn tableName="acm_notification">
-    		<column name="cm_notification_title" type="VARCHAR(1024)">
-    			<constraints nullable="true"/>
-    		</column>
-    	</addColumn>
+        <addColumn tableName="acm_notification">
+            <column name="cm_notification_title" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
     </changeSet>
-    
+
     <changeSet id="09-rename-auto-column-notification-table" author="riste.tutureski">
-    	<renameColumn tableName="acm_notification" oldColumnName="cm_notification_auto" newColumnName="cm_notification_type" columnDataType="VARCHAR(1024)"/>
+        <renameColumn tableName="acm_notification" oldColumnName="cm_notification_auto"
+                      newColumnName="cm_notification_type" columnDataType="VARCHAR(1024)"/>
     </changeSet>
-    
+
     <changeSet id="10-add-state-column-notification-table" author="riste.tutureski">
-    	<addColumn tableName="acm_notification">
-    		<column name="cm_notification_state" type="VARCHAR(1024)">
-    			<constraints nullable="true"/>
-    		</column>
-    	</addColumn>
+        <addColumn tableName="acm_notification">
+            <column name="cm_notification_state" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
     </changeSet>
-    
+
     <changeSet id="11-add-parent-columns-notification-table" author="riste.tutureski">
-    	<addColumn tableName="acm_notification">
-    		<column name="cm_notification_parent_id" type="${fkIdType}">
-    			<constraints nullable="true"/>
-    		</column>
-    		<column name="cm_notification_parent_type" type="VARCHAR(1024)">
-    			<constraints nullable="true"/>
-    		</column>
-    		<column name="cm_notification_parent_name" type="VARCHAR(1024)">
-    			<constraints nullable="true"/>
-    		</column>
-    		<column name="cm_notification_parent_title" type="VARCHAR(1024)">
-    			<constraints nullable="true"/>
-    		</column>
-    	</addColumn>
+        <addColumn tableName="acm_notification">
+            <column name="cm_notification_parent_id" type="${fkIdType}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_notification_parent_type" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_notification_parent_name" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_notification_parent_title" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
     </changeSet>
 
     <changeSet id="12-acm_notification-id" author="nebojsha.davidovikj">
@@ -142,6 +147,13 @@
             <column name="cm_seq_num" value="100"></column>
             <column name="cm_seq_name" value="acm_notification"></column>
         </insert>
+    </changeSet>
+
+    <changeSet id="13-acm_notification-add-columns-related-objects" author="nadica.cuculova">
+        <addColumn tableName="acm_notification">
+            <column name="cm_notification_related_object_id" type="${fkIdType}"/>
+            <column name="cm_notification_related_object_type" type="VARCHAR(1024)"/>
+        </addColumn>
     </changeSet>
 
 </databaseChangeLog>
