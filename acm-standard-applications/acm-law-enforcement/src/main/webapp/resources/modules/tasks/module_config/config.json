@@ -530,7 +530,7 @@
               "name": "signedDate",
               "displayName": "tasks.comp.signatures.table.columns.signedDate",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.signedDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "enableCellEdit": false
             },
             {
