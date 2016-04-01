@@ -18,6 +18,7 @@
  * @param {Object} tree-config Tree configuration used to add to default configuration. Default doc tree configuration
  * is saved in config.json file of common module.
  * @param {Object} object-info Metadata of document container object
+ * @param {Boolean} read-only Value "true" would disable all functions that can modify document. Default value is "false"
  * @param {Function} on-allow-cmd (Optional)Callback function before a command is shown on Menu, to allow doc tree
  * consummer to have a chance to modify menu items. Return "invisible" to remove the command from menu;
  * "disable" to disable the command; Anything else or undefined means the command will be show as normal.
@@ -86,8 +87,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
     , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService'
     , function ($q, $translate, $modal, $filter, $log
         , Store, Util, UtilDateService, ConfigService, LookupService
-        , Ecm, EcmEmailService, EcmRecordService
-    ) {
+        , Ecm, EcmEmailService, EcmRecordService) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
         var promiseGetUserFullName = LookupService.getUserFullNames();
@@ -197,7 +197,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 $tdList.eq(4).text(Util.goodMapValue(found, "name"));
                             });
 
-                            $tdList.eq(5).replaceWith($td6);
+                            if (DocTree.readOnly) {
+                                $tdList.eq(5).text(node.data.version);
+                            } else {
+                                $tdList.eq(5).replaceWith($td6);
+                            }
 
                             $tdList.eq(6).text(node.data.status);
 
@@ -232,8 +236,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     , edit: {
                         triggerStart: ["f2", "shift+click", "mac+enter"]
                         , beforeEdit: function (event, data) {
+                            // Return false to prevent edit mode
+                            if (DocTree.readOnly) {
+                                return false;
+                            }
                             if (DocTree.isTopNode(data.node) || DocTree.isSpecialNode(data.node)) {
-                                return false;// Return false to prevent edit mode
+                                return false;
                             }
                             if (data.node.isLoading()) {
                                 return false;
@@ -245,7 +253,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
                         , beforeClose: function (event, data) {
                             // Return false to prevent cancel/save (data.input is available)
-                            var z = 1;
                         }
                         , save: function (event, data) {
                             var parent = data.node.getParent();
@@ -266,7 +273,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     }
 
                                 } else {
-
                                     if (DocTree.isFolderNode(data.node)) {
                                         DocTree.Op.renameFolder(data.node, name);
                                     } else if (DocTree.isFileNode(data.node)) {
@@ -293,6 +299,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         preventVoidMoves: true,       // Prevent dropping nodes 'before self', etc.
                         preventRecursiveMoves: true,  // Prevent dropping nodes on own descendants
                         dragStart: function (node, data) {
+                            if (DocTree.readOnly) {
+                                return false;
+                            }
                             if (DocTree.isTopNode(data.node) || DocTree.isSpecialNode(data.node)) {
                                 return false;
                             }
@@ -300,8 +309,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 return false;
                             }
                             return true;
-                        },
-                        dragEnter: function (node, data) {
+                        }
+                        , dragEnter: function (node, data) {
                             if (node == data.otherNode) {
                                 return ["before", "after"];     //Cannot drop to oneself
                             } else if (DocTree.isTopNode(data.node)) {
@@ -321,8 +330,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             } else {
                                 return ["before", "after"];  // Don't allow dropping *over* a document node (would create a child)
                             }
-                        },
-                        dragDrop: function (node, data) {
+                        }
+                        , dragDrop: function (node, data) {
+                            if (DocTree.readOnly) {
+                                return;
+                            }
+
                             if (("before" != data.hitMode && "after" != data.hitMode) && DocTree.isFolderNode(node)) {
                                 DocTree.expandNode(node).done(function () {
                                     if (DocTree.isFolderNode(data.otherNode)) {
@@ -371,11 +384,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                 DocTree.tree = DocTree.jqTree.fancytree("getTree");
                 var jqTreeBody = DocTree.jqTree.find("tbody");
-                //DocTree.Menu.useContextMenu(jqTreeBody, false);
-                DocTree.ExternalDnd.useExternalDnd(jqTreeBody);
+                DocTree.ExternalDnd.startExternalDnd(jqTreeBody);
 
-                jqTreeBody.delegate("select.docversion", "change", DocTree.onChangeVersion);
-                jqTreeBody.delegate("select.docversion", "dblclick", DocTree.onDblClickVersion);
+                jqTreeBody.on("change", "select.docversion", DocTree.onChangeVersion);
+                jqTreeBody.on("dblclick", "select.docversion", DocTree.onDblClickVersion);
 
                 var jqTreeHead = DocTree.jqTree.find("thead");
                 jqTreeHead.find("input:checkbox").on("click", function (e) {
@@ -720,6 +732,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
 
             , onDblClick: function (event, data) {
+                if (DocTree.readOnly) {
+                    return;
+                }
                 var tree = $(this).fancytree("getTree"),
                     node = tree.getActiveNode();
                 if (!DocTree.isEditing()) {
@@ -872,7 +887,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     } else if (!Validator.validateNode(node)) {
                         return;
                     }
-                    var actNodes = (batch)? selNodes : [node];
+                    var actNodes = (batch) ? selNodes : [node];
 
                     if (data.uploadFile) {
                         if (DocTree.uploadingCmd) {
@@ -880,12 +895,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
                         DocTree.uploadingCmd = {cmd: data.cmd, actNodes: actNodes};
                         DocTree.Command._processCommand(event, data, node, selNodes, batch, actNodes);
-                        
+
                     } else {
                         //prevent command process if return "false"; continue when return "true", "undefined" or anything else
                         var rc = DocTree.Command.onPreCmd(data.cmd, actNodes);
                         if (false !== rc) {
-                            $q.all([rc]).then(function(preCmdData) {
+                            $q.all([rc]).then(function (preCmdData) {
                                 if (false !== preCmdData[0]) {
                                     DocTree.Command._processCommand(event, data, node, selNodes, batch, actNodes);
                                 }
@@ -1141,7 +1156,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             var menuResource = null;
                             var selNodes = DocTree.getSelectedNodes();
                             var batchMode = !Util.isArrayEmpty(selNodes);
-                            var actNodes = (batchMode)? selNodes: [node];
+                            var actNodes = (batchMode) ? selNodes : [node];
                             if (batchMode) {
                                 menuResource = DocTree.Menu.getBatchResource(selNodes);
                             } else if ("RECORD" == Util.goodValue(node.data.status)) {
@@ -1194,7 +1209,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return menuResource;
                 }
-                , getRecordResource: function(node) {
+                , getRecordResource: function (node) {
                     var menuResource = null;
                     if (node) {
                         if (DocTree.isTopNode(node)) {
@@ -1207,7 +1222,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return menuResource;
                 }
-                , getBasicResource: function(node) {
+                , getBasicResource: function (node) {
                     var menuResource = null;
                     if (node) {
                         if (DocTree.isTopNode(node)) {
@@ -1229,16 +1244,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         if (menuFileTypes) {
                             menuFileTypes.children = this.makeMenuFileTypes();
                         }
-                    //} else {
-                    //    var menu0 = [Util.goodMapValue(DocTree.treeConfig, "noop")];
-                    //    menu = [{
-                    //        title: $translate.instant("common.directive.docTree.menu.noop"),
-                    //        cmd: "noop",
-                    //        uiIcon: ""
-                    //    }];
+                        //} else {
+                        //    var menu0 = [Util.goodMapValue(DocTree.treeConfig, "noop")];
+                        //    menu = [{
+                        //        title: $translate.instant("common.directive.docTree.menu.noop"),
+                        //        cmd: "noop",
+                        //        uiIcon: ""
+                        //    }];
                     }
 
-                    _.each(menu, function(item) {
+                    _.each(menu, function (item) {
                         var allow = true;
                         if (item.cmd) {
                             allow = DocTree.Command.onAllowCmd(item.cmd, nodes);
@@ -1246,15 +1261,26 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                         if ("invisible" == allow) {
                             item.invisible = true;
-                        }  else if ("disable" == allow) {
+                        } else if ("disable" == allow) {
                             item.disabled = true;
                         } else {
                             item.disabled = false;
                         }
                     });
-                    menu = _.filter(menu, function(item) {
+                    menu = _.filter(menu, function (item) {
                         return !item.invisible;
                     });
+
+                    //Under readOnly mode, disable all non-readOnly cmd
+                    if (DocTree.readOnly) {
+                        _.each(menu, function (item) {
+                            var readOnly = Util.goodMapValue(item.data, "readOnly", false);
+                            if (readOnly) {
+                                item.disabled = false;
+                            }
+                        });
+
+                    }
 
                     return menu;
                 }
@@ -1284,7 +1310,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     item.cmd = "form/" + fileTypes[i].type;
                                 } else {
                                     item.cmd = "file/" + fileTypes[i].type;
-                                    item.data = {uploadFile: true};
+                                    item.data = {};
+                                    item.data.uploadFile = true;
                                 }
                             }
                             menu.push(item);
@@ -1345,11 +1372,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
 
             , ExternalDnd: {
-                useExternalDnd: function ($treeBody) {
-                    $treeBody.delegate("tr", "dragenter", this.onDragEnter);
-                    $treeBody.delegate("tr", "dragleave", this.onDragLeave);
-                    $treeBody.delegate("tr", "dragover", this.onDragOver);
-                    $treeBody.delegate("tr", "drop", this.onDragDrop);
+                startExternalDnd: function ($treeBody) {
+                    $treeBody.on("dragenter", "tr", this.onDragEnter);
+                    $treeBody.on("dragleave", "tr", this.onDragLeave);
+                    $treeBody.on("dragover", "tr", this.onDragOver);
+                    $treeBody.on("drop", "tr", this.onDragDrop);
 
                     $(document).on('dragenter', function (e) {
                         e.stopPropagation();
@@ -1384,6 +1411,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     //e.stopPropagation();
                     e.preventDefault();
                     $(this).removeClass("dragover");
+
+                    if (DocTree.readOnly) {
+                        return;
+                    }
 
                     var node = $.ui.fancytree.getNode(e);
                     var files = e.originalEvent.dataTransfer.files;
@@ -2733,7 +2764,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     //prevent command process if return "false"; continue when return "true", "undefined" or anything else
                     var rc = DocTree.Command.onPreCmd(DocTree.uploadingCmd.cmd, DocTree.uploadingCmd.actNodes);
                     if (false !== rc) {
-                        $q.all([rc]).then(function(preCmdData) {
+                        $q.all([rc]).then(function (preCmdData) {
                             if (false !== preCmdData[0]) {
                                 var files = DocTree.jqFileInput[0].files;
                                 DocTree.doSubmitFormUploadFile(files);
@@ -2765,7 +2796,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                 var cacheKey = DocTree.getCacheKeyByNode(folderNode);
                 if (DocTree.uploadFileNew) {
-                    DocTree.Op.uploadFiles(fd, folderNode, names, fileType).always(function() {
+                    DocTree.Op.uploadFiles(fd, folderNode, names, fileType).always(function () {
                         if (DocTree.uploadingCmd) {
                             DocTree.Command.onPostCmd(DocTree.uploadingCmd.cmd, DocTree.uploadingCmd.actNodes);
                             DocTree.uploadingCmd = null;
@@ -2773,7 +2804,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     });
                 } else {
                     var replaceNode = DocTree.replaceFileNode;
-                    DocTree.Op.replaceFile(fd, replaceNode, names[0]).always(function() {
+                    DocTree.Op.replaceFile(fd, replaceNode, names[0]).always(function () {
                         if (DocTree.uploadingCmd) {
                             DocTree.Command.onPostCmd(DocTree.uploadingCmd.cmd, DocTree.uploadingCmd.actNodes);
                             DocTree.uploadingCmd = null;
@@ -3829,6 +3860,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 , onAllowCmd: '&'
                 , onPreCmd: '&'
                 , onPostCmd: '&'
+                , readOnly: '@'
             }
 
             , link: function (scope, element, attrs) {
@@ -3839,16 +3871,20 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.setObjId(scope.objectId);
                 DocTree.treeConfig = {};
                 DocTree.objectInfo = null;
-                DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function (){}); //if not defined, do nothing
+                DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function () {
+                }); //if not defined, do nothing
+                DocTree.Command.onAllowCmd = ("undefined" != typeof attrs.onAllowCmd) ? scope.onAllowCmd() : (function () {
+                });
+                DocTree.Command.onPreCmd = ("undefined" != typeof attrs.onPreCmd) ? scope.onPreCmd() : (function () {
+                });
+                DocTree.Command.onPostCmd = ("undefined" != typeof attrs.onPostCmd) ? scope.onPostCmd() : (function () {
+                });
+                DocTree.readOnly = ("true" === attrs.readOnly);
 
                 scope.treeControl = {
                     refreshTree: DocTree.refreshTree
                     , getSelectedNodes: DocTree.getSelectedNodes
                 };
-
-                DocTree.Command.onAllowCmd = ("undefined" != typeof attrs.onAllowCmd) ? scope.onAllowCmd() : (function (){});
-                DocTree.Command.onPreCmd = ("undefined" != typeof attrs.onPreCmd) ? scope.onPreCmd() : (function (){});
-                DocTree.Command.onPostCmd = ("undefined" != typeof attrs.onPostCmd) ? scope.onPostCmd() : (function (){});
 
                 ConfigService.getModuleConfig("common").then(function (moduleConfig) {
                     var treeConfig = Util.goodMapValue(moduleConfig, "docTree", {});

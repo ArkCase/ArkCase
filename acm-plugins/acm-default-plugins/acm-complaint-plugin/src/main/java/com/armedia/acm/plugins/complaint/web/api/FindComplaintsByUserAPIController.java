@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.ComplaintListView;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -15,29 +16,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.List;
 
 /**
  * Created by marjan.stefanoski on 8/20/2014.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/complaint", "/api/latest/plugin/complaint"})
+@RequestMapping({ "/api/v1/plugin/complaint", "/api/latest/plugin/complaint" })
 public class FindComplaintsByUserAPIController
 {
 
     private ComplaintDao complaintDao;
     private ComplaintEventPublisher eventPublisher;
 
-
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/forUser/{user}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/forUser/{user:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<ComplaintListView> tasksForUser(
-            @PathVariable("user") String user,
-            Authentication authentication,
-            HttpSession session
-    ) throws AcmListObjectsFailedException
+    public List<ComplaintListView> tasksForUser(@PathVariable("user") String user, Authentication authentication, HttpSession session)
+            throws AcmListObjectsFailedException
     {
         if (log.isInfoEnabled())
         {
@@ -52,7 +50,8 @@ public class FindComplaintsByUserAPIController
                 getEventPublisher().publishComplaintSearchResultEvent(complaint, authentication, ipAddress);
             }
             return complaints;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Could not list complaints: " + e.getMessage(), e);
             throw new AcmListObjectsFailedException("complaint", e.getMessage(), e);

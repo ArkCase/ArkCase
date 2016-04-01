@@ -291,24 +291,38 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             user = new AcmOutlookUser(getSystemUserId(), getSystemUserEmail(), getSystemUserPass());
         }
 
+        sendEmail(emailWithAttachmentsDTO, user, authentication);
+    }
+
+    @Override
+    public void sendEmail(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user, Authentication authentication) throws Exception
+    {
         ExchangeService service = connect(user);
         EmailMessage emailMessage = new EmailMessage(service);
         emailMessage.setSubject(emailWithAttachmentsDTO.getSubject());
         emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getHeader() + "\r\r" + emailWithAttachmentsDTO.getBody() + "\r\r\r" + emailWithAttachmentsDTO.getFooter()));
         emailMessage.getBody().setBodyType(BodyType.Text);
-        for (String emailAddress : emailWithAttachmentsDTO.getEmailAddresses())
+
+        if (emailWithAttachmentsDTO.getEmailAddresses() != null && !emailWithAttachmentsDTO.getEmailAddresses().isEmpty())
         {
-            emailMessage.getToRecipients().add(emailAddress);
+            for (String emailAddress : emailWithAttachmentsDTO.getEmailAddresses())
+            {
+                emailMessage.getToRecipients().add(emailAddress);
+            }
         }
 
         List<EcmFile> attachedFiles = new ArrayList<>();
-        for (Long attachmentId : emailWithAttachmentsDTO.getAttachmentIds())
+        if (emailWithAttachmentsDTO.getAttachmentIds() != null && !emailWithAttachmentsDTO.getAttachmentIds().isEmpty())
         {
-            InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
-            EcmFile ecmFile = getEcmFileService().findById(attachmentId);
-            emailMessage.getAttachments().addFileAttachment(ecmFile.getFileName(), contents);
-            attachedFiles.add(ecmFile);
+            for (Long attachmentId : emailWithAttachmentsDTO.getAttachmentIds())
+            {
+                InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
+                EcmFile ecmFile = getEcmFileService().findById(attachmentId);
+                emailMessage.getAttachments().addFileAttachment(ecmFile.getFileName(), contents);
+                attachedFiles.add(ecmFile);
+            }
         }
+
         emailMessage.sendAndSaveCopy();
 
         // use the first method if you don't require a copy

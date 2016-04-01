@@ -11,6 +11,7 @@ import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
+
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,7 +36,7 @@ import java.util.stream.Collectors;
  */
 
 @Controller
-@RequestMapping({"/api/v1/plugin/dashboard/widgets", "/api/latest/plugin/dashboard/widgets"})
+@RequestMapping({ "/api/v1/plugin/dashboard/widgets", "/api/latest/plugin/dashboard/widgets" })
 public class GetWidgetsByUserRolesAPIController
 {
 
@@ -47,10 +49,11 @@ public class GetWidgetsByUserRolesAPIController
 
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Widget> getDashboardConfig(Authentication authentication, HttpSession session) throws AcmWidgetException, AcmObjectNotFoundException
+    public List<Widget> getDashboardConfig(Authentication authentication, HttpSession session)
+            throws AcmWidgetException, AcmObjectNotFoundException
     {
 
-        String userId = authentication.getName().toLowerCase();
+        String userId = authentication.getName();
         if (log.isInfoEnabled())
         {
             log.info("Finding widgets for user  based on the user roles'" + userId + "'");
@@ -69,9 +72,11 @@ public class GetWidgetsByUserRolesAPIController
             raiseGetEvent(authentication, session, retval, true);
             List<Widget> dashboardWidgetsOnly = dashboardPropertyReader.getDashboardWidgetsOnly();
             return retval.stream().filter(w -> dashboardWidgetsOnly.contains(w)).collect(Collectors.toList());
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
-            // If there are no records for widgets into the DB ( when user logs in for the first time) we will read all widgets by user roles from
+            // If there are no records for widgets into the DB ( when user logs in for the first time) we will read all widgets by user
+            // roles from
             // config file .acm/dashboardPlugin.properties and that we will store them into the DB.
             if (retval == null)
             {
@@ -83,7 +88,8 @@ public class GetWidgetsByUserRolesAPIController
             }
             raiseGetEvent(authentication, session, retval, true);
             return retval;
-        } catch (Exception e1)
+        }
+        catch (Exception e1)
         {
             if (log.isErrorEnabled())
             {
@@ -136,10 +142,11 @@ public class GetWidgetsByUserRolesAPIController
                 }
 
                 if (retVal == null)
+                {
                     continue;
+                }
 
                 widgetArray = retVal.split(DashboardConstants.COMMA_SPLITTER);
-
 
                 for (String widget : widgetArray)
                 {
@@ -159,7 +166,8 @@ public class GetWidgetsByUserRolesAPIController
                         WidgetRole widgetRole;
                         widgetRole = addWidgetRoleIntoDB(widget, role);
                         getEventPublisher().publishWidgetRoleEvent(widgetRole, authentication, true, true);
-                    } else
+                    }
+                    else
                     {
                         WidgetRole widgetRole;
                         widgetRole = addWidgetRoleIntoDB(widget, role);

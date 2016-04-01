@@ -11,6 +11,7 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     private String groupSearchFilter;
     private Map<String, String> roleToGroupMap;
     private String auditUserId = AcmLdapConstants.DEFAULT_AUDIT_USER;
+    private String userDomain;
 
     public Map<String, String> getRoleToGroupMap()
     {
@@ -50,5 +51,15 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     public void setAuditUserId(String auditUserId)
     {
         this.auditUserId = auditUserId;
+    }
+
+    public String getUserDomain()
+    {
+        return userDomain;
+    }
+
+    public void setUserDomain(String userDomain)
+    {
+        this.userDomain = userDomain;
     }
 }

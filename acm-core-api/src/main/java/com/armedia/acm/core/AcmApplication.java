@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  *
  */
@@ -14,6 +13,7 @@ public class AcmApplication implements Serializable
     private static final long serialVersionUID = -4533090175042467646L;
 
     private String applicationName;
+    private String logoutUrl;
     private List<AcmUserAction> topbarActions;
     private List<AcmUserAction> navigatorTabs;
     private List<AcmObjectType> objectTypes;
@@ -31,6 +31,16 @@ public class AcmApplication implements Serializable
     public void setApplicationName(String applicationName)
     {
         this.applicationName = applicationName;
+    }
+
+    public String getLogoutUrl()
+    {
+        return logoutUrl;
+    }
+
+    public void setLogoutUrl(String logoutUrl)
+    {
+        this.logoutUrl = logoutUrl;
     }
 
     public List<AcmUserAction> getTopbarActions()
@@ -53,19 +63,23 @@ public class AcmApplication implements Serializable
         this.navigatorTabs = navigatorTabs;
     }
 
-    public List<AcmObjectType> getObjectTypes() {
+    public List<AcmObjectType> getObjectTypes()
+    {
         return objectTypes;
     }
 
-    public void setObjectTypes(List<AcmObjectType> objectTypes) {
+    public void setObjectTypes(List<AcmObjectType> objectTypes)
+    {
         this.objectTypes = objectTypes;
     }
 
-    public Boolean getIssueCollectorFlag() {
+    public Boolean getIssueCollectorFlag()
+    {
         return issueCollectorFlag;
     }
 
-    public void setIssueCollectorFlag(Boolean issueCollectorFlag) {
+    public void setIssueCollectorFlag(Boolean issueCollectorFlag)
+    {
         this.issueCollectorFlag = issueCollectorFlag;
     }
 
@@ -81,9 +95,9 @@ public class AcmApplication implements Serializable
 
     public AcmObjectType getBusinessObjectByName(String name)
     {
-        for ( AcmObjectType objectType : getBusinessObjects() )
+        for (AcmObjectType objectType : getBusinessObjects())
         {
-            if ( objectType.getName().equalsIgnoreCase(name) )
+            if (objectType.getName().equalsIgnoreCase(name))
             {
                 return objectType;
             }
@@ -92,11 +106,13 @@ public class AcmApplication implements Serializable
         throw new IllegalArgumentException("No such business object with name '" + name + "'");
     }
 
-    public Map<Object, Object> getSettings() {
+    public Map<Object, Object> getSettings()
+    {
         return settings;
     }
 
-    public void setSettings(Map<Object, Object> settings) {
+    public void setSettings(Map<Object, Object> settings)
+    {
         this.settings = settings;
     }
 }

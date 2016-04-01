@@ -9,6 +9,7 @@
 
     <bean id="deleteNotesByNotesId" class="com.armedia.acm.services.note.web.api.DeleteNoteByIdAPIController">
         <property name="noteDao" ref="noteDao"/>
+        <property name="noteEventPublisher" ref="noteEventPublisher"/>
     </bean>
 
     <bean id="saveNote" class="com.armedia.acm.services.note.web.api.SaveNoteAPIController">

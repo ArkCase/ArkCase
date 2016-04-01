@@ -24,6 +24,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
+
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -32,7 +33,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.gridOptions = $scope.gridOptions || {};
-            $scope.gridOptions.data = $scope.objectInfo.references;
+            $scope.gridOptions.data = Util.goodArray($scope.objectInfo.references);
             //gridHelper.hidePagingControlsIfAllDataShown($scope.objectInfo.references.length);
         };
 
