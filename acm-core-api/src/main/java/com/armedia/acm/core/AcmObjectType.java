@@ -15,6 +15,8 @@ public class AcmObjectType implements Serializable
     private String url;
     private String urlEnd;
     private String iconName;
+    private String urlContainerComplaint;
+    private String urlContainerCase;
     private List<AcmObjectState> states;
     private List<AcmParticipantType> participantTypes;
 
@@ -66,6 +68,26 @@ public class AcmObjectType implements Serializable
     public void setIconName(String iconName)
     {
         this.iconName = iconName;
+    }
+
+    public String getUrlContainerComplaint()
+    {
+        return urlContainerComplaint;
+    }
+
+    public void setUrlContainerComplaint(String urlContainerComplaint)
+    {
+        this.urlContainerComplaint = urlContainerComplaint;
+    }
+
+    public String getUrlContainerCase()
+    {
+        return urlContainerCase;
+    }
+
+    public void setUrlContainerCase(String urlContainerCase)
+    {
+        this.urlContainerCase = urlContainerCase;
     }
 
     // @JsonIgnore

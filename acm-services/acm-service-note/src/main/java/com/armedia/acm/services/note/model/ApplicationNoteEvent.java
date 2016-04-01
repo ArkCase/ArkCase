@@ -17,7 +17,7 @@ public class ApplicationNoteEvent extends AcmEvent
         setEventType(String.format("%s.%s", EVENT_TYPE, noteEvent));
         setSucceeded(succeeded);
         setIpAddress(ipAddress);
-        setObjectType("NOTIFICATION");
+        setObjectType("NOTE");
         setParentObjectId(source.getParentId());
         setParentObjectType(source.getParentType());
     }

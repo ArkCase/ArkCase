@@ -1,24 +1,23 @@
 package com.armedia.acm.plugins.casefile.service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
-import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
-import com.armedia.acm.service.objecthistory.model.AcmAssignment;
-import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
-import com.armedia.acm.services.participants.utils.ParticipantUtils;
-import org.springframework.context.ApplicationListener;
-
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
+import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
+import com.armedia.acm.service.objecthistory.model.AcmAssignment;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
+import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.utils.ParticipantUtils;
+import org.springframework.context.ApplicationListener;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class CaseFileEventListener implements ApplicationListener<AcmObjectHistoryEvent>
 {
@@ -28,7 +27,8 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     private CaseFileEventUtility caseFileEventUtility;
     private AcmAssignmentDao acmAssignmentDao;
 
-    @Override public void onApplicationEvent(AcmObjectHistoryEvent event)
+    @Override
+    public void onApplicationEvent(AcmObjectHistoryEvent event)
     {
         if (event != null)
         {
@@ -148,8 +148,17 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
 
         if (us.addAll(es))
         {
-            // participants deleted
-            getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, "", "participants.deleted");
+            // set is mutable
+            us = new HashSet<>(updated);
+
+            for (AcmParticipant participant : es)
+            {
+                if (!us.contains(participant))
+                {
+                    // participants deleted
+                    getCaseFileEventUtility().raiseParticipantDeletedInCaseFile(participant, updatedCaseFile);
+                }
+            }
         }
     }
 
