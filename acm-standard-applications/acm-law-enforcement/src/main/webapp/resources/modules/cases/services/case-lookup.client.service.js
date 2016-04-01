@@ -6,11 +6,11 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/cases/services/case-lookup.client.service.js modules/cases/services/case-lookup.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/cases/services/case-lookup.client.service.js modules/cases/services/case-lookup.client.service.js}
  *
  * Case.LookupService provides functions for Case lookup data
  */
-angular.module('services').factory('Case.LookupService', ['$resource', '$translate', 'StoreService', 'UtilService', 'Object.ModelService',
+angular.module('services').factory('Case.LookupService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.ModelService',
     function ($resource, $translate, Store, Util, ObjectModelService) {
         var Service = $resource('api/latest/plugin', {}, {
             /**

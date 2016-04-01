@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/helper/helper-note.client.service.js services/helper/helper-note.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/helper/helper-note.client.service.js services/helper/helper-note.client.service.js}
 
  * Helper.NoteService provides common functionality related to the notes tables throughout the application
  */
@@ -39,14 +39,17 @@ angular.module('services').factory('Helper.NoteService', ['UtilService', 'Object
              * @param {Number} parentObjId unique identifier for the parent of the note
              * @param {String} parentObjType specifies the ArkCase type for the parent of the note
              * @param {String} userId the internal username of the note creator
+             * @param {String} noteType type of the note
              * @returns {Object} note metadata used to populate a row in the notes table
              */
-            createNote: function (parentObjId, parentObjType, userId) {
+            createNote: function (parentObjId, parentObjType, userId, noteType) {
+                noteType = noteType || "GENERAL";
                 return {
                     parentId: parentObjId,
                     parentType: parentObjType,
                     created: UtilDateService.dateToIso(new Date()),
-                    creator: userId
+                    creator: userId,
+                    type: noteType
                 };
             }
 

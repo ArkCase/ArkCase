@@ -7,7 +7,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/directives/object-tree/object-tree.client.directive.js directives/object-tree/object-tree.client.directive.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/object-tree/object-tree.client.directive.js directives/object-tree/object-tree.client.directive.js}
  *
  * The objectTree directive renders a FancyTree to browse ArkCase objects with support of paging, filter and sort
  *
@@ -137,7 +137,7 @@
  </file>
  </example>
  */
-angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilService', 'StoreService',
+angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilService', 'Acm.StoreService',
     function ($q, $translate, Util, Store) {
         var Tree = {
             create: function (treeArgs) {

@@ -9,7 +9,7 @@
 
 
     <bean id="acmPluginFolder" class="java.io.File">
-        <constructor-arg value="${user.home}/.acm/spring/spring-config-acm-plugins"/>
+        <constructor-arg value="${user.home}/.arkcase/acm/spring/spring-config-acm-plugins"/>
     </bean>
 
     <bean id="acmPluginResourceExpression" class="java.lang.String">

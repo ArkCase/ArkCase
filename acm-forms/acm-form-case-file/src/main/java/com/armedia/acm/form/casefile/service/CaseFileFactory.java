@@ -65,7 +65,12 @@ public class CaseFileFactory extends FrevvoFormFactory
 		
 		if (form.getPeople() != null)
 		{
-			List<PersonAssociation> paArray = new ArrayList<>();
+			List<PersonAssociation> paArray = caseFile.getPersonAssociations();
+			if (paArray == null)
+			{
+				paArray = new ArrayList<>();
+			}
+
 			for (Person person : form.getPeople())
 			{
 				PersonAssociation pa = new PersonAssociation();

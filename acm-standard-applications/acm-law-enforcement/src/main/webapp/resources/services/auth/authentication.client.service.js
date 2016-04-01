@@ -5,11 +5,11 @@
  * @name services.service:Authentication
  *
  * @description
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/auth/authentication.client.service.js services/auth/authentication.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/auth/authentication.client.service.js services/auth/authentication.client.service.js}
  *
  * The Authentication service retrieves user information from server
  */
-angular.module('services').factory('Authentication', ['$resource', 'StoreService', 'UtilService',
+angular.module('services').factory('Authentication', ['$resource', 'Acm.StoreService', 'UtilService',
     function ($resource, Store, Util) {
         var Service = $resource('api/v1/users/info', {}, {
             /**

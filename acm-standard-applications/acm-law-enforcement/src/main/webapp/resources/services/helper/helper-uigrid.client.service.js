@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/helper/helper-uigrid.client.service.js services/helper/helper-uigrid.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/helper/helper-uigrid.client.service.js services/helper/helper-uigrid.client.service.js}
 
  * Helper.UiGridService has functions for typical usage in ArCase of 'ui-grid' directive
  */
@@ -26,6 +26,10 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 , ALIAS_TYPES: "aliasTypes"
                 , SECURITY_TAG_TYPES: "securityTagTypes"
             }
+            , CommonButtons: [
+                {"name": "edit", "clickFn": "editRow", "icon": "fa fa-pencil", "readOnlyFn": "isReadOnly"}
+                , {"name": "delete", "clickFn": "deleteRow", "icon": "fa fa-trash-o", "readOnlyFn": "isReadOnly"}
+            ]
 
             /**
              * @ngdoc method
@@ -49,6 +53,12 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
             , Grid: function (arg) {
                 this.scope = arg.scope;
                 this.scope.gridOptions = this.scope.gridOptions || {};
+
+                if (!this.scope.isReadOnly) {
+                    this.scope.isReadOnly = function(objectInfo) {
+                        return false;
+                    }
+                }
 
                 // The onRegisterApi handler must be defined immediately,
                 // otherwise angular will never call it and gridApi will never be defined
@@ -126,7 +136,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * @name setExternalPaging
              * @methodOf services:Helper.UiGridService
              *
-             * @param {Object} Component configuration data with grid options
+             * @param {Object} config Component configuration data with grid options
              * @param {Function} retrieveGridData Callback function to call when need to retrieve data for ui-grid
              *
              * @description
@@ -186,7 +196,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * @name setInPlaceEditing
              * @methodOf services:Helper.UiGridService
              *
-             * @param {Object} Component configuration data with grid options
+             * @param {Object} config Component configuration data with grid options
              * @param {Function} updateRow Callback function to update a row of a ui-grid
              * @param {Function} canUpdate Callback function to to check condition if a row can be updated
              *
@@ -244,7 +254,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * @name setColumnDefs
              * @methodOf services:Helper.UiGridService
              *
-             * @param {Object} Component configuration data with grid options
+             * @param {Object} config Component configuration data with grid options
              *
              * @description
              * Define ui-grid columns
@@ -409,6 +419,30 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
 
             /**
              * @ngdoc method
+             * @name addEditButton
+             * @methodOf services:Helper.UiGridService
+             *
+             * @param {Object} columnDefs ui-grid column definition
+             * @param {Function} onClickEdit Callback function to response to button click event
+             *
+             * @description
+             * Create a new column with edit button
+             */
+            , addEditButton: function (columnDefs, onClickEdit) {
+                console.log("Warning: HelperUiGridService.Grid.addEditButton() is outdated. Please use addButton() instead");
+
+                var columnDef = {
+                    name: "edit",
+                    cellEditableCondition: false,
+                    width: 40,
+                    headerCellTemplate: "<span></span>",
+                    cellTemplate: "<span><i class='fa fa-pencil fa-lg' style='cursor :pointer' ng-hide='grid.appScope.isReadOnly(row.entity)' ng-click='" + onClickEdit + "'></i></span>"
+                };
+                columnDefs.push(columnDef);
+            }
+
+            /**
+             * @ngdoc method
              * @name addDeleteButton
              * @methodOf services:Helper.UiGridService
              *
@@ -419,6 +453,8 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * Create a new column with delete button
              */
             , addDeleteButton: function (columnDefs, onClickDelete) {
+                console.log("Warning: HelperUiGridService.Grid.addDeleteButton() is outdated. Please use addButton() instead");
+
                 var columnDef = {
                     name: "act"
                     , cellEditableCondition: false
@@ -428,10 +464,84 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                     //, enableColumnResizing: false
                     , width: 40
                     , headerCellTemplate: "<span></span>"
-                    , cellTemplate: "<span><i class='fa fa-trash-o fa-lg' ng-click='" + onClickDelete + "'></i></span>"
+                    , cellTemplate: "<span><i class='fa fa-trash-o fa-lg' style='cursor :pointer' ng-hide='grid.appScope.isReadOnly(row.entity)' ng-click='" + onClickDelete + "'></i></span>"
                 };
                 columnDefs.push(columnDef);
             }
+
+
+            /**
+             * @ngdoc method
+             * @name addButton
+             * @methodOf services:Helper.UiGridService
+             *
+             * @description
+             * Add a button to a column.
+             *
+             * @param {Object} config Component configuration data with grid options.
+             * @param {String} name Button name, serve as unique key in the button group.
+             * @param {String} icon (Optional) Font awesome icon.
+             *     If not provided, attempt is made to find in CommonButtons.
+             * @param {String} clickFn (Optional) Callback function name to button click event. The function must be define within app $scope.
+             *     If not provided, attempt is made to find in CommonButtons.
+             * @param {String} readOnlyFn (Optional) Read only function name to check if grid is read only.
+             *     If not provided, attempt is made to find in CommonButtons. If still not found, it is assume the button is read only and is thus
+             *     not subject to any read only function control (i.e., it is always regardless if grid is read only or not)
+             */
+            , addButton: function (config, name, icon, clickFn, readOnlyFn) {
+                if (Util.isEmpty(icon) || Util.isEmpty(clickFn) || Util.isEmpty(readOnlyFn)) {
+                    var found = _.find(Service.CommonButtons, {name: name});
+                    if (found) {
+                        if (Util.isEmpty(icon)) {
+                            icon = found.icon;
+                        }
+                        if (Util.isEmpty(clickFn)) {
+                            clickFn = found.clickFn;
+                        }
+                        if (Util.isEmpty(readOnlyFn)) {
+                            readOnlyFn = found.readOnlyFn;
+                        }
+                    }
+                }
+                //var cellTemplate = "<span><i class='" + icon //"fa fa-trash-o fa-lg"
+                //        + "' style='cursor :pointer'"
+                //        + " ng-click='grid.appScope." + clickFn + "(row.entity)'"
+                //    ;
+                //if (readOnlyFn) {
+                //    cellTemplate += " ng-hide='grid.appScope." + readOnlyFn + "(row.entity)'";
+                //}
+                //cellTemplate += "></i></span>";
+
+                var cellTemplate = "<a title='' class='inline animated btn btn-default btn-xs'"
+                    + " ng-click='grid.appScope." + clickFn + "(row.entity)'";
+                if (readOnlyFn) {
+                    cellTemplate += " ng-hide='grid.appScope." + readOnlyFn + "(row.entity)'";
+                }
+                cellTemplate += "><i class='" + icon + "'></i></a>";
+
+                var columnDefs = Util.goodArray(config.columnDefs);
+                var columnDef = _.find(columnDefs, {name: "act"});
+                if (columnDef) {
+                    columnDef.cellTemplate += cellTemplate;
+
+                } else {
+                    columnDef = {
+                        name: "act"
+                        , cellEditableCondition: false
+                        //, enableFiltering: false
+                        //, enableHiding: false
+                        //, enableSorting: false
+                        //, enableColumnResizing: false
+                        , width: 50
+                        , headerCellTemplate: "<span></span>"
+                        , cellTemplate: cellTemplate
+                    };
+                    columnDefs.push(columnDef);
+                }
+                
+                return this;
+            }
+
 
             /**
              * @ngdoc method
@@ -451,28 +561,6 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 if (0 <= idx) {
                     that.scope.gridOptions.data.splice(idx, 1);
                 }
-            }
-
-            /**
-             * @ngdoc method
-             * @name addEditButton
-             * @methodOf services:Helper.UiGridService
-             *
-             * @param {Object} columnDefs ui-grid column definition
-             * @param {Function} onClickEdit Callback function to response to button click event
-             *
-             * @description
-             * Create a new column with edit button
-             */
-            , addEditButton: function (columnDefs, onClickEdit) {
-                var columnDef = {
-                    name: "edit",
-                    cellEditableCondition: false,
-                    width: 40,
-                    headerCellTemplate: "<span></span>",
-                    cellTemplate: "<span><i class='fa fa-pencil fa-lg' style='cursor :pointer' ng-click='" + onClickEdit + "'></i></span>"
-                };
-                columnDefs.push(columnDef);
             }
 
             /**

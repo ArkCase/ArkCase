@@ -11,8 +11,9 @@
 <div class="modal-body">
     <form name="notesForm">
         <div>
-            <span translate>common.directive.coreNotes.modal.notes.label</span>
-            <textarea ng-model="note.note" required class="form-control">
+            <label for="notesText_{{::$id}}"><span translate>common.directive.coreNotes.modal.notes.label</span><span
+                    class="required-asterisk">*</span></label>
+            <textarea id="notesText_{{::$id}}" ng-model="note.note" required class="form-control">
 
             </textarea>
         </div>
@@ -22,7 +23,7 @@
     <button class="btn btn-default" ng-click="onClickCancel()">
         <span translate>common.directive.coreNotes.modal.btnCancel.text</span>
     </button>
-    <button class="btn btn-default" ng-click="onClickOk()" ng-disabled="notesForm.$invalid">
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="notesForm.$invalid">
         <span translate>common.directive.coreNotes.modal.btnOk.text</span>
     </button>
 </div>

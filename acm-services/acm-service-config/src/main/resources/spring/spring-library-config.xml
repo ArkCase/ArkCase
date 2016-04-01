@@ -10,7 +10,7 @@
     <bean id="addressTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/addressTypes.json"/>
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/addressTypes.json"/>
             </bean>
         </constructor-arg>
     </bean>
@@ -18,7 +18,7 @@
     <bean id="aliasTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/aliasTypes.json"/>
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/aliasTypes.json"/>
             </bean>
         </constructor-arg>
     </bean>
@@ -26,15 +26,25 @@
     <bean id="contactMethodTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/contactMethodTypes.json"/>
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/contactMethodTypes.json"/>
             </bean>
         </constructor-arg>
     </bean>
 
-    <bean id="correspondenceFormsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+    <bean id="caseCorrespondenceFormsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/correspondenceForms.json"/>
+                <constructor-arg type="java.io.File"
+                                 value="${user.home}/.arkcase/acm/lookups/caseCorrespondenceForms.json"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="complaintCorrespondenceFormsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File"
+                                 value="${user.home}/.arkcase/acm/lookups/complaintCorrespondenceForms.json"/>
             </bean>
         </constructor-arg>
     </bean>
@@ -42,7 +52,7 @@
     <bean id="fileTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/fileTypes.json"/>
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/fileTypes.json"/>
             </bean>
         </constructor-arg>
     </bean>
@@ -50,7 +60,7 @@
     <bean id="objectTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/objectTypes.json"/>
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/objectTypes.json"/>
             </bean>
         </constructor-arg>
     </bean>
@@ -58,7 +68,7 @@
     <bean id="organizationTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/organizationTypes.json"/>
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/organizationTypes.json"/>
             </bean>
         </constructor-arg>
     </bean>
@@ -66,7 +76,7 @@
     <bean id="participantTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/participantTypes.json"/>
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/participantTypes.json"/>
             </bean>
         </constructor-arg>
     </bean>
@@ -74,7 +84,7 @@
     <bean id="personTitlesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/personTitles.json"/>
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/personTitles.json"/>
             </bean>
         </constructor-arg>
     </bean>
@@ -82,7 +92,15 @@
     <bean id="securityTagTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.acm/lookups/securityTagTypes.json"/>
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/securityTagTypes.json"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="securityFieldTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/securityFieldTypes.json"/>
             </bean>
         </constructor-arg>
     </bean>

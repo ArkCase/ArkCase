@@ -10,24 +10,27 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/directives/core-notes/core-notes.client.directive.js directives/core-notes/core-notes.client.directive.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/core-notes/core-notes.client.directive.js directives/core-notes/core-notes.client.directive.js}
  *
  * The "Core-Notes" directive add notes grid functionality
  *
  * @param {Object} config object containing configuration items for current component
- * @param {Object} objectInfo object containing object type and current object id
+ * @param {Object} notesInit object containing object type and current object id
+ * @param {string} notesInit.objectType string for the type of the object
+ * @param {string} notesInit.noteType string for the type of the note object, can be optional
+ * @param {string} notesInit.noteTitle string for the title of notes directive, can be optional
  *
  * @example
  <example>
  <file name="index.html">
- <core-notes config="config" object-info="objectInfo"/>
+ <core-notes config="config" notes-init="notesInit"/>
  </file>
  <file name="app.js">
  angular.module('cases').controller('Cases.NotesController', ['$scope', '$stateParams', 'ConfigService', 'ObjectService'
  , function ($scope, $stateParams, ConfigService, ObjectService) {
 
         ConfigService.getComponentConfig("cases", "notes").then(function (config) {
-            $scope.objectInfo = {
+            $scope.notesInit = {
                 objectType: ObjectService.ObjectTypes.CASE_FILE,
                 currentObjectId: $stateParams.id
             };
@@ -46,7 +49,7 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
         return {
             restrict: 'E',
             scope: {
-                objectInfo: '=',
+                notesInit: '=',
                 config: '='
             },
             link: function (scope, element, attrs) {
@@ -62,9 +65,11 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                 var promiseUsers = gridHelper.getUsers();
 
                 scope.$watchCollection('config', function (config, oldValue) {
+                    if (!scope.notesInit.noteTitle)
+                        scope.notesInit.noteTitle = $translate.instant("common.directive.coreNotes.title");
                     if (config) {
-                        gridHelper.addEditButton(config.columnDefs, "grid.appScope.editRow(row.entity)");
-                        gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
+                        gridHelper.addButton(config, "edit");
+                        gridHelper.addButton(config, "delete");
                         gridHelper.setColumnDefs(config);
                         gridHelper.setBasicOptions(config);
                         gridHelper.disableGridScrolling(config);
@@ -74,8 +79,9 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                 });
 
                 scope.retrieveGridData = function () {
-                    if (Util.goodPositive(scope.objectInfo.currentObjectId, false)) {
-                        var promiseQueryNotes = ObjectNoteService.queryNotes(scope.objectInfo.objectType, scope.objectInfo.currentObjectId);
+                    if (Util.goodPositive(scope.notesInit.currentObjectId, false)) {
+                        var info = scope.notesInit;
+                        var promiseQueryNotes = ObjectNoteService.queryNotes(info.objectType, info.currentObjectId, info.noteType);
                         $q.all([promiseQueryNotes, promiseUsers]).then(function (data) {
                             var notes = data[0];
                             scope.gridOptions.data = notes;
@@ -85,7 +91,8 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                 };
 
                 scope.addNew = function () {
-                    var note = noteHelper.createNote(scope.objectInfo.currentObjectId, scope.objectInfo.objectType, scope.userId);
+                    var info = scope.notesInit;
+                    var note = noteHelper.createNote(info.currentObjectId, info.objectType, scope.userId, info.noteType);
                     showModal(note, false);
                 };
                 scope.editRow = function (rowEntity) {

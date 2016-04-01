@@ -268,7 +268,7 @@ public class AcmBpmnServiceIT
     {
         //in case of failed test or exception, database will rollback, and files and deployments are cleaned manually
         String userHome = System.getProperty("user.home");
-        String processDefinitionsFolder = userHome + "/.acm/activiti/versions";
+        String processDefinitionsFolder = userHome + "/.arkcase/acm/activiti/versions";
         //delete created files
         for (String file : filesToDelete)
         {

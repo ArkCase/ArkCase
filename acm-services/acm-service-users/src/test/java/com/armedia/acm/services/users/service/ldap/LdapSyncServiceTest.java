@@ -1,11 +1,18 @@
 package com.armedia.acm.services.users.service.ldap;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.model.AcmLdapEntity;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,9 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by armdev on 7/3/14.
@@ -43,6 +47,38 @@ public class LdapSyncServiceTest extends EasyMockSupport
     }
 
     @Test
+    public void reverseRoleToGroupMap_multipleGroupsPerRole()
+    {
+        Map<String, String> roleToGroups = new HashMap<>();
+        roleToGroups.put("ROLE ONE", "GROUP A,GROUP B");
+        roleToGroups.put("ROLE TWO", "GROUP B, GROUP C ");
+        roleToGroups.put("ROLE THREE", "GROUP D");
+
+        Map<String, List<String>> groupToRoles = unit.reverseRoleToGroupMap(roleToGroups);
+
+        assertNotNull(groupToRoles.get("GROUP A"));
+        assertNotNull(groupToRoles.get("GROUP B"));
+        assertNotNull(groupToRoles.get("GROUP C"));
+        assertNotNull(groupToRoles.get("GROUP D"));
+
+        assertEquals(1, groupToRoles.get("GROUP A").size());
+        assertEquals(2, groupToRoles.get("GROUP B").size());
+        assertEquals(1, groupToRoles.get("GROUP C").size());
+        assertEquals(1, groupToRoles.get("GROUP D").size());
+
+        assertEquals("ROLE ONE", groupToRoles.get("GROUP A").get(0));
+        assertEquals("ROLE TWO", groupToRoles.get("GROUP C").get(0));
+        assertEquals("ROLE THREE", groupToRoles.get("GROUP D").get(0));
+
+        assertTrue(groupToRoles.get("GROUP B").contains("ROLE ONE"));
+        assertTrue(groupToRoles.get("GROUP B").contains("ROLE TWO"));
+
+        assertFalse(groupToRoles.containsKey("GROUP A,GROUP B"));
+        assertFalse(groupToRoles.containsKey("GROUP B, GROUP C "));
+
+    }
+
+    @Test
     public void queryLdapUsers_applicationRoles_differentCases()
     {
         Map<String, String> rolesToGroupMap = new HashMap<>();
@@ -59,11 +95,11 @@ public class LdapSyncServiceTest extends EasyMockSupport
         List<AcmUser> users = new ArrayList<>();
         Map<String, List<AcmUser>> usersByApplicationRole = new HashMap<>();
         Map<String, List<AcmUser>> usersByLdapGroup = new HashMap<>();
-        Map<String, String> childParentPairs = new HashMap<String, String>();
+        Map<String, String> childParentPairs = new HashMap<>();
 
         String userDnOne = "dn1";
         String userDnTwo = "dn2";
-        String[] memberDns = {userDnOne, userDnTwo};
+        String[] memberDns = { userDnOne, userDnTwo };
         LdapGroup group = new LdapGroup();
         group.setGroupName(groupOne.toLowerCase());
         group.setMemberDistinguishedNames(memberDns);
@@ -77,6 +113,8 @@ public class LdapSyncServiceTest extends EasyMockSupport
         userTwo.setDistinguishedName(userDnTwo);
 
         List<AcmLdapEntity> entities = Arrays.asList(userOne, userTwo);
+
+        unit.setLdapSyncConfig(new AcmLdapSyncConfig());
 
         expect(mockLdapDao.buildLdapTemplate(config)).andReturn(mockLdapTemplate);
         expect(mockLdapDao.findGroups(mockLdapTemplate, config)).andReturn(groups);
@@ -108,11 +146,11 @@ public class LdapSyncServiceTest extends EasyMockSupport
         List<AcmUser> users = new ArrayList<>();
         Map<String, List<AcmUser>> usersByApplicationRole = new HashMap<>();
         Map<String, List<AcmUser>> usersByLdapGroup = new HashMap<>();
-        Map<String, String> childParentPairs = new HashMap<String, String>();
+        Map<String, String> childParentPairs = new HashMap<>();
 
         String userDistinguishedName = "dn1";
         String groupDistinguishedName = "dn2";
-        String[] memberDns = {userDistinguishedName, groupDistinguishedName};
+        String[] memberDns = { userDistinguishedName, groupDistinguishedName };
         LdapGroup group = new LdapGroup();
         group.setGroupName(groupName);
         group.setMemberDistinguishedNames(memberDns);
@@ -127,6 +165,8 @@ public class LdapSyncServiceTest extends EasyMockSupport
         role.setDistinguishedName(groupDistinguishedName);
 
         List<AcmLdapEntity> entities = Arrays.asList(user, role);
+
+        unit.setLdapSyncConfig(new AcmLdapSyncConfig());
 
         expect(mockLdapDao.buildLdapTemplate(config)).andReturn(mockLdapTemplate);
         expect(mockLdapDao.findGroups(mockLdapTemplate, config)).andReturn(groups);
@@ -166,7 +206,6 @@ public class LdapSyncServiceTest extends EasyMockSupport
 
         assertEquals(1, usersByApplicationRole.size());
         assertEquals(1, usersByLdapGroup.size());
-
 
     }
 }

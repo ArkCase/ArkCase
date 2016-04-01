@@ -6,11 +6,11 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/object/object-note.client.service.js services/object/object-note.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-note.client.service.js services/object/object-note.client.service.js}
 
  * Object.NoteService includes group of REST calls related to note.
  */
-angular.module('services').factory('Object.NoteService', ['$resource', 'StoreService', 'UtilService', '$translate',
+angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.StoreService', 'UtilService', '$translate',
     function ($resource, Store, Util, $translate) {
         var Service = $resource('api/latest/plugin', {}, {
             /**
@@ -127,15 +127,17 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'StoreSer
          *
          * @returns {Object} Promise
          */
-        Service.queryNotes = function (objectType, objectId) {
+        Service.queryNotes = function (objectType, objectId, noteType) {
+            noteType = noteType || "GENERAL";
             var cacheNotes = new Store.CacheFifo(Service.CacheNames.NOTES);
-            var cacheKey = objectType + "." + objectId;
+            var cacheKey = objectType + "." + objectId + "." + noteType;
             var notes = cacheNotes.get(cacheKey);
             return Util.serviceCall({
-                service: Service._queryNotes
+                service: Service._queryNotesByType
                 , param: {
                     parentType: objectType
                     , parentId: objectId
+                    , noteType: noteType
                 }
                 , result: notes
                 , onSuccess: function (data) {
@@ -172,15 +174,24 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'StoreSer
                 , onSuccess: function (data) {
                     if (Service.validateNote(data)) {
                         var noteInfo = data;
-                        var cacheKey = Util.goodValue(noteInfo.parentType) + "." + Util.goodValue(noteInfo.parentId, 0);
+                        var cacheKey = Util.goodValue(noteInfo.parentType) + "." + Util.goodValue(noteInfo.parentId, 0) + "." + Util.goodValue(noteInfo.type, "GENERAL");
                         var cacheNotes = new Store.CacheFifo(Service.CacheNames.NOTES);
-                        //remove it from cache so next query will go for data in backend
-                        cacheNotes.remove(cacheKey);
-                        return noteInfo;
+                        var notes = cacheNotes.get(cacheKey);
+                        //update noteInfo into notes
+                        var index = _.findIndex(notes, function (note) {
+                            return Util.compare(note.id, noteInfo.id);
+                        });
+                        if (index < 0)
+                            notes.push(noteInfo);
+                        else
+                            notes[index] = noteInfo;
+                        cacheNotes.put(cacheKey, notes);
+                        return notes;
                     }
                 }
             });
         };
+
 
         /**
          * @ngdoc method
@@ -280,62 +291,6 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'StoreSer
             }
             return true;
         };
-
-        /**
-         * @ngdoc method
-         * @name queryRejectComments
-         * @methodOf services:Object.NoteService
-         *
-         * @description
-         * Query list of notes of an object
-         *
-         * @param {String} objectType  Object type
-         * @param {Number} objectId  Object ID
-         *
-         * @returns {Object} Promise
-         */
-        Service.queryRejectComments = function (objectType, objectId) {
-            var noteType = "REJECT_COMMENT";
-            var cacheNotes = new Store.CacheFifo(this.CacheNames.NOTES);
-            var cacheKey = objectType + "." + objectId + "." + noteType;
-            var notes = cacheNotes.get(cacheKey);
-            return Util.serviceCall({
-                service: Service._queryNotesByType
-                , param: {
-                    parentType: objectType
-                    , parentId: objectId
-                    , noteType: noteType
-                }
-                , result: notes
-                , onSuccess: function (data) {
-                    if (Service.validateRejectComments(data)) {
-                        notes = data;
-                        cacheNotes.put(cacheKey, notes);
-                        return notes;
-                    }
-                }
-            });
-        };
-
-        /**
-         * @ngdoc method
-         * @name validateRejectComments
-         * @methodOf services:Object.NoteService
-         *
-         * @description
-         * Validate reject comments (notes)
-         *
-         * @param {Object} data  Data to be validated
-         *
-         * @returns {Boolean} Return true if data is valid
-         */
-        Service.validateRejectComments = function (data) {
-            if (!Util.isArray(data)) {
-                return false;
-            }
-            return true;
-        };
-
 
         return Service;
     }

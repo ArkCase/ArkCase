@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.armedia.acm.plugins.ecm.model.EcmFileEmailedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +60,7 @@ import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
+import org.springframework.security.core.Authentication;
 
 /**
  * Created by armdev on 4/20/15.
@@ -281,7 +283,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     }
 
-    @Override public void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user) throws Exception
+    @Override public void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user, Authentication authentication) throws Exception
     {
 
         if (getSendFromSystemUser())
@@ -289,28 +291,49 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             user = new AcmOutlookUser(getSystemUserId(), getSystemUserEmail(), getSystemUserPass());
         }
 
+        sendEmail(emailWithAttachmentsDTO, user, authentication);
+    }
+
+    @Override
+    public void sendEmail(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user, Authentication authentication) throws Exception
+    {
         ExchangeService service = connect(user);
         EmailMessage emailMessage = new EmailMessage(service);
         emailMessage.setSubject(emailWithAttachmentsDTO.getSubject());
         emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getHeader() + "\r\r" + emailWithAttachmentsDTO.getBody() + "\r\r\r" + emailWithAttachmentsDTO.getFooter()));
         emailMessage.getBody().setBodyType(BodyType.Text);
-        for (String emailAddress : emailWithAttachmentsDTO.getEmailAddresses())
+
+        if (emailWithAttachmentsDTO.getEmailAddresses() != null && !emailWithAttachmentsDTO.getEmailAddresses().isEmpty())
         {
-            emailMessage.getToRecipients().add(emailAddress);
+            for (String emailAddress : emailWithAttachmentsDTO.getEmailAddresses())
+            {
+                emailMessage.getToRecipients().add(emailAddress);
+            }
         }
 
-        for (Long attachmentId : emailWithAttachmentsDTO.getAttachmentIds())
+        List<EcmFile> attachedFiles = new ArrayList<>();
+        if (emailWithAttachmentsDTO.getAttachmentIds() != null && !emailWithAttachmentsDTO.getAttachmentIds().isEmpty())
         {
-            InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
-            EcmFile ecmFile = getEcmFileService().findById(attachmentId);
-            emailMessage.getAttachments().addFileAttachment(ecmFile.getFileName(), contents);
+            for (Long attachmentId : emailWithAttachmentsDTO.getAttachmentIds())
+            {
+                InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
+                EcmFile ecmFile = getEcmFileService().findById(attachmentId);
+                emailMessage.getAttachments().addFileAttachment(ecmFile.getFileName(), contents);
+                attachedFiles.add(ecmFile);
+            }
         }
+
         emailMessage.sendAndSaveCopy();
 
         // use the first method if you don't require a copy
         // use the second if a copy of the sent email is needed
         // emailMessage.send();
         // emailMessage.sendAndSaveCopy();
+
+        // Fires an audit event for each successfully emailed file
+        for (EcmFile emailedFile : attachedFiles) {
+            outlookEventPublisher.publishFileEmailedEvent(emailedFile, authentication);
+        }
     }
 
     @Override public OutlookResults<OutlookContactItem> findContactItems(AcmOutlookUser user, int start, int maxItems, String sortField, boolean sortAscending, SearchFilter filter)

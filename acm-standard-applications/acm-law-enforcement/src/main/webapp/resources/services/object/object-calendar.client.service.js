@@ -6,11 +6,11 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/object/object-calendar.client.service.js services/object/object-calendar.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-calendar.client.service.js services/object/object-calendar.client.service.js}
 
  * Object.CalendarService includes group of REST calls to retrieve and save Calendar info;
  */
-angular.module('services').factory('Object.CalendarService', ['$resource', 'UtilService', 'StoreService',
+angular.module('services').factory('Object.CalendarService', ['$resource', 'UtilService', 'Acm.StoreService',
     function ($resource, Util, Store) {
         var Service = this;
         Service.SessionCacheNames = {};

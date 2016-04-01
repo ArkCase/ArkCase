@@ -6,11 +6,11 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/blob/develop/acm-user-interface/ark-web/src/main/webapp/resources/services/config/modules-config.client.service.js services/config/modules-config.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/config/modules-config.client.service.js services/config/modules-config.client.service.js}
 
  * ConfigService contains wrapper functions of ConfigService to support default error handling, data validation and data cache.
  */
-angular.module('services').factory('ConfigService', ['$resource', 'StoreService', 'UtilService',
+angular.module('services').factory('ConfigService', ['$resource', 'Acm.StoreService', 'UtilService',
     function ($resource, Store, Util) {
         var Service = $resource('api/config/', {}, {
             getModule: {

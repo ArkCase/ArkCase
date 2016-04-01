@@ -12,29 +12,30 @@
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
         <property name="locations">
             <list>
-                <value>file:${user.home}/.acm/acmEmailReceiver.properties</value>
-                <value>file:${user.home}/.acm/acm-forms.properties</value>
-                <value>file:${user.home}/.acm/acm-reports.properties</value>
-                <value>file:${user.home}/.acm/adminPlugin.properties</value>
-                <value>file:${user.home}/.acm/applicationRoleToUserGroup.properties</value>
-                <value>file:${user.home}/.acm/auditPlugin.properties</value>
-                <value>file:${user.home}/.acm/capture.properties</value>
-                <value>file:${user.home}/.acm/caseFilePlugin.properties</value>
-                <value>file:${user.home}/.acm/cmis.properties</value>
-                <value>file:${user.home}/.acm/complaintPlugin.properties</value>
-                <value>file:${user.home}/.acm/correspondencePlugin.properties</value>
-                <value>file:${user.home}/.acm/dashboardPlugin.properties</value>
-                <value>file:${user.home}/.acm/dataAccessControl.properties</value>
-                <value>file:${user.home}/.acm/datasource.properties</value>
-                <value>file:${user.home}/.acm/lawEnforcementApp.properties</value>
-                <value>file:${user.home}/.acm/msOutlookIntegration.properties</value>
-                <value>file:${user.home}/.acm/msOutlookPlugin.properties</value>
-                <value>file:${user.home}/.acm/notification.properties</value>
-                <value>file:${user.home}/.acm/profilePlugin.properties</value>
-                <value>file:${user.home}/.acm/solr.properties</value>
-                <value>file:${user.home}/.acm/subscriptionPlugin.properties</value>
-                <value>file:${user.home}/.acm/taskPlugin.properties</value>
-                <value>file:${user.home}/.acm/activiti.properties</value>
+                <value>file:${user.home}/.arkcase/acm/acmEmailReceiver.properties</value>
+                <value>file:${user.home}/.arkcase/acm/acm-forms.properties</value>
+                <value>file:${user.home}/.arkcase/acm/acm-reports.properties</value>
+                <value>file:${user.home}/.arkcase/acm/adminPlugin.properties</value>
+                <value>file:${user.home}/.arkcase/acm/applicationRoleToUserGroup.properties</value>
+                <value>file:${user.home}/.arkcase/acm/auditPlugin.properties</value>
+                <value>file:${user.home}/.arkcase/acm/capture.properties</value>
+                <value>file:${user.home}/.arkcase/acm/caseFilePlugin.properties</value>
+                <value>file:${user.home}/.arkcase/acm/cmis.properties</value>
+                <value>file:${user.home}/.arkcase/acm/complaintPlugin.properties</value>
+                <value>file:${user.home}/.arkcase/acm/correspondencePlugin.properties</value>
+                <value>file:${user.home}/.arkcase/acm/dashboardPlugin.properties</value>
+                <value>file:${user.home}/.arkcase/acm/dataAccessControl.properties</value>
+                <value>file:${user.home}/.arkcase/acm/datasource.properties</value>
+                <value>file:${user.home}/.arkcase/acm/lawEnforcementApp.properties</value>
+                <value>file:${user.home}/.arkcase/acm/msOutlookIntegration.properties</value>
+                <value>file:${user.home}/.arkcase/acm/msOutlookPlugin.properties</value>
+                <value>file:${user.home}/.arkcase/acm/notification.properties</value>
+                <value>file:${user.home}/.arkcase/acm/profilePlugin.properties</value>
+                <value>file:${user.home}/.arkcase/acm/solr.properties</value>
+                <value>file:${user.home}/.arkcase/acm/subscriptionPlugin.properties</value>
+                <value>file:${user.home}/.arkcase/acm/taskPlugin.properties</value>
+                <value>file:${user.home}/.arkcase/acm/activiti.properties</value>
+                <value>file:${user.home}/.arkcase/acm/sso/spring-config-armedia-sso.properties</value>
             </list>
         </property>
     </bean>
