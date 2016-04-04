@@ -76,11 +76,12 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
         };
 
         //reset all values to default for selected module from dropdown
-        $scope.resetCurrentModuleResources = function () {
+        $scope.resetCurrentModuleResources = function (useBaseLang) {
             $scope.disabledInputs = true;
             LabelsConfigService.resetResource({
                 lng: [$scope.selectedLanguage],
-                ns: [$scope.selectedNamespace.id]
+                ns: [$scope.selectedNamespace.id],
+                useBaseLang: useBaseLang
             }, function () {
                 reloadGrid();
             }, function () {
@@ -89,12 +90,13 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
         };
 
         //reset all values to default for all modules
-        $scope.resetAllResources = function () {
+        $scope.resetAllResources = function (useBaseLang) {
             var allNamespaces = _.pluck($scope.namespacesDropdownOptions, 'id');
             $scope.disabledInputs = true;
             LabelsConfigService.resetResource({
                 lng: [$scope.selectedLanguage],
-                ns: allNamespaces
+                ns: allNamespaces,
+                useBaseLang: useBaseLang
             }, function () {
                 reloadGrid();
             }, function () {
@@ -107,7 +109,8 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             $scope.disabledInputs = true;
             LabelsConfigService.refreshResource({
                 lng: [$scope.selectedLanguage],
-                ns: allNamespaces
+                ns: allNamespaces,
+                useBaseLang: useBaseLang
             }, function () {
                 reloadGrid();
             }, function () {

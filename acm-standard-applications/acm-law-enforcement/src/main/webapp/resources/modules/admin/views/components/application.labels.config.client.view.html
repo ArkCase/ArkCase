@@ -36,7 +36,8 @@
                         </li>
                     </ul>
 
-                    <form class="navbar-form navbar-right">
+                    <form class="navbar-form navbar-right ">
+                        <!-- Refresh resources button -->
                         <button class="btn btn-sm btn-info"
                                 ng-click="refreshAllResources()"
                                 ng-disabled="disabledInputs"
@@ -44,22 +45,52 @@
                             <i class="fa fa-refresh"></i>
                             <span translate>admin.application.labels.config.refreshAll</span>
                         </button>
-                        <button class="btn btn-sm btn-danger"
-                                ng-disabled="disabledInputs"
-                                ng-bootbox-confirm="{{'admin.application.labels.config.resetModule.confirm' | translate}}"
-                                ng-bootbox-confirm-action="resetCurrentModuleResources()"
-                                title="{{'admin.application.labels.config.resetModule.title' | translate}}">
-                            <i class="fa fa-trash-o"></i>
-                            <span translate>admin.application.labels.config.resetModule</span>
-                        </button>
-                        <button class="btn btn-sm btn-danger"
-                                ng-disabled="disabledInputs"
-                                ng-bootbox-confirm="{{'admin.application.labels.config.resetAll.confirm' | translate}}"
-                                ng-bootbox-confirm-action="resetAllResources()"
-                                title="{{'admin.application.labels.config.resetAll.title' | translate}}">
-                            <i class="fa fa-trash-o"></i>
-                            <span translate>admin.application.labels.config.resetAll</span>
-                        </button>
+
+                        <!-- Current module reset button -->
+                        <div class="btn-group btn-group-sm" dropdown>
+                            <button type="button"
+                                    ng-bootbox-confirm-action="resetCurrentModuleResources(false)"
+                                    ng-bootbox-confirm="{{'admin.application.labels.config.resetModule.confirm' | translate}}"
+                                    class="btn btn-danger">
+                                <i class="fa fa-trash-o"></i>
+                                <span translate>admin.application.labels.config.resetModule</span>
+                            </button>
+                            <button type="button" class="btn btn-danger dropdown-toggle" dropdown-toggle>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a
+                                            ng-bootbox-confirm-action="resetCurrentModuleResources(true)"
+                                            ng-bootbox-confirm="{{'admin.application.labels.config.resetModule.confirm' | translate}}">
+                                        <span translate>admin.application.labels.config.useBaseLanguage</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- All modules reset button -->
+                        <div class="btn-group btn-group-sm" dropdown>
+                            <button type="button"
+                                    ng-bootbox-confirm-action="resetAllResources(false)"
+                                    ng-bootbox-confirm="{{'admin.application.labels.config.resetAll.confirm' | translate}}"
+                                    class="btn btn-danger">
+                                <i class="fa fa-trash-o"></i>
+                                <span translate>admin.application.labels.config.resetAll</span>
+                            </button>
+                            <button type="button" class="btn btn-danger dropdown-toggle" dropdown-toggle>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a
+                                            ng-bootbox-confirm-action="resetAllResources(true)"
+                                            ng-bootbox-confirm="{{'admin.application.labels.config.resetAll.confirm' | translate}}">
+                                        <span translate>admin.application.labels.config.useBaseLanguage</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </form>
                 </div>
             </div>

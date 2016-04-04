@@ -454,9 +454,14 @@ span.fancytree-title {
 }
 
 
-
+/* FIX: THis is bad style. It breaks vertical alignment for all btn-group elements. */
 .module-content .content-body .well-sm .btn-group {
     padding-top: 10px;
+}
+
+/* This style fixes incorrect vertical alignment for btn-group  elements located int navbar */
+.module-content .content-body .well-sm .navbar .btn-group {
+    padding-top: 0px;
 }
 
 /* Right Sidebar */
