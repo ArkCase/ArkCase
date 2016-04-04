@@ -37,7 +37,8 @@
           {
             "title": "New Folder <kbd>Ctrl+N</kbd>",
             "cmd": "newFolder",
-            "uiIcon": "ui-icon-plus"
+            "uiIcon": "ui-icon-plus",
+            "disabledExpression": "DocTree.objectInfo.completed"
           }
         , {
             "title": "New Document",
