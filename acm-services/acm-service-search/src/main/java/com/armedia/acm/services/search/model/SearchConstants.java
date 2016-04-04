@@ -93,4 +93,7 @@ public interface SearchConstants
 
     String FACETED_SEARCH_ENCODING = "UTF-8";
 
+    String EXPORT_FIELDS = "export.fields";
+
+    String SEPARATOR_COMMA = ",";
 }
