@@ -144,7 +144,7 @@ public class LabelManagementService
         }
 
         // 2. Load custom resource file
-        JSONObject customResource = normalizeResource(loadCustomResource(moduleId, lang));
+        JSONObject customResource = loadCustomResource(moduleId, lang);
 
         // 3. Merge Module's and custom resources
         JSONObject adminResource = mergeAdminResouces(moduleResource, customResource);
@@ -196,15 +196,16 @@ public class LabelManagementService
      *
      * @param modules
      * @param langs
+     * @param useBaseLang
      * @throws AcmLabelManagementException
      */
-    public void reset(List<String> modules, List<String> langs) throws AcmLabelManagementException
+    public void reset(List<String> modules, List<String> langs, boolean useBaseLang) throws AcmLabelManagementException
     {
         for (String lang : langs)
         {
             for (String module : modules)
             {
-                resetModule(module, lang);
+                resetModule(module, lang, useBaseLang);
             }
         }
     }
@@ -232,15 +233,16 @@ public class LabelManagementService
      *
      * @param moduleId
      * @param lang
+     * @param useBaseLang
      */
-    public void resetModule(String moduleId, String lang) throws AcmLabelManagementException
+    public void resetModule(String moduleId, String lang, boolean useBaseLang) throws AcmLabelManagementException
     {
         String fileName = String.format(customResourcesLocation + customResourceFile, moduleId, lang);
         try
         {
             File resourceFile = new File(fileName);
             FileUtils.deleteQuietly(resourceFile);
-            updateResource(moduleId, lang);
+            updateResource(moduleId, lang, useBaseLang);
         } catch (Exception e)
         {
             String msg = String.format("Can't reset resource file %s", fileName);
@@ -248,6 +250,7 @@ public class LabelManagementService
             throw new AcmLabelManagementException(msg);
         }
     }
+
 
     /**
      * Update resource file
@@ -259,8 +262,24 @@ public class LabelManagementService
      */
     public JSONObject updateResource(String moduleId, String lang) throws AcmLabelManagementException
     {
+        return updateResource(moduleId, lang, false);
+    }
+
+    /**
+     * Update resource file
+     *
+     * @param moduleId
+     * @param lang
+     * @return
+     * @throws AcmLabelManagementException
+     */
+    public JSONObject updateResource(String moduleId, String lang, boolean useBaseLang) throws AcmLabelManagementException
+    {
         // 1. Load module's resource file
-        JSONObject moduleResource = normalizeResource(loadModuleResource(moduleId, lang));
+
+        JSONObject rawModuleResource = loadModuleResource(moduleId, lang);
+        boolean moduleResourceAbsent = (rawModuleResource == null);
+        JSONObject moduleResource = moduleResource = normalizeResource(rawModuleResource);
 
         // If module is core, them inject information about menus that are stored in configuration file
         if (MODULE_CORE_ID.equals(moduleId))
@@ -271,9 +290,22 @@ public class LabelManagementService
         }
 
         // 2. Load custom resource file
-        JSONObject customResource = normalizeResource(loadCustomResource(moduleId, lang));
+        JSONObject customResource = null;
+        if (moduleResourceAbsent && useBaseLang)
+        {
+            // If module resource is absent and useBaseLang option = true, then load base language module resource and
+            // save it as custom resource
+            JSONObject baseModuleResource = normalizeResource(loadModuleResource(moduleId, baseLanguage));
+            moduleResource = baseModuleResource;
+            customResource = saveAsCustomResource(moduleId, lang, baseModuleResource);
+        } else
+        {
+            customResource = loadCustomResource(moduleId, lang);
+        }
+
 
         // 3. Merge Module's and custom resources
+        //JSONObject resource = mergeResources(moduleResource, customResource);
         JSONObject resource = extendResources(moduleResource, customResource);
 
         // 4. Save updated resource
@@ -331,6 +363,43 @@ public class LabelManagementService
                 log.error(msg);
                 throw new AcmLabelManagementException(msg);
             }
+        }
+    }
+
+    /**
+     * Save regular resource as cusotm resource. It extends values by adding new properties: id,  description, value
+     *
+     * @param moduleId
+     * @param lang
+     * @param resource
+     * @return
+     * @throws AcmLabelManagementException
+     */
+    private JSONObject saveAsCustomResource(String moduleId, String lang, JSONObject resource) throws AcmLabelManagementException
+    {
+        String fileName = String.format(customResourcesLocation + customResourceFile, moduleId, lang);
+        try
+        {
+            JSONObject customRes = new JSONObject();
+            Iterator<String> keys = resource.keys();
+            while (keys.hasNext())
+            {
+                String key = keys.next();
+                String value = resource.getString(key);
+                JSONObject customValue = new JSONObject();
+                customValue.put("id", key);
+                customValue.put("value", value);
+                customValue.put("description", "");
+                customRes.put(key, customValue);
+            }
+            File file = new File(fileName);
+            FileUtils.writeStringToFile(file, customRes.toString(4));
+            return customRes;
+        } catch (Exception e)
+        {
+            String msg = String.format("Can't save resource as custom resource into the file  %s", fileName);
+            log.error(msg);
+            throw new AcmLabelManagementException(msg);
         }
     }
 
@@ -397,7 +466,7 @@ public class LabelManagementService
     }
 
     /**
-     * Extend normalized module and custom resources to produce new resource
+     * Extend normalized module and original custom resources to produce new resource
      *
      * @param moduleRes
      * @param customRes
@@ -414,12 +483,26 @@ public class LabelManagementService
                 String key = keys.next();
                 String value = moduleRes.getString(key);
 
-                if (customRes != null)
-                {
-                    value = customRes.has(key + ".value") ? (String) customRes.get(key + ".value") : value;
-                }
+//                if (customRes != null)
+//                {
+//                    value = customRes.has(key + ".value") ? (String) customRes.get(key + ".value") : value;
+//                }
 
                 res.put(key, value);
+            }
+        }
+
+        if (customRes != null)
+        {
+            Iterator<String> keys = customRes.keys();
+            while (keys.hasNext())
+            {
+                String key = keys.next();
+                JSONObject customNode = customRes.getJSONObject(key);
+                if (customNode.has("value")) {
+                    String value = customNode.getString("value");
+                    res.put(key, value);
+                }
             }
         }
 
@@ -459,7 +542,7 @@ public class LabelManagementService
     }
 
     /**
-     * Merge normalized module and custom resources to produce admin resource
+     * Merge normalized module and original (not normalized) custom resources to produce admin resource
      *
      * @param moduleRes
      * @param customRes
@@ -478,10 +561,11 @@ public class LabelManagementService
                 String defaultValue = value;
                 String description = "";
 
-                if (customRes != null)
+                if (customRes != null && customRes.has(key))
                 {
-                    value = customRes.has(key + ".value") ? (String) customRes.get(key + ".value") : value;
-                    description = customRes.has(key + ".value") ? (String) customRes.get(key + ".description") : "";
+                    JSONObject customNode = customRes.getJSONObject(key);
+                    value = customNode.has("value") ? customNode.getString("value") : value;
+                    description = customNode.has("value") ? (String) customNode.get(key + "description") : "";
                 }
 
                 JSONObject node = new JSONObject();
@@ -490,6 +574,35 @@ public class LabelManagementService
                 node.put("defaultValue", defaultValue);
 
                 adminRes.put(key, node);
+            }
+        }
+
+        if (customRes != null)
+        {
+            Iterator<String> keys = customRes.keys();
+            while (keys.hasNext())
+            {
+                String key = (String) keys.next();
+
+                if (customRes.has(key))
+                {
+                    JSONObject customNode = customRes.getJSONObject(key);
+                    String value = customNode.has("value") ? customNode.getString("value") : null;
+                    String description = customNode.has("description") ? customNode.getString("description") : null;
+
+                    String defaultValue = null;
+                    if (adminRes.has(key))
+                    {
+                        JSONObject node = adminRes.getJSONObject(key);
+                        defaultValue = node.has("defaultValue") ? node.getString("defaultValue") : null;
+                    }
+
+                    JSONObject newNode = new JSONObject();
+                    newNode.put("value", value);
+                    newNode.put("description", description);
+                    newNode.put("defaultValue", defaultValue);
+                    adminRes.put(key, newNode);
+                }
             }
         }
 
