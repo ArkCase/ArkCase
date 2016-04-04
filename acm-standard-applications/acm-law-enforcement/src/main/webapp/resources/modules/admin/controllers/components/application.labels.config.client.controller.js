@@ -109,8 +109,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             $scope.disabledInputs = true;
             LabelsConfigService.refreshResource({
                 lng: [$scope.selectedLanguage],
-                ns: allNamespaces,
-                useBaseLang: useBaseLang
+                ns: allNamespaces
             }, function () {
                 reloadGrid();
             }, function () {
