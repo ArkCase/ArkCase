@@ -20,6 +20,7 @@ public class LabelManagementService
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private List<String> languages;
+    private String baseLanguage;
     private String customResourcesLocation;
     private String customResourceFile;
     private String modulesLocation;
@@ -28,7 +29,6 @@ public class LabelManagementService
     private String resourcesLocation;
     private String resourceFile;
     private String settingsFileLocation;
-
 
     private final String MODULE_CORE_ID = "core";
 
@@ -53,10 +53,26 @@ public class LabelManagementService
      *
      * @return
      */
-    public List<String> getLanguages()
+    public List<String> getLanguages() throws AcmLabelManagementException
     {
-        // Languages list is stored in XML configuration
-        return languages;
+        List<String> langs = new ArrayList();
+        JSONObject setitngs = getSettings(true);
+        JSONArray jsonLangs = setitngs.getJSONArray("languages");
+        if (jsonLangs != null)
+        {
+            for (int i = 0; i < jsonLangs.length(); i++)
+            {
+                langs.add(jsonLangs.getString(i));
+            }
+        }
+
+        // If JSON setting file doesn't contain information about available languages, then usxe XML data
+        if (langs.isEmpty())
+        {
+            langs = languages;
+        }
+
+        return langs;
     }
 
     /**
@@ -170,6 +186,7 @@ public class LabelManagementService
 
         // Get information about languages
         // Set first language in the list as default language
+        defaultSettings.put("languages", languages);
         defaultSettings.put("defaultLang", languages.get(0));
         return defaultSettings;
     }
@@ -211,7 +228,7 @@ public class LabelManagementService
     }
 
     /**
-     * Remove module's custom resource
+     * Remove module's custom resource and update it.
      *
      * @param moduleId
      * @param lang
@@ -526,7 +543,6 @@ public class LabelManagementService
             log.warn(String.format("Can't read resource file %s", fileName));
             return null;
         }
-
     }
 
     /**
@@ -569,6 +585,11 @@ public class LabelManagementService
     public void setLanguages(List<String> languages)
     {
         this.languages = languages;
+    }
+
+    public void setBaseLanguage(String baseLanguage)
+    {
+        this.baseLanguage = baseLanguage;
     }
 
     public void setCustomResourcesLocation(String customResourcesLocation)
