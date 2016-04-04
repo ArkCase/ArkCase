@@ -123,7 +123,7 @@
                             "name": "modified",
                             "displayName": "timeTracking.comp.details.table.columns.modified",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.modified | date : 'dd/MM/yyyy'}}</div>"
+                            "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
                         },
                         {
                             "name": "modifier",
