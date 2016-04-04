@@ -1259,10 +1259,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                         if ("invisible" == allow) {
                             item.invisible = true;
-                        }  else if ("disable" == allow) {
+                        } else if ("disable" == allow) {
                             item.disabled = true;
                         } else {
-                            item.disabled = false;
+                            if (item.disabledExpression) {
+                                item.disabled = eval(item.disabledExpression);
+                            } else {
+                                item.disabled = false;
+                            }
                         }
                     });
                     menu = _.filter(menu, function(item) {
