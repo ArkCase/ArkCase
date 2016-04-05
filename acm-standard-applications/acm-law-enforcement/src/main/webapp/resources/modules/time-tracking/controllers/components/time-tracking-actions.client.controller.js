@@ -22,7 +22,7 @@ angular.module('time-tracking').controller('TimeTracking.ActionsController', ['$
         };
 
         $scope.edit = function (timesheetInfo) {
-            var frevvoDateFormat = Util.goodValue($scope.config.frevvoDateFormat, $translate.instant("common.frevvo.defaultDateFormat"));
+            var frevvoDateFormat = $translate.instant("common.frevvo.defaultDateFormat");
             var starDate = moment(timesheetInfo.startDate).format(frevvoDateFormat);
             $state.go("frevvo", {
                 name: "edit-timesheet",

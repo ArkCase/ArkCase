@@ -2,9 +2,9 @@
 
 angular.module('document-details').controller('DocumentDetailsController', ['$scope', '$stateParams', '$sce', '$log', '$q'
     , '$timeout', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService'
-    , 'Object.ModelService', 'Case.InfoService', 'Util.DateService',
+    , 'Object.ModelService', 'Case.InfoService',
     function ($scope, $stateParams, $sce, $log, $q, $timeout
-        , TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, UtilDateService) {
+        , TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService) {
 
         $scope.acmTicket = '';
         $scope.userId = '';
@@ -15,7 +15,6 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
         $scope.ecmFileParticipants = [];
         $scope.userList = [];
         $scope.caseInfo = {};
-        $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
 
 
         /**
