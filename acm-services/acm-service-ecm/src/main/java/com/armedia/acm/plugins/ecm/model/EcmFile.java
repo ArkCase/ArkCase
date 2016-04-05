@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -14,8 +15,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -107,9 +110,14 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
 
     @Column(name = "cm_security_field")
     private String securityField;
-    
-    @Column(name = "cm_file_locked")
-    private String locked;
+
+    @Column(name = "cm_object_type", insertable = true, updatable = false)
+    private String objectType = OBJECT_TYPE;
+
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumns({@JoinColumn(name = "cm_file_id", referencedColumnName = "cm_object_id", updatable = false, insertable = false),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", updatable = false, insertable = false)})
+    private AcmObjectLock lock;
 
     @PrePersist
     protected void beforeInsert()
@@ -357,11 +365,18 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
         return ToStringBuilder.reflectionToString(this);
     }
 
-    public String getLocked() {
-        return locked;
+    public void setObjectType(String objectType)
+    {
+        this.objectType = objectType;
     }
 
-    public void setLocked(String locked) {
-        this.locked = locked;
+    public AcmObjectLock getLock()
+    {
+        return lock;
+    }
+
+    public void setLock(AcmObjectLock lock)
+    {
+        this.lock = lock;
     }
 }

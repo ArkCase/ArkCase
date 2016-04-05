@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.ecm.model;
 
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +28,7 @@ public class AcmCmisObject implements Serializable
     private String mimeType;
     private String status;
     private Integer pageCount;
-    private Boolean locked;
+    private AcmObjectLock lock;
 
     public Long getObjectId()
     {
@@ -178,11 +180,13 @@ public class AcmCmisObject implements Serializable
         this.pageCount = pageCount;
     }
 
-    public Boolean getLocked() {
-        return locked;
+    public AcmObjectLock getLock()
+    {
+        return lock;
     }
 
-    public void setLocked(Boolean locked) {
-        this.locked = locked;
+    public void setLock(AcmObjectLock lock)
+    {
+        this.lock = lock;
     }
 }

@@ -172,7 +172,18 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         additionalProperties.put("page_count_i", in.getPageCount());
 
-        additionalProperties.put("locked_b", Boolean.valueOf(in.getLocked()));
+        if (in.getLock() != null)
+        {
+            additionalProperties.put("lock_id_s", in.getLock().getId());
+            additionalProperties.put("lock_creator_s", in.getLock().getCreator());
+            additionalProperties.put("lock_created_tdt", in.getLock().getCreated());
+        }
+        else
+        {
+            additionalProperties.put("lock_id_s", null);
+            additionalProperties.put("lock_creator_s", null);
+            additionalProperties.put("lock_created_tdt", null);
+        }
     }
 
     @Override

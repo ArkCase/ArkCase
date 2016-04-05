@@ -3,25 +3,31 @@ package com.armedia.acm.service.objectlock.service;
 import com.armedia.acm.service.objectlock.dao.AcmObjectLockDao;
 import com.armedia.acm.service.objectlock.exception.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.service.objectlock.model.AcmObjectLockEvent;
+import com.armedia.acm.service.objectlock.model.AcmObjectUnlockEvent;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by nebojsha on 25.08.2015.
  */
-public class AcmObjectLockServiceImpl implements AcmObjectLockService
+public class AcmObjectLockServiceImpl implements AcmObjectLockService, ApplicationEventPublisherAware
 {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private AcmObjectLockDao acmObjectLockDao;
     private ExecuteSolrQuery executeSolrQuery;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     @Transactional
@@ -43,7 +49,13 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService
         AcmObjectLock ol = new AcmObjectLock();
         ol.setObjectId(objectId);
         ol.setObjectType(objectType);
-        return acmObjectLockDao.save(ol);
+
+        AcmObjectLock lock = acmObjectLockDao.save(ol);
+
+        AcmObjectLockEvent event = new AcmObjectLockEvent(lock, auth.getName(), true);
+        getApplicationEventPublisher().publishEvent(event);
+
+        return lock;
     }
 
     @Override
@@ -54,6 +66,10 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService
         if (ol == null)
             throw new AcmObjectLockException("Error removing. Lock for [objectId, objectType] = [" + objectId + ", " + objectType + "] doesn't exists!");
         acmObjectLockDao.remove(ol);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        AcmObjectUnlockEvent event = new AcmObjectUnlockEvent(ol, auth.getName(), true);
+        getApplicationEventPublisher().publishEvent(event);
     }
 
     @Override
@@ -130,5 +146,16 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
         this.executeSolrQuery = executeSolrQuery;
+    }
+
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return applicationEventPublisher;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }

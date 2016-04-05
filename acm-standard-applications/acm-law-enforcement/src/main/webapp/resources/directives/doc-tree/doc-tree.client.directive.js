@@ -165,7 +165,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         if (DocTree.isFolderNode(node)) {
                             ;
                         } else if (DocTree.isFileNode(node)) {
-                            if (node.data.locked) {
+                            if (node.data.lock) {
                                 var $span = $("<span class='ui-icon ui-icon-locked' title='This document is locked.'/>").appendTo($tdList.eq(1));
                                 $span.hover(function(){
                                     $(this).tooltip('show');
@@ -2844,7 +2844,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     nodeData.data.status = Util.goodValue(fileData.status);
                     nodeData.data.category = Util.goodValue(fileData.category);
                     nodeData.data.version = Util.goodValue(fileData.version);
-                    nodeData.data.locked = Util.goodValue(fileData.locked);
+                    nodeData.data.lock = Util.goodValue(fileData.lock);
                     nodeData.data.modifier = Util.goodValue(fileData.modifier);
                     if (Util.isArray(fileData.versionList)) {
                         nodeData.data.versionList = [];
