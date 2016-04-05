@@ -49,7 +49,7 @@
                         <div class="btn-group btn-group-sm" dropdown>
                             <button type="button"
                                     ng-bootbox-confirm-action="resetCurrentModuleResources(false)"
-                                    ng-bootbox-confirm="{{'admin.application.labels.config.resetModule.confirm' | translate}}"
+                                    ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.resetModule.confirm' | translate}}"
                                     class="btn btn-danger">
                                 <i class="fa fa-trash-o"></i>
                                 <span translate>admin.application.labels.config.resetModule</span>
@@ -61,7 +61,7 @@
                                 <li>
                                     <a
                                             ng-bootbox-confirm-action="resetCurrentModuleResources(true)"
-                                            ng-bootbox-confirm="{{'admin.application.labels.config.resetModule.confirm' | translate}}">
+                                            ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.resetModule.confirm' | translate}}">
                                         <span translate>admin.application.labels.config.useBaseLanguage</span>
                                     </a>
                                 </li>
@@ -72,7 +72,7 @@
                         <div class="btn-group btn-group-sm" dropdown>
                             <button type="button"
                                     ng-bootbox-confirm-action="resetAllResources(false)"
-                                    ng-bootbox-confirm="{{'admin.application.labels.config.resetAll.confirm' | translate}}"
+                                    ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.resetAll.confirm' | translate}}"
                                     class="btn btn-danger">
                                 <i class="fa fa-trash-o"></i>
                                 <span translate>admin.application.labels.config.resetAll</span>
@@ -84,7 +84,7 @@
                                 <li>
                                     <a
                                             ng-bootbox-confirm-action="resetAllResources(true)"
-                                            ng-bootbox-confirm="{{'admin.application.labels.config.resetAll.confirm' | translate}}">
+                                            ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.resetAll.confirm' | translate}}">
                                         <span translate>admin.application.labels.config.useBaseLanguage</span>
                                     </a>
                                 </li>
