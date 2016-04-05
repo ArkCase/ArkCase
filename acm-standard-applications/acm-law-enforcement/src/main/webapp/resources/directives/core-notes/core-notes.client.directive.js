@@ -68,8 +68,10 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                     if (!scope.notesInit.noteTitle)
                         scope.notesInit.noteTitle = $translate.instant("common.directive.coreNotes.title");
                     if (config) {
-                        gridHelper.addButton(config, "edit");
-                        gridHelper.addButton(config, "delete");
+                        if (scope.notesInit.notesEnabled) {
+                            gridHelper.addButton(config, "edit");
+                            gridHelper.addButton(config, "delete");
+                        }
                         gridHelper.setColumnDefs(config);
                         gridHelper.setBasicOptions(config);
                         gridHelper.disableGridScrolling(config);
@@ -77,7 +79,7 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                         scope.retrieveGridData();
                     }
                 });
-
+                
                 scope.retrieveGridData = function () {
                     if (Util.goodPositive(scope.notesInit.currentObjectId, false)) {
                         var info = scope.notesInit;
@@ -91,20 +93,26 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                 };
 
                 scope.addNew = function () {
-                    var info = scope.notesInit;
-                    var note = noteHelper.createNote(info.currentObjectId, info.objectType, scope.userId, info.noteType);
-                    showModal(note, false);
+                    if (scope.notesInit.notesEnabled) {
+                        var info = scope.notesInit;
+                        var note = noteHelper.createNote(info.currentObjectId, info.objectType, scope.userId, info.noteType);
+                        showModal(note, false);
+                    }
                 };
                 scope.editRow = function (rowEntity) {
-                    var note = angular.copy(rowEntity);
-                    showModal(note, true);
+                    if (scope.notesInit.notesEnabled) {
+                        var note = angular.copy(rowEntity);
+                        showModal(note, true);
+                    }
                 };
                 scope.deleteRow = function (rowEntity) {
-                    gridHelper.deleteRow(rowEntity);
-
-                    var id = Util.goodMapValue(rowEntity, "id", 0);
-                    if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                        ObjectNoteService.deleteNote(id);
+                    if (scope.notesInit.notesEnabled) {
+                        gridHelper.deleteRow(rowEntity);
+    
+                        var id = Util.goodMapValue(rowEntity, "id", 0);
+                        if (0 < id) {    //do not need to call service when deleting a new row with id==0
+                            ObjectNoteService.deleteNote(id);
+                        }
                     }
                 };
                 function showModal(note, isEdit) {
