@@ -43,8 +43,6 @@ angular.module('reports').controller('ReportsController', ['$scope', 'UtilServic
                 delete $scope.data.reports.PENTAHO_SERVER_PORT;
                 $scope.data.reportsHost = reportsConfig['PENTAHO_SERVER_URL'];
                 $scope.data.reportsPort = reportsConfig['PENTAHO_SERVER_PORT'];
-                $scope.data.reportDateFormat = UtilDateService.defaultDateFormat;
-                $scope.data.dateFormat = UtilDateService.defaultDateFormat;
                 $scope.data.reportSelected = null;
             });
 

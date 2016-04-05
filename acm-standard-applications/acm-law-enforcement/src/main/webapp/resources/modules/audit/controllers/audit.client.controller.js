@@ -71,8 +71,8 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
          * @param {Object} dateTo Object of type date that represents value for date chosen from dateTo input
          */
         function getDateValues(e, dateFrom, dateTo) {
-            $scope.dateFrom = moment(dateFrom).format(UtilDateService.defaultDateFormat);
-            $scope.dateTo = moment(dateTo).format(UtilDateService.defaultDateFormat);
+            $scope.dateFrom = UtilDateService.goodIsoDate(dateFrom);
+            $scope.dateTo = UtilDateService.goodIsoDate(dateTo);
 
             if (moment($scope.dateFrom).isAfter($scope.dateTo)) {
                 $scope.$broadcast('fix-date-values', $scope.dateFrom, $scope.dateFrom);
