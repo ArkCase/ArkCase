@@ -17,9 +17,9 @@
              specific properties file; these defaults are here for reference, not to be used. -->
         <property name="properties">
             <props>
-                <prop key="cmis.baseUrl">http://localhost:8080/alfresco/cmisatom</prop>
+                <prop key="cmis.baseUrl">https://acm-alfresco:8081/alfresco/cmisatom</prop>
                 <prop key="cmis.username">admin</prop>
-                <prop key="cmis.password">AdM!n</prop>
+                <prop key="cmis.password">admin</prop>
                 <prop key="cmis.useAlfrescoExtension">true</prop>
                 <!-- endpoint is either ATOM or SOAP -->
                 <prop key="cmis.endpoint">ATOM</prop>
