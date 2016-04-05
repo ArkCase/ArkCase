@@ -75,15 +75,15 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         $scope.onAllowCmd = function (cmd, nodes) {
             if (1 == nodes.length) {
                 if ("checkin" == cmd || "cancelEditing" == cmd) {
-                    if (!nodes[0].data.locked) {
+                    if (!nodes[0].data.lock) {
                         return "disable";
                     }
-                    else if (nodes[0].data.locked && nodes[0].data.creator !== $scope.user && nodes[0].data.modifier !== $scope.user || !adminRole) {
+                    else if (nodes[0].data.lock && odes[0].data.lock.creator !== $scope.user || !adminRole) {
                         return "disable";
                     }
                 }
                 else if ("checkout" == cmd) {
-                    if (nodes[0].data.locked) {
+                    if (nodes[0].data.lock) {
                         return "disable";
                     }
                 }

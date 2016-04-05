@@ -165,10 +165,6 @@ public interface EcmFileService
     EcmFile updateFileType(Long fileId, String fileType) throws AcmObjectNotFoundException;
 
     int getTotalPageCount(String parentObjectType, Long parentObjectId, List<String> totalPageCountFileTypes, List<String> totalPageCountMimeTypes, Authentication auth);
-
-    EcmFile lock(EcmFile file) throws AcmObjectNotFoundException;
-    
-    EcmFile unlock(EcmFile file, Authentication authentication) throws AcmObjectNotFoundException;
     
     EcmFile updateSecurityField(Long fileId, String securityFieldValue) throws AcmObjectNotFoundException;
 }

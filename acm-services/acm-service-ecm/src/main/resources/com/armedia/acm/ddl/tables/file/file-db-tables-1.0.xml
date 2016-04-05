@@ -387,9 +387,9 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="47-acm_file-add-file_locked" author="bojan.mickoski">
+    <changeSet id="48-acm_file-add-object-type" author="riste.tutureski">
         <addColumn tableName="acm_file">
-            <column name="cm_file_locked" type="VARCHAR(255)" defaultValue="false"/>
+            <column name="cm_object_type" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
 
