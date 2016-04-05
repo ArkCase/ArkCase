@@ -6,7 +6,7 @@
                     {{objectInfo.container.containerObjectTitle || 'Unknown' | uppercase}}
                 </div>
                 <small class="text-muted">
-                    Last Modified {{objectInfo.modified | date: defaultDatePickerFormat}}
+                    Last Modified {{objectInfo.modified | date: ('common.defaultDateUIFormat' | translate)}}
                 </small>
             </div>
         </div>

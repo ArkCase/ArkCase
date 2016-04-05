@@ -12,8 +12,6 @@
         }
         
     ],
-    "dateFormat": "MM-DD-YYYY",
-    "pentahoDateFormat": "MM/DD/YYYY",
     "components": [
         {
             "id": "auditselection",
@@ -30,8 +28,7 @@
         {
             "id": "datepickers",
             "title": "Audits",
-            "enabled": true,
-            "datepickerPopupFormat": "MM/dd/yyyy"
+            "enabled": true
         }
    ]
 }
