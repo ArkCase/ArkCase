@@ -138,7 +138,7 @@ public class LabelManagementService
         // If module is core, them inject information about menus that are stored in configuration file
         if (MODULE_CORE_ID.equals(moduleId))
         {
-            JSONObject menusInfo = normalizeResource(loadMenusResources());
+            JSONObject menusInfo = loadMenusResources();
             JSONObject coreModuleResource = mergeResources(moduleResource, menusInfo);
             moduleResource = coreModuleResource;
         }
@@ -284,7 +284,7 @@ public class LabelManagementService
         // If module is core, them inject information about menus that are stored in configuration file
         if (MODULE_CORE_ID.equals(moduleId))
         {
-            JSONObject menusInfo = normalizeResource(loadMenusResources());
+            JSONObject menusInfo = loadMenusResources();
             JSONObject coreModuleResource = mergeResources(moduleResource, menusInfo);
             moduleResource = coreModuleResource;
         }
@@ -296,8 +296,8 @@ public class LabelManagementService
             // If module resource is absent and useBaseLang option = true, then load base language module resource and
             // save it as custom resource
             JSONObject baseModuleResource = normalizeResource(loadModuleResource(moduleId, baseLanguage));
-            moduleResource = baseModuleResource;
-            customResource = saveAsCustomResource(moduleId, lang, baseModuleResource);
+            moduleResource = mergeResources(baseModuleResource, moduleResource);
+            customResource = saveAsCustomResource(moduleId, lang, moduleResource);
         } else
         {
             customResource = loadCustomResource(moduleId, lang);
@@ -482,12 +482,6 @@ public class LabelManagementService
             {
                 String key = keys.next();
                 String value = moduleRes.getString(key);
-
-//                if (customRes != null)
-//                {
-//                    value = customRes.has(key + ".value") ? (String) customRes.get(key + ".value") : value;
-//                }
-
                 res.put(key, value);
             }
         }
@@ -499,7 +493,8 @@ public class LabelManagementService
             {
                 String key = keys.next();
                 JSONObject customNode = customRes.getJSONObject(key);
-                if (customNode.has("value")) {
+                if (customNode.has("value"))
+                {
                     String value = customNode.getString("value");
                     res.put(key, value);
                 }
@@ -560,13 +555,6 @@ public class LabelManagementService
                 String value = moduleRes.getString(key);
                 String defaultValue = value;
                 String description = "";
-
-                if (customRes != null && customRes.has(key))
-                {
-                    JSONObject customNode = customRes.getJSONObject(key);
-                    value = customNode.has("value") ? customNode.getString("value") : value;
-                    description = customNode.has("value") ? (String) customNode.get(key + "description") : "";
-                }
 
                 JSONObject node = new JSONObject();
                 node.put("value", value);
