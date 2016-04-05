@@ -62,6 +62,7 @@ angular.module('dashboard').config(['$stateProvider', 'dashboardProvider',
             controller: 'DashboardController',
             resolve: {
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('common');
                     $translatePartialLoader.addPart('dashboard');
                     return $translate.refresh();
                 }]
