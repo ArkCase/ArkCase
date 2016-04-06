@@ -10,8 +10,8 @@
  *
  * The BuildUrl is used for building report url with given parameters.
  */
-angular.module('reports').factory('Reports.BuildUrl', ['$sce',
-    function ($sce) {
+angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService',
+    function ($sce, UtilDateService) {
         return {
 
             /**
@@ -30,16 +30,15 @@ angular.module('reports').factory('Reports.BuildUrl', ['$sce',
              * @param {String} params.reportUri Represents report URL
              * @param {String} params.startDate Represents value for date chosen from dateFrom input
              * @param {String} params.endDate Represents value for date chosen from dateTo input
-             * @param {String} params.reportDateFormat Represents report server date format
              * @param {String} params.stateSelected Represents report server date format
              * @returns {Object} Object assigned as trusted for angular to display the report in an iFrame
              */
             getUrl: function (params) {
                 var reportUrl = params.reportsHost + (params.reportsPort ? ":" + params.reportsPort : "") + params.reports[params.reportSelected]
-                    + "&startDate=" + moment(params.startDate).format(params.dateFormat)
-                    + "&endDate=" + moment(params.endDate).format(params.dateFormat)
-                    + "&dateFormat=" + encodeURIComponent(params.reportDateFormat);
-                if(params.stateSelected){
+                    + "&startDate=" + UtilDateService.goodIsoDate(params.startDate)
+                    + "&endDate=" + UtilDateService.goodIsoDate(params.endDate)
+                    + "&dateFormat=" + encodeURIComponent(UtilDateService.defaultDateFormat);
+                if (params.stateSelected) {
                     reportUrl += "&caseStatus=" + params.stateSelected;
                 }
                 return $sce.trustAsResourceUrl(reportUrl);

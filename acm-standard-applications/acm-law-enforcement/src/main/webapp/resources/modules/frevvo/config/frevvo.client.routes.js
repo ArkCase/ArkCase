@@ -9,6 +9,7 @@ angular.module('frevvo').config(['$stateProvider',
                 templateUrl: 'modules/frevvo/views/frevvo.client.view.html',
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                        $translatePartialLoader.addPart('common');
                         $translatePartialLoader.addPart('frevvo');
                         return $translate.refresh();
                     }]
