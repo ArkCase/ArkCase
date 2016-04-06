@@ -113,7 +113,8 @@
             {
               "name": "details",
               "displayName": "timeTracking.comp.details.table.columns.title",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.details'></div>"
             },
             {
               "name": "modified",
