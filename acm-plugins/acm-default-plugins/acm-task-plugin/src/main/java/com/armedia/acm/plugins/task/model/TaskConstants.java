@@ -12,7 +12,8 @@ public interface TaskConstants
     String STATE_UNCLAIMED = "UNCLAIMED";
     // EDTRM-491: Use DELETE instead of DELETED, since the search filters for active objects filter out DELETE.
     // So this way, deleted tasks won't show up when we search for active tasks.
-    String STATE_DELETED = "DELETE";
+    String STATE_DELETE = "DELETE";
+    String STATE_DELETED = "DELETED";
     Integer DEFAULT_PRIORITY = 50;
     String DEFAULT_PRIORITY_WORD = "Medium";
 
