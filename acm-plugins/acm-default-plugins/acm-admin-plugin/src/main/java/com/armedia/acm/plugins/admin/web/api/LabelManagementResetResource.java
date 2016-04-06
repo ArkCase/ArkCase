@@ -36,7 +36,6 @@ public class LabelManagementResetResource
 
         List<String> ns = new ArrayList<>();
         List<String> langs = new ArrayList<>();
-        boolean useBaseLang = false;
 
         try
         {
@@ -51,14 +50,13 @@ public class LabelManagementResetResource
             {
                 langs.add(langJsonArray.getString(i));
             }
-            useBaseLang = resourceObject.getBoolean("useBaseLang");
         } catch (Exception e)
         {
             log.error(String.format("Wrong reset parameter '%s' ", resource));
             throw new AcmLabelManagementException("Reset resource error", e);
         }
 
-        labelManagementService.reset(ns, langs, useBaseLang);
+        labelManagementService.reset(ns, langs);
         return (new JSONObject()).toString();
     }
 
