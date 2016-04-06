@@ -54,5 +54,5 @@ public interface GroupService
      * @param str
      * @return true or false
      */
-    boolean isUUIDPresent(String str);
+    boolean isUUIDPresentInTheGroupName(String str);
 }
