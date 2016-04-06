@@ -1191,7 +1191,8 @@ public class ActivitiTaskDao implements TaskDao
         return TaskConstants.DEFAULT_PRIORITY;
     }
 
-    protected AcmTask acmTaskFromActivitiTask(Task activitiTask)
+    @Override
+    public AcmTask acmTaskFromActivitiTask(Task activitiTask)
     {
         if (activitiTask == null)
         {
