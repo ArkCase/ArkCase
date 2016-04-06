@@ -31,7 +31,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             var langPromise = LabelsConfigService.retrieveLanguages().$promise;
             var settingsPromise = LabelsConfigService.retrieveSettings().$promise;
 
-            $q.all([nsPromise, langPromise, settingsPromise]).then(function(result){
+            $q.all([nsPromise, langPromise, settingsPromise]).then(function (result) {
                 var namespaces = result[0];
                 var langs = result[1];
                 var settings = result[2];
@@ -42,7 +42,6 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
 
                 $scope.selectedNamespace = $scope.namespacesDropdownOptions[0];
                 $scope.selectedLanguage = settings.defaultLang;
-                $scope.selectedDefaultLanguage = settings.defaultLang;
 
                 reloadGrid();
 
@@ -68,7 +67,8 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
 
 
         //changing default language
-        $scope.changeDefaultLng = function (newLang) {
+        $scope.changeDefaultLng = function ($event, newLang) {
+            $event.preventDefault();
             $scope.settings.defaultLang = newLang;
             LabelsConfigService.updateSettings(
                 angular.toJson($scope.settings)
@@ -83,7 +83,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
                 ns: [$scope.selectedNamespace.id]
             }, function () {
                 reloadGrid();
-            }, function(){
+            }, function () {
                 $scope.disabledInputs = false;
             });
         };
@@ -97,12 +97,12 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
                 ns: allNamespaces
             }, function () {
                 reloadGrid();
-            }, function(){
+            }, function () {
                 $scope.disabledInputs = false;
             });
         };
 
-        $scope.refreshAllResources = function(){
+        $scope.refreshAllResources = function () {
             var allNamespaces = _.pluck($scope.namespacesDropdownOptions, 'id');
             $scope.disabledInputs = true;
             LabelsConfigService.refreshResource({
@@ -110,7 +110,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
                 ns: allNamespaces
             }, function () {
                 reloadGrid();
-            }, function(){
+            }, function () {
                 $scope.disabledInputs = false;
             });
         };

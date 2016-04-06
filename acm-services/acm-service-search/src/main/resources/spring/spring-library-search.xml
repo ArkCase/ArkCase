@@ -62,6 +62,10 @@
         </property>
     </bean>
 
+    <bean id="csvReportGenerator" class="com.armedia.acm.services.search.service.CSVReportGenerator">
+        <property name="propertyMap" ref="pluginSearch"/>
+    </bean>
+
     <bean id="sendDocumentsToSolr" class="com.armedia.acm.services.search.service.SendDocumentsToSolr">
         <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
