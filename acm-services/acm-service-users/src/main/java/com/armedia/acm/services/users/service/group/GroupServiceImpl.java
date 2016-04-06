@@ -8,6 +8,7 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.GroupConstants;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.util.UUID;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * @author riste.tutureski
@@ -107,8 +109,7 @@ public class GroupServiceImpl implements GroupService
         if (!isGroupNameTaken)
         {
             group.setName(group.getName() + "-UUID-" + UUID.getUUID());
-            return  getGroupDao().save(group);
-
+            return getGroupDao().save(group);
         } else
         {
             return null;
@@ -118,7 +119,13 @@ public class GroupServiceImpl implements GroupService
     private boolean isGroupUINameTakenOnASameTreeLevel(AcmGroup group)
     {
         AcmGroup g = group.getParentGroup() != null ? groupDao.subGroupByUIName(group) : groupDao.groupByUIName(group);
-        return g != null ? true : false;
+        return g != null && isUUIDPresent(g.getName()) ? true : false;
+    }
+
+    @Override
+    public boolean isUUIDPresent(String str)
+    {
+        return Pattern.compile(GroupConstants.UUID_REGEX_STRING).matcher(str).matches();
     }
 
     public UserDao getUserDao()
