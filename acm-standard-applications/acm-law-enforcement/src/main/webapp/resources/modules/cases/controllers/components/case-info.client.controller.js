@@ -74,7 +74,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
         };
 
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
-        $scope.defaultDateFormat = UtilDateService.defaultDateFormat;
+
         $scope.picker = {opened: false};
         $scope.onPickerClick = function () {
             $timeout(function () {

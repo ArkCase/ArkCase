@@ -2,10 +2,10 @@
 
 angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService'
-    , 'Object.ModelService', 'LookupService', 'Helper.ObjectBrowserService', '$log', 'Util.DateService'
+    , 'Object.ModelService', 'LookupService', 'Helper.ObjectBrowserService'
     , function ($scope, $stateParams
         , Util, ConfigService, ObjectService, CaseInfoService, ComplaintInfoService, TaskInfoService
-        , ObjectModelService, LookupService, HelperObjectBrowserService, $log, UtilDateService) {
+        , ObjectModelService, LookupService, HelperObjectBrowserService) {
 
         new HelperObjectBrowserService.Component({
             moduleId: "tasks"
@@ -39,8 +39,6 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
                 $log.error('parentCaseInfo is undefined, cannot redirect to the parent case');
             }
         };
-
-        $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
