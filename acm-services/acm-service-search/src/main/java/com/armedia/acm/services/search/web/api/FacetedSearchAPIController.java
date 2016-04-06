@@ -5,13 +5,12 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.FacetedSearchService;
+import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -38,8 +37,7 @@ public class FacetedSearchAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private ApplicationContext applicationContext;
+    private SpringContextHolder springContextHolder;
 
     private ExecuteSolrQuery executeSolrQuery;
     private FacetedSearchService facetedSearchService;
@@ -53,7 +51,7 @@ public class FacetedSearchAPIController
             @RequestParam(value = "n", required = false, defaultValue = "500") int maxRows,
             @RequestParam(value = "filters", required = false, defaultValue = "") String[] filters,
             @RequestParam(value = "s", required = false, defaultValue = "create_date_tdt DESC") String sortSpec,
-            @RequestParam(value = "fields", required = false, defaultValue = "") String[] exportFields,
+            @RequestParam(value = "fields", required = false, defaultValue = "Object Number, Object Type, Modified") String[] exportFields,
             @RequestParam(value = "export", required = false) String export,
             @RequestParam(value = "reportName", required = false, defaultValue = "report") String reportName,
             HttpServletResponse response,
@@ -87,7 +85,7 @@ public class FacetedSearchAPIController
         if (StringUtils.isNotEmpty(export))
         {
             startRow = 0;
-            maxRows = Integer.MAX_VALUE;
+            maxRows = SearchConstants.MAX_RESULT_ROWS;
         }
 
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
@@ -99,7 +97,7 @@ public class FacetedSearchAPIController
             try
             {
                 // Get the appropriate generator for the requested file type
-                ReportGenerator generator = applicationContext.getBean(String.format("%sReportGenerator",
+                ReportGenerator generator = (ReportGenerator) springContextHolder.getBeanByName(String.format("%sReportGenerator",
                         export.toLowerCase()), ReportGenerator.class);
                 byte[] output = generator.generateReport(exportFields, res);
                 export(generator, output, response, reportName);
@@ -108,6 +106,9 @@ public class FacetedSearchAPIController
                 log.error(String.format("Bean of type: %sReportGenerator is not defined", export.toLowerCase()));
                 throw new IllegalStateException(String.format("Can not export to %s!", export));
             }
+
+            // The output stream is already closed as report is exported
+            return "";
         }
         return res;
     }
@@ -148,5 +149,15 @@ public class FacetedSearchAPIController
     public void setFacetedSearchService(FacetedSearchService facetedSearchService)
     {
         this.facetedSearchService = facetedSearchService;
+    }
+
+    public SpringContextHolder getSpringContextHolder()
+    {
+        return springContextHolder;
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
+        this.springContextHolder = springContextHolder;
     }
 }
