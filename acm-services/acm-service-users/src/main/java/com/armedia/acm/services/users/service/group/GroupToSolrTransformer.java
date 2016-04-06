@@ -23,6 +23,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
 
     private AcmGroupDao groupDao;
     private UserDao userDao;
+    private GroupService groupService;
 
     @Override
     public List<AcmGroup> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -41,7 +42,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setObject_id_s(in.getName());
         solr.setObject_type_s("GROUP");
         solr.setTitle_parseable(in.getName());
-        if (in.getName().contains("-UUID-"))
+        if (groupService.isUUIDPresent(in.getName()))
         {
             solr.setName(in.getName().substring(0, in.getName().lastIndexOf("-UUID-")));
         } else
@@ -102,7 +103,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setId(in.getName() + "-GROUP");
         solr.setObject_id_s(in.getName());
         solr.setObject_type_s("GROUP");
-        if (in.getName().contains("-UUID-"))
+        if (groupService.isUUIDPresent(in.getName()))
         {
             solr.setName(in.getName().substring(0, in.getName().lastIndexOf("-UUID-")));
         } else
@@ -175,6 +176,8 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         return solr;
     }
 
+
+
     public AcmGroupDao getGroupDao()
     {
         return groupDao;
@@ -193,5 +196,15 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    public GroupService getGroupService()
+    {
+        return groupService;
+    }
+
+    public void setGroupService(GroupService groupService)
+    {
+        this.groupService = groupService;
     }
 }
