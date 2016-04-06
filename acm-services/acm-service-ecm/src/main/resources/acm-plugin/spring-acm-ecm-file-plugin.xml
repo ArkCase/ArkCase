@@ -129,16 +129,6 @@
                     <property name="url" value="/api/v1/service/file/{fileId}/security-field/{securityFieldValue}s"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
-                <bean id="lockFile" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/service/ecm/file/lock/{fileId}"/>
-                    <property name="requiredPrivilege" ref="filePrivilege"/>
-                </bean>
-                <bean id="unlockFile" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/service/ecm/file/unlock/{fileId}"/>
-                    <property name="requiredPrivilege" ref="filePrivilege"/>
-                </bean>
             </list>
         </property>
     </bean>

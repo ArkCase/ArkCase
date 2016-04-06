@@ -145,7 +145,7 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
 
         replayAll();
 
-        acmObjectLockService.removeLock(objectId, objectType);
+        acmObjectLockService.removeLock(objectId, objectType, authMock);
 
 
         verifyAll();

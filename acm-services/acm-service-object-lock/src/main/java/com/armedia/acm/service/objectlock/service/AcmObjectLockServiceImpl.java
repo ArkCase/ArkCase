@@ -60,14 +60,13 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
     @Override
     @Transactional
-    public void removeLock(Long objectId, String objectType)
+    public void removeLock(Long objectId, String objectType, Authentication auth)
     {
         AcmObjectLock ol = acmObjectLockDao.findLock(objectId, objectType);
         if (ol == null)
             throw new AcmObjectLockException("Error removing. Lock for [objectId, objectType] = [" + objectId + ", " + objectType + "] doesn't exists!");
         acmObjectLockDao.remove(ol);
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         AcmObjectUnlockEvent event = new AcmObjectUnlockEvent(ol, auth.getName(), true);
         getApplicationEventPublisher().publishEvent(event);
     }
