@@ -113,12 +113,14 @@
             {
               "name": "details",
               "displayName": "costTracking.comp.details.table.columns.title",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.details'></div>"
             },
             {
               "name": "modified",
               "displayName": "costTracking.comp.details.table.columns.modified",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+			  "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             },
             {
               "name": "modifier",
@@ -158,8 +160,7 @@
       "title": "Info",
       "enabled": false,
       "type": "empty",
-      "editable": false,
-      "parentDateFormat": "DD/MM/YYYY"
+      "editable": false
     },
     {
       "id": "actions",
@@ -259,7 +260,6 @@
       "enabled": true,
       "type": "grid",
       "typeAheadColumn": "tags_s",
-      "dateFormat": "MM/DD/YYYY",
       "enableFiltering": true,
       "paginationPageSizes": [
         5,
@@ -277,7 +277,7 @@
         {
           "name": "created",
           "displayName": "costTracking.comp.tags.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : 'MM/dd/yyyy'}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "headerCellFilter": "translate"
         },
         {
@@ -287,8 +287,8 @@
           "lookup": "userFullNames"
         }
       ],
-       "filters": "\"Object Type\": TAG",
-       "filterName" : "Object Type"
+      "filters": "\"Object Type\": TAG",
+      "filterName": "Object Type"
     }
   ]
 }

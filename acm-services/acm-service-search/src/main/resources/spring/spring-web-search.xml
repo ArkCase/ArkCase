@@ -55,6 +55,7 @@
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
     <bean id="facetedSearchAPIController" class="com.armedia.acm.services.search.web.api.FacetedSearchAPIController">
+        <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="facetedSearchService" ref="facetedSearchService"/>
     </bean>
