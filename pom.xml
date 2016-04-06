@@ -108,6 +108,7 @@
         <pdfbox.version>2.0.0-RC3</pdfbox.version>
         <barcode4j.version>2.1</barcode4j.version>
         <jai-imageio-core.version>1.3.1</jai-imageio-core.version>
+        <milton.version>2.7.1.3</milton.version>
     </properties>
 
     <organization>
@@ -533,6 +534,11 @@
             <id>spring-extensions-milestone</id>
             <name>Spring Extensions Milestone Repository</name>
             <url>http://extensions.springframework.org/milestone</url>
+        </repository>
+
+        <repository>
+            <id>milton-repo</id>
+            <url>http://milton.io/maven</url>
         </repository>
     </repositories>
 
