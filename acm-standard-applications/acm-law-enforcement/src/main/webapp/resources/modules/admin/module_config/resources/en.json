@@ -197,7 +197,6 @@
         "resetModule": "Reset Module",
         "resetModule.confirm": "Are you sure you want reset custom resources for current module?",
         "resetModule.title": "Reset current module (delete custom resources)",
-        "useBaseLanguage": "Use base language resources",
         "resetAll": "Reset All",
         "resetAll.confirm": "Are you sure you want reset all custom resources for all modules?",
         "resetAll.title": "Reset all resources (delete all custom resources)",

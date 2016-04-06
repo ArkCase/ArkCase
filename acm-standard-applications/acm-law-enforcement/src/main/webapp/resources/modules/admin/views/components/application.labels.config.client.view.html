@@ -46,50 +46,22 @@
                         </button>
 
                         <!-- Current module reset button -->
-                        <div class="btn-group btn-group-sm" dropdown>
-                            <button type="button"
-                                    ng-bootbox-confirm-action="resetCurrentModuleResources(false)"
-                                    ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.resetModule.confirm' | translate}}"
-                                    class="btn btn-danger">
-                                <i class="fa fa-trash-o"></i>
-                                <span translate>admin.application.labels.config.resetModule</span>
-                            </button>
-                            <button type="button" class="btn btn-danger dropdown-toggle" dropdown-toggle>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a
-                                            ng-bootbox-confirm-action="resetCurrentModuleResources(true)"
-                                            ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.resetModule.confirm' | translate}}">
-                                        <span translate>admin.application.labels.config.useBaseLanguage</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                        <button class="btn btn-sm btn-danger"
+                                ng-bootbox-confirm-action="resetCurrentModuleResources()"
+                                ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.resetModule.confirm' | translate}}"
+                                title="{{'admin.application.labels.config.resetModule.title' | translate}}">
+                            <i class="fa fa-trash-o"></i>
+                            <span translate>admin.application.labels.config.resetModule</span>
+                        </button>
 
                         <!-- All modules reset button -->
-                        <div class="btn-group btn-group-sm" dropdown>
-                            <button type="button"
-                                    ng-bootbox-confirm-action="resetAllResources(false)"
-                                    ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.resetAll.confirm' | translate}}"
-                                    class="btn btn-danger">
-                                <i class="fa fa-trash-o"></i>
-                                <span translate>admin.application.labels.config.resetAll</span>
-                            </button>
-                            <button type="button" class="btn btn-danger dropdown-toggle" dropdown-toggle>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a
-                                            ng-bootbox-confirm-action="resetAllResources(true)"
-                                            ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.resetAll.confirm' | translate}}">
-                                        <span translate>admin.application.labels.config.useBaseLanguage</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                        <button class="btn btn-sm btn-danger"
+                                ng-bootbox-confirm-action="resetAllResources()"
+                                ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.resetAll.confirm' | translate}}"
+                                title="{{'admin.application.labels.config.resetAll.title' | translate}}">
+                            <i class="fa fa-trash-o"></i>
+                            <span translate>admin.application.labels.config.resetAll</span>
+                        </button>
                     </form>
                 </div>
             </div>
