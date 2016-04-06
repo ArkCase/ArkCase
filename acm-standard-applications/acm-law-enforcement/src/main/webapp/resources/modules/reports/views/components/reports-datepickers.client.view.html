@@ -4,7 +4,7 @@
         <p class="input-group">
             <input id="dateFromReports" type="text"
                    class="form-control"
-                   datepicker-popup="{{config.datepickerPopupFormat}}"
+                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
                    ng-model="data.startDate"
                    is-open="opened.openedStart"
                    close-on-date-selection="true"
@@ -24,7 +24,7 @@
         <p class="input-group">
             <input id="dateToReports" type="text"
                    class="form-control"
-                   datepicker-popup="{{config.datepickerPopupFormat}}"
+                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
                    ng-model="data.endDate"
                    is-open="opened.openedEnd"
                    close-on-date-selection="true"

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('time-tracking').controller('TimeTracking.InfoController', ['$scope', '$stateParams', 'UtilService',
-    'Util.DateService', 'ConfigService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService',
-    function ($scope, $stateParams, Util, UtilDateService,
+    'ConfigService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService',
+    function ($scope, $stateParams, Util,
               ConfigService, TimeTrackingInfoService, HelperObjectBrowserService) {
 
         new HelperObjectBrowserService.Component({
@@ -13,8 +13,5 @@ angular.module('time-tracking').controller('TimeTracking.InfoController', ['$sco
             , retrieveObjectInfo: TimeTrackingInfoService.getTimesheetInfo
             , validateObjectInfo: TimeTrackingInfoService.validateTimesheet
         });
-
-        $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
-
     }
 ]);
