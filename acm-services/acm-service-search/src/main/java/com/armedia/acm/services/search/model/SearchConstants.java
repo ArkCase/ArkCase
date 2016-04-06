@@ -96,4 +96,6 @@ public interface SearchConstants
     String EXPORT_FIELDS = "export.fields";
 
     String SEPARATOR_COMMA = ",";
+
+    Integer MAX_RESULT_ROWS = 100000;
 }

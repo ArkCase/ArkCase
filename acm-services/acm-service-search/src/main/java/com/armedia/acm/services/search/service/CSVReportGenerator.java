@@ -7,7 +7,9 @@ import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 /**
  * Generate csv report
@@ -17,10 +19,6 @@ public class CSVReportGenerator extends ReportGenerator
     @Override
     public byte[] generateReport(String[] requestedFields, String jsonData)
     {
-        if (requestedFields.length == 0)
-        {
-            requestedFields = new String[]{"Object Number", "Object Type", "Modified"};
-        }
         JSONObject jsonResult = new JSONObject(jsonData);
         JSONObject jsonResponse = jsonResult.getJSONObject("response");
         JSONArray jsonDocs = jsonResponse.getJSONArray("docs");
@@ -28,13 +26,11 @@ public class CSVReportGenerator extends ReportGenerator
         JSONObject fields = findFields();
 
         StringBuilder sb = new StringBuilder();
-        for (String field : requestedFields)
-        {
-            sb.append(field);
-            sb.append(SearchConstants.SEPARATOR_COMMA);
-        }
-        sb.deleteCharAt(sb.length() - 1);
+
+        String headers = Arrays.stream(requestedFields).collect(Collectors.joining(SearchConstants.SEPARATOR_COMMA));
+        sb.append(headers);
         sb.append("\n");
+
         for (int i = 0; i < jsonDocs.length(); i++)
         {
             JSONObject data = jsonDocs.getJSONObject(i);
