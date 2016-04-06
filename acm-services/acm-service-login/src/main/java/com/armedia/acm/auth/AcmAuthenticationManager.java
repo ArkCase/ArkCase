@@ -107,7 +107,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
     	
     	if (groups != null)
     	{
-            authGroups = groups.stream().map(group -> new AcmGrantedAuthority(group.getName())).collect(Collectors.toSet());
+            authGroups = groups.stream().map(group -> new AcmGrantedAuthority(group.getName().contains("-UUID-") ? group.getName().substring(0, group.getName().lastIndexOf("-UUID")) : group.getName())).collect(Collectors.toSet());
     	}
     	
     	return authGroups;
