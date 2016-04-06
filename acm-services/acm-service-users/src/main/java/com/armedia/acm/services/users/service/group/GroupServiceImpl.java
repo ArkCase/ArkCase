@@ -119,11 +119,11 @@ public class GroupServiceImpl implements GroupService
     private boolean isGroupUINameTakenOnASameTreeLevel(AcmGroup group)
     {
         AcmGroup g = group.getParentGroup() != null ? groupDao.subGroupByUIName(group) : groupDao.groupByUIName(group);
-        return g != null && isUUIDPresent(g.getName()) ? true : false;
+        return g != null && isUUIDPresentInTheGroupName(g.getName()) ? true : false;
     }
 
     @Override
-    public boolean isUUIDPresent(String str)
+    public boolean isUUIDPresentInTheGroupName(String str)
     {
         return Pattern.compile(GroupConstants.UUID_REGEX_STRING).matcher(str).matches();
     }

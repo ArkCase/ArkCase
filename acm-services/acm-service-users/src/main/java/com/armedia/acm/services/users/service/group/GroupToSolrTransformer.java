@@ -42,7 +42,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setObject_id_s(in.getName());
         solr.setObject_type_s("GROUP");
         solr.setTitle_parseable(in.getName());
-        if (groupService.isUUIDPresent(in.getName()))
+        if (groupService.isUUIDPresentInTheGroupName(in.getName()))
         {
             solr.setName(in.getName().substring(0, in.getName().lastIndexOf("-UUID-")));
         } else
@@ -103,7 +103,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setId(in.getName() + "-GROUP");
         solr.setObject_id_s(in.getName());
         solr.setObject_type_s("GROUP");
-        if (groupService.isUUIDPresent(in.getName()))
+        if (groupService.isUUIDPresentInTheGroupName(in.getName()))
         {
             solr.setName(in.getName().substring(0, in.getName().lastIndexOf("-UUID-")));
         } else
