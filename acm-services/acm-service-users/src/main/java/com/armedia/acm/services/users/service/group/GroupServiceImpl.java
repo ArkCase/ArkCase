@@ -33,6 +33,8 @@ public class GroupServiceImpl implements GroupService
     private AcmGroupDao groupDao;
     private MuleContextManager muleContextManager;
 
+    private Pattern pattern = Pattern.compile(GroupConstants.UUID_REGEX_STRING);
+
     @Override
     public AcmGroup updateGroupWithMembers(AcmGroup group, Set<AcmUser> members)
     {
@@ -125,7 +127,7 @@ public class GroupServiceImpl implements GroupService
     @Override
     public boolean isUUIDPresentInTheGroupName(String str)
     {
-        return Pattern.compile(GroupConstants.UUID_REGEX_STRING).matcher(str).matches();
+        return pattern.matcher(str).matches();
     }
 
     public UserDao getUserDao()
