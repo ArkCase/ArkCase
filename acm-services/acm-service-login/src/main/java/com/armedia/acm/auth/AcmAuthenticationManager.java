@@ -4,6 +4,7 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -29,6 +30,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
     private DefaultAuthenticationEventPublisher authenticationEventPublisher;
     private UserDao userDao;
     private AcmGroupDao groupDao;
+    private GroupService groupService;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException
@@ -107,7 +109,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
     	
     	if (groups != null)
     	{
-            authGroups = groups.stream().map(group -> new AcmGrantedAuthority(group.getName().contains("-UUID-") ? group.getName().substring(0, group.getName().lastIndexOf("-UUID")) : group.getName())).collect(Collectors.toSet());
+            authGroups = groups.stream().map(group -> new AcmGrantedAuthority(groupService.isUUIDPresentInTheGroupName(group.getName()) ? group.getName().substring(0, group.getName().lastIndexOf("-UUID-")) : group.getName())).collect(Collectors.toSet());
     	}
     	
     	return authGroups;
@@ -154,4 +156,14 @@ public class AcmAuthenticationManager implements AuthenticationManager
 	public void setGroupDao(AcmGroupDao groupDao) {
 		this.groupDao = groupDao;
 	}
+
+    public GroupService getGroupService()
+    {
+        return groupService;
+    }
+
+    public void setGroupService(GroupService groupService)
+    {
+        this.groupService = groupService;
+    }
 }
