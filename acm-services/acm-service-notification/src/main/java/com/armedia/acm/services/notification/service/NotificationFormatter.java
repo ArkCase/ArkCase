@@ -4,7 +4,9 @@ import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.core.AcmObjectType;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -58,41 +60,28 @@ public class NotificationFormatter
         // find the object type from the ACM application configuration, and get the URL from the object type
         for (AcmObjectType objectType : getAcmAppConfiguration().getObjectTypes())
         {
-            String objectUrl = objectType.getUrl();
+            Map<String, String> urlValues = objectType.getUrl();
 
-            if (objectType.getName().equals(parentType))
+            if (objectType.getName().equals(parentType) && !StringUtils.isNotEmpty(relatedObjectType))
             {
-                if (!objectUrl.isEmpty())
+                // The parent object is top level (Case File or Complaint)
+                String objectUrl = urlValues.get(parentType);
+                if (StringUtils.isNotEmpty(objectUrl))
                 {
-                    // The parent object is top level (Case File or Complaint)
-                    url = String.format("%s%s/%d", baseUrl, objectUrl, parentId);
-                } else if (objectUrl.isEmpty() && relatedObjectType != null)
-                // The parent object (eg. Person association) is nested in top level object = relatedObjectType
-                {
-                    // Find the target container url
-                    if (relatedObjectType.equals(NotificationConstants.NOTIFICATION_CONTAINER_CASE))
-                    {
-                        objectUrl = objectType.getUrlContainerCase();
-                    } else if (relatedObjectType.equals(NotificationConstants.NOTIFICATION_CONTAINER_COMPLAINT))
-                    {
-                        objectUrl = objectType.getUrlContainerComplaint();
-                    }
-                    url = String.format("%s%s/%d%s", baseUrl, objectUrl, relatedObjectId, objectType.getUrlEnd());
+                    objectUrl = String.format(objectUrl, parentId);
+                    url = String.format("%s%s", baseUrl, objectUrl);
                 }
             }
 
-            // The parent object is top level, but has nested object = relatedObjectType (eg. NOTE)
-            if (relatedObjectType != null && objectUrl.isEmpty() && objectType.getName().equals(relatedObjectType))
+            if (objectType.getName().equals(parentType) && StringUtils.isNotEmpty(relatedObjectType))
             {
-                // Find the target container url
-                if (parentType.equals(NotificationConstants.NOTIFICATION_CONTAINER_CASE))
+                // The parent object is nested in top level object represented by relatedObjectType
+                String objectUrl = urlValues.get(relatedObjectType);
+                if (StringUtils.isNotEmpty(objectUrl))
                 {
-                    objectUrl = objectType.getUrlContainerCase();
-                } else if (parentType.equals(NotificationConstants.NOTIFICATION_CONTAINER_COMPLAINT))
-                {
-                    objectUrl = objectType.getUrlContainerComplaint();
+                    objectUrl = String.format(objectUrl, relatedObjectId);
+                    url = String.format("%s%s", baseUrl, objectUrl, relatedObjectId);
                 }
-                url = String.format("%s%s/%d%s", baseUrl, objectUrl, parentId, objectType.getUrlEnd());
             }
         }
 

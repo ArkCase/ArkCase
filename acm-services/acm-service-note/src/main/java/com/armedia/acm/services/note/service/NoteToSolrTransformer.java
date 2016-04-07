@@ -1,0 +1,111 @@
+package com.armedia.acm.services.note.service;
+
+
+import com.armedia.acm.services.note.dao.NoteDao;
+import com.armedia.acm.services.note.model.Note;
+import com.armedia.acm.services.note.model.NoteConstants;
+import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
+import com.armedia.acm.services.search.model.solr.SolrDocument;
+import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+
+import java.util.Date;
+import java.util.List;
+
+public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note>
+{
+
+    private UserDao userDao;
+    private NoteDao noteDao;
+
+    @Override
+    public List<Note> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
+    {
+        return getNoteDao().findModifiedSince(lastModified, start, pageSize);
+    }
+
+    @Override
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(Note in)
+    {
+        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
+
+        solr.setId(String.format("%d-%s", in.getId(), NoteConstants.OBJECT_TYPE));
+
+        solr.setObject_id_s(in.getId() + "");
+        solr.setObject_type_s(NoteConstants.OBJECT_TYPE);
+
+        solr.setDescription_parseable(in.getNote());
+        solr.setName(String.format("%s_%d", NoteConstants.OBJECT_TYPE, in.getId()));
+
+        solr.setCreate_date_tdt(in.getCreated());
+        solr.setCreator_lcs(in.getCreator());
+        solr.setModified_date_tdt(in.getModified());
+        solr.setModifier_lcs(in.getModifier());
+
+
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+        }
+
+        return solr;
+    }
+
+    @Override
+    public SolrDocument toSolrQuickSearch(Note in)
+    {
+        SolrDocument solrDoc = new SolrDocument();
+        solrDoc.setId(String.format("%d-%s", in.getId(), NoteConstants.OBJECT_TYPE));
+        solrDoc.setObject_type_s(NoteConstants.OBJECT_TYPE);
+        solrDoc.setName(String.format("%s_%d", NoteConstants.OBJECT_TYPE, in.getId()));
+        solrDoc.setObject_id_s(in.getId() + "");
+        solrDoc.setCreate_tdt(in.getCreated());
+        solrDoc.setAuthor(in.getCreator());
+        solrDoc.setLast_modified_tdt(in.getModified());
+        solrDoc.setModifier_s(in.getModifier());
+        solrDoc.setType_s(in.getType());
+
+        return solrDoc;
+    }
+
+    @Override
+    public SolrAdvancedSearchDocument toContentFileIndex(Note in)
+    {
+        return null;
+    }
+
+    @Override
+    public boolean isAcmObjectTypeSupported(Class acmObjectType)
+    {
+        return Note.class.equals(acmObjectType);
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
+
+    public NoteDao getNoteDao()
+    {
+        return noteDao;
+    }
+
+    public void setNoteDao(NoteDao noteDao)
+    {
+        this.noteDao = noteDao;
+    }
+}
