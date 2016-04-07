@@ -44,6 +44,7 @@
         <module>acm-service-form-configuration</module>
         <module>acm-service-object-change-status</module>
         <module>acm-service-object-lock</module>
+        <module>acm-service-webdav</module>
     </modules>
 
 
