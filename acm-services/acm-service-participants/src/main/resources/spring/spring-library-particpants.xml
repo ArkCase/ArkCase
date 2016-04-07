@@ -9,11 +9,12 @@
         <property name="participantDao" ref="acmParticipantDao"/>
     </bean>
 
-    <bean id="acmParticipantEventPublisher" class="com.armedia.acm.services.participants.service.AcmParticipantEventPublisher"/>
+    <bean id="acmParticipantEventPublisher"
+          class="com.armedia.acm.services.participants.service.AcmParticipantEventPublisher"/>
 
 
     <bean id="participantProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -30,6 +31,12 @@
     <bean id="participantPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Participant Plugin"/>
         <property name="pluginProperties" ref="participantProperties"/>
+    </bean>
+
+    <bean id="acmParticipantToSolrTransformer"
+          class="com.armedia.acm.services.participants.service.AcmParticipantToSolrTransformer">
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="acmParticipantDao" ref="acmParticipantDao"/>
     </bean>
 
 </beans>
