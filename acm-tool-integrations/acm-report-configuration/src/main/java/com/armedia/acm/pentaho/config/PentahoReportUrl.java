@@ -50,7 +50,10 @@ public class PentahoReportUrl implements ReportUrl
         String serverFormUrl = getReportServerConfigurationProperties().get(REPORT_SERVER_URL).toString();
         builder.append(serverFormUrl);
         String serverFormPort = getReportServerConfigurationProperties().get(REPORT_SERVER_PORT).toString();
-        builder.append(":").append(serverFormPort);
+        if (serverFormPort != null && !serverFormPort.trim().isEmpty())
+        {
+            builder.append(":").append(serverFormPort);
+        }
         String pathStr = getReportsProperties().get(reportName).toString();
         builder.append(pathStr);
         String path = builder.toString();
@@ -90,8 +93,11 @@ public class PentahoReportUrl implements ReportUrl
     {
         StringBuilder builder = new StringBuilder();
         builder.append(host);
-        builder.append(":");
-        builder.append(port);
+        if (port != null && !port.trim().isEmpty())
+        {
+            builder.append(":");
+            builder.append(port);
+        }
         builder.append(path);
         return builder.toString();
     }
@@ -105,7 +111,10 @@ public class PentahoReportUrl implements ReportUrl
         builder.append(serverFormUrl);
 
         String serverFormPort = getReportServerConfigurationProperties().get(PENTAHO_SERVER_INTERNAL_PORT).toString();
-        builder.append(":").append(serverFormPort);
+        if (serverFormPort != null && !serverFormPort.trim().isEmpty())
+        {
+            builder.append(":").append(serverFormPort);
+        }
 
         String pentahoReportsUrl = getReportServerConfigurationProperties().get(REPORTS_URL).toString();
         builder.append(pentahoReportsUrl);
