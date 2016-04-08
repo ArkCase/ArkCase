@@ -77,12 +77,12 @@
         "default": true
       },
       {
-        "desc": "Sort Case Name Asc",
+        "desc": "Sort Task Name Asc",
         "name": "sort-by-name-asc",
         "value": "name ASC"
       },
       {
-        "desc": "Sort Case Name Desc",
+        "desc": "Sort Task Name Desc",
         "name": "sort-by-name-desc",
         "value": "name DESC"
       },
