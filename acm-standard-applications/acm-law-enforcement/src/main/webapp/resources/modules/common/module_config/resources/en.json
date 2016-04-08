@@ -42,7 +42,8 @@
       "footerForAttachment": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
     },
     "menu": {
-      "noop": "(Select Item)"
+      "noop": "(Select Item)",
+      "editWithWord": "Edit in Word"
     },
     "dndDialog": {
       "title": "Drag and Drop",

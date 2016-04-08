@@ -84,11 +84,10 @@
  */
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log'
     , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService'
-    , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', '$timeout'
+    , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', '$timeout', '$browser', '$location'
     , function ($q, $translate, $modal, $filter, $log
         , Store, Util, UtilDateService, ConfigService, LookupService
-        , Ecm, EcmEmailService, EcmRecordService, $timeout
-    ) {
+        , Ecm, EcmEmailService, EcmRecordService, $timeout, $browser, $location) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
         var promiseGetUserFullName = LookupService.getUserFullNames();
@@ -271,7 +270,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     if (DocTree.isFolderNode(data.node)) {
                                         DocTree.Op.createFolder(data.node, name);
                                     } else {
-                                         //create new document node
+                                        //create new document node
                                     }
 
                                 } else {
@@ -528,7 +527,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
              * @param node The node from which the iteration will start
              * @param nodesStatusBeforeRefresh The array in which the nodes status will be saved
              */
-            , saveNodesStatus: function(node, nodesStatusBeforeRefresh) {
+            , saveNodesStatus: function (node, nodesStatusBeforeRefresh) {
                 if (node.children) {
                     for (var i = 0; i < node.children.length; i++) {
                         if (DocTree.isFolderNode(node.children[i])) {
@@ -556,16 +555,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
              * @param nodesStatusBeforeRefresh The array in which the tree structure and it's types of
              * children are replicated
              */
-            , expandAfterRefresh: function(children, nodesStatusBeforeRefresh) {
-                nodesStatusBeforeRefresh.forEach(function(item, index){
-                    if(angular.isArray(item)) {
-                        DocTree.expandNode(children[index]).then(function(data){
+            , expandAfterRefresh: function (children, nodesStatusBeforeRefresh) {
+                nodesStatusBeforeRefresh.forEach(function (item, index) {
+                    if (angular.isArray(item)) {
+                        DocTree.expandNode(children[index]).then(function (data) {
                             DocTree.expandAfterRefresh(data.children, nodesStatusBeforeRefresh[index]);
                         });
                     }
                 });
             }
-            , refreshTree: function() {
+            , refreshTree: function () {
                 var objType = DocTree.getObjType();
                 var objId = DocTree.getObjId();
                 if (!Util.isEmpty(objType) && !Util.isEmpty(objId)) {
@@ -619,9 +618,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                 DocTree.saveNodesStatus(rootNode, nodesStatusBeforeRefresh);
 
-                DocTree.tree.reload(DocTree.Source.source()).then(function(){
-                    if(rootNode.expanded) {
-                        DocTree.expandTopNode().then(function(){
+                DocTree.tree.reload(DocTree.Source.source()).then(function () {
+                    if (rootNode.expanded) {
+                        DocTree.expandTopNode().then(function () {
                             var rootNode = DocTree.getTopNode();
                             DocTree.expandAfterRefresh(rootNode.children, nodesStatusBeforeRefresh);
                         })
@@ -1109,6 +1108,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             break;
                         case "edit":
                             break;
+                        case "editWithWord":
+                            var absUrl = $location.absUrl();
+                            var baseHref = $browser.baseHref();
+                            var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
+                            ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + node.parent.data.objectId + "/" + node.data.objectId + ".docx");
+                            break;
                         case "email":
                             Email.openModal(actNodes);
                             break;
@@ -1123,7 +1128,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
 
                             if (!Util.isArrayEmpty(declareAsRecordData)) {
-                                DocTree.Op.declareAsRecord(nodesToDeclare, declareAsRecordData).done(function(){
+                                DocTree.Op.declareAsRecord(nodesToDeclare, declareAsRecordData).done(function () {
                                     $timeout(function () {
                                         DocTree.refreshTree()
                                     }, 1000);
