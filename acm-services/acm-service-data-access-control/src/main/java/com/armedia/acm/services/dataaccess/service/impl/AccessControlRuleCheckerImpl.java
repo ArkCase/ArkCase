@@ -184,7 +184,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             boolean found = false;
             for (GrantedAuthority authority : grantedAuthorities)
             {
-                if (userRole.equals(authority.getAuthority()))
+                if (userRole.equalsIgnoreCase(authority.getAuthority()))
                 {
                     found = true;
                     // if any of the granted roles does match, continue with the next role
@@ -224,7 +224,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             userRole = evaluateRole(userRole, targetObjectProperties);
             for (GrantedAuthority authority : grantedAuthorities)
             {
-                if (userRole.equals(authority.getAuthority()))
+                if (userRole.equalsIgnoreCase(authority.getAuthority()))
                 {
                     // if any of the granted roles does match, break immediately and return true
                     log.debug("Found \"ANY\" matching user role [{}]", userRole);
