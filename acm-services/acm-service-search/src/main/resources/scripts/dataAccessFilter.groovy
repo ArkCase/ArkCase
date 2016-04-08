@@ -21,10 +21,11 @@ dataAccessFilter += ", termfreq(allow_acl_ss, " + safeUserId + ")";
 // exclude records where the user is specifically locked out
 String denyAccessFilter = "-deny_acl_ss:" + safeUserId;
 
-for (GrantedAuthority granted : authentication.getAuthorities()) {
+for (GrantedAuthority granted : authentication.getAuthorities())
+{
     String authName = granted.getAuthority();
     String sAuthName = authName.replace(" ", SPACE_REPLACE);
-    String safeAuthName = sAuthName.replaceAll("\\,", COMMA_REPLACE);
+    String safeAuthName = sAuthName.replace("\\,", COMMA_REPLACE);
     // include records where current user is in a group on allow_acl_ss
     dataAccessFilter += ", termfreq(allow_acl_ss, " + safeAuthName + ")";
     // exclude records where current user is in a locked-out group
@@ -44,20 +45,22 @@ childObjectDacFilter += "protected_object_b:false OR public_doc_b:true ";
 
 childObjectDacFilter += " OR allow_acl_ss:" + safeUserId;
 
-for (GrantedAuthority granted : authentication.getAuthorities()) {
+for (GrantedAuthority granted : authentication.getAuthorities())
+{
     String authName = granted.getAuthority();
     String sAuthName = authName.replace(" ", SPACE_REPLACE);
-    String safeAuthName = sAuthName.replaceAll("\\,", COMMA_REPLACE);
+    String safeAuthName = sAuthName.replace("\\,", COMMA_REPLACE);
     // include records where current user is in a group on allow_acl_ss
     childObjectDacFilter += " OR allow_acl_ss:" + safeAuthName;
 }
 
 // now we have to add the mandatory denies
 childObjectDacFilter += " ) AND -deny_acl_ss:" + safeUserId;
-for (GrantedAuthority granted : authentication.getAuthorities()) {
+for (GrantedAuthority granted : authentication.getAuthorities())
+{
     String authName = granted.getAuthority();
     String sAuthName = authName.replace(" ", SPACE_REPLACE);
-    String safeAuthName = sAuthName.replaceAll("\\,", COMMA_REPLACE);
+    String safeAuthName = sAuthName.replace("\\,", COMMA_REPLACE);
     // include records where current user is in a group on allow_acl_ss
     childObjectDacFilter += " AND -deny_acl_ss:" + safeAuthName;
 }
