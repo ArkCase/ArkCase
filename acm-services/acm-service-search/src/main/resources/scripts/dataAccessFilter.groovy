@@ -1,9 +1,10 @@
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
+
+import java.nio.charset.StandardCharsets
 
 String SPACE_REPLACE = "_0020_";
+String COMMA_REPLACE = "_002C_";
 
 // include records with no protected object field
 // include records where protected_object_b is false
@@ -20,10 +21,10 @@ dataAccessFilter += ", termfreq(allow_acl_ss, " + safeUserId + ")";
 // exclude records where the user is specifically locked out
 String denyAccessFilter = "-deny_acl_ss:" + safeUserId;
 
-for ( GrantedAuthority granted : authentication.getAuthorities() )
-{
+for (GrantedAuthority granted : authentication.getAuthorities()) {
     String authName = granted.getAuthority();
-    String safeAuthName = authName.replace(" ", SPACE_REPLACE);
+    String sAuthName = authName.replace(" ", SPACE_REPLACE);
+    String safeAuthName = sAuthName.replaceAll("\\,", COMMA_REPLACE);
     // include records where current user is in a group on allow_acl_ss
     dataAccessFilter += ", termfreq(allow_acl_ss, " + safeAuthName + ")";
     // exclude records where current user is in a locked-out group
@@ -43,20 +44,20 @@ childObjectDacFilter += "protected_object_b:false OR public_doc_b:true ";
 
 childObjectDacFilter += " OR allow_acl_ss:" + safeUserId;
 
-for ( GrantedAuthority granted : authentication.getAuthorities() )
-{
+for (GrantedAuthority granted : authentication.getAuthorities()) {
     String authName = granted.getAuthority();
-    String safeAuthName = authName.replace(" ", SPACE_REPLACE);
+    String sAuthName = authName.replace(" ", SPACE_REPLACE);
+    String safeAuthName = sAuthName.replaceAll("\\,", COMMA_REPLACE);
     // include records where current user is in a group on allow_acl_ss
     childObjectDacFilter += " OR allow_acl_ss:" + safeAuthName;
 }
 
 // now we have to add the mandatory denies
 childObjectDacFilter += " ) AND -deny_acl_ss:" + safeUserId;
-for ( GrantedAuthority granted : authentication.getAuthorities() )
-{
+for (GrantedAuthority granted : authentication.getAuthorities()) {
     String authName = granted.getAuthority();
-    String safeAuthName = authName.replace(" ", SPACE_REPLACE);
+    String sAuthName = authName.replace(" ", SPACE_REPLACE);
+    String safeAuthName = sAuthName.replaceAll("\\,", COMMA_REPLACE);
     // include records where current user is in a group on allow_acl_ss
     childObjectDacFilter += " AND -deny_acl_ss:" + safeAuthName;
 }
