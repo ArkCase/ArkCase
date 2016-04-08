@@ -25,7 +25,7 @@ for (GrantedAuthority granted : authentication.getAuthorities())
 {
     String authName = granted.getAuthority();
     String sAuthName = authName.replace(" ", SPACE_REPLACE);
-    String safeAuthName = sAuthName.replace("\\,", COMMA_REPLACE);
+    String safeAuthName = sAuthName.replace(",", COMMA_REPLACE);
     // include records where current user is in a group on allow_acl_ss
     dataAccessFilter += ", termfreq(allow_acl_ss, " + safeAuthName + ")";
     // exclude records where current user is in a locked-out group
@@ -49,7 +49,7 @@ for (GrantedAuthority granted : authentication.getAuthorities())
 {
     String authName = granted.getAuthority();
     String sAuthName = authName.replace(" ", SPACE_REPLACE);
-    String safeAuthName = sAuthName.replace("\\,", COMMA_REPLACE);
+    String safeAuthName = sAuthName.replace(",", COMMA_REPLACE);
     // include records where current user is in a group on allow_acl_ss
     childObjectDacFilter += " OR allow_acl_ss:" + safeAuthName;
 }
@@ -60,7 +60,7 @@ for (GrantedAuthority granted : authentication.getAuthorities())
 {
     String authName = granted.getAuthority();
     String sAuthName = authName.replace(" ", SPACE_REPLACE);
-    String safeAuthName = sAuthName.replace("\\,", COMMA_REPLACE);
+    String safeAuthName = sAuthName.replace(",", COMMA_REPLACE);
     // include records where current user is in a group on allow_acl_ss
     childObjectDacFilter += " AND -deny_acl_ss:" + safeAuthName;
 }
