@@ -61,7 +61,12 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             retrieveGridData();
         };
 
-        var retrieveGridData = function() {
+        //jwu: for testing, remove meeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+        //$scope.isReadOnly = function (objectInfo) {
+        //    return true;
+        //};
+
+        var retrieveGridData = function () {
             var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
@@ -122,7 +127,8 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
         $scope.addNew = function () {
             $state.go("newTaskFromParentObject", {
                 parentType: ObjectService.ObjectTypes.CASE_FILE,
-                parentObject: $scope.objectInfo.caseNumber
+                parentObject: $scope.objectInfo.caseNumber,
+                parentTitle: $scope.objectInfo.title
             });
         };
 
@@ -179,5 +185,9 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             var targetId = Util.goodMapValue(rowEntity, "object_id_s");
             gridHelper.showObject(targetType, targetId);
         };
+
+        //$scope.$on("object-refreshed", function (e, objectId) {
+        //    ObjectTaskService.resetChildTasks(ObjectService.ObjectTypes.CASE_FILE, $scope.objectInfo.id);
+        //});
     }
 ]);

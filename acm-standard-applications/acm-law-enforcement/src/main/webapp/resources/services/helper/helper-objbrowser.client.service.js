@@ -13,7 +13,7 @@
  * Tree helper uses 'object-tree' directive. Content helper includes component links and data loading. Component helper includes common object info handling
  */
 angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resource', '$translate'
-    , 'StoreService', 'UtilService', 'ConfigService', 'ServCommService'
+    , 'Acm.StoreService', 'UtilService', 'ConfigService', 'ServCommService'
     , function ($q, $resource, $translate, Store, Util, ConfigService, ServCommService) {
 
         var Service = {
@@ -109,14 +109,16 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
                 that.scope.$on("object-updated", function (e, objectInfo) {
                     var node = that.makeTreeNode(objectInfo);
-                    that.scope.treeControl.setTitle(node.nodeType, node.nodeId, node.nodeTitle, node.nodeToolTip);
-                    if (that.updateTreeData && that.treeParams) {
-                        that.updateTreeData(that.treeParams.start, that.treeParams.n, that.treeParams.sort, that.treeParams.filters, that.treeParams.query, node);
+                    if (that.scope.treeControl) {
+                        that.scope.treeControl.setTitle(node.nodeType, node.nodeId, node.nodeTitle, node.nodeToolTip);
+                        if (that.updateTreeData && that.treeParams) {
+                            that.updateTreeData(that.treeParams.start, that.treeParams.n, that.treeParams.sort, that.treeParams.filters, that.treeParams.query, node);
+                        }
                     }
                 });
 
                 that.scope.$on("object-update-failed", function (e, error) {
-                    if (that.selectedObject) {
+                    if (that.selectedObject && that.scope.treeControl) {
                         var nodeType = Util.goodValue(that.selectedObject.nodeType);
                         var nodeId = Util.goodValue(that.selectedObject.nodeId);
                         that.scope.treeControl.setTitle(nodeType, nodeId

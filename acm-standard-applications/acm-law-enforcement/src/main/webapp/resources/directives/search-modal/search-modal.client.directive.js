@@ -61,6 +61,12 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.disableSearchControls = (scope.disableSearch === 'true') ? true : false;
                 scope.searchQuery = '';
                 scope.minSearchLength = 3;
+                if(typeof(scope.config().showFacets) === 'undefined') {
+                    scope.config.showFacets = true;
+                }
+                else {
+                    scope.config.showFacets = scope.config().showFacets;
+                }
                 //if (scope.multiSelect == undefined || scope.multiSelect == '') {
                 //    scope.multiSelect = 'false';
                 //}

@@ -92,7 +92,7 @@ public class AcmPrivilegeService
                         found = true;
                         priv.setAccessType(mode);
                         priv.setAccessReason(DataAccessControlConstants.ACCESS_REASON_POLICY);
-                        log.debug("updated existing privilege");
+                        log.info("updated existing privilege [{} '{}' to '{}'='{}']", mode, action, ap.getParticipantType(), ap.getParticipantLdapId());
                         break;
                     }
                 }

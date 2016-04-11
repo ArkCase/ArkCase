@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('time-tracking').controller('TimeTracking.MainController', ['$scope', '$translate'
-    , 'StoreService', 'UtilService', 'dashboard', 'Dashboard.DashboardService'
+    , 'Acm.StoreService', 'UtilService', 'dashboard', 'Dashboard.DashboardService'
     , 'TimeTracking.InfoService', 'ConfigService'
     , function ($scope, $translate, Store, Util, dashboard, DashboardService
         , TimeTrackingInfoService, ConfigService) {

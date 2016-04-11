@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
 import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
+import org.activiti.engine.task.Task;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -124,4 +125,6 @@ public interface TaskDao
     void createFolderForTaskEvent(AcmTaskEvent event) throws AcmTaskException, AcmCreateObjectFailedException;
 
     void createFolderForTaskEvent(AcmTask task) throws AcmTaskException, AcmCreateObjectFailedException;
+
+    AcmTask acmTaskFromActivitiTask(Task activitiTask);
 }

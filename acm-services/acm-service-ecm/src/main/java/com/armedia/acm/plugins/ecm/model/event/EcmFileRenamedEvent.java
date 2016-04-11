@@ -8,7 +8,10 @@ public class EcmFileRenamedEvent extends  EcmFilePersistenceEvent {
     private static final String EVENT_TYPE = "com.armedia.acm.file.renamed";
 
     public EcmFileRenamedEvent(EcmFile source, String userId, String ipAddress) {
+
         super(source,userId, ipAddress);
+        setParentObjectId(source.getContainer().getContainerObjectId());
+        setParentObjectType(source.getContainer().getContainerObjectType());
     }
 
     @Override

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.MainController', ['$scope', '$stateParams', '$translate'
-    , 'StoreService', 'UtilService', 'ConfigService', 'ObjectService', 'Object.NoteService', 'Object.AuditService'
+    , 'Acm.StoreService', 'UtilService', 'ConfigService', 'ObjectService', 'Object.NoteService', 'Object.AuditService'
     , 'Object.SignatureService', 'Task.InfoService', 'Task.HistoryService', 'dashboard', 'Dashboard.DashboardService'
     , function ($scope, $stateParams, $translate
         , Store, Util, ConfigService, ObjectService, ObjectNoteService, ObjectAuditService

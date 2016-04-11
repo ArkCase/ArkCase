@@ -15,6 +15,8 @@ public class AcmAssociatedTagPersistentEvent  extends AcmEvent
         setEventDate(new Date());
         setUserId(userId);
         setObjectType(OBJECT_TYPE);
+        setParentObjectId(source.getParentId());
+        setParentObjectType(source.getParentType());
     }
 
     @Override

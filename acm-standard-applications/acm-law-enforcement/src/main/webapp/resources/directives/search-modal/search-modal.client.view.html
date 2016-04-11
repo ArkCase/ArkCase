@@ -26,7 +26,7 @@
         </div>
 
         <div class="modal-columns">
-            <div class="modal-left">
+            <div ng-if="config.showFacets"  class="modal-left">
                 <ul class="list-unstyled">
                     <li ng-repeat="facet in facets"
                         ng-if="facet.fields.length && facet.name!='Object Sub Type' && facet.name!= 'Object Type'">

@@ -9,7 +9,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         $scope.options = {
             focus: true,
-            dialogsInBody:true
+            dialogsInBody: true
             //,height: 120
         };
 
@@ -35,10 +35,13 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.config.data.status = defaultStatus;
             $scope.config.data.percentComplete = 0;
 
-            
+
             if (!Util.isEmpty($stateParams.parentObject) && !Util.isEmpty($stateParams.parentType)) {
                 $scope.config.data.attachedToObjectName = $stateParams.parentObject;
                 $scope.config.data.attachedToObjectType = $stateParams.parentType;
+                if (!Util.isEmpty($stateParams.parentTitle)) {
+                    $scope.config.data.parentObjectTitle = $stateParams.parentTitle;
+                }
             }
             return moduleConfig;
         });

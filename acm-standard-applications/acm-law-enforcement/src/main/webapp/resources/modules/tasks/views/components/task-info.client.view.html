@@ -10,7 +10,8 @@
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-number="objectInfo.percentComplete" onbeforesave="validatePercentComplete($data)" onaftersave="saveTask()">
+                    <a href="#" editable-number="objectInfo.percentComplete"
+                       onbeforesave="validatePercentComplete($data)" onaftersave="saveTask()">
                         {{ objectInfo.percentComplete }}
                     </a>
                 </div>
@@ -34,21 +35,25 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#"
-                       editable-date="dateInfo.taskStartDate"
+                    <a href="#" editable-bsdate="dateInfo.taskStartDate"
+                       e-datepicker-popup="{{defaultDatePickerFormat}}"
+                       e-ng-click="onPickerClick()" e-is-open="picker.opened"
+                       e-init-date="dateInfo.taskStartDate"
+                       e-on-open-focus="false"
                        onaftersave="updateStartDate(dateInfo.taskStartDate)">
-                        {{ (dateInfo.taskStartDate | date: "MM/dd/yyyy") || 'Unknown' }}
-                    </a>
+                        {{ (dateInfo.taskStartDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</a>
                 </div>
                 <small class="text-muted">Start Date</small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#"
-                       editable-date="dateInfo.dueDate"
+                    <a href="#" editable-bsdate="dateInfo.dueDate"
+                       e-datepicker-popup="{{defaultDatePickerFormat}}"
+                       e-ng-click="onPickerClick()" e-is-open="picker.opened"
+                       e-init-date="dateInfo.dueDate"
+                       e-on-open-focus="false"
                        onaftersave="updateDueDate(dateInfo.dueDate)">
-                        {{ (dateInfo.dueDate | date: "MM/dd/yyyy") || 'Unknown' }}
-                    </a>
+                        {{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</a>
                 </div>
                 <small class="text-muted">Due Date</small>
             </div>
