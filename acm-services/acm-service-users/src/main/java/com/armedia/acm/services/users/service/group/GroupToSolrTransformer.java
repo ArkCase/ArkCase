@@ -7,7 +7,6 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +23,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
 
     private AcmGroupDao groupDao;
     private UserDao userDao;
+    private GroupService groupService;
 
     @Override
     public List<AcmGroup> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -42,7 +42,14 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setObject_id_s(in.getName());
         solr.setObject_type_s("GROUP");
         solr.setTitle_parseable(in.getName());
-        solr.setName(in.getName());
+        if (groupService.isUUIDPresentInTheGroupName(in.getName()))
+        {
+            solr.setName(in.getName().substring(0, in.getName().lastIndexOf("-UUID-")));
+        } else
+        {
+            solr.setName(in.getName());
+        }
+
         solr.setDescription_parseable(in.getDescription());
         solr.setObject_sub_type_s(in.getType());
 
@@ -96,7 +103,13 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setId(in.getName() + "-GROUP");
         solr.setObject_id_s(in.getName());
         solr.setObject_type_s("GROUP");
-        solr.setName(in.getName());
+        if (groupService.isUUIDPresentInTheGroupName(in.getName()))
+        {
+            solr.setName(in.getName().substring(0, in.getName().lastIndexOf("-UUID-")));
+        } else
+        {
+            solr.setName(in.getName());
+        }
 
         solr.setAuthor(in.getCreator());
         solr.setCreate_tdt(in.getCreated());
@@ -163,6 +176,8 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         return solr;
     }
 
+
+
     public AcmGroupDao getGroupDao()
     {
         return groupDao;
@@ -181,5 +196,15 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    public GroupService getGroupService()
+    {
+        return groupService;
+    }
+
+    public void setGroupService(GroupService groupService)
+    {
+        this.groupService = groupService;
     }
 }

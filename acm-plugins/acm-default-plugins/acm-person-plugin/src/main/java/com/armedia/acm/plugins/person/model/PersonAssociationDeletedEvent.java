@@ -4,9 +4,11 @@ public class PersonAssociationDeletedEvent extends PersonAssociationPersistenceE
 {
     private static final String EVENT_TYPE = "com.armedia.acm.personAssociation.deleted";
 
-    public PersonAssociationDeletedEvent(PersonAssociation source)
+    public PersonAssociationDeletedEvent(PersonAssociation source, String parentType, Long parentId)
     {
         super(source);
+        setParentObjectId(parentId);
+        setParentObjectType(parentType);
     }
 
     @Override

@@ -10,7 +10,7 @@
  *
  * Case.ListService provides functions for Case database data
  */
-angular.module('services').factory('Case.ListService', ['$resource', '$translate', 'StoreService', 'UtilService', 'ObjectService', 'Object.ListService',
+angular.module('services').factory('Case.ListService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'ObjectService', 'Object.ListService',
     function ($resource, $translate, Store, Util, ObjectService, ObjectListService) {
         var Service = $resource('api/latest/plugin', {}, {});
 

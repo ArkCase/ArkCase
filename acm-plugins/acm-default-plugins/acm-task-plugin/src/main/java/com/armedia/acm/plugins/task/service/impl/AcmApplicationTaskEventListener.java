@@ -1,26 +1,22 @@
 package com.armedia.acm.plugins.task.service.impl;
 
-import com.armedia.acm.objectonverter.DateFormats;
-import com.armedia.acm.plugins.task.model.TaskConstants;
-import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
-import com.armedia.acm.service.objecthistory.model.AcmAssignment;
-import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
-import com.armedia.acm.services.participants.utils.ParticipantUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationListener;
-
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
+import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
+import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
+import com.armedia.acm.service.objecthistory.model.AcmAssignment;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
+import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
+import com.armedia.acm.services.participants.utils.ParticipantUtils;
+import org.springframework.context.ApplicationListener;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AcmApplicationTaskEventListener implements ApplicationListener<AcmObjectHistoryEvent>
 {
@@ -29,7 +25,8 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
     private TaskEventPublisher taskEventPublisher;
     private AcmAssignmentDao acmAssignmentDao;
 
-    @Override public void onApplicationEvent(AcmObjectHistoryEvent event)
+    @Override
+    public void onApplicationEvent(AcmObjectHistoryEvent event)
     {
 
         if (event != null && event.getSource() != null)
@@ -56,15 +53,21 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
 
                     acmAssignment.setOldAssignee(ParticipantUtils.getAssigneeIdFromParticipants(existing.getParticipants()));
 
-                    if (detailsChanged(existing, updatedTask))
+                    if (isDetailsChanged(existing, updatedTask))
                     {
                         AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "details.changed", event.getUserId(), true, event.getIpAddress());
                         getTaskEventPublisher().publishTaskEvent(taskEvent);
                     }
 
-                    if (priorityChanged(existing, updatedTask))
+                    if (isPriorityChanged(existing, updatedTask))
                     {
                         AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "priority.changed", event.getUserId(), true, event.getIpAddress());
+                        getTaskEventPublisher().publishTaskEvent(taskEvent);
+                    }
+
+                    if (isStatusChanged(existing, updatedTask))
+                    {
+                        AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "status.changed", event.getUserId(), true, event.getIpAddress());
                         getTaskEventPublisher().publishTaskEvent(taskEvent);
                     }
                 }
@@ -130,7 +133,7 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
 
     }
 
-    public boolean detailsChanged(AcmTask existing, AcmTask updatedTask)
+    public boolean isDetailsChanged(AcmTask existing, AcmTask updatedTask)
     {
         String updatedDetails = updatedTask.getDetails();
         String details = existing.getDetails();
@@ -144,11 +147,28 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
         return false;
     }
 
-    private boolean priorityChanged(AcmTask existing, AcmTask updatedTask)
+    private boolean isPriorityChanged(AcmTask existing, AcmTask updatedTask)
     {
         String updatedPriority = updatedTask.getPriority();
         String priority = existing.getPriority();
-        return !updatedPriority.equals(priority);
+        if (updatedPriority != null && priority != null)
+        {
+            return !updatedPriority.equals(priority);
+        }
+        return false;
+    }
+
+    private boolean isStatusChanged(AcmTask existing, AcmTask updatedTask)
+    {
+        String updatedStatus = updatedTask.getStatus();
+        String status = existing.getStatus();
+        if (updatedStatus != null && status != null)
+        {
+            updatedStatus = updatedStatus.toUpperCase();
+            status = status.toUpperCase();
+            return !updatedStatus.equals(status);
+        }
+        return false;
     }
 
     private boolean checkExecution(String objectType)

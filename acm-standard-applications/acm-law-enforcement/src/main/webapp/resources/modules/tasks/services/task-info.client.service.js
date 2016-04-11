@@ -10,7 +10,7 @@
  *
  * Task.InfoService provides functions for Task database data
  */
-angular.module('tasks').factory('Task.InfoService', ['$resource', '$translate', 'StoreService', 'UtilService', 'Object.InfoService',
+angular.module('tasks').factory('Task.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.InfoService',
     function ($resource, $translate, Store, Util, ObjectInfoService) {
         var Service = $resource('api/latest/plugin', {}, {
             /**

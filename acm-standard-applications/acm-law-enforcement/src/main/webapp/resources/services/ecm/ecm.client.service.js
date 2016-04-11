@@ -10,7 +10,7 @@
 
  * EcmService contains functions to related to document management.
  */
-angular.module('services').factory('EcmService', ['$resource', 'StoreService', 'UtilService'
+angular.module('services').factory('EcmService', ['$resource', 'Acm.StoreService', 'UtilService'
     , function ($resource, StoreService, UtilService) {
 
         var Service = $resource('api/latest/service', {}, {

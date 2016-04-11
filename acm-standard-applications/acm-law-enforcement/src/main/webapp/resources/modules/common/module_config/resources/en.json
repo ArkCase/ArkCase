@@ -4,7 +4,9 @@
     "defaultDateFormat": "MM/DD/YYYY",
     "defaultTimeFormat": "hh:mm:ss",
     "defaultDateTimeFormat": "MM/DD/YYYY hh:mm",
-    "defaultDatePickerFormat": "MM/dd/yyyy"
+    "defaultDatePickerFormat": "MM/dd/yyyy",
+    "defaultDateUIFormat": "MM/dd/yyyy",
+    "defaultDateTimeUIFormat": "MM/dd/yyyy HH:MM"
   },
   "common.service": {
     "error.invalidData": "Invalid data"
@@ -40,7 +42,8 @@
       "footerForAttachment": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
     },
     "menu": {
-      "noop": "(Select Item)"
+      "noop": "(Select Item)",
+      "editWithWord": "Edit in Word"
     },
     "dndDialog": {
       "title": "Drag and Drop",
@@ -166,7 +169,7 @@
       }
     }
   },
-    "common.directive.coreCalendar": {
+  "common.directive.coreCalendar": {
     "title": "Calendar",
     "start.label": "Start: ",
     "end.label": "End: "

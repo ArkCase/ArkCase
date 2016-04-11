@@ -238,12 +238,14 @@
             {
               "name": "details",
               "displayName": "cases.comp.details.table.columns.title",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.details'></div>"
             },
             {
               "name": "modified",
               "displayName": "cases.comp.details.table.columns.modified",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             },
             {
               "name": "modifier",
@@ -312,7 +314,7 @@
               "name": "created",
               "displayName": "cases.comp.notes.table.columns.created",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "enableCellEdit": false
             },
             {
@@ -346,7 +348,7 @@
               "field": "due_tdt",
               "displayName": "cases.comp.tasks.table.columns.due",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'medium'}}</div>"
+              "cellTemplate": "<div>{{ row.entity.due_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             }
           ]
         },
@@ -396,7 +398,7 @@
               "name": "created",
               "displayName": "cases.comp.correspondence.table.columns.created",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "enableCellEdit": false
             },
             {
@@ -431,8 +433,7 @@
       "title": "Info",
       "enabled": false,
       "type": "empty",
-      "editable": false,
-      "dateFormat": "YYYY-MM-DDTHH:mm:ss.SSSZZ"
+      "editable": false
     },
     {
       "id": "actions",
@@ -530,7 +531,7 @@
             "name": "created",
             "displayName": "cases.comp.people.contactMethods.table.columns.created",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : 'MM/dd/yyyy'}}</div>",
+            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
@@ -571,7 +572,7 @@
             "name": "created",
             "displayName": "cases.comp.people.organizations.table.columns.created",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : 'MM/dd/yyyy'}}</div>",
+            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
@@ -629,7 +630,7 @@
             "name": "created",
             "displayName": "cases.comp.people.addresses.table.columns.created",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : 'MM/dd/yyyy'}}</div>",
+            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
@@ -667,7 +668,7 @@
             "name": "created",
             "displayName": "cases.comp.people.aliases.table.columns.created",
             "headerCellFilter": "translate",
-            "cellTemplate": "<div>{{ row.entity.created | date : 'MM/dd/yyyy'}}</div>",
+            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
             "enableCellEdit": false
           },
           {
@@ -704,7 +705,8 @@
           {
             "name": "created",
             "displayName": "cases.comp.people.securityTags.table.columns.created",
-            "headerCellFilter": "translate"
+            "headerCellFilter": "translate",
+			"cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>"
           },
           {
             "name": "creator",
@@ -746,6 +748,7 @@
       "dialogUserPicker": {
         "enableFiltering": false,
         "multiSelect": false,
+        "showFacets": false,
         "columnDefs": [
           {
             "name": "name",
@@ -770,6 +773,7 @@
       "dialogGroupPicker": {
         "enableFiltering": false,
         "multiSelect": false,
+        "showFacets": false,
         "columnDefs": [
           {
             "name": "name",
@@ -811,7 +815,7 @@
           "name": "created",
           "displayName": "cases.comp.notes.table.columns.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "enableCellEdit": false
         },
         {
@@ -857,7 +861,7 @@
           "field": "create_tdt",
           "displayName": "cases.comp.tasks.table.columns.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'medium'}}</div>"
+          "cellTemplate": "<div>{{ row.entity.create_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "priority",
@@ -870,7 +874,7 @@
           "field": "due_tdt",
           "displayName": "cases.comp.tasks.table.columns.due",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'medium'}}</div>"
+          "cellTemplate": "<div>{{ row.entity.due_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "status",
@@ -917,7 +921,7 @@
           "name": "modified",
           "displayName": "cases.comp.references.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : 'medium'}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "targetType",
@@ -955,7 +959,7 @@
           "name": "eventDate",
           "displayName": "cases.comp.history.table.columns.eventDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.eventDate | date : 'medium'}}</div>"
+          "cellTemplate": "<div>{{ row.entity.eventDate | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "userId",
@@ -990,7 +994,7 @@
           "name": "created",
           "displayName": "cases.comp.correspondence.table.columns.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "enableCellEdit": false
         },
         {
@@ -1038,7 +1042,7 @@
           "field": "modified",
           "displayName": "cases.comp.time.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : 'medium'}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "status",
@@ -1084,7 +1088,7 @@
           "field": "modified",
           "displayName": "cases.comp.cost.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : 'medium'}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "status",
@@ -1101,7 +1105,6 @@
       "enabled": true,
       "type": "grid",
       "typeAheadColumn": "tags_s",
-      "dateFormat": "MM/DD/YYYY",
       "enableFiltering": true,
       "paginationPageSizes": [
         5,
@@ -1119,7 +1122,7 @@
         {
           "name": "created",
           "displayName": "cases.comp.tags.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : 'MM/dd/yyyy'}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "headerCellFilter": "translate"
         },
         {
@@ -1137,8 +1140,7 @@
       "title": "Calendar",
       "icon": "fa fa-calendar",
       "enabled": true,
-      "type": "empty",
-      "dateFormat": "MM/DD/YYYY HH:mm"
+      "type": "empty"
     },
     {
       "id": "merge",
@@ -1177,7 +1179,8 @@
         {
           "name": "modified_date_tdt",
           "displayName": "cases.comp.merge.table.columns.modified",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
         }
       ],
       "paginationPageSizes": [
@@ -1189,6 +1192,68 @@
       "paginationPageSize": 5,
       "start": 0,
       "__xxx__caseInfoFilter": "\"Object Type\": CASE_FILE"
+    },
+    {
+      "id": "referenceSearchGrid",
+      "title": "Reference Search",
+      "enabled": "true",
+      "type": "grid",
+      "enableFiltering": false,
+      "emptySearch": false,
+      "hideTypeahead": true,
+      "showFacets": false,
+      "searchFilter": "\"Object Type\": COMPLAINT|CASE_FILE",
+      "columnDefs": [
+        {
+          "name": "object_id_s",
+          "displayName": "cases.comp.addreference.grid.columns.id",
+          "headerCellFilter": "translate",
+          "visible": false
+        },
+        {
+          "name": "name",
+          "displayName": "cases.comp.addreference.grid.columns.name",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity.object_type_s, row.entity.object_id_s)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.name}}>{{row.entity.name}}</a>"
+        },
+        {
+          "name": "object_type_s",
+          "displayName": "cases.comp.addreference.grid.columns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title_parseable",
+          "displayName": "cases.comp.addreference.grid.columns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "parent_number_lcs",
+          "displayName": "cases.comp.addreference.grid.columns.parent",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "assignee_full_name_lcs",
+          "displayName": "cases.comp.addreference.grid.columns.assignee",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified_date_tdt",
+          "displayName": "cases.comp.addreference.grid.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 20,
+      "start": 0,
+      "filter": "",
+      "filterName": "",
+      "csvFileName": "search.csv"
     }
   ]
 }

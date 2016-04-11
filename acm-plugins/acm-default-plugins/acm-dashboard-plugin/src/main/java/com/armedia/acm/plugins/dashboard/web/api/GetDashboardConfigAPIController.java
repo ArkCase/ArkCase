@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher;
 import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
 import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.List;
 
 /**
@@ -27,7 +29,7 @@ import java.util.List;
  */
 
 @Controller
-@RequestMapping({"/api/v1/plugin/dashboard", "/api/latest/plugin/dashboard"})
+@RequestMapping({ "/api/v1/plugin/dashboard", "/api/latest/plugin/dashboard" })
 public class GetDashboardConfigAPIController
 {
 
@@ -41,11 +43,9 @@ public class GetDashboardConfigAPIController
     @ResponseBody
     public DashboardDto getDashboardConfig(
             @RequestParam(value = "moduleName", required = false, defaultValue = "DASHBOARD") String moduleName,
-            Authentication authentication,
-            HttpSession session
-    ) throws AcmDashboardException, AcmObjectNotFoundException
+            Authentication authentication, HttpSession session) throws AcmDashboardException, AcmObjectNotFoundException
     {
-        String userId = authentication.getName().toLowerCase();
+        String userId = authentication.getName();
         if (log.isInfoEnabled())
         {
             log.info("Finding dashboard configuration for user '" + userId + "'");
@@ -70,7 +70,8 @@ public class GetDashboardConfigAPIController
             retval = dashboardService.getDashboardConfigForUserAndModuleName(owner, moduleName);
             dashboardDto = dashboardService.prepareDashboardDto(retval, inserted, moduleName);
             return dashboardDto;
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
             if (dashboardPropertyReader.getModuleNameList().contains(moduleName))
             {
@@ -90,15 +91,18 @@ public class GetDashboardConfigAPIController
                 }
                 dashboardDto = dashboardService.prepareDashboardDto(retval, inserted, moduleName);
                 return dashboardDto;
-            } else
+            }
+            else
             {
                 if (log.isWarnEnabled())
                 {
-                    log.info("Module dashboard config for user '" + userId + " and module " + moduleName + " NOT inserted into the DB, moduleName " + moduleName + " does NOT exists");
+                    log.info("Module dashboard config for user '" + userId + " and module " + moduleName
+                            + " NOT inserted into the DB, moduleName " + moduleName + " does NOT exists");
                 }
                 throw e;
             }
-        } catch (Exception e1)
+        }
+        catch (Exception e1)
         {
             if (log.isErrorEnabled())
             {
@@ -107,7 +111,6 @@ public class GetDashboardConfigAPIController
             throw new AcmDashboardException("Get dashboard exception", e1);
         }
     }
-
 
     public DashboardEventPublisher getEventPublisher()
     {

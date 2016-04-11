@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.audit.model;
 import com.armedia.acm.audit.model.NotAudited;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
-import com.armedia.acm.plugins.audit.service.AuditConstants;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

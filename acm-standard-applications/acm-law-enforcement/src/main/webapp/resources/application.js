@@ -76,7 +76,9 @@ angular.module(ApplicationConfiguration.applicationModuleName).config([
                 }
 
                 function isErrorSuppressed(response) {
-                    var isSuppressed = false;
+                    // dmiller 2016-04-11 suppressing errors by default.
+                    // TODO: need a configuration flag and/or a smarter messaging strategy
+                    var isSuppressed = true;
                     angular.forEach(ApplicationConfiguration.suppressedErrorList, function (error) {
                         if (error.url == response.config.url && error.status == response.status) {
                             isSuppressed = true;
@@ -90,6 +92,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).config([
     .run(['$translate', '$translatePartialLoader',
         function ($translate, $translatePartialLoader) {
             $translatePartialLoader.addPart('core');
+            $translatePartialLoader.addPart('welcome');
             $translate.refresh();
         }
     ]);

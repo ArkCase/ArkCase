@@ -17,8 +17,8 @@ angular.module('document-details').controller('Document.ParticipantsController',
         );
 
         var promiseConfig = ConfigService.getComponentConfig("document-details", "participants").then(function (config) {
-            gridHelper.addDeleteButton(config.columnDefs, "grid.appScope.deleteRow(row.entity)");
-            gridHelper.addEditButton(config.columnDefs, "grid.appScope.editRow(row.entity)");
+            gridHelper.addButton(config, "edit");
+            gridHelper.addButton(config, "delete");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
