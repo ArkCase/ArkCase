@@ -40,7 +40,7 @@ public class GetUsersByGroupAPIController
         query.append(" AND ").append("groups_id_ss").append(":").append(group);
         log.debug("executing query for users in group: {}", query.toString());
 
-        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query.toString().replace("002E","."), 0, 1000, "");
+        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query.toString().replace("_002E_","."), 0, 1000, "");
     }
 
     public ExecuteSolrQuery getExecuteSolrQuery()
