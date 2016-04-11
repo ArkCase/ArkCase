@@ -4,11 +4,14 @@ import com.armedia.acm.services.search.model.ReportGenerator;
 import com.armedia.acm.services.search.model.SearchConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -16,6 +19,9 @@ import java.util.stream.Collectors;
  */
 public class CSVReportGenerator extends ReportGenerator
 {
+
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
+
     @Override
     public byte[] generateReport(String[] requestedFields, String jsonData)
     {
@@ -23,12 +29,24 @@ public class CSVReportGenerator extends ReportGenerator
         JSONObject jsonResponse = jsonResult.getJSONObject("response");
         JSONArray jsonDocs = jsonResponse.getJSONArray("docs");
 
-        JSONObject fields = findFields();
+        JSONObject headerFields = findHeaderFields();
 
         StringBuilder sb = new StringBuilder();
 
-        String headers = Arrays.stream(requestedFields).collect(Collectors.joining(SearchConstants.SEPARATOR_COMMA));
-        sb.append(headers);
+        List<String> headers = new ArrayList<>();
+        for (String field : requestedFields)
+        {
+            if (headerFields.has(field))
+            {
+                headers.add(headerFields.getString(field));
+            } else
+            {
+                log.warn("Field '{}' not found in searchPlugin.properties", field);
+            }
+        }
+
+        String headersLine = headers.stream().collect(Collectors.joining(SearchConstants.SEPARATOR_COMMA));
+        sb.append(headersLine);
         sb.append("\n");
 
         for (int i = 0; i < jsonDocs.length(); i++)
@@ -36,10 +54,9 @@ public class CSVReportGenerator extends ReportGenerator
             JSONObject data = jsonDocs.getJSONObject(i);
             for (String field : requestedFields)
             {
-                String f = fields.getString(field);
-                if (data.has(f))
+                if (data.has(field))
                 {
-                    sb.append(data.getString(f));
+                    sb.append(data.getString(field));
                 }
                 sb.append(SearchConstants.SEPARATOR_COMMA);
             }
