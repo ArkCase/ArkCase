@@ -262,7 +262,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
                 //find child users
                 if (group.member_id_ss) {
-                    organizationalHierarchyService.getUsersForGroup(group.object_id_s).then(function (payload) {
+                    organizationalHierarchyService.getUsersForGroup(group.object_id_s.replace(/\./g, '002E')).then(function (payload) {
                         //successfully users received, insert with groups in same array
                         var data = payload.data.response.docs;
                         if (data) {
