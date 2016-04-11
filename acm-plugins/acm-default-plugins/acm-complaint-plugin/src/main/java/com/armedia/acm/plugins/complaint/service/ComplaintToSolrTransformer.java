@@ -57,7 +57,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         String assigneeUserId = findAssigneeUserId(in);
         solr.setAssignee_id_lcs(assigneeUserId);
 
-        solr.setAdditionalProperty("title_parseable_lcs", in.getComplaintTitle().toLowerCase());
+        solr.setAdditionalProperty("title_parseable_lcs", setTitleProperty(in));
 
         AcmUser assignee = getUserDao().quietFindByUserId(assigneeUserId);
 
@@ -115,9 +115,16 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setAssignee_s(assigneeUserId);
 
         // needed a _lcs property for sorting
-        solr.setAdditionalProperty("title_parseable_lcs", in.getComplaintTitle().toLowerCase());
+        solr.setAdditionalProperty("title_parseable_lcs", setTitleProperty(in));
 
         return solr;
+    }
+
+
+    private String setTitleProperty(Complaint complaint)
+    {
+        String title = complaint.getComplaintTitle();
+        return title != null ? title.toLowerCase() : "";
     }
 
     @Override
