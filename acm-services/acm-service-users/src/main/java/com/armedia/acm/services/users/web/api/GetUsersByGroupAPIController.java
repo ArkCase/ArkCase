@@ -31,7 +31,8 @@ public class GetUsersByGroupAPIController
     {
         log.debug("Getting users for group {}", group);
 
-        if(group.contains(" ")){
+        if (group.contains(" "))
+        {
             group = "\"" + group + "\"";
         }
         StringBuilder query = new StringBuilder();
@@ -39,7 +40,7 @@ public class GetUsersByGroupAPIController
         query.append(" AND ").append("groups_id_ss").append(":").append(group);
         log.debug("executing query for users in group: {}", query.toString());
 
-        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query.toString(), 0, 1000, "");
+        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query.toString().replace("002E","."), 0, 1000, "");
     }
 
     public ExecuteSolrQuery getExecuteSolrQuery()
