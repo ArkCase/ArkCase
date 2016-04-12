@@ -134,6 +134,12 @@ public class LabelManagementService
     {
         // 1. Load module's resource file
         JSONObject moduleResource = normalizeResource(loadModuleResource(moduleId, lang));
+        if (!baseLanguage.equals(lang))
+        {
+            JSONObject baseResource = normalizeResource(loadModuleResource(moduleId, baseLanguage));
+            moduleResource = mergeResources(baseResource, moduleResource);
+        }
+
 
         // If module is core, them inject information about menus that are stored in configuration file
         if (MODULE_CORE_ID.equals(moduleId))
@@ -196,16 +202,15 @@ public class LabelManagementService
      *
      * @param modules
      * @param langs
-     * @param useBaseLang
      * @throws AcmLabelManagementException
      */
-    public void reset(List<String> modules, List<String> langs, boolean useBaseLang) throws AcmLabelManagementException
+    public void reset(List<String> modules, List<String> langs) throws AcmLabelManagementException
     {
         for (String lang : langs)
         {
             for (String module : modules)
             {
-                resetModule(module, lang, useBaseLang);
+                resetModule(module, lang);
             }
         }
     }
@@ -233,16 +238,15 @@ public class LabelManagementService
      *
      * @param moduleId
      * @param lang
-     * @param useBaseLang
      */
-    public void resetModule(String moduleId, String lang, boolean useBaseLang) throws AcmLabelManagementException
+    public void resetModule(String moduleId, String lang) throws AcmLabelManagementException
     {
         String fileName = String.format(customResourcesLocation + customResourceFile, moduleId, lang);
         try
         {
             File resourceFile = new File(fileName);
             FileUtils.deleteQuietly(resourceFile);
-            updateResource(moduleId, lang, useBaseLang);
+            updateResource(moduleId, lang);
         } catch (Exception e)
         {
             String msg = String.format("Can't reset resource file %s", fileName);
@@ -250,7 +254,6 @@ public class LabelManagementService
             throw new AcmLabelManagementException(msg);
         }
     }
-
 
     /**
      * Update resource file
@@ -262,24 +265,16 @@ public class LabelManagementService
      */
     public JSONObject updateResource(String moduleId, String lang) throws AcmLabelManagementException
     {
-        return updateResource(moduleId, lang, false);
-    }
 
-    /**
-     * Update resource file
-     *
-     * @param moduleId
-     * @param lang
-     * @return
-     * @throws AcmLabelManagementException
-     */
-    public JSONObject updateResource(String moduleId, String lang, boolean useBaseLang) throws AcmLabelManagementException
-    {
         // 1. Load module's resource file
+        JSONObject moduleResource = normalizeResource(loadModuleResource(moduleId, lang));
 
-        JSONObject rawModuleResource = loadModuleResource(moduleId, lang);
-        boolean moduleResourceAbsent = (rawModuleResource == null);
-        JSONObject moduleResource = moduleResource = normalizeResource(rawModuleResource);
+        if (!baseLanguage.equals(lang))
+        {
+            JSONObject baseResource = normalizeResource(loadModuleResource(moduleId, baseLanguage));
+            moduleResource = mergeResources(baseResource, moduleResource);
+        }
+
 
         // If module is core, them inject information about menus that are stored in configuration file
         if (MODULE_CORE_ID.equals(moduleId))
@@ -290,22 +285,9 @@ public class LabelManagementService
         }
 
         // 2. Load custom resource file
-        JSONObject customResource = null;
-        if (moduleResourceAbsent && useBaseLang)
-        {
-            // If module resource is absent and useBaseLang option = true, then load base language module resource and
-            // save it as custom resource
-            JSONObject baseModuleResource = normalizeResource(loadModuleResource(moduleId, baseLanguage));
-            moduleResource = mergeResources(baseModuleResource, moduleResource);
-            customResource = saveAsCustomResource(moduleId, lang, moduleResource);
-        } else
-        {
-            customResource = loadCustomResource(moduleId, lang);
-        }
-
+        JSONObject customResource = loadCustomResource(moduleId, lang);
 
         // 3. Merge Module's and custom resources
-        //JSONObject resource = mergeResources(moduleResource, customResource);
         JSONObject resource = extendResources(moduleResource, customResource);
 
         // 4. Save updated resource
@@ -551,7 +533,7 @@ public class LabelManagementService
             Iterator<String> keys = moduleRes.keys();
             while (keys.hasNext())
             {
-                String key = (String) keys.next();
+                String key = keys.next();
                 String value = moduleRes.getString(key);
                 String defaultValue = value;
                 String description = "";

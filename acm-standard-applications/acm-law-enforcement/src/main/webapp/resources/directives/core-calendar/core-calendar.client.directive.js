@@ -13,21 +13,17 @@
  *
  * The "Core-Calendar" calendar functionality to the view
  *
- * @param {Object} config object containing configuration items for current component
  * @param {string} folderId string that is folderId from outlook calendar
  *
  * @example
  <example>
  <file name="index.html">
- <core-calendar config="config" folder-id="folderId"/>
+ <core-calendar folder-id="folderId"/>
  </file>
  <file name="app.js">
  angular.module('AppModule').controller('AppController', ['$scope', 'ConfigService'
  , function ($scope, ConfigService) {
         $scope.folderId = 'somefolderid';
-        $scope.config = {
-                "dateFormat": "MM/DD/YYYY HH:mm"
-            }
     }
  ]);
  </file>
@@ -39,8 +35,7 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
         return {
             restrict: 'E',
             scope: {
-                folderId: '=',
-                config: '='
+                folderId: '='
             },
             link: function (scope) {
 
@@ -121,7 +116,7 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                 };
 
                 var makeDetail = function (calendarItem) {
-                    var dateFormat = scope.config.dateFormat;
+                    var dateFormat = $translate.instant('common.dateFormat');
                     var startLabel = $translate.instant('common.directive.coreCalendar.start.label');
                     var endLabel = $translate.instant('common.directive.coreCalendar.end.label');
                     var body = calendarItem.body;

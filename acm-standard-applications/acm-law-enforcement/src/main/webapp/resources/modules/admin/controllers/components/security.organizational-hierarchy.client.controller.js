@@ -3,6 +3,8 @@
 angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['$scope', 'Admin.OrganizationalHierarchyService', '$q', '$modal', 'MessageService', '$translate', 'Admin.ModalDialogService', 'UtilService',
     function ($scope, organizationalHierarchyService, $q, $modal, messageService, $translate, modalDialogService, Util) {
 
+        var UUIDRegExString = ".*-UUID-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}";
+
         $scope.data = [];
         var groupsMap = {};
 
@@ -105,7 +107,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
                     //name that should be displayed in UI should not be unique across different tree levels,
                     // so the UUID part is removed!
-                    newGroup.name = newGroup.name.substring(0,newGroup.name.lastIndexOf("-UUID-"));
+                    newGroup.name = UUIDRegExString.test(newGroup.name) ? newGroup.name.substring(0, newGroup.name.lastIndexOf("-UUID-")) : newGroup.name;
 
                     groupsMap[newGroup.object_id_s] = newGroup;
                     if (!groupsMap[newGroup.parent_id_s].child_id_ss) {
@@ -360,7 +362,9 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     //name that should be displayed in UI should not be unique across different tree levels,
                     // so the UUID part is removed!
 
-                    newGroup.name = payload.data.name.substring(0,payload.data.name.lastIndexOf("-UUID-"));
+
+                    newGroup.name = UUIDRegExString.test(payload.data.name) ? payload.data.name.substring(0, payload.data.name.lastIndexOf("-UUID-")) : payload.data.name;
+
 
                     groupsMap[payload.data.name] = newGroup;
                     addToTree(newGroup, true);

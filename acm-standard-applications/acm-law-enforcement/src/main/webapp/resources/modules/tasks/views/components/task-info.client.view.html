@@ -41,7 +41,7 @@
                        e-init-date="dateInfo.taskStartDate"
                        e-on-open-focus="false"
                        onaftersave="updateStartDate(dateInfo.taskStartDate)">
-                        {{ (dateInfo.taskStartDate | date: defaultDatePickerFormat) || 'Unknown' }}</a>
+                        {{ (dateInfo.taskStartDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</a>
                 </div>
                 <small class="text-muted">Start Date</small>
             </div>
@@ -53,7 +53,7 @@
                        e-init-date="dateInfo.dueDate"
                        e-on-open-focus="false"
                        onaftersave="updateDueDate(dateInfo.dueDate)">
-                        {{ (dateInfo.dueDate | date: defaultDatePickerFormat) || 'Unknown' }}</a>
+                        {{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</a>
                 </div>
                 <small class="text-muted">Due Date</small>
             </div>

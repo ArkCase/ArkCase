@@ -7,6 +7,7 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
+import com.armedia.acm.services.users.model.group.GroupConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,23 +99,32 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         {
             group.setStatus(AcmGroupStatus.DELETE);
             group.setParentGroup(null);
-            group.setChildGroups(null);
-
-            if (group.getMembers() != null)
+            if (group.getChildGroups() != null)
             {
-                // Clone the members that should be removed because of
-                // concurrent modification exception
-                Set<AcmUser> clonedMembers = getClonedMembers(group.getMembers());
-                for (AcmUser member : clonedMembers)
-                {
-                    group.removeMember(member);
-                }
-            }
+                List<AcmGroup> childGroups = group.getChildGroups();
+                group.setChildGroups(null);
+                group = removeMemebres(group);
 
-            group = save(group);
+                childGroups.forEach(cg -> markGroupDelete(cg.getName()));
+            }
+        }
+        return group;
+    }
+
+    private AcmGroup removeMemebres(AcmGroup group)
+    {
+        if (group.getMembers() != null)
+        {
+            // Clone the members that should be removed because of
+            // concurrent modification exception
+            Set<AcmUser> clonedMembers = getClonedMembers(group.getMembers());
+            for (AcmUser member : clonedMembers)
+            {
+                group.removeMember(member);
+            }
         }
 
-        return group;
+        return save(group);
     }
 
     @Transactional
@@ -185,21 +195,24 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 
     public AcmGroup groupByUIName(AcmGroup group)
     {
-        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.name LIKE :name AND group.parentGroup IS NULL", AcmGroup.class);
+        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.name LIKE :name AND " +
+                "group.parentGroup IS NULL AND group.status <> :status", AcmGroup.class);
 
-        query.setParameter("name", group.getName() + "-UUID-%");
+        query.setParameter("name", group.getName() + GroupConstants.UUID_LIKE_STRING);
+        query.setParameter("status", AcmGroupStatus.DELETE);
         List<AcmGroup> result = query.getResultList();
+
         return result.isEmpty() ? null : result.get(0);
     }
 
     public AcmGroup subGroupByUIName(AcmGroup group)
     {
         TypedQuery<AcmGroup> query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.name LIKE :name AND " +
-                "group.parentGroup.name = :uuidName", AcmGroup.class);
+                "group.parentGroup.name = :uuidName AND group.status <> :status", AcmGroup.class);
 
-        query.setParameter("name", group.getName() + "-UUID-%");
+        query.setParameter("name", group.getName() + GroupConstants.UUID_LIKE_STRING);
         query.setParameter("uuidName", group.getParentGroup().getName());
-
+        query.setParameter("status", AcmGroupStatus.DELETE);
         List<AcmGroup> result = query.getResultList();
 
         return result.isEmpty() ? null : result.get(0);

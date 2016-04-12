@@ -84,10 +84,10 @@
  */
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log'
     , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService'
-    , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService'
+    , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', '$timeout', '$browser', '$location'
     , function ($q, $translate, $modal, $filter, $log
         , Store, Util, UtilDateService, ConfigService, LookupService
-        , Ecm, EcmEmailService, EcmRecordService) {
+        , Ecm, EcmEmailService, EcmRecordService, $timeout, $browser, $location) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
         var promiseGetUserFullName = LookupService.getUserFullNames();
@@ -155,8 +155,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
 
                         if (DocTree.isFolderNode(node)) {
-                            ;
-                        } else if (DocTree.isFileNode(node)) {
+
+                        }
+                        else if (DocTree.isFileNode(node)) {
                             var filter = $filter('capitalizeFirst');
                             var typeColumn = (DocTree.getDocumentTypeDisplayLabel(node.data.type));
                             var filteredType = filter(typeColumn);
@@ -217,7 +218,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         var acmIcon = null;
                         var nodeType = Util.goodValue(node.data.objectType);
                         if (DocTree.NODE_TYPE_PREV == nodeType) {
-                            acmIcon = "<i class='i i-arrow-up'></i>" //"i-notice icon"
+                            acmIcon = "<i class='i i-arrow-up'></i>"; //"i-notice icon"
                         } else if (DocTree.NODE_TYPE_NEXT == nodeType) {
                             acmIcon = "<i class='i i-arrow-down'></i>";
                         }
@@ -269,7 +270,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     if (DocTree.isFolderNode(data.node)) {
                                         DocTree.Op.createFolder(data.node, name);
                                     } else {
-                                        ; //create new document node
+                                        //create new document node
                                     }
 
                                 } else {
@@ -516,6 +517,53 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 }
                 return $promise;
             }
+            /**
+             * @description Recursive function that will iterate through the tree starting from a given node,
+             * and replicate the tree structure and it's types of children in an array.
+             * Used in DocTree.refreshTree() together with DocTree.expandAfterRefresh()
+             *
+             * NOTE - the node from which the iteration is started, must be used in DocTree.expandAfterRefresh()
+             *
+             * @param node The node from which the iteration will start
+             * @param nodesStatusBeforeRefresh The array in which the nodes status will be saved
+             */
+            , saveNodesStatus: function (node, nodesStatusBeforeRefresh) {
+                if (node.children) {
+                    for (var i = 0; i < node.children.length; i++) {
+                        if (DocTree.isFolderNode(node.children[i])) {
+                            if (node.children[i].expanded) {
+                                var folderExpanded = [];
+                                nodesStatusBeforeRefresh.push(folderExpanded);
+                                DocTree.saveNodesStatus(node.children[i], folderExpanded);
+                            } else {
+                                nodesStatusBeforeRefresh.push('folderNotExpanded');
+                            }
+                        } else {
+                            nodesStatusBeforeRefresh.push('file');
+                        }
+                    }
+                }
+            }
+            /**
+             * @description Recursive function which will expand the folders in the tree based on their value
+             * in the nodesStatusBeforeRefresh array
+             * Used in DocTree.refreshtree() together with DocTree.saveNodesStatus()
+             *
+             * NOTE - the children param. must be the chhildren array from the node used as starting node in DocTree.saveNodesStatus()
+             *
+             * @param children The children of the first node
+             * @param nodesStatusBeforeRefresh The array in which the tree structure and it's types of
+             * children are replicated
+             */
+            , expandAfterRefresh: function (children, nodesStatusBeforeRefresh) {
+                nodesStatusBeforeRefresh.forEach(function (item, index) {
+                    if (angular.isArray(item)) {
+                        DocTree.expandNode(children[index]).then(function (data) {
+                            DocTree.expandAfterRefresh(data.children, nodesStatusBeforeRefresh[index]);
+                        });
+                    }
+                });
+            }
             , refreshTree: function () {
                 var objType = DocTree.getObjType();
                 var objId = DocTree.getObjId();
@@ -557,7 +605,27 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     //    }
                     //}
                 }
-                DocTree.tree.reload(DocTree.Source.source());
+
+                /**
+                 * @description Array in which the tree structure will be replicated before the reload is started
+                 */
+                var nodesStatusBeforeRefresh = [];
+
+                /**
+                 * @description We want the iteration to start from the root node of the tree
+                 */
+                var rootNode = DocTree.getTopNode();
+
+                DocTree.saveNodesStatus(rootNode, nodesStatusBeforeRefresh);
+
+                DocTree.tree.reload(DocTree.Source.source()).then(function () {
+                    if (rootNode.expanded) {
+                        DocTree.expandTopNode().then(function () {
+                            var rootNode = DocTree.getTopNode();
+                            DocTree.expandAfterRefresh(rootNode.children, nodesStatusBeforeRefresh);
+                        })
+                    }
+                });
             }
             , switchObject: function (activeObjType, activeObjId) {
                 if (!DocTree.tree) {
@@ -1040,6 +1108,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             break;
                         case "edit":
                             break;
+                        case "editWithWord":
+                            var absUrl = $location.absUrl();
+                            var baseHref = $browser.baseHref();
+                            var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
+                            ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + node.parent.data.objectId + "/" + node.data.objectId + ".docx");
+                            break;
                         case "email":
                             Email.openModal(actNodes);
                             break;
@@ -1054,7 +1128,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
 
                             if (!Util.isArrayEmpty(declareAsRecordData)) {
-                                DocTree.Op.declareAsRecord(nodesToDeclare, declareAsRecordData);
+                                DocTree.Op.declareAsRecord(nodesToDeclare, declareAsRecordData).done(function () {
+                                    $timeout(function () {
+                                        DocTree.refreshTree()
+                                    }, 1000);
+                                });
                             }
                             break;
                         case "print":
@@ -1264,7 +1342,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         } else if ("disable" == allow) {
                             item.disabled = true;
                         } else {
-                            item.disabled = false;
+                            if (item.disabledExpression) {
+                                item.disabled = eval(item.disabledExpression);
+                            } else {
+                                item.disabled = false;
+                            }
                         }
                     });
                     menu = _.filter(menu, function (item) {
@@ -2478,25 +2560,27 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 }
 
                 , declareAsRecord: function (nodes, declareAsRecordData) {
+                    var dfd = $.Deferred();
                     var objType = DocTree.getObjType();
                     var objId = DocTree.getObjId();
-                    EcmRecordService.declareAsRecord(objType, objId, declareAsRecordData).then(function (data) {
-                        for (var j = 0; j < nodes.length; j++) {
-                            if (DocTree.isFolderNode(nodes[j])) {
-                                for (var i = 0; i < nodes[j].children.length; i++) {
-                                    if (Validator.validateNode(nodes[j].children[i])) {
-                                        nodes[j].children[i].data.status = "RECORD";
-                                        nodes[j].children[i].renderTitle();
+                    EcmRecordService.declareAsRecord(objType, objId, declareAsRecordData)
+                        .then(function (data) {
+                            for (var j = 0; j < nodes.length; j++) {
+                                if (DocTree.isFolderNode(nodes[j])) {
+                                    for (var i = 0; i < nodes[j].children.length; i++) {
+                                        if (Validator.validateNode(nodes[j].children[i])) {
+                                            nodes[j].children[i].data.status = "RECORD";
+                                            nodes[j].children[i].renderTitle();
+                                        }
                                     }
+                                } else if (DocTree.isFileNode(nodes[j])) {
+                                    nodes[j].data.status = "RECORD";
+                                    nodes[j].renderTitle();
                                 }
-                            } else if (DocTree.isFileNode(nodes[j])) {
-                                nodes[j].data.status = "RECORD";
-                                nodes[j].renderTitle();
                             }
-                        }
-                        DocTree.refreshTree();
-                        return data;
-                    });
+                            dfd.resolve(data);
+                        });
+                    return dfd.promise();
                 }
 
             } // end Op
@@ -2657,6 +2741,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     } //end if validateFolderList
                                 } //end if (!Util.isArrayEmpty(newChildren))
                             }
+                            DocTree.refreshTree();
                             return uploadedFiles;
                         }
                     );
@@ -3915,9 +4000,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
         };
 
     }
-]);
-
-
+])
 angular.module('directives').controller('directives.DocTreeDndDialogController', ['$scope', '$modalInstance'
         , 'UtilService', 'OpTypes', 'params'
         , function ($scope, $modalInstance, Util, OpTypes, params) {
