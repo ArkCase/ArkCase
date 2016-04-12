@@ -1,22 +1,15 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal'
+angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
-    , 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication'
-    , function ($scope, $stateParams, $modal
+    , 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication', 'PermissionsService'
+    , function ($scope, $stateParams, $modal, $q
         , Util, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService
-        , HelperObjectBrowserService, DocTreeService, Authentication) {
-
-        var adminRole = false;
+        , HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService) {
 
         Authentication.queryUserInfo().then(
-            function(userInfo) {
+            function (userInfo) {
                 $scope.user = userInfo.userId;
-                _.forEach(userInfo.authorities, function (authority) {
-                    if (authority === 'ROLE_ADMINISTRATOR') {
-                        adminRole = true;
-                    }
-                });
                 return userInfo;
             }
         );
@@ -78,13 +71,44 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
                     if (!nodes[0].data.lock) {
                         return "disable";
                     }
-                    else if (nodes[0].data.lock && odes[0].data.lock.creator !== $scope.user || !adminRole) {
+                    else if (nodes[0].data.lock && nodes[0].data.lock.creator !== $scope.user) {
                         return "disable";
+                    }
+                    else {
+                        var allowDeffered = $q.defer();
+                        //check permission for unlock
+                        PermissionsService.getActionPermission('unlock', nodes[0].data)
+                            .then(function success(hasPermission) {
+                                    if (hasPermission)
+                                        allowDeffered.resolve("");
+                                    else
+                                        allowDeffered.resolve("disable");
+                                },
+                                function error() {
+                                    allowDeffered.resolve("disable");
+                                }
+                            );
+                        return allowDeffered.promise;
                     }
                 }
                 else if ("checkout" == cmd) {
                     if (nodes[0].data.lock) {
                         return "disable";
+                    } else {
+                        var allowDeffered = $q.defer();
+                        //check permission for lock
+                        PermissionsService.getActionPermission('lock', nodes[0].data)
+                            .then(function success(hasPermission) {
+                                    if (hasPermission)
+                                        allowDeffered.resolve("");
+                                    else
+                                        allowDeffered.resolve("disable");
+                                },
+                                function error() {
+                                    allowDeffered.resolve("disable");
+                                }
+                            );
+                        return allowDeffered.promise;
                     }
                 }
             }

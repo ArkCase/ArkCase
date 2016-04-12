@@ -389,7 +389,7 @@
 
     <changeSet id="48-acm_file-add-object-type" author="riste.tutureski">
         <addColumn tableName="acm_file">
-            <column name="cm_object_type" type="VARCHAR(255)"/>
+            <column name="cm_object_type" type="VARCHAR(255)" defaultValue="FILE"/>
         </addColumn>
     </changeSet>
 
