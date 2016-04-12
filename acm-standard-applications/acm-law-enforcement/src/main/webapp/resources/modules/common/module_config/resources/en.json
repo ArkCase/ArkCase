@@ -71,7 +71,8 @@
     },
     "error": {
       "nodeTitle": "(Error)"
-    }
+    },
+    "lockedTitle": "This document is locked."
   },
   "common.directive.objectTree": {
     "btnPrev.title": " records above...",
