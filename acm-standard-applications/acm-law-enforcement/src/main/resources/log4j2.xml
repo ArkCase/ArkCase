@@ -14,7 +14,7 @@
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
-            <ThresholdFilter level="info"/>
+            <ThresholdFilter level="debug"/>
         </RollingFile>
     </Appenders>
     <Loggers>
