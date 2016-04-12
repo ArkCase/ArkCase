@@ -6,7 +6,7 @@
     "defaultDateTimeFormat": "MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "MM/dd/yyyy",
     "defaultDateUIFormat": "MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "MM/dd/yyyy HH:MM"
+    "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm"
   },
   "common.service": {
     "error.invalidData": "Invalid data"
