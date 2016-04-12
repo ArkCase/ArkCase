@@ -475,6 +475,10 @@
         {
           "title": "admin.application.module.config.title",
           "templateName": "application.module.config"
+        },
+        {
+          "title": "admin.application.name.title",
+          "templateName": "application.name.config"
         }
       ]
     },
