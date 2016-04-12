@@ -4,6 +4,7 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.easymock.EasyMockSupport;
@@ -40,6 +41,7 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
     private DefaultAuthenticationEventPublisher mockEventPublisher;
     private UserDao mockUserDao;
     private AcmGroupDao mockGroupDao;
+    private GroupService mockGroupService;
 
     @Before
     public void setUp() throws Exception
@@ -52,6 +54,7 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         mockEventPublisher = createMock(DefaultAuthenticationEventPublisher.class);
         mockUserDao = createMock(UserDao.class);
         mockGroupDao = createMock(AcmGroupDao.class);
+        mockGroupService = createMock(GroupService.class);
 
         unit = new AcmAuthenticationManager();
 
@@ -60,6 +63,7 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         unit.setAuthenticationEventPublisher(mockEventPublisher);
         unit.setUserDao(mockUserDao);
         unit.setGroupDao(mockGroupDao);
+        unit.setGroupService(mockGroupService);
     }
 
     @Test
@@ -102,6 +106,8 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         expect(mockAuthoritiesMapper.mapAuthorities(authsFromProvider)).andReturn(authsFromMapper);
         expect(mockUserDao.findByUserIdAnyCase(user.getUserId())).andReturn(user);
         expect(mockGroupDao.findByUserMember(user)).andReturn(groups);
+        expect(mockGroupService.isUUIDPresentInTheGroupName(ldapGroup.getName())).andReturn(false);
+        expect(mockGroupService.isUUIDPresentInTheGroupName(adhocGroup.getName())).andReturn(false);
         expect(mockAuthoritiesMapper.mapAuthorities(authsGroups)).andReturn(authsGroups);
 
         replayAll();
@@ -149,4 +155,5 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         providers.put("B", mockSecondProvider);
         return providers;
     }
+
 }
