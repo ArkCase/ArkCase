@@ -192,6 +192,11 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     if (!Util.isEmpty(objectType)) {
                         params.type = objectType;
                     }
+
+                    if (that.scope.treeControl) {
+                        that.scope.treeControl.selectComponent(objectType, objectId, linkId);
+                    }
+
                     that.state.go(arg.moduleId + "." + linkId, params);
                 };
 
