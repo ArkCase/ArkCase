@@ -1766,6 +1766,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                                     for (var i = 0; i < replaceInfo.versions.length; i++) {
                                                         var ver = {};
                                                         ver.versionTag = replaceInfo.versions[i].versionTag;
+                                                        ver.created = replaceInfo.versions[i].created;
+                                                        ver.creator = replaceInfo.versions[i].creator;
                                                         folderList.children[replaced].versionList.push(ver);
                                                     }
                                                 }
