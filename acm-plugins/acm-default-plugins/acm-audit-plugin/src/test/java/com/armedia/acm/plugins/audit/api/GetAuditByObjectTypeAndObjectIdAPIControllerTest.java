@@ -26,14 +26,20 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-@RunWith(SpringJUnit4ClassRunner.class) @ContextConfiguration(locations = { "classpath:/spring/spring-library-audit-plugin-test.xml" }) public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:/spring/spring-library-audit-plugin-test.xml"})
+public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
         extends EasyMockSupport
 {
     private MockMvc mockMvc;
@@ -46,7 +52,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
     private Authentication mockAuthentication;
     private ReplaceEventTypeNames mockReplaceEventTypeNames;
 
-    @Autowired private ExceptionHandlerExceptionResolver exceptionResolver;
+    @Autowired
+    private ExceptionHandlerExceptionResolver exceptionResolver;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -58,8 +65,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
     AuditEvent mockAuditEvent = null;
     QueryResultPageWithTotalCount<AuditEvent> mockExpected = null;
     String key = null;
+    String sortBy = "";
+    String sort = "";
 
-    @Before public void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         mockAuditDao = createMock(AuditDao.class);
         mockHttpSession = new MockHttpSession();
@@ -78,6 +88,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         objectType = "OBJECT_TYPE";
         eventResult = "eventResult";
         fullEventType = "fullEventType";
+        sort = "eventDate DESC";
 
         mockAuditEvent = setAuditEvent();
 
@@ -105,13 +116,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         return auditEvent;
     }
 
-    @Test public void getEventsByObjectTypeAndObjectId() throws Exception
+    @Test
+    public void getEventsByObjectTypeAndObjectId() throws Exception
     {
         expect(mockAuditProperties.get(eq(key))).andReturn("com.armedia.acm.app.task.create, com.armedia.acm.casefile.created");
         executeTest(false);
     }
 
-    @Test public void getEventsByObjectTypeAndObjectIdWhenEventTypesNull() throws Exception
+    @Test
+    public void getEventsByObjectTypeAndObjectIdWhenEventTypesNull() throws Exception
     {
         expect(mockAuditProperties.get(eq(key))).andReturn(null);
         executeTest(true);
@@ -121,7 +134,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
     {
         Capture<List<String>> eventTypes = newCapture();
 
-        expect(mockAuditDao.findPagedResults(eq(objectId), eq(objectType), eq(0), eq(10), capture(eventTypes))).
+        expect(mockAuditDao.findPagedResults(eq(objectId), eq(objectType), eq(0), eq(10), capture(eventTypes), eq(sortBy), eq(sort))).
                 andReturn(Arrays.asList(mockAuditEvent));
         expect(mockAuditDao.countAll(eq(objectId), eq(objectType), capture(eventTypes))).andReturn(Arrays.asList(mockAuditEvent).size());
         expect(mockReplaceEventTypeNames.replaceNameInAcmEvent(mockAuditEvent)).andReturn(mockAuditEvent).anyTimes();
