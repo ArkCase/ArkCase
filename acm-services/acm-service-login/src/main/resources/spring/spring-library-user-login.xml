@@ -82,6 +82,13 @@
     <bean id="ssAuthenticationEventPublisher"
           class="org.springframework.security.authentication.DefaultAuthenticationEventPublisher"/>
     
+    <!-- REST services security beans -->
+    <bean id="acmRestAuthenticationSuccessHandler" class="com.armedia.acm.auth.AcmRestAuthenticationSuccessHandler" />
+    
+    <bean id="acmRestAuthenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler" />
+    
+    <bean id="acmRestAuthenticationEntryPoint" class="com.armedia.acm.auth.AcmRestAuthenticationEntryPoint" />
+    
     <beans profile="ldap">
         <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">
             <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory" />
@@ -106,7 +113,11 @@
             </property>
         </bean>
         
-        <bean id="acmSamlAthenticationCheckFilter" class="com.armedia.acm.auth.AcmSamlAuthenticationCheckFilter">
+        <bean id="acmSamlAuthenticationCheckFilter" class="com.armedia.acm.auth.AcmSamlAuthenticationCheckFilter">
+            <property name="authenticationCheckIntervalInSeconds" value="${sso.saml.authenticationCheckIntervalInSeconds}"/>
+        </bean>
+        
+        <bean id="acmSamlRestAuthenticationCheckFilter" class="com.armedia.acm.auth.AcmSamlRestAuthenticationCheckFilter">
             <property name="authenticationCheckIntervalInSeconds" value="${sso.saml.authenticationCheckIntervalInSeconds}"/>
         </bean>
         
@@ -116,5 +127,5 @@
             <property name="alwaysUseDefaultTargetUrl" value="false" />
         </bean>
     </beans>
-
+ 
 </beans>
