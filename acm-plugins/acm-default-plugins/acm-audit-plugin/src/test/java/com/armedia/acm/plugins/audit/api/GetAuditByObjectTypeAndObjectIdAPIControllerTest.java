@@ -88,7 +88,8 @@ public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
         objectType = "OBJECT_TYPE";
         eventResult = "eventResult";
         fullEventType = "fullEventType";
-        sort = "eventDate DESC";
+        sortBy = "eventDate";
+        sort = "DESC";
 
         mockAuditEvent = setAuditEvent();
 
