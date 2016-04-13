@@ -165,6 +165,21 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 //Tree.tree.activateKey(key);
 
             }
+            , selectComponent: function(nodeType, nodeId, component) {
+
+                var subKey = null;
+                if ("main" != component) {
+                    var nodeTpe = Tree.getNodeTypeByComponent(component);
+                    subKey = component;
+                }
+                //Tree.select({pageStart: null
+                //    , nodeType: nodeType
+                //    , nodeId: nodeId
+                //    , subKey: subKey
+                //});
+
+                var z = 1;
+            }
             , setTitle: function (nodeType, nodeId, nodeTitle, nodeToolTip) {
                 var key = Tree.Key.getKeyByObj(nodeType, nodeId);
                 var node = Tree.tree.getNodeByKey(key);
@@ -287,6 +302,23 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     }
                 }
                 return leadComponent;
+            }
+            , getNodeTypeByComponent: function (component) {
+                var nt = null;
+                if (!Util.isEmpty(key)) {
+                    var nodeType = Tree.Key.getNodeTypeByKey(key);
+                    var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
+                    for (var i = 0; i < nodeTypes.length; i++) {
+                        var aComponent = Util.goodMapValue(nodeTypes[i], "components[0]", null);
+                        if (aComponent == component) {
+                            if (1 == nodeTypes[i].components.length) {
+                                nt = nodeTypes[i].type;
+                                break;
+                            }
+                        }
+                    }
+                }
+                return nt;
             }
 
             , _getDefaultTreeArgs: function (treeArgs) {
@@ -826,6 +858,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 scope.treeControl = {
                     setTitle: Tree.setTitle
                     , select: Tree.select
+                    , selectComponent: Tree.selectComponent
                 };
 
                 Tree.create();
