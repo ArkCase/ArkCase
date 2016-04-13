@@ -392,6 +392,13 @@
             "uiIcon": "ui-icon-locked"
           }
         ]
+        ,"filesOrFoldersRecord": [
+          {
+            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "cmd": "copy",
+            "uiIcon": "ui-icon-copy"
+          }
+        ]
       },
       "noop": {
         "title": "(Select Item)",

@@ -1268,23 +1268,31 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     if (Validator.validateNodes(nodes)) {
                         var countFolder = 0;
                         var countFile = 0;
+                        var hasOneRecord = false;
                         for (var i = 0; i < nodes.length; i++) {
                             if (DocTree.isFolderNode(nodes[i])) {
                                 countFolder++;
+                                if (nodes[i].data.status == "RECORD") {
+                                    hasOneRecord = true;
+                                }
                             } else if (DocTree.isFileNode(nodes[i])) {
                                 countFile++;
+                                if (nodes[i].data.status == "RECORD") {
+                                    hasOneRecord = true;
+                                }
                             }
                         }
 
-                        if (0 < countFile && 0 >= countFolder) {              //file only menu
-                            menuResource = "menu.batch.files";
-                        } else if (0 >= countFile || 0 < countFolder) {       //folder only menu
-                            menuResource = "menu.batch.folders";
-                        } else if (0 < countFile || 0 < countFolder) {        //mix file and folder menu
-                            menuResource = "menu.batch.filesAndFolders";
-
+                        if (countFile > 0 && countFolder > 0) { // files and folders menu
+                            menuResource = (hasOneRecord ? "menu.batch.filesOrFoldersRecord" : "menu.batch.filesAndFolders");
+                        } else if (countFolder > 0) {       // folders only menu
+                            menuResource = (hasOneRecord ? "menu.batch.filesOrFoldersRecord" : "menu.batch.folders");
+                        } else if (countFile > 0) {        // files only menu
+                            menuResource = (hasOneRecord ? "menu.record.file" : "menu.batch.files");
                         }
+
                     }
+
                     return menuResource;
                 }
                 , getRecordResource: function (node) {
@@ -2789,6 +2797,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     nodeData.data.objectType = Util.goodValue(folderData.objectType);
                     nodeData.data.created = Util.goodValue(folderData.created);
                     nodeData.data.creator = Util.goodValue(folderData.creator);
+                    nodeData.data.status = Util.goodValue(folderData.status);
 
                 }
                 return nodeData;
@@ -3143,6 +3152,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 solrData.modified = Util.goodValue(folderData.modified);
                 solrData.modifier = Util.goodValue(folderData.modifier);
                 solrData.name = Util.goodValue(folderData.name);
+                solrData.status = Util.goodValue(folderData.status);
                 if (!Util.isEmpty(folderData.parentFolderId, 0)) {
                     solrData.folderId = Util.goodValue(folderData.parentFolderId, 0);
                 } else if (!Util.isEmpty(folderData.folderId, 0)) {
