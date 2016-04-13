@@ -8,6 +8,7 @@ angular.module('preference').config(['$stateProvider',
             templateUrl: 'modules/preference/views/preference.client.view.html',
             resolve: {
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('common');
                     $translatePartialLoader.addPart('preference');
                     return $translate.refresh();
                 }]

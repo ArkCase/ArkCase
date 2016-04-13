@@ -724,6 +724,9 @@ public class ActivitiTaskDao implements TaskDao
         if (isTaskTerminated(historicTaskInstance))
         {
             return TaskConstants.STATE_TERMINATED;
+        } else if (isTaskDeleted(historicTaskInstance))
+        {
+            return TaskConstants.STATE_DELETE;
         }
         return historicTaskInstance.getEndTime() == null ? TaskConstants.STATE_ACTIVE : TaskConstants.STATE_CLOSED;
     }
@@ -759,13 +762,27 @@ public class ActivitiTaskDao implements TaskDao
         return false;
     }
 
+    private boolean isTaskDeleted(HistoricTaskInstance historicTaskInstance)
+    {
+        // EDTRM-763 Tasks related bugs to fix in core V2
+        // For adhoc task, the status is DELETE in the tasks grid,
+        // but if you click on the task and view it in task module, the state is CLOSED.
+        // by default activiti sets deleteReason as "deleted" for deleted tasks
+        if (historicTaskInstance.getDeleteReason() != null && historicTaskInstance.getEndTime() != null
+                && historicTaskInstance.getDeleteReason().equals(TaskConstants.STATE_DELETED.toLowerCase()))
+        {
+            return true;
+        }
+        return false;
+    }
+
     private String findTaskStatus(HistoricTaskInstance historicTaskInstance, Boolean deleted)
     {
         if (isTaskTerminated(historicTaskInstance))
         {
             return TaskConstants.STATE_TERMINATED;
         }
-        return historicTaskInstance.getEndTime() == null ? TaskConstants.STATE_ACTIVE : TaskConstants.STATE_DELETED;
+        return historicTaskInstance.getEndTime() == null ? TaskConstants.STATE_ACTIVE : TaskConstants.STATE_DELETE;
     }
 
     private String findTaskStatus(Task task)
@@ -822,6 +839,7 @@ public class ActivitiTaskDao implements TaskDao
                     getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(strTaskId).singleResult();
 
             acmTask.setTaskStartDate(hti.getStartTime());
+            acmTask.setCreateDate(hti.getStartTime());
             acmTask.setTaskFinishedDate(hti.getEndTime());
             acmTask.setTaskDurationInMillis(hti.getDurationInMillis());
             acmTask.setCompleted(true);
@@ -1173,7 +1191,8 @@ public class ActivitiTaskDao implements TaskDao
         return TaskConstants.DEFAULT_PRIORITY;
     }
 
-    protected AcmTask acmTaskFromActivitiTask(Task activitiTask)
+    @Override
+    public AcmTask acmTaskFromActivitiTask(Task activitiTask)
     {
         if (activitiTask == null)
         {
