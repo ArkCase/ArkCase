@@ -157,6 +157,7 @@ angular.module('admin').factory('Admin.LabelsConfigService', ['$resource',
              * @param {Object} params Map of input parameter.
              * @param {Object} params.lng Object that contains value for selected language from dropdown
              * @param {Object} params.ns Object that contains value for selected namespace from dropdown
+             * @param {Boolean} params.useBaseLang If true then use base language for absent resources
              * @param {Function} onSuccess (Optional)Callback function of success query
              * @param {Function} onError (Optional) Callback function when fail
              *
@@ -189,7 +190,6 @@ angular.module('admin').factory('Admin.LabelsConfigService', ['$resource',
                 url: "api/latest/plugin/admin/labelmanagement/admin-resource/refresh",
                 cache: false
             }
-
         });
     }
 ]);
