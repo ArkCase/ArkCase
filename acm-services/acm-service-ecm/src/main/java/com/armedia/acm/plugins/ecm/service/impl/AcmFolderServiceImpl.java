@@ -18,7 +18,6 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.FileableCmisObject;
@@ -39,7 +38,6 @@ import org.springframework.context.ApplicationEventPublisherAware;
 
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
-
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -321,7 +319,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
             folderForMoving.setCmisFolderId(newFolderId);
             folderForMoving.setParentFolderId(dstFolder.getId());
-            getParticipantDao().removeAllOtherParticipantsForObject(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderForMoving.getId(), new ArrayList<AcmParticipant>());
+            getParticipantDao().removeAllOtherParticipantsForObject(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderForMoving.getId(), new ArrayList<>());
             folderForMoving.setParentFolderParticipants(dstFolder.getParticipants());
             movedFolder = getFolderDao().save(folderForMoving);
         } catch (PersistenceException | MuleException e)
@@ -606,15 +604,11 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
                 List<Tree<FileableCmisObject>> descendants = message.getInboundProperty(AcmFolderConstants.IS_FOLDER_NOT_EMPTY_INBOUND_PROPERTY);
 
-                if (foldersAreEmpty(descendants))
+                if (!foldersAreEmpty(descendants))
                 {
-
-                } else
-                {
-
                     if (log.isErrorEnabled())
                     {
-                        log.error("Folder " + folder.getName() + " is not empty and is not deleted!");
+                        log.error("Folder [{}] is not empty and is not deleted!", folder.getName());
                     }
                     throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
                             "Folder " + folder.getName() + " not deleted successfully", null);
