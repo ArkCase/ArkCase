@@ -24,7 +24,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
 
         <enricher target="#[flowVars['children']]">
-            <cmis:folder get="CHILDREN" folderId="#[message.inboundProperties.acmFolderId]"/>
+            <cmis:folder get="DESCENDANTS" depth="100" folderId="#[message.inboundProperties.acmFolderId]"/>
         </enricher>
 
         <choice>
@@ -32,7 +32,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
                 <cmis:delete objectId="#[message.inboundProperties.acmFolderId]"/>
             </when>
             <otherwise>
-                <set-property propertyName="isFolderNotEmpty" value="true"/>
+                <set-property propertyName="isFolderNotEmpty" value="#[flowVars['children']]"/>
             </otherwise>
         </choice>
 
