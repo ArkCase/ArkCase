@@ -125,6 +125,63 @@
         "ROLE_TECHNICIAN"
       ],
       "userRolesAll": []
+    },
+    {
+      "actionName": "editTask",
+      "objectType": "TASK",
+      "objectProperties": {
+        "completed": false
+      },
+      "userRolesAny": [
+        "ROLE_INVESTIGATOR",
+        "ROLE_INVESTIGATOR_SUPERVISOR",
+        "ROLE_ANALYST",
+        "ROLE_CALLCENTER",
+        "ROLE_ADMINISTRATOR",
+        "ROLE_PROSECUTOR",
+        "Role_Ronda",
+        "Evidence Tech",
+        "ROLE_TECHNICIAN"
+      ],
+      "userRolesAll": []
+    },
+    {
+      "actionName": "editNote",
+      "objectType": "TASK",
+      "objectProperties": {
+        "completed": false
+      },
+      "userRolesAny": [
+        "ROLE_INVESTIGATOR",
+        "ROLE_INVESTIGATOR_SUPERVISOR",
+        "ROLE_ANALYST",
+        "ROLE_CALLCENTER",
+        "ROLE_ADMINISTRATOR",
+        "ROLE_PROSECUTOR",
+        "Role_Ronda",
+        "Evidence Tech",
+        "ROLE_TECHNICIAN"
+      ],
+      "userRolesAll": []
+    },
+    {
+      "actionName": "editAttachments",
+      "objectType": "TASK",
+      "objectProperties": {
+        "completed": false
+      },
+      "userRolesAny": [
+        "ROLE_INVESTIGATOR",
+        "ROLE_INVESTIGATOR_SUPERVISOR",
+        "ROLE_ANALYST",
+        "ROLE_CALLCENTER",
+        "ROLE_ADMINISTRATOR",
+        "ROLE_PROSECUTOR",
+        "Role_Ronda",
+        "Evidence Tech",
+        "ROLE_TECHNICIAN"
+      ],
+      "userRolesAll": []
     }
   ]
 }
