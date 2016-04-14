@@ -1,0 +1,24 @@
+<div class="modal-header">
+    <h2 translate>common.directive.docTree.comment.title</h2>
+</div>
+
+<div class="modal-body">
+    <form name="notesForm">
+        <div>
+            <span translate>common.directive.docTree.comment.addComent</span>
+            <textarea ng-model="note.note" required class="form-control">
+
+            </textarea>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
+        common.directive.docTree.comment.btnCancel.text
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" translate ng-disabled="notesForm.$invalid">
+        common.directive.docTree.comment.btnOk.text
+    </button>
+</div>
+
