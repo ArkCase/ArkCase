@@ -84,10 +84,19 @@
  */
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log'
     , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService'
-    , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', '$timeout', '$browser', '$location'
+    , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', 'Authentication', 'Helper.NoteService', 'Object.NoteService' 
+    , '$timeout', '$browser', '$location', 'Object.LockingService', 'ObjectService'
     , function ($q, $translate, $modal, $filter, $log
         , Store, Util, UtilDateService, ConfigService, LookupService
-        , Ecm, EcmEmailService, EcmRecordService, $timeout, $browser, $location) {
+        , Ecm, EcmEmailService, EcmRecordService, Authentication, HelperNoteService, ObjectNoteService
+        , $timeout, $browser, $location, LockingService, ObjectService) {
+        var user = "";
+        Authentication.queryUserInfo().then(
+            function (userInfo) {
+                user = userInfo.userId;
+                return userInfo;
+            }
+        );
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
         var promiseGetUserFullName = LookupService.getUserFullNames();
@@ -135,7 +144,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                     , table: {
                         indentation: 10,      // indent 20px per node level
-                        nodeColumnIdx: 1,     // render the node title into the 2nd column
+                        nodeColumnIdx: 2,     // render the node title into the 3rd column
                         checkboxColumnIdx: 0  // render the checkboxes into the 1st column
                     }
                     , gridnav: {
@@ -155,14 +164,22 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
 
                         if (DocTree.isFolderNode(node)) {
-
-                        }
-                        else if (DocTree.isFileNode(node)) {
+                            ;
+                        } else if (DocTree.isFileNode(node)) {
+                            if (node.data.lock) {
+                                var lockedTitle = $translate.instant("common.directive.docTree.lockedTitle");
+                                var $span = $("<span class='ui-icon ui-icon-locked' title='" + lockedTitle + "'/>").appendTo($tdList.eq(1));
+                                $span.hover(function () {
+                                    $(this).tooltip('show');
+                                }, function () {
+                                    $(this).tooltip('hide');
+                                });
+                            }
                             var filter = $filter('capitalizeFirst');
                             var typeColumn = (DocTree.getDocumentTypeDisplayLabel(node.data.type));
                             var filteredType = filter(typeColumn);
 
-                            $tdList.eq(2).text(filteredType); // document type is mapped (afdp-1249)
+                            $tdList.eq(3).text(filteredType); // document type is mapped (afdp-1249)
 
                             var versionDate = UtilDateService.getDatePart(node.data.created);
                             var versionUser = Util.goodValue(node.data.creator);
@@ -191,22 +208,22 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     }
                                 }
                             }
-                            $tdList.eq(3).text(versionDate);
+                            $tdList.eq(4).text(versionDate);
 
                             promiseGetUserFullName.then(function (userFullNames) {
                                 var found = _.find(userFullNames, {id: versionUser});
-                                $tdList.eq(4).text(Util.goodMapValue(found, "name"));
+                                $tdList.eq(5).text(Util.goodMapValue(found, "name"));
                             });
 
                             if (DocTree.readOnly) {
-                                $tdList.eq(5).text(node.data.version);
+                                $tdList.eq(6).text(node.data.version);
                             } else {
-                                $tdList.eq(5).replaceWith($td6);
+                                $tdList.eq(6).replaceWith($td6);
                             }
 
-                            $tdList.eq(6).text(node.data.status);
+                            $tdList.eq(7).text(node.data.status);
 
-                            //$tdList.eq(1).addClass("");
+                            $tdList.eq(1).addClass("");
 
                         } else {  //non file, non folder
                             $tdList.eq(0).text("");
@@ -1040,7 +1057,34 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 DocTree.uploadFile(node);
                             }
                             break;
-
+                        case "checkout":
+                            var fileId = node.data.objectId;
+                            LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE).then(
+                                function (lockedFile) {
+                                    DocTree._doDownload(node);
+                                    DocTree.refreshTree();
+                                }
+                            );
+                            break;
+                        case "checkin":
+                            var fileId = node.data.objectId;
+                            LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE).then(
+                                function (unlockedFile) {
+                                    var noteHelper = new HelperNoteService.Note();
+                                    var note = noteHelper.createNote(fileId, ObjectService.ObjectTypes.FILE, user);
+                                    Comment.openModal(note, node);
+                                }
+                            );
+                            break;
+                        case "cancelEditing":
+                            var fileId = node.data.objectId;
+                            LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE).then(
+                                function (unlockedFile) {
+                                    // file is unlocked
+                                    DocTree.refreshTree();
+                                }
+                            );
+                            break;
                         case "cut":
                             var nodes = (batch) ? selNodes : [node];
                             if (batch) {
@@ -1226,6 +1270,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         //,delegate: "span.fancytree-node"
                         , delegate: "tr"
                         , beforeOpen: function (event, ui) {
+                            var dfd = new $.Deferred();
                             var node = $.ui.fancytree.getNode(ui.target);
                             if (DocTree.isSpecialNode(node)) {
                                 return false;
@@ -1244,12 +1289,19 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
                             var menu = DocTree.Menu.makeContextMenu(menuResource, actNodes);
 
-                            $s.contextmenu("replaceMenu", menu);
+                            $q.when(menu).then(function (menuResult) {
+                                $s.contextmenu("replaceMenu", menuResult);
 
-                            if (!batchMode) {
-                                $s.contextmenu("enableEntry", "paste", !!DocTree.CLIPBOARD);
-                                node.setActive();
-                            }
+                                if (!batchMode) {
+                                    $s.contextmenu("enableEntry", "paste", !!DocTree.CLIPBOARD);
+                                    node.setActive();
+                                }
+
+                                dfd.resolve(); // Notify about finished response
+                            });
+
+                            // Return a promise to delay opening until an async response becomes available
+                            ui.result = dfd.promise();
                         }
                         , select: function (event, ui) {
                             // delay the event, so the menu can close and the click event does
@@ -1314,6 +1366,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     return menuResource;
                 }
                 , makeContextMenu: function (menuResource, nodes) {
+                    var promiseArray = [];
+                    var menuDeferred = $q.defer();
                     var menu;
                     if (menuResource) {
                         menu = Util.goodMapValue(DocTree.treeConfig, menuResource, []);
@@ -1337,34 +1391,43 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             allow = DocTree.Command.onAllowCmd(item.cmd, nodes);
                         }
 
-                        if ("invisible" == allow) {
-                            item.invisible = true;
-                        } else if ("disable" == allow) {
-                            item.disabled = true;
-                        } else {
-                            if (item.disabledExpression) {
-                                item.disabled = eval(item.disabledExpression);
+                        promiseArray.push(allow);
+                        $q.when(allow).then(function (allowResult) {
+                            if ("invisible" == allowResult) {
+                                item.invisible = true;
+                            } else if ("disable" == allowResult) {
+                                item.disabled = true;
                             } else {
-                                item.disabled = false;
-                            }
-                        }
-                    });
-                    menu = _.filter(menu, function (item) {
-                        return !item.invisible;
-                    });
-
-                    //Under readOnly mode, disable all non-readOnly cmd
-                    if (DocTree.readOnly) {
-                        _.each(menu, function (item) {
-                            var readOnly = Util.goodMapValue(item.data, "readOnly", false);
-                            if (readOnly) {
-                                item.disabled = false;
+                                if (item.disabledExpression) {
+                                    item.disabled = eval(item.disabledExpression);
+                                } else {
+                                    item.disabled = false;
+                                }
                             }
                         });
+                    });
 
-                    }
+                    $q.all(promiseArray).then(function () {
+                        menu = _.filter(menu, function (item) {
+                            return !item.invisible;
+                        });
 
-                    return menu;
+                        //Under readOnly mode, disable all non-readOnly cmd
+                        if (DocTree.readOnly) {
+                            _.each(menu, function (item) {
+                                var readOnly = Util.goodMapValue(item.data, "readOnly", false);
+                                if (readOnly) {
+                                    item.disabled = false;
+                                }
+                            });
+
+                        }
+
+                        menuDeferred.resolve(menu);
+                    });
+
+
+                    return menuDeferred.promise;
                 }
 
 
@@ -1785,6 +1848,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     fileNode.setStatus("ok");
                                 }
                                 dfd.resolve();
+                                DocTree.refreshTree();
                             }
                             , function (errorData) {
                                 //fixme: App.View.MessageBoard.show($.t("doctree:error.replace-file"), Util.goodValue(response.errorMsg));
@@ -2810,6 +2874,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     nodeData.data.status = Util.goodValue(fileData.status);
                     nodeData.data.category = Util.goodValue(fileData.category);
                     nodeData.data.version = Util.goodValue(fileData.version);
+                    nodeData.data.lock = Util.goodValue(fileData.lock);
+                    nodeData.data.modifier = Util.goodValue(fileData.modifier);
                     if (Util.isArray(fileData.versionList)) {
                         nodeData.data.versionList = [];
                         for (var i = 0; i < fileData.versionList.length; i++) {
@@ -3342,6 +3408,38 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             //}
 
         }; // end Email
+
+        var Comment = {
+            openModal: function (note, node) {
+
+                var params = {
+                    config: Util.goodMapValue(DocTree.treeConfig, "comment", {}),
+                    note: note
+                };
+
+                var modalInstance = $modal.open({
+                    templateUrl: "directives/doc-tree/doc-tree.comment.dialog.html"
+                    , controller: 'directives.DocTreeCommentDialogController'
+                    , animation: true
+                    , size: 'lg'
+                    , resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+                modalInstance.result.then(function (data) {
+                    data.note.created = Util.dateToIsoString(new Date(note.created));
+                    ObjectNoteService.saveNote(data.note).then(function () {
+                    });
+                    //replace file after comment is added
+                    DocTree.replaceFile(node);
+                }, function () {
+                    // comment is not added, replace file
+                    DocTree.replaceFile(node);
+                });
+            }
+        };
 
         var Ui = {
             dlgModal: function ($s, onClickBtnPrimary, onClickBtnDefault) {
@@ -4105,6 +4203,24 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
                 return Util.isEmpty($scope.recipientsStr);
             };
 
+        }
+    ]
+);
+
+angular.module('directives').controller('directives.DocTreeCommentDialogController', ['$scope', '$modalInstance'
+        , 'UtilService', 'params'
+        , function ($scope, $modalInstance, Util, params) {
+            $scope.modalInstance = $modalInstance;
+
+            $scope.config = params.config;
+            $scope.note = params.note;
+
+            $scope.onClickCancel = function () {
+                $modalInstance.dismiss();
+            };
+            $scope.onClickOk = function () {
+                $modalInstance.close({note: $scope.note});
+            };
         }
     ]
 );
