@@ -32,10 +32,10 @@
     -->
     <!-- data access control -->
     <security:global-method-security pre-post-annotations="enabled">
-        <security:expression-handler ref="serviceExceptionHandler"/>
+        <security:expression-handler ref="serviceExpressionHandler"/>
     </security:global-method-security>
 
-    <bean id="serviceExceptionHandler" class=
+    <bean id="serviceExpressionHandler" class=
             "org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
         <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
     </bean>
