@@ -67,7 +67,11 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         };
 
         $scope.onAllowCmd = function (cmd, nodes) {
-            return $scope.objectInfo.isReadOnly ? 'disable' : '';
+            if (cmd === 'remove' && nodes[0].children.length !== 0) {
+                return 'disable';
+            } else {
+                return $scope.objectInfo.isReadOnly ? 'disable' : '';
+            }
         };
 
         $scope.onPreCmd = function (cmd, nodes) {
