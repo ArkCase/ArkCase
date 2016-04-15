@@ -120,7 +120,12 @@
             <groupId>com.oracle</groupId>
             <artifactId>jdbc</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>sqljdbc4</artifactId>
+            <version>${sqlserver.version}</version>
+        </dependency>
+        
         <!-- utilities -->
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -151,6 +156,15 @@
             <id>mysql</id>
             <properties>
                 <dbms.name>mysql</dbms.name>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>mssql</id>
+            <properties>
+                <dbms.name>mssql</dbms.name>
             </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>
