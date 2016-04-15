@@ -2,10 +2,10 @@
 
 angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'DocTreeService'
-    , 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService'
+    , 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService', 'Object.ModelService'
     , function ($scope, $stateParams, $modal, $q
         , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
-        , HelperObjectBrowserService, Authentication, PermissionsService) {
+        , HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -53,7 +53,9 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
         $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
         var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.objectInfo = objectInfo;
             $scope.objectId = objectInfo.id;
+            $scope.assignee = ObjectModelService.getAssignee(objectInfo);
         };
 
 
@@ -95,14 +97,12 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                     if (!nodes[0].data.lock) {
                         return "disable";
                     }
-                    else if (nodes[0].data.lock
-                        && !(nodes[0].data.lock.creator == $scope.user
-                        || nodes[0].data.creator == $scope.user)) {
-                        return "disable";
-                    }
                     else {
                         var allowDeffered = $q.defer();
+                        nodes[0].data.assignee = $scope.assignee;
                         //check permission for unlock
+                        console.log('da proveram za asigne');
+                        console.log(nodes[0].data);
                         PermissionsService.getActionPermission('unlock', nodes[0].data)
                             .then(function success(hasPermission) {
                                     if (hasPermission)
