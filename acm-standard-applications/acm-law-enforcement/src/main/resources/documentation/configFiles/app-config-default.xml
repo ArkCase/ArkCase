@@ -5,14 +5,16 @@
 
     <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication">
         <property name="applicationName" value="Law Enforcement Application"/>
+	
+        <!-- The logoutUrl bean is defined in spring-security-config-*.xml -->
+        <property name="logoutUrl" ref="logoutUrl" />
 
         <!--
             Set "issueCollectorFlag" flag as "true" only if ArkCase instance is inside Armedia network or on the Armedia VPN or
             ArkCase instance can connect to Armedia's internal JIRA server (***REMOVED***).
             JIRA issue collector can be utilized only if above criteria are met. If those criteria cannot be met,
-            ,set "issueCollectorFlag" flag as "false".
+            set "issueCollectorFlag" flag as "false".
         -->
-
         <property name="issueCollectorFlag" value="true"/>
         <property name="topbarActions">
             <list>
@@ -62,12 +64,13 @@
         </property>
         <property name="settings">
             <map>
+                <!--<entry key="labelSettingsFile" value="#{ systemProperties ['user.home'] }/.acm/labels/settings.json" />-->
+                <!--<entry key="labelSettings" value='{"defaultLang": "en"}' />-->
                 <entry key="issueCollectorFlag" value="true" />
                 <entry key="autoLogoutIdleLimit" value="1200000" />  <!-- 1200000 == 20x60x1000ms = 20min -->
                 <entry key="autoLogoutErrorLimit" value="6" />
             </map>
         </property>
-
     </bean>
 
     <!-- top bar buttons -->
@@ -249,7 +252,7 @@
         <property name="name" value="FILE"/>
         <property name="description" value="File"/>
         <property name="iconName" value=""/>
-        <property name="url" value="/api/latest/plugin/ecm/download"/>
+        <property name="url" value="/api/latest/plugin/ecm/download/byId/"/>
     </bean>
     <bean id="personType" class="com.armedia.acm.core.AcmObjectType">
         <property name="name" value="PERSON"/>
@@ -318,6 +321,4 @@
         <property name="url" value="/plugin/costsheet/"/>
     </bean>
     <!-- end of objectTypes -->
-
-
 </beans>

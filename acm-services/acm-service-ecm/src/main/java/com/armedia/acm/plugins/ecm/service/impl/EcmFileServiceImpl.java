@@ -603,6 +603,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             {
                 object.setVersionList(file.getVersions());
                 object.setPageCount(file.getPageCount());
+                object.setLock(file.getLock());
             }
         }
 
@@ -786,7 +787,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         return totalCount;
     }
-
+    
     @Override
     public EcmFile updateSecurityField(Long fileId, String securityFieldValue) throws AcmObjectNotFoundException
     {

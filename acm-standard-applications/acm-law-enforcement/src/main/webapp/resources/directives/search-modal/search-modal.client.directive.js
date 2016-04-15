@@ -87,7 +87,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.selectedItem = null;
                 scope.selectedItems = [];
                 scope.queryExistingItems = function () {
-                    var query = SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start);
+                    var query = decodeURIComponent(SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start));
                     if (query) {
                         SearchService.queryFilteredSearch({
                                 query: query
