@@ -67,11 +67,37 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
 
         $scope.onAllowCmd = function (cmd, nodes) {
             if (1 == nodes.length) {
-                if ("checkin" == cmd || "cancelEditing" == cmd) {
+                if ("checkin" == cmd) {
                     if (!nodes[0].data.lock) {
                         return "disable";
                     }
                     else if (nodes[0].data.lock && nodes[0].data.lock.creator !== $scope.user) {
+                        return "disable";
+                    }
+                    else {
+                        var allowDeffered = $q.defer();
+                        //check permission for unlock
+                        PermissionsService.getActionPermission('unlock', nodes[0].data)
+                            .then(function success(hasPermission) {
+                                    if (hasPermission)
+                                        allowDeffered.resolve("");
+                                    else
+                                        allowDeffered.resolve("disable");
+                                },
+                                function error() {
+                                    allowDeffered.resolve("disable");
+                                }
+                            );
+                        return allowDeffered.promise;
+                    }
+                }
+                else if ("cancelEditing" == cmd) {
+                    if (!nodes[0].data.lock) {
+                        return "disable";
+                    }
+                    else if (nodes[0].data.lock
+                        && !(nodes[0].data.lock.creator == $scope.user
+                        || nodes[0].data.creator == $scope.user)) {
                         return "disable";
                     }
                     else {
@@ -103,6 +129,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
                                         allowDeffered.resolve("");
                                     else
                                         allowDeffered.resolve("disable");
+
                                 },
                                 function error() {
                                     allowDeffered.resolve("disable");
