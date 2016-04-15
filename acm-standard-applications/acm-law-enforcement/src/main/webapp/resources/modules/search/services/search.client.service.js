@@ -202,7 +202,7 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
          */
         Service.exportUrl = function (query, fields, exportType, reportName) {
             var url = "api/v1/plugin/search/facetedSearch?q=" + query;
-            if (typeof fields === 'object' && fields.length > 0) {
+            if (fields instanceof Array && fields.length > 0) {
                 url += "&fields=" + fields.join(',');
             }
             url += "&export=" + exportType;
