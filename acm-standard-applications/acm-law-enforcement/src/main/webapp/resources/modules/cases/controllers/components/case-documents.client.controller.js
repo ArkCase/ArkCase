@@ -101,8 +101,6 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                         var allowDeffered = $q.defer();
                         nodes[0].data.assignee = $scope.assignee;
                         //check permission for unlock
-                        console.log('da proveram za asigne');
-                        console.log(nodes[0].data);
                         PermissionsService.getActionPermission('unlock', nodes[0].data)
                             .then(function success(hasPermission) {
                                     if (hasPermission)
