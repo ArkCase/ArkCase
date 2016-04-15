@@ -3,6 +3,7 @@ package com.armedia.acm.service.objectlock.service;
 import com.armedia.acm.service.objectlock.dao.AcmObjectLockDao;
 import com.armedia.acm.service.objectlock.exception.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.service.objectlock.model.AcmObjectLockEvent;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
@@ -14,15 +15,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.nio.file.Files;
 
 import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -42,6 +46,7 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
     private Authentication authMock;
     private String authName = "auditUser";
     private ExecuteSolrQuery executeSolrQueryMock;
+    private ApplicationEventPublisher mockApplicationEventPublisher;
 
     @Before
     public void beforeEachTest()
@@ -53,8 +58,13 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
         executeSolrQueryMock = createMock(ExecuteSolrQuery.class);
         acmObjectLockService.setExecuteSolrQuery(executeSolrQueryMock);
 
+        mockApplicationEventPublisher = createMock(ApplicationEventPublisher.class);
+        acmObjectLockService.setApplicationEventPublisher(mockApplicationEventPublisher);
+
         assertNotNull(acmObjectLockService);
         EasyMock.expect(authMock.getName()).andReturn(authName).anyTimes();
+
+        SecurityContextHolder.getContext().setAuthentication(authMock);
     }
 
     @Test
@@ -107,6 +117,8 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
                 return objectLockCapture.getValue();
             }
         });
+        Capture<AcmObjectLockEvent> capturedEvent = EasyMock.newCapture();
+        mockApplicationEventPublisher.publishEvent(capture(capturedEvent));
 
         replayAll();
 
@@ -128,9 +140,12 @@ public class AcmObjectLockServiceImplTest extends EasyMockSupport
         acmObjectLockDao.remove(lock);
         EasyMock.expectLastCall();
 
+        Capture<AcmObjectLockEvent> capturedEvent = EasyMock.newCapture();
+        mockApplicationEventPublisher.publishEvent(capture(capturedEvent));
+
         replayAll();
 
-        acmObjectLockService.removeLock(objectId, objectType);
+        acmObjectLockService.removeLock(objectId, objectType, authMock);
 
 
         verifyAll();
