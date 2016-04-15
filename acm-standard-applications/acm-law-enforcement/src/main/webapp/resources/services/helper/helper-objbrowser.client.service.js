@@ -127,6 +127,13 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                         );
                     }
                 });
+
+                that.scope.$on("link-updated", function (event, linkParams) {
+                    if (that.scope.treeControl) {
+                        that.scope.treeControl.selectComponent(linkParams.objectType, linkParams.objectId, linkParams.linkId);
+                    }
+                    return 123;
+                });
             }
 
 
@@ -161,6 +168,11 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.getObjectInfo = arg.getObjectInfo;
                 that.updateObjectInfo = arg.updateObjectInfo;
                 that.initComponentLinks = arg.initComponentLinks;
+                //that.initComponentLinks = arg.initComponentLinks | function (config) {
+                //    var nodeType = that.stateParams.type;
+                //    return Service.createComponentLinks(config, nodeType);
+                //};
+
                 that.selectComponentLinks = arg.selectComponentLinks;
                 that.getObjectIdFromInfo = (arg.getObjectIdFromInfo) ? arg.getObjectIdFromInfo : function (objectInfo) {
                     return Util.goodMapValue(objectInfo, "id");
@@ -188,16 +200,19 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     var objectId = that.getObjectIdFromInfo(that.scope.objectInfo);
                     var objectType = that.getObjectTypeFromInfo(that.scope.objectInfo);
                     Service.updateObjectSetting(that.moduleId, linkId, objectId, objectType);
-                    var params = {id: objectId};
+
+                    var linkParams = {
+                        objectType: objectType
+                        , objectId: objectId
+                        , linkId: linkId
+                    };
+                    var rc = that.scope.$broadcast('link-updated', linkParams);
+
+                    var stateParams = {id: objectId};
                     if (!Util.isEmpty(objectType)) {
-                        params.type = objectType;
+                        stateParams.type = objectType;
                     }
-
-                    if (that.scope.treeControl) {
-                        that.scope.treeControl.selectComponent(objectType, objectId, linkId);
-                    }
-
-                    that.state.go(arg.moduleId + "." + linkId, params);
+                    that.state.go(arg.moduleId + "." + linkId, stateParams);
                 };
 
                 that.scope.linksShown = true;

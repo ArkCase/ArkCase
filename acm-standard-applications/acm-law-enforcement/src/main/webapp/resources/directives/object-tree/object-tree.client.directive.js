@@ -148,7 +148,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 Tree.jqDivTree.fancytree(treeArgsToUse);
                 Tree.tree = Tree.jqDivTree.fancytree('getTree');
             }
-            , select: function (arg) {
+            , select: function (arg, activate) {
                 var treeInfo = Tree.Info.getTreeInfo();
                 var pageStart = Util.goodValue(arg.pageStart, treeInfo.start);
                 var nodeType = arg.nodeType;
@@ -161,24 +161,30 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     key += subKey;
                 }
                 treeInfo.key = key;
-                //Tree.refreshTree(key);
-                //Tree.tree.activateKey(key);
 
+                if (activate) {
+                    var node = Tree.tree.getNodeByKey(key);
+                    if (node) {
+                        node.setActive();
+                        node.setFocus();
+                    }
+                }
             }
             , selectComponent: function(nodeType, nodeId, component) {
+                var key = Tree.Key.getKeyByObj(nodeType, nodeId);
+                var node = Tree.tree.getNodeByKey(key);
+                if (node) {
+                    var subKey = null;
+                    if (node.expanded) {
+                        subKey = Tree.getSubKeyByComponent(component);
+                    }
+                    Tree.select({pageStart: null
+                        , nodeType: nodeType
+                        , nodeId: nodeId
+                        , subKey: subKey
+                    }, true);
 
-                var subKey = null;
-                if ("main" != component) {
-                    var nodeTpe = Tree.getNodeTypeByComponent(component);
-                    subKey = component;
                 }
-                //Tree.select({pageStart: null
-                //    , nodeType: nodeType
-                //    , nodeId: nodeId
-                //    , subKey: subKey
-                //});
-
-                var z = 1;
             }
             , setTitle: function (nodeType, nodeId, nodeTitle, nodeToolTip) {
                 var key = Tree.Key.getKeyByObj(nodeType, nodeId);
@@ -303,14 +309,21 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 }
                 return leadComponent;
             }
-            , getNodeTypeByComponent: function (component) {
+            , getSubKeyByComponent: function (component) {
                 var nt = null;
-                if (!Util.isEmpty(key)) {
-                    var nodeType = Tree.Key.getNodeTypeByKey(key);
+                if (!Util.isEmpty(component)) {
                     var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
                     for (var i = 0; i < nodeTypes.length; i++) {
                         var aComponent = Util.goodMapValue(nodeTypes[i], "components[0]", null);
-                        if (aComponent == component) {
+
+                        if ("main" == component) {
+                            if (nodeTypes[i].components) {
+                                if (1 < nodeTypes[i].components.length) {
+                                    nt = nodeTypes[i].type;
+                                    break;
+                                }
+                            }
+                        } else if (aComponent == component) {
                             if (1 == nodeTypes[i].components.length) {
                                 nt = nodeTypes[i].type;
                                 break;
@@ -318,7 +331,14 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                         }
                     }
                 }
-                return nt;
+                var subKey = null;
+                if (nt) {
+                    var arr = nt.split(Tree.Key.KEY_SEPARATOR);
+                    if (3 == arr.length) {
+                        subKey = arr[2];
+                    }
+                }
+                return subKey;
             }
 
             , _getDefaultTreeArgs: function (treeArgs) {
