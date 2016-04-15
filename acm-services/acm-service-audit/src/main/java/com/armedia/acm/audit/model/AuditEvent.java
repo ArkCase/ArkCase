@@ -221,12 +221,24 @@ public class AuditEvent
         if (getAuditLookup() != null)
             return getAuditLookup().getAuditBuisinessName();
 
-        int lastDot = getFullEventType().lastIndexOf('.');
+        String result = getFullEventType().substring(16);
+        int dotIndex = result.indexOf('.');
+        if (dotIndex >= 0)
+        {
+
+            result = result.substring(dotIndex + 1);
+            dotIndex = result.indexOf('.');
+            if (dotIndex > 0)
+            {
+                result = result.substring(dotIndex + 1);
+            }
+            return result;
+        }
+        /*int lastDot = getFullEventType().lastIndexOf('.');
         if (lastDot >= 0)
         {
-            return getFullEventType().substring(16, getFullEventType().length());
-            //return getFullEventType().substring(lastDot + 1, getFullEventType().length());
-        }
+            return getFullEventType().substring(lastDot + 1, getFullEventType().length());
+        }*/
         return getFullEventType();
     }
 
