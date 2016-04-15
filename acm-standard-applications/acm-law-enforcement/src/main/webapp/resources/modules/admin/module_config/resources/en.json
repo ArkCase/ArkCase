@@ -22,6 +22,8 @@
       "groupSearchBase": "Group Search Base",
       "groupSeachBaseOU": "Group Search Base OU",
       "userIdAttributeName": "User Id Attribute Name",
+      "userDomain": "User domain",
+      "userDomainNote": "(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
       "cancel": "Cancel",
       "ok": "OK"
     },
