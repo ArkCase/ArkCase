@@ -34,6 +34,7 @@ public class AcmObjectLockAPIController
      *
      * @param objectType object type
      * @param objectId   object ID
+     * @param authentication Authentication
      * @return AcmObjectLock lock details
      * @throws MuleException
      * @throws IOException
@@ -55,6 +56,7 @@ public class AcmObjectLockAPIController
      *
      * @param objectType object type
      * @param objectId   object ID
+     * @param auth Authentication
      * @return solr response
      * @throws MuleException
      * @throws IOException
@@ -64,13 +66,14 @@ public class AcmObjectLockAPIController
     @ResponseBody
     public String unlockObject(
             @PathVariable(value = "objectType") String objectType,
-            @PathVariable(value = "objectId") Long objectId
+            @PathVariable(value = "objectId") Long objectId,
+            Authentication auth
     ) throws MuleException, IOException
     {
         try
         {
             //FIXME not sure if anyone can remove object lock or just owner, for now anyone can remove the lock
-            objectLockService.removeLock(objectId, objectType);
+            objectLockService.removeLock(objectId, objectType, auth);
         } catch (AcmObjectLockException e)
         {
             return e.getMessage();

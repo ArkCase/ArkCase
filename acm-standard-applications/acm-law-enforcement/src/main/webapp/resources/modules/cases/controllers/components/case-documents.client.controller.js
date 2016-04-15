@@ -1,11 +1,18 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal'
+angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'DocTreeService'
-    , 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, $modal
+    , 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService'
+    , function ($scope, $stateParams, $modal, $q
         , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
-        , HelperObjectBrowserService) {
+        , HelperObjectBrowserService, Authentication, PermissionsService) {
+
+        Authentication.queryUserInfo().then(
+            function (userInfo) {
+                $scope.user = userInfo.userId;
+                return userInfo;
+            }
+        );
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -59,14 +66,53 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         };
 
         $scope.onAllowCmd = function (cmd, nodes) {
-            //Usage example
-            //if (1 == nodes.length) {
-            //    if ("paste" == cmd) {
-            //        return "invisible";
-            //    } else if ("newFolder" == cmd) {
-            //        return "disable";
-            //    }
-            //}
+            if (1 == nodes.length) {
+                if ("checkin" == cmd || "cancelEditing" == cmd) {
+                    if (!nodes[0].data.lock) {
+                        return "disable";
+                    }
+                    else if (nodes[0].data.lock && nodes[0].data.lock.creator !== $scope.user) {
+                        return "disable";
+                    }
+                    else {
+                        var allowDeffered = $q.defer();
+                        //check permission for unlock
+                        PermissionsService.getActionPermission('unlock', nodes[0].data)
+                            .then(function success(hasPermission) {
+                                    if (hasPermission)
+                                        allowDeffered.resolve("");
+                                    else
+                                        allowDeffered.resolve("disable");
+                                },
+                                function error() {
+                                    allowDeffered.resolve("disable");
+                                }
+                            );
+                        return allowDeffered.promise;
+                    }
+                }
+                else if ("checkout" == cmd) {
+                    if (nodes[0].data.lock) {
+                        return "disable";
+                    } else {
+                        var allowDeffered = $q.defer();
+                        //check permission for lock
+                        PermissionsService.getActionPermission('lock', nodes[0].data)
+                            .then(function success(hasPermission) {
+                                    if (hasPermission)
+                                        allowDeffered.resolve("");
+                                    else
+                                        allowDeffered.resolve("disable");
+
+                                },
+                                function error() {
+                                    allowDeffered.resolve("disable");
+                                }
+                            );
+                        return allowDeffered.promise;
+                    }
+                }
+            }
         };
 
         $scope.onPreCmd = function (cmd, nodes) {
