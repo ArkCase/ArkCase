@@ -16,6 +16,9 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
             , getObjectIdFromInfo: function (complaintInfo) {
                 return Util.goodMapValue(complaintInfo, "complaintId");
             }
+            , getObjectTypeFromInfo: function (complaintInfo) {
+                return ObjectService.ObjectTypes.COMPLAINT;
+            }
             , initComponentLinks: function (config) {
                 return HelperObjectBrowserService.createComponentLinks(config, ObjectService.ObjectTypes.COMPLAINT);
             }
