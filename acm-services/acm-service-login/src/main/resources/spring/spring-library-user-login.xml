@@ -2,13 +2,10 @@
 <!--suppress SpringSecurityFiltersConfiguredInspection -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="applicationRoleToUserGroupProperties"
-          class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean" >
+          class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -55,45 +52,48 @@
         <property name="authenticationDetailsSource" ref="acmAuthenticationDetailsFactory"/>
         <property name="loginSuccessEventListener" ref="acmLoginSuccessListener"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
-        <property name="authenticationTokenDao" ref="authenticationTokenDao" />
-        <property name="acmGrantedAuthoritiesMapper" ref="acmAuthoritiesMapper" />
-        <property name="groupService" ref="groupService" />
+        <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
+        <property name="acmGrantedAuthoritiesMapper" ref="acmAuthoritiesMapper"/>
+        <property name="groupService" ref="groupService"/>
     </bean>
 
     <bean id="acmAuditPropertyInterceptor" class="com.armedia.acm.auth.AcmAuditPropertyInterceptor">
         <property name="entityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
-    
+
     <bean id="acmLoginSuccessOperations" class="com.armedia.acm.auth.AcmLoginSuccessOperations">
         <property name="acmPluginManager" ref="acmPluginManager"/>
         <property name="acmApplication" ref="acmApplication"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
-    
+
     <bean id="acmLoginSuccessHandler" class="com.armedia.acm.auth.AcmLoginSuccessHandler">
         <property name="loginSuccessOperations" ref="acmLoginSuccessOperations"/>
         <property name="defaultTargetUrl" value="/home.html#!/welcome"/>
         <property name="alwaysUseDefaultTargetUrl" value="false"></property>
     </bean>
-    
+
     <bean id="acmLoginFailureListener" class="com.armedia.acm.auth.AcmLoginFailureEventListener"/>
-    
+
     <bean id="ssAuthenticationEventPublisher"
           class="org.springframework.security.authentication.DefaultAuthenticationEventPublisher"/>
-    
+
     <!-- REST services security beans -->
-    <bean id="acmRestAuthenticationSuccessHandler" class="com.armedia.acm.auth.AcmRestAuthenticationSuccessHandler" />
-    
-    <bean id="acmRestAuthenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler" />
-    
-    <bean id="acmRestAuthenticationEntryPoint" class="com.armedia.acm.auth.AcmRestAuthenticationEntryPoint" />
-    
+    <bean id="acmRestAuthenticationSuccessHandler" class="com.armedia.acm.auth.AcmRestAuthenticationSuccessHandler"/>
+
+    <bean id="acmRestAuthenticationFailureHandler"
+          class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"/>
+
+    <bean id="acmRestAuthenticationEntryPoint" class="com.armedia.acm.auth.AcmRestAuthenticationEntryPoint"/>
+
+    <bean id="acmStaticResourcesAuthenticationEntryPoint" class="com.armedia.acm.auth.AcmRestAuthenticationEntryPoint"/>
+
     <beans profile="ldap">
         <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">
-            <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory" />
-            <property name="defaultTargetUrl" value="/login?logout" />
-            <property name="alwaysUseDefaultTargetUrl" value="false" />
+            <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory"/>
+            <property name="defaultTargetUrl" value="/login?logout"/>
+            <property name="alwaysUseDefaultTargetUrl" value="false"/>
         </bean>
     </beans>
 
@@ -112,20 +112,23 @@
                 </props>
             </property>
         </bean>
-        
+
         <bean id="acmSamlAuthenticationCheckFilter" class="com.armedia.acm.auth.AcmSamlAuthenticationCheckFilter">
-            <property name="authenticationCheckIntervalInSeconds" value="${sso.saml.authenticationCheckIntervalInSeconds}"/>
+            <property name="authenticationCheckIntervalInSeconds"
+                      value="${sso.saml.authenticationCheckIntervalInSeconds}"/>
         </bean>
-        
-        <bean id="acmSamlRestAuthenticationCheckFilter" class="com.armedia.acm.auth.AcmSamlRestAuthenticationCheckFilter">
-            <property name="authenticationCheckIntervalInSeconds" value="${sso.saml.authenticationCheckIntervalInSeconds}"/>
+
+        <bean id="acmSamlRestAuthenticationCheckFilter"
+              class="com.armedia.acm.auth.AcmSamlRestAuthenticationCheckFilter">
+            <property name="authenticationCheckIntervalInSeconds"
+                      value="${sso.saml.authenticationCheckIntervalInSeconds}"/>
         </bean>
-        
+
         <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">
-            <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory" />
-            <property name="defaultTargetUrl" value="/sso/loggedout" />
-            <property name="alwaysUseDefaultTargetUrl" value="false" />
+            <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory"/>
+            <property name="defaultTargetUrl" value="/sso/loggedout"/>
+            <property name="alwaysUseDefaultTargetUrl" value="false"/>
         </bean>
     </beans>
- 
+
 </beans>
