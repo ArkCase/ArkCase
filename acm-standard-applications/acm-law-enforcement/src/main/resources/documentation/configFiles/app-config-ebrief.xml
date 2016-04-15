@@ -6,6 +6,9 @@
     <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication">
         <property name="applicationName" value="Law Enforcement Application"/>
 
+        <!-- The logoutUrl bean is defined in spring-security-config-*.xml -->
+        <property name="logoutUrl" ref="logoutUrl" />
+
         <!--
             Set "issueCollectorFlag" flag as "true" only if ArkCase instance is inside Armedia network or on the Armedia VPN or
             ArkCase instance can connect to Armedia's internal JIRA server (http://internal.armedia.com/jira).
@@ -18,7 +21,7 @@
             <list>
                 <!--<ref bean="createComplaintAction"/>-->
                 <ref bean="createCaseFileAction"/>
-                <ref bean="createTaskAction"/>
+                <!--<ref bean="createTaskAction"/>-->
                 <!--<ref bean="createTimesheetAction"/>-->
                 <!--<ref bean="createCostsheetAction"/>-->
             </list>
@@ -28,7 +31,7 @@
                 <ref bean="dashboardNavigatorAction"/>
                 <!--<ref bean="complaintNavigatorAction"/>-->
                 <ref bean="caseFileNavigatorAction"/>
-                <ref bean="taskNavigatorAction"/>
+                <!--<ref bean="taskNavigatorAction"/>-->
                 <!--<ref bean="searchNavigatorAction"/>-->
                 <ref bean="reportNavigatorAction"/>
                 <ref bean="notificationNavigatorAction"/>
@@ -88,7 +91,7 @@
     </bean>
 
     <bean id="createCaseFileAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="Brief"/>
+        <property name="actionName" value="Case File"/>
         <property name="actionResourceName" value="common:top-bar.button.case-file" />
         <property name="iconName" value="i i-file2"/>
         <property name="url" value="/plugin/casefile/wizard"/>
@@ -141,7 +144,7 @@
 
     <bean id="caseFileNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Briefs"/>
-        <property name="actionResourceName" value="common:navigation.label.case-files" />
+        <property name="actionResourceName" value="ebrief:navigation.label.case-files" />
         <property name="iconName" value="i i-folder"/>
         <property name="url" value="/plugin/casefile"/>
         <property name="requiredPrivilege" value="case-file-list"/>
@@ -249,7 +252,7 @@
         <property name="name" value="FILE"/>
         <property name="description" value="File"/>
         <property name="iconName" value=""/>
-        <property name="url" value="/api/latest/plugin/ecm/download"/>
+        <property name="url" value="/api/latest/plugin/ecm/download/byId/"/>
     </bean>
     <bean id="personType" class="com.armedia.acm.core.AcmObjectType">
         <property name="name" value="PERSON"/>
