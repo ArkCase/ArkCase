@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService', 'PermissionsService'
     , function ($scope, $stateParams, $modal
-        , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, DocTreeService) {
+        , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, DocTreeService, PermissionsService) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             moduleId: "tasks"
@@ -51,6 +51,11 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.objectId = objectInfo.taskId;
+            PermissionsService.getActionPermission('editAttachments', objectInfo).then(function(result) {
+
+                objectInfo.isReadOnly = !result;
+
+            });
         };
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
@@ -62,6 +67,11 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         };
 
         $scope.onAllowCmd = function (cmd, nodes) {
+            if (cmd === 'remove' && nodes[0].children.length !== 0) {
+                return 'disable';
+            } else {
+                return $scope.objectInfo.isReadOnly ? 'disable' : '';
+            }
         };
 
         $scope.onPreCmd = function (cmd, nodes) {
