@@ -111,31 +111,31 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
                             var dateRangeValue;
 
                             _.forEach(fields, function (count, fieldName) {
-                            	if(count > 0) {
-                            		splitField = fieldName.split(",");
-                            		dateRangeType = filter(splitField[0]);
-                            		dateRangeValue = filter(splitField[1]);
+                                if (count > 0) {
+                                    splitField = fieldName.split(",");
+                                    dateRangeType = filter(splitField[0]);
+                                    dateRangeValue = filter(splitField[1]);
 
-                            		if(!newFields[dateRangeType]) {
-                            			newFields[dateRangeType] = [];
-                            			newFields[dateRangeType].push({
-                            				name: {
-                            					nameValue: dateRangeValue,
-                            					nameFiltered: filter(dateRangeValue)
-                            				},
-                            				count: count
-                            			});
-                            		}
-                            		else {
-                            			newFields[dateRangeType].push({
-                            				name: {
-                            					nameValue: dateRangeValue,
-                            					nameFiltered: filter(dateRangeValue)
-                            				},
-                            				count: count
-                            			});
-                            		}
-                            	}
+                                    if (!newFields[dateRangeType]) {
+                                        newFields[dateRangeType] = [];
+                                        newFields[dateRangeType].push({
+                                            name: {
+                                                nameValue: dateRangeValue,
+                                                nameFiltered: filter(dateRangeValue)
+                                            },
+                                            count: count
+                                        });
+                                    }
+                                    else {
+                                        newFields[dateRangeType].push({
+                                            name: {
+                                                nameValue: dateRangeValue,
+                                                nameFiltered: filter(dateRangeValue)
+                                            },
+                                            count: count
+                                        });
+                                    }
+                                }
                             });
                             searchObj.facet_counts.facet_fields = newFields;
                         }
@@ -184,7 +184,31 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
                 return false;
             }
             return true;
-        }
+        };
+
+        /**
+         * @ngdoc method
+         * @name exportUrl
+         * @methodOf services:Search
+         *
+         * @description
+         * Returns export url for the current search query
+         *
+         * @param {String} query Query to send to the server
+         * @param {Array} fields Array of fields to be exported (if empty omitted)
+         * @param {String} exportType Type of export (csv)
+         * @param {String} reportName The file name of the generated report
+         * @returns {String} The export URL
+         */
+        Service.exportUrl = function (query, fields, exportType, reportName) {
+            var url = "api/v1/plugin/search/facetedSearch?q=" + query;
+            if (fields instanceof Array && fields.length > 0) {
+                url += "&fields=" + fields.join(',');
+            }
+            url += "&export=" + exportType;
+            url += "&reportName=" + reportName;
+            return url;
+        };
 
         return Service;
     }
