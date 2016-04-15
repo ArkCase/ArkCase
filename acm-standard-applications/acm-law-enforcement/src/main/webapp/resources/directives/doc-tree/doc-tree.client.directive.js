@@ -3254,7 +3254,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 return "";
             }
             , _makeEmailDataForEmailWithLinks: function (emailAddresses, nodes, title) {
-                var emailNotifications = [];
                 var emailData = {};
                 emailData.subject = this._buildSubject();
                 emailData.title = Util.goodValue(title, $translate.instant("common.directive.docTree.email.defaultTitle"));
@@ -3263,8 +3262,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 emailData.emailAddresses = emailAddresses;
                 emailData.fileIds = Email._extractFileIds(nodes);
                 emailData.baseUrl = Email._makeBaseUrl();
-                emailNotifications.push(emailData);
-                return emailNotifications;
+                return emailData;
             }
             , _makeEmailDataForEmailWithAttachments: function (emailAddresses, nodes) {
                 var emailData = {};
@@ -3297,7 +3295,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 if (!Util.isEmpty(Email.arkcasePort)) {
                     url += ":" + Util.goodValue(Email.arkcasePort);
                 }
-                url += "arkcase" + Email.API_DOWNLOAD_DOCUMENT;
+                url += "/arkcase" + Email.API_DOWNLOAD_DOCUMENT;
                 return url;
             }
             //, sentEmail: function (emailData) {
