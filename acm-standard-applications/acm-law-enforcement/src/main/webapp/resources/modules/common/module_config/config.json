@@ -166,6 +166,28 @@
             "title": "----"
           },
           {
+            "title": "Checkout",
+            "cmd": "checkout",
+            "uiIcon": "ui-icon-check"
+          },
+          {
+            "title": "Checkin",
+            "cmd": "checkin",
+            "uiIcon": "ui-icon-check",
+            "data": {
+              "uploadFile": true
+            }
+          },
+          {
+            "title": "Cancel Editing",
+            "cmd": "cancelEditing",
+            "uiIcon": "ui-icon-close",
+            "disabled": true
+          },
+          {
+            "title": "----"
+          },
+          {
             "title": "Cut <kbd>Ctrl+X</kbd>",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
