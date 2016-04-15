@@ -221,19 +221,6 @@ public class AuditEvent
         if (getAuditLookup() != null)
             return getAuditLookup().getAuditBuisinessName();
 
-        String result = getFullEventType().substring(16);
-        int dotIndex = result.indexOf('.');
-        if (dotIndex >= 0)
-        {
-
-            result = result.substring(dotIndex + 1);
-            dotIndex = result.indexOf('.');
-            if (dotIndex > 0)
-            {
-                result = result.substring(dotIndex + 1);
-            }
-            return result;
-        }
         /*int lastDot = getFullEventType().lastIndexOf('.');
         if (lastDot >= 0)
         {

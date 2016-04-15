@@ -77,7 +77,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         switch (sort)
         {
             case "eventType":
-                sortBy = "COALESCE(lu.auditBuisinessName, SUBSTRING(SUBSTRING(ae.fullEventType, LOCATE('.',ae.fullEventType, 17)+1), LOCATE('.', SUBSTRING(ae.fullEventType, LOCATE('.',ae.fullEventType, 17)+1))+1))";
+                sortBy = "COALESCE(lu.auditBuisinessName, ae.fullEventType)";
                 break;
             case "userId":
                 sortBy = "ae.userId";
