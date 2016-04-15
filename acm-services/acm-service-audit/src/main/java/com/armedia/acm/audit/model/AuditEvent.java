@@ -224,7 +224,8 @@ public class AuditEvent
         int lastDot = getFullEventType().lastIndexOf('.');
         if (lastDot >= 0)
         {
-            return getFullEventType().substring(lastDot + 1, getFullEventType().length());
+            return getFullEventType().substring(16, getFullEventType().length());
+            //return getFullEventType().substring(lastDot + 1, getFullEventType().length());
         }
         return getFullEventType();
     }

@@ -9,14 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.Date;
 import java.util.List;
 
@@ -72,74 +64,48 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         return findAudits.getResultList();
     }
 
-    public List<AuditEvent> findPagedResults(Long objectId, String objectType, int startRow, int maxRows, List<String> eventTypes, String sortBy, String direction)
+    public List<AuditEvent> findPagedResults(Long objectId, String objectType, int startRow, int maxRows, List<String> eventTypes, String sort, String direction)
     {
-        List<AuditEvent> results;
 
-        CriteriaBuilder cb = getEm().getCriteriaBuilder();
-        CriteriaQuery<AuditEvent> query = cb.createQuery(AuditEvent.class);
-        Root<AuditEvent> ae = query.from(AuditEvent.class);
-        query.select(ae);
-
-        Predicate isNotDelete = cb.notEqual(ae.get("status"), "DELETE");
-        Predicate isSuccess = cb.equal(ae.get("eventResult"), "success");
-
-        //check by objectType and objectId parameters
-        Predicate isObjectType = cb.equal(ae.get("objectType"), objectType);
-        Predicate isObjectId = cb.equal(ae.get("objectId"), objectId);
-        Predicate isObjectTypeAndId = cb.and(isObjectId, isObjectType);
-
-        //check the same but for parent object id and type
-        Predicate isParentObjectType = cb.equal(ae.get("parentObjectType"), objectType);
-        Predicate isParentObjectId = cb.equal(ae.get("parentObjectId"), objectId);
-        Predicate isParentObjectTypeAndId = cb.and(isParentObjectType, isParentObjectId);
-
-        //result should be same as object OR parent
-        Predicate isObjectOrParent = cb.or(isObjectTypeAndId, isParentObjectTypeAndId);
-
-        //filter only events from eventTypes array
-        Predicate inEventTypes = ae.get("fullEventType").in(eventTypes);
-
-        //check all predicates with AND
-        query.where(cb.and(isNotDelete, isSuccess, isObjectOrParent, inEventTypes));
-
-        if (sortBy.equals("eventType"))
+        //lets change order by string because of sql injection
+        if (!direction.toUpperCase().equals("ASC"))
         {
-            Join lu = ae.join("auditLookup", JoinType.LEFT);
-            Order order;
-            if (direction.toUpperCase().equals("ASC"))
-                order = cb.asc(lu.get("auditBuisinessName"));
-            else
-                order = cb.desc(lu.get("auditBuisinessName"));
-            query.orderBy(order);
-            /*//we will get all results and sort them in memory
-            TypedQuery<AuditEvent> dbQuery = getEm().createQuery(query);
-            results = dbQuery.getResultList();
-
-            Stream<AuditEvent> streamAudit;
-
-            //sort them in memory
-            if (direction.toUpperCase().equals("ASC"))
-                streamAudit = results.stream().sorted(comparing(AuditEvent::getEventType));
-            else
-                streamAudit = results.stream().sorted(comparing(AuditEvent::getEventType).reversed());
-
-            //get by paging parameters
-            results = streamAudit.skip(startRow).limit(maxRows).collect(Collectors.toList());*/
-        } else
-        {
-            Order order;
-            if (direction.toUpperCase().equals("ASC"))
-                order = cb.asc(ae.get(sortBy));
-            else
-                order = cb.desc(ae.get(sortBy));
-            query.orderBy(order);
+            direction = "DESC";
         }
-        TypedQuery<AuditEvent> dbQuery = getEm().createQuery(query);
-        dbQuery.setFirstResult(startRow);
-        dbQuery.setMaxResults(maxRows);
-        results = dbQuery.getResultList();
 
+        String sortBy;
+        switch (sort)
+        {
+            case "eventType":
+                sortBy = "COALESCE(lu.auditBuisinessName, SUBSTRING(ae.fullEventType,17))";
+                break;
+            case "userId":
+                sortBy = "ae.userId";
+                break;
+            default:
+                sortBy = "ae.eventDate";
+                break;
+        }
+
+        String queryText = "SELECT ae " +
+                "FROM   AuditEvent ae LEFT OUTER JOIN AcmAuditLookup lu ON ae.fullEventType=lu.auditEventName " +
+                "WHERE  ae.status != 'DELETE' " +
+                "AND ((ae.objectType = :objectType AND ae.objectId = :objectId) " +
+                "OR (ae.parentObjectType = :objectType AND ae.parentObjectId = :objectId)) " +
+                (eventTypes != null ? "AND ae.fullEventType IN :eventTypes " : "") +
+                "AND ae.eventResult = 'success' " +
+                "ORDER BY " + sortBy + " " + direction;
+        Query query = getEm().createQuery(queryText);
+        query.setFirstResult(startRow);
+        query.setMaxResults(maxRows);
+        query.setParameter("objectId", objectId);
+        query.setParameter("objectType", objectType);
+        if (eventTypes != null)
+        {
+            query.setParameter("eventTypes", eventTypes);
+        }
+
+        List<AuditEvent> results = query.getResultList();
         return results;
     }
 
