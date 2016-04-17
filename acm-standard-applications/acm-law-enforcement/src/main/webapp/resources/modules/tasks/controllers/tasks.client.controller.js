@@ -19,21 +19,15 @@ angular.module('tasks').controller('TasksController', ['$scope', '$stateParams',
             , getObjectTypeFromInfo: function (taskInfo) {
                 return (taskInfo.adhocTask) ? ObjectService.ObjectTypes.ADHOC_TASK : ObjectService.ObjectTypes.TASK;
             }
-            ,
-            initComponentLinks: function (config) {
+            , initComponentLinks: function (config) {
                 $scope.taskLinks = HelperObjectBrowserService.createComponentLinks(config, ObjectService.ObjectTypes.TASK);
                 $scope.adhocTaskLinks = HelperObjectBrowserService.createComponentLinks(config, ObjectService.ObjectTypes.ADHOC_TASK);
                 return (ObjectService.ObjectTypes.ADHOC_TASK == $stateParams.type) ? $scope.adhocTaskLinks : $scope.taskLinks;
             }
-            ,
-            selectComponentLinks: function (selectedTask) {
+            , selectComponentLinks: function (selectedTask) {
                 return (ObjectService.ObjectTypes.ADHOC_TASK == selectedTask.nodeType) ? $scope.adhocTaskLinks : $scope.taskLinks;
             }
         });
-
-        //$scope.$on("collapsed", function(event, collapsed) {
-        //    $scope.linksShown = !collapsed;
-        //});
 
     }
 ]);

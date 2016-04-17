@@ -19,17 +19,7 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
             , getObjectTypeFromInfo: function (complaintInfo) {
                 return ObjectService.ObjectTypes.COMPLAINT;
             }
-            , initComponentLinks: function (config) {
-                return HelperObjectBrowserService.createComponentLinks(config, ObjectService.ObjectTypes.COMPLAINT);
-            }
-            , selectComponentLinks: function (selectedObject) {
-                return $scope.componentLinks;
-            }
         });
-
-        //$scope.$on("collapsed", function(event, collapsed) {
-        //    $scope.linksShown = !collapsed;
-        //});
 
     }
 ]);
