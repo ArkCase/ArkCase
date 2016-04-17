@@ -21,11 +21,8 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.apache.chemistry.opencmis.client.api.FileableCmisObject;
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.ItemIterable;
-import org.apache.chemistry.opencmis.client.api.ObjectType;
-import org.apache.chemistry.opencmis.client.api.Tree;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.json.JSONArray;
@@ -604,21 +601,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             } else if (message.getInboundPropertyNames().contains(AcmFolderConstants.IS_FOLDER_NOT_EMPTY_INBOUND_PROPERTY))
             {
 
-                List<Tree<FileableCmisObject>> descendants = message.getInboundProperty(AcmFolderConstants.IS_FOLDER_NOT_EMPTY_INBOUND_PROPERTY);
-
-                if (foldersAreEmpty(descendants))
+                if (log.isErrorEnabled())
                 {
-
-                } else
-                {
-
-                    if (log.isErrorEnabled())
-                    {
-                        log.error("Folder " + folder.getName() + " is not empty and is not deleted!");
-                    }
-                    throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
-                            "Folder " + folder.getName() + " not deleted successfully", null);
+                    log.error("Folder " + folder.getName() + " is not empty and is not deleted!");
                 }
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
+                        "Folder " + folder.getName() + " not deleted successfully", null);
             }
             getFolderDao().deleteFolder(folderId);
         } catch (PersistenceException | MuleException e)
@@ -630,29 +618,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
                     "Folder was no added under " + folder.getName() + " successfully", e);
         }
-    }
-
-    private boolean foldersAreEmpty(List<Tree<FileableCmisObject>> descendants)
-    {
-        for (Tree<FileableCmisObject> tree : descendants)
-        {
-            FileableCmisObject item = tree.getItem();
-            if (!item.getBaseType().getId().equals(ObjectType.FOLDER_BASETYPE_ID))
-            {
-                return false;
-            } else
-            {
-                List<Tree<FileableCmisObject>> children = tree.getChildren();
-                if (children != null)
-                {
-                    if (!foldersAreEmpty(children))
-                    {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
     }
 
     private AcmFolder prepareFolder(AcmFolder folder, String cmisFolderId, String folderName) throws AcmUserActionFailedException, PersistenceException, AcmFolderException
