@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:task="http://www.springframework.org/schema/task"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:task="http://www.springframework.org/schema/task"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="file:${propertiesFileName}"/>
+        <property name="location" value="file:${r'${user.home}'}/.arkcase/acm/spring/spring-config-${id}-ldap.properties"/>
     </bean>
 
     <bean id="${id}_RoleToGroupProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+            class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
         <!-- note: must leave "file:" at the start of the file name for spring
              to be able to read the file; otherwise it will try to read from the
              classpath -->
@@ -27,8 +27,7 @@
     </task:scheduled-tasks>
 
     <!-- ensure this bean id is unique across all the LDAP sync beans. -->
-    <bean id="${id}_ldapSyncJob" class="com.armedia.acm.services.users.service.ldap.LdapSyncService"
-          init-method="ldapSync">
+    <bean id="${id}_ldapSyncJob" class="com.armedia.acm.services.users.service.ldap.LdapSyncService" init-method="ldapSync">
         <!-- directoryName: must be unique across all LDAP sync beans -->
         <property name="directoryName" value='${r"${ldapConfig.directoryName}"}'/>
         <!-- ldapSyncConfig: ref must match an AcmLdapSyncConfig bean, which should be defined below. -->
@@ -38,6 +37,7 @@
         <property name="ldapDao" ref="springLdapDao"/>
         <property name="ldapSyncDatabaseHelper" ref="userDatabaseHelper"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="syncEnabled" value="true"/>
     </bean>
 
     <bean id="${id}_sync" class="com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig">
@@ -63,5 +63,6 @@
              servers use "uid". -->
         <property name="userIdAttributeName" value='${r"${ldapConfig.userIdAttributeName}"}'/>
         <property name="roleToGroupMap" ref="${id}_RoleToGroupProperties"/>
+        <property name="userDomain" value='${r"${ldapConfig.userDomain}"}'/>
     </bean>
 </beans>

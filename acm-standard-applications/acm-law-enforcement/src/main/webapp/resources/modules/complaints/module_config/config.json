@@ -1282,7 +1282,7 @@
       "start": 0,
       "filter": "",
       "filterName": "",
-      "csvFileName": "search.csv"
+      "reportFileName": "search"
     }
   ]
 }

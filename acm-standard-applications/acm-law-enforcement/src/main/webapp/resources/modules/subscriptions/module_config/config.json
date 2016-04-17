@@ -58,9 +58,9 @@
       ],
       "paginationPageSize": 20,
       "start": 0,
-      "filter": "\"Object Type\": SUBSCRIPTION_EVENT",
+      "filter": "\"Object Type\": SUBSCRIPTION_EVENT&owner_lcs:userId",
       "filterName": "Object Type",
-      "csvFileName": "subscriptions.csv"
+      "reportFileName": "subscriptions"
     }
   ]
 }
