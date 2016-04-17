@@ -16,9 +16,6 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
             , getObjectTypeFromInfo: function (objectInfo) {
                 return ObjectService.ObjectTypes.CASE_FILE;
             }
-            , initComponentLinks: function (config) {
-                return HelperObjectBrowserService.createComponentLinks(config, ObjectService.ObjectTypes.CASE_FILE);
-            }
         });
 
     }
