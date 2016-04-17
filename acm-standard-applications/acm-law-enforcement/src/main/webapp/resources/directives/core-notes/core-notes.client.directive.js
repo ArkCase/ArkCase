@@ -60,6 +60,12 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                         return userInfo;
                     }
                 );
+
+                scope.isReadOnly = function(objectInfo) {
+                    return scope.notesInit.isReadOnly;
+                }
+
+
                 var noteHelper = new HelperNoteService.Note();
                 var gridHelper = new HelperUiGridService.Grid({scope: scope});
                 var promiseUsers = gridHelper.getUsers();

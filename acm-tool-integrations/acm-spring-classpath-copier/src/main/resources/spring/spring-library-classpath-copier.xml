@@ -12,10 +12,10 @@
         2. $HOME/.arkcase/acm/custom-config/spring if they are outside the WAR file
     -->
     <bean id="builtinFolderPath" class="java.lang.String">
-        <constructor-arg value="${user.home}/.arkcase/custom-config/spring"/>
+        <constructor-arg value="${user.home}/.arkcase/default-config/spring"/>
     </bean>
     <bean id="customFolderPath" class="java.lang.String">
-        <constructor-arg value="${user.home}/.arkcase/default-config/spring"/>
+        <constructor-arg value="${user.home}/.arkcase/custom-config/spring"/>
     </bean>
 
     <bean id="acmSpringConfigCopier" class="com.armedia.acm.spring.SpringConfigCopier">

@@ -111,7 +111,7 @@ public class AcmObjectLockAPIControllerTest extends EasyMockSupport
         final String user = "user";
         expect(mockAuthentication.getName()).andReturn(user).anyTimes();
 
-        objectLockServiceMock.removeLock(1123l, "CASE_FILE");
+        objectLockServiceMock.removeLock(1123l, "CASE_FILE", mockAuthentication);
         expectLastCall();
 
         session.setAttribute("acm_ip_address", "127.0.0.1");
