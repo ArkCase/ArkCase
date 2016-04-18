@@ -9,3 +9,5 @@ ldapConfig.groupSearchBase=${groupSearchBase}
 ldapConfig.groupSearchBaseOU=${groupSearchBaseOU}
 ldapConfig.ldapUrl=${ldapUrl}
 ldapConfig.userIdAttributeName=${userIdAttributeName}
+# Set the user' federated domain name in case of Single Sing-On scenraio. Leave it blank when authenticating against LDAP directly
+ldapConfig.userDomain=

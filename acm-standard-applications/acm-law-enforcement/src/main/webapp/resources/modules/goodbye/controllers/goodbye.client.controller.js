@@ -23,11 +23,16 @@ angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', 
             });
         }
 
-        // Retrieves the app properties from app-config.xml file
+		// Retrieves the app properties from app-config.xml file
         var appConfig = LookupService.getConfig('app').then(function (data) {
+            // clear redirectURL and redirectState
+            localStorage.removeItem('redirectURL');
+            sessionStorage.removeItem('redirectState');
             // redirect to logout page
             $window.location.href = AcmAppService.getAppUrl(Util.goodMapValue(data, "logoutUrl", "/logout"));
         });
+        
+        // TODO: this will not do anything because the browser is already redirected to the logout page.
         AcmLoginStatService.setLogin(false);        
     }
 ]);
