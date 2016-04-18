@@ -29,6 +29,9 @@
         pattern="/sso/loggedout" />
     <http
         security="none"
+        pattern="/samllogin" />
+    <http
+        security="none"
         pattern="/resources/**" />
     <http
         security="none"
