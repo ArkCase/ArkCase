@@ -61,7 +61,7 @@
       "start": 0,
       "filter": "\"Object Type\": NOTIFICATION",
       "filterName": "Object Type",
-      "csvFileName": "notifications.csv"
+      "reportFileName": "notifications"
     }
   ]
 }
