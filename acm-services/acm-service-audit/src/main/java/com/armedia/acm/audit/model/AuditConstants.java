@@ -5,7 +5,6 @@ package com.armedia.acm.audit.model;
 
 /**
  * @author riste.tutureski
- *
  */
 public interface AuditConstants
 {
@@ -29,4 +28,6 @@ public interface AuditConstants
     String EVENT_OBJECT_TYPE_DATABASE = "DATABASE";
     String EVENT_OBJECT_TYPE_ACTIVITI_EVENT = "ACTIVITI EVENT";
     String EVENT_OBJECT_TYPE_MULE_FLOW = "MULE FLOW";
+
+    String OBJECT_TYPE = "AUDIT_LOOKUP";
 }
