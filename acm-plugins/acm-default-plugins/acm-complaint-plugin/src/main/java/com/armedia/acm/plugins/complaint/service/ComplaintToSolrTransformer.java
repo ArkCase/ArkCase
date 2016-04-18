@@ -116,7 +116,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
 
         // needed a _lcs property for sorting
         solr.setAdditionalProperty("title_parseable_lcs", setTitleProperty(in));
-
+        solr.setAdditionalProperty("status_lcs", in.getStatus());
         return solr;
     }
 

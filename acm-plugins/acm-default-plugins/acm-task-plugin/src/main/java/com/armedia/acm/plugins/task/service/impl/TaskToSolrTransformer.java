@@ -143,6 +143,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setAdditionalProperty("parent_title_s", in.getParentObjectTitle());
 
         doc.setAdditionalProperty("title_parseable_lcs", setTitleProperty(in));
+        doc.setAdditionalProperty("status_lcs", in.getStatus());
 
         log.trace("returning a quick search doc");
 
