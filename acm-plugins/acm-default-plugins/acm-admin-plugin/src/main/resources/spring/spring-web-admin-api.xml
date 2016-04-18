@@ -91,14 +91,12 @@
     <!-- LDAP configuration API -->
     <bean id="ldapConfigurationService" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationService">
         <property name="ldapConfigurationTemplatesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/ldap-config-templates/" />
-        <property name="ldapTemplateLoginFile" value="spring-config-ldap-authenticate.xml.ftl"/>
-        <property name="ldapTemplateSignatureFile" value="spring-config-auth.xml.ftl"/>
+        <property name="ldapTemplateAuthFile" value="spring-config-ldap-auth.xml.ftl"/>
         <property name="ldapTemplateSyncFile" value="spring-config-ldap-sync.xml.ftl"/>
         <property name="ldapTemplatePropertiesFile" value="spring-config-ldap.properties.ftl"/>
 
         <property name="ldapConfigurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/"/>
-        <property name="ldapLoginFile" value="spring-config-%s-ldap-authenticate.xml"/>
-        <property name="ldapSignatureFile" value="spring-config-%s-auth.xml"/>
+        <property name="ldapAuthFile" value="spring-config-%s-ldap-auth.xml"/>
         <property name="ldapSyncFile" value="spring-config-%s-ldap-sync.xml"/>
         <property name="ldapPropertiesFile" value="spring-config-%s-ldap.properties"/>
         <property name="ldapPropertiesFileRegex" value="^spring[-d]config[-d][a-zA-Z0-9]+[-d]ldap.properties$"/>

@@ -51,7 +51,8 @@ public class FacetedSearchAPIController
             @RequestParam(value = "n", required = false, defaultValue = "500") int maxRows,
             @RequestParam(value = "filters", required = false, defaultValue = "") String[] filters,
             @RequestParam(value = "s", required = false, defaultValue = "create_date_tdt DESC") String sortSpec,
-            @RequestParam(value = "fields", required = false, defaultValue = "Object Number, Object Type, Modified") String[] exportFields,
+            @RequestParam(value = "fields", required = false,
+                    defaultValue = "parent_number_lcs, parent_type_s, modified_date_tdt") String[] exportFields,
             @RequestParam(value = "export", required = false) String export,
             @RequestParam(value = "reportName", required = false, defaultValue = "report") String reportName,
             HttpServletResponse response,
@@ -115,19 +116,16 @@ public class FacetedSearchAPIController
 
     public void export(ReportGenerator generator, byte[] bytes, HttpServletResponse response, String reportName)
     {
-        try
+        try (OutputStream outputStream = response.getOutputStream())
         {
             response.setContentType(generator.getReportContentType());
             response.setHeader("Content-Disposition",
                     String.format("attachment; filename=\"%s\"", generator.generateReportName(reportName)));
             response.setContentLength(bytes.length);
-            OutputStream outputStream = response.getOutputStream();
             outputStream.write(bytes);
-            outputStream.flush();
-            outputStream.close();
         } catch (IOException e)
         {
-            e.printStackTrace();
+            log.error("Unable to generate report document. Exception msg: '{}'", e.getMessage());
         }
     }
 

@@ -43,13 +43,24 @@ angular.module(ApplicationConfiguration.applicationModuleName).config([
             //$translateProvider.useSanitizeValueStrategy('sanitize');
 
             // Add HTTP error interceptor
-            function httpInterceptor($q, MessageService) {
+            function httpInterceptor($q, $window, MessageService) {
                 return {
                     responseError: responseError
                 };
 
                 // Intercept the failed response.
                 function responseError(response) {
+                    // Redirect to login page on 401
+                    // TODO Should the application caches be emptied? If the same user logs in no, but what about for a different user? 
+                    if (response.status === 401) {
+                        // reload the current page to get the user redirected to the login page and return to the same page after login
+                        // Spring security on the server remembers the last requested page
+                        $window.location.reload();
+                        return (
+                            $q.reject(null)
+                        );
+                    }
+                    
                     // Send error message to MessageService if is not suppressed
                     if (isErrorSuppressed(response)) {
                         return (
@@ -89,11 +100,18 @@ angular.module(ApplicationConfiguration.applicationModuleName).config([
             }
         }
     ])
-    .run(['$translate', '$translatePartialLoader',
-        function ($translate, $translatePartialLoader) {
+    .run(['$translate', '$translatePartialLoader', '$rootScope',
+        function ($translate, $translatePartialLoader, $rootScope) {
             $translatePartialLoader.addPart('core');
             $translatePartialLoader.addPart('welcome');
             $translate.refresh();
+
+            // remember last state (hash) in sessionStorage
+            $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+                if (toState.name != 'welcome' && toState.name != 'goodbye') {
+                    sessionStorage.redirectState = angular.toJson(toState);
+                }
+            });
         }
     ]);
 

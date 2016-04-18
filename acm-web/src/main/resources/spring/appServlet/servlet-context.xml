@@ -24,6 +24,7 @@
     <mvc:view-controller path="/logout" view-name="login"/>
     <mvc:view-controller path="/login.html" view-name="login"/>
     <mvc:view-controller path="/sso/loggedout" view-name="loggedout"/>
+    <mvc:view-controller path="/samllogin" view-name="saml_login"/>
     <mvc:view-controller path="/" view-name="redirect:/home.html"/>
 
     <!-- Scan for Spring beans declared via annotations. -->
