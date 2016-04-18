@@ -1,8 +1,8 @@
 package com.armedia.acm.plugins.complaint.handler;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.plugins.casefile.exceptions.AcmCaseFileNotFound;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
+import com.armedia.acm.plugins.complaint.exceptions.ComplaintNotFoundException;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
@@ -45,7 +45,7 @@ public class ComplaintMailHandler
             return;
         String complaintNumber = extractComplaintNumberFromSubject(message);
         if (complaintNumber == null)
-            throw new AcmCaseFileNotFound("Subject in the mail didn't match correct complaint number. subject: " + message.getSubject());
+            throw new ComplaintNotFoundException("Subject in the mail didn't match correct complaint number. subject: " + message.getSubject());
 
         String userId = "mail-service";
         auditPropertyEntityAdapter.setUserId(userId);
@@ -71,7 +71,7 @@ public class ComplaintMailHandler
                     complaint.getId());
         } catch (Exception e)
         {
-            log.error("Error processing complaint with number '{}'. Exception msg: '{}' ", complaint, e.getMessage());
+            log.error("Error processing complaint with number '{}'. Exception msg: '{}' ", complaintNumber, e.getMessage());
         }
 
     }
