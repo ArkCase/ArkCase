@@ -52,8 +52,10 @@ public class AuditDaoIT
         String objectType = "TASK";
         Long objectId = 100L;   // just want to make sure the query executes, doesn't have to return data
         List<String> eventTypes = null;
+        String sortBy = "eventDate";
+        String sort = "DESC";
 
-        List<AuditEvent> events = dao.findPagedResults(objectId, objectType, startRow, maxRows, eventTypes);
+        List<AuditEvent> events = dao.findPagedResults(objectId, objectType, startRow, maxRows, eventTypes, sortBy, sort);
 
         assertNotNull(events);
 

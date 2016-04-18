@@ -18,7 +18,6 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleException;
@@ -71,7 +70,7 @@ import static org.junit.Assert.*;
                 "/spring/test-case-file-context.xml"
         })
 @TransactionConfiguration(defaultRollback = true)
-public class MergeCaseFileServiceIT extends EasyMock
+public class MergeCaseFileServiceIT
 {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -220,20 +219,17 @@ public class MergeCaseFileServiceIT extends EasyMock
     public void mergeCaseFilesParticipantSameAssigneeTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException
     {
         auditAdapter.setUserId("auditUser");
-        auth = createMock(Authentication.class);
-        ipAddress = "127.0.0.1";
-
         String roleAdd = "ROLE_ADMINISTRATOR";
         AcmGrantedAuthority authority = new AcmGrantedAuthority(roleAdd);
+
+        auth = new UsernamePasswordAuthenticationToken("ann-acm", "ann-acm", Arrays.asList(authority));
+        ipAddress = "127.0.0.1";
 
         assertNotNull(caseFileDao);
         assertNotNull(ecmFileService);
         assertNotNull(acmFolderService);
         assertNotNull(mergeCaseService);
 
-        expect(auth.getName()).andReturn("ann-acm").anyTimes();
-        expect((List<AcmGrantedAuthority>) auth.getAuthorities()).andReturn(Arrays.asList(authority)).atLeastOnce();
-        replay(auth);
         //create source case file
         CaseFile sourceCaseFile = new CaseFile();
         sourceCaseFile.setCaseType("caseType");
@@ -269,11 +265,7 @@ public class MergeCaseFileServiceIT extends EasyMock
 
         mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
 
-        CaseFile sourceCase = caseFileDao.find(sourceId);
         CaseFile targetCase = caseFileDao.find(targetId);
-
-        assertEquals(4, targetCase.getParticipants().size());
-
         AcmParticipant foundAssignee = null;
         for (AcmParticipant ap : targetCase.getParticipants())
         {
@@ -283,8 +275,12 @@ public class MergeCaseFileServiceIT extends EasyMock
                 break;
             }
         }
+
+        assertEquals(5, targetCase.getParticipants().size());
+
         assertNotNull(foundAssignee);
         assertEquals(auth.getName(), foundAssignee.getParticipantLdapId());
+
     }
 
     @Test
@@ -292,20 +288,17 @@ public class MergeCaseFileServiceIT extends EasyMock
     public void mergeCaseFilesParticipantDifferentAssigneeTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException
     {
         auditAdapter.setUserId("auditUser");
-        auth = createMock(Authentication.class);
-        ipAddress = "127.0.0.1";
-
         String roleAdd = "ROLE_ADMINISTRATOR";
         AcmGrantedAuthority authority = new AcmGrantedAuthority(roleAdd);
+
+        auth = new UsernamePasswordAuthenticationToken("ann-acm", "ann-acm", Arrays.asList(authority));
+        ipAddress = "127.0.0.1";
 
         assertNotNull(caseFileDao);
         assertNotNull(ecmFileService);
         assertNotNull(acmFolderService);
         assertNotNull(mergeCaseService);
 
-        expect(auth.getName()).andReturn("ann-acm").anyTimes();
-        expect((List<AcmGrantedAuthority>) auth.getAuthorities()).andReturn(Arrays.asList(authority)).atLeastOnce();
-        replay(auth);
         //create source case file
         CaseFile sourceCaseFile = new CaseFile();
         sourceCaseFile.setCaseType("caseType");
@@ -335,7 +328,7 @@ public class MergeCaseFileServiceIT extends EasyMock
         assertNotNull(sourceId);
         assertNotNull(targetId);
 
-        assertEquals(4, targetSaved.getParticipants().size());
+        assertEquals(5, targetSaved.getParticipants().size());
 
         AcmParticipant foundAssignee = null;
         for (AcmParticipant ap : targetSaved.getParticipants())
@@ -356,10 +349,9 @@ public class MergeCaseFileServiceIT extends EasyMock
 
         mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
 
-        CaseFile sourceCase = caseFileDao.find(sourceId);
         CaseFile targetCase = caseFileDao.find(targetId);
 
-        assertEquals(5, targetCase.getParticipants().size());
+        assertEquals(6, targetCase.getParticipants().size());
 
         foundAssignee = null;
         for (AcmParticipant ap : targetCase.getParticipants())
