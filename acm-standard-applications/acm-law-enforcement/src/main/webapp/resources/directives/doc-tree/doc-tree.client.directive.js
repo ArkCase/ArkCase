@@ -84,7 +84,7 @@
  */
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log'
     , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService'
-    , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', 'Authentication', 'Helper.NoteService', 'Object.NoteService' 
+    , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', 'Authentication', 'Helper.NoteService', 'Object.NoteService'
     , '$timeout', '$browser', '$location', 'Object.LockingService', 'ObjectService'
     , function ($q, $translate, $modal, $filter, $log
         , Store, Util, UtilDateService, ConfigService, LookupService
@@ -167,12 +167,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             ;
                         } else if (DocTree.isFileNode(node)) {
                             if (node.data.lock) {
-                                var lockedTitle = $translate.instant("common.directive.docTree.lockedTitle");
-                                var $span = $("<span class='ui-icon ui-icon-locked' title='" + lockedTitle + "'/>").appendTo($tdList.eq(1));
-                                $span.hover(function () {
-                                    $(this).tooltip('show');
-                                }, function () {
-                                    $(this).tooltip('hide');
+                                promiseGetUserFullName.then(function (userFullNames) {
+                                    var found = _.find(userFullNames, {id: node.data.lock.creator});
+                                    var userFullName = Util.goodMapValue(found, "name");
+                                    var lockedTitle = $translate.instant("common.directive.docTree.lockedTitle") + userFullName;
+                                    var $span = $("<span class='ui-icon ui-icon-locked' title='" + lockedTitle + "'/>").appendTo($tdList.eq(1));
+                                    $span.hover(function () {
+                                        $(this).tooltip('show');
+                                    }, function () {
+                                        $(this).tooltip('hide');
+                                    });
                                 });
                             }
                             var filter = $filter('capitalizeFirst');
@@ -188,8 +192,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             var $span = $("<span/>").appendTo($td6);
                             var $select = $("<select/>")
                                 .addClass('docversion inline')
-                                .appendTo($span)
-                                ;
+                                .appendTo($span);
 
                             if (Util.isArray(node.data.versionList)) {
                                 for (var i = 0; i < node.data.versionList.length; i++) {
@@ -197,8 +200,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     var $option = $("<option/>")
                                         .val(versionTag)
                                         .text(versionTag)
-                                        .appendTo($select)
-                                        ;
+                                        .appendTo($select);
 
                                     if (Util.goodValue(node.data.version) == versionTag) {
                                         $option.attr("selected", true);
@@ -397,8 +399,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 DocTree.Paging.relievePaging();
                             }
                         }
-                    })
-                ;
+                    });
 
                 DocTree.tree = DocTree.jqTree.fancytree("getTree");
                 var jqTreeBody = DocTree.jqTree.find("tbody");
@@ -3445,7 +3446,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     DocTree.replaceFile(node);
                 }, function () {
                     // comment is not added, replace file
-                    DocTree.replaceFile(node);
+                    //if this should be configurable add check for something here
+                    //DocTree.replaceFile(node);
                 });
             }
         };
