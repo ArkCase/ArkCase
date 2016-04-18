@@ -4109,7 +4109,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
         };
 
     }
-])
+]);
+
 angular.module('directives').controller('directives.DocTreeDndDialogController', ['$scope', '$modalInstance'
         , 'UtilService', 'OpTypes', 'params'
         , function ($scope, $modalInstance, Util, OpTypes, params) {
