@@ -35,7 +35,7 @@ public class ComplaintMailFilter
 
         boolean matchesComplaintFilter = matcher.find();
 
-        log.debug("Message with subject '{}' matches a case number: '{}'", message.getSubject(), matchesComplaintFilter);
+        log.debug("Message with subject '{}' matches the complaint number: '{}'", message.getSubject(), matchesComplaintFilter);
 
         return matchesComplaintFilter;
     }
