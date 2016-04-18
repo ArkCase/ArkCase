@@ -85,7 +85,7 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setAdditionalProperty("candidate_group_ss", in.getCandidateGroups());
 
         // needed a _lcs property for sorting
-        doc.setAdditionalProperty("title_parseable_lcs", setTitleProperty(in));
+        doc.setTitle_parseable_lcs(setTitleProperty(in));
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getOwner());
@@ -142,8 +142,8 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setAdditionalProperty("candidate_group_ss", in.getCandidateGroups());
         doc.setAdditionalProperty("parent_title_s", in.getParentObjectTitle());
 
-        doc.setAdditionalProperty("title_parseable_lcs", setTitleProperty(in));
-        doc.setAdditionalProperty("status_lcs", in.getStatus());
+        doc.setTitle_parseable_lcs(setTitleProperty(in));
+        doc.setStatus_lcs(in.getStatus());
 
         log.trace("returning a quick search doc");
 

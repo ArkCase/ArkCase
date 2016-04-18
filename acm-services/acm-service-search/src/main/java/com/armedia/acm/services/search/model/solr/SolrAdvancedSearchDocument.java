@@ -39,7 +39,8 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     /////////////////// for complaints, case files, other objects with a title or description ////////////
     private String title_parseable;
     private String description_parseable;
-
+    //for sorting//
+    private String title_parseable_lcs;
     /////////////////// for complaints, case files, tasks we introduce description and for personAssociation we introduce notes ////////////
     private String description_no_html_tags_parseable;
     private String notes_no_html_tags_parseable;
@@ -782,6 +783,16 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         return hidden_b;
     }
 
+    public String getTitle_parseable_lcs()
+    {
+        return title_parseable_lcs;
+    }
+
+    public void setTitle_parseable_lcs(String title_parseable_lcs)
+    {
+        this.title_parseable_lcs = title_parseable_lcs;
+    }
+
     @Override
     public String toString()
     {
@@ -800,6 +811,7 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
                 ", deny_acl_ss=" + deny_acl_ss +
                 ", allow_acl_ss=" + allow_acl_ss +
                 ", title_parseable='" + title_parseable + '\'' +
+                ", title_parseable_lcs='" + title_parseable_lcs + '\'' +
                 ", description_parseable='" + description_parseable + '\'' +
                 ", description_no_html_tags_parseable='" + description_no_html_tags_parseable + '\'' +
                 ", notes_no_html_tags_parseable='" + notes_no_html_tags_parseable + '\'' +
