@@ -1268,27 +1268,24 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     if (Validator.validateNodes(nodes)) {
                         var countFolder = 0;
                         var countFile = 0;
-                        var hasOneRecord = false;
+                        var hasFileRecord = false;
                         for (var i = 0; i < nodes.length; i++) {
                             if (DocTree.isFolderNode(nodes[i])) {
                                 countFolder++;
-                                if (nodes[i].data.status == "RECORD") {
-                                    hasOneRecord = true;
-                                }
                             } else if (DocTree.isFileNode(nodes[i])) {
                                 countFile++;
                                 if (nodes[i].data.status == "RECORD") {
-                                    hasOneRecord = true;
+                                    hasFileRecord = true;
                                 }
                             }
                         }
 
                         if (countFile > 0 && countFolder > 0) { // files and folders menu
-                            menuResource = (hasOneRecord ? "menu.batch.filesOrFoldersRecord" : "menu.batch.filesAndFolders");
+                            menuResource = (hasFileRecord ? "menu.batch.filesOrFoldersRecord" : "menu.batch.filesAndFolders");
                         } else if (countFolder > 0) {       // folders only menu
-                            menuResource = (hasOneRecord ? "menu.batch.filesOrFoldersRecord" : "menu.batch.folders");
+                            menuResource = "menu.batch.folders";
                         } else if (countFile > 0) {        // files only menu
-                            menuResource = (hasOneRecord ? "menu.record.file" : "menu.batch.files");
+                            menuResource = (hasFileRecord ? "menu.record.file" : "menu.batch.files");
                         }
 
                     }
