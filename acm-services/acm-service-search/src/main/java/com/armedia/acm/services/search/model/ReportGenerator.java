@@ -14,7 +14,7 @@ public abstract class ReportGenerator
 
     public abstract String getReportContentType();
 
-    public JSONObject findFields()
+    public JSONObject findHeaderFields()
     {
         String exportFields = (String) getPropertyMap().getPluginProperties().get(SearchConstants.EXPORT_FIELDS);
         JSONObject fields = new JSONObject(exportFields);

@@ -1,10 +1,10 @@
 package com.armedia.acm.plugins.audit.service;
 
 
+import com.armedia.acm.audit.dao.AuditLookupDao;
+import com.armedia.acm.audit.model.AcmAuditLookup;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
-import com.armedia.acm.plugins.audit.dao.AuditLookupDao;
-import com.armedia.acm.plugins.audit.model.AcmAuditLookup;
 import com.armedia.acm.plugins.audit.model.AuditConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +20,8 @@ import java.util.Map;
 /**
  * Created by marjan.stefanoski on 26.06.2015.
  */
-public class InsertEventTypeNames implements ApplicationContextAware {
-
+public class InsertEventTypeNames implements ApplicationContextAware
+{
 
 
     private AcmPlugin pluginEventType;
@@ -31,77 +31,101 @@ public class InsertEventTypeNames implements ApplicationContextAware {
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
+    {
 
         getAuditPropertyEntityAdapter().setUserId("audit-lookup");
 
-        try {
+        try
+        {
             updateEventTypeNamesInTheDb();
-        } catch ( SQLException e ) {
-            if(log.isErrorEnabled()) {
-              log.error("Audit msgs was not inserted successfully"+e.getMessage(),e);
+        } catch (SQLException e)
+        {
+            if (log.isErrorEnabled())
+            {
+                log.error("Audit msgs was not inserted successfully" + e.getMessage(), e);
             }
         }
     }
 
 
-    public void updateEventTypeNamesInTheDb() throws SQLException {
+    public void updateEventTypeNamesInTheDb() throws SQLException
+    {
         Map<String, Object> props = getPluginEventType().getPluginProperties();
         boolean isForUpdate = false;
-        if (props.containsKey(AuditConstants.AUDIT_UPDATE)){
+        if (props.containsKey(AuditConstants.AUDIT_UPDATE))
+        {
             String forUpdate = (String) props.get(AuditConstants.AUDIT_UPDATE);
             isForUpdate = new Boolean(forUpdate).booleanValue();
         }
-        if(isForUpdate){
-            try {
+        if (isForUpdate)
+        {
+            try
+            {
                 getAuditLookupDao().deleteAllAuditsFormLookupTabel();
-            } catch ( NoResultException e ){
-                if(log.isInfoEnabled()){
-                    log.info("No Data into acm_audit_event_type_lu table found "+e.getMessage(),e);
+            } catch (NoResultException e)
+            {
+                if (log.isInfoEnabled())
+                {
+                    log.info("No Data into acm_audit_event_type_lu table found " + e.getMessage(), e);
                 }
-            } catch ( PersistenceException e ){
-                if(log.isInfoEnabled()){
-                    log.info("No Data into acm_audit_event_type_lu table found "+e.getMessage(),e);
+            } catch (PersistenceException e)
+            {
+                if (log.isInfoEnabled())
+                {
+                    log.info("No Data into acm_audit_event_type_lu table found " + e.getMessage(), e);
                 }
             }
             insertNewDataIntoDb();
-            if(log.isInfoEnabled()){
+            if (log.isInfoEnabled())
+            {
                 log.info("New Audit Data inserted into acm_audit_event_type_lu table");
             }
-        } else {
-            if( log.isInfoEnabled() ){
+        } else
+        {
+            if (log.isInfoEnabled())
+            {
                 log.info("No new data for inserting into acm_audit_event_type_lu table");
             }
         }
     }
 
-    private void insertNewDataIntoDb(){
-        Map<String,Object> props = getPluginEventType().getPluginProperties();
+    private void insertNewDataIntoDb()
+    {
+        Map<String, Object> props = getPluginEventType().getPluginProperties();
         long i = 0;
-        for ( Map.Entry<String,Object> entry: props.entrySet() ){
-            if( entry.getKey().contains(AuditConstants.EVENT_TYPE) ){
+        for (Map.Entry<String, Object> entry : props.entrySet())
+        {
+            if (entry.getKey().contains(AuditConstants.EVENT_TYPE))
+            {
                 String key = entry.getKey().split(AuditConstants.EVENT_TYPE)[1];
                 String value = (String) entry.getValue();
-                if ("".equals(value)){
+                if ("".equals(value))
+                {
                     value = key;
                 }
-                AcmAuditLookup  auditLookup = new AcmAuditLookup();
+                AcmAuditLookup auditLookup = new AcmAuditLookup();
                 auditLookup.setAuditBuisinessName(value);
                 auditLookup.setAuditStatus(AuditConstants.AUDIT_STATUS_ACTIVE);
                 auditLookup.setOrder(new Long(++i));
                 auditLookup.setAuditEventName(key);
                 auditLookup.setCreator(AuditConstants.ARK_AUDIT_USER);
                 auditLookup.setModifier(AuditConstants.ARK_AUDIT_USER);
-                try {
+                try
+                {
                     getAuditLookupDao().save(auditLookup);
-                } catch (PersistenceException e) {
-                    if(log.isInfoEnabled()){
-                        log.info("No Data into acm_audit_event_type_lu table found "+e.getMessage(),e);
+                } catch (PersistenceException e)
+                {
+                    if (log.isInfoEnabled())
+                    {
+                        log.info("No Data into acm_audit_event_type_lu table found " + e.getMessage(), e);
                     }
                     throw e;
-                } catch (Exception e){
-                    if(log.isInfoEnabled()){
-                        log.info("No Data into acm_audit_event_type_lu table found "+e.getMessage(),e);
+                } catch (Exception e)
+                {
+                    if (log.isInfoEnabled())
+                    {
+                        log.info("No Data into acm_audit_event_type_lu table found " + e.getMessage(), e);
                     }
                     throw e;
                 }
@@ -109,19 +133,23 @@ public class InsertEventTypeNames implements ApplicationContextAware {
         }
     }
 
-    public AcmPlugin getPluginEventType() {
+    public AcmPlugin getPluginEventType()
+    {
         return pluginEventType;
     }
 
-    public void setPluginEventType(AcmPlugin pluginEventType) {
+    public void setPluginEventType(AcmPlugin pluginEventType)
+    {
         this.pluginEventType = pluginEventType;
     }
 
-    public AuditLookupDao getAuditLookupDao() {
+    public AuditLookupDao getAuditLookupDao()
+    {
         return auditLookupDao;
     }
 
-    public void setAuditLookupDao(AuditLookupDao auditLookupDao) {
+    public void setAuditLookupDao(AuditLookupDao auditLookupDao)
+    {
         this.auditLookupDao = auditLookupDao;
     }
 
