@@ -81,7 +81,7 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
         solr.setAdditionalProperty("security_field_lcs", in.getSecurityField());
 
-        solr.setAdditionalProperty("title_parseable_lcs", setTitleProperty(in));
+        solr.setTitle_parseable_lcs(setTitleProperty(in));
         return solr;
     }
 
@@ -111,7 +111,8 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         solr.setAssignee_s(assigneeUserId);
 
         // needed a _lcs property for sorting
-        solr.setAdditionalProperty("title_parseable_lcs", setTitleProperty(in));
+        solr.setTitle_parseable_lcs(setTitleProperty(in));
+        solr.setStatus_lcs(in.getStatus());
 
         return solr;
     }
