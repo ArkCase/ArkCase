@@ -3,7 +3,7 @@ package com.armedia.acm.plugins.outlook.web.api;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
-import com.armedia.acm.service.outlook.exception.AcmOutlookSendEmailWithAttachmentsFailedException;
+import com.armedia.acm.service.outlook.exception.AcmOutlookSendEmailWithEmbeddedLinksFailedException;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
@@ -41,7 +41,7 @@ public class SendEmailWithEmbeddedLinksAPIController
 
         if (null == in)
         {
-            throw new AcmOutlookSendEmailWithAttachmentsFailedException("Could not create email message, invalid input : " + in);
+            throw new AcmOutlookSendEmailWithEmbeddedLinksFailedException("Could not create email message, invalid input : " + in);
         }
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
@@ -53,8 +53,8 @@ public class SendEmailWithEmbeddedLinksAPIController
             return getOutlookService().sendEmailWithEmbeddedLinks(in, outlookUser, authentication);
         } catch (Exception e)
         {
-            throw new AcmOutlookSendEmailWithAttachmentsFailedException("Could not send emails with attachment,among other things check your request body. Exception message is : " + e.getMessage(),
-                    e);
+            throw new AcmOutlookSendEmailWithEmbeddedLinksFailedException(
+                    "Could not send emails with embedded links, among other things check your request body. Exception message is : " + e.getMessage(), e);
         }
 
     }
