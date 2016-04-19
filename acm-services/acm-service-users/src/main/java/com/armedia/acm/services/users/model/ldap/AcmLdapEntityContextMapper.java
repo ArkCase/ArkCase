@@ -87,7 +87,7 @@ public class AcmLdapEntityContextMapper implements ContextMapper
         }
         retval.setUserId(adapter.getStringAttribute(getUserIdAttributeName()));
         retval.setMail(adapter.getStringAttribute(getMailAttributeName()));
-        retval.setDistinguishedName(adapter.getStringAttribute("dn"));
+        retval.setDistinguishedName(adapter.getStringAttribute("dn") != null ? adapter.getStringAttribute("dn") : adapter.getStringAttribute("distinguishedname"));
 
         return retval;
     }
