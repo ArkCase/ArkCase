@@ -33,7 +33,7 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
                     $scope.config = params.config;
                 }],
                 animation: true,
-                size: 'lg',
+                size: 'sm',
                 backdrop: 'static',
                 resolve: {
                     params: function () {

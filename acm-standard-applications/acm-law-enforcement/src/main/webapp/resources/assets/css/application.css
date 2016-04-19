@@ -1,4 +1,5 @@
-/* @override http://jsapn.armedianet.com/arkcase/assets/css/application.css */
+/* @override http://jsapn.armedianet.com/arkcase/assets/css/application.css
+	http://10.21.4.149/arkcase/assets/css/application.css */
 
 /* @override http://dev.jsapn.armedianet.com/arkcase/assets/css/application.css
 	http://localhost:8080/arkcase/assets/css/application.css
@@ -1118,4 +1119,27 @@ tags-input .tags {
 	position: absolute;
 	right: 15px;
 	margin-top: 3px;
+}
+
+
+.modal-header {
+	background-color: #232931;
+	border-radius: 4px 4px 0px 0px;
+	color: #fff;
+}
+
+
+.modal-header h3{
+	color: #fff;
+}
+
+
+.modal-footer {
+	background-color: #2d343e;
+	color: #fff;
+}
+
+.modal-footer .btn-secondary {
+	background-color: transparent;
+	color: #fff;
 }
