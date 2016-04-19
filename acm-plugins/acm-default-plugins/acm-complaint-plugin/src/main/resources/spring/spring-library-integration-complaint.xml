@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd"
+       xmlns:int="http://www.springframework.org/schema/integration">
+
+
+    <int:channel id="complaintFilteredMailChannel"/>
+
+    <bean id="complaintMailFilter" class="com.armedia.acm.plugins.complaint.filter.ComplaintMailFilter">
+        <property name="complaintNumberRegexPattern" value="${complaint.email.regex.complaint_number}"/>
+        <property name="complaintObjectTypeRegexPattern" value="${complaint.email.regex.object_type}"/>
+    </bean>
+
+    <bean id="ComplaintMailHandler" class="com.armedia.acm.plugins.complaint.handler.ComplaintMailHandler">
+        <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="mailDirectory" value="${complaint.email.folder.relative.path}"/>
+        <property name="enabled" value="${complaint.email.handler.enabled}"/>
+        <property name="acmFolderService" ref="acmFolderService"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="complaintNumberRegexPattern" value="${complaint.email.regex.complaint_number}"/>
+    </bean>
+
+    <int:service-activator input-channel="complaintFilteredMailChannel" ref="ComplaintMailHandler" method="handle"/>
+
+    <int:chain input-channel="mailChannel" output-channel="complaintFilteredMailChannel">
+        <int:filter ref="complaintMailFilter" throw-exception-on-rejection="true" method="accept"/>
+    </int:chain>
+
+</beans>

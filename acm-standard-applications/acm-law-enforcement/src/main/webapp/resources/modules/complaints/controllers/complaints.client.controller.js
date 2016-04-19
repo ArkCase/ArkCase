@@ -16,17 +16,10 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
             , getObjectIdFromInfo: function (complaintInfo) {
                 return Util.goodMapValue(complaintInfo, "complaintId");
             }
-            , initComponentLinks: function (config) {
-                return HelperObjectBrowserService.createComponentLinks(config, ObjectService.ObjectTypes.COMPLAINT);
-            }
-            , selectComponentLinks: function (selectedObject) {
-                return $scope.componentLinks;
+            , getObjectTypeFromInfo: function (complaintInfo) {
+                return ObjectService.ObjectTypes.COMPLAINT;
             }
         });
-
-        //$scope.$on("collapsed", function(event, collapsed) {
-        //    $scope.linksShown = !collapsed;
-        //});
 
     }
 ]);

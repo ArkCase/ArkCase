@@ -1,6 +1,5 @@
-package com.armedia.acm.plugins.audit.model;
+package com.armedia.acm.audit.model;
 
-import com.armedia.acm.audit.model.NotAudited;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 
@@ -19,7 +18,8 @@ import java.util.Date;
 @Entity
 @NotAudited
 @Table(name = "acm_audit_event_type_lu")
-public class AcmAuditLookup implements Serializable, AcmObject, AcmEntity {
+public class AcmAuditLookup implements Serializable, AcmObject, AcmEntity
+{
 
     private static final long serialVersionUID = 2464137631399833851L;
 
@@ -63,93 +63,113 @@ public class AcmAuditLookup implements Serializable, AcmObject, AcmEntity {
     private Date modified;
 
 
-    public Long getAuditLookupId() {
+    public Long getAuditLookupId()
+    {
         return auditLookupId;
     }
 
-    public void setAuditLookupId(Long auditLookupId) {
+    public void setAuditLookupId(Long auditLookupId)
+    {
         this.auditLookupId = auditLookupId;
     }
 
-    public String getAuditBuisinessName() {
+    public String getAuditBuisinessName()
+    {
         return auditBuisinessName;
     }
 
-    public void setAuditBuisinessName(String auditBuisinessName) {
+    public void setAuditBuisinessName(String auditBuisinessName)
+    {
         this.auditBuisinessName = auditBuisinessName;
     }
 
-    public Long getOrder() {
+    public Long getOrder()
+    {
         return order;
     }
 
-    public void setOrder(Long order) {
+    public void setOrder(Long order)
+    {
         this.order = order;
     }
 
-    public String getAuditStatus() {
+    public String getAuditStatus()
+    {
         return auditStatus;
     }
 
-    public void setAuditStatus(String auditStatus) {
+    public void setAuditStatus(String auditStatus)
+    {
         this.auditStatus = auditStatus;
     }
 
-    public String getAuditEventName() {
+    public String getAuditEventName()
+    {
         return auditEventName;
     }
 
-    public void setAuditEventName(String auditEventName) {
+    public void setAuditEventName(String auditEventName)
+    {
         this.auditEventName = auditEventName;
     }
 
     @Override
-    public Date getModified() {
+    public Date getModified()
+    {
         return modified;
     }
 
     @Override
-    public void setModified(Date modified) {
+    public void setModified(Date modified)
+    {
         this.modified = modified;
     }
 
     @Override
-    public Date getCreated() {
+    public Date getCreated()
+    {
         return created;
     }
 
     @Override
-    public void setCreated(Date created) {
+    public void setCreated(Date created)
+    {
         this.created = created;
     }
 
     @Override
-    public String getModifier() {
+    public String getModifier()
+    {
         return modifier;
     }
 
     @Override
-    public void setModifier(String modifier) {
+    public void setModifier(String modifier)
+    {
         this.modifier = modifier;
     }
 
     @Override
-    public String getCreator() {
+    public String getCreator()
+    {
         return creator;
     }
 
     @Override
-    public void setCreator(String creator) {
+    public void setCreator(String creator)
+    {
         this.creator = creator;
     }
 
     @Override
-    public String getObjectType() {
+    public String getObjectType()
+    {
         return AuditConstants.OBJECT_TYPE;
     }
 
     @Override
-    public Long getId() {
+    public Long getId()
+    {
         return auditLookupId;
     }
 }

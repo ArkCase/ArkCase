@@ -64,6 +64,8 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
 
         doc.setParent_folder_id_i(in.getParentFolderId());
 
+        doc.setStatus_s(in.getStatus());
+
         return doc;
     }
 
