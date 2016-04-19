@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -28,7 +29,8 @@ import java.util.UUID;
 @Entity
 @NotAudited
 @Table(name = "acm_audit_log")
-public class AuditEvent {
+public class AuditEvent
+{
 
     private static DateTimeFormatter dtf = ISODateTimeFormat.dateTime();
 
@@ -88,59 +90,77 @@ public class AuditEvent {
     @Column(name = "cm_audit_property_value")
     private Map<String, String> eventProperties = new HashMap<>();
 
-    public Date getEventDate() {
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "cm_audit_activity", referencedColumnName = "cm_key", nullable = true, insertable = false, updatable = false)
+    private AcmAuditLookup auditLookup;
+
+    public Date getEventDate()
+    {
         return eventDate;
     }
 
-    public void setEventDate(Date eventDate) {
+    public void setEventDate(Date eventDate)
+    {
         this.eventDate = eventDate;
     }
 
-    public String getUserId() {
+    public String getUserId()
+    {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(String userId)
+    {
         this.userId = userId;
     }
 
-    public String getFullEventType() {
+    public String getFullEventType()
+    {
         return fullEventType;
     }
 
-    public void setFullEventType(String fullEventType) {
+    public void setFullEventType(String fullEventType)
+    {
         this.fullEventType = fullEventType;
     }
 
-    public String getEventResult() {
+    public String getEventResult()
+    {
         return eventResult;
     }
 
-    public void setEventResult(String eventResult) {
+    public void setEventResult(String eventResult)
+    {
         this.eventResult = eventResult;
     }
 
-    public String getIpAddress() {
+    public String getIpAddress()
+    {
         return ipAddress;
     }
 
-    public void setIpAddress(String ipAddress) {
+    public void setIpAddress(String ipAddress)
+    {
         this.ipAddress = ipAddress;
     }
 
-    public String getObjectType() {
+    public String getObjectType()
+    {
         return objectType;
     }
 
-    public void setObjectType(String objectType) {
+    public void setObjectType(String objectType)
+    {
         this.objectType = objectType;
     }
 
-    public Long getObjectId() {
+    public Long getObjectId()
+    {
         return objectId;
     }
 
-    public void setObjectId(Long objectId) {
+    public void setObjectId(Long objectId)
+    {
         this.objectId = objectId;
     }
 
@@ -164,36 +184,48 @@ public class AuditEvent {
         this.parentObjectId = parentObjectId;
     }
 
-    public String getStatus() {
+    public String getStatus()
+    {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(String status)
+    {
         this.status = status;
     }
 
-    public String getTrackId() {
+    public String getTrackId()
+    {
         return trackId;
     }
 
-    public void setTrackId(String trackId) {
+    public void setTrackId(String trackId)
+    {
         this.trackId = trackId;
     }
 
-    public Long getId() {
+    public Long getId()
+    {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id)
+    {
         this.id = id;
     }
 
     @Transient
-    public String getEventType() {
-        int lastDot = getFullEventType().lastIndexOf('.');
-        if (lastDot >= 0) {
+    public String getEventType()
+    {
+        //check if auditLookup is not null and get the type
+        if (getAuditLookup() != null)
+            return getAuditLookup().getAuditBuisinessName();
+
+        /*int lastDot = getFullEventType().lastIndexOf('.');
+        if (lastDot >= 0)
+        {
             return getFullEventType().substring(lastDot + 1, getFullEventType().length());
-        }
+        }*/
         return getFullEventType();
     }
 
@@ -205,6 +237,16 @@ public class AuditEvent {
     public void setRequestId(UUID requestId)
     {
         this.requestId = requestId;
+    }
+
+    public AcmAuditLookup getAuditLookup()
+    {
+        return auditLookup;
+    }
+
+    public void setAuditLookupMap(AcmAuditLookup auditLookup)
+    {
+        this.auditLookup = auditLookup;
     }
 
     public Map<String, String> getEventProperties()
