@@ -357,6 +357,12 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     @Override
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO emailDTO, AcmOutlookUser outlookUser, Authentication authentication) throws Exception
     {
+
+        if (getSendFromSystemUser())
+        {
+            outlookUser = new AcmOutlookUser(getSystemUserId(), getSystemUserEmail(), getSystemUserPass());
+        }
+
         ExchangeService service = connect(outlookUser);
 
         List<EmailWithEmbeddedLinksResultDTO> results = new ArrayList<>();
