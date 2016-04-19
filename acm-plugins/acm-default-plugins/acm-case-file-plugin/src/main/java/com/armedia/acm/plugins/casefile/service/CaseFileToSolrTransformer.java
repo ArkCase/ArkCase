@@ -112,7 +112,6 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
         // needed a _lcs property for sorting
         solr.setTitle_parseable_lcs(setTitleProperty(in));
-        solr.setStatus_lcs(in.getStatus());
 
         return solr;
     }
