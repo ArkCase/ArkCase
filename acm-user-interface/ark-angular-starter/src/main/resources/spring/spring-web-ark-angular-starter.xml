@@ -40,10 +40,10 @@
         </property>
         <property name="frontEndCommandsToBeExecuted">
             <list>
-                <!--<value>${frontEndCommandPrefix}npm${frontEndCommandSuffix} &#45;&#45;no-color install</value>-->
-                <!--<value>${frontEndCommandPrefix}${frontEndCommandPath}bower${frontEndCommandSuffix} &#45;&#45;no-color -q
-                    &#45;&#45;config.interactive=false install
-                </value>-->
+                <value>${frontEndCommandPrefix}npm${frontEndCommandSuffix} --no-color install</value>
+                <value>${frontEndCommandPrefix}${frontEndCommandPath}bower${frontEndCommandSuffix} --no-color -q
+                    --config.interactive=false install
+                </value>
                 <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} --no-color</value>
             </list>
         </property>
