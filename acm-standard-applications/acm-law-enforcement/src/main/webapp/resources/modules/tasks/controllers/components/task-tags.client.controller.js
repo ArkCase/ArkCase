@@ -92,7 +92,7 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
 
-            var currentObjectId = Util.goodMapValue(objectInfo, "id");
+            var currentObjectId = Util.goodMapValue(objectInfo, "taskId");
             if (Util.goodPositive(currentObjectId, false)) {
             	var promiseQueryTags = ObjectTagsService.getAssociateTags(currentObjectId, ObjectService.ObjectTypes.TASK);
                 $q.all([promiseQueryTags]).then(function (data) {
