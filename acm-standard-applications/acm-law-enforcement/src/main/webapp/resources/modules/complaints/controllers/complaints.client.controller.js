@@ -24,9 +24,7 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
             }
         });
 
-        //$scope.$on("collapsed", function(event, collapsed) {
-        //    $scope.linksShown = !collapsed;
-        //});
+        $scope.limit = "57";
 
     }
 ]);
