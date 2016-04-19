@@ -29,6 +29,25 @@ angular.module('search').factory('Search.QueryBuilderService', [
              */
             buildFacetedSearchQuery: function (input, filters, n, start) {
                 return (filters ? (input + "&filters=" + encodeURIComponent(filters) + "&n=" + n + "&start=" + start) : (input + "&n=" + n + "&start=" + start));
+            },
+
+            /**
+             * @ngdoc method
+             * @name buildSafeFqFacetedSearchQuery
+             * @methodOf service:Search.QueryBuilderService
+             *
+             * @description
+             * Builds URL to pass to the faceted search service.
+             * It doesn't perform whole uri encoding, only encodes '&fq='. Some requests have
+             *
+             * @param {String} input Search term input by user
+             * @param {String} filters Filters to send to the faceted search service
+             * @param {String} n Total row count
+             * @param {String} start Starting row count
+             * @returns {HttpPromise} Future info about cancel status
+             */
+            buildSafeFqFacetedSearchQuery: function (input, filters, n, start) {
+                return (filters ? (input + "&filters=" + filters.replace(/&fq=/gi, '%26fq%3D') + "&n=" + n + "&start=" + start) : (input + "&n=" + n + "&start=" + start));
             }
         }
     }
