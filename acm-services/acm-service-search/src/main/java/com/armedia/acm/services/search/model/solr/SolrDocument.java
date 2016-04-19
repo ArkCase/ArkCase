@@ -86,7 +86,6 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
     private String business_process_name_lcs;
 
     ///for sorting related fieds///
-    private String status_lcs;
     private String title_parseable_lcs;
 
     @Override
@@ -585,16 +584,6 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         this.business_process_name_lcs = business_process_name_lcs;
     }
 
-    public String getStatus_lcs()
-    {
-        return status_lcs;
-    }
-
-    public void setStatus_lcs(String status_lcs)
-    {
-        this.status_lcs = status_lcs;
-    }
-
     public String getTitle_parseable_lcs()
     {
         return title_parseable_lcs;
@@ -611,7 +600,6 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         return "SolrDocument{" +
                 "id='" + id + '\'' +
                 ", status_s='" + status_s + '\'' +
-                ", status_lcs='" + status_lcs + '\'' +
                 ", author='" + author + '\'' +
                 ", author_s='" + author_s + '\'' +
                 ", modifier_s='" + modifier_s + '\'' +
