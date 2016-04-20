@@ -84,7 +84,6 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
          * @param {String} sortBy  (Optional) Sort field
          * @param {String} sortDir  (Optional) Sort direction
          *
-         * @returns None
          */
         Service.resetChildTasks = function (parentType, parentId, start, n, sortBy, sortDir) {
             var cacheChildTaskData = new Store.CacheFifo(Service.CacheNames.CHILD_TASK_DATA);
