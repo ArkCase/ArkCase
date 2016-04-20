@@ -3,6 +3,7 @@
  */
 package com.armedia.acm.form.casefile.model.ps.xml;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -10,6 +11,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.armedia.acm.form.casefile.model.ps.Subject;
 import com.armedia.acm.objectonverter.adapter.DateFrevvoAdapter;
+import com.armedia.acm.objectonverter.adapter.LocalDateFrevvoAdapter;
 
 /**
  * @author riste.tutureski
@@ -97,14 +99,14 @@ public class Employee extends Subject{
 	}
 	
 	@XmlElement(name="employeeDateOfBirth")
-	@XmlJavaTypeAdapter(value=DateFrevvoAdapter.class)
+	@XmlJavaTypeAdapter(value=LocalDateFrevvoAdapter.class)
 	@Override
-	public Date getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
 		return super.getDateOfBirth();
 	}
 
 	@Override
-	public void setDateOfBirth(Date dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		super.setDateOfBirth(dateOfBirth);
 	}
 	
