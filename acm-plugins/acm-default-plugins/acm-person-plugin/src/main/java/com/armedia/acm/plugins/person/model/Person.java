@@ -1,8 +1,12 @@
 package com.armedia.acm.plugins.person.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.BooleanToStringConverter;
+import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -14,6 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -73,8 +78,8 @@ public class Person implements Serializable, AcmEntity
     private Long weightInPounds;
 
     @Column(name = "cm_person_date_of_birth")
-    @Temporal(TemporalType.DATE)
-    private Date dateOfBirth;
+    @Convert(converter = LocalDateConverter.class)
+    private LocalDate dateOfBirth;
 
     @Column(name = "cm_person_date_married")
     @Temporal(TemporalType.DATE)
@@ -398,12 +403,12 @@ public class Person implements Serializable, AcmEntity
     }
 
     @XmlTransient
-    public Date getDateOfBirth()
+    public LocalDate getDateOfBirth()
     {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth)
+    public void setDateOfBirth(LocalDate dateOfBirth)
     {
         this.dateOfBirth = dateOfBirth;
     }
