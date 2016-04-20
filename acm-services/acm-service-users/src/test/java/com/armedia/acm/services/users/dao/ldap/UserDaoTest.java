@@ -30,7 +30,7 @@ public class UserDaoTest extends EasyMockSupport
     }
 
     @Test
-    public void saveUser() throws Exception
+    public void saveAcmUser() throws Exception
     {
         AcmUser user = new AcmUser();
         user.setFirstName("first");
