@@ -131,7 +131,7 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                                 $modalInstance.dismiss('cancel');
                             }
                         },
-                        size: 'lg',
+                        size: 'md',
                         backdrop: 'static'
                     });
 
