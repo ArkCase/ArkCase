@@ -62,6 +62,7 @@
         <property name="properties">
             <props>
                 <prop key="subscription.batchUpdateFrequencyInMilliseconds">180000</prop>
+                <prop key="subscription.removed.event.types">com.armedia.acm.plugins.search.result</prop>
             </props>
         </property>
     </bean>
