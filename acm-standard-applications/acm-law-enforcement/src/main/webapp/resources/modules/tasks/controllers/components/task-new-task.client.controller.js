@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$stateParams', '$sce', '$q', '$modal', 'ConfigService'
-    , 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService', 'Authentication'
-    , function ($scope, $stateParams, $sce, $q, $modal, ConfigService, Util, TicketService, LookupService, FrevvoFormService, TaskNewTaskService, Authentication) {
+    , 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService', 'Authentication', 'Util.DateService'
+    , function ($scope, $stateParams, $sce, $q, $modal, ConfigService, Util, TicketService
+        , LookupService, FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService) {
 
         $scope.config = null;
         $scope.userSearchConfig = null;
@@ -53,6 +54,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         $scope.saveNewTask = function () {
             $scope.saved = true;
+            $scope.config.data.dueDate = UtilDateService.dateToIso($scope.config.data.dueDate);
             TaskNewTaskService.saveAdHocTask($scope.config.data);
         };
 

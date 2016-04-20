@@ -1,69 +1,67 @@
 {
-    "id": "notifications",
-    "title": "Notifications",
-    "menus": [
-        
+  "id": "notifications",
+  "title": "Notifications",
+  "menus": [
+    {
+      "menuId": "leftnav",
+      "menuItemURL": "notifications",
+      "menuItemTitle": "Notifications",
+      "iconClass": "fa fa-bell-o",
+      "position": 90
+    }
+  ],
+  "components": [
+    {
+      "id": "notificationsFacetedSearch",
+      "title": "Notifications Faceted Search",
+      "enabled": "true",
+      "type": "grid",
+      "enableFiltering": false,
+      "emptySearch": true,
+      "typeAheadColumn": "title_parseable",
+      "columnDefs": [
         {
-            "menuId": "leftnav",
-            "menuItemURL": "notifications",
-            "menuItemTitle": "Notifications",
-            "iconClass": "fa fa-bell-o",
-            "position": 90
-        }
-        
-    ],
-    "components": [
+          "name": "parent_id_s",
+          "displayName": "notifications.comp.grid.columns.id",
+          "headerCellFilter": "translate",
+          "visible": false
+        },
         {
-            "id": "notificationsFacetedSearch",
-            "title": "Notifications Faceted Search",
-            "enabled": "true",
-            "type": "grid",
-            "enableFiltering": false,
-            "emptySearch":true,
-            "typeAheadColumn":"title_parseable",
-            "columnDefs": [
-                {
-                    "name": "parent_id_s",
-                    "displayName": "notifications.comp.grid.columns.id",
-                    "headerCellFilter": "translate",
-                    "visible": false
-                },
-                {
-                    "name": "description_parseable",
-                    "displayName": "notifications.comp.grid.columns.description",
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<div>{{row.entity.description_parseable}}</div>"
-                },
-                {
-                    "name": "parent_number_lcs",
-                    "displayName": "notifications.comp.grid.columns.objNumber",
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<a href'#' ng-click='grid.appScope.onClickObjLink($event, row.entity.parent_type_s, row.entity.parent_id_s)'>{{row.entity.parent_number_lcs}}</a>"
-                },
-                {
-                    "name": "parent_type_s",
-                    "displayName": "notifications.comp.grid.columns.objType",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "modified_date_tdt",
-                    "type": "date",
-                    "displayName": "notifications.comp.grid.columns.modified",
-                    "headerCellFilter": "translate",
-                    "cellFilter": "date : 'MM/dd/yyyy HH:MM'"
-                }
-            ],
-            "paginationPageSizes": [
-                5,
-                10,
-                20,
-                50
-            ],
-            "paginationPageSize": 20,
-            "start": 0,
-            "filter": "\"Object Type\": NOTIFICATION",
-            "filterName" : "Object Type",
-            "csvFileName": "notifications.csv"
+          "name": "description_parseable",
+          "displayName": "notifications.comp.grid.columns.description",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{row.entity.description_parseable}}</div>"
+        },
+        {
+          "name": "parent_number_lcs",
+          "displayName": "notifications.comp.grid.columns.objNumber",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href'#' ng-click='grid.appScope.onClickObjLink($event, row.entity.parent_type_s, row.entity.parent_id_s)'>{{row.entity.parent_number_lcs}}</a>"
+        },
+        {
+          "name": "parent_type_s",
+          "displayName": "notifications.comp.grid.columns.objType",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified_date_tdt",
+          "type": "date",
+          "displayName": "notifications.comp.grid.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
         }
-    ]
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 20,
+      "start": 0,
+      "filter": "\"Object Type\": NOTIFICATION",
+      "filterName": "Object Type",
+      "reportFileName": "notifications"
+    }
+  ]
 }

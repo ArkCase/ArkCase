@@ -238,4 +238,9 @@ public class SpringContextHolder implements ApplicationContextAware, Application
         log.debug("The application event publisher has been set!");
         this.applicationEventPublisher = applicationEventPublisher;
     }
+
+    public Object getBeanByName(String name, Class type)
+    {
+        return toplevelContext.getBean(name, type);
+    }
 }

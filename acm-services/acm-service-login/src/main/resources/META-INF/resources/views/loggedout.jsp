@@ -1,27 +1,41 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<%--
+  User: riste.tutureski
+  Date: 8/5/2015
+  Time: 12:44
+--%>
+<!DOCTYPE html>
 <html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>You have been logged out. | ArkCase</title>
+
+	<link rel="stylesheet" href="<%= request.getContextPath()%>/lib/bootstrap/dist/css/bootstrap.css">
+	<link rel="stylesheet" href="<%= request.getContextPath()%>/assets/css/login.css">
+</head>
 <body>
-	<div id="site-wrapper">
-	    <div class="main" id="main-two-columns">
-	        <div class="left" id="main-content">
-	            <div class="section">
-	                <div class="section-content">
-	                    <div class="post">
-	                        <div class="post-title"><h2 class="label label-green">Logout</h2></div>
-	                        <p class="quiet large">You have been logged out.</p>
-	                        <div class="post-body">
-	                            <p>
-	                                <a href="<c:url value="/" />">Back to ArkCase</a>
-	                            </p>
-	                        </div>
-	                    </div>
-	                    <div class="clearer">&nbsp;</div>
-	                </div>
-	            </div>
-	            <div class="clearer">&nbsp;</div>
-	        </div>
-	    </div>
+<div class="login-wrapper">
+	<div class="logo">
+		<img src="<%= request.getContextPath()%>/branding/loginlogo.png" style="max-width: 100%;">
 	</div>
+
+	<header class="text-center">
+		<div class="alert alert-danger">You have been logged out.</div>
+	</header>
+
+	<p></p>
+
+	<p class="text-center"><a href="<c:url value="/" />">Click here to return to ArkCase</a></p>
+
+</div>
+
+<footer id="footer">
+	<div class="text-center padder">
+		<p>
+			<small><span>ArkCase</span><br>&copy;<span>2014, 2015, 2016</span></small>
+		</p>
+	</div>
+</footer>
 </body>
 </html>

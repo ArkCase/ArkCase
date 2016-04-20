@@ -21,7 +21,7 @@
         <div class="module-header">
             <div class="input-group">
                 <input
-                	ng-hide= "isMultiFilter"  
+                	ng-hide= "isMultiFilter"
                 	type="text"
                     autofocus
                     class="form-control input-md"
@@ -34,7 +34,7 @@
                     typeahead-no-results="noResults"
                 >
                 <tags-input
-                	ng-show= "isMultiFilter"                  
+                	ng-show= "isMultiFilter"
                     ng-model="searchQuery"
                     placeholder="{{searchPlaceholder}}"
                     display-property="tag_token_lcs"
@@ -56,7 +56,7 @@
             <div class="panel-heading">
                 <div class="panel-title">Results
                     <div class="pull-right">
-                        <button class="btn btn-xs btn-default" type="button" ng-click="downloadCSV()">{{exportBtn}}</button>
+                        <a class="btn btn-xs btn-default" type="button" ng-href="{{exportUrl}}">{{ exportBtn }}</a>
                     </div>
                 </div>
             </div>

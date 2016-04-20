@@ -2,34 +2,38 @@
     <div class="clearfix">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a href="#" editable-text="objectInfo.title" onaftersave="saveTask()">{{objectInfo.title ||
-                    "Unknown"}}</a></h4>
+                <h4><a href="#" editable-text="objectInfo.title" onaftersave="saveTask()" permission="editTask" permission-properties="objectInfo" permission-action="disable">{{objectInfo.title ||
+                    "Unknown"}}</a>
+                    <!-- <span permission="editTask" permission-properties="objectInfo" permission-action="show">{{objectInfo.title || "Unknown"}}</span> -->
+                </h4>
             </div>
 
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-number="objectInfo.percentComplete"
-                       onbeforesave="validatePercentComplete($data)" onaftersave="saveTask()">
+                    <a href="#" editable-number="objectInfo.percentComplete" onbeforesave="validatePercentComplete($data)" onaftersave="saveTask()" permission="editTask" permission-properties="objectInfo" permission-action="disable">
                         {{ objectInfo.percentComplete }}
                     </a>
+                    <!-- <span permission="editTask" permission-properties="objectInfo" permission-action="show">{{objectInfo.percentComplete || "Unknown"}}</span> -->
                 </div>
                 <small class="text-muted">"% of Completion"</small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="#" editable-select="assignee" onaftersave="updateAssignee(assignee)"
-                       e-ng-options="a.object_id_s as a.name for a in assignableUsers">
+                       e-ng-options="a.object_id_s as a.name for a in assignableUsers" permission="editTask" permission-properties="objectInfo" permission-action="disable">
                         {{assignee | mapKeyValue: assignableUsers:'object_id_s':'name' || 'Unknown'}}</a>
+                    <!-- <span permission="editTask" permission-properties="objectInfo" permission-action="show">{{assignee | mapKeyValue: assignableUsers:'object_id_s':'name' || "Unknown"}}</span> -->
                 </div>
                 <small class="text-muted">Assignee</small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="#" editable-select="objectInfo.priority" onaftersave="saveTask()"
-                       e-ng-options="p.value as p.text for p in priorities">{{ objectInfo.priority ||
+                       e-ng-options="p.value as p.text for p in priorities" permission="editTask" permission-properties="objectInfo" permission-action="disable">{{ objectInfo.priority ||
                         'Unknown'}}</a>
+                    <!-- <span permission="editTask" permission-properties="objectInfo" permission-action="show">{{objectInfo.priority || "Unknown"}}</span> -->
                 </div>
                 <small class="text-muted">Priority</small>
             </div>
@@ -40,8 +44,10 @@
                        e-ng-click="onPickerClick()" e-is-open="picker.opened"
                        e-init-date="dateInfo.taskStartDate"
                        e-on-open-focus="false"
-                       onaftersave="updateStartDate(dateInfo.taskStartDate)">
-                        {{ (dateInfo.taskStartDate | date: defaultDatePickerFormat) || 'Unknown' }}</a>
+                       onaftersave="updateStartDate(dateInfo.taskStartDate)"
+                       permission="editTask" permission-properties="objectInfo" permission-action="disable">
+                        {{ (dateInfo.taskStartDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</a>
+                    <!-- <span permission="editTask" permission-properties="objectInfo" permission-action="show">{{ (dateInfo.taskStartDate | ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</span> -->
                 </div>
                 <small class="text-muted">Start Date</small>
             </div>
@@ -52,8 +58,10 @@
                        e-ng-click="onPickerClick()" e-is-open="picker.opened"
                        e-init-date="dateInfo.dueDate"
                        e-on-open-focus="false"
-                       onaftersave="updateDueDate(dateInfo.dueDate)">
-                        {{ (dateInfo.dueDate | date: defaultDatePickerFormat) || 'Unknown' }}</a>
+                       onaftersave="updateDueDate(dateInfo.dueDate)"
+                       permission="editTask" permission-properties="objectInfo" permission-action="disable">
+                        {{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</a>
+                    <!-- <span permission="editTask" permission-properties="objectInfo" permission-action="show">{{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</span> -->
                 </div>
                 <small class="text-muted">Due Date</small>
             </div>

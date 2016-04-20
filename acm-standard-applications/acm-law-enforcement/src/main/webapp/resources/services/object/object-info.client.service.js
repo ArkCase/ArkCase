@@ -61,6 +61,27 @@ angular.module('services').factory('Object.InfoService', ['$resource', 'UtilServ
 
         });
 
+        /**
+         * @ngdoc method
+         * @name getOriginator
+         * @methodOf services:Object.InfoService
+         *
+         * @description
+         * Detract originator from objectInfo
+         *
+         * @param {Object} params Map of input parameter.
+         * @param {Number} params.type  Type in REST path. Can be 'casefile', 'complaint', 'task', etc.
+         * @param {Object} data Object data
+         * @param {Function} onSuccess (Optional)Callback function of success query.
+         * @param {Function} onError (Optional) Callback function when fail.
+         *
+         * @returns {Object} Object returned by $resource
+         */
+        Service.getOriginator = function (objectInfo) {
+            var pa = _.find(Util.goodMapValue(objectInfo, "personAssociations", []), {personType: "Originator"});
+            return Util.goodMapValue(pa, "person", null);
+        };
+
 
         return Service;
     }

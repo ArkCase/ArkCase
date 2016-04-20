@@ -10,17 +10,12 @@
       "position": 80
     }
   ],
-  "dateFormat": "MM-DD-YYYY",
-
-  "pentahoDateFormat": "MM/DD/YYYY",
-
   "components": [
     {
       "id": "datepickers",
       "title": "Datepickers",
       "enabled": true,
-      "type": "empty",
-      "datepickerPopupFormat": "MM/dd/yyyy"
+      "type": "empty"
     },
     {
       "id": "reportselection",

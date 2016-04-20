@@ -22,6 +22,8 @@
       "groupSearchBase": "Group Search Base",
       "groupSeachBaseOU": "Group Search Base OU",
       "userIdAttributeName": "User Id Attribute Name",
+      "userDomain": "User domain",
+      "userDomainNote": "(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
       "cancel": "Cancel",
       "ok": "OK"
     },
@@ -194,8 +196,13 @@
       "labels.config": {
         "defaultLabel": "Default",
         "applyBtn": "Apply",
-        "resetlModule": "Reset Current Module",
+        "resetModule": "Reset Module",
+        "resetModule.confirm": "Are you sure you want reset custom resources for current module?",
+        "resetModule.title": "Reset current module (delete custom resources)",
+        "resetAll": "Reset All",
+        "resetAll.confirm": "Are you sure you want reset all custom resources for all modules?",
         "resetAll.title": "Reset all resources (delete all custom resources)",
+        "refreshAll": "Refresh All",
         "refreshAll.title": "Refresh all resources (keep custom resources)",
         "title": "Label Configuration",
         "filterBy": "Filter By Id",
@@ -209,6 +216,12 @@
       },
       "module.config": {
         "title": "Module Configuration"
+      },
+      "name.config": {
+        "title": "Name Configuration",
+        "userId.label": "Use user identifier to display user",
+        "username.label":"Use user name to display user",
+        "apply": "Apply"
       }
     },
     "branding.title": "Branding",

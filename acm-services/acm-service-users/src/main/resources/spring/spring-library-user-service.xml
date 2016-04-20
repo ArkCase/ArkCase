@@ -48,6 +48,7 @@
     <bean id="groupToSolrTransformer" class="com.armedia.acm.services.users.service.group.GroupToSolrTransformer">
         <property name="groupDao" ref="groupDao"/>
         <property name="userDao" ref="userJpaDao"/>
-    </bean>
+        <property name="groupService" ref="groupService"/>
+     </bean>
 
 </beans>
