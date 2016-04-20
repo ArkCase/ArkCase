@@ -5,14 +5,14 @@
 
 /**
  * @ngdoc directive
- * @name global.directive:siple-pager
+ * @name global.directive:simple-pager
  * @restrict E
  *
  * @description
  *
  * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/simple-pager/simple-pager.client.directive.js directives/simple-pager/simple-pager.client.directive.js}
  *
- * The "Simple-Pager" directive add paging functionality like ui-grid pager
+ * The "simple-pager" directive adds paging functionality like ui-grid pager
  *
  * @param {Object} pagerData object containing pageSizes array, pageSize and totalItems
  * @param {Function} reloadPage, sends command to parrent control that page or pageSize is changed to reload the page
