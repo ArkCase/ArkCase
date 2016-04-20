@@ -62,7 +62,7 @@ public class NotificationFormatter
         {
             Map<String, String> urlValues = objectType.getUrl();
 
-            if (objectType.getName().equals(parentType) && !StringUtils.isNotEmpty(relatedObjectType))
+            if (objectType.getName().equals(parentType) && StringUtils.isEmpty(relatedObjectType))
             {
                 // The parent object is top level (Case File or Complaint)
                 String objectUrl = urlValues.get(parentType);
