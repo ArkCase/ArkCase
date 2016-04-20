@@ -29,6 +29,7 @@
         <property name="subscriptionDao" ref="subscriptionDao"/>
         <property name="subscriptionEventDao" ref="subscriptionEventDao"/>
         <property name="subscriptionEventPublisher" ref="subscriptionEventPublisher"/>
+        <property name="subscriptionProperties" ref="subscriptionProperties"/>
     </bean>
 
     <bean id="subscriptionEventPublisher"
