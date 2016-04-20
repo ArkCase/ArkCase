@@ -6,6 +6,15 @@ angular.module('directives').directive('adjustTableHeight', function () {
             restrict: 'A',
             link: function ($scope, element, attrs) {
 
+                // This hack allows to scroll page that contains grid.
+                // Solution is described at https://github.com/angular-ui/ui-grid/issues/1926
+                $scope.$watch('isDisplayed', function(newValue, oldValue) {
+                    var viewport = element.find('.ui-grid-render-container');
+                    ['touchstart', 'touchmove', 'touchend','keydown', 'wheel', 'mousewheel', 'DomMouseScroll', 'MozMousePixelScroll'].forEach(function (eventName) {
+                        viewport.unbind(eventName);
+                    });
+                });
+
                 $scope.$watch(attrs.adjustTableHeight, function (value, oldValue) {
                     if (value && value > 0) {
                         element.attr('style', 'height: ' + getTableHeight(value) + 'px');
