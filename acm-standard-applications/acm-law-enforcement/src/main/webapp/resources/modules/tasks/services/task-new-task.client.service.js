@@ -52,6 +52,7 @@ angular.module('tasks').factory('Task.NewTaskService', ['$resource', '$state', '
                 , onSuccess: function (data) {
                     if (TaskInfoService.validateTaskInfo(data)) {
                         $state.go('tasks.main', {type: 'ADHOC', id: data.taskId});
+                        return data;
                     }
                 }
             })
