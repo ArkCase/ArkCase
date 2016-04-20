@@ -488,7 +488,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                                 $modalInstance.dismiss('cancel');
                             }
                         }],
-                        size: 'lg'
+                        size: 'sm'
                     });
                     modalInstance.result.then(function (data) {
                         scope.personAssociation.person.givenName = data.person.givenName;
@@ -530,7 +530,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                                 $modalInstance.dismiss('cancel');
                             }
                         }],
-                        size: 'lg'
+                        size: 'sm'
                     });
                     modalInstance.result.then(function (data) {
                         var contactMethod;
@@ -574,7 +574,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                                 $modalInstance.dismiss('cancel');
                             }
                         }],
-                        size: 'lg'
+                        size: 'sm'
                     });
 
                     modalInstance.result.then(function (data) {
@@ -619,7 +619,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                                 $modalInstance.dismiss('cancel');
                             }
                         }],
-                        size: 'lg'
+                        size: 'sm'
                     });
 
                     modalInstance.result.then(function (data) {
@@ -668,7 +668,7 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
                                 $modalInstance.dismiss('cancel');
                             }
                         }],
-                        size: 'lg'
+                        size: 'sm'
                     });
 
                     modalInstance.result.then(function (data) {
