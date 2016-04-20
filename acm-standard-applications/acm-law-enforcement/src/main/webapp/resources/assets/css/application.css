@@ -1,3 +1,5 @@
+/* @override http://jsapn.armedianet.com/arkcase/assets/css/application.css */
+
 /* @override http://dev.jsapn.armedianet.com/arkcase/assets/css/application.css
 	http://localhost:8080/arkcase/assets/css/application.css
 	http://10.21.4.149/arkcase/assets/css/application.css
@@ -454,9 +456,14 @@ span.fancytree-title {
 }
 
 
-
+/* FIX: THis is bad style. It breaks vertical alignment for all btn-group elements. */
 .module-content .content-body .well-sm .btn-group {
     padding-top: 10px;
+}
+
+/* This style fixes incorrect vertical alignment for btn-group  elements located int navbar */
+.module-content .content-body .well-sm .navbar .btn-group {
+    padding-top: 0px;
 }
 
 /* Right Sidebar */
@@ -1082,22 +1089,33 @@ div.tabbed-footer .overview-tabs li:hover:last-child span:before {
     left: 58px;
 }
 
-
-
 tags-input .host {
   margin-top: 0px;
   margin-bottom: 0px;
 }
+
 tags-input .tags {
   box-shadow: none;
   padding-top: 1px;
   padding-bottom: 2px;
 }
 
-
 .module-header tags-input .tags{
 	border: none;
 	box-shadow: none;
 	padding-top: 1px;
 	padding-bottom: 3px;
+}
+
+.left-sidebar ul.tag-list li {
+	width: 240px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.left-sidebar ul.tag-list .remove-button{
+	position: absolute;
+	right: 15px;
+	margin-top: 3px;
 }

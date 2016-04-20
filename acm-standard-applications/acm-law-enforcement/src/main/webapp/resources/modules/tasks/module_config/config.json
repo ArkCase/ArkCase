@@ -77,12 +77,12 @@
         "default": true
       },
       {
-        "desc": "Sort Case Name Asc",
+        "desc": "Sort Task Name Asc",
         "name": "sort-by-name-asc",
         "value": "name ASC"
       },
       {
-        "desc": "Sort Case Name Desc",
+        "desc": "Sort Task Name Desc",
         "name": "sort-by-name-desc",
         "value": "name DESC"
       },
@@ -158,7 +158,7 @@
       },
       {
         "type": "p/TASK/wkfl",
-        "label": "Workflow",
+        "label": "Workflow Overview",
         "icon": "fa fa-code-fork",
         "components": [
           "workflow"
@@ -236,7 +236,7 @@
       },
       {
         "type": "p/ADHOC/wkfl",
-        "label": "Workflow",
+        "label": "Workflow Overview",
         "icon": "fa fa-code-fork",
         "components": [
           "workflow"
@@ -291,7 +291,7 @@
               "name": "createDate",
               "displayName": "tasks.comp.details.table.columns.modified",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.createDate | date : 'dd/MM/yyyy'}}</div>"
+              "cellTemplate": "<div>{{ row.entity.createDate | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             },
             {
               "name": "assignee",
@@ -365,7 +365,7 @@
               "name": "created",
               "displayName": "tasks.comp.notes.table.columns.created",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "enableCellEdit": false
             },
             {
@@ -401,7 +401,7 @@
               "field": "startDate",
               "displayName": "tasks.comp.workflow.table.columns.startDateTime",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.startDate | date : 'medium'}}</div>",
+              "cellTemplate": "<div>{{ row.entity.startDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "enableCellEdit": false
             },
             {
@@ -409,7 +409,7 @@
               "field": "endDate",
               "displayName": "tasks.comp.workflow.table.columns.endDateTime",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.endDate | date : 'medium'}}</div>",
+              "cellTemplate": "<div>{{ row.entity.endDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "enableCellEdit": false
             }
           ]
@@ -426,7 +426,7 @@
               "name": "signedDate",
               "displayName": "tasks.comp.signatures.table.columns.signedDate",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "enableCellEdit": false
             },
             {
@@ -469,7 +469,7 @@
               "name": "created",
               "displayName": "tasks.comp.notes.table.columns.created",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "enableCellEdit": false
             },
             {
@@ -505,7 +505,7 @@
               "field": "startDate",
               "displayName": "tasks.comp.workflow.table.columns.startDateTime",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.startDate | date : 'medium'}}</div>",
+              "cellTemplate": "<div>{{ row.entity.startDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "enableCellEdit": false
             },
             {
@@ -513,7 +513,7 @@
               "field": "endDate",
               "displayName": "tasks.comp.workflow.table.columns.endDateTime",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.endDate | date : 'medium'}}</div>",
+              "cellTemplate": "<div>{{ row.entity.endDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "enableCellEdit": false
             }
           ]
@@ -530,7 +530,7 @@
               "name": "signedDate",
               "displayName": "tasks.comp.signatures.table.columns.signedDate",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+              "cellTemplate": "<div>{{ row.entity.signedDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "enableCellEdit": false
             },
             {
@@ -553,8 +553,7 @@
       "title": "Info",
       "enabled": false,
       "type": "empty",
-      "editable": false,
-      "dateFormat": "YYYY-MM-DDTHH:mm:ss.SSSZZ"
+      "editable": false
     },
     {
       "id": "parentinfo",
@@ -615,7 +614,7 @@
           "name": "created",
           "displayName": "tasks.comp.docsreview.table.columns.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : 'medium'}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "creator",
@@ -655,7 +654,7 @@
           "name": "created",
           "displayName": "tasks.comp.rejcomments.table.columns.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "enableCellEdit": false
         },
         {
@@ -706,7 +705,7 @@
           "name": "created",
           "displayName": "tasks.comp.notes.table.columns.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "enableCellEdit": false
         },
         {
@@ -720,7 +719,7 @@
     },
     {
       "id": "workflow",
-      "title": "Workflow",
+      "title": "Workflow Overview",
       "icon": "fa fa-code-fork",
       "enabled": true,
       "type": "grid",
@@ -753,7 +752,7 @@
           "field": "startDate",
           "displayName": "tasks.comp.workflow.table.columns.startDateTime",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.startDate | date : 'medium'}}</div>",
+          "cellTemplate": "<div>{{ row.entity.startDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "enableCellEdit": false
         },
         {
@@ -761,7 +760,7 @@
           "field": "endDate",
           "displayName": "tasks.comp.workflow.table.columns.endDateTime",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.endDate | date : 'medium'}}</div>",
+          "cellTemplate": "<div>{{ row.entity.endDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "enableCellEdit": false
         }
       ]
@@ -790,7 +789,7 @@
           "name": "eventDate",
           "displayName": "tasks.comp.history.table.columns.eventDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.eventDate | date : 'medium'}}</div>"
+          "cellTemplate": "<div>{{ row.entity.eventDate | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "userId",
@@ -819,7 +818,7 @@
           "name": "signedDate",
           "displayName": "tasks.comp.signatures.table.columns.signedDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : 'medium'}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "enableCellEdit": false
         },
         {
@@ -838,7 +837,6 @@
       "enabled": true,
       "type": "grid",
       "typeAheadColumn": "tags_s",
-      "dateFormat": "MM/DD/YYYY",
       "enableFiltering": true,
       "paginationPageSizes": [
         5,
@@ -856,7 +854,7 @@
         {
           "name": "created",
           "displayName": "tasks.comp.tags.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : 'MM/dd/yyyy'}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "headerCellFilter": "translate"
         },
         {
@@ -905,7 +903,8 @@
         {
           "name": "modified_date_tdt",
           "displayName": "tasks.userSearch.assigneeGridColumns.modified",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
         }
       ],
       "paginationPageSizes": [
@@ -951,7 +950,6 @@
           "id": "Expedite"
         }
       ],
-      "datepickerPopupFormat": "MM/dd/yyyy",
       "data": {
         "adhocTask": true,
         "assignee": "",

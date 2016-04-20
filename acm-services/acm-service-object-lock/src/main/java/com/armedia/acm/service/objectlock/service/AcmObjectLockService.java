@@ -11,7 +11,7 @@ public interface AcmObjectLockService
 {
     AcmObjectLock createLock(Long objectId, String objectType, Authentication auth);
 
-    void removeLock(Long objectId, String objectType);
+    void removeLock(Long objectId, String objectType, Authentication auth);
 
     /**
      * queries documents which doesn't have lock.

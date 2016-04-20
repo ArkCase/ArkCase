@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.0.51-SNAPSHOT</version>
+        <version>3.0.53-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -44,6 +44,7 @@
         <module>acm-service-form-configuration</module>
         <module>acm-service-object-change-status</module>
         <module>acm-service-object-lock</module>
+        <module>acm-service-webdav</module>
     </modules>
 
 

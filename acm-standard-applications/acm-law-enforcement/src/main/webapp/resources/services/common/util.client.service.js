@@ -42,15 +42,33 @@ angular.module('services').factory('UtilService', ['$q', '$log'
              * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to 0
              *
              * @description
-             * This function returns itself only it is a positive number; else 'replacement' is used.
+             * This function returns a valid positive number; else 'replacement' is used.
              */
             , goodPositive: function (val, replacement) {
+                var rc = this.goodNumber(val, replacement);
+                if (0 > rc) {
+                    rc = (undefined === replacement) ? 0 : replacement;
+                }
+                return rc;
+            }
+
+            /**
+             * @ngdoc method
+             * @name goodNumber
+             * @methodOf services.service:UtilService
+             *
+             * @param {Number} val A number
+             * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to 0
+             *
+             * @description
+             * This function returns a valid number value; else 'replacement' is used.
+             */
+            , goodNumber: function (val, replacement) {
                 var replacedWith = (undefined === replacement) ? 0 : replacement;
                 var rc = replacedWith;
-                if (!this.isEmpty(val)) {
-                    if (0 < val) {
-                        rc = val;
-                    }
+                var num = parseInt(val);
+                if (!isNaN(num)) {
+                    rc = num;
                 }
                 return rc;
             }
@@ -288,33 +306,33 @@ angular.module('services').factory('UtilService', ['$q', '$log'
             }
 
 
-            /**
-             * @ngdoc method
-             * @name compare
-             * @methodOf services.service:UtilService
-             *
-             * @param {Object} left An object, including value
-             * @param {Object} right An object, including value
-             *
-             * @description
-             * Append random parameter after a url to avoid undesired cached session variables
-             * The function handles input url in following sample cases:
-             * (1):  some.com/some/path
-             * (2):  some.com/some/path/
-             * (3):  some.com/some/path?var=abc
-             */
-            , noneCacheUrl: function(url) {
-                var lastChar = url.slice(-1);
-                var hasQmark = (-1 !== url.indexOf('?'));
-
-                if (hasQmark) {
-                    url += '&'
-                } else {
-                    url += '?';
-                }
-                url += 'rand=' + Math.floor((Math.random()*10000000000));
-                return url;
-            }
+            ///**
+            // * @ngdoc method
+            // * @name compare
+            // * @methodOf services.service:UtilService
+            // *
+            // * @param {Object} left An object, including value
+            // * @param {Object} right An object, including value
+            // *
+            // * @description
+            // * Append random parameter after a url to avoid undesired cached session variables
+            // * The function handles input url in following sample cases:
+            // * (1):  some.com/some/path
+            // * (2):  some.com/some/path/
+            // * (3):  some.com/some/path?var=abc
+            // */
+            //, noneCacheUrl: function(url) {
+            //    var lastChar = url.slice(-1);
+            //    var hasQmark = (-1 !== url.indexOf('?'));
+            //
+            //    if (hasQmark) {
+            //        url += '&'
+            //    } else {
+            //        url += '?';
+            //    }
+            //    url += 'rand=' + Math.floor((Math.random()*10000000000));
+            //    return url;
+            //}
 
             /**
              * @ngdoc method
@@ -380,7 +398,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
                     }
                     d.reject(rc);
 
-                    $log.error("service call error:[" + Util.goodValue(rc.status) + ", " + Util.goodValue(rc.statusText) + "]" + Util.goodValue(rc.data));
+                    $log.error("service call error:[" + Util.goodMapValue(rc, "status") + ", " + Util.goodMapValue(rc, "statusText") + "]" + Util.goodMapValue(rc, "data"));
                     return rc;
                 };
 
