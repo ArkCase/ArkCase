@@ -11,8 +11,10 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -78,6 +80,45 @@ public class LdapSyncService
                 childParentPair);
     }
 
+    /**
+     * Try to sync user from LDAP by given username
+     *
+     * @param username - username of the user
+     */
+    public void ldapUserSync(String username)
+    {
+        log.info("Starting sync user [{}] from ldap [{}]", username, getLdapSyncConfig().getLdapUrl());
+
+        getAuditPropertyEntityAdapter().setUserId(getLdapSyncConfig().getAuditUserId());
+
+        LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
+        AcmUser user = getLdapDao().findUser(username, template, getLdapSyncConfig());
+
+        Map<String, String> roleToGroup = getLdapSyncConfig().getRoleToGroupMap();
+        Map<String, List<AcmUser>> usersByApplicationRole = new HashMap<>();
+        Map<String, List<AcmUser>> usersByLdapGroup = new HashMap<>();
+        Map<String, String> childParentPair = new HashMap<>();
+
+        Map<String, List<String>> groupToRoleMap = reverseRoleToGroupMap(roleToGroup);
+
+        List<LdapGroup> groups = getLdapDao().findGroupsForUser(user, template, getLdapSyncConfig());
+
+        if (groups != null && !groups.isEmpty())
+        {
+            groups.stream().forEach(group -> {
+                String groupName = group.getGroupName().toUpperCase();
+                addUsersToMap(usersByLdapGroup, groupName, Arrays.asList(user));
+                addUsersToApplicationRole(usersByApplicationRole, groupToRoleMap, Arrays.asList(user), groupName);
+
+                // Here we are interested only for populating "childParentPair"
+                calculateGroupsSubgroupsAndUsers(getLdapSyncConfig(), template, group, childParentPair, new ArrayList<>(), new ArrayList<>());
+            });
+        }
+
+        getLdapSyncDatabaseHelper().updateDatabaseForUser(getDirectoryName(), user, usersByApplicationRole, usersByLdapGroup, childParentPair);
+
+    }
+
     protected void queryLdapUsers(AcmLdapSyncConfig config, String directoryName, Set<String> allRoles, List<AcmUser> users,
             Map<String, List<AcmUser>> usersByApplicationRole, Map<String, List<AcmUser>> usersByLdapGroup,
             Map<String, String> childParentPair)
@@ -118,6 +159,15 @@ public class LdapSyncService
         }
     }
 
+    private void calculateGroupsSubgroupsAndUsers(AcmLdapSyncConfig config, LdapTemplate template, LdapGroup group, Map<String, String> childParentPair, List<AcmRole> nestedGroups, List<AcmUser> allUsersForGroup)
+    {
+        List<AcmLdapEntity> foundEntities = getLdapDao().findGroupMembers(template, config, group);
+
+        splitEntitiesIntoNestedGroupsAndUsers(foundEntities, nestedGroups, allUsersForGroup);
+
+        populateChildParentPair(group, nestedGroups, childParentPair);
+    }
+
     private List<AcmUser> findAllUsersForGroup(AcmLdapSyncConfig config, LdapTemplate template, LdapGroup group,
             Map<String, String> childParentPair)
     {
@@ -125,11 +175,7 @@ public class LdapSyncService
 
         List<AcmUser> allUsersForGroup = new ArrayList<>();
 
-        List<AcmLdapEntity> foundEntities = getLdapDao().findGroupMembers(template, config, group);
-
-        splitEntitiesIntoNestedGroupsAndUsers(foundEntities, nestedGroups, allUsersForGroup);
-
-        populateChildParentPair(group, nestedGroups, childParentPair);
+        calculateGroupsSubgroupsAndUsers(config, template, group, childParentPair, nestedGroups, allUsersForGroup);
 
         findUsersForNestedGroups(config, template, nestedGroups, allUsersForGroup);
 

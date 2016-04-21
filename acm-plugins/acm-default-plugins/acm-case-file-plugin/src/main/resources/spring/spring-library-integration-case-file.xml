@@ -10,10 +10,8 @@
 
     <bean id="caseFileMailFilter" class="com.armedia.acm.plugins.casefile.filter.CaseFileMailFilter">
         <property name="caseNumberRegexPattern" value="${casefile.email.regex.case_number}"/>
+        <property name="caseObjectTypeRegexPattern" value="${casefile.email.regex.object_type}"/>
     </bean>
-
-    <int:filter input-channel="mailChannel"  output-channel="caseFileFilteredMailChannel"
-                ref="caseFileMailFilter" method="accept"/>
 
     <bean id="caseFileMailHandler" class="com.armedia.acm.plugins.casefile.handler.CaseFileMailHandler">
         <property name="caseFileDao" ref="caseFileDao"/>
@@ -27,4 +25,7 @@
 
     <int:service-activator input-channel="caseFileFilteredMailChannel" ref="caseFileMailHandler" method="handle"/>
 
+    <int:chain input-channel="mailChannel" output-channel="caseFileFilteredMailChannel">
+        <int:filter ref="caseFileMailFilter" throw-exception-on-rejection="true" method="accept"/>
+    </int:chain>
 </beans>

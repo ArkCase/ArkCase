@@ -26,7 +26,7 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
             queryFilteredSearchForUser: {
                 method: 'GET',
                 url: "api/v1/plugin/search/advancedSearch?q=:query&startRow=:start&n=:maxRows",
-                cache: true,
+                cache: false,
                 isArray: false,
                 transformResponse: function transformReponseForUser(data, headerGetter) {
                     if (Service.validateSolrData(JSON.parse(data))) {
@@ -71,7 +71,7 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
             queryFilteredSearch: {
                 method: 'GET',
                 url: "api/v1/plugin/search/facetedSearch?q=:query",
-                cache: true,
+                cache: false,
                 isArray: false,
                 transformResponse: function (data, headerGetter) {
                     if (Service.validateSolrData(JSON.parse(data))) {
