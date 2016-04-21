@@ -1129,7 +1129,7 @@ tags-input .tags {
 }
 
 
-.modal-header h3{
+.modal-header h3, .modal-header h4 {
 	color: #fff;
 }
 
@@ -1142,4 +1142,13 @@ tags-input .tags {
 .modal-footer .btn-secondary {
 	background-color: transparent;
 	color: #fff;
+}
+
+.modal-title {
+	color: #fff;
+}
+
+.modal-body {
+	color: #000000;
+	color: rgba(0, 0, 0, 0.7);
 }
