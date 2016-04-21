@@ -58,7 +58,7 @@
         "description": "Description",
         "descriptionPlaceholder": "Enter Description",
         "btn": {
-          "ok": "Add Ag-Hoc Group",
+          "ok": "Add Ad-Hoc Group",
           "cancel": "Cancel"
         }
       },
@@ -69,7 +69,7 @@
         "description": "Description",
         "descriptionPlaceholder": "Enter Description",
         "btn": {
-          "ok": "Add Ag-Hoc Group",
+          "ok": "Add Ad-Hoc Group",
           "cancel": "Cancel"
         }
       },
