@@ -3,6 +3,7 @@
  */
 package com.armedia.acm.plugins.person.model.xml;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -69,12 +70,12 @@ public class DefendantPerson extends Person implements FrevvoPerson  {
 	
 	@XmlElement(name="defendantDOB")
 	@Override
-	public Date getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
         return super.getDateOfBirth();
     }
 
 	@Override
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         super.setDateOfBirth(dateOfBirth);
     }
 

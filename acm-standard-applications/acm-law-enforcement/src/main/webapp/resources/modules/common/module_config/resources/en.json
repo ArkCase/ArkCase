@@ -73,7 +73,7 @@
     "error": {
       "nodeTitle": "(Error)"
     },
-    "lockedTitle": "This document is locked."
+    "lockedTitle": "This document is locked by "
   },
   "common.directive.objectTree": {
     "btnPrev.title": " records above...",

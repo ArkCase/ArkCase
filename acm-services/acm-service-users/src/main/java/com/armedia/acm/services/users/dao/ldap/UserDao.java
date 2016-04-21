@@ -49,7 +49,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public AcmUser quietFindByUserId(String userId)
     {
-        if ( userId == null || userId.trim().isEmpty() )
+        if (userId == null || userId.trim().isEmpty())
         {
             return null;
         }
@@ -61,8 +61,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             {
                 return user;
             }
-        }
-        catch (PersistenceException pe)
+        } catch (PersistenceException pe)
         {
             log.error("Could not find user record: " + pe.getMessage(), pe);
         }
@@ -79,34 +78,38 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return retval;
     }
 
-    public List<AcmRole> findAllRolesByRoleType(RoleType roleType) {
+    public List<AcmRole> findAllRolesByRoleType(RoleType roleType)
+    {
         Query roleQuery = getEntityManager().createQuery("SELECT role FROM AcmRole role WHERE role.roleType= :roleType");
-        roleQuery.setParameter("roleType",roleType.getRoleName());
+        roleQuery.setParameter("roleType", roleType.getRoleName());
         List<AcmRole> retval = roleQuery.getResultList();
         return retval;
     }
 
-    public List<AcmRole> findAllRolesByUser(String userId) {
+    public List<AcmRole> findAllRolesByUser(String userId)
+    {
         Query roleQuery = getEntityManager().createQuery("SELECT acmRole FROM AcmRole acmRole " +
-                    "WHERE acmRole.roleName IN " +
-                    "(SELECT userRole.roleName FROM AcmUserRole userRole " +
-                    "WHERE userRole.userId= :userId " +
-                    "AND userRole.userRoleState = :userRoleState)");
-        roleQuery.setParameter("userId",userId);
-        roleQuery.setParameter("userRoleState","VALID");
+                "WHERE acmRole.roleName IN " +
+                "(SELECT userRole.roleName FROM AcmUserRole userRole " +
+                "WHERE userRole.userId= :userId " +
+                "AND userRole.userRoleState = :userRoleState)");
+        roleQuery.setParameter("userId", userId);
+        roleQuery.setParameter("userRoleState", "VALID");
         List<AcmRole> retval = roleQuery.getResultList();
         return retval;
     }
-    public List<AcmRole> findAllRolesByUserAndRoleType(String userId,RoleType roleType) {
+
+    public List<AcmRole> findAllRolesByUserAndRoleType(String userId, RoleType roleType)
+    {
         Query roleQuery = getEntityManager().createQuery("SELECT acmRole FROM AcmRole acmRole " +
                 "WHERE acmRole.roleName IN " +
                 "(SELECT userRole.roleName FROM AcmUserRole userRole " +
                 "WHERE userRole.userId= :userId " +
                 "AND userRole.userRoleState = :userRoleState) " +
                 "AND acmRole.roleType = :roleType");
-        roleQuery.setParameter("userId",userId);
-        roleQuery.setParameter("roleType",roleType.getRoleName());
-        roleQuery.setParameter("userRoleState","VALID");
+        roleQuery.setParameter("userId", userId);
+        roleQuery.setParameter("roleType", roleType.getRoleName());
+        roleQuery.setParameter("userRoleState", "VALID");
         List<AcmRole> retval = roleQuery.getResultList();
         return retval;
     }
@@ -146,29 +149,30 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
         return retval;
     }
-    
-    public List<AcmUser> findByFullNameKeyword(String keyword) {
-    	CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
-    	CriteriaQuery<AcmUser> query = builder.createQuery(AcmUser.class);
-    	Root<AcmUser> user = query.from(AcmUser.class);
-    	
-    	query.select(user);
-    	
-    	query.where(
-    			builder.and(
-    					builder.like(
-    							builder.lower(user.<String>get("fullName")), "%" + keyword.toLowerCase() + "%"
-    					),
-    					builder.equal(user.<String>get("userState"), "VALID")
-    			)
-    	);
-    	
-    	query.orderBy(builder.asc(user.get("fullName")));
-    	
-    	TypedQuery<AcmUser> dbQuery = getEntityManager().createQuery(query);
-    	List<AcmUser> results = dbQuery.getResultList();
-    	
-    	return results;
+
+    public List<AcmUser> findByFullNameKeyword(String keyword)
+    {
+        CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<AcmUser> query = builder.createQuery(AcmUser.class);
+        Root<AcmUser> user = query.from(AcmUser.class);
+
+        query.select(user);
+
+        query.where(
+                builder.and(
+                        builder.like(
+                                builder.lower(user.<String>get("fullName")), "%" + keyword.toLowerCase() + "%"
+                        ),
+                        builder.equal(user.<String>get("userState"), "VALID")
+                )
+        );
+
+        query.orderBy(builder.asc(user.get("fullName")));
+
+        TypedQuery<AcmUser> dbQuery = getEntityManager().createQuery(query);
+        List<AcmUser> results = dbQuery.getResultList();
+
+        return results;
     }
 
     public void markAllUsersInvalid(String directoryName)
@@ -196,7 +200,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     {
 
         AcmRole existing = getEntityManager().find(AcmRole.class, in.getRoleName());
-        if ( existing == null )
+        if (existing == null)
         {
 
             getEntityManager().persist(in);
@@ -208,7 +212,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     public AcmUser saveAcmUser(AcmUser user)
     {
         AcmUser existing = getEntityManager().find(AcmUser.class, user.getUserId());
-        if ( existing == null )
+        if (existing == null)
         {
             getEntityManager().persist(user);
             getEntityManager().flush();
@@ -220,6 +224,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         existing.setLastName(user.getLastName());
         existing.setFirstName(user.getFirstName());
         existing.setMail(user.getMail());
+        existing.setFullName(user.getFullName());
         getEntityManager().persist(existing);
 
         return existing;
@@ -233,7 +238,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         key.setUserId(userRole.getUserId());
         AcmUserRole existing = getEntityManager().find(AcmUserRole.class, key);
 
-        if ( existing == null )
+        if (existing == null)
         {
             getEntityManager().persist(userRole);
             getEntityManager().flush();
@@ -252,9 +257,14 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return entityManager;
     }
 
+    protected void setEntityManager(EntityManager entityManager)
+    {
+        this.entityManager = entityManager;
+    }
 
     @Override
-    protected Class getPersistenceClass() {
+    protected Class getPersistenceClass()
+    {
         return AcmUser.class;
     }
 }

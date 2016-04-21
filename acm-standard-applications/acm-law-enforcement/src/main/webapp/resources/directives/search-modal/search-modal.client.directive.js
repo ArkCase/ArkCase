@@ -87,7 +87,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.selectedItem = null;
                 scope.selectedItems = [];
                 scope.queryExistingItems = function () {
-                    var query = decodeURIComponent(SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start));
+                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start);
                     if (query) {
                         SearchService.queryFilteredSearch({
                                 query: query
@@ -210,9 +210,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
 
                 // Perform initial request to get list of documents if defaultFilter is defined
                 if (scope.defaultFilter) {
-                    // TODO: figure out why buildFacetedSearchQuery returns encoded URI?
-                    // $resource service encodes url parameters itself
-                    var query = decodeURIComponent(SearchQueryBuilder.buildFacetedSearchQuery(scope.searchQuery + '*', scope.defaultFilter, scope.pageSize, 0));
+                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(scope.searchQuery + '*', scope.defaultFilter, scope.pageSize, 0);
                     if (query) {
                         SearchService.queryFilteredSearch({
                                 query: query

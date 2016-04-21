@@ -13,8 +13,8 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
             , resetObjectInfo: CaseInfoService.resetCaseInfo
             , getObjectInfo: CaseInfoService.getCaseInfo
             , updateObjectInfo: CaseInfoService.updateCaseInfo
-            , initComponentLinks: function (config) {
-                return HelperObjectBrowserService.createComponentLinks(config, ObjectService.ObjectTypes.CASE_FILE);
+            , getObjectTypeFromInfo: function (objectInfo) {
+                return ObjectService.ObjectTypes.CASE_FILE;
             }
         });
 

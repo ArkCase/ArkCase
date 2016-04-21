@@ -60,8 +60,7 @@ angular.module('cases').controller('Cases.CorrespondenceController', ['$scope', 
         };
 
         var retrieveGridData = function () {
-            var currentObjectId = Util.goodMapValue(objectInfo, "id");
-            if (Util.goodPositive(currentObjectId, false)) {
+            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                 var promiseCorrespondence = ObjectCorrespondenceService.queryCorrespondences(ObjectService.ObjectTypes.CASE_FILE
                     , componentHelper.currentObjectId
                     , Util.goodValue($scope.start, 0)
