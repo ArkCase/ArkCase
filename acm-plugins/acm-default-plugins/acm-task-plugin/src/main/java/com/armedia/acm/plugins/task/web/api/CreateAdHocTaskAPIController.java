@@ -63,7 +63,7 @@ public class CreateAdHocTaskAPIController
                     JSONArray results = getSearchResults().getDocuments(obj);
                     JSONObject result = results.getJSONObject(0);
                     objectId = getSearchResults().extractLong(result, SearchConstants.PROPERTY_OBJECT_ID_S);
-                    parentObjectType = getSearchResults().extractString(result, SearchConstants.PROPERTY_PARENT_OBJECT_TYPE_S);
+                    parentObjectType = getSearchResults().extractString(result, SearchConstants.PROPERTY_OBJECT_TYPE_S);
                 }
             } else
             {
@@ -72,6 +72,7 @@ public class CreateAdHocTaskAPIController
             if (objectId != null)
             {
                 in.setAttachedToObjectId(objectId);
+                in.setAttachedToObjectType(parentObjectType);
                 in.setParentObjectId(objectId);
                 in.setParentObjectType(parentObjectType);
             } else
