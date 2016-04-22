@@ -925,7 +925,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
 
                     var treeInfo = Tree.Info.getTreeInfo();
                     treeInfo.sorter = Sorter.defaultSort;
-                    treeInfo.filter = Sorter.defaultFilter;
+                    treeInfo.filter = Filter.defaultFilter;
                     Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
                 };
             }
