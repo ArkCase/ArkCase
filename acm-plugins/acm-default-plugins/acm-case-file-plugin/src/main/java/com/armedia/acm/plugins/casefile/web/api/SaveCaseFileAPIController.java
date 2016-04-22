@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.casefile.web.api;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
+import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 
 @Controller
 @RequestMapping({"/api/v1/plugin/casefile", "/api/latest/plugin/casefile"})
@@ -26,6 +28,7 @@ public class SaveCaseFileAPIController
 
     private SaveCaseService saveCaseService;
 
+    private CaseFileEventUtility caseFileEventUtility;
 
     @PreAuthorize("#in.id == null or hasPermission(#in.id, 'CASE_FILE', 'saveCase')")
     @RequestMapping(method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE})
@@ -38,7 +41,7 @@ public class SaveCaseFileAPIController
     {
         if (log.isTraceEnabled())
         {
-            log.trace("Got a case file: " + in + "; case ID: '" + in.getId() + "'");
+            log.trace("Got a case file: [{}] ; case ID: [{}]", in, in.getId());
         }
         String ipAddress = (String) session.getAttribute("acm_ip_address");
 
@@ -51,6 +54,8 @@ public class SaveCaseFileAPIController
             // approvers are stored in Activiti.
             saved.setApprovers(in.getApprovers());
 
+            caseFileEventUtility.raiseEvent(saved, "updated", new Date(), ipAddress, auth.getName(), auth);
+
             return saved;
         } catch (PipelineProcessException | PersistenceException e)
         {
@@ -58,6 +63,15 @@ public class SaveCaseFileAPIController
         }
     }
 
+    public CaseFileEventUtility getCaseFileEventUtility()
+    {
+        return caseFileEventUtility;
+    }
+
+    public void setCaseFileEventUtility(CaseFileEventUtility caseFileEventUtility)
+    {
+        this.caseFileEventUtility = caseFileEventUtility;
+    }
 
     public SaveCaseService getSaveCaseService()
     {

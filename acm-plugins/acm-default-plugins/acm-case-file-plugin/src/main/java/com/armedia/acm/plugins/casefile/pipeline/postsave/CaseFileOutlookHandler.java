@@ -36,17 +36,22 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
+        log.trace("CaseFile entrering CaseFileOutlookHandler : [{}]", entity);
+
         //create calendar folder
         if (autoCreateFolderForCaseFile && pipelineContext.isNewCase())
         {
             createOutlookFolder(entity, pipelineContext);
         }
+        log.info("CaseFile entity post - autoCreateFolderForCaseFile  CaseFileOutlookHandler : [{}]", entity);
 
         if (!pipelineContext.isNewCase() && !StringUtils.isEmpty(entity.getContainer().getCalendarFolderId()))
         {
             //update folder participants
             updateOutlookFolderParticipants(entity, pipelineContext);
         }
+        log.trace("CaseFile exiting CaseFileOutlookHandler : [{}]", entity);
+
 
     }
 

@@ -5,6 +5,8 @@ import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.service.SaveCaseFileBusinessRule;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Apply business rules to a Case File.
@@ -18,10 +20,20 @@ public class CaseFileRulesHandler implements PipelineHandler<CaseFile, CaseFileP
      */
     private SaveCaseFileBusinessRule saveRule;
 
+    /**
+     * Logger instance.
+     */
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
+        log.trace("CaseFile entering CaseFileRulesHandler : [{}]", entity);
+
         entity = saveRule.applyRules(entity);
+
+        log.trace("CaseFile exiting CaseFileRulesHandler : [{}]", entity);
+
     }
 
     @Override
