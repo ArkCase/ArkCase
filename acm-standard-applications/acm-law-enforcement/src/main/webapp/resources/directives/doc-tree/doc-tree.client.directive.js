@@ -1068,14 +1068,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             );
                             break;
                         case "checkin":
-                            var fileId = node.data.objectId;
-                            LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE).then(
-                                function (unlockedFile) {
-                                    var noteHelper = new HelperNoteService.Note();
-                                    var note = noteHelper.createNote(fileId, ObjectService.ObjectTypes.FILE, user);
-                                    Comment.openModal(note, node);
-                                }
-                            );
+                            Comment.openModal(node);
                             break;
                         case "cancelEditing":
                             var fileId = node.data.objectId;
@@ -1802,7 +1795,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return dfd.promise();
                 }
-                , replaceFile: function (formData, fileNode, name) {
+                , replaceFile: function (formData, fileNode, name, doRefresh) {
+                    var refresh = true;
+                    if (doRefresh == false)
+                        refresh = false;
                     var dfd = $.Deferred();
                     if (!DocTree.isFileNode(fileNode)) {
                         dfd.reject();
@@ -1823,6 +1819,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 if (Validator.validateReplaceInfo(data)) {
                                     var replaceInfo = data;
 
+                                    //i think file will have different id because it is new file
                                     if (replaceInfo.fileId == fileId) {
                                         var folderList = DocTree.cacheFolderList.get(cacheKey);
                                         if (Validator.validateFolderList(folderList)) {
@@ -1849,19 +1846,19 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
                         }).then(
                             function (replacedFile) {
-                                if (replacedFile && fileNode) {
-                                    fileNode.data.version = replacedFile.version;
-                                    fileNode.data.versionList = replacedFile.versionList;
-                                    fileNode.renderTitle();
-                                    fileNode.setStatus("ok");
+                                if (refresh) {
+                                    if (replacedFile && fileNode) {
+                                        fileNode.renderTitle();
+                                        fileNode.setStatus("ok");
+                                    }
+                                    DocTree.refreshTree();
                                 }
-                                dfd.resolve();
-                                DocTree.refreshTree();
+                                dfd.resolve(replacedFile);
                             }
                             , function (errorData) {
                                 //fixme: App.View.MessageBoard.show($.t("doctree:error.replace-file"), Util.goodValue(response.errorMsg));
                                 DocTree.markNodeError(fileNode);
-                                dfd.reject();
+                                dfd.reject(errorData);
                             }
                         );
                     }
@@ -2718,6 +2715,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 }
             }
 
+            , replaceFileWithSelectedFile: function (node, files) {
+                var fileType = Util.goodValue(node.data.type);
+                if (!Util.isEmpty(fileType)) {
+                    DocTree.replaceFileNode = node;
+                    DocTree.uploadToFolderNode = node.parent;
+                    DocTree.uploadFileType = fileType;
+                    DocTree.uploadFileNew = false;
+                    return DocTree.doSubmitFormUploadFile(files, false);
+                }
+            }
             , _addFileNode: function (folderNode, name, type) {
                 var fileNode = folderNode.addChildren({
                     "title": $translate.instant("common.directive.docTree.waitUploading") + name,
@@ -2933,7 +2940,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                 }
             }
-            , doSubmitFormUploadFile: function (files) {
+            , doSubmitFormUploadFile: function (files, doRefresh) {
+                var refresh = true;
+                if (doRefresh == false)
+                    refresh = false;
+                var dfd = $.Deferred();
                 var folderNode = DocTree.uploadToFolderNode;
                 var fileType = DocTree.uploadFileType;
                 var fd = new FormData();
@@ -2956,21 +2967,36 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                 var cacheKey = DocTree.getCacheKeyByNode(folderNode);
                 if (DocTree.uploadFileNew) {
-                    DocTree.Op.uploadFiles(fd, folderNode, names, fileType).always(function () {
-                        if (DocTree.uploadingCmd) {
-                            DocTree.Command.onPostCmd(DocTree.uploadingCmd.cmd, DocTree.uploadingCmd.actNodes);
-                            DocTree.uploadingCmd = null;
-                        }
-                    });
+                    DocTree.Op.uploadFiles(fd, folderNode, names, fileType)
+                        .then(function (data) {
+                                dfd.resolve(data);
+                            },
+                            function (error) {
+                                dfd.reject(error);
+                            })
+                        .always(function () {
+                            if (DocTree.uploadingCmd) {
+                                DocTree.Command.onPostCmd(DocTree.uploadingCmd.cmd, DocTree.uploadingCmd.actNodes);
+                                DocTree.uploadingCmd = null;
+                            }
+                        });
                 } else {
                     var replaceNode = DocTree.replaceFileNode;
-                    DocTree.Op.replaceFile(fd, replaceNode, names[0]).always(function () {
-                        if (DocTree.uploadingCmd) {
-                            DocTree.Command.onPostCmd(DocTree.uploadingCmd.cmd, DocTree.uploadingCmd.actNodes);
-                            DocTree.uploadingCmd = null;
-                        }
-                    });
+                    DocTree.Op.replaceFile(fd, replaceNode, names[0], refresh)
+                        .then(function (data) {
+                                dfd.resolve(data);
+                            },
+                            function (error) {
+                                dfd.reject(error);
+                            })
+                        .always(function () {
+                            if (DocTree.uploadingCmd) {
+                                DocTree.Command.onPostCmd(DocTree.uploadingCmd.cmd, DocTree.uploadingCmd.actNodes);
+                                DocTree.uploadingCmd = null;
+                            }
+                        });
                 }
+                return dfd.promise();
             }
             , _matchFileNode: function (type, name, fileNodes) {
                 var fileNode = null;
@@ -3419,11 +3445,15 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
         }; // end Email
 
         var Comment = {
-            openModal: function (note, node) {
-
+            openModal: function (node) {
+                var noteHelper = new HelperNoteService.Note();
+                var fileId = node.data.objectId;
+                var isNoteRequired = DocTree.treeConfig.noteRequiredOnCheckin;
+                var note = noteHelper.createNote(fileId, ObjectService.ObjectTypes.FILE, user);
                 var params = {
                     config: Util.goodMapValue(DocTree.treeConfig, "comment", {}),
-                    note: note
+                    note: note,
+                    isNoteRequired: isNoteRequired
                 };
 
                 var modalInstance = $modal.open({
@@ -3437,20 +3467,29 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
                     }
                 });
+
                 modalInstance.result.then(function (data) {
-                    data.note.created = Util.dateToIsoString(new Date(note.created));
-                    ObjectNoteService.saveNote(data.note).then(function () {
-                    });
-                    //replace file after comment is added
-                    DocTree.replaceFile(node);
-                }, function () {
-                    // comment is not added, replace file
-                    //if this should be configurable add check for something here
-                    //DocTree.replaceFile(node);
+                    DocTree.replaceFileWithSelectedFile(node, data.files)
+                        .then(function (result) {
+                                if (data.note.note != null && data.note.note.length > 0) {
+                                    //we have text in note so we will save the note
+                                    data.note.tag = result.version;
+                                    ObjectNoteService.saveNote(data.note);
+                                }
+                                var fileId = result.objectId;
+                                LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE).then(function () {
+                                    DocTree.markNodeOk(node.parent);
+                                    node.parent.renderTitle();
+                                    DocTree.refreshTree();
+                                });
+                            },
+                            function () {
+                                DocTree.markNodeError(node);
+                            });
                 });
+
             }
         };
-
         var Ui = {
             dlgModal: function ($s, onClickBtnPrimary, onClickBtnDefault) {
                 var a = $s.html();
@@ -4225,12 +4264,22 @@ angular.module('directives').controller('directives.DocTreeCommentDialogControll
 
             $scope.config = params.config;
             $scope.note = params.note;
+            $scope.selectedFiles = [];
+            $scope.isNoteRequired = params.isNoteRequired;
+
+            /**
+             * Add files to files list
+             * @param files
+             */
+            $scope.selectFiles = function (files) {
+                $scope.selectedFiles = files;
+            };
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss();
             };
             $scope.onClickOk = function () {
-                $modalInstance.close({note: $scope.note});
+                $modalInstance.close({note: $scope.note, files: $scope.selectedFiles});
             };
         }
     ]
