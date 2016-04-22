@@ -47,6 +47,11 @@ public class SaveCaseFileAPIController
 
         try
         {
+            boolean isNew = false;
+            if (in.getId() == null)
+            {
+                isNew = true;
+            }
             CaseFile saved = getSaveCaseService().saveCase(in, auth, ipAddress);
 
             // since the approver list is not persisted to the database, we want to send them back to the caller...
@@ -54,7 +59,13 @@ public class SaveCaseFileAPIController
             // approvers are stored in Activiti.
             saved.setApprovers(in.getApprovers());
 
-            caseFileEventUtility.raiseEvent(saved, "updated", new Date(), ipAddress, auth.getName(), auth);
+            if (isNew)
+            {
+                caseFileEventUtility.raiseEvent(saved, saved.getStatus(), new Date(), ipAddress, auth.getName(), auth);
+            } else
+            {
+                caseFileEventUtility.raiseEvent(saved, "updated", new Date(), ipAddress, auth.getName(), auth);
+            }
 
             return saved;
         } catch (PipelineProcessException | PersistenceException e)
