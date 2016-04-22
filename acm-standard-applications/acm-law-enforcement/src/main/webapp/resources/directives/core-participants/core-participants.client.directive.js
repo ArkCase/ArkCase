@@ -99,7 +99,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                         animation: true,
                         templateUrl: "directives/core-participants/core-participants-modal.client.view.html",
                         controller: "Directives.CoreParticipantsModalController",
-                        size: 'sm',
+                        size: 'lg',
                         backdrop: 'static'
                     });
 

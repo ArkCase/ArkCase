@@ -1,28 +1,25 @@
-<div>
-    <div class="modal-header">
-        <h4 class="modal-title">
-            <span translate>admin.security.organizationalHierarchy.createGroupDialog.title</span>
-        </h4>
-    </div>
-    <div class="modal-body">
-        <div>
+<div class="modal-header">
+    <h4 class="modal-title">
+        <span translate>admin.security.organizationalHierarchy.createGroupDialog.title</span>
+    </h4>
+</div>
+<div class="modal-body">
+    <div>
+        <span translate>admin.security.organizationalHierarchy.createGroupDialog.name</span>
+        <input type="text" ng-model="adHocGroup.name" class="form-control" required
+               placeholder="{{'admin.security.organizationalHierarchy.createGroupDialog.namePlaceholder'| translate}}">
 
-            <span translate>admin.security.organizationalHierarchy.createGroupDialog.name</span>
-            <input type="text" ng-model="adHocGroup.name" class="form-control" required
-                   placeholder="{{'admin.security.organizationalHierarchy.createGroupDialog.namePlaceholder'| translate}}">
-
-            <span translate>admin.security.organizationalHierarchy.createGroupDialog.description</span>
-            <textarea type="text" ng-model="adHocGroup.description" class="form-control"
-                      placeholder="{{'admin.security.organizationalHierarchy.createGroupDialog.descriptionPlaceholder'| translate}}">
-            </textarea>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" ng-click="cancel()">
-                <span translate>admin.security.organizationalHierarchy.createGroupDialog.btn.cancel</span>
-            </button>
-            <button type="button" class="btn btn-default" ng-click="ok()" ng-disabled="inputValid">
-                <span translate>admin.security.organizationalHierarchy.createGroupDialog.btn.ok</span>
-            </button>
-        </div>
+        <span translate>admin.security.organizationalHierarchy.createGroupDialog.description</span>
+        <textarea type="text" ng-model="adHocGroup.description" class="form-control"
+                  placeholder="{{'admin.security.organizationalHierarchy.createGroupDialog.descriptionPlaceholder'| translate}}">
+        </textarea>
     </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" ng-click="cancel()">
+        <span translate>admin.security.organizationalHierarchy.createGroupDialog.btn.cancel</span>
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="inputValid">
+        <span translate>admin.security.organizationalHierarchy.createGroupDialog.btn.ok</span>
+    </button>
 </div>
