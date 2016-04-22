@@ -1,26 +1,23 @@
-<div>
-    <div class="modal-header">
-        <h4 class="modal-title">
-            <span translate>admin.security.selectPrivileges.createRole</span>
-        </h4>
-    </div>
-    <div class="modal-body">
+<div class="modal-header">
+    <h4 class="modal-title">
+        <span translate>admin.security.selectPrivileges.createRole</span>
+    </h4>
+</div>
+<div class="modal-body">
 
-        <span translate>admin.security.selectPrivileges.enterRoleName</span>
+    <span translate>admin.security.selectPrivileges.enterRoleName</span>
 
-        <label for="dialogRoleName" class="label">
-            <span translate>admin.security.selectPrivileges.name</span>
-        </label>
-        <input id="dialogRoleName" type="text" ng-model="roleName" class="form-control" required
-               placeholder="{{'admin.security.selectPrivileges.name'| translate}}">
-
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" ng-click="cancel()">
-                <span translate>admin.security.selectPrivileges.cancel</span>
-            </button>
-            <button type="button" class="btn btn-default" ng-click="ok()" ng-disabled="inputValid">
-                {{saveBtnText}}
-            </button>
-        </div>
-    </div>
+    <label for="dialogRoleName" class="label">
+        <span translate>admin.security.selectPrivileges.name</span>
+    </label>
+    <input id="dialogRoleName" type="text" ng-model="roleName" class="form-control" required
+           placeholder="{{'admin.security.selectPrivileges.name'| translate}}">
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" ng-click="cancel()">
+        <span translate>admin.security.selectPrivileges.cancel</span>
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="ok()" ng-disabled="inputValid">
+        {{saveBtnText}}
+    </button>
 </div>
