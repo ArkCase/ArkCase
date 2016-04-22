@@ -29,7 +29,7 @@ angular.module('services').factory('Acm.LoginStatService', ['Acm.StoreService', 
             , isLogin: function () {
                 var cacheLoginStatus = new Store.LocalData(Service.LocalCacheNames.LOGIN_STATUS);
                 var loginStatus = cacheLoginStatus.get();
-                return Util.goodValue(loginStatus, false);
+                return Util.goodMapValue(loginStatus, "login", false);
             }
 
             /**
@@ -37,14 +37,61 @@ angular.module('services').factory('Acm.LoginStatService', ['Acm.StoreService', 
              * @name setLogin
              * @methodOf services:Acm.LoginStatService
              *
-             * @param {Boolean} status Login status as boolean. true if login; false if logout
+             * @param {Boolean} login Login status as boolean. true if login; false if not
              *
              * @description
              * Set login status
              */
-            , setLogin: function (status) {
+            , setLogin: function (login) {
                 var cacheLoginStatus = new Store.LocalData(Service.LocalCacheNames.LOGIN_STATUS);
-                cacheLoginStatus.set(status);
+                var loginStatus = Util.goodValue(cacheLoginStatus.get(), {});
+                loginStatus.login = login;
+                cacheLoginStatus.set(loginStatus);
+            }
+
+            /**
+             * @ngdoc method
+             * @name getLastIdle
+             * @methodOf services:Acm.LoginStatService
+             *
+             * @description
+             * Get last idle time
+             */
+            , getLastIdle: function () {
+                var cacheLoginStatus = new Store.LocalData(Service.LocalCacheNames.LOGIN_STATUS);
+                var loginStatus = Util.goodValue(cacheLoginStatus.get(), {});
+                return loginStatus.lastIdle = Util.goodMapValue(loginStatus, "lastIdle", new Date().getTime());
+            }
+
+            /**
+             * @ngdoc method
+             * @name setLastIdle
+             * @methodOf services:Acm.LoginStatService
+             *
+             * @param {Boolean} (optional)val Last idle time in seconds. If not specified, current time is used
+             *
+             * @description
+             * Set last user active time to mark as beginning of an idle period.
+             */
+            , setLastIdle: function (val) {
+                var cacheLoginStatus = new Store.LocalData(Service.LocalCacheNames.LOGIN_STATUS);
+                var loginStatus = Util.goodValue(cacheLoginStatus.get(), {});
+                loginStatus.lastIdle = Util.goodValue(val, new Date().getTime());
+                cacheLoginStatus.set(loginStatus);
+            }
+
+            /**
+             * @ngdoc method
+             * @name getSinceIdle
+             * @methodOf services:Acm.LoginStatService
+             *
+             * @description
+             * Set time elapses since last idle
+             */
+            , getSinceIdle: function () {
+                var last = this.getLastIdle();
+                var now = new Date().getTime();
+                return now - last;
             }
 
         };

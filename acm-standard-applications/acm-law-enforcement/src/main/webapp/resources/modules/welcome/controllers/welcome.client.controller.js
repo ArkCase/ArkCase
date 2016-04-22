@@ -28,6 +28,8 @@ angular.module('welcome').controller('WelcomeController', ['$scope', '$q', '$sta
 
         // TODO: check if this is needed. It is used in 'user-info.client.controller.js'. Doesn't seem like it is necessary...
         // In the 'goodbye.client.controller.js' the AcmLoginStatService.setLogin(false) will do nothing because the page will already be redirected to logout page.
+        //
+        //jwu: setLogin(false) in goodbye is now called before redirection. Purpose is to reset the local cache. The flag is needed for auto logout
         AcmLoginStatService.setLogin(true);
 
         if (sessionStorage.redirectState) {
