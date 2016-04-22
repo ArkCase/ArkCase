@@ -27,13 +27,13 @@
     <bean id="dispositionDao" class="com.armedia.acm.plugins.casefile.dao.DispositionDao"/>
 
     <bean id="caseFileEventUtility" class="com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility"/>
-    
-     <bean id="caseFileEventListener" class="com.armedia.acm.plugins.casefile.service.CaseFileEventListener">
-        <property name="acmObjectHistoryService" ref="acmObjectHistoryService" />
-         <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher"/>
-         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
-         <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
-     </bean>
+
+    <bean id="caseFileEventListener" class="com.armedia.acm.plugins.casefile.service.CaseFileEventListener">
+        <property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>
+        <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher"/>
+        <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+        <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
+    </bean>
 
     <bean id="changeCaseFileStateService" class="com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService">
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
@@ -92,7 +92,6 @@
     </bean>
     <bean id="caseFileFolderStructureHandler"
           class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileFolderStructureHandler">
-        <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
         <property name="folderStructureAsString" value="${casefile.folder.structure}"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="acmFolderService" ref="acmFolderService"/>
