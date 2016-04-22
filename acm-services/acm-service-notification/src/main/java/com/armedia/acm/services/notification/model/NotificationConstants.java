@@ -107,6 +107,6 @@ public interface NotificationConstants
 
     String LAST_BATCH_RUN_PROPERTY_FILE = System.getProperty("user.home") + "/.arkcase/acm/notificationLastBatchUpdate.properties";
 
-    String NOTIFICATION_CONTAINER_CASE = "CASE_FILE";
-    String NOTIFICATION_CONTAINER_COMPLAINT = "COMPLAINT";
+    String BASE_URL_KEY = "arkcase.url.base";
+
 }
