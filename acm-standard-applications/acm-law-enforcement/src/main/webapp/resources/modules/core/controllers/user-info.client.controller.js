@@ -25,13 +25,13 @@ angular.module('core').controller('UserInfoController', ['$rootScope', '$scope',
             $state.go("goodbye");
         };
 
-        UtilTimerService.useTimer("LoginStat", 4000, function() {
-            var isLogin = AcmLoginStatService.isLogin();
-            if (!isLogin) {
-                $state.go("goodbye");
-                return false;
-            }
-            return true;
-        });
+        //UtilTimerService.useTimer("LoginStat", 4000, function() {
+        //    var isLogin = AcmLoginStatService.isLogin();
+        //    if (!isLogin) {
+        //        $state.go("goodbye");
+        //        return false;
+        //    }
+        //    return true;
+        //});
     }
 ]);

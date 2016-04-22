@@ -28,7 +28,7 @@ angular.module('core').directive('acmIdleLogout', ['$stateParams', '$q', '$trans
         return {
             scope: {}
             , bindToController: {
-                limit: '@'
+                idleLimit: '@'
             }
             //, templateUrl: 'modules/core/components/acm-idle-logout/acm-idle-logout.client.view.html'
             , template: ''
