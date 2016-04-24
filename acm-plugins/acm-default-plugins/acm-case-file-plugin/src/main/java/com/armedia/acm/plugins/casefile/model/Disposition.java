@@ -2,11 +2,28 @@ package com.armedia.acm.plugins.casefile.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -32,8 +49,8 @@ public class Disposition implements Serializable, AcmObject, AcmEntity
     private Long id;
 
     @Column(name = "cm_close_date")
-    @Temporal(TemporalType.DATE)
-    private Date closeDate;
+    @Convert(converter = LocalDateConverter.class)
+    private LocalDate closeDate;
 
     @Column(name = "cm_disposition_type")
     private String dispositionType;
@@ -83,12 +100,12 @@ public class Disposition implements Serializable, AcmObject, AcmEntity
         this.id = id;
     }
 
-    public Date getCloseDate()
+    public LocalDate getCloseDate()
     {
         return closeDate;
     }
 
-    public void setCloseDate(Date closeDate)
+    public void setCloseDate(LocalDate closeDate)
     {
         this.closeDate = closeDate;
     }
