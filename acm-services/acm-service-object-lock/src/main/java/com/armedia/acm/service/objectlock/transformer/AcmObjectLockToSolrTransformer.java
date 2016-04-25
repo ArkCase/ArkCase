@@ -34,6 +34,7 @@ public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransfo
         solr.setObject_id_s(in.getId().toString());
         solr.setObject_type_s("OBJECT_LOCK");
 
+
         solr.setParent_id_s(in.getObjectId().toString());
         solr.setParent_type_s(in.getObjectType());
         solr.setParent_ref_s(in.getObjectId() + "-" + in.getObjectType());
