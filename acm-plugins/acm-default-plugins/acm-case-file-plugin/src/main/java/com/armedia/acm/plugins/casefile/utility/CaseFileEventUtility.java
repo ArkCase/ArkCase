@@ -54,11 +54,11 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         applicationEventPublisher.publishEvent(event);
     }
 
-    public void raiseParticipantDeletedInCaseFile(AcmParticipant participant, CaseFile source)
+    public void raiseParticipantDeletedInCaseFile(AcmParticipant participant, CaseFile source, String ipAddress)
     {
         CaseFileParticipantDeletedEvent event = new CaseFileParticipantDeletedEvent(participant);
         event.setSucceeded(true);
-        event.setIpAddress("");
+        event.setIpAddress(ipAddress);
         event.setParentObjectId(source.getId());
         event.setParentObjectType(source.getObjectType());
         event.setParentObjectName(source.getCaseNumber());
