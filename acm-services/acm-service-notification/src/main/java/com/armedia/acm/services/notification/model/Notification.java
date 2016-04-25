@@ -95,10 +95,10 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_notification_parent_title")
     private String parentTitle;
 
-    @Column(name = "cm_notification_related_object_id")
+    @Column(name = "cm_related_object_id")
     private Long relatedObjectId;
 
-    @Column(name = "cm_notification_related_object_type")
+    @Column(name = "cm_related_object_type")
     private String relatedObjectType;
 
     @Transient
