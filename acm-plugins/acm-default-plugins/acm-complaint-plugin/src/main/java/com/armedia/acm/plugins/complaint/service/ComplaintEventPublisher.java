@@ -112,7 +112,7 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
     {
         ComplaintParticipantDeletedEvent event = new ComplaintParticipantDeletedEvent(participant);
         event.setSucceeded(true);
-        event.setIpAddress("");
+        event.setIpAddress(ipAddress);
         event.setParentObjectId(in.getComplaintId());
         event.setParentObjectType(in.getObjectType());
         event.setParentObjectName(in.getComplaintNumber());

@@ -67,7 +67,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                         getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "details.changed");
                     }
 
-                    checkParticipants(existing, updatedCaseFile);
+                    checkParticipants(existing, updatedCaseFile, event.getIpAddress());
 
                     if (isStatusChanged(existing, updatedCaseFile))
                     {
@@ -138,7 +138,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
         return false;
     }
 
-    public void checkParticipants(CaseFile caseFile, CaseFile updatedCaseFile)
+    public void checkParticipants(CaseFile caseFile, CaseFile updatedCaseFile, String ipAddress)
     {
         List<AcmParticipant> existing = caseFile.getParticipants();
         List<AcmParticipant> updated = updatedCaseFile.getParticipants();
@@ -156,7 +156,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                 if (!us.contains(participant))
                 {
                     // participants deleted
-                    getCaseFileEventUtility().raiseParticipantDeletedInCaseFile(participant, updatedCaseFile);
+                    getCaseFileEventUtility().raiseParticipantDeletedInCaseFile(participant, updatedCaseFile, ipAddress);
                 }
             }
         }

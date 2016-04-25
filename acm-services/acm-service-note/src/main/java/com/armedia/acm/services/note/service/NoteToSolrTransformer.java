@@ -41,8 +41,6 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
         solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());
         solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
-
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
@@ -56,6 +54,9 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
         {
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
+
+        solr.setAdditionalProperty("parent_object_type", in.getParentType());
+        solr.setAdditionalProperty("parent_object_id", in.getParentId());
 
         return solr;
     }
@@ -71,8 +72,9 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
         solrDoc.setCreate_tdt(in.getCreated());
         solrDoc.setAuthor(in.getCreator());
         solrDoc.setLast_modified_tdt(in.getModified());
-        solrDoc.setModifier_s(in.getModifier());
         solrDoc.setType_s(in.getType());
+        solrDoc.setAdditionalProperty("parent_object_type", in.getParentType());
+        solrDoc.setAdditionalProperty("parent_object_id", in.getParentId());
 
         return solrDoc;
     }
