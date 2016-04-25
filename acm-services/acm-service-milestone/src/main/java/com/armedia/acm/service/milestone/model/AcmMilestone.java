@@ -1,8 +1,10 @@
 package com.armedia.acm.service.milestone.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.LocalDateConverter;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +14,7 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -39,8 +42,8 @@ public class AcmMilestone implements Serializable, AcmEntity {
     private String objectType;
 
     @Column(name = "cm_milestone_achieved_date")
-    @Temporal(TemporalType.DATE)
-    private Date milestoneDate;
+    @Convert(converter = LocalDateConverter.class)
+    private LocalDate milestoneDate;
 
     @Column(name = "cm_milestone_name")
     private String milestoneName;
@@ -88,11 +91,11 @@ public class AcmMilestone implements Serializable, AcmEntity {
         return created;
     }
 
-    public Date getMilestoneDate() {
+    public LocalDate getMilestoneDate() {
         return milestoneDate;
     }
 
-    public void setMilestoneDate(Date milestoneDate) {
+    public void setMilestoneDate(LocalDate milestoneDate) {
         this.milestoneDate = milestoneDate;
     }
 
