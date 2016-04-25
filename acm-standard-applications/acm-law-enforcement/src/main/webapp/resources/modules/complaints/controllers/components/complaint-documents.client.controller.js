@@ -70,35 +70,55 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             if (1 == nodes.length) {
                 if ("checkin" == cmd) {
                     if (!nodes[0].data.lock) {
+                        //there is no lock so checkin should be disabled
                         return "disable";
                     }
-                    else if (nodes[0].data.lock && nodes[0].data.lock.creator !== $scope.user) {
+                    else if (nodes[0].data.lock
+                        && nodes[0].data.lock.creator !== $scope.user) {
+                        //there is lock on object but it is not by the user so checkin is disabled
+                        return "disable";
+                    }
+                    else if (nodes[0].data.lock.lockType !== ObjectService.LockTypes.CHECKOUT_LOCK) {
+                        //object has lock and it is by the user but it isn't checkout
+                        //it is probably edit in word so checkin should be disabled
                         return "disable";
                     }
                     else {
-                        var allowDeffered = $q.defer();
-                        //check permission for unlock
-                        PermissionsService.getActionPermission('unlock', nodes[0].data)
-                            .then(function success(hasPermission) {
-                                    if (hasPermission)
-                                        allowDeffered.resolve("");
-                                    else
-                                        allowDeffered.resolve("disable");
-                                },
-                                function error() {
-                                    allowDeffered.resolve("disable");
-                                }
-                            );
-                        return allowDeffered.promise;
+                        //object has lock, lockType is checkout and user is creator
+                        return "";
+
+                        //user should be able to unlock the file with checkin if he had permisison
+                        //to checkout the file, there is not need to check for permission for unlock
+
+                        /*var allowDeffered = $q.defer();
+
+                         //check permission for unlock
+                         PermissionsService.getActionPermission('unlock', nodes[0].data)
+                         .then(function success(hasPermission) {
+                         if (hasPermission)
+                         allowDeffered.resolve("");
+                         else
+                         allowDeffered.resolve("disable");
+                         },
+                         function error() {
+                         allowDeffered.resolve("disable");
+                         }
+                         );
+                         return allowDeffered.promise;*/
                     }
                 }
                 else if ("cancelEditing" == cmd) {
                     if (!nodes[0].data.lock) {
+                        //there is no lock so cancel is disabled
                         return "disable";
                     }
-                    else {
+                    else if (nodes[0].data.lock
+                        && (nodes[0].data.lock.creator !== $scope.user
+                        || nodes[0].data.lock.creator !== $scope.assignee)) {
+                        //object has lock, the user is not creator or owner of parent object
+
+                        //we will check for permissions if it is user that has permission to unlock
                         var allowDeffered = $q.defer();
-                        nodes[0].data.assignee = $scope.assignee;
                         //check permission for unlock
                         PermissionsService.getActionPermission('unlock', nodes[0].data)
                             .then(function success(hasPermission) {
@@ -113,8 +133,13 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
                             );
                         return allowDeffered.promise;
                     }
+                    else {
+                        //object has lock and user is creator or owner of parent object
+                        //so they should be able to unlock
+                        return "";
+                    }
                 }
-                else if ("checkout" == cmd) {
+                else if ("checkout" == cmd || "editWithWord") {
                     if (nodes[0].data.lock) {
                         return "disable";
                     } else {
