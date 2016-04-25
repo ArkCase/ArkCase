@@ -2,6 +2,7 @@ package com.armedia.acm.core;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 7/7/14.
@@ -12,7 +13,7 @@ public class AcmObjectType implements Serializable
 
     private String name;
     private String description;
-    private String url;
+    private Map<String, String> url;
     private String urlEnd;
     private String iconName;
     private List<AcmObjectState> states;
@@ -38,12 +39,12 @@ public class AcmObjectType implements Serializable
         this.description = description;
     }
 
-    public String getUrl()
+    public Map<String, String> getUrl()
     {
         return url;
     }
 
-    public void setUrl(String url)
+    public void setUrl(Map<String, String> url)
     {
         this.url = url;
     }
