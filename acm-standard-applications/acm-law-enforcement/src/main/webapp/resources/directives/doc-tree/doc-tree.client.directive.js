@@ -1060,7 +1060,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             break;
                         case "checkout":
                             var fileId = node.data.objectId;
-                            LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE).then(
+                            LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE, "CHECKOUT_LOCK").then(
                                 function (lockedFile) {
                                     DocTree._doDownload(node);
                                     DocTree.refreshTree();
@@ -1072,7 +1072,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             break;
                         case "cancelEditing":
                             var fileId = node.data.objectId;
-                            LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE).then(
+                            LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE, "CANCEL_LOCK").then(
                                 function (unlockedFile) {
                                     // file is unlocked
                                     DocTree.refreshTree();
@@ -3477,7 +3477,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     ObjectNoteService.saveNote(data.note);
                                 }
                                 var fileId = result.objectId;
-                                LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE).then(function () {
+                                LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE, "CHECKIN_LOCK").then(function () {
                                     DocTree.markNodeOk(node.parent);
                                     node.parent.renderTitle();
                                     DocTree.refreshTree();
