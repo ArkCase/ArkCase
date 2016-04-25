@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -45,7 +46,7 @@ public class FacetedSearchAPIController
     // For EXPORT, set parameter export =(eg. 'csv') & fields = [fields that should be exported]!
     @RequestMapping(value = "/facetedSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String mainNotFilteredFacetedSerach(
+    public String mainNotFilteredFacetedSearch(
             @RequestParam(value = "q", required = true) String q,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "500") int maxRows,
@@ -63,10 +64,21 @@ public class FacetedSearchAPIController
 
         String facetKeys = getFacetedSearchService().getFacetKeys();
 
+        // true if the filter should check for parent object access
+        boolean isParentRef = true;
         String filterQueries = "";
         if (filters != null)
         {
             filterQueries = Arrays.asList(filters).stream().map(f -> getFacetedSearchService().buildSolrQuery(f)).collect(Collectors.joining("&"));
+            for (String filter : filters)
+            {
+                String decodedFilter = URLDecoder.decode(filter, SearchConstants.FACETED_SEARCH_ENCODING);
+                decodedFilter = decodedFilter.replaceAll("\\s+", "");
+
+                // do not check for parent-object access for NOTIFICATION and SUBSCRIPTION_EVENT object types
+                isParentRef = isParentRef && !decodedFilter.contains("\"ObjectType\":NOTIFICATION");
+                isParentRef = isParentRef && !decodedFilter.contains("\"ObjectType\":SUBSCRIPTION_EVENT");
+            }
         }
 
         String rowQueryParameters = facetKeys + filterQueries;
@@ -89,8 +101,9 @@ public class FacetedSearchAPIController
             maxRows = SearchConstants.MAX_RESULT_ROWS;
         }
 
+
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
-                query, startRow, maxRows, sort, rowQueryParameters);
+                query, startRow, maxRows, sort, rowQueryParameters, isParentRef);
         String res = getFacetedSearchService().replaceEventTypeName(results);
 
         if (StringUtils.isNotEmpty(export))
