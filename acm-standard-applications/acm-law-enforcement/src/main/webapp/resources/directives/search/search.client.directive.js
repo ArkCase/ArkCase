@@ -273,6 +273,10 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     });
                 };
 
+                scope.onClickParentObjLink = function (event, parentReference) {
+                    event.preventDefault();
+                };
+
                 scope.keyUp = function (event) {
                     scope.searchQuery = scope.searchQuery.replace('*', '');
                     if (event.keyCode == 13 && scope.searchQuery) {
