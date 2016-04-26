@@ -3,6 +3,7 @@
  */
 package com.armedia.acm.form.casefile.model.ps;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class Subject {
 	private String firstName;
 	private String middleName;
 	private String lastName;
-	private Date dateOfBirth;
+	private LocalDate dateOfBirth;
 	private String socialSecurityNumber;
 	private String phoneNumber;
 
@@ -115,12 +116,12 @@ public class Subject {
 	}
 
 	@XmlTransient
-	public Date getDateOfBirth() 
+	public LocalDate getDateOfBirth()
 	{
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(Date dateOfBirth) 
+	public void setDateOfBirth(LocalDate dateOfBirth)
 	{
 		this.dateOfBirth = dateOfBirth;
 	}

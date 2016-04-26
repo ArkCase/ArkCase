@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.armedia.acm.services.notification.service;
 
@@ -11,16 +11,15 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author riste.tutureski
- *
  */
 public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransformer<Notification>
 {
@@ -82,6 +81,8 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
+        mapAdditionalProperties(in, solr.getAdditionalProperties());
+
         return solr;
     }
 
@@ -111,6 +112,8 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
 
         solr.setType_s(in.getType());
 
+        mapAdditionalProperties(in, solr.getAdditionalProperties());
+
         return solr;
     }
 
@@ -137,6 +140,14 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
         boolean isSupported = objectNotNull && classNames;
 
         return isSupported;
+    }
+
+    private void mapAdditionalProperties(Notification in, Map<String, Object> additionalProperties)
+    {
+        Long relatedObjectId = in.getRelatedObjectId();
+        String relatedObjectType = in.getRelatedObjectType();
+        additionalProperties.put("related_object_id_l", relatedObjectId);
+        additionalProperties.put("related_object_type_s", relatedObjectType);
     }
 
     public NotificationDao getNotificationDao()

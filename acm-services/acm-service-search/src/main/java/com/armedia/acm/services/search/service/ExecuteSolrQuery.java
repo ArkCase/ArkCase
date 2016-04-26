@@ -14,22 +14,28 @@ import java.util.Map;
 /**
  * Created by marjan.stefanoski on 02.02.2015.
  */
-public class ExecuteSolrQuery {
+public class ExecuteSolrQuery
+{
 
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private MuleContextManager muleContextManager;
 
-    public String getResultsByPredefinedQuery( Authentication auth, SolrCore core, String solrQuery, int firstRow,
-                                               int maxRows, String sort ) throws MuleException
+    public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow,
+                                              int maxRows, String sort) throws MuleException
     {
-        String results = getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, "");
-        return results;
+        return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, "", true);
     }
 
-    public String getResultsByPredefinedQuery( Authentication auth, SolrCore core, String solrQuery, int firstRow,
-                                               int maxRows, String sort, String rowQueryParameters ) throws MuleException
+    public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow,
+                                              int maxRows, String sort, String rowQueryParameters) throws MuleException
+    {
+        return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, rowQueryParameters, true);
+    }
+
+    public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow,
+                                              int maxRows, String sort, String rowQueryParameters, boolean filterParentRef) throws MuleException
     {
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", solrQuery);
@@ -37,13 +43,14 @@ public class ExecuteSolrQuery {
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
         headers.put("acmUser", auth);
+        headers.put("filterParentRef", filterParentRef);
         headers.put("rowQueryParametars", rowQueryParameters);
 
         MuleMessage response = getMuleContextManager().send(core.getMuleEndpointUrl(), "", headers);
 
         log.debug("Response type: " + response.getPayload().getClass());
 
-        if ( response.getPayload() instanceof String )
+        if (response.getPayload() instanceof String)
         {
             return (String) response.getPayload();
         }

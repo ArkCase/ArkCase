@@ -19,8 +19,10 @@
       "authUserDn": "Auth User Dn",
       "authUserPassword": "Auth User Password",
       "userSearchBase": "User Search Base",
+      "userSearchFilter": "User Search Filter",
       "groupSearchBase": "Group Search Base",
       "groupSeachBaseOU": "Group Search Base OU",
+      "groupSearchFilterForUser": "Group Search Filter For User",
       "userIdAttributeName": "User Id Attribute Name",
       "userDomain": "User domain",
       "userDomainNote": "(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
@@ -58,7 +60,7 @@
         "description": "Description",
         "descriptionPlaceholder": "Enter Description",
         "btn": {
-          "ok": "Add Ag-Hoc Group",
+          "ok": "Add Ad-Hoc Group",
           "cancel": "Cancel"
         }
       },
@@ -69,7 +71,7 @@
         "description": "Description",
         "descriptionPlaceholder": "Enter Description",
         "btn": {
-          "ok": "Add Ag-Hoc Group",
+          "ok": "Add Ad-Hoc Group",
           "cancel": "Cancel"
         }
       },

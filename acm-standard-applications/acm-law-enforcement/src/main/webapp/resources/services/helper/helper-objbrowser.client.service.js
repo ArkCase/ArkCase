@@ -166,7 +166,8 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.resetObjectInfo = arg.resetObjectInfo;
                 that.getObjectInfo = arg.getObjectInfo;
                 that.updateObjectInfo = arg.updateObjectInfo;
-                that.initComponentLinks = (arg.initComponentLinks)? arg.initComponentLinks : function (config) {
+                that.initComponentLinks = arg.initComponentLinks;
+                that.initComponentLinksDefault = function (config) {
                     var nodeType = Service.getCurrentObjectType();
                     return Service.createComponentLinks(config, nodeType);
                 };
@@ -184,7 +185,9 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
                 ConfigService.getModuleConfig(that.moduleId).then(function (moduleConfig) {
                     that.scope.config = moduleConfig;
-                    //that.scope.componentLinks = that.initComponentLinks(moduleConfig);
+                    if (that.initComponentLinks) {  //if initComponentLinks is not define, use initComponentLinksDefault but postpone after objectInfo retrieved
+                        that.scope.componentLinks = that.initComponentLinks(moduleConfig);
+                    }
                     that.scope.linksShown = Util.goodValue(moduleConfig.initialLinksShown, true);
                     return moduleConfig;
                 });
@@ -262,7 +265,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     var objectId = Util.goodMapValue(selectedObject, "nodeId", null);
                     var objectType = Util.goodMapValue(selectedObject, "nodeType", null);
                     Service.updateObjectSetting(that.moduleId, that.scope.activeLinkId, objectId, objectType);
-                    if (that.selectComponentLinks) {
+                    if (that.selectComponentLinks && that.initComponentLinks) {     //initComponentLinks serves as flag to indicate initComponentLinks() has called
                         that.scope.componentLinks = that.selectComponentLinks(selectedObject);
                     }
 
@@ -286,7 +289,12 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                             function (objectInfo) {
                                 that.scope.progressMsg = null;
                                 that.scope.objectInfo = objectInfo;
+
+                                if (!that.initComponentLinks) {
+                                    that.initComponentLinks = that.initComponentLinksDefault;
+                                }
                                 that.scope.componentLinks = that.initComponentLinks(that.scope.config);
+
                                 that.scope.$broadcast('object-updated', objectInfo);
                                 return objectInfo;
                             }
