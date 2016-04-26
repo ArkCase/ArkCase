@@ -1,5 +1,8 @@
 package com.armedia.acm.files.propertymanager;
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +23,8 @@ public class PropertyFileManager
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    private AcmEncryptablePropertyUtils encryptablePropertyUtils;
+
     public void store(String key, String value, String filename)
     {
         Properties p = new Properties();
@@ -37,7 +42,7 @@ public class PropertyFileManager
         }
         finally
         {
-            if ( fos != null )
+            if (fos != null)
             {
                 try
                 {
@@ -50,39 +55,39 @@ public class PropertyFileManager
             }
         }
     }
-    
+
     public void storeMultiple(Map<String, String> propertiesMap, String fileName, boolean clean)
     {
-    	if (propertiesMap != null && propertiesMap.size() > 0)
-    	{
-    		FileInputStream in = null;
-    		FileOutputStream out = null;
-    		try
-    		{    			
-    			Properties p = new Properties();
-    		
-    			if (!clean)
-    			{
-	    			in = new FileInputStream(fileName);
-	    			p.load(in);
-    			}
-    			
-    			out = new FileOutputStream(fileName);
-    			
-    			for (Entry<String, String> entry : propertiesMap.entrySet())
-        		{
-    				p.setProperty(entry.getKey(), entry.getValue());
-        		}
-    			
-    			p.store(out, null);
-    		}
-    		catch(IOException e)
-    		{
-    			log.debug("Could not update properties file: " + e.getMessage(), e);
-    		}
-    		finally
+        if (propertiesMap != null && propertiesMap.size() > 0)
+        {
+            FileInputStream in = null;
+            FileOutputStream out = null;
+            try
             {
-                if ( in != null )
+                Properties p = new Properties();
+
+                if (!clean)
+                {
+                    in = new FileInputStream(fileName);
+                    p.load(in);
+                }
+
+                out = new FileOutputStream(fileName);
+
+                for (Entry<String, String> entry : propertiesMap.entrySet())
+                {
+                    p.setProperty(entry.getKey(), entry.getValue());
+                }
+
+                p.store(out, null);
+            }
+            catch (IOException e)
+            {
+                log.debug("Could not update properties file: " + e.getMessage(), e);
+            }
+            finally
+            {
+                if (in != null)
                 {
                     try
                     {
@@ -93,8 +98,8 @@ public class PropertyFileManager
                         log.warn("Could not close input stream: " + e.getMessage(), e);
                     }
                 }
-                
-                if ( out != null )
+
+                if (out != null)
                 {
                     try
                     {
@@ -106,65 +111,65 @@ public class PropertyFileManager
                     }
                 }
             }
-    	}
-    }
-    
-    public void removeMultiple(List<String> properties, String fileName)
-    {
-    	if (properties != null && properties.size() > 0)
-    	{
-    		FileInputStream in = null;
-    		FileOutputStream out = null;
-    		try
-    		{
-    			in = new FileInputStream(fileName);
-    			
-    			Properties p = new Properties();
-    			p.load(in);
-    			
-    			out = new FileOutputStream(fileName);
-    			
-    			for (String key : properties)
-        		{
-    				p.remove(key);
-        		}
-    			
-    			p.store(out, null);
-    		}
-    		catch(IOException e)
-    		{
-    			log.debug("Could not remove properties file: " + e.getMessage(), e);
-    		}
-    		finally
-            {
-                if ( in != null )
-                {
-                    try
-                    {
-                        in.close();
-                    }
-                    catch (IOException e)
-                    {
-                        log.warn("Could not close input stream: " + e.getMessage(), e);
-                    }
-                }
-                
-                if ( out != null )
-                {
-                    try
-                    {
-                        out.close();
-                    }
-                    catch (IOException e)
-                    {
-                        log.warn("Could not close output stream: " + e.getMessage(), e);
-                    }
-                }
-            }
-    	}
+        }
     }
 
-    public String load(String filename, String key, String defaultValue)
+    public void removeMultiple(List<String> properties, String fileName)
+    {
+        if (properties != null && properties.size() > 0)
+        {
+            FileInputStream in = null;
+            FileOutputStream out = null;
+            try
+            {
+                in = new FileInputStream(fileName);
+
+                Properties p = new Properties();
+                p.load(in);
+
+                out = new FileOutputStream(fileName);
+
+                for (String key : properties)
+                {
+                    p.remove(key);
+                }
+
+                p.store(out, null);
+            }
+            catch (IOException e)
+            {
+                log.debug("Could not remove properties file: " + e.getMessage(), e);
+            }
+            finally
+            {
+                if (in != null)
+                {
+                    try
+                    {
+                        in.close();
+                    }
+                    catch (IOException e)
+                    {
+                        log.warn("Could not close input stream: " + e.getMessage(), e);
+                    }
+                }
+
+                if (out != null)
+                {
+                    try
+                    {
+                        out.close();
+                    }
+                    catch (IOException e)
+                    {
+                        log.warn("Could not close output stream: " + e.getMessage(), e);
+                    }
+                }
+            }
+        }
+    }
+
+    public String load(String filename, String key, String defaultValue) throws AcmEncryptionException
     {
 
         InputStream fis = null;
@@ -176,7 +181,7 @@ public class PropertyFileManager
             fis = new FileInputStream(filename);
             p.load(fis);
 
-            retval = p.getProperty(key, defaultValue);
+            retval = encryptablePropertyUtils.decryptPropertyValue(p.getProperty(key, defaultValue));
 
         }
         catch (IOException e)
@@ -185,7 +190,7 @@ public class PropertyFileManager
         }
         finally
         {
-            if ( fis != null )
+            if (fis != null)
             {
                 try
                 {
@@ -199,5 +204,22 @@ public class PropertyFileManager
         }
 
         return retval;
+    }
+
+    /**
+     * @return the encryptablePropertyUtils
+     */
+    public AcmEncryptablePropertyUtils getEncryptablePropertyUtils()
+    {
+        return encryptablePropertyUtils;
+    }
+
+    /**
+     * @param encryptablePropertyUtils
+     *            the encryptablePropertyUtils to set
+     */
+    public void setEncryptablePropertyUtils(AcmEncryptablePropertyUtils encryptablePropertyUtils)
+    {
+        this.encryptablePropertyUtils = encryptablePropertyUtils;
     }
 }
