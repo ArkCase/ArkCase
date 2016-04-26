@@ -61,6 +61,9 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity, AcmStat
 	@Lob
     @Column(name = "cm_timesheet_details")
     private String details;
+
+	@Column(name = "cm_timesheet_title")
+	private String title;
 	
 	@Column(name = "cm_timesheet_creator")
 	private String creator;
@@ -195,6 +198,16 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity, AcmStat
 
 	public void setDetails(String details) {
 		this.details = details;
+	}
+
+	public String getTitle()
+	{
+		return title;
+	}
+
+	public void setTitle(String title)
+	{
+		this.title = title;
 	}
 
 	@Override
