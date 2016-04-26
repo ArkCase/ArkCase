@@ -446,5 +446,42 @@
         "uiIcon": "ui-icon-pencil"
       }
     }
-  }
+  },
+  "resetCacheNames": [
+    {
+      "service": "Authentication",
+      "names": "SessionCacheNames",
+      "type": "session"
+    },
+    {
+      "service": "Acm.AppService",
+      "names": "SessionCacheNames",
+      "type": "session"
+    },
+    {
+      "service": "ConfigService",
+      "names": "SessionCacheNames",
+      "type": "session"
+    },
+    {
+      "service": "LookupService",
+      "names": "SessionCacheNames",
+      "type": "session"
+    },
+    {
+      "service": "Object.LookupService",
+      "names": "SessionCacheNames",
+      "type": "session"
+    },
+    {
+      "service": "Case.LookupService",
+      "names": "SessionCacheNames",
+      "type": "session"
+    },
+    {
+      "service": "Complaint.LookupService",
+      "names": "SessionCacheNames",
+      "type": "session"
+    }
+  ]
 }

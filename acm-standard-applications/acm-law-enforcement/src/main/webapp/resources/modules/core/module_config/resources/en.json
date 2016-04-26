@@ -14,5 +14,8 @@
       "toggle.btn": "Toggle navigation",
       "search.placeholder": "Search"
     }
+  },
+  "core.comp.acmLogin": {
+    "confirmLogout": "For your protection, application is about to logout. Press Cancel to stay log in."
   }
 }
