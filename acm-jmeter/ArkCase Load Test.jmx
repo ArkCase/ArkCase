@@ -24,17 +24,17 @@
           </elementProp>
           <elementProp name="csv.complaint.data" elementType="Argument">
             <stringProp name="Argument.name">csv.complaint.data</stringProp>
-            <stringProp name="Argument.value">complaint-data.csv</stringProp>
+            <stringProp name="Argument.value">complaint-data-100K.csv</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="acm.url.arkcase" elementType="Argument">
             <stringProp name="Argument.name">acm.url.arkcase</stringProp>
-            <stringProp name="Argument.value">http://armdvc7arkpt1.armedia.com:8080/arkcase</stringProp>
+            <stringProp name="Argument.value">http://acm-arkcase:8080/arkcase</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="acm.url.frevvo" elementType="Argument">
             <stringProp name="Argument.name">acm.url.frevvo</stringProp>
-            <stringProp name="Argument.value">http://armdvc7arkpt1.armedia.com:8082/frevvo</stringProp>
+            <stringProp name="Argument.value">http://acm-frevvo:8082/frevvo</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -48,7 +48,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.num_threads">8</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1458582238000</longProp>
         <longProp name="ThreadGroup.end_time">1458582238000</longProp>
@@ -78,7 +78,9 @@
           <stringProp name="HTTPSampler.concurrentPool">4</stringProp>
         </ConfigTestElement>
         <hashTree/>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Initialize Tests" enabled="true"/>
+        <CriticalSectionController guiclass="CriticalSectionControllerGui" testclass="CriticalSectionController" testname="Critical Section Controller" enabled="true">
+          <stringProp name="CriticalSectionController.lockName">init_test</stringProp>
+        </CriticalSectionController>
         <hashTree>
           <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Parse target URLs" enabled="true">
             <stringProp name="BeanShellSampler.query">import java.net.*;
@@ -194,6 +196,14 @@ SampleResult.setResponseData(&quot;Counted &quot; + linenumber + &quot; fields f
             <stringProp name="BeanShellSampler.filename"></stringProp>
             <stringProp name="BeanShellSampler.parameters"></stringProp>
             <boolProp name="BeanShellSampler.resetInterpreter">true</boolProp>
+          </BeanShellSampler>
+          <hashTree/>
+          <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Calculate Constant Field Values" enabled="true">
+            <stringProp name="BeanShellSampler.query">// Set the client&apos;s timezone ID
+vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
+            <stringProp name="BeanShellSampler.filename"></stringProp>
+            <stringProp name="BeanShellSampler.parameters"></stringProp>
+            <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
           </BeanShellSampler>
           <hashTree/>
         </hashTree>
@@ -491,11 +501,6 @@ SampleResult.setResponseData(&quot;Counted &quot; + linenumber + &quot; fields f
                 <stringProp name="Argument.value">Ann Administrator</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
-              <elementProp name="acm.data.date" elementType="Argument">
-                <stringProp name="Argument.name">acm.data.date</stringProp>
-                <stringProp name="Argument.value">4/4/2016</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
               <elementProp name="acm.data.initiatorDeviceType" elementType="Argument">
                 <stringProp name="Argument.name">acm.data.initiatorDeviceType</stringProp>
                 <stringProp name="Argument.value">Home phone</stringProp>
@@ -645,7 +650,7 @@ vars.putAll(newValues);</stringProp>
                 <elementProp name="_formTz" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.name">_formTz</stringProp>
-                  <stringProp name="Argument.value">America/New_York</stringProp>
+                  <stringProp name="Argument.value">${__urlencode(${acm.client.tz})}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -781,7 +786,7 @@ vars.putAll(newValues);</stringProp>
                 <elementProp name="_formTz" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.name">_formTz</stringProp>
-                  <stringProp name="Argument.value">America/New_York</stringProp>
+                  <stringProp name="Argument.value">${__urlencode(${acm.client.tz})}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -860,7 +865,7 @@ vars.putAll(newValues);</stringProp>
                 <elementProp name="_formTz" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.name">_formTz</stringProp>
-                  <stringProp name="Argument.value">America/New_York</stringProp>
+                  <stringProp name="Argument.value">${__urlencode(${acm.client.tz})}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -967,7 +972,7 @@ vars.putAll(newValues);</stringProp>
                 <elementProp name="_formTz" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.name">_formTz</stringProp>
-                  <stringProp name="Argument.value">America%2FGuatemala</stringProp>
+                  <stringProp name="Argument.value">${__urlencode(${acm.client.tz})}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -1885,7 +1890,7 @@ vars.putAll(newValues);</stringProp>
               <threadCounts>true</threadCounts>
             </value>
           </objProp>
-          <stringProp name="filename">C:\Users\drivera\Desktop\ACM3\acm-jmeter\test-results-20160420-2.jtl</stringProp>
+          <stringProp name="filename">C:\Users\drivera\Desktop\ACM3\acm-jmeter\test-results-100K-20160425-2.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="Errors Detected" enabled="true">
