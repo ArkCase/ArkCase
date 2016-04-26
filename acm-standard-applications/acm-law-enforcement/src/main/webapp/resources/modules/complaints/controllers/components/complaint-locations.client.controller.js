@@ -90,7 +90,7 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
                         $modalInstance.dismiss('cancel');
                     }
                 }],
-                size: 'lg'
+                size: 'sm'
             });
 
             modalInstance.result.then(function (data) {

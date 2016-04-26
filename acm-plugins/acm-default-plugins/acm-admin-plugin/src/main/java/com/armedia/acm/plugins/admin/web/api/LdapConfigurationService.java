@@ -29,13 +29,11 @@ public class LdapConfigurationService
     private Logger log = LoggerFactory.getLogger(LdapConfigurationService.class);
 
     private String ldapConfigurationLocation;
-    private String ldapAuthFile;
-    private String ldapSyncFile;
+    private String ldapFile;
     private String ldapPropertiesFile;
 
     private String ldapConfigurationTemplatesLocation;
-    private String ldapTemplateAuthFile;
-    private String ldapTemplateSyncFile;
+    private String ldapTemplateFile;
     private String ldapTemplatePropertiesFile;
 
     private String ldapPropertiesFileRegex;
@@ -60,7 +58,7 @@ public class LdapConfigurationService
         }
 
         // Check if LDAP files are exist
-        if (propertiesFileExist(dirId) || syncFileExist(dirId) || signatureFileExist(dirId))
+        if (propertiesFileExist(dirId) || ldapFileExist(dirId))
         {
             throw new AcmLdapConfigurationException(String.format("LDAP directory with ID='%s' exists", dirId));
         }
@@ -68,15 +66,13 @@ public class LdapConfigurationService
         try
         {
             createPropertiesFile(dirId, props);
-            createAuthFile(dirId, props);
-            createSyncFile(dirId, props);
+            createLdapFile(dirId, props);
         }
         catch (Exception e)
         {
             // Delete created files quietly
             deletePropertiesFileQuietly(dirId);
-            deleteAuthFileQuietly(dirId);
-            deleteSyncFileQuietly(dirId);
+            deleteLdapFileQuietly(dirId);
 
             if (log.isErrorEnabled())
             {
@@ -144,8 +140,7 @@ public class LdapConfigurationService
         // Delete LDAP config files. If something goes wrong then go ahead add information to the log only
 
         forceDeleteFileQuietly(getPropertiesFileName(dirId));
-        forceDeleteFileQuietly(getAuthFileName(dirId));
-        forceDeleteFileQuietly(getSyncFileName(dirId));
+        forceDeleteFileQuietly(getLdapFileName(dirId));
     }
 
     /**
@@ -214,7 +209,7 @@ public class LdapConfigurationService
     }
 
     /**
-     * Create Auth file
+     * Create LDAP file
      *
      * @param dirId
      *            Directory identifier
@@ -223,12 +218,12 @@ public class LdapConfigurationService
      * @throws IOException
      * @throws AcmLdapConfigurationException
      */
-    private void createAuthFile(String dirId, Map<String, Object> props) throws IOException, AcmLdapConfigurationException
+    private void createLdapFile(String dirId, Map<String, Object> props) throws IOException, AcmLdapConfigurationException
     {
-        String signatureFileName = getAuthFileName(dirId);
-        if (signatureFileExist(dirId))
+        String ldapFileName = getLdapFileName(dirId);
+        if (ldapFileExist(dirId))
         {
-            throw new AcmLdapConfigurationException(String.format("Auth file '%s' is present in the system.", signatureFileName));
+            throw new AcmLdapConfigurationException(String.format("LDAP file '%s' is present in the system.", ldapFileName));
         }
 
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_22);
@@ -236,12 +231,12 @@ public class LdapConfigurationService
 
         try
         {
-            // Auth file
-            Template tmplSig = cfg.getTemplate(ldapTemplateAuthFile);
+            // LDAP file
+            Template tmplSig = cfg.getTemplate(ldapTemplateFile);
             Writer writerSig = null;
             try
             {
-                writerSig = new FileWriter(new File(signatureFileName));
+                writerSig = new FileWriter(new File(ldapFileName));
                 tmplSig.process(props, writerSig);
             }
             finally
@@ -256,58 +251,9 @@ public class LdapConfigurationService
         {
             if (log.isErrorEnabled())
             {
-                log.error(String.format("Can't create LDAP signature file with ID '%s'", dirId), e);
+                log.error(String.format("Can't create LDAP file with ID '%s'", dirId), e);
             }
-            throw new AcmLdapConfigurationException("Can't create LDAP signature file ", e);
-        }
-    }
-
-    /**
-     * Create Sync file
-     *
-     * @param dirId
-     *            Directory identifier
-     * @param props
-     *            Directory properties data
-     * @throws IOException
-     * @throws AcmLdapConfigurationException
-     */
-    private void createSyncFile(String dirId, Map<String, Object> props) throws IOException, AcmLdapConfigurationException
-    {
-        String syncFileName = getSyncFileName(dirId);
-        if (syncFileExist(dirId))
-        {
-            throw new AcmLdapConfigurationException(String.format("Sync file '%s' is present in the system.", syncFileName));
-        }
-
-        Configuration cfg = new Configuration(Configuration.VERSION_2_3_22);
-        cfg.setDirectoryForTemplateLoading(new File(ldapConfigurationTemplatesLocation));
-
-        try
-        {
-            Template tmplSync = cfg.getTemplate(ldapTemplateSyncFile);
-            Writer writerSync = null;
-            try
-            {
-                writerSync = new FileWriter(new File(syncFileName));
-                tmplSync.process(props, writerSync);
-            }
-            finally
-            {
-                if (writerSync != null)
-                {
-                    writerSync.close();
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            if (log.isErrorEnabled())
-            {
-                log.error(String.format("Can't create LDAP sync file with ID '%s'", dirId), e);
-            }
-
-            throw new AcmLdapConfigurationException("Can't create LDAP sync file ", e);
+            throw new AcmLdapConfigurationException("Can't create LDAP file ", e);
         }
     }
 
@@ -334,7 +280,7 @@ public class LdapConfigurationService
         props.put("groupSearchFilterForUser", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUP_SEARCH_FILTER_FOR_USER));
         props.put("ldapUrl", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_LDAP_URL));
         props.put("userIdAttributeName", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_ID_ATTR_NAME));
-        props.put("userDomain", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN));
+        props.put("userDomain", jsonObj.has(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN) ? jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN) : "");
         return props;
     }
 
@@ -381,14 +327,9 @@ public class LdapConfigurationService
         FileUtils.deleteQuietly(new File(getPropertiesFileName(dirId)));
     }
 
-    private void deleteAuthFileQuietly(String dirId)
+    private void deleteLdapFileQuietly(String dirId)
     {
-        FileUtils.deleteQuietly(new File(getAuthFileName(dirId)));
-    }
-
-    private void deleteSyncFileQuietly(String dirId)
-    {
-        FileUtils.deleteQuietly(new File(getSyncFileName(dirId)));
+        FileUtils.deleteQuietly(new File(getLdapFileName(dirId)));
     }
 
     public String getPropertiesFileName(String dirId)
@@ -396,14 +337,9 @@ public class LdapConfigurationService
         return ldapConfigurationLocation + String.format(ldapPropertiesFile, dirId);
     }
 
-    public String getAuthFileName(String dirId)
+    public String getLdapFileName(String dirId)
     {
-        return ldapConfigurationLocation + String.format(ldapAuthFile, dirId);
-    }
-
-    public String getSyncFileName(String dirId)
-    {
-        return ldapConfigurationLocation + String.format(ldapSyncFile, dirId);
+        return ldapConfigurationLocation + String.format(ldapFile, dirId);
     }
 
     public boolean propertiesFileExist(String dirId)
@@ -412,15 +348,9 @@ public class LdapConfigurationService
         return new File(fileName).exists();
     }
 
-    public boolean signatureFileExist(String dirId)
+    public boolean ldapFileExist(String dirId)
     {
-        String fileName = getAuthFileName(dirId);
-        return new File(fileName).exists();
-    }
-
-    public boolean syncFileExist(String dirId)
-    {
-        String fileName = getSyncFileName(dirId);
+        String fileName = getLdapFileName(dirId);
         return new File(fileName).exists();
     }
 
@@ -429,14 +359,9 @@ public class LdapConfigurationService
         this.ldapConfigurationLocation = ldapConfigurationLocation;
     }
 
-    public void setLdapAuthFile(String ldapAuthFile)
+    public void setLdapFile(String ldapFile)
     {
-        this.ldapAuthFile = ldapAuthFile;
-    }
-
-    public void setLdapSyncFile(String ldapSyncFile)
-    {
-        this.ldapSyncFile = ldapSyncFile;
+        this.ldapFile = ldapFile;
     }
 
     public void setLdapPropertiesFile(String ldapPropertiesFile)
@@ -449,14 +374,9 @@ public class LdapConfigurationService
         this.ldapConfigurationTemplatesLocation = ldapConfigurationTemplatesLocation;
     }
 
-    public void setLdapTemplateAuthFile(String ldapTemplateAuthFile)
+    public void setLdapTemplateFile(String ldapTemplateFile)
     {
-        this.ldapTemplateAuthFile = ldapTemplateAuthFile;
-    }
-
-    public void setLdapTemplateSyncFile(String ldapTemplateSyncFile)
-    {
-        this.ldapTemplateSyncFile = ldapTemplateSyncFile;
+        this.ldapTemplateFile = ldapTemplateFile;
     }
 
     public void setLdapTemplatePropertiesFile(String ldapTemplatePropertiesFile)

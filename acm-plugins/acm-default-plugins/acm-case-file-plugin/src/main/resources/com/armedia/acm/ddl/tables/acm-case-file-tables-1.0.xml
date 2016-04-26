@@ -341,4 +341,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="29-add-legacy_system-columns" author="riste.tutureski">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_legacy_system_id" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

@@ -60,6 +60,12 @@
           "enableCellEdit": false
         },
         {
+          "name": "tag",
+          "displayName": "documentDetails.comp.notes.table.columns.tag",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false
+        },
+        {
           "name": "created",
           "displayName": "documentDetails.comp.notes.table.columns.created",
           "headerCellFilter": "translate",
@@ -211,7 +217,7 @@
         }
       ],
       "filters": "\"Object Type\": TAG",
-      "filterName" : "Object Type"
+      "filterName": "Object Type"
     }
   ]
 }
