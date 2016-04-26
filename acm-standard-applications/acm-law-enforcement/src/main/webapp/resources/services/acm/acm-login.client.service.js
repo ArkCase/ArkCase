@@ -2,17 +2,20 @@
 
 /**
  * @ngdoc service
- * @name services:Acm.LoginStatService
+ * @name services:Acm.LoginService
  *
  * @description
  *
- * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/login-stat.client.service.js services/acm/login-stat.client.service.js}
+ * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/login.client.service.js services/acm/login.client.service.js}
  *
- * This service is used to hold login information, for example login status, idle time, error statistics, etc.
+ * This service is used to manage login. It holds login information, for example login status, idle time, error statistics, etc.
  */
 
-angular.module('services').factory('Acm.LoginStatService', ['Acm.StoreService', 'UtilService'
-    , function (Store, Util) {
+angular.module('services').factory('Acm.LoginService', ['$state', '$injector', '$log'
+    , 'Acm.StoreService', 'UtilService', 'ConfigService'
+    , function ($state, $injector, $log
+        , Store, Util, ConfigService
+    ) {
         var Service = {
             LocalCacheNames: {
                 LOGIN_STATUS: "AcmLoginStatus"
@@ -21,7 +24,7 @@ angular.module('services').factory('Acm.LoginStatService', ['Acm.StoreService', 
             /**
              * @ngdoc method
              * @name isLogin
-             * @methodOf services:Acm.LoginStatService
+             * @methodOf services:Acm.LoginService
              *
              * @description
              * Return boolean to indicate if current session is in login status
@@ -35,7 +38,7 @@ angular.module('services').factory('Acm.LoginStatService', ['Acm.StoreService', 
             /**
              * @ngdoc method
              * @name setLogin
-             * @methodOf services:Acm.LoginStatService
+             * @methodOf services:Acm.LoginService
              *
              * @param {Boolean} login Login status as boolean. true if login; false if not
              *
@@ -52,7 +55,7 @@ angular.module('services').factory('Acm.LoginStatService', ['Acm.StoreService', 
             /**
              * @ngdoc method
              * @name getLastIdle
-             * @methodOf services:Acm.LoginStatService
+             * @methodOf services:Acm.LoginService
              *
              * @description
              * Get last idle time
@@ -66,7 +69,7 @@ angular.module('services').factory('Acm.LoginStatService', ['Acm.StoreService', 
             /**
              * @ngdoc method
              * @name setLastIdle
-             * @methodOf services:Acm.LoginStatService
+             * @methodOf services:Acm.LoginService
              *
              * @param {Boolean} (optional)val Last idle time in seconds. If not specified, current time is used
              *
@@ -83,7 +86,7 @@ angular.module('services').factory('Acm.LoginStatService', ['Acm.StoreService', 
             /**
              * @ngdoc method
              * @name getSinceIdle
-             * @methodOf services:Acm.LoginStatService
+             * @methodOf services:Acm.LoginService
              *
              * @description
              * Set time elapses since last idle
@@ -94,6 +97,54 @@ angular.module('services').factory('Acm.LoginStatService', ['Acm.StoreService', 
                 return now - last;
             }
 
+
+            /**
+             * @ngdoc method
+             * @name resetCaches
+             * @methodOf services:Acm.LoginService
+             *
+             * @description
+             * Reset caches to get ready for new user or for next user
+             */
+            , resetCaches: function () {
+                ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+                    var resetCacheNames = Util.goodMapValue(moduleConfig, "resetCacheNames", []);
+                    _.each(resetCacheNames, function(cacheList) {
+                        var type = Util.goodMapValue(cacheList, "type");
+                        var names = Util.goodMapValue(cacheList, "names");
+                        if ("session" == Util.goodMapValue(cacheList, "type")) {
+                            try {
+                                var service = $injector.get(Util.goodMapValue(cacheList, "service"));
+                                var SessionCacheNames = Util.goodMapValue(service, Util.goodMapValue(cacheList, "names"), {});
+                                _.each(SessionCacheNames, function (name) {
+                                    var cache = new Store.SessionData(name);
+                                    cache.set(null);
+                                });
+                            } catch(e) {
+                                $log.error("AcmLoginService: " + err.message);
+                            }
+                        }
+                    });
+
+                    return moduleConfig;
+                });
+
+            }
+
+
+            /**
+             * @ngdoc method
+             * @name logout
+             * @methodOf services:Acm.LoginService
+             *
+             * @description
+             * Set time elapses since last idle
+             */
+            , logout: function () {
+                Service.resetCaches();
+                Service.setLogin(false);
+                $state.go("goodbye");
+            }
         };
 
         return Service;
