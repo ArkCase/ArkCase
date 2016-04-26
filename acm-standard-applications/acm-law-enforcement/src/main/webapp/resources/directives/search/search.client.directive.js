@@ -274,7 +274,23 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 };
 
                 scope.onClickParentObjLink = function (event, parentReference) {
+                    var objectId = parentReference.substring(0, parentReference.indexOf('-'));
+                    var objectType = parentReference.substring(parentReference.indexOf('-') + 1);
                     event.preventDefault();
+                    promiseObjectTypes.then(function (data) {
+                        var found = _.find(scope.objectTypes, {type: objectType});
+                        if (found && found.url) {
+                            var url = Util.goodValue(found.url);
+                            var id = objectId;
+                            url = url.replace(":id", id);
+
+                            // Target property is used to control open mode: _parent, _blank
+                            if (found.target) {
+                                $window.open(url, found.target);
+                            } else {
+                                $window.location.href = url;
+                            }
+                        }
                 };
 
                 scope.keyUp = function (event) {
