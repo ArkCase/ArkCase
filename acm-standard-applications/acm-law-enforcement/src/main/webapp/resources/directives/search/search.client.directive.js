@@ -291,6 +291,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                 $window.location.href = url;
                             }
                         }
+                    });
                 };
 
                 scope.keyUp = function (event) {
