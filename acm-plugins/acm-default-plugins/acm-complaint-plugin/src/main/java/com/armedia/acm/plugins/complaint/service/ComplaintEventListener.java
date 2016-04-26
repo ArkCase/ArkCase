@@ -1,24 +1,23 @@
 package com.armedia.acm.plugins.complaint.service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.armedia.acm.objectonverter.AcmUnmarshaller;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
+import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
+import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
+import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import org.springframework.context.ApplicationListener;
 
-import com.armedia.acm.objectonverter.AcmUnmarshaller;
-import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
-import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
-import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
-import com.armedia.acm.services.participants.model.AcmParticipant;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ComplaintEventListener implements ApplicationListener<AcmObjectHistoryEvent>
 {
@@ -28,7 +27,8 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     private ComplaintEventPublisher complaintEventPublisher;
     private AcmAssignmentDao acmAssignmentDao;
 
-    @Override public void onApplicationEvent(AcmObjectHistoryEvent event)
+    @Override
+    public void onApplicationEvent(AcmObjectHistoryEvent event)
     {
         if (event != null)
         {
@@ -132,9 +132,11 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     {
         PostalAddress updatedLocation = updatedComplaint.getLocation();
         PostalAddress location = complaint.getLocation();
-        if(location != null){
+        if (location != null)
+        {
             return !location.equals(updatedLocation);
-        }else if (updatedLocation != null){
+        } else if (updatedLocation != null)
+        {
             return true;
         }
         return false;
@@ -164,8 +166,17 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
         if (us.addAll(es))
         {
-            // participants deleted
-            getComplaintEventPublisher().publishComplaintModified(updatedComplaint, "", "participants.deleted");
+            // set is mutable
+            us = new HashSet<>(updated);
+
+            for (AcmParticipant participant : es)
+            {
+                if (!us.contains(participant))
+                {
+                    // participants deleted
+                    getComplaintEventPublisher().publishParticipantDeletedInComplaint(participant, updatedComplaint, "");
+                }
+            }
         }
     }
 
