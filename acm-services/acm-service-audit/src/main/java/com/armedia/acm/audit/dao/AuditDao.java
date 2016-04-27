@@ -19,9 +19,11 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
 {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    @PersistenceContext private EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
 
-    @Transactional public int purgeAudits(Date threshold)
+    @Transactional
+    public int purgeAudits(Date threshold)
     {
         int retval = 0;
 
@@ -62,16 +64,37 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         return findAudits.getResultList();
     }
 
-    public List<AuditEvent> findPagedResults(Long objectId, String objectType, int startRow, int maxRows, List<String> eventTypes)
+    public List<AuditEvent> findPagedResults(Long objectId, String objectType, int startRow, int maxRows, List<String> eventTypes, String sort, String direction)
     {
+
+        //lets change order by string because of sql injection
+        if (!direction.toUpperCase().equals("ASC"))
+        {
+            direction = "DESC";
+        }
+
+        String sortBy;
+        switch (sort)
+        {
+            case "eventType":
+                sortBy = "COALESCE(lu.auditBuisinessName, ae.fullEventType)";
+                break;
+            case "userId":
+                sortBy = "ae.userId";
+                break;
+            default:
+                sortBy = "ae.eventDate";
+                break;
+        }
+
         String queryText = "SELECT ae " +
-                "FROM   AuditEvent ae " +
+                "FROM   AuditEvent ae LEFT OUTER JOIN AcmAuditLookup lu ON ae.fullEventType=lu.auditEventName " +
                 "WHERE  ae.status != 'DELETE' " +
                 "AND ((ae.objectType = :objectType AND ae.objectId = :objectId) " +
                 "OR (ae.parentObjectType = :objectType AND ae.parentObjectId = :objectId)) " +
                 (eventTypes != null ? "AND ae.fullEventType IN :eventTypes " : "") +
                 "AND ae.eventResult = 'success' " +
-                "ORDER BY ae.eventDate";
+                "ORDER BY " + sortBy + " " + direction;
         Query query = getEm().createQuery(queryText);
         query.setFirstResult(startRow);
         query.setMaxResults(maxRows);
@@ -147,7 +170,8 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         this.em = em;
     }
 
-    @Override protected Class<AuditEvent> getPersistenceClass()
+    @Override
+    protected Class<AuditEvent> getPersistenceClass()
     {
         return AuditEvent.class;
     }

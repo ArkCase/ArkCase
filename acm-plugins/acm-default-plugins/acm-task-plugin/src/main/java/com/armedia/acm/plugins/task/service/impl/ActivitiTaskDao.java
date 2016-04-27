@@ -160,6 +160,8 @@ public class ActivitiTaskDao implements TaskDao
 
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS, in.getReworkInstructions());
 
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID, in.getLegacySystemId());
+
             if (in.getTaskOutcome() != null)
             {
                 if (in.getTaskOutcome().getName() != null && in.getTaskOutcome().getName().equals("SEND_FOR_REWORK"))
@@ -923,6 +925,7 @@ public class ActivitiTaskDao implements TaskDao
 
             retval.setParentObjectTitle((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE));
 
+            retval.setLegacySystemId((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID));
         }
 
         if (hti.getTaskLocalVariables() != null)
@@ -1142,6 +1145,11 @@ public class ActivitiTaskDao implements TaskDao
             String parentObjectTitle = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE);
             acmTask.setParentObjectTitle(parentObjectTitle);
         }
+        if (acmTask.getLegacySystemId() == null)
+        {
+            String legacySystemId = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID);
+            acmTask.setLegacySystemId(legacySystemId);
+        }
         Date startDate = (Date) taskLocal.get(TaskConstants.VARIABLE_NAME_START_DATE);
         acmTask.setTaskStartDate(startDate);
 
@@ -1335,6 +1343,8 @@ public class ActivitiTaskDao implements TaskDao
 
             // AFDP-1876 if the task is part of a business process, the next assignee will be stored in process variables.
             acmTask.setNextAssignee((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_NEXT_ASSIGNEE));
+
+            acmTask.setLegacySystemId((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID));
         }
     }
 

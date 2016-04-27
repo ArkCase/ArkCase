@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h2 translate>common.directive.docTree.emailDialog.title</h2>
+    <h3 translate>common.directive.docTree.emailDialog.title</h3>
 </div>
 
 <div>
@@ -16,7 +16,7 @@
     </label>
     <textarea class="form-control input-md" ng-model="recipientsStr" ng-change="onChangeRecipients()"></textarea>
     <br/>
-    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
+    <button type="button" class="btn btn-secondary" ng-click="onClickCancel()" translate>
         common.directive.docTree.emailDialog.btnCancel.text
     </button>
     <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="disableOk()" translate>

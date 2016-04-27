@@ -65,15 +65,17 @@
       }
     },
     "comment": {
-      "title": "Add note",
-      "addComent": "Add comment",
+      "title": "Checkin New Document",
+      "addComent": "Detailed Note",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Add Note"
+      "btnOk.text": "Checkin",
+      "chooseFiles": "Choose Files",
+      "noFiles": "No Files Selected"
     },
     "error": {
       "nodeTitle": "(Error)"
     },
-    "lockedTitle": "This document is locked."
+    "lockedTitle": "This document is locked by "
   },
   "common.directive.objectTree": {
     "btnPrev.title": " records above...",

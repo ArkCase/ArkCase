@@ -1,14 +1,22 @@
 package com.armedia.acm.services.notification.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -48,7 +56,7 @@ public class Notification implements Serializable, AcmObject, AcmEntity
 
     @Column(name = "cm_notification_action", insertable = true, updatable = true)
     private String action;
-    
+
     @Column(name = "cm_notification_title", insertable = true, updatable = false)
     private String title;
 
@@ -74,182 +82,245 @@ public class Notification implements Serializable, AcmObject, AcmEntity
 
     @Column(name = "cm_notification_state", insertable = true, updatable = true)
     private String state;
-    
+
     @Column(name = "cm_notification_parent_id")
     private Long parentId;
-    
+
     @Column(name = "cm_notification_parent_type")
     private String parentType;
-    
+
     @Column(name = "cm_notification_parent_name")
     private String parentName;
-    
+
     @Column(name = "cm_notification_parent_title")
     private String parentTitle;
-    
+
+    @Column(name = "cm_related_object_id")
+    private Long relatedObjectId;
+
+    @Column(name = "cm_related_object_type")
+    private String relatedObjectType;
+
     @Transient
     private String userEmail;
 
     @Override
-    public Long getId() {
+    public Long getId()
+    {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id)
+    {
         this.id = id;
     }
 
-    public String getTitle() {
-		return title;
-	}
+    public String getTitle()
+    {
+        return title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
 
-	public String getNote() {
+    public String getNote()
+    {
         return note;
     }
 
-    public void setNote(String note) {
+    public void setNote(String note)
+    {
         this.note = note;
     }
 
     @Override
-    public Date getCreated() {
+    public Date getCreated()
+    {
         return created;
     }
 
     @Override
-    public void setCreated(Date created) {
+    public void setCreated(Date created)
+    {
         this.created = created;
     }
 
     @Override
-    public String getCreator() {
+    public String getCreator()
+    {
         return creator;
     }
 
     @Override
-    public void setCreator(String creator) {
+    public void setCreator(String creator)
+    {
         this.creator = creator;
     }
 
-    public String getData() {
+    public String getData()
+    {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(String data)
+    {
         this.data = data;
     }
 
-	public String getType() {
-		return type;
-	}
+    public String getType()
+    {
+        return type;
+    }
 
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setType(String type)
+    {
+        this.type = type;
+    }
 
 
-	public String getStatus() {
+    public String getStatus()
+    {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(String status)
+    {
         this.status = status;
     }
 
-    public String getAction() {
+    public String getAction()
+    {
         return action;
     }
 
-    public void setAction(String action) {
+    public void setAction(String action)
+    {
         this.action = action;
     }
 
     @Override
-    public Date getModified() {
+    public Date getModified()
+    {
         return modified;
     }
 
     @Override
-    public void setModified(Date modified) {
+    public void setModified(Date modified)
+    {
         this.modified = modified;
     }
 
     @Override
-    public String getModifier() {
+    public String getModifier()
+    {
         return modifier;
     }
 
     @Override
-    public void setModifier(String modifier) {
+    public void setModifier(String modifier)
+    {
         this.modifier = modifier;
     }
 
-    public String getUser() {
+    public String getUser()
+    {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(String user)
+    {
         this.user = user;
     }
 
-	public String getState() {
-		return state;
-	}
+    public String getState()
+    {
+        return state;
+    }
 
-	public void setState(String state) {
-		this.state = state;
-	}
+    public void setState(String state)
+    {
+        this.state = state;
+    }
 
-	public Long getParentId() {
-		return parentId;
-	}
+    public Long getParentId()
+    {
+        return parentId;
+    }
 
-	public void setParentId(Long parentId) {
-		this.parentId = parentId;
-	}
+    public void setParentId(Long parentId)
+    {
+        this.parentId = parentId;
+    }
 
-	public String getParentType() {
-		return parentType;
-	}
+    public String getParentType()
+    {
+        return parentType;
+    }
 
-	public void setParentType(String parentType) {
-		this.parentType = parentType;
-	}
+    public void setParentType(String parentType)
+    {
+        this.parentType = parentType;
+    }
 
-	public String getParentName() {
-		return parentName;
-	}
+    public String getParentName()
+    {
+        return parentName;
+    }
 
-	public void setParentName(String parentName) {
-		this.parentName = parentName;
-	}
+    public void setParentName(String parentName)
+    {
+        this.parentName = parentName;
+    }
 
-	public String getParentTitle() {
-		return parentTitle;
-	}
+    public String getParentTitle()
+    {
+        return parentTitle;
+    }
 
-	public void setParentTitle(String parentTitle) {
-		this.parentTitle = parentTitle;
-	}
+    public void setParentTitle(String parentTitle)
+    {
+        this.parentTitle = parentTitle;
+    }
 
-	public String getUserEmail() {
-		return userEmail;
-	}
+    public Long getRelatedObjectId()
+    {
+        return relatedObjectId;
+    }
 
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
-	}
+    public void setRelatedObjectId(Long relatedObjectId)
+    {
+        this.relatedObjectId = relatedObjectId;
+    }
 
-	@Override
-	@JsonIgnore
-	public String getObjectType() {
-		return NotificationConstants.OBJECT_TYPE;
-	}
+    public String getRelatedObjectType()
+    {
+        return relatedObjectType;
+    }
+
+    public void setRelatedObjectType(String relatedObjectType)
+    {
+        this.relatedObjectType = relatedObjectType;
+    }
+
+    public String getUserEmail()
+    {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail)
+    {
+        this.userEmail = userEmail;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getObjectType()
+    {
+        return NotificationConstants.OBJECT_TYPE;
+    }
 }
 
 

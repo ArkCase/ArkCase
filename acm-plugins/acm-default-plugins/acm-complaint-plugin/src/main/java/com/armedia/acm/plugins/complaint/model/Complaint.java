@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.model.Disposition;
@@ -59,7 +60,7 @@ import java.util.Optional;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.complaint.model.Complaint")
-public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity
+public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity
 {
     private static final long serialVersionUID = -1154137631399833851L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -177,6 +178,9 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
 
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
+
+    @Column(name = "cm_legacy_system_id")
+    private String legacySystemId;
 
     @PrePersist
     protected void beforeInsert()
@@ -575,6 +579,18 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
                 + ", complaintTitle='" + complaintTitle + '\'' + ", details='" + details + '\'' + ", incidentDate=" + incidentDate + ", created=" + created + ", creator='" + creator + '\''
                 + ", modified=" + modified + ", modifier='" + modifier + '\'' + ", status='" + status + '\'' + ", originator=" + originator + ", ecmFolderPath='" + ecmFolderPath + '\''
                 + ", container=" + container + ", childObjects=" + childObjects + ", approvers=" + approvers + ", personAssociations=" + personAssociations + ", participants=" + participants
-                + ", dueDate=" + dueDate + ", tag='" + tag + '\'' + ", frequency='" + frequency + '\'' + ", location=" + location + ", disposition=" + disposition + ", restricted=" + restricted + '}';
+                + ", dueDate=" + dueDate + ", tag='" + tag + '\'' + ", frequency='" + frequency + '\'' + ", location=" + location + ", disposition=" + disposition + ", restricted=" + restricted + ", legacySystemId='" + legacySystemId + "'}";
+    }
+
+    @Override
+    public String getLegacySystemId()
+    {
+        return legacySystemId;
+    }
+
+    @Override
+    public void setLegacySystemId(String legacySystemId)
+    {
+        this.legacySystemId = legacySystemId;
     }
 }

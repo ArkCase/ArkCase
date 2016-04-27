@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -33,7 +34,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "acm_file")
-public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulEntity
+public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulEntity, AcmLegacySystemEntity
 {
     private static final long serialVersionUID = -5177153023458655846L;
     private static final String OBJECT_TYPE = "FILE";
@@ -118,6 +119,9 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @JoinColumns({@JoinColumn(name = "cm_file_id", referencedColumnName = "cm_object_id", updatable = false, insertable = false),
             @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", updatable = false, insertable = false)})
     private AcmObjectLock lock;
+
+    @Column(name = "cm_legacy_system_id")
+    private String legacySystemId;
 
     @PrePersist
     protected void beforeInsert()
@@ -378,5 +382,17 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public void setLock(AcmObjectLock lock)
     {
         this.lock = lock;
+    }
+
+    @Override
+    public String getLegacySystemId()
+    {
+        return legacySystemId;
+    }
+
+    @Override
+    public void setLegacySystemId(String legacySystemId)
+    {
+        this.legacySystemId = legacySystemId;
     }
 }
