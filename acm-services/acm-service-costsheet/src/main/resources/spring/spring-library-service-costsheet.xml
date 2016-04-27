@@ -43,7 +43,6 @@
     
     <bean id="costsheetToSolrTransformer" class="com.armedia.acm.services.costsheet.service.CostsheetToSolrTransformer">
 		<property name="acmCostsheetDao" ref="acmCostsheetDao"/>
-		<property name="costsheetService" ref="costsheetService"/>
 	</bean>
 
     <bean id="acmCostsheetPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
