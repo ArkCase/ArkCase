@@ -13,10 +13,10 @@
 angular.module('services').factory('ApplicationConfigService', ['$resource', 'Acm.StoreService', 'UtilService',
     function ($resource, Store, Util) {
 
-        var Service = $resource('api/latest/service/admin/app-properties', {}, {
+        var Service = $resource('api/latest/plugin/admin/app-properties', {}, {
             _getApplicationConfig: {
                 method: 'GET',
-                url: 'api/latest/service/admin/app-properties'
+                url: 'api/latest/plugin/admin/app-properties'
             }
         });
 
@@ -24,6 +24,10 @@ angular.module('services').factory('ApplicationConfigService', ['$resource', 'Ac
             APP_CONFIG: 'ApplicationConfig'
         };
 
+
+        Service.PROPERTIES = {
+            NAME: 'name'
+        };
 
         /**
          * @ngdoc method

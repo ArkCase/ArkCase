@@ -10,6 +10,7 @@
  * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/user-name/user-name.client.directive.js directives/user-name/user-name.client.directive.js}
  *
  * The userName directive displays userId or full user name depends on application configuration.
+ * If configuration settings not defined tat it displays Full user name by default.
  *
  *
  * @example
@@ -26,12 +27,19 @@ angular.module('directives').directive('userName', ['$q', 'Authentication', 'App
             transclude: true,
 
             link: function (scope, element, attrs) {
-                $q.all([Authentication.queryUserInfo(), ApplicationConfigService.getConfiguration(ApplicationConfigService.PROP_NAME)])
-                    .then(function(result){
-                        var userInfo = result[0];
-                        var nameConfig = result[1];
 
-                        scope.userName = userInfo.userId;
+                $q.all([Authentication.queryUserInfo(), ApplicationConfigService.getConfiguration()])
+                    .then(function (result) {
+                        var userInfo = result[0];
+                        var appConfig = result[1];
+
+                        // Display user Id as useName property equals to 'userId'
+                        // otherwise display full user name
+                        if (_.get(appConfig, ApplicationConfigService.PROPERTIES.NAME) == 'userId') {
+                            scope.userName = userInfo.userId;
+                        } else {
+                            scope.userName = userInfo.fullName;
+                        }
                     });
             },
 
