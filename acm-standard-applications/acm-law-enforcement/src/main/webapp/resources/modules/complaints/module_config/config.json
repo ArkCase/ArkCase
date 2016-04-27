@@ -257,15 +257,17 @@
               "name": "details",
               "displayName": "complaints.comp.details.table.columns.title",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div ng-bind-html='row.entity.details'></div>"
+              "cellTemplate": "<div ng-bind-html='row.entity.details' title='{{row.entity.details}}' class='ui-grid-cell-contents'></div>"
             },
             {
+              "width": 150,
               "name": "modified",
               "displayName": "complaints.comp.details.table.columns.modified",
               "headerCellFilter": "translate",
               "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             },
             {
+              "width": 150,
               "name": "modifier",
               "displayName": "complaints.comp.details.table.columns.modifier",
               "headerCellFilter": "translate"
@@ -327,6 +329,7 @@
               "name": "note",
               "displayName": "complaints.comp.notes.table.columns.note",
               "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.note}}' class='ui-grid-cell-contents'></div>",
               "enableCellEdit": false
             },
             {
@@ -334,14 +337,16 @@
               "displayName": "complaints.comp.notes.table.columns.created",
               "headerCellFilter": "translate",
               "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-              "enableCellEdit": false
+              "enableCellEdit": false,
+              "width": 150
             },
             {
               "name": "creator",
               "displayName": "complaints.comp.notes.table.columns.creator",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
-              "lookup": "userFullNames"
+              "lookup": "userFullNames",
+              "width": 150
             }
           ]
         },
@@ -361,14 +366,16 @@
               "field": "assignee_s",
               "displayName": "complaints.comp.tasks.table.columns.assignee",
               "headerCellFilter": "translate",
-              "lookup": "userFullNames"
+              "lookup": "userFullNames",
+              "width": 150
             },
             {
               "name": "due",
               "field": "due_tdt",
               "displayName": "complaints.comp.tasks.table.columns.due",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.due_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.due_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "width": 150
             }
           ]
         },
@@ -458,12 +465,14 @@
             {
               "name": "location.modified",
               "displayName": "complaints.comp.locations.table.columns.modified",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "width": 150
             },
             {
               "name": "location.modifier",
               "displayName": "complaints.comp.locations.table.columns.modifier",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "width": 150
             }
           ]
         }
@@ -802,6 +811,7 @@
       "id": "participants",
       "title": "Participants",
       "icon": "fa fa-users",
+      "className": "com.armedia.acm.services.participants.model.AcmParticipant",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
