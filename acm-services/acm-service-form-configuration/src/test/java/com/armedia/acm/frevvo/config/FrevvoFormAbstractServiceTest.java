@@ -1,7 +1,11 @@
 package com.armedia.acm.frevvo.config;
 
-import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.frevvo.config.service.FrevvoTestService;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
@@ -30,6 +34,7 @@ public class FrevvoFormAbstractServiceTest extends EasyMockSupport
     private EcmFileService mockFileService;
     private Authentication mockAuthentication;
     private HttpServletRequest mockRequest;
+    private EcmFileDao mockEcmFileDao;
 
     @Before
     public void setUp() throws Exception
@@ -37,6 +42,7 @@ public class FrevvoFormAbstractServiceTest extends EasyMockSupport
         mockIs = createMock(InputStream.class);
         mockAuthentication = createMock(Authentication.class);
         mockRequest = createMock(HttpServletRequest.class);
+        mockEcmFileDao = createMock(EcmFileDao.class);
 
         unit = new FrevvoTestService();
 
@@ -45,6 +51,30 @@ public class FrevvoFormAbstractServiceTest extends EasyMockSupport
 
         unit.setAuthentication(mockAuthentication);
         unit.setRequest(mockRequest);
+        unit.setEcmFileDao(mockEcmFileDao);
+    }
+
+    @Test
+    public void updateXml_whenFormFileNotFound_thenDoNotUpdateEcmFile() throws Exception
+    {
+        AcmContainerEntity entity = createMock(AcmContainerEntity.class);
+        AcmContainer container = new AcmContainer();
+        container.setId(500L);
+        container.setAttachmentFolder(new AcmFolder());
+        container.getAttachmentFolder().setId(250L);
+
+        expect(entity.getContainer()).andReturn(container).atLeastOnce();
+        expect(mockEcmFileDao.findForContainerAttachmentFolderAndFileType(container.getId(),
+                container.getAttachmentFolder().getId(), unit.getFormName() + "_xml")).andReturn(null);
+
+        // this test is just to verify there are no further calls to the ECM service or ECM dao.
+        // so we don't need any assertions.
+
+        replayAll();
+
+        unit.updateXML(entity, mockAuthentication, entity.getClass());
+
+        verifyAll();
     }
 
     @Test
