@@ -8,6 +8,7 @@ public interface AcmObjectLockConstants
     String WORD_EDIT_LOCK = "WORD_EDIT_LOCK";
     String CHECKOUT_LOCK = "CHECKOUT_LOCK";
     String CHECKIN_LOCK = "CHECKIN_LOCK";
+    String WORD_CHECKIN_LOCK = "WORD_CHECKIN_LOCK";
     String CANCEL_LOCK = "CANCEL_LOCK";
     String OBJECT_LOCK = "OBJECT_LOCK";
 
