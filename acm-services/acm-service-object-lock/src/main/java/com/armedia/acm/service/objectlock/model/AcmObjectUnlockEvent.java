@@ -7,7 +7,6 @@ public class AcmObjectUnlockEvent extends AcmObjectLockUnlockEvent
 {
     private static final String EVENT_TYPE = "com.armedia.acm.objectlock.unlock";
     private static final String CHECKIN_TYPE = "com.armedia.acm.objectlock.checkin";
-    private static final String WORD_CHECKIN_TYPE = "com.armedia.acm.objectlock.wordcheckin";
     private static final String CANCEL_TYPE = "com.armedia.acm.objectlock.cancel";
 
     public AcmObjectUnlockEvent(AcmObjectLock source, String userId, Boolean success)
@@ -24,10 +23,6 @@ public class AcmObjectUnlockEvent extends AcmObjectLockUnlockEvent
             case AcmObjectLockConstants.CHECKIN_LOCK:
                 eventType = CHECKIN_TYPE;
                 break;
-            case AcmObjectLockConstants.WORD_CHECKIN_LOCK:
-                eventType = WORD_CHECKIN_TYPE;
-                break;
-
             case AcmObjectLockConstants.CANCEL_LOCK:
                 eventType = CANCEL_TYPE;
                 break;
