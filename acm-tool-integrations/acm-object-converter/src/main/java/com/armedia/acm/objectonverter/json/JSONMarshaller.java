@@ -3,12 +3,12 @@
  */
 package com.armedia.acm.objectonverter.json;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author riste.tutureski
@@ -22,8 +22,10 @@ public class JSONMarshaller implements AcmMarshaller {
 	public String marshal(Object obj)
 	{
 		String output = null;
-		
+
+		//FIXME not sure why we are instating new ObjectMapper instead we can use it one which is in ApplicationContext
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule( new JavaTimeModule());
 		
 		try 
 		{

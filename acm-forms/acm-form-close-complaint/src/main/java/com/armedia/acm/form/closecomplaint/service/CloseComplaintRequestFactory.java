@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class CloseComplaintRequestFactory
 {
     /**
      * Assumes each CloseComplaintRequest is new. Must be updated when we support editing the form.
+     *
      * @param form
      * @return
      */
@@ -43,42 +45,46 @@ public class CloseComplaintRequestFactory
         Disposition disposition = new Disposition();
         req.setDisposition(disposition);
 
-        if ( form.getInformation() != null )
+        if (form.getInformation() != null)
         {
-            disposition.setCloseDate(form.getInformation().getDate());
+            //convert java.util.Date to LocalDate
+            if (form.getInformation().getDate() != null && form.getInformation().getDate().toInstant() != null)
+            {
+                disposition.setCloseDate(form.getInformation().getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            }
             disposition.setDispositionType(form.getInformation().getOption());
         }
 
-        if ( form.getExistingCase() != null )
+        if (form.getExistingCase() != null)
         {
             disposition.setExistingCaseNumber(form.getExistingCase().getCaseNumber());
         }
 
-        if ( form.getReferExternal() != null )
+        if (form.getReferExternal() != null)
         {
             disposition.setReferExternalContactPersonName(form.getReferExternal().getPerson());
             disposition.setReferExternalOrganizationName(form.getReferExternal().getAgency());
             disposition.setReferExternalContactMethod(form.getReferExternal().getContact().returnBase());
         }
     }
-    
+
     private List<AcmParticipant> convertItemsToParticipants(List<Item> items)
     {
-    	List<AcmParticipant> participants = new ArrayList<>();
-    	Logger log = LoggerFactory.getLogger(getClass());
+        List<AcmParticipant> participants = new ArrayList<>();
+        Logger log = LoggerFactory.getLogger(getClass());
         log.debug("# of incoming approvers: " + items.size());
-    	if ( items != null )
-    	{
-    		for ( Item item : items )
-    		{
+        if (items != null)
+        {
+            for (Item item : items)
+            {
 
                 AcmParticipant participant = new AcmParticipant();
                 participant.setParticipantLdapId(item.getValue());
                 participant.setParticipantType("approver");
                 participants.add(participant);
-    		}
-    	}
-    	
-    	return participants;
+            }
+        }
+
+        return participants;
     }
 }

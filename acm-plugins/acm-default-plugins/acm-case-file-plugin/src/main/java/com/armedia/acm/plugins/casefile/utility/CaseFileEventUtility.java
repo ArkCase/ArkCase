@@ -1,14 +1,20 @@
 package com.armedia.acm.plugins.casefile.utility;
 
-import java.util.Date;
-
 import com.armedia.acm.auth.AcmAuthenticationDetails;
-import com.armedia.acm.plugins.casefile.model.*;
+import com.armedia.acm.plugins.casefile.model.CaseEvent;
+import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
+import com.armedia.acm.plugins.casefile.model.CaseFileModifiedEvent;
+import com.armedia.acm.plugins.casefile.model.CaseFileParticipantDeletedEvent;
+import com.armedia.acm.plugins.casefile.model.FileAddedEvent;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
+
+import java.util.Date;
 
 /**
  * Created by armdev on 9/4/14.
@@ -28,7 +34,8 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         applicationEventPublisher.publishEvent(event);
     }
 
-    public void raiseFileAddedEvent(CaseFile source, String userId, boolean succeeded) {
+    public void raiseFileAddedEvent(CaseFile source, String userId, boolean succeeded)
+    {
 
         FileAddedEvent fileAddedEvent = new FileAddedEvent(source);
         fileAddedEvent.setSucceeded(succeeded);
@@ -36,8 +43,9 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
 
         applicationEventPublisher.publishEvent(fileAddedEvent);
     }
-    
-    public void raiseCaseFileModifiedEvent(CaseFile source, String ipAddress, String eventStatus) {
+
+    public void raiseCaseFileModifiedEvent(CaseFile source, String ipAddress, String eventStatus)
+    {
 
         CaseFileModifiedEvent event = new CaseFileModifiedEvent(source);
         event.setSucceeded(true);
@@ -46,10 +54,22 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         applicationEventPublisher.publishEvent(event);
     }
 
-    public void raiseCaseFileCreated(CaseFile source, Authentication authentication) {
+    public void raiseParticipantDeletedInCaseFile(AcmParticipant participant, CaseFile source, String ipAddress)
+    {
+        CaseFileParticipantDeletedEvent event = new CaseFileParticipantDeletedEvent(participant);
+        event.setSucceeded(true);
+        event.setIpAddress(ipAddress);
+        event.setParentObjectId(source.getId());
+        event.setParentObjectType(source.getObjectType());
+        event.setParentObjectName(source.getCaseNumber());
+        applicationEventPublisher.publishEvent(event);
+    }
+
+    public void raiseCaseFileCreated(CaseFile source, Authentication authentication)
+    {
 
         String ipAddress = null;
-        if ( authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
+        if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
         {
             ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
         }

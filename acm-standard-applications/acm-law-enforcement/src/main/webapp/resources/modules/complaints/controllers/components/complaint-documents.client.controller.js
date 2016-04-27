@@ -2,10 +2,10 @@
 
 angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
-    , 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication', 'PermissionsService'
+    , 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication', 'PermissionsService', 'Object.ModelService'
     , function ($scope, $stateParams, $modal, $q
         , Util, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService
-        , HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService) {
+        , HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -55,6 +55,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.objectId = objectInfo.complaintId;
+            $scope.assignee = ObjectModelService.getAssignee(objectInfo);
         };
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
@@ -67,7 +68,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
 
         $scope.onAllowCmd = function (cmd, nodes) {
             if (1 == nodes.length) {
-                if ("checkin" == cmd || "cancelEditing" == cmd) {
+                if ("checkin" == cmd) {
                     if (!nodes[0].data.lock) {
                         return "disable";
                     }
@@ -76,6 +77,28 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
                     }
                     else {
                         var allowDeffered = $q.defer();
+                        //check permission for unlock
+                        PermissionsService.getActionPermission('unlock', nodes[0].data)
+                            .then(function success(hasPermission) {
+                                    if (hasPermission)
+                                        allowDeffered.resolve("");
+                                    else
+                                        allowDeffered.resolve("disable");
+                                },
+                                function error() {
+                                    allowDeffered.resolve("disable");
+                                }
+                            );
+                        return allowDeffered.promise;
+                    }
+                }
+                else if ("cancelEditing" == cmd) {
+                    if (!nodes[0].data.lock) {
+                        return "disable";
+                    }
+                    else {
+                        var allowDeffered = $q.defer();
+                        nodes[0].data.assignee = $scope.assignee;
                         //check permission for unlock
                         PermissionsService.getActionPermission('unlock', nodes[0].data)
                             .then(function success(hasPermission) {
@@ -103,6 +126,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
                                         allowDeffered.resolve("");
                                     else
                                         allowDeffered.resolve("disable");
+
                                 },
                                 function error() {
                                     allowDeffered.resolve("disable");

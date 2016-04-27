@@ -52,6 +52,11 @@
                     <property name="url" value="/api/{version}/plugin/outlook/email/withattachments"/>
                     <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
+                <bean id="emailWithEmbeddedLinksUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/outlook/email/withembeddedlinks"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>

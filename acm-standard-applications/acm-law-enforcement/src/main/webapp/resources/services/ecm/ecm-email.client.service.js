@@ -26,7 +26,7 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreS
              */
             _sendEmail: {
                 method: 'POST',
-                url: 'api/latest/service/notification/email'
+                url: 'api/latest/plugin/outlook/email/withembeddedlinks'
             }
 
             /**
@@ -57,10 +57,10 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreS
          *
          * @returns {Object} Object returned by $resource
          */
-        Service.sentEmail = function (emailData) {
+        Service.sendEmail = function (emailData) {
             var failed = "";
             return Util.serviceCall({
-                service: Service._sentEmail
+                service: Service._sendEmail
                 , param: {}
                 , data: emailData
                 , onSuccess: function (data) {
