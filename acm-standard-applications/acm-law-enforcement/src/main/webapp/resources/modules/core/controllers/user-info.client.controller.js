@@ -1,11 +1,9 @@
 'use strict';
 
-angular.module('core').controller('UserInfoController', ['$rootScope', '$scope', '$state'
-    , 'Profile.UserInfoService', 'Menus', 'Util.TimerService', 'Acm.LoginService'
-    , function ($rootScope, $scope, $state
-        , UserInfoService, Menus, UtilTimerService, AcmLoginService
+angular.module('core').controller('UserInfoController', ['$scope'
+    , 'Profile.UserInfoService', 'Menus', 'Acm.LoginService'
+    , function ($scope, UserInfoService, Menus, AcmLoginService
     ) {
-
         $scope.menu = Menus.getMenu('usermenu');
 
         UserInfoService.getUserInfo().then(function (data) {
@@ -22,17 +20,7 @@ angular.module('core').controller('UserInfoController', ['$rootScope', '$scope',
 
         $scope.onClickLogout = function () {
             AcmLoginService.logout();
-            //AcmLoginService.setLogin(false);
-            //$state.go("goodbye");
         };
 
-        //UtilTimerService.useTimer("LoginStat", 4000, function() {
-        //    var isLogin = AcmLoginService.isLogin();
-        //    if (!isLogin) {
-        //        $state.go("goodbye");
-        //        return false;
-        //    }
-        //    return true;
-        //});
     }
 ]);

@@ -11,15 +11,34 @@
  * This service is used to manage login. It holds login information, for example login status, idle time, error statistics, etc.
  */
 
-angular.module('services').factory('Acm.LoginService', ['$state', '$injector', '$log'
+angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$injector', '$log'
     , 'Acm.StoreService', 'UtilService', 'ConfigService'
-    , function ($state, $injector, $log
+    , function ($q, $state, $injector, $log
         , Store, Util, ConfigService
     ) {
         var Service = {
             LocalCacheNames: {
                 LOGIN_STATUS: "AcmLoginStatus"
             }
+
+            /**
+             * @ngdoc method
+             * @name getSetLoginPromise
+             * @methodOf services:Acm.LoginService
+             *
+             * @description
+             * Return a promise to wait for setLogin(true) is called. If it is already login, it return true to
+             * indicate the promise is already been resolved to true.
+             */
+            , getSetLoginPromise: function() {
+                var login = Service.isLogin();
+                if (login) {
+                    return true;
+                }
+
+                return Service._deferSetLogin.promise;
+            }
+
 
             /**
              * @ngdoc method
@@ -50,6 +69,9 @@ angular.module('services').factory('Acm.LoginService', ['$state', '$injector', '
                 var loginStatus = Util.goodValue(cacheLoginStatus.get(), {});
                 loginStatus.login = login;
                 cacheLoginStatus.set(loginStatus);
+                if (login) {
+                    this._deferSetLogin.resolve(login);
+                }
             }
 
             /**
@@ -129,6 +151,9 @@ angular.module('services').factory('Acm.LoginService', ['$state', '$injector', '
                     return moduleConfig;
                 });
 
+                //Above ConfigService.getModuleConfig() just created a cache, reset it as well
+                var cache = new Store.SessionData(ConfigService.SessionCacheNames.MODULE_CONFIG_MAP);
+                cache.set(null);
             }
 
 
@@ -138,14 +163,14 @@ angular.module('services').factory('Acm.LoginService', ['$state', '$injector', '
              * @methodOf services:Acm.LoginService
              *
              * @description
-             * Set time elapses since last idle
+             * Set off logout. Currently, it route to 'goodbye' page
              */
             , logout: function () {
-                Service.resetCaches();
-                Service.setLogin(false);
                 $state.go("goodbye");
             }
         };
+
+        Service._deferSetLogin = $q.defer();
 
         return Service;
     }
