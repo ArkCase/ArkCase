@@ -722,6 +722,7 @@
       "id": "participants",
       "title": "Participants",
       "icon": "fa fa-users",
+      "className": "com.armedia.acm.services.participants.model.AcmParticipant",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
