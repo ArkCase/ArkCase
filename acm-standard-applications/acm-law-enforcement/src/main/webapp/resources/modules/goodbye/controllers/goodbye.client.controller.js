@@ -2,11 +2,10 @@
 
 angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', '$q', '$state'
     , 'Acm.StoreService', 'Authentication', 'ConfigService', 'UtilService', 'LookupService', 'Object.LookupService'
-    , 'Case.LookupService', 'Complaint.LookupService', 'Acm.LoginStatService', 'Acm.AppService'
+    , 'Case.LookupService', 'Complaint.LookupService', 'Acm.LoginStatService', 'Acm.AppService', 'ApplicationConfigService'
     , function ($scope, $window, $q, $state
         , Store, Authentication, ConfigService, Util, LookupService, ObjectLookupService
-        , CaseLookupService, ComplaintLookupService, AcmLoginStatService, AcmAppService
-    ) {
+        , CaseLookupService, ComplaintLookupService, AcmLoginStatService, AcmAppService, ApplicationConfigService) {
         var sessionCacheNamesList = [
             Authentication.SessionCacheNames
             , ConfigService.SessionCacheNames
@@ -14,7 +13,7 @@ angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', 
             , ObjectLookupService.SessionCacheNames
             , CaseLookupService.SessionCacheNames
             , ComplaintLookupService.SessionCacheNames
-
+            , ApplicationConfigService.SessionCacheNames
         ];
         for (var i = 0; i < sessionCacheNamesList.length; i++) {
             _.each(sessionCacheNamesList[i], function (name) {
@@ -23,7 +22,7 @@ angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', 
             });
         }
 
-		// Retrieves the app properties from app-config.xml file
+        // Retrieves the app properties from app-config.xml file
         var appConfig = LookupService.getConfig('app').then(function (data) {
             // clear redirectURL and redirectState
             localStorage.removeItem('redirectURL');
@@ -31,8 +30,8 @@ angular.module('goodbye').controller('GoodbyeController', ['$scope', '$window', 
             // redirect to logout page
             $window.location.href = AcmAppService.getAppUrl(Util.goodMapValue(data, "logoutUrl", "/logout"));
         });
-        
+
         // TODO: this will not do anything because the browser is already redirected to the logout page.
-        AcmLoginStatService.setLogin(false);        
+        AcmLoginStatService.setLogin(false);
     }
 ]);

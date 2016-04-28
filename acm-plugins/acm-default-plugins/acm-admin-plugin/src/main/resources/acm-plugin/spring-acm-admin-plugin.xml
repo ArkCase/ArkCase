@@ -3,7 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="adminPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges" depends-on="adminPrivilege,acmGlobalAllowPrivilege">
+    <bean id="adminPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges"
+          depends-on="adminPrivilege,acmGlobalAllowPrivilege">
         <property name="pluginName" value="Admin Plugin"/>
         <property name="privileges">
             <list>
@@ -122,6 +123,24 @@
                     <property name="url" value="/api/{version}/plugin/admin/labelmanagement/languages"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
                 </bean>
+
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/admin/app-properties"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/admin/app-properties/{propertyName}"/>
+                    <property name="requiredPrivilege" ref="adminPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/{version}/plugin/admin/app-properties"/>
+                    <property name="requiredPrivilege" ref="adminPrivilege"/>
+                </bean>
+
+
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/admin/labelmanagement/settings"/>
@@ -150,12 +169,14 @@
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="DELETE"/>
-                    <property name="url" value="/api/{version}/plugin/admin/ldapconfiguration/directories/{directoryId}"/>
+                    <property name="url"
+                              value="/api/{version}/plugin/admin/ldapconfiguration/directories/{directoryId}"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="PUT"/>
-                    <property name="url" value="/api/{version}/plugin/admin/ldapconfiguration/directories/{directoryId}"/>
+                    <property name="url"
+                              value="/api/{version}/plugin/admin/ldapconfiguration/directories/{directoryId}"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
@@ -175,27 +196,32 @@
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/admin/rolesprivileges/roles/{roleName}/privileges"/>
+                    <property name="url"
+                              value="/api/{version}/plugin/admin/rolesprivileges/roles/{roleName}/privileges"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="PUT"/>
-                    <property name="url" value="/api/{version}/plugin/admin/rolesprivileges/roles/{roleName}/privileges"/>
+                    <property name="url"
+                              value="/api/{version}/plugin/admin/rolesprivileges/roles/{roleName}/privileges"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="PUT"/>
-                    <property name="url" value="/api/{version}/plugin/admin/rolesprivileges/roles/{rolesNames}/privileges/{privilegesNames}"/>
+                    <property name="url"
+                              value="/api/{version}/plugin/admin/rolesprivileges/roles/{rolesNames}/privileges/{privilegesNames}"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="DELETE"/>
-                    <property name="url" value="/api/{version}/plugin/admin/rolesprivileges/roles/{rolesNames}/privileges/{privilegesNames}"/>
+                    <property name="url"
+                              value="/api/{version}/plugin/admin/rolesprivileges/roles/{rolesNames}/privileges/{privilegesNames}"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/admin/rolesprivileges/privileges/{privilegeName}/roles"/>
+                    <property name="url"
+                              value="/api/{version}/plugin/admin/rolesprivileges/privileges/{privilegeName}/roles"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
                 </bean>
 
@@ -231,12 +257,14 @@
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/admin/workflowconfiguration/workflows/{key}/versions/{version}/history"/>
+                    <property name="url"
+                              value="/api/{version}/plugin/admin/workflowconfiguration/workflows/{key}/versions/{version}/history"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/admin/workflowconfiguration/workflows/{key}/versions/{version}/file"/>
+                    <property name="url"
+                              value="/api/{version}/plugin/admin/workflowconfiguration/workflows/{key}/versions/{version}/file"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
@@ -246,7 +274,8 @@
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="PUT"/>
-                    <property name="url" value="/api/{version}/plugin/admin/workflowconfiguration/workflows/{key}/versions/{version}/active"/>
+                    <property name="url"
+                              value="/api/{version}/plugin/admin/workflowconfiguration/workflows/{key}/versions/{version}/active"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">

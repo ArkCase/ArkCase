@@ -47,4 +47,9 @@
         </property>
     </bean>
 
+    <bean id="propertiesManagementService" class="com.armedia.acm.plugins.admin.service.PropertiesManagementService">
+        <property name="propertiesFileLocation"
+                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/app-properties/properties.json"/>
+    </bean>
+
 </beans>
