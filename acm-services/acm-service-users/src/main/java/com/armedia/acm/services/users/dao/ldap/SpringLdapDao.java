@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.dao.ldap;
 
 import com.armedia.acm.services.users.model.AcmLdapEntity;
+import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapEntityContextMapper;
@@ -13,7 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import javax.naming.directory.SearchControls;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +101,52 @@ public class SpringLdapDao
     {
         LdapGroup group = (LdapGroup) template.lookup(groupDistinguishedName, groupMembersContextMapper);
         return group;
+    }
+
+    public AcmUser findUser(String username, LdapTemplate template, AcmLdapSyncConfig config)
+    {
+        AcmUser user = null;
+
+        SearchControls searchControls = new SearchControls();
+        searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+        AcmLdapEntityContextMapper mapper = new AcmLdapEntityContextMapper();
+        mapper.setUserIdAttributeName(config.getUserIdAttributeName());
+        mapper.setMailAttributeName(config.getMailAttributeName());
+
+        List<AcmLdapEntity> results = template.search(config.getUserSearchBase(), String.format(config.getUserSearchFilter(), username), searchControls, mapper);
+
+        if (results != null && !results.isEmpty())
+        {
+            // Return the first entity that will be found. The above search can return multiple results under one domain if
+            // "sAMAccountName" is the same for two users. This in theory should not be the case, but just in case, return only the first one.
+            AcmLdapEntity ldapEntity = results.get(0);
+            if (ldapEntity != null && !ldapEntity.isGroup())
+            {
+                user = (AcmUser) ldapEntity;
+                // append user domain name if set. Used in Single Sign-On scenario.
+                String userDomainSuffix = ((config.getUserDomain() == null || config.getUserDomain().trim().equals("")) ? "" : "@" + config.getUserDomain());
+                log.debug("Adding user domain sufix to the usernames: {}", userDomainSuffix);
+                user.setUserId(user.getUserId() + userDomainSuffix);
+            }
+        }
+
+        if (user != null)
+        {
+            return user;
+        }
+
+        throw new UsernameNotFoundException("User with id [" + username + "] cannot be found");
+    }
+
+    public List<LdapGroup> findGroupsForUser(AcmUser user, LdapTemplate template, AcmLdapSyncConfig config)
+    {
+        SearchControls searchControls = new SearchControls();
+        searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+        List<LdapGroup> groups = template.search(config.getGroupSearchBase(), String.format(config.getGroupSearchFilterForUser(), user.getDistinguishedName()), searchControls, groupMembersContextMapper);
+
+        return groups;
     }
 
 }

@@ -5,6 +5,8 @@ import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Publish new case file is created
@@ -14,13 +16,22 @@ public class CaseFileEventHandler implements PipelineHandler<CaseFile, CaseFileP
 
     private CaseFileEventUtility caseFileEventUtility;
 
+    /**
+     * Logger instance.
+     */
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
+        log.trace("CaseFile entering CaseFileEventHandler : [{}]", entity);
+
         if (pipelineContext.isNewCase())
         {
             getCaseFileEventUtility().raiseCaseFileCreated(entity, pipelineContext.getAuthentication());
         }
+        log.trace("CaseFile exiting CaseFileEventHandler : [{}]", entity);
+
     }
 
     @Override

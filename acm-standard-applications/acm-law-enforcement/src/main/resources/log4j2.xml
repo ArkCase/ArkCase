@@ -14,33 +14,34 @@
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
+            <ThresholdFilter level="debug"/>
         </RollingFile>
     </Appenders>
     <Loggers>
         <!-- INFO and above to console and log file; com.armedia debug and above to log file -->
         <Logger name="com.armedia" level="debug" additivity="false">
-            <AppenderRef ref="Console" level="info"/>
-            <AppenderRef ref="file-log" level="debug"/>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="file-log"/>
         </Logger>
         <Logger name="com.armedia.acm.userinterface.angular.AngularResourceCopier" level="debug" additivity="false">
-            <AppenderRef ref="Console" level="info"/>
-            <AppenderRef ref="file-log" level="debug"/>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="file-log"/>
         </Logger>
         <Logger name="org.springframework" level="info" additivity="false">
-            <AppenderRef ref="Console" level="info"/>
-            <AppenderRef ref="file-log" level="info"/>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="file-log"/>
         </Logger>
         <Logger name="org.springframework.security.saml" level="info" additivity="false">
-            <AppenderRef ref="Console" level="info"/>
-            <AppenderRef ref="file-log" level="info"/>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="file-log"/>
         </Logger>
         <Logger name="org.opensaml" level="info" additivity="false">
-            <AppenderRef ref="Console" level="info"/>
-            <AppenderRef ref="file-log" level="info"/>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="file-log"/>
         </Logger>
         <Root level="info" additivity="false">
-            <AppenderRef ref="Console" level="info"/>
-            <AppenderRef ref="file-log" level="info"/>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="file-log"/>
         </Root>
     </Loggers>
 </Configuration>

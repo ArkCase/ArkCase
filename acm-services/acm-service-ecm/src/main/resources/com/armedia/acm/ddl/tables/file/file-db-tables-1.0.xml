@@ -387,5 +387,17 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="48-acm_file-add-object-type" author="riste.tutureski">
+        <addColumn tableName="acm_file">
+            <column name="cm_object_type" type="VARCHAR(255)" defaultValue="FILE"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="49-acm_file-add-legacy_system-columns" author="riste.tutureski">
+        <addColumn tableName="acm_file">
+            <column name="cm_legacy_system_id" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 

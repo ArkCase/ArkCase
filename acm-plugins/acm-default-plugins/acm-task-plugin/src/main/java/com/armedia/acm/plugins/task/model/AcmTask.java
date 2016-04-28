@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.task.model;
 
+import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class AcmTask implements AcmAssignedObject, Serializable
+public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystemEntity
 {
     private static final long serialVersionUID = 8087833770464474147L;
 
@@ -82,6 +83,8 @@ public class AcmTask implements AcmAssignedObject, Serializable
      * the next person.
      */
     private String nextAssignee;
+
+    private String legacySystemId;
 
 
     public AcmContainer getContainer()
@@ -522,6 +525,19 @@ public class AcmTask implements AcmAssignedObject, Serializable
                 ", parentObjectTitle='" + parentObjectTitle + '\'' +
                 ", candidateGroups=" + candidateGroups +
                 ", nextAssignee='" + nextAssignee + '\'' +
+                ", legacySystemId='" + legacySystemId + '\'' +
                 '}';
+    }
+
+    @Override
+    public String getLegacySystemId()
+    {
+        return legacySystemId;
+    }
+
+    @Override
+    public void setLegacySystemId(String legacySystemId)
+    {
+        this.legacySystemId = legacySystemId;
     }
 }

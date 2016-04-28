@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-@Controller @RequestMapping({ "/api/v1/plugin/note", "/api/latest/plugin/note" }) public class SaveNoteAPIController
+@Controller
+@RequestMapping({"/api/v1/plugin/note", "/api/latest/plugin/note"})
+public class SaveNoteAPIController
 {
 
     private NoteDao noteDao;
@@ -28,16 +30,15 @@ import javax.servlet.http.HttpSession;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#note.parentId, #note.parentType, 'addComment')") @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE) @ResponseBody public Note addNote(
+    @PreAuthorize("hasPermission(#note.parentId, #note.parentType, 'addComment')")
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Note addNote(
             @RequestBody Note note, Authentication authentication, HttpSession httpSession) throws AcmUserActionFailedException
     {
-        if (log.isInfoEnabled())
+        if (note != null)
         {
-
-            if (note != null)
-            {
-                log.info("Note ID : " + note.getId());
-            }
+            log.info("Note ID : {}", note.getId());
         }
 
         try
@@ -55,6 +56,7 @@ import javax.servlet.http.HttpSession;
             newNote.setNote(note.getNote());
             newNote.setCreator(note.getCreator());
             newNote.setCreated(note.getCreated());
+            newNote.setTag(note.getTag());
 
             Note savedNote = getNoteDao().save(note);
 
@@ -71,8 +73,8 @@ import javax.servlet.http.HttpSession;
             // gen up a fake task so we can audit the failure
             Note fakeNote = new Note();
             fakeNote.setId(note.getId());
-            log.info("fake id : " + fakeNote.getId());
-            log.info("fake id 2: " + note.getId());
+            log.info("fake id : ()", fakeNote.getId());
+            log.info("fake id 2: {}", note.getId());
 
             fakeNote.setParentId(note.getParentId());
             fakeNote.setParentType(note.getParentType());
@@ -80,6 +82,7 @@ import javax.servlet.http.HttpSession;
             fakeNote.setCreator(note.getCreator());
             fakeNote.setCreated(note.getCreated());
             fakeNote.setType(NoteConstants.NOTE_GENERAL);
+            fakeNote.setTag(note.getTag());
 
             String noteEvent = note.getId() == null ? "added" : "updated";
 

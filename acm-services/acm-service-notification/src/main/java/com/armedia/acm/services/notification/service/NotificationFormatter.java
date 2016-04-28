@@ -4,7 +4,9 @@ import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.core.AcmObjectType;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -12,6 +14,7 @@ import java.util.Properties;
  */
 public class NotificationFormatter
 {
+
     private Properties notificationProperties;
 
     private AcmApplication acmAppConfiguration;
@@ -21,25 +24,27 @@ public class NotificationFormatter
 
         String objectTypeLabelPlaceholder = NotificationConstants.OBJECT_TYPE_LABEL_PLACEHOLDER;
         String anchorPlaceholder = NotificationConstants.ANCHOR_PLACEHOLDER;
+        String notificationTitle = notification.getTitle();
 
-        if ( notification.getTitle() != null && notification.getTitle().contains(objectTypeLabelPlaceholder))
+        if (notificationTitle != null && notificationTitle.contains(objectTypeLabelPlaceholder))
         {
-            String updatedTitle = replaceObjectTypeLabel(notification.getTitle(), objectTypeLabelPlaceholder,
+            String updatedTitle = replaceObjectTypeLabel(notificationTitle, objectTypeLabelPlaceholder,
                     notification.getParentType());
             notification.setTitle(updatedTitle);
         }
 
-        if ( notification.getNote() != null && notification.getNote().contains(objectTypeLabelPlaceholder))
+        String notificationNote = notification.getNote();
+        if (notificationNote != null && notificationNote.contains(objectTypeLabelPlaceholder))
         {
-            String updatedNote = replaceObjectTypeLabel(notification.getNote(), objectTypeLabelPlaceholder,
+            String updatedNote = replaceObjectTypeLabel(notificationNote, objectTypeLabelPlaceholder,
                     notification.getParentType());
             notification.setNote(updatedNote);
         }
 
-        if ( notification.getNote() != null && notification.getNote().contains(anchorPlaceholder))
+        if (notificationNote != null && notificationNote.contains(anchorPlaceholder))
         {
-            String updatedNote = replaceAnchor(notification.getNote(), anchorPlaceholder, notification.getParentType(),
-                    notification.getParentId());
+            String updatedNote = replaceAnchor(notificationNote, anchorPlaceholder, notification.getParentType(),
+                    notification.getParentId(), notification.getRelatedObjectType(), notification.getRelatedObjectId());
             notification.setNote(updatedNote);
         }
 
@@ -48,23 +53,37 @@ public class NotificationFormatter
 
     }
 
-    private String replaceAnchor(String withPlaceholder, String anchorPlaceholder, String parentType, Long parentId)
+    private String replaceAnchor(String withPlaceholder, String anchorPlaceholder, String parentType,
+                                 Long parentId, String relatedObjectType, Long relatedObjectId)
     {
-        String keyBaseUrl = "arkcase.url.base";
 
-        String baseUrl = getNotificationProperties().getProperty(keyBaseUrl);
+        String baseUrl = getNotificationProperties().getProperty(NotificationConstants.BASE_URL_KEY);
 
+        String url = null;
         // find the object type from the ACM application configuration, and get the URL from the object type
-        for ( AcmObjectType objectType : getAcmAppConfiguration().getObjectTypes() )
+        for (AcmObjectType objectType : getAcmAppConfiguration().getObjectTypes())
         {
-            if ( objectType.getName().equals(parentType) )
-            {
-                String objectUrl = objectType.getUrl() + parentId;
-                String url = baseUrl + objectUrl;
+            Map<String, String> urlValues = objectType.getUrl();
 
-                String withAnchor = withPlaceholder.replace(anchorPlaceholder, url);
-                return withAnchor;
+            // If relatedObjectType is null, the parent object is TOP LEVEL (Case File or Complaint)
+            // else parent object is nested in top level object
+            String linkedObjectType = StringUtils.isEmpty(relatedObjectType) ? parentType : relatedObjectType;
+            Long linkedObjectId = StringUtils.isEmpty(relatedObjectType) ? parentId : relatedObjectId;
+
+            if (objectType.getName().equals(parentType) && StringUtils.isNotEmpty(linkedObjectType))
+            {
+                String objectUrl = urlValues.get(linkedObjectType);
+                if (StringUtils.isNotEmpty(objectUrl))
+                {
+                    objectUrl = String.format(objectUrl, linkedObjectId);
+                    url = String.format("%s%s", baseUrl, objectUrl);
+                }
             }
+        }
+
+        if (StringUtils.isNotEmpty(url))
+        {
+            return withPlaceholder.replace(anchorPlaceholder, url);
         }
 
         return withPlaceholder;
@@ -75,9 +94,7 @@ public class NotificationFormatter
     {
         String keyLabel = parentType + ".label";
         String objectTypeLabel = getNotificationProperties().getProperty(keyLabel);
-        String withObjectType = withPlaceholder.replace(placeholder, objectTypeLabel);
-
-        return withObjectType;
+        return withPlaceholder.replace(placeholder, objectTypeLabel);
     }
 
     public Properties getNotificationProperties()

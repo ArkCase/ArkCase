@@ -461,7 +461,8 @@
           "subjectRegex": "(.*)\\$([^\\s]+)",
           "objectTypeRegexGroup": 1,
           "objectNumberRegexGroup": 2
-        }
+        },
+        "noteRequiredOnCheckin": false
       }
     },
     {
@@ -706,7 +707,7 @@
             "name": "created",
             "displayName": "cases.comp.people.securityTags.table.columns.created",
             "headerCellFilter": "translate",
-			"cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>"
           },
           {
             "name": "creator",
@@ -721,6 +722,7 @@
       "id": "participants",
       "title": "Participants",
       "icon": "fa fa-users",
+      "className": "com.armedia.acm.services.participants.model.AcmParticipant",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -1253,7 +1255,7 @@
       "start": 0,
       "filter": "",
       "filterName": "",
-      "csvFileName": "search.csv"
+      "reportFileName": "search"
     }
   ]
 }
