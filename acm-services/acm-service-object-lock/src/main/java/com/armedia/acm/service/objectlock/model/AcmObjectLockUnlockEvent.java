@@ -13,7 +13,7 @@ public class AcmObjectLockUnlockEvent extends AcmEvent
     {
         super(source);
         setObjectId(source.getId());
-        setObjectType("OBJECT_LOCK");
+        setObjectType(source.getLockType());
         setParentObjectId(source.getObjectId());
         setParentObjectType(source.getObjectType());
         setEventDate(new Date());

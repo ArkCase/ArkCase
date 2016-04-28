@@ -64,16 +64,18 @@ angular.module('services').factory('Object.LockingService', ['$resource', '$tran
          *
          * @param {String} params.objectType  Object type
          * @param {Number} params.objectId  Object ID
+         * @param {String} params.lockType  Lock type
          *
          * @returns {Object} Object returned by $resource
          */
-        Service.lockObject = function (objectId, objectType) {
+        Service.lockObject = function (objectId, objectType, lockType) {
 
             return Util.serviceCall({
                 service: Service._lockObject
                 , param: {
                     objectId: objectId,
-                    objectType: objectType
+                    objectType: objectType,
+                    lockType: lockType
                 }
                 , data: {}
                 , onSuccess: function (data) {
@@ -97,16 +99,18 @@ angular.module('services').factory('Object.LockingService', ['$resource', '$tran
          *
          * @param {String} params.objectType  Object type
          * @param {Number} params.objectId  Object ID
+         * @param {String} params.lockType  Lock type
          *
          * @returns {Object} Object returned by $resource
          */
-        Service.unlockObject = function (objectId, objectType) {
+        Service.unlockObject = function (objectId, objectType, lockType) {
 
             return Util.serviceCall({
                 service: Service._unlockObject
                 , param: {
                     objectId: objectId,
-                    objectType: objectType
+                    objectType: objectType,
+                    lockType: lockType
                 }
                 , data: {}
                 , onSuccess: function (data) {

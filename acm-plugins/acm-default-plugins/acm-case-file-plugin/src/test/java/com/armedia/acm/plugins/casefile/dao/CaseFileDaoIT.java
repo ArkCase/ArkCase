@@ -134,7 +134,7 @@ public class CaseFileDaoIT
 
         CaseFile saved = caseFileDao.save(caseFile);
 
-        acmObjectLockService.createLock(saved.getId(), saved.getObjectType(), authentication);
+        acmObjectLockService.createLock(saved.getId(), saved.getObjectType(), "OBJECT_LOCK", authentication);
 
         entityManager.flush();
 
