@@ -62,6 +62,13 @@ public class Note implements Serializable, AcmEntity
     @Column(name = "cm_note_tag")
     private String tag;
 
+    @Column(name = "cm_note_modifier", nullable = false)
+    private String modifier;
+
+    @Column(name = "cm_note_modified", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modified;
+
     @PrePersist
     public void beforeInsert()
     {
@@ -161,26 +168,24 @@ public class Note implements Serializable, AcmEntity
     @Override
     public String getModifier()
     {
-        // Not used. Modifier not exist in the database
-        return null;
+        return modifier;
     }
 
     @Override
     public void setModifier(String modifier)
     {
-        // Not used. Modifier not exist in the database
+        this.modifier = modifier;
     }
 
     @Override
     public Date getModified()
     {
-        // Not used. Modified not exist in the database
-        return null;
+        return modified;
     }
 
     @Override
     public void setModified(Date modified)
     {
-        // Not used. Modified not exist in the database
+        this.modified = modified;
     }
 }
