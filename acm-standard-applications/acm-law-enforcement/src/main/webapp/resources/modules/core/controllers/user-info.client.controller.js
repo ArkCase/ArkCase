@@ -11,6 +11,7 @@ angular.module('core').controller('UserInfoController', ['$rootScope', '$scope',
         UserInfoService.getUserInfo().then(function (data) {
             $scope.profileEcmFileID = data.ecmFileId;
             $scope.fullName = data.fullName;
+            $scope.userId = data.userId;
             $scope.imgSrc = !$scope.profileEcmFileID ? 'modules/profile/img/nopic.png' :
             'api/latest/plugin/ecm/download?ecmFileId='+$scope.profileEcmFileID+'&inline=true';
         });
