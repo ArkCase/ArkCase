@@ -3,13 +3,13 @@
 angular.module('admin').controller('Admin.UserNameConfigController', ['$scope', '$q', 'Admin.ApplicationSettingsService',
     function ($scope, $q, ApplicationSettingsService) {
 
-        ApplicationSettingsService.getProperty(ApplicationSettingsService.PROP_NAME).then(function (response) {
-            $scope.nameProperty = response.data[ApplicationSettingsService.PROP_NAME];
+        ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.DISPLAY_USERNAME).then(function (response) {
+            $scope.nameProperty = response.data[ApplicationSettingsService.PROPERTIES.DISPLAY_USERNAME];
         });
 
         $scope.applyChanges = function () {
             ApplicationSettingsService.setProperty(
-                ApplicationSettingsService.PROP_NAME,
+                ApplicationSettingsService.PROPERTIES.DISPLAY_USERNAME,
                 $scope.nameProperty
             );
         }
