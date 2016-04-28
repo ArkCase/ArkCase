@@ -14,7 +14,7 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', ['$http',
     function ($http) {
         return {
             // properties constants
-            PROP_NAME: 'name',
+            PROP_NAME: 'displayUserName',
 
 
             /**

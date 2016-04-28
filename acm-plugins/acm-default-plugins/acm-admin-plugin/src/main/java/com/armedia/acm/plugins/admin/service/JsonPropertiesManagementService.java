@@ -12,7 +12,7 @@ import java.util.Iterator;
 /**
  * Created by sergey on 4/13/16.
  */
-public class PropertiesManagementService
+public class JsonPropertiesManagementService
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private String propertiesFileLocation;
@@ -63,7 +63,7 @@ public class PropertiesManagementService
     {
         if (newProps == null)
         {
-            throw new AcmPropertiesManagementException("Can'\t store null into properties file");
+            throw new AcmPropertiesManagementException("Can't store null into properties file");
         }
         JSONObject props = loadPropertiesFile();
         if (props == null)

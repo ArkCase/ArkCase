@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('admin').controller('Admin.NameConfigController', ['$scope', '$q', 'Admin.ApplicationSettingsService',
+angular.module('admin').controller('Admin.UserNameConfigController', ['$scope', '$q', 'Admin.ApplicationSettingsService',
     function ($scope, $q, ApplicationSettingsService) {
 
         ApplicationSettingsService.getProperty(ApplicationSettingsService.PROP_NAME).then(function (response) {
-            $scope.nameProperty = response.data.name;
+            $scope.nameProperty = response.data[ApplicationSettingsService.PROP_NAME];
         });
 
         $scope.applyChanges = function () {
