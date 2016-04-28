@@ -795,7 +795,8 @@
           "objectTypeRegexGroup": 1,
           "objectNumberRegexGroup": 2
         },
-        "noteRequiredOnCheckin": false
+        "noteRequiredOnCheckin": false,
+        "allowParentOwnerToCancel": true
       }
     },
     {
