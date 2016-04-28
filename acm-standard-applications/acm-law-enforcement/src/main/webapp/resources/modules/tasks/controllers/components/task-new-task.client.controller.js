@@ -55,9 +55,6 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.saveNewTask = function () {
             $scope.saved = true;
             $scope.config.data.dueDate = UtilDateService.dateToIso($scope.config.data.dueDate);
-//            if (!Util.isEmpty($scope.config.data.attachedToObjectName) && Util.isEmpty($scope.config.data.attachedToObjectType)) {
-//                $scope.config.data.attachedToObjectType = "(CASE_FILE OR COMPLAINT)";
-//            }
             TaskNewTaskService.saveAdHocTask($scope.config.data);
         };
 
