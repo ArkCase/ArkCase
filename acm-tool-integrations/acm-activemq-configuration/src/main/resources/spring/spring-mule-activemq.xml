@@ -4,43 +4,83 @@
        xmlns:amq="http://activemq.apache.org/schema/core"
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-        http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.9.0.xsd">
+        http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.13.2.xsd">
 
 
     <!--*************************************************************************** -->
     <!-- ActiveMQ Configuration                                                     -->
     <!--*************************************************************************** -->
 
-    <amq:broker id="broker" useJmx="false" persistent="true">
+    <amq:broker id="broker" useJmx="false" persistent="true" deleteAllMessagesOnStartup="true"
+                schedulePeriodForDestinationPurge="50">
+        <!--<amq:persistenceAdapter>-->
+        <!--<amq:kahaDB directory="${user.home}/.arkcase/activemq"/>-->
+
+        <!--</amq:persistenceAdapter>-->
         <amq:persistenceAdapter>
-            <amq:kahaDB directory="${user.home}/.arkcase/activemq"/>
+            <amq:memoryPersistenceAdapter directory="${user.home}/.arkcase/activemq"/>
         </amq:persistenceAdapter>
+
+        <amq:destinationPolicy>
+            <amq:policyMap>
+                <amq:policyEntries>
+                    <amq:policyEntry queue="testQueue.in" deadLetterStrategy="discarding" memoryLimit="1 mb"
+                                     advisoryForDiscardingMessages="true" advisoryForConsumed="true">
+                        <amq:deadLetterStrategy>
+                            <amq:discarding/>
+                        </amq:deadLetterStrategy>
+                        <amq:messageEvictionStrategy>
+                            <amq:oldestMessageEvictionStrategy evictExpiredMessagesHighWatermark="2"/>
+                        </amq:messageEvictionStrategy>
+                    </amq:policyEntry>
+                </amq:policyEntries>
+            </amq:policyMap>
+        </amq:destinationPolicy>
+
         <amq:systemUsage>
+
             <amq:systemUsage>
                 <!-- memory usage is for non_persistent messages - limit is on memory -->
                 <amq:memoryUsage>
-                    <amq:memoryUsage limit="20 mb"/>
+                    <amq:memoryUsage limit="2 mb"/>
                 </amq:memoryUsage>
                 <!-- storeUsage is for persistent messages - the limit is applied to disk space  -->
                 <amq:storeUsage>
-                    <amq:storeUsage limit="128 mb"/>
+                    <amq:storeUsage limit="2 mb"/>
                 </amq:storeUsage>
                 <!-- tempUsage is for temporary messages - limit is on disk space -->
                 <amq:tempUsage>
-                    <amq:tempUsage limit="128 mb"/>
+                    <amq:tempUsage limit="2 mb"/>
                 </amq:tempUsage>
             </amq:systemUsage>
         </amq:systemUsage>
+
+
+        <amq:plugins>
+            <amq:loggingBrokerPlugin logAll="true" logConnectionEvents="false" logInternalEvents="true"/>
+            <!--<amq:timeStampingBrokerPlugin zeroExpirationOverride="1000" ttlCeiling="1000" futureOnly="false"/>-->
+            <!--<amq:traceBrokerPathPlugin/>-->
+
+
+        </amq:plugins>
         <amq:transportConnectors>
-            <amq:transportConnector uri="vm://localhost"/>
+            <amq:transportConnector uri="tcp://localhost:12345"/>
         </amq:transportConnectors>
+        <!--<amq:destinations>-->
+        <!--<amq:queue name="solrQuickSearch.in" physicalName="solrQuickSearch.in">-->
+        <!--</amq:queue>-->
+        <!--<amq:queue name="testQueue.in" physicalName="testQueue.in"/>-->
+        <!--</amq:destinations>-->
+
     </amq:broker>
 
-    <amq:connectionFactory id="amqConnectionFactory" brokerURL="vm://localhost"/>
+    <amq:connectionFactory id="amqConnectionFactory" brokerURL="tcp://localhost:12345"/>
 
     <bean id="jmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
           destroy-method="stop" depends-on="broker">
         <property name="connectionFactory" ref="amqConnectionFactory"/>
+        <property name="maxConnections" value="10"/>
+
     </bean>
 
 </beans>
