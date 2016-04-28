@@ -17,14 +17,15 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:/spring/spring-library-*.xml,
-            classpath:/spring/spring-security-config.xml
+            classpath:/spring/spring-security-config.xml,
+            file:${user.home}/.arkcase/acm/spring-security/spring-security-config-*.xml
         </param-value>
     </context-param>
 
     <!-- The default Spring authentication profile. To use a different profile pass it as system property ex. -Dspring.profiles.active="ssoSaml" -->
     <context-param>
-       <param-name>spring.profiles.default</param-name>
-       <param-value>ldap</param-value>
+        <param-name>spring.profiles.default</param-name>
+        <param-value>ldap</param-value>
     </context-param>
 
     <!-- Sets RequestId, User Id, Remote address in org.slfj.MDC variables -->

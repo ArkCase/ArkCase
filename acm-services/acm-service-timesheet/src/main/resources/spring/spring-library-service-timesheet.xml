@@ -43,7 +43,6 @@
 	
 	<bean id="timesheetToSolrTransformer" class="com.armedia.acm.services.timesheet.service.TimesheetToSolrTransformer">
 		<property name="acmTimesheetDao" ref="acmTimesheetDao"/>
-		<property name="timesheetService" ref="timesheetService"/>
 	</bean>
 
     <bean id="acmTimesheetPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">

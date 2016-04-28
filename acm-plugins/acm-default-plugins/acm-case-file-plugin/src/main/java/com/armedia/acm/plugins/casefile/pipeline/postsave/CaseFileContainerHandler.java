@@ -6,6 +6,8 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Ensure that Case File container exists..
@@ -13,9 +15,15 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
  */
 public class CaseFileContainerHandler implements PipelineHandler<CaseFile, CaseFilePipelineContext>
 {
+    /**
+     * Logger instance.
+     */
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
+        log.trace("CaseFile entering CaseFileContainerHandler : [{}]", entity);
         if (entity.getContainer() == null)
         {
             AcmContainer container = new AcmContainer();
@@ -31,6 +39,7 @@ public class CaseFileContainerHandler implements PipelineHandler<CaseFile, CaseF
             entity.getContainer().setFolder(folder);
             entity.getContainer().setAttachmentFolder(folder);
         }
+        log.trace("CaseFile exiting CaseFileContainerHandler : [{}]", entity);
     }
 
     @Override

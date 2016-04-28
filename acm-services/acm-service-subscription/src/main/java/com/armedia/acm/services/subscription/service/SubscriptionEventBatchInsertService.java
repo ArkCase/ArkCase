@@ -7,6 +7,7 @@ import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.dao.SubscriptionEventDao;
 import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
 import com.armedia.acm.spring.SpringContextHolder;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.xmlbeans.SystemProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,14 +15,17 @@ import org.slf4j.LoggerFactory;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by marjan.stefanoski on 29.01.2015.
  */
-public class SubscriptionEventBatchInsertService {
+public class SubscriptionEventBatchInsertService
+{
 
     private SubscriptionDao subscriptionDao;
     private SubscriptionEventDao subscriptionEventDao;
@@ -33,6 +37,7 @@ public class SubscriptionEventBatchInsertService {
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private String fullPath;
     private SpringContextHolder springContextHolder;
+    private Map<String, String> subscriptionProperties;
 
     /**
      * The default run date to use if this generator has never run before (or if the properties file that stores the
@@ -47,10 +52,16 @@ public class SubscriptionEventBatchInsertService {
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    /**
+     * The property key to get all events that should not be saved  as AcmSubscriptionEvent
+     */
+    private static final String SUBSCRIPTION_EVENT_TYPES_TO_BE_REMOVED = "subscription.removed.event.types";
+
     // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration
     // folder ($HOME/.acm).
-    public void insertNewSubscriptionEvents() {
-        setFullPath(getUserHomeDir() + getLastBatchInsertPropertyFileLocation().replace("/",getFileSeparator()));
+    public void insertNewSubscriptionEvents()
+    {
+        setFullPath(getUserHomeDir() + getLastBatchInsertPropertyFileLocation().replace("/", getFileSeparator()));
         getAuditPropertyEntityAdapter().setUserId("SUBSCRIPTION-BATCH-INSERT");
 
         String lastRunDate = getPropertyFileManager().load(
@@ -59,23 +70,35 @@ public class SubscriptionEventBatchInsertService {
                 DEFAULT_LAST_RUN_DATE);
         DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 
-        try {
+        try
+        {
+            String eventTypesString = getSubscriptionProperties().get(SUBSCRIPTION_EVENT_TYPES_TO_BE_REMOVED);
+            List<String> eventsToBeRemoved = null;
+            if (StringUtils.isNotEmpty(eventTypesString))
+            {
+                eventTypesString.trim();
+                eventsToBeRemoved = Arrays.asList(eventTypesString.split("\\s*,\\s*"));
+            }
             Date lastBatchRunDate = getLastBatchRunDate(lastRunDate, dateFormat);
             storeCurrentDateForNextBatchRun(dateFormat);
             List<AcmSubscriptionEvent> subscriptionEventList = null;
-        try {
-                subscriptionEventList = getSubscriptionDao().createListOfNewSubscriptionEventsForInserting(lastBatchRunDate);
-                for( AcmSubscriptionEvent subscriptionEvent: subscriptionEventList ){
+            try
+            {
+                subscriptionEventList = getSubscriptionDao().createListOfNewSubscriptionEventsForInserting(lastBatchRunDate, eventsToBeRemoved);
+                for (AcmSubscriptionEvent subscriptionEvent : subscriptionEventList)
+                {
                     AcmSubscriptionEvent subscriptionEventSaved = getSubscriptionEventDao().save(subscriptionEvent);
-                    subscriptionEventPublisher.publishAcmSubscriptionEventCreatedEvent(subscriptionEventSaved,true);
+                    subscriptionEventPublisher.publishAcmSubscriptionEventCreatedEvent(subscriptionEventSaved, true);
                 }
-        } catch ( AcmObjectNotFoundException e ) {
-            if ( log.isInfoEnabled() )
-                log.info("There are no new events to be added",e);
-        }
-        } catch ( ParseException e ) {
-            if ( log.isErrorEnabled() )
-                log.error("Parsing exception occurred while fetching lastBatchRunDate ",e);
+            } catch (AcmObjectNotFoundException e)
+            {
+                if (log.isInfoEnabled())
+                    log.info("There are no new events to be added", e);
+            }
+        } catch (ParseException e)
+        {
+            if (log.isErrorEnabled())
+                log.error("Parsing exception occurred while fetching lastBatchRunDate ", e);
         }
     }
 
@@ -99,83 +122,113 @@ public class SubscriptionEventBatchInsertService {
         return sinceWhen;
     }
 
-    public String getLastBatchInsertPropertyFileLocation() {
+    public String getLastBatchInsertPropertyFileLocation()
+    {
         return lastBatchInsertPropertyFileLocation;
     }
 
-    public void setLastBatchInsertPropertyFileLocation(String lastBatchInsertPropertyFileLocation) {
+    public void setLastBatchInsertPropertyFileLocation(String lastBatchInsertPropertyFileLocation)
+    {
         this.lastBatchInsertPropertyFileLocation = lastBatchInsertPropertyFileLocation;
     }
 
-    public PropertyFileManager getPropertyFileManager() {
+    public PropertyFileManager getPropertyFileManager()
+    {
         return propertyFileManager;
     }
 
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager) {
+    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
+    {
         this.propertyFileManager = propertyFileManager;
     }
 
-    public String getUserHomeDir() {
-           return userHomeDir;
+    public String getUserHomeDir()
+    {
+        return userHomeDir;
     }
 
-    public void setUserHomeDir(String userHomeDir) {
+    public void setUserHomeDir(String userHomeDir)
+    {
         this.userHomeDir = userHomeDir;
     }
 
-    public String getFileSeparator() {
+    public String getFileSeparator()
+    {
         return fileSeparator;
     }
 
-    public void setFileSeparator(String fileSeparator) {
+    public void setFileSeparator(String fileSeparator)
+    {
         this.fileSeparator = fileSeparator;
     }
 
-    public SubscriptionEventDao getSubscriptionEventDao() {
+    public SubscriptionEventDao getSubscriptionEventDao()
+    {
         return subscriptionEventDao;
     }
 
-    public void setSubscriptionEventDao(SubscriptionEventDao subscriptionEventDao) {
+    public void setSubscriptionEventDao(SubscriptionEventDao subscriptionEventDao)
+    {
         this.subscriptionEventDao = subscriptionEventDao;
     }
 
-    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter() {
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
         return auditPropertyEntityAdapter;
     }
 
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter) {
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
-    public String getFullPath() {
+    public String getFullPath()
+    {
         return fullPath;
     }
 
-    public void setFullPath(String fullPath) {
+    public void setFullPath(String fullPath)
+    {
         this.fullPath = fullPath;
     }
 
-    public SubscriptionDao getSubscriptionDao() {
+    public SubscriptionDao getSubscriptionDao()
+    {
         return subscriptionDao;
     }
 
-    public void setSubscriptionDao(SubscriptionDao subscriptionDao) {
+    public void setSubscriptionDao(SubscriptionDao subscriptionDao)
+    {
         this.subscriptionDao = subscriptionDao;
     }
 
-    public SubscriptionEventPublisher getSubscriptionEventPublisher() {
+    public SubscriptionEventPublisher getSubscriptionEventPublisher()
+    {
         return subscriptionEventPublisher;
     }
 
-    public void setSubscriptionEventPublisher(SubscriptionEventPublisher subscriptionEventPublisher) {
+    public void setSubscriptionEventPublisher(SubscriptionEventPublisher subscriptionEventPublisher)
+    {
         this.subscriptionEventPublisher = subscriptionEventPublisher;
     }
 
-    public SpringContextHolder getSpringContextHolder() {
+    public SpringContextHolder getSpringContextHolder()
+    {
         return springContextHolder;
     }
 
-    public void setSpringContextHolder(SpringContextHolder springContextHolder) {
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
         this.springContextHolder = springContextHolder;
+    }
+
+    public Map<String, String> getSubscriptionProperties()
+    {
+        return subscriptionProperties;
+    }
+
+    public void setSubscriptionProperties(Map<String, String> subscriptionProperties)
+    {
+        this.subscriptionProperties = subscriptionProperties;
     }
 }

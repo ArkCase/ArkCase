@@ -18,4 +18,9 @@
         <property name="pluginName" value="Delete Note Service Plugin"/>
     </bean>
 
+    <bean id="noteToSolrTransformer" class="com.armedia.acm.services.note.service.NoteToSolrTransformer">
+        <property name="noteDao" ref="noteDao"/>
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
 </beans>

@@ -177,6 +177,8 @@ angular.module('services').factory('Object.NoteService', ['$resource', 'Acm.Stor
                         var cacheKey = Util.goodValue(noteInfo.parentType) + "." + Util.goodValue(noteInfo.parentId, 0) + "." + Util.goodValue(noteInfo.type, "GENERAL");
                         var cacheNotes = new Store.CacheFifo(Service.CacheNames.NOTES);
                         var notes = cacheNotes.get(cacheKey);
+                        if (notes == null)
+                            notes = [];
                         //update noteInfo into notes
                         var index = _.findIndex(notes, function (note) {
                             return Util.compare(note.id, noteInfo.id);

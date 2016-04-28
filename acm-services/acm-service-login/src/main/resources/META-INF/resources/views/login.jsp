@@ -10,6 +10,18 @@
     <meta charset="utf-8"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>ACM | ArkCase | User Interface</title>
+    
+    <!-- Set the hash in localStorage, so when the user logs in the Angular application opens that state -->
+    <script type="text/javascript">
+	    function addUrlHashToLocalStorage() {
+	        if (window.location.hash != '#!/welcome' && window.location.hash != '#!/goodbye') {
+	            localStorage.redirectURL = window.location.hash;
+	        } else {
+	            localStorage.removeItem('redirectURL');
+	        }
+	    }
+	    window.onload = addUrlHashToLocalStorage;
+    </script>
 
     <link rel="stylesheet" href="<%= request.getContextPath()%>/lib/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="<%= request.getContextPath()%>/assets/css/login.css">

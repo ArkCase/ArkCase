@@ -4,7 +4,6 @@ package com.armedia.acm.plugins.audit.web.api;
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
-
 import com.armedia.acm.plugins.audit.model.AuditConstants;
 import com.armedia.acm.plugins.audit.service.ReplaceEventTypeNames;
 import org.apache.commons.lang3.StringUtils;
@@ -13,40 +12,43 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author riste.tutureski
- *
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/audit", "/api/latest/plugin/audit"})
-public class GetAuditByObjectTypeAndObjectIdAPIController {
-	
+@RequestMapping({"/api/v1/plugin/audit", "/api/latest/plugin/audit"})
+public class GetAuditByObjectTypeAndObjectIdAPIController
+{
+
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private AuditDao auditDao;
     private Map<String, String> auditProperties;
     private ReplaceEventTypeNames replaceEventTypeNames;
-    
-    @RequestMapping(value = "/{objectType}/{objectId}",method = RequestMethod.GET,produces = { MediaType.APPLICATION_JSON_VALUE })
+
+    @RequestMapping(value = "/{objectType}/{objectId}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public QueryResultPageWithTotalCount<AuditEvent> getEventsByObjectTypeAndObjectId(
-    		@PathVariable(value = "objectType") String objectType,
+            @PathVariable(value = "objectType") String objectType,
             @PathVariable(value = "objectId") Long objectId,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
+            @RequestParam(value = "s", required = false, defaultValue = "eventDate DESC") String s,
             Authentication authentication)
     {
-        if ( LOG.isDebugEnabled() )
-        {
-            LOG.debug("Finding audit for " + objectType + " with id "  + objectId + "; start row: " + startRow + "; max rows: " + maxRows);
-        }
+
+        LOG.debug("Finding audit for {} with id {}; start row: {}; max rows: {}", objectType, objectId, startRow, maxRows);
+
         String key = String.format("%s.%s", objectType, AuditConstants.HISTORY_TYPES);
         String eventTypesString = getAuditProperties().get(key);
         List<String> eventTypes = null;
@@ -56,7 +58,19 @@ public class GetAuditByObjectTypeAndObjectIdAPIController {
             eventTypes = Arrays.asList(eventTypesString.split("\\s*,\\s*"));
         }
 
-        List<AuditEvent> pagedResult = getAuditDao().findPagedResults(objectId, objectType, startRow, maxRows, eventTypes);
+        String sortBy = "eventDate";
+        String direction = "DESC";
+
+        String[] sArray = s.split(" ");
+        if (sArray.length == 1)
+        {
+            sortBy = sArray[0];
+        } else if (sArray.length > 1)
+        {
+            sortBy = sArray[0];
+            direction = sArray[1];
+        }
+        List<AuditEvent> pagedResult = getAuditDao().findPagedResults(objectId, objectType, startRow, maxRows, eventTypes, sortBy, direction);
 
         int totalCount = getAuditDao().countAll(objectId, objectType, eventTypes);
 
@@ -65,14 +79,7 @@ public class GetAuditByObjectTypeAndObjectIdAPIController {
         retval.setMaxRows(maxRows);
         retval.setTotalCount(totalCount);
         retval.setResultPage(pagedResult);
-        List<AuditEvent> eventList = new ArrayList<>();
-        List<AuditEvent> auditEvents = retval.getResultPage();
-        for (AuditEvent event : auditEvents){
 
-            event.setFullEventType(getReplaceEventTypeNames().replaceNameInAcmEvent(event).getFullEventType());
-            eventList.add(event);
-        }
-        retval.setResultPage(eventList);
         return retval;
     }
 
@@ -80,24 +87,29 @@ public class GetAuditByObjectTypeAndObjectIdAPIController {
     {
         return auditDao;
     }
+
     public void setAuditDao(AuditDao dao)
     {
         this.auditDao = dao;
     }
 
-    public Map<String, String> getAuditProperties() {
+    public Map<String, String> getAuditProperties()
+    {
         return auditProperties;
     }
 
-    public void setAuditProperties(Map<String, String> auditProperties) {
+    public void setAuditProperties(Map<String, String> auditProperties)
+    {
         this.auditProperties = auditProperties;
     }
 
-    public ReplaceEventTypeNames getReplaceEventTypeNames() {
+    public ReplaceEventTypeNames getReplaceEventTypeNames()
+    {
         return replaceEventTypeNames;
     }
 
-    public void setReplaceEventTypeNames(ReplaceEventTypeNames replaceEventTypeNames) {
+    public void setReplaceEventTypeNames(ReplaceEventTypeNames replaceEventTypeNames)
+    {
         this.replaceEventTypeNames = replaceEventTypeNames;
     }
 }

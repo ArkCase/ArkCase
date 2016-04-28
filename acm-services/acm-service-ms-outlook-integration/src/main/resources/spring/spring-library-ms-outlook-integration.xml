@@ -39,6 +39,8 @@
         <property name="systemUserEmail" value="${outlook.exchange.system_user_email}" />
         <property name="systemUserPass" value="${outlook.exchange.system_user_email_password}" />
         <property name="systemUserId" value="${outlook.exchange.system_user_id}" />
+        <property name="authenticationTokenService" ref="authenticationTokenService" />
+        <property name="authenticationTokenDao" ref="authenticationTokenDao" />
     </bean>
 
     <bean id="outlookCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
