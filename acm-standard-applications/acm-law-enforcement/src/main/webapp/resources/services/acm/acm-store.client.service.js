@@ -10,8 +10,9 @@
  *
  * This service package contains objects and functions for data storage
  */
-angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilService',
-    function ($rootScope, Util) {
+angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilService', '$window'
+    , function ($rootScope, Util, $window
+    ) {
         var Store = {
             /**
              * @ngdoc service
@@ -684,6 +685,31 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', 'UtilServi
             }
         };
 
+
+        //
+        // IE11 has known issue with Local Storage. Following is a work-around until Microsoft provides a fix.
+        // http://connect.microsoft.com/IE/feedbackdetail/view/812563/ie-11-local-storage-synchronization-issues#
+        //
+        var getIeVersion = function () {
+            var sAgent = $window.navigator.userAgent;
+            var Idx = sAgent.indexOf("MSIE");
+
+            // If IE, return version number.
+            if (Idx > 0)
+                return parseInt(sAgent.substring(Idx+ 5, sAgent.indexOf(".", Idx)));
+
+            // If IE 11 then look for Updated user agent string.
+            else if (!!navigator.userAgent.match(/Trident\/7\./))
+                return 11;
+
+            else
+                return 0; //It is not IE
+        };
+        if (11 == getIeVersion()) {
+            $window.addEventListener("storage", function (e) {
+                // Dummy
+            }, false);
+        }
 
         return Store;
     }

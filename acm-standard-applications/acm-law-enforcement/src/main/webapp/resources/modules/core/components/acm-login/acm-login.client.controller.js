@@ -8,9 +8,9 @@ var AcmLoginController = ["$q", "$scope", "$document", "$state", "$translate"
         var ctrl = this;
 
         var promiseConfig = ConfigService.getComponentConfig("core", "acmLogin").then(function (config) {
-            ctrl.idleLimit = Util.goodValue(config.idleLimit, 600000);     //600000 - every 10 minutes
+            ctrl.idleLimit = Util.goodValue(config.idleLimit, 600000);     //600000 - limit of 10 minutes
             ctrl.idlePull = Util.goodValue(config.idlePull, 5000);         //5000 - every 20 seconds
-            ctrl.idleConfirm = Util.goodValue(config.idleConfirm, 15000);   //15000 - every 15 seconds
+            ctrl.idleConfirm = Util.goodValue(config.idleConfirm, 15000);   //15000 - limit of 15 seconds
             return config;
         });
 
@@ -30,12 +30,10 @@ var AcmLoginController = ["$q", "$scope", "$document", "$state", "$translate"
                     AcmLoginService.logout();
                     return false;
                 }
+
                 if (ctrl.waitConfirm) {
-                    if (AcmLoginService.isConfirmCanceled()) {
-                        bootbox.hideAll();
-                        ctrl.waitConfirm = false;
-                        return;
-                    }
+                    removeCanceledConfirmDialog();
+
                 } else { //if (!ctrl.waitConfirm) {
                     var sinceIdle = AcmLoginService.getSinceIdle();
                     if (ctrl.idleLimit < sinceIdle) {
@@ -48,17 +46,17 @@ var AcmLoginController = ["$q", "$scope", "$document", "$state", "$translate"
 
         });
 
+        var removeCanceledConfirmDialog = function() {
+            if (AcmLoginService.isConfirmCanceled()) {
+                UtilTimerService.removeListener("AboutToLogout");
+                bootbox.hideAll();
+                ctrl.waitConfirm = false;
+            }
+        };
 
         ctrl.onIdleDetected = function () {
             UtilTimerService.useTimer("AboutToLogout", ctrl.idleConfirm, function() {
-                if (ctrl.waitConfirm) {
-                    if (AcmLoginService.isConfirmCanceled()) {
-                        bootbox.hideAll();
-                        ctrl.waitConfirm = false;
-                        return;
-                    }
-                }
-
+                removeCanceledConfirmDialog();
                 AcmLoginService.logout();
                 return false;
             });
