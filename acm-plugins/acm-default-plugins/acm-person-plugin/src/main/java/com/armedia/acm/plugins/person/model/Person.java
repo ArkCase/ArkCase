@@ -82,8 +82,8 @@ public class Person implements Serializable, AcmEntity
     private LocalDate dateOfBirth;
 
     @Column(name = "cm_person_date_married")
-    @Temporal(TemporalType.DATE)
-    private Date dateMarried;
+    @Convert(converter = LocalDateConverter.class)
+    private LocalDate dateMarried;
 
     @Column(name = "cm_person_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -414,12 +414,12 @@ public class Person implements Serializable, AcmEntity
     }
 
     @XmlTransient
-    public Date getDateMarried()
+    public LocalDate getDateMarried()
     {
         return dateMarried;
     }
 
-    public void setDateMarried(Date dateMarried)
+    public void setDateMarried(LocalDate dateMarried)
     {
         this.dateMarried = dateMarried;
     }

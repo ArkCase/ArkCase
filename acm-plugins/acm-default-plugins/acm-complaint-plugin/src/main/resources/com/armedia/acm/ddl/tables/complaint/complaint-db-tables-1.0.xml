@@ -246,5 +246,12 @@
             <column name="cm_class_name" type="VARCHAR(400)"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="24-acm_complaint-add-legacy_system-columns" author="riste.tutureski">
+        <addColumn tableName="acm_complaint">
+            <column name="cm_legacy_system_id" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 

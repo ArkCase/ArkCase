@@ -3,7 +3,9 @@
 angular.module('admin').controller('Admin.NameConfigController', ['$scope', '$q', 'Admin.ApplicationSettingsService',
     function ($scope, $q, ApplicationSettingsService) {
 
-        $scope.nameProperty = ApplicationSettingsService.getProperty(ApplicationSettingsService.PROP_NAME);
+        ApplicationSettingsService.getProperty(ApplicationSettingsService.PROP_NAME).then(function (response) {
+            $scope.nameProperty = response.data.name;
+        });
 
         $scope.applyChanges = function () {
             ApplicationSettingsService.setProperty(

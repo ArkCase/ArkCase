@@ -1,8 +1,19 @@
 package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
-import com.armedia.acm.plugins.complaint.model.*;
-
+import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.complaint.model.ComplaintApprovalWorkflowRequestedEvent;
+import com.armedia.acm.plugins.complaint.model.ComplaintClosedEvent;
+import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
+import com.armedia.acm.plugins.complaint.model.ComplaintFileAddedEvent;
+import com.armedia.acm.plugins.complaint.model.ComplaintListView;
+import com.armedia.acm.plugins.complaint.model.ComplaintModifiedEvent;
+import com.armedia.acm.plugins.complaint.model.ComplaintParticipantDeletedEvent;
+import com.armedia.acm.plugins.complaint.model.ComplaintPersistenceEvent;
+import com.armedia.acm.plugins.complaint.model.ComplaintSearchResultEvent;
+import com.armedia.acm.plugins.complaint.model.ComplaintUpdatedEvent;
+import com.armedia.acm.plugins.complaint.model.FindComplaintByIdEvent;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -87,7 +98,7 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
         event.setUserId(userId);
         eventPublisher.publishEvent(event);
     }
-    
+
     public void publishComplaintModified(Complaint in, String ipAddress, String eventStatus)
     {
         ComplaintModifiedEvent event = new ComplaintModifiedEvent(in);
@@ -96,11 +107,22 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
         event.setEventStatus(eventStatus);
         eventPublisher.publishEvent(event);
     }
-    
+
+    public void publishParticipantDeletedInComplaint(AcmParticipant participant, Complaint in, String ipAddress)
+    {
+        ComplaintParticipantDeletedEvent event = new ComplaintParticipantDeletedEvent(participant);
+        event.setSucceeded(true);
+        event.setIpAddress(ipAddress);
+        event.setParentObjectId(in.getComplaintId());
+        event.setParentObjectType(in.getObjectType());
+        event.setParentObjectName(in.getComplaintNumber());
+        eventPublisher.publishEvent(event);
+    }
+
     public void publishComplaintUpdated(Complaint in, String userId)
     {
-       ComplaintUpdatedEvent event = new ComplaintUpdatedEvent(in);
-       event.setUserId(userId);
-       eventPublisher.publishEvent(event);
+        ComplaintUpdatedEvent event = new ComplaintUpdatedEvent(in);
+        event.setUserId(userId);
+        eventPublisher.publishEvent(event);
     }
 }

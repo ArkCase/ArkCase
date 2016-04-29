@@ -39,4 +39,6 @@ public interface TaskConstants
 
     String IDENTITY_LINK_TYPE_CANDIDATE = "candidate";
     String VARIABLE_NAME_NEXT_ASSIGNEE = "NEXT_ASSIGNEE";
+
+    String VARIABLE_NAME_LEGACY_SYSTEM_ID = "LEGACY_SYSTEM_ID";
 }

@@ -54,6 +54,7 @@
       "title": "Notes",
       "table.columns": {
         "note": "Note",
+        "tag": "Document Version",
         "created": "Created",
         "creator": "Author"
       }
@@ -66,7 +67,7 @@
         "versionTag": "Version"
       }
     },
-    "userSearch":{
+    "userSearch": {
       "id": "userSearch",
       "title": "Add New Participant",
       "search": {
