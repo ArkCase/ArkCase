@@ -482,6 +482,12 @@
       "service": "Complaint.LookupService",
       "names": "SessionCacheNames",
       "type": "session"
+    },
+    {
+      "service": "ApplicationConfigService",
+      "names": "SessionCacheNames",
+      "type": "session"
     }
+
   ]
 }

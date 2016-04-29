@@ -60,7 +60,7 @@
         "description": "Description",
         "descriptionPlaceholder": "Enter Description",
         "btn": {
-          "ok": "Add Ag-Hoc Group",
+          "ok": "Add Ad-Hoc Group",
           "cancel": "Cancel"
         }
       },
@@ -71,7 +71,7 @@
         "description": "Description",
         "descriptionPlaceholder": "Enter Description",
         "btn": {
-          "ok": "Add Ag-Hoc Group",
+          "ok": "Add Ad-Hoc Group",
           "cancel": "Cancel"
         }
       },
@@ -222,7 +222,7 @@
       "name.config": {
         "title": "Name Configuration",
         "userId.label": "Use user identifier to display user",
-        "username.label":"Use user name to display user",
+        "userName.label": "Use user name to display user",
         "apply": "Apply"
       }
     },
