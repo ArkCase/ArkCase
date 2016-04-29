@@ -55,7 +55,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 this.scope.gridOptions = this.scope.gridOptions || {};
 
                 if (!this.scope.isReadOnly) {
-                    this.scope.isReadOnly = function(objectInfo) {
+                    this.scope.isReadOnly = function (objectInfo) {
                         return false;
                     }
                 }
@@ -165,7 +165,11 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                             that.scope.sort.by = null;
                             that.scope.sort.dir = null;
                         } else {
-                            that.scope.sort.by = sortColumns[0].field;
+                            if (sortColumns[0].colDef.sortField) {
+                                that.scope.sort.by = sortColumns[0].colDef.sortField;
+                            } else
+                                that.scope.sort.by = sortColumns[0].field;
+
                             that.scope.sort.dir = sortColumns[0].sort.direction;
                         }
                         retrieveGridData();
@@ -538,7 +542,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                     };
                     columnDefs.push(columnDef);
                 }
-                
+
                 return this;
             }
 

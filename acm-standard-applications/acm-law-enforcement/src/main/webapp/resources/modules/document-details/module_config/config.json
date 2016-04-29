@@ -165,6 +165,7 @@
         },
         {
           "name": "title_parseable",
+          "sortField": "title_parseable_lcs",
           "displayName": "documentDetails.userSearch.userGridColumns.title",
           "headerCellFilter": "translate"
         },
