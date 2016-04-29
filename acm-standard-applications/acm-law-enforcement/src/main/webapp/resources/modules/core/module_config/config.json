@@ -15,7 +15,7 @@
             "id": "acmLogin",
             "title": "",
             "idleLimit": 600000,
-            "idlePull": 20000,
+            "idlePull": 5000,
             "idleConfirm": 15000
         }
     ]

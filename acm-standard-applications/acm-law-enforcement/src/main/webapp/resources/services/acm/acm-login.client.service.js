@@ -8,7 +8,7 @@
  *
  * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/acm/login.client.service.js services/acm/login.client.service.js}
  *
- * This service is used to manage login. It holds login information, for example login status, idle time, error statistics, etc.
+ * This service is used to manage login and logout. It holds login information, for example login status, idle time, current login ID, error statistics, etc.
  */
 
 angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$injector', '$log'
@@ -18,7 +18,8 @@ angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$inject
     ) {
         var Service = {
             LocalCacheNames: {
-                LOGIN_STATUS: "AcmLoginStatus"
+                LOGIN_INFO: "AcmLoginInfo"
+                , LOGIN_STATUS: "AcmLoginStatus" //AcmLoginStatus is no longer used. Leave it for now for backward compatibility. Will remove after a few cycles
             }
 
             /**
@@ -39,7 +40,6 @@ angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$inject
                 return Service._deferSetLogin.promise;
             }
 
-
             /**
              * @ngdoc method
              * @name isLogin
@@ -49,9 +49,9 @@ angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$inject
              * Return boolean to indicate if current session is in login status
              */
             , isLogin: function () {
-                var cacheLoginStatus = new Store.LocalData(Service.LocalCacheNames.LOGIN_STATUS);
-                var loginStatus = cacheLoginStatus.get();
-                return Util.goodMapValue(loginStatus, "login", false);
+                var cacheLoginInfo = new Store.LocalData(Service.LocalCacheNames.LOGIN_INFO);
+                var loginInfo = cacheLoginInfo.get();
+                return Util.goodMapValue(loginInfo, "login", false);
             }
 
             /**
@@ -65,10 +65,10 @@ angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$inject
              * Set login status
              */
             , setLogin: function (login) {
-                var cacheLoginStatus = new Store.LocalData(Service.LocalCacheNames.LOGIN_STATUS);
-                var loginStatus = Util.goodValue(cacheLoginStatus.get(), {});
-                loginStatus.login = login;
-                cacheLoginStatus.set(loginStatus);
+                var cacheLoginInfo = new Store.LocalData(Service.LocalCacheNames.LOGIN_INFO);
+                var loginInfo = Util.goodValue(cacheLoginInfo.get(), {});
+                loginInfo.login = login;
+                cacheLoginInfo.set(loginInfo);
                 if (login) {
                     this._deferSetLogin.resolve(login);
                 }
@@ -83,9 +83,9 @@ angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$inject
              * Get last idle time
              */
             , getLastIdle: function () {
-                var cacheLoginStatus = new Store.LocalData(Service.LocalCacheNames.LOGIN_STATUS);
-                var loginStatus = Util.goodValue(cacheLoginStatus.get(), {});
-                return loginStatus.lastIdle = Util.goodMapValue(loginStatus, "lastIdle", new Date().getTime());
+                var cacheLoginInfo = new Store.LocalData(Service.LocalCacheNames.LOGIN_INFO);
+                var loginInfo = Util.goodValue(cacheLoginInfo.get(), {});
+                return loginInfo.lastIdle = Util.goodMapValue(loginInfo, "lastIdle", new Date().getTime());
             }
 
             /**
@@ -99,10 +99,10 @@ angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$inject
              * Set last user active time to mark as beginning of an idle period.
              */
             , setLastIdle: function (val) {
-                var cacheLoginStatus = new Store.LocalData(Service.LocalCacheNames.LOGIN_STATUS);
-                var loginStatus = Util.goodValue(cacheLoginStatus.get(), {});
-                loginStatus.lastIdle = Util.goodValue(val, new Date().getTime());
-                cacheLoginStatus.set(loginStatus);
+                var cacheLoginInfo = new Store.LocalData(Service.LocalCacheNames.LOGIN_INFO);
+                var loginInfo = Util.goodValue(cacheLoginInfo.get(), {});
+                loginInfo.lastIdle = Util.goodValue(val, new Date().getTime());
+                cacheLoginInfo.set(loginInfo);
             }
 
             /**
@@ -117,6 +117,70 @@ angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$inject
                 var last = this.getLastIdle();
                 var now = new Date().getTime();
                 return now - last;
+            }
+
+
+            /**
+             * @ngdoc method
+             * @name getUserId
+             * @methodOf services:Acm.LoginService
+             *
+             * @description
+             * Return current user ID
+             */
+            , getUserId: function () {
+                var cacheLoginInfo = new Store.LocalData(Service.LocalCacheNames.LOGIN_INFO);
+                var loginInfo = cacheLoginInfo.get();
+                return Util.goodMapValue(loginInfo, "userId");
+            }
+
+            /**
+             * @ngdoc method
+             * @name setUserId
+             * @methodOf services:Acm.LoginService
+             *
+             * @param {String} user Current user ID
+             *
+             * @description
+             * Set current user ID
+             */
+            , setUserId: function (userId) {
+                var cacheLoginInfo = new Store.LocalData(Service.LocalCacheNames.LOGIN_INFO);
+                var loginInfo = Util.goodValue(cacheLoginInfo.get(), {});
+                loginInfo.userId = userId;
+                cacheLoginInfo.set(loginInfo);
+            }
+
+
+            /**
+             * @ngdoc method
+             * @name isConfirmCanceled
+             * @methodOf services:Acm.LoginService
+             *
+             * @description
+             * Return true if user cancels a confirmation dialog in any window
+             */
+            , isConfirmCanceled: function () {
+                var cacheLoginInfo = new Store.LocalData(Service.LocalCacheNames.LOGIN_INFO);
+                var loginInfo = cacheLoginInfo.get();
+                return Util.goodMapValue(loginInfo, "confirmCanceled", false);
+            }
+
+            /**
+             * @ngdoc method
+             * @name setConfirmCanceled
+             * @methodOf services:Acm.LoginService
+             *
+             * @param {Boolean} confirmCanceled 'true' value indicates confirmation dialog is canceled
+             *
+             * @description
+             * Set confirmCanceled flag
+             */
+            , setConfirmCanceled: function (confirmCanceled) {
+                var cacheLoginInfo = new Store.LocalData(Service.LocalCacheNames.LOGIN_INFO);
+                var loginInfo = Util.goodValue(cacheLoginInfo.get(), {});
+                loginInfo.confirmCanceled = confirmCanceled;
+                cacheLoginInfo.set(loginInfo);
             }
 
 
