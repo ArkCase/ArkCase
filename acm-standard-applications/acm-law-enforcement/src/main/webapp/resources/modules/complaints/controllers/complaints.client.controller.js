@@ -16,15 +16,15 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
             , getObjectIdFromInfo: function (complaintInfo) {
                 return Util.goodMapValue(complaintInfo, "complaintId");
             }
-            , initComponentLinks: function (config) {
-                return HelperObjectBrowserService.createComponentLinks(config, ObjectService.ObjectTypes.COMPLAINT);
+            , getObjectTypeFromInfo: function (objectInfo) {
+                return ObjectService.ObjectTypes.COMPLAINT;
             }
-            , selectComponentLinks: function (selectedObject) {
-                return $scope.componentLinks;
-            }
+            //, initComponentLinks: function (config) {
+            //    return HelperObjectBrowserService.createComponentLinks(config, ObjectService.ObjectTypes.COMPLAINT);
+            //}
+            //, selectComponentLinks: function (selectedObject) {
+            //    return $scope.componentLinks;
+            //}
         });
-
-        $scope.limit = "57";
-
     }
 ]);

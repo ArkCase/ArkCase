@@ -80,7 +80,7 @@ angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$inject
              * @methodOf services:Acm.LoginService
              *
              * @description
-             * Get last idle time
+             * Get last time marked as the beginning of an idle period
              */
             , getLastIdle: function () {
                 var cacheLoginInfo = new Store.LocalData(Service.LocalCacheNames.LOGIN_INFO);
@@ -111,7 +111,7 @@ angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$inject
              * @methodOf services:Acm.LoginService
              *
              * @description
-             * Set time elapses since last idle
+             * Set time elapses since beginning of idle
              */
             , getSinceIdle: function () {
                 var last = this.getLastIdle();
