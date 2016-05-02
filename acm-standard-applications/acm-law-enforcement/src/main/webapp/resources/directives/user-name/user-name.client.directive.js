@@ -9,41 +9,64 @@
  *
  * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/user-name/user-name.client.directive.js directives/user-name/user-name.client.directive.js}
  *
+ * @param {string} userId User Identifier that displayed if application property ApplicationConfigService.PROPERTIES.NAME  = 'userId'
+ * @param {string} userName User Name that displayed if application property ApplicationConfigService.PROPERTIES.NAME  = 'userName'
+ *
  * The userName directive displays userId or full user name depends on application configuration.
- * If configuration settings not defined tat it displays Full user name by default.
+ * If configuration settings not defined then it displays Full user name by default.
  *
  *
  * @example
  <example>
  <file name="index.html">
- <user-name></user-name>
+ <user-name userId="{{profile.userId}}" userName="{{profile.fullName}}"></user-name>
  </file>
  </example>
  */
-angular.module('directives').directive('userName', ['$q', 'Authentication', 'ApplicationConfigService',
-    function ($q, Authentication, ApplicationConfigService) {
+angular.module('directives').directive('userName', ['$q', 'ApplicationConfigService',
+    function ($q, ApplicationConfigService) {
         return {
             restrict: 'E',
             transclude: true,
+            scope: {
+                userName: '=',
+                userId: '='
+            },
 
             link: function (scope, element, attrs) {
 
-                $q.all([Authentication.queryUserInfo(), ApplicationConfigService.getConfiguration()])
-                    .then(function (result) {
-                        var userInfo = result[0];
-                        var appConfig = result[1];
+                var userName = null;
+                var userId = null;
 
-                        // Display user Id as useName property equals to 'userId'
-                        // otherwise display full user name
-                        if (_.get(appConfig, ApplicationConfigService.PROPERTIES.NAME) == 'userId') {
-                            scope.userName = userInfo.userId;
-                        } else {
-                            scope.userName = userInfo.fullName;
-                        }
-                    });
+                scope.$watch('userName', function (newUserName) {
+                    userName = newUserName;
+                    update(scope, userName, userId);
+                });
+
+                scope.$watch('userId', function (newUserId) {
+                    userId = newUserId;
+                    update(scope, userName, userId);
+                });
             },
 
-            template: '{{userName}}'
+            template: '{{displayName}}'
         };
+
+
+        function update(scope, userName, userId) {
+            $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME)])
+                .then(function (result) {
+                    var userNameProp = result[0];
+
+                    // Display user Id as userName property equals to 'userId'
+                    // otherwise display full user name
+                    if (userNameProp == 'userId') {
+                        scope.displayName = userId;
+                    } else {
+                        scope.displayName = userName;
+                    }
+                });
+        }
+
     }
 ]);
