@@ -26,7 +26,7 @@ angular.module('services').factory('ApplicationConfigService', ['$resource', 'Ac
 
 
         Service.PROPERTIES = {
-            NAME: 'name'
+            DISPLAY_USERNAME: 'displayUserName'
         };
 
         /**
@@ -51,6 +51,27 @@ angular.module('services').factory('ApplicationConfigService', ['$resource', 'Ac
                     return appConfig;
                 }
             });
+        };
+
+        /**
+         * @ngdoc method
+         * @name getProperty
+         * @methodOf services.service:ApplicationConfigService
+         *
+         * @description
+         * Retrieve property value from application configuration. If property is absent then return 'undefined'
+         *
+         * @returns {Object} Future application configuration property value.
+         */
+        Service.getProperty = function(propName) {
+            return Service.getConfiguration()
+                .then(function(config){
+                    var value;
+                    if (_.isObject(config)) {
+                        value = _.get(config, propName);
+                    }
+                    return value;
+                })
         };
 
         return Service;
