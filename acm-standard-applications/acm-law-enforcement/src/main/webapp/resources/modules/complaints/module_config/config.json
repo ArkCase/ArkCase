@@ -358,6 +358,7 @@
             {
               "name": "title",
               "field": "title_parseable",
+			  "sortField": "title_parseable_lcs",
               "displayName": "complaints.comp.tasks.table.columns.title",
               "headerCellFilter": "translate"
             },
@@ -937,6 +938,7 @@
         {
           "name": "title",
           "field": "title_parseable",
+		  "sortField": "title_parseable_lcs",
           "displayName": "complaints.comp.tasks.table.columns.title",
           "headerCellFilter": "translate",
           "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
@@ -1264,6 +1266,7 @@
         },
         {
           "name": "title_parseable",
+		  "sortField": "title_parseable_lcs",
           "displayName": "complaints.comp.addreference.grid.columns.title",
           "headerCellFilter": "translate"
         },
