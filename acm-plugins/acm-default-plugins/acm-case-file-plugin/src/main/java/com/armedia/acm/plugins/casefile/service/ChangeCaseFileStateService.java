@@ -6,7 +6,8 @@ import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
 import java.util.Date;
@@ -16,6 +17,7 @@ import java.util.Date;
  */
 public class ChangeCaseFileStateService
 {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private CaseFileDao dao;
     private ChangeCaseStatusDao changeCaseStatusDao;
     private CaseFileEventUtility caseFileEventUtility;
@@ -25,10 +27,11 @@ public class ChangeCaseFileStateService
     {
         try
         {
+            log.info("Case ID : [{}] and incoming status is : [{}]", caseId, newState);
             CaseFile retval = getDao().find(caseId);
 
             // do we need to do anything?
-            if ( retval.getStatus().equals(newState) )
+            if (retval.getStatus().equals(newState))
             {
                 return retval;
             }
@@ -37,52 +40,53 @@ public class ChangeCaseFileStateService
 
             retval.setStatus(newState);
 
-            if ( "CLOSED".equals(newState) )
+            if ("CLOSED".equals(newState))
             {
                 retval.setClosed(now);
             }
 
             retval = getDao().save(retval);
 
+            log.info("Case ID : [{}] and saved status is : [{}]", caseId, retval.getStatus());
+
             getCaseFileEventUtility().raiseEvent(retval, newState, now, ipAddress, auth.getName(), auth);
 
             return retval;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw new AcmUserActionFailedException("Set case to " + newState, "Case File", caseId, e.getMessage(), e);
         }
     }
-    
+
     public void handleChangeCaseStatusApproved(Long caseId, Long requestId, String userId, Date approvalDate, String ipAddress)
     {
-    	CaseFile updatedCase = updateCaseStatus(caseId, requestId);
-    	
-    	updateCaseStatusRequestToApproved(requestId);
-    	
-    	getCaseFileEventUtility().raiseEvent(updatedCase, updatedCase.getStatus(), approvalDate, ipAddress, userId, null);
+        CaseFile updatedCase = updateCaseStatus(caseId, requestId);
+
+        updateCaseStatusRequestToApproved(requestId);
+
+        getCaseFileEventUtility().raiseEvent(updatedCase, updatedCase.getStatus(), approvalDate, ipAddress, userId, null);
     }
-    
+
     private CaseFile updateCaseStatus(Long caseId, Long requestId)
     {
-    	ChangeCaseStatus changeCaseStatus = getChangeCaseStatusDao().find(requestId);
-    	
-    	CaseFile toSave = getDao().find(caseId);
-    	toSave.setStatus(changeCaseStatus.getStatus());
-    	
-    	CaseFile updated = getDao().save(toSave);
-    	
-    	return updated;
+        ChangeCaseStatus changeCaseStatus = getChangeCaseStatusDao().find(requestId);
+
+        CaseFile toSave = getDao().find(caseId);
+        toSave.setStatus(changeCaseStatus.getStatus());
+
+        CaseFile updated = getDao().save(toSave);
+
+        return updated;
     }
-    
+
     private ChangeCaseStatus updateCaseStatusRequestToApproved(Long id)
     {
-    	ChangeCaseStatus toSave = getChangeCaseStatusDao().find(id);
-    	toSave.setStatus("APPROVED");
-    	
-    	ChangeCaseStatus updated = getChangeCaseStatusDao().save(toSave);
-    	
-    	return updated;
+        ChangeCaseStatus toSave = getChangeCaseStatusDao().find(id);
+        toSave.setStatus("APPROVED");
+
+        ChangeCaseStatus updated = getChangeCaseStatusDao().save(toSave);
+
+        return updated;
     }
 
     public CaseFileDao getDao()
@@ -95,15 +99,17 @@ public class ChangeCaseFileStateService
         this.dao = dao;
     }
 
-    public ChangeCaseStatusDao getChangeCaseStatusDao() {
-		return changeCaseStatusDao;
-	}
+    public ChangeCaseStatusDao getChangeCaseStatusDao()
+    {
+        return changeCaseStatusDao;
+    }
 
-	public void setChangeCaseStatusDao(ChangeCaseStatusDao changeCaseStatusDao) {
-		this.changeCaseStatusDao = changeCaseStatusDao;
-	}
+    public void setChangeCaseStatusDao(ChangeCaseStatusDao changeCaseStatusDao)
+    {
+        this.changeCaseStatusDao = changeCaseStatusDao;
+    }
 
-	public CaseFileEventUtility getCaseFileEventUtility()
+    public CaseFileEventUtility getCaseFileEventUtility()
     {
         return caseFileEventUtility;
     }
