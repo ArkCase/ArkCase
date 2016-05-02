@@ -117,19 +117,19 @@
     </bean>
 
     <!-- Application properties management-->
-    <bean id="propertiesManagementRetrieveProperties"
-          class="com.armedia.acm.plugins.admin.web.api.PropertiesManagementRetrieveProperties">
-        <property name="propertiesManagementService" ref="propertiesManagementService"/>
+    <bean id="angularPropertiesManagementRetrieveProperties"
+          class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementRetrieveProperties">
+        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
     </bean>
 
-    <bean id="propertiesManagementRetrieveProperty"
-          class="com.armedia.acm.plugins.admin.web.api.PropertiesManagementRetrieveProperty">
-        <property name="propertiesManagementService" ref="propertiesManagementService"/>
+    <bean id="angularPropertiesManagementRetrieveProperty"
+          class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementRetrieveProperty">
+        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
     </bean>
 
-    <bean id="propertiesManagementUpdateProperty"
-          class="com.armedia.acm.plugins.admin.web.api.PropertiesManagementUpdateProperty">
-        <property name="propertiesManagementService" ref="propertiesManagementService"/>
+    <bean id="angularPropertiesManagementUpdateProperty"
+          class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementUpdateProperty">
+        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
     </bean>
 
     <!-- LDAP configuration API -->
