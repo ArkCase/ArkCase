@@ -92,9 +92,6 @@ public class CaseFileService extends FrevvoFormAbstractService
     public boolean save(String xml,
                         MultiValueMap<String, MultipartFile> attachments) throws Exception
     {
-        // Get submission name - Save or Submit
-        String submissionName = getRequest().getParameter("submission_name");
-
         // Convert XML to Object
         CaseFileForm form = (CaseFileForm) convertFromXMLToObject(cleanXML(xml), getFormClass());
 
