@@ -1,15 +1,15 @@
 'use strict';
 
 var AcmLoginController = ["$q", "$scope", "$document", "$state", "$translate"
-    , "UtilService", "ConfigService", "Util.TimerService", "Authentication", "Acm.LoginService"
+    , "UtilService", "ConfigService", "Util.TimerService", "Authentication", "Acm.LoginService", "Dialog.BootboxService"
     , function($q, $scope, $document, $state, $translate
-        , Util, ConfigService, UtilTimerService, Authentication, AcmLoginService
+        , Util, ConfigService, UtilTimerService, Authentication, AcmLoginService, Dialog
     ) {
         var ctrl = this;
 
         var promiseConfig = ConfigService.getComponentConfig("core", "acmLogin").then(function (config) {
             ctrl.idleLimit = Util.goodValue(config.idleLimit, 600000);     //600000 - limit of 10 minutes
-            ctrl.idlePull = Util.goodValue(config.idlePull, 5000);         //5000 - every 20 seconds
+            ctrl.idlePull = Util.goodValue(config.idlePull, 5000);         //5000   - every 5 seconds
             ctrl.idleConfirm = Util.goodValue(config.idleConfirm, 15000);   //15000 - limit of 15 seconds
             return config;
         });
@@ -49,7 +49,7 @@ var AcmLoginController = ["$q", "$scope", "$document", "$state", "$translate"
         var removeCanceledConfirmDialog = function() {
             if (AcmLoginService.isConfirmCanceled()) {
                 UtilTimerService.removeListener("AboutToLogout");
-                bootbox.hideAll();
+                Dialog.hideAll();
                 ctrl.waitConfirm = false;
             }
         };
@@ -63,7 +63,7 @@ var AcmLoginController = ["$q", "$scope", "$document", "$state", "$translate"
 
             ctrl.waitConfirm = true;
             AcmLoginService.setConfirmCanceled(false);
-            bootbox.confirm($translate.instant("common.comp.acmLogin.confirmLogout"), function(result) {
+            Dialog.confirm($translate.instant("common.comp.acmLogin.confirmLogout"), function(result) {
                 UtilTimerService.removeListener("AboutToLogout");
                 if (result) {
                     UtilTimerService.removeListener("AutoLogout");
