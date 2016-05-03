@@ -40,7 +40,12 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
     @Override
     public Resource getResource(String host, String path) throws NotAuthorizedException, BadRequestException
     {
-        path = path.replace(".docx", "");
+        //.docx and .doc should be removed
+        if (path.endsWith(".docx"))
+            path = path.substring(0, path.length() - 5);
+        else if (path.endsWith(".doc"))
+            path = path.substring(0, path.length() - 4);
+
         String strippedPath = path.substring(path.indexOf(filterMapping) + filterMapping.length());
         if (strippedPath.endsWith("/"))
         {
