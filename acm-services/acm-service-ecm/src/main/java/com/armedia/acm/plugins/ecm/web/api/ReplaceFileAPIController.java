@@ -86,7 +86,7 @@ public class ReplaceFileAPIController
         }
         try
         {
-            replacedFile = getFileTransaction().updateFileTransaction(authentication, fileToBeReplaced, replacementStream);
+            replacedFile = getFileTransaction().updateFileTransactionEventAware(authentication, fileToBeReplaced, replacementStream);
             getFileEventPublisher().publishFileReplacedEvent(replacedFile, authentication, ipAddress, true);
         } catch (MuleException e)
         {
