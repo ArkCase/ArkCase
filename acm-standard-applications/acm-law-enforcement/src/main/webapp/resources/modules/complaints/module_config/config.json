@@ -1053,7 +1053,7 @@
           "name": "eventDate",
           "displayName": "complaints.comp.history.table.columns.eventDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.eventDate | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.eventDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
         },
         {
           "name": "userId",
