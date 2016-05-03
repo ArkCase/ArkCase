@@ -1163,7 +1163,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     else if (fileName.endsWith('.doc'))
                                         fileExt = '.doc';
 
-                                    console.log(fileExt);
                                     ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + node.parent.data.objectId + "/" + node.data.objectId + fileExt);
                                     DocTree.refreshTree();
                                 }
