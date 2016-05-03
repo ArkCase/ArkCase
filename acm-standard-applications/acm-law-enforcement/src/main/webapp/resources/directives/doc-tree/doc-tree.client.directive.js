@@ -1156,7 +1156,15 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     var absUrl = $location.absUrl();
                                     var baseHref = $browser.baseHref();
                                     var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
-                                    ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + node.parent.data.objectId + "/" + node.data.objectId + ".docx");
+                                    var fileName = node.data.name;
+                                    var fileExt = '';
+                                    if (fileName.endsWith('.docx'))
+                                        fileExt = '.docx';
+                                    else if (fileName.endsWith('.doc'))
+                                        fileExt = '.doc';
+
+                                    console.log(fileExt);
+                                    ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + node.parent.data.objectId + "/" + node.data.objectId + fileExt);
                                     DocTree.refreshTree();
                                 }
                             );
