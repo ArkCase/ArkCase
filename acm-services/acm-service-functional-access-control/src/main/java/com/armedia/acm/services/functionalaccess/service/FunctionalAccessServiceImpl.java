@@ -1,5 +1,6 @@
 package com.armedia.acm.services.functionalaccess.service;
 
+import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -11,8 +12,11 @@ import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,17 +24,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
 
 /**
  * @author riste.tutureski
  */
-public class FunctionalAccessServiceImpl implements FunctionalAccessService
+public class FunctionalAccessServiceImpl implements FunctionalAccessService, ApplicationListener<ConfigurationFileChangedEvent>
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    Map<String, String> applicationRolesProperties;
-    Map<String, String> applicationRolesToGroupsProperties;
+    private Properties applicationRolesProperties;
+    private Properties applicationRolesToGroupsProperties;
     private PropertyFileManager propertyFileManager;
     private String rolesToGroupsPropertyFileLocation;
     private FunctionalAccessEventPublisher eventPublisher;
@@ -39,16 +44,56 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
     private ExecuteSolrQuery executeSolrQuery;
 
     @Override
+    public void onApplicationEvent(ConfigurationFileChangedEvent configurationFileChangedEvent)
+    {
+        File eventFile = configurationFileChangedEvent.getConfigFile();
+        if ("applicationRoles.properties".equals(eventFile.getName()))
+        {
+            String filename = eventFile.getName();
+            LOG.debug("[{}] has changed!", filename);
+
+            try
+            {
+                Properties reloaded = getPropertyFileManager().readFromFile(eventFile);
+                applicationRolesProperties = reloaded;
+            } catch (IOException e)
+            {
+                LOG.info("Could not read new properties; keeping the old properties.");
+            }
+
+        }
+
+        if ("applicationRoleToUserGroup.properties".equals(eventFile.getName()))
+        {
+            String filename = eventFile.getName();
+            LOG.info("[{}] has changed!", filename);
+
+            try
+            {
+                Properties reloaded = getPropertyFileManager().readFromFile(eventFile);
+                applicationRolesToGroupsProperties = reloaded;
+            } catch (IOException e)
+            {
+                LOG.info("Could not read new properties; keeping the old properties.");
+            }
+
+        }
+
+
+    }
+
+    @Override
     public List<String> getApplicationRoles()
     {
-        List<String> applicationRoles = new ArrayList<String>();
+        List<String> applicationRoles = new ArrayList<>();
 
         try
         {
-            applicationRoles = Arrays.asList(getApplicationRolesProperties().get("application.roles").split(","));
+            Properties roleProperties = getApplicationRolesProperties();
+            applicationRoles = Arrays.asList(roleProperties.getProperty("application.roles").split(","));
         } catch (Exception e)
         {
-            LOG.error("Cannot read application roles from configuratoin.", e);
+            LOG.error("Cannot read application roles from configuration.", e);
         }
 
         return applicationRoles;
@@ -57,9 +102,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
     @Override
     public Map<String, List<String>> getApplicationRolesToGroups()
     {
-        Map<String, String> rolesToGroups = getApplicationRolesToGroupsProperties();
-
-        return prepareRoleToGroupsForRetrieving(rolesToGroups);
+        return prepareRoleToGroupsForRetrieving(getApplicationRolesToGroupsProperties());
     }
 
     @Override
@@ -126,7 +169,8 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
             if (groupName.equals(group) || group == null)
             {
                 AcmGroup acmGroup = getAcmGroupDao().findByName(groupName);
-                if(acmGroup != null && !acmGroup.getMembers().isEmpty()){
+                if (acmGroup != null && !acmGroup.getMembers().isEmpty())
+                {
                     retval.addAll(acmGroup.getMembers());
                 }
             }
@@ -137,7 +181,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
 
     private Map<String, String> prepareRoleToGroupsForSaving(Map<String, List<String>> rolesToGroups)
     {
-        Map<String, String> retval = new HashMap<String, String>();
+        Map<String, String> retval = new HashMap<>();
 
         if (rolesToGroups != null && rolesToGroups.size() > 0)
         {
@@ -150,17 +194,18 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
         return retval;
     }
 
-    private Map<String, List<String>> prepareRoleToGroupsForRetrieving(Map<String, String> rolesToGroups)
+    private Map<String, List<String>> prepareRoleToGroupsForRetrieving(Properties rolesToGroups)
     {
-        Map<String, List<String>> retval = new HashMap<String, List<String>>();
+        Map<String, List<String>> retval = new HashMap<>();
 
         if (rolesToGroups != null && rolesToGroups.size() > 0)
         {
-            for (Entry<String, String> entry : rolesToGroups.entrySet())
+            for (String key : rolesToGroups.stringPropertyNames())
             {
-                if (!("".equals(entry.getValue())) && entry.getValue() != null)
+                String value = rolesToGroups.getProperty(key);
+                if (!("").equals(value) && value != null)
                 {
-                    retval.put(entry.getKey(), Arrays.asList(entry.getValue().split(",")));
+                    retval.put(key, Arrays.asList(value.split(",")));
                 }
             }
         }
@@ -229,22 +274,22 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
         return response;
     }
 
-    public Map<String, String> getApplicationRolesProperties()
+    public Properties getApplicationRolesProperties()
     {
         return applicationRolesProperties;
     }
 
-    public void setApplicationRolesProperties(Map<String, String> applicationRolesProperties)
+    public void setApplicationRolesProperties(Properties applicationRolesProperties)
     {
         this.applicationRolesProperties = applicationRolesProperties;
     }
 
-    public Map<String, String> getApplicationRolesToGroupsProperties()
+    public Properties getApplicationRolesToGroupsProperties()
     {
         return applicationRolesToGroupsProperties;
     }
 
-    public void setApplicationRolesToGroupsProperties(Map<String, String> applicationRolesToGroupsProperties)
+    public void setApplicationRolesToGroupsProperties(Properties applicationRolesToGroupsProperties)
     {
         this.applicationRolesToGroupsProperties = applicationRolesToGroupsProperties;
     }
@@ -309,5 +354,6 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
     {
         this.executeSolrQuery = executeSolrQuery;
     }
+
 
 }
