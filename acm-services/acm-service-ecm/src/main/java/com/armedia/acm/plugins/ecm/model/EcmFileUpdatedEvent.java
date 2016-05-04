@@ -25,5 +25,7 @@ public class EcmFileUpdatedEvent extends AcmEvent
             setIpAddress(((AcmAuthenticationDetails) auth.getDetails()).getRemoteAddress());
         }
         setUserId(auth.getName());
+        setParentObjectType(updated.getContainer().getContainerObjectType());
+        setParentObjectId(updated.getContainer().getContainerObjectId());
     }
 }

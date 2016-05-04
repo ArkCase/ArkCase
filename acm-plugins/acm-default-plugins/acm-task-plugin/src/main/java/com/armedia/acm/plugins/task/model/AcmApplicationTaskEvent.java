@@ -44,6 +44,9 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
         setDueDate(source.getDueDate());
         setTaskEvent(taskEvent);
         setPriority(source.getPriority());
+        setParentObjectId(source.getParentObjectId() != null ? source.getParentObjectId() : source.getAttachedToObjectId());
+        setParentObjectType(source.getParentObjectType() != null ? source.getParentObjectType() : source.getAttachedToObjectType());
+        setParentObjectName(source.getAttachedToObjectName());
         setAdhocTask(source.isAdhocTask());
         setOwner(source.getOwner());
 
