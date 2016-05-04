@@ -1,34 +1,17 @@
 'use strict';
 
-angular.module('welcome').controller('WelcomeController', ['$scope', '$q', '$state'
-    , 'Acm.StoreService', 'Authentication', 'Acm.AppService', 'ConfigService'
-    , 'LookupService', 'Object.LookupService', 'Case.LookupService', 'Complaint.LookupService'
-    , 'Acm.LoginStatService', '$window'
-    , function ($scope, $q, $state
-        , Store, Authentication, AcmAppService , ConfigService
-        , LookupService, ObjectLookupService, CaseLookupService, ComplaintLookupService
-        , AcmLoginStatService, $window
+angular.module('welcome').controller('WelcomeController', ['$state', '$window'
+    , 'Acm.LoginService', 'Acm.AppService'
+    , function ($state, $window, AcmLoginService, AcmAppService
     ) {
-        var sessionCacheNamesList = [
-            Authentication.SessionCacheNames
-            , AcmAppService.SessionCacheNames
-            , ConfigService.SessionCacheNames
-            , LookupService.SessionCacheNames
-            , ObjectLookupService.SessionCacheNames
-            , CaseLookupService.SessionCacheNames
-            , ComplaintLookupService.SessionCacheNames
-
-        ];
-        for (var i = 0; i < sessionCacheNamesList.length; i++) {
-            _.each(sessionCacheNamesList[i], function (name) {
-                var cache = new Store.SessionData(name);
-                cache.set(null);
-            });
-        }
+        AcmLoginService.resetCaches();
+        AcmLoginService.setLogin(true);
+        AcmLoginService.setLastIdle();
 
         // TODO: check if this is needed. It is used in 'user-info.client.controller.js'. Doesn't seem like it is necessary...
-        // In the 'goodbye.client.controller.js' the AcmLoginStatService.setLogin(false) will do nothing because the page will already be redirected to logout page.
-        AcmLoginStatService.setLogin(true);
+        // In the 'goodbye.client.controller.js' the AcmLoginService.setLogin(false) will do nothing because the page will already be redirected to logout page.
+        //
+        //jwu: setLogin() flag is needed for auto logout. setLogin(false) in goodbye is now fixed to call before redirection.
 
         if (sessionStorage.redirectState) {
             // redirect to the last remembered state  
