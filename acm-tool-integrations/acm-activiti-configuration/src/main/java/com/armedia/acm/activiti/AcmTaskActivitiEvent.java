@@ -38,6 +38,9 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent {
         setDueDate(source.getDueDate());
         setTaskEvent(taskEvent);
         setPriority(determinePriority(source.getPriority()));
+        setParentObjectId(parentObjectId);
+        setParentObjectType(parentObjectType);
+        setParentObjectName(parentObjectName);
     }
 
     private String determinePriority(int priority)
