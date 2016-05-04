@@ -1,20 +1,15 @@
 package com.armedia.acm.plugins.casefile.dao;
 
-import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -39,7 +34,8 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-task.xml",
         "/spring/spring-library-event.xml",
         "/spring/spring-library-object-lock.xml",
-        "/spring/spring-library-note.xml"
+        "/spring/spring-library-note.xml",
+        "/spring/spring-library-authentication-token.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class AcmQueueDaoIT
@@ -50,13 +46,10 @@ public class AcmQueueDaoIT
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
 
-    private Authentication authentication;
-
     @Before
     public void setUp()
     {
 
-        authentication = new AcmAuthentication(null, null, null, true, "user");
         auditAdapter.setUserId("auditUser");
     }
 
