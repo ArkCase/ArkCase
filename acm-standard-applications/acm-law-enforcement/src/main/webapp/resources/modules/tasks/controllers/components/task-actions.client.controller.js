@@ -21,45 +21,43 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             }
         });
 
+        var promiseQueryUser = Authentication.queryUserInfo();
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
 
-            var promiseQueryUser = Authentication.queryUserInfo();
+            $scope.showBtnSignature = false;
+            $scope.showBtnDelete = false;
+            $scope.showBtnComplete = false;
+            $scope.showBtnReject = false;
+            $scope.showBtnOutcomes = false;
+            if (!Util.isEmpty($scope.objectInfo.assignee)) {
+                if (Util.compare($scope.userId, $scope.objectInfo.assignee)) {
+                    if ($scope.objectInfo.adhocTask) {
+                        if (!Util.goodValue($scope.objectInfo.completed, false)) {
+                            $scope.showBtnSignature = true;
+                            $scope.showBtnDelete = true;
+                            $scope.showBtnComplete = true;
+                        }
 
-            promiseQueryUser.then(function (userInfo) {
-
-                $scope.showBtnSignature = false;
-                $scope.showBtnDelete = false;
-                $scope.showBtnComplete = false;
-                $scope.showBtnReject = false;
-                $scope.showBtnOutcomes = false;
-                if (!Util.isEmpty($scope.objectInfo.assignee)) {
-                    if (Util.compare($scope.userId, $scope.objectInfo.assignee)) {
-                        if ($scope.objectInfo.adhocTask) {
-                            if (!Util.goodValue($scope.objectInfo.completed, false)) {
+                        if (!Util.isEmpty($scope.objectInfo.owner) && !Util.isEmpty($scope.objectInfo.assignee)) {
+                            if (($scope.objectInfo.owner != $scope.objectInfo.assignee)) {
                                 $scope.showBtnSignature = true;
-                                $scope.showBtnDelete = true;
-                                $scope.showBtnComplete = true;
+                                $scope.showBtnReject = true;
                             }
+                        }
 
-                            if (!Util.isEmpty($scope.objectInfo.owner) && !Util.isEmpty($scope.objectInfo.assignee)) {
-                                if (($scope.objectInfo.owner != $scope.objectInfo.assignee)) {
-                                    $scope.showBtnSignature = true;
-                                    $scope.showBtnReject = true;
-                                }
-                            }
-
-                        } else {
-                            if (!Util.goodValue($scope.objectInfo.completed, false)) {
-                                $scope.showBtnSignature = true;
-                                $scope.showBtnOutcomes = true;
-                            }
+                    } else {
+                        if (!Util.goodValue($scope.objectInfo.completed, false)) {
+                            $scope.showBtnSignature = true;
+                            $scope.showBtnOutcomes = true;
                         }
                     }
                 }
+            }
 
 
+            promiseQueryUser.then(function (userInfo) {
                 $scope.userId = userInfo.userId;
                 ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId).then(function (subscriptions) {
                     var found = _.find(subscriptions, {
