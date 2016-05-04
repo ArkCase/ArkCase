@@ -43,7 +43,8 @@ angular.module('admin').controller('Admin.FunctionalAccessController', ['$scope'
             //set not authorized groups.
             // Logic: iterate all user groups and if not already exists in selected app role user groups, add to the array
             for (var key in $scope.userGroupsAll) {
-                if ($scope.appRolesUserGroups[selectedObject.key].indexOf(key) == -1) {
+                // appRolesUserGroups might not have this particular selected object at all.
+                if ($scope.appRolesUserGroups[selectedObject.key] === undefined || $scope.appRolesUserGroups[selectedObject.key].indexOf(key) == -1) {
                     var notAuthObject = {};
                     notAuthObject.key = key;
                     notAuthObject.name = key;
