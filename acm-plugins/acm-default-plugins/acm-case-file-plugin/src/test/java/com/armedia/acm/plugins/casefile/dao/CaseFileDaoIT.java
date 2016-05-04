@@ -22,8 +22,7 @@ import javax.persistence.PersistenceContext;
 import java.util.Date;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -48,7 +47,8 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-task.xml",
         "/spring/spring-library-event.xml",
         "/spring/spring-library-object-lock.xml",
-        "/spring/spring-library-note.xml"
+        "/spring/spring-library-note.xml",
+        "/spring/spring-library-authentication-token.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class CaseFileDaoIT
