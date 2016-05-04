@@ -45,6 +45,7 @@
         },
         {
           "name": "title_parseable",
+		  "sortField": "title_parseable_lcs",
           "displayName": "dashboard.widgets.myCases.table.header.title",
           "headerCellFilter": "translate",
           "enableSorting": true,

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
-	<import resource="file:${user.home}/.arkcase/acm/app-config.xml" />
+    <import resource="file:${user.home}/.arkcase/acm/app-config.xml"/>
 
-	<!-- Rules definitions -->
-	<bean id="assignRule"
-		class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="sendExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
-					SELECT 
+    <!-- Rules definitions -->
+    <bean id="assignRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="sendExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
+					SELECT
 					  a.newAssignee AS user,
 					  CONCAT('${objectTypeLabel} ', a.objectName, ' assigned to ', u.fullName, ' on ', a.created) AS title,
 					  CONCAT('${objectTypeLabel} ', a.objectName, ' was assigned to ', u.fullName, ' on ', a.created, '.  Click here to view: ${urlanchor}') AS note,
@@ -24,31 +24,33 @@
 					  a.objectType AS objectType,
 					  a.objectName AS objectName,
 					  a.objectTitle AS objectTitle,
+					  NULL AS relatedObjectId,
+					  NULL AS relatedObjectType,
 					  u.mail as mail
-					FROM 
-						AcmAssignment a, AcmUser u 
-					WHERE 
-						a.newAssignee IS NOT NULL 
+					FROM
+						AcmAssignment a, AcmUser u
+					WHERE
+						a.newAssignee IS NOT NULL
 					AND
-						a.newAssignee=u.userId 
-					AND 
+						a.newAssignee=u.userId
+					AND
 						a.created >= :lastRunDate
-					ORDER BY 
+					ORDER BY
 						a.created
 				]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="unassignRule"
-		class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="sendExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
-					SELECT 	
+    <bean id="unassignRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="sendExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
+					SELECT
 					  a.oldAssignee AS user,
 					  CONCAT('${objectTypeLabel} ', a.objectName, ' unassigned from ', u.fullName, ' on ', a.created) AS title,
 					  CONCAT('${objectTypeLabel} ', a.objectName, ' was unassigned from ', u.fullName, ' on ', a.created, '.  Click here to view: ${urlanchor}') AS note,
@@ -57,62 +59,68 @@
 					  a.objectType AS objectType,
 					  a.objectName AS objectName,
 					  a.objectTitle AS objectTitle,
+					  NULL AS relatedObjectId,
+					  NULL AS relatedObjectType,
 					  u.mail as mail
-					FROM 
-						AcmAssignment a, AcmUser u 
-					WHERE 
+					FROM
+						AcmAssignment a, AcmUser u
+					WHERE
 						a.oldAssignee IS NOT NULL
 					AND
-						a.oldAssignee=u.userId 
-					AND 
+						a.oldAssignee=u.userId
+					AND
 						a.created >= :lastRunDate
-					ORDER BY 
+					ORDER BY
 						a.created
 				]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="purgeRule"
-		class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="SELECT" />
-		<property name="executor" ref="purgeExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
-					SELECT 
+    <bean id="purgeRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="SELECT"/>
+        <property name="executor" ref="purgeExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
+					SELECT
 					    notification
-					FROM 
-						Notification notification 
-					WHERE 
-						notification.status != 'DELETE' 
+					FROM
+						Notification notification
+					WHERE
+						notification.status != 'DELETE'
 					AND
 						notification.created <= :threshold
 				]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="documentCreatedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true"/>
-		<property name="queryType" value="CREATE"/>
-		<property name="executor" ref="noopExecutor"/>
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
+    <bean id="documentCreatedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
 					SELECT
 					  u.userId AS user,
-					  CONCAT('Document(s) created in ${objectTypeLabel} ', ecmf.fileName, ' on ', a.eventDate) AS title,
-					  CONCAT('Document(s) created in ${objectTypeLabel} ', ecmf.fileName, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+					  CONCAT('Document(s) ', ecmf.fileName, ' created in ', a.parentObjectType, ' on ', a.eventDate) AS title,
+					  CONCAT('Document(s) ', ecmf.fileName, ' created in ', a.parentObjectType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
 					  'user' AS notificationType,
 					  a.objectId AS objectId,
 					  a.objectType AS objectType,
 					  ecmf.fileName AS objectName,
 					  ecmf.fileName AS objectTitle,
+					  a.parentObjectId AS relatedObjectId,
+					  a.parentObjectType AS relatedObjectType,
 					  u.mail as mail
 					FROM
-						AuditEvent a, EcmFile ecmf, AcmUser u
+						AuditEvent a
+					JOIN AcmUser u ON a.userId = u.userId
+					JOIN EcmFile ecmf ON a.objectId = ecmf.fileId
 					WHERE
 						a.userId = u.userId
 					AND
@@ -122,37 +130,40 @@
 					AND
 						a.objectType = 'FILE'
 					AND
-						a.objectId = ecmf.fileId
+                    	a.eventResult = 'success'
+					AND
+						ecmf.fileType NOT LIKE '%\_xml' ESCAPE '\'
 					ORDER BY
 						a.eventDate
 				]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="documentDeletedRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
+    <bean id="documentDeletedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
                   SELECT
                       u.userId AS user,
-                      CONCAT('Document(s) deleted in ${objectTypeLabel} on ', a.eventDate) AS title,
-                      CONCAT('Document(s) deleted in ${objectTypeLabel} on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+                      CONCAT('Document(s) deleted in ', a.parentObjectType, ' on ', a.eventDate) AS title,
+                      CONCAT('Document(s) deleted in ', a.parentObjectType, ' on ', a.eventDate, '.') AS note,
                       'user' AS notificationType,
                       a.objectId AS objectId,
                       a.objectType AS objectType,
                       '' AS objectName,
                       '' AS objectTitle,
+                      a.parentObjectId AS relatedObjectId,
+					  a.parentObjectType AS relatedObjectType,
                       u.mail as mail
                     FROM
-                        AuditEvent a, AcmUser u
+                        AuditEvent a
+                    JOIN AcmUser u ON a.userId = u.userId
                     WHERE
-                        a.userId = u.userId
-                    AND
                         a.eventDate >= :lastRunDate
                     AND
                         a.fullEventType = 'com.armedia.acm.file.deleted'
@@ -163,344 +174,333 @@
                     ORDER BY
                         a.eventDate
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="documentReplacedRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
+    <bean id="documentReplacedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
                     SELECT
                       u.userId AS user,
-                      CONCAT('Document(s) ', ecmf.fileName, ' replaced in ${objectTypeLabel} on ', a.eventDate) AS title,
-                      CONCAT('Document(s) ', ecmf.fileName, ' replaced in ${objectTypeLabel} on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+                      CONCAT('Document(s) ', ecmf.fileName, ' replaced in ', a.parentObjectType, ' on ', a.eventDate) AS title,
+                      CONCAT('Document(s) ', ecmf.fileName, ' replaced in ', a.parentObjectType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
                       'user' AS notificationType,
                       a.objectId AS objectId,
                       a.objectType AS objectType,
                       ecmf.fileName AS objectName,
                       ecmf.fileName AS objectTitle,
+                      a.parentObjectId AS relatedObjectId,
+					  a.parentObjectType AS relatedObjectType,
                       u.mail as mail
                     FROM
-                         AuditEvent a, EcmFile ecmf, AcmUser u
+                         AuditEvent a
+                    JOIN AcmUser u ON a.userId = u.userId
+                    JOIN EcmFile ecmf ON a.objectId = ecmf.fileId
                     WHERE
-                        a.userId = u.userId
-                    AND
                         a.eventDate >= :lastRunDate
                     AND
                         a.fullEventType = 'com.armedia.acm.ecm.file.replaced'
                     AND
                         a.objectType = 'FILE'
                     AND
-                        a.objectId = ecmf.fileId
+                    	a.eventResult = 'success'
                     ORDER BY
                         a.eventDate
 
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="documentVersionedRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
+    <bean id="documentVersionedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
                     SELECT u.userId AS user,
-                    CONCAT('Document(s) ', ecmf.fileName, ' versioned in ${objectTypeLabel} on ', a.eventDate) AS title,
-                    CONCAT('Document(s) ', ecmf.fileName, ' versioned in ${objectTypeLabel} on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+                    CONCAT('Document(s) ', ecmf.fileName, ' versioned in ', a.parentObjectType,  ' on ', a.eventDate) AS title,
+                    CONCAT('Document(s) ', ecmf.fileName, ' versioned in ', a.parentObjectType,  ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
                     'user' AS notificationType,
                     a.objectId AS objectId,
                     a.objectType AS objectType,
                     ecmf.fileName AS objectName,
                     ecmf.fileName AS objectTitle,
+                    a.parentObjectId AS relatedObjectId,
+					a.parentObjectType AS relatedObjectType,
                     u.mail as mail
                     FROM
-                    AuditEvent a, EcmFile ecmf, AcmUser u
+                    	AuditEvent a
+                    JOIN AcmUser u ON a.userId = u.userId
+                    JOIN EcmFile ecmf ON a.objectId = ecmf.fileId
                     WHERE
-                    a.userId = u.userId
+                    	a.eventDate >= :lastRunDate
                     AND
-                    a.eventDate >= :lastRunDate
+                    	a.fullEventType = 'com.armedia.acm.file.version.set'
                     AND
-                    a.fullEventType = 'com.armedia.acm.file.version.set'
+                   	 a.objectType = 'FILE'
                     AND
-                    a.objectType = 'FILE'
-                    AND
-                    a.objectId = ecmf.fileId
+                    	a.eventResult = 'success'
                     ORDER BY
-                    a.eventDate
+                    	a.eventDate
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="complaintStatusChangedRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
+    <bean id="complaintStatusChangedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
+                SELECT u.userId AS user,
+  				CONCAT('Complaint ', c.complaintNumber, ' status changed on ', a.eventDate) AS title,
+  				CONCAT('Complaint ', c.complaintNumber, ' status changed on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+  				'user' AS notificationType,
+  				a.objectId AS objectId,
+  				a.objectType AS objectType,
+  				c.complaintNumber AS objectName,
+  				c.complaintTitle AS objectTitle,
+  				a.parentObjectId AS relatedObjectId,
+			    a.parentObjectType AS relatedObjectType,
+  				u.mail AS mail
+				FROM
+  					AuditEvent a
+  				JOIN AcmUser u ON a.userId = u.userId
+  				JOIN Complaint c ON a.objectId = c.complaintId
+				WHERE
+  					a.eventDate >= :lastRunDate
+  				AND
+  					a.fullEventType = 'com.armedia.acm.complaint.status.changed'
+				ORDER BY
+  					a.eventDate
+                ]]>
+            </value>
+        </property>
+    </bean>
+
+    <bean id="caseStatusChangedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
+                SELECT u.userId AS user,
+       			CONCAT('Case ', c.caseNumber, ' status changed on ', a.eventDate) AS title,
+       			CONCAT('Case ', c.caseNumber, ' status changed on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+       			'user' AS notificationType,
+       			a.objectId AS objectId,
+       			a.objectType AS objectType,
+       			c.caseNumber AS objectName,
+       			c.title AS objectTitle,
+       			a.parentObjectId AS relatedObjectId,
+				a.parentObjectType AS relatedObjectType,
+       			u.mail as mail
+				FROM
+					AuditEvent a
+				JOIN AcmUser u ON a.userId = u.userId
+				JOIN CaseFile c ON a.objectId = c.id
+				WHERE
+					a.eventDate >= :lastRunDate
+				AND
+					a.fullEventType = 'com.armedia.acm.casefile.status.changed'
+				ORDER BY
+					a.eventDate
+                ]]>
+            </value>
+        </property>
+    </bean>
+
+    <bean id="noteAddedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
                     SELECT u.userId AS user,
-                    CONCAT('Complaint ', c.complaintNumber, ' status changed on ', a.eventDate) AS title,
-                    CONCAT('Complaint ', c.complaintNumber, ' status changed on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
-                    'user' AS notificationType,
-                    a.objectId AS objectId,
-                    a.objectType AS objectType,
-                    c.complaintNumber AS objectName,
-                    c.complaintTitle AS objectTitle,
-                    u.mail as mail
-                    FROM
-                    AuditEvent a, Complaint c, AcmUser u
-                    WHERE
-                    a.userId = u.userId
-                    AND
-                    a.eventDate >= :lastRunDate
-                    AND
-                    a.fullEventType = 'com.armedia.acm.complaint.status.changed'
-                    AND
-                    a.objectType = 'COMPLAINT'
-                    AND
-                    a.objectId = c.complaintId
-                    ORDER BY
-                    a.eventDate
+       				CONCAT('Note added in ', a.parentObjectType, ' on ', a.eventDate) AS title,
+				    CONCAT('Note added in ', a.parentObjectType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+				    'user' AS notificationType,
+				    a.objectId AS objectId,
+       			    a.objectType AS objectType,
+				    CONCAT(a.objectType, "_", a.objectId) AS objectName,
+				    CONCAT(a.objectType, "_", a.objectId) AS objectTitle,
+				    a.parentObjectId AS relatedObjectId,
+					a.parentObjectType AS relatedObjectType,
+				    u.mail as mail
+					FROM
+				  		AuditEvent a
+				 	JOIN AcmUser u ON a.userId = u.userId
+					WHERE
+				  		a.eventDate >= :lastRunDate
+				  	AND
+				  		a.fullEventType = 'com.armedia.acm.app.note.added'
+					ORDER BY
+				  		a.eventDate
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="caseStatusChangedRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
+    <bean id="complaintPriorityChangedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
                     SELECT u.userId AS user,
-                    CONCAT('Case ', c.caseNumber, ' status changed on ', a.eventDate) AS title,
-                    CONCAT('Case ', c.caseNumber, ' status changed on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
-                    'user' AS notificationType,
-                    a.objectId AS objectId,
-                    a.objectType AS objectType,
-                    c.caseNumber AS objectName,
-                    c.title AS objectTitle,
-                    u.mail as mail
-                    FROM
-                    AuditEvent a, CaseFile c, AcmUser u
-                    WHERE
-                    a.userId = u.userId
-                    AND
-                    a.eventDate >= :lastRunDate
-                    AND
-                    a.fullEventType = 'com.armedia.acm.casefile.status.changed'
-                    AND
-                    a.objectType = 'CASE_FILE'
-                    AND
-                    a.objectId = c.id
-                    ORDER BY
-                    a.eventDate
+  				CONCAT('Complaint ', c.complaintNumber, ' priority changed on ', a.eventDate) AS title,
+  				CONCAT('Complaint ', c.complaintNumber, ' priority changed on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+  				'user' AS notificationType,
+  				a.objectId AS objectId,
+  				a.objectType AS objectType,
+  				c.complaintNumber AS objectName,
+  				c.complaintTitle AS objectTitle,
+  				a.parentObjectId AS parentId,
+			    a.parentObjectType AS parentType,
+  				u.mail AS mail
+				FROM
+  					AuditEvent a
+  				JOIN AcmUser u ON a.userId = u.userId
+  				JOIN Complaint c ON a.objectId = c.complaintId
+				WHERE
+  					a.eventDate >= :lastRunDate
+  				AND
+  					a.fullEventType = 'com.armedia.acm.complaint.priority.changed'
+				ORDER BY
+  					a.eventDate
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="noteAddedRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
+    <bean id="complaintDetailsUpdatedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
                     SELECT u.userId AS user,
-                    CONCAT('Notification added in ', n.parentType, ' on ', a.eventDate) AS title,
-                    CONCAT('Notification added in ', n.parentType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
-                    'user' AS notificationType,
-                    a.objectId AS objectId,
-                    a.objectType AS objectType,
-                    '' AS objectName,
-                    'NOTE' AS objectTitle,
-                    u.mail as mail
-                    FROM
-                    AuditEvent a, Note n, AcmUser u
-                    WHERE
-                    a.userId = u.userId
-                    AND
-                    a.eventDate >= :lastRunDate
-                    AND
-                    a.fullEventType = 'com.armedia.acm.app.note.added'
-                    AND
-                    a.objectType = 'NOTIFICATION'
-                    AND
-                    a.objectId = n.id
-                    ORDER BY
-                    a.eventDate
+  				CONCAT('Complaint ', c.complaintNumber, ' details updated on ', a.eventDate) AS title,
+  				CONCAT('Complaint ', c.complaintNumber, ' details updated on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+  				'user' AS notificationType,
+  				a.objectId AS objectId,
+  				a.objectType AS objectType,
+  				c.complaintNumber AS objectName,
+  				c.complaintTitle AS objectTitle,
+  				a.parentObjectId AS parentId,
+				a.parentObjectType AS parentType,
+  				u.mail AS mail
+				FROM
+  					AuditEvent a
+  				JOIN AcmUser u ON a.userId = u.userId
+  				JOIN Complaint c ON a.objectId = c.complaintId
+				WHERE
+  					a.eventDate >= :lastRunDate
+  				AND
+  					a.fullEventType = 'com.armedia.acm.complaint.details.changed'
+				ORDER BY
+  					a.eventDate
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="complaintPriorityUpdatedRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
-                    SELECT u.userId AS user,
-                    CONCAT('Complaint ', c.complaintNumber , ' priority updated on ', a.eventDate) AS title,
-                    CONCAT('Complaint ', c.complaintNumber , ' priority updated on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
-                    'user' AS notificationType,
-                    a.objectId AS objectId,
-                    a.objectType AS objectType,
-                    c.complaintNumber AS objectName,
-                    c.complaintTitle AS objectTitle,
-                    u.mail as mail
-                    FROM
-                    AuditEvent a, Complaint c, AcmUser u
-                    WHERE
-                    a.userId = u.userId
-                    AND
-                    a.eventDate >= :lastRunDate
-                    AND
-                    a.fullEventType = 'com.armedia.acm.complaint.priority.changed'
-                    AND
-                    a.objectType = 'COMPLAINT'
-                    AND
-                    a.objectId = c.complaintId
-                    ORDER BY
-                    a.eventDate
+    <bean id="caseFilePriorityChangedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
+                     SELECT u.userId AS user,
+       			CONCAT('Case ', c.caseNumber, ' priority changed on ', a.eventDate) AS title,
+       			CONCAT('Case ', c.caseNumber, ' priority changed on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+       			'user' AS notificationType,
+       			a.objectId AS objectId,
+       			a.objectType AS objectType,
+       			c.caseNumber AS objectName,
+       			c.title AS objectTitle,
+       			a.parentObjectId AS parentId,
+				a.parentObjectType AS parentType,
+       			u.mail as mail
+				FROM
+					AuditEvent a
+				JOIN AcmUser u ON a.userId = u.userId
+				JOIN CaseFile c ON a.objectId = c.id
+				WHERE
+					a.eventDate >= :lastRunDate
+				AND
+					a.fullEventType = 'com.armedia.acm.casefile.priority.changed'
+				ORDER BY
+					a.eventDate
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="complaintDetailsUpdatedRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
-                    SELECT u.userId AS user,
-                    CONCAT('Complaint ', c.complaintNumber , ' details updated on ', a.eventDate) AS title,
-                    CONCAT('Complaint ', c.complaintNumber , ' details updated on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
-                    'user' AS notificationType,
-                    a.objectId AS objectId,
-                    a.objectType AS objectType,
-                    c.complaintNumber AS objectName,
-                    c.complaintTitle AS objectTitle,
-                    u.mail as mail
-                    FROM
-                    AuditEvent a, Complaint c, AcmUser u
-                    WHERE
-                    a.userId = u.userId
-                    AND
-                    a.eventDate >= :lastRunDate
-                    AND
-                    a.fullEventType = 'com.armedia.acm.complaint.details.changed'
-                    AND
-                    a.objectType = 'COMPLAINT'
-                    AND
-                    a.objectId = c.complaintId
-                    ORDER BY
-                    a.eventDate
+    <bean id="caseFileDetailsUpdatedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
+                        SELECT u.userId AS user,
+       			CONCAT('Case ', c.caseNumber, ' details updated on ', a.eventDate) AS title,
+       			CONCAT('Case ', c.caseNumber, ' details updated on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+       			'user' AS notificationType,
+       			a.objectId AS objectId,
+       			a.objectType AS objectType,
+       			c.caseNumber AS objectName,
+       			c.title AS objectTitle,
+       			a.parentObjectId AS parentId,
+				a.parentObjectType AS parentType,
+       			u.mail as mail
+				FROM
+					AuditEvent a
+				JOIN AcmUser u ON a.userId = u.userId
+				JOIN CaseFile c ON a.objectId = c.id
+				WHERE
+					a.eventDate >= :lastRunDate
+				AND
+					a.fullEventType = 'com.armedia.acm.casefile.details.changed'
+				ORDER BY
+					a.eventDate
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="caseFilePriorityUpdatedRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
-                    SELECT u.userId AS user,
-                    CONCAT('Case file ', c.caseNumber , ' priority updated on ', a.eventDate) AS title,
-                    CONCAT('Case file ', c.caseNumber , ' priority updated on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
-                    'user' AS notificationType,
-                    a.objectId AS objectId,
-                    a.objectType AS objectType,
-                    c.caseNumber AS objectName,
-                    c.title AS objectTitle,
-                    u.mail as mail
-                    FROM
-                    AuditEvent a, CaseFile c, AcmUser u
-                    WHERE
-                    a.userId = u.userId
-                    AND
-                    a.eventDate >= :lastRunDate
-                    AND
-                    a.fullEventType = 'com.armedia.acm.casefile.priority.changed'
-                    AND
-                    a.objectType = 'CASE_FILE'
-                    AND
-                    a.objectId = c.id
-                    ORDER BY
-                    a.eventDate
-                ]]>
-			</value>
-		</property>
-	</bean>
-
-	<bean id="caseFileDetailsUpdatedRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
-                    SELECT u.userId AS user,
-                    CONCAT('Case file ', c.caseNumber , ' details updated on ', a.eventDate) AS title,
-                    CONCAT('Case file ', c.caseNumber , ' details updated on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
-                    'user' AS notificationType,
-                    a.objectId AS objectId,
-                    a.objectType AS objectType,
-                    c.caseNumber AS objectName,
-                    c.title AS objectTitle,
-                    u.mail as mail
-                    FROM
-                    AuditEvent a, CaseFile c, AcmUser u
-                    WHERE
-                    a.userId = u.userId
-                    AND
-                    a.eventDate >= :lastRunDate
-                    AND
-                    a.fullEventType = 'com.armedia.acm.casefile.details.changed'
-                    AND
-                    a.objectType = 'CASE_FILE'
-                    AND
-                    a.objectId = c.id
-                    ORDER BY
-                    a.eventDate
-                ]]>
-			</value>
-		</property>
-	</bean>
-
-	<bean id="taskDetailsUpdatedRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
+    <bean id="taskDetailsUpdatedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
                     SELECT u.userId AS user,
                     CONCAT('Task details updated on ', a.eventDate) AS title,
                     CONCAT('Task details updated on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
@@ -509,374 +509,364 @@
                     a.objectType AS objectType,
                     CONCAT('TASK_', a.objectId) AS objectName,
                     'TASK' AS objectTitle,
+                    a.parentObjectId AS parentId,
+					a.parentObjectType AS parentType,
                     u.mail as mail
                     FROM
-                    AuditEvent a, AcmUser u
+                    	AuditEvent a
+                    JOIN AcmUser u ON a.userId = u.userId
                     WHERE
-                    a.userId = u.userId
+                    	a.eventDate >= :lastRunDate
                     AND
-                    a.eventDate >= :lastRunDate
-                    AND
-                    a.fullEventType = 'com.armedia.acm.app.task.details.changed'
-                    AND
-                    a.objectType = 'TASK'
+                    	a.fullEventType = 'com.armedia.acm.app.task.details.changed'
                     ORDER BY
-                    a.eventDate
+                    	a.eventDate
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="taskPriorityUpdatedRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
+    <bean id="taskPriorityChangedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
                     SELECT u.userId AS user,
-                    CONCAT('Task priority updated on ', a.eventDate) AS title,
-                    CONCAT('Task priority updated on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+                    CONCAT('Task priority changed on ', a.eventDate) AS title,
+                    CONCAT('Task priority changed on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
                     'user' AS notificationType,
                     a.objectId AS objectId,
                     a.objectType AS objectType,
                     CONCAT('TASK_', a.objectId) AS objectName,
                     'TASK' AS objectTitle,
+                    a.parentObjectId AS parentId,
+					a.parentObjectType AS parentType,
                     u.mail as mail
                     FROM
-                    AuditEvent a, AcmUser u
+                    	AuditEvent a
+                    JOIN AcmUser u ON a.userId = u.userId
                     WHERE
-                    a.userId = u.userId
+                    	a.eventDate >= :lastRunDate
                     AND
-                    a.eventDate >= :lastRunDate
-                    AND
-                    a.fullEventType = 'com.armedia.acm.app.task.priority.changed'
-                    AND
-                    a.objectType = 'TASK'
+                    	a.fullEventType = 'com.armedia.acm.app.task.priority.changed'
                     ORDER BY
-                    a.eventDate
+                    	a.eventDate
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="personAssociationAddedRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
+    <bean id="taskStatusChangedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
                     SELECT u.userId AS user,
-                    CONCAT('Person added in ', p.parentType, ' on ', a.eventDate) AS title,
-                    CONCAT('Person added in ', p.parentType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+                    CONCAT('Task status changed on ', a.eventDate) AS title,
+                    CONCAT('Task status changed on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
                     'user' AS notificationType,
                     a.objectId AS objectId,
                     a.objectType AS objectType,
-                    '' AS objectName,
-                    'PERSON' AS objectTitle,
+                    CONCAT('TASK_', a.objectId) AS objectName,
+                    'TASK' AS objectTitle,
+                    a.parentObjectId AS parentId,
+					a.parentObjectType AS parentType,
                     u.mail as mail
                     FROM
-                    AuditEvent a, PersonAssociation p, AcmUser u
+                    	AuditEvent a
+                    JOIN AcmUser u ON a.userId = u.userId
                     WHERE
-                    a.userId = u.userId
+                    	a.eventDate >= :lastRunDate
                     AND
-                    a.eventDate >= :lastRunDate
-                    AND
-                    a.fullEventType = 'com.armedia.acm.personAssociation.created'
-                    AND
-                    a.objectType = 'PERSON-ASSOCIATION'
-                    AND
-                    a.objectId = p.id
+                    	a.fullEventType = 'com.armedia.acm.app.task.status.changed'
                     ORDER BY
-                    a.eventDate
+                    	a.eventDate
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="personAssociationDeletedRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
+    <bean id="personAssociationAddedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
                     SELECT u.userId AS user,
-                    CONCAT('Person deleted on ', a.eventDate) AS title,
-                    CONCAT('Person deleted on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
-                    'user' AS notificationType,
-                    a.objectId AS objectId,
-                    a.objectType AS objectType,
-                    '' AS objectName,
-                    'PERSON' AS objectTitle,
-                    u.mail as mail
-                    FROM
-                    AuditEvent a, PersonAssociation p, AcmUser u
-                    WHERE
-                    a.userId = u.userId
-                    AND
-                    a.eventDate >= :lastRunDate
-                    AND
-                    a.fullEventType = 'com.armedia.acm.personAssociation.deleted'
-                    AND
-                    a.objectType = 'PERSON-ASSOCIATION'
-                    ORDER BY
-                    a.eventDate
+			    	CONCAT('Person added in ', a.parentObjectType, ' on ', a.eventDate) AS title,
+			    	CONCAT('Person added in ', a.parentObjectType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+			    	'user' AS notificationType,
+			    	a.objectId AS objectId,
+			    	a.objectType AS objectType,
+			    	CONCAT(a.objectType, "_", a.objectId) AS objectName,
+			    	CONCAT(a.objectType, "_", a.objectId) AS objectTitle,
+			    	a.parentObjectId AS relatedObjectId,
+					a.parentObjectType AS relatedObjectType,
+			    	u.mail as mail
+					FROM
+			  			AuditEvent a
+			  		JOIN AcmUser u ON a.userId = u.userId
+					WHERE
+			  			a.eventDate >= :lastRunDate
+			  		AND
+			  			a.fullEventType = 'com.armedia.acm.personAssociation.created'
+					ORDER BY
+			  			a.eventDate
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-
-	<bean id="participantsAddedInComplaintRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
-                    SELECT u.userId AS user,
-                    CONCAT('Participants added in ', p.objectType, ' on ', a.eventDate) AS title,
-                    CONCAT('Participants added in ', p.objectType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
-                    'user' AS notificationType,
-                    a.objectId AS objectId,
-                    a.objectType AS objectType,
-                    '' AS objectName,
-                    'PARTICIPANT' AS objectTitle,
-                    u.mail as mail
-                    FROM
-                    AuditEvent a, AcmParticipant p, AcmUser u
-                    WHERE
-                    a.userId = u.userId
-                    AND
-                    a.eventDate >= :lastRunDate
-                    AND
-                    a.fullEventType = 'com.armedia.acm.complaint.participants.added'
-                    AND
-                    a.objectId = p.objectId
-                    AND
-                    a.objectType = p.objectType
-                    ORDER BY
-                    a.eventDate
+    <bean id="personAssociationDeletedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
+                  	SELECT u.userId AS user,
+				    CONCAT('Person deleted in ', a.parentObjectType, ' on ', a.eventDate) AS title,
+				    CONCAT('Person deleted in ', a.parentObjectType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+				    'user' AS notificationType,
+				    a.objectId AS objectId,
+				    a.objectType AS objectType,
+				    CONCAT(a.parentObjectType, "_", a.parentObjectId) AS objectName,
+				    'person' AS objectTitle,
+				    a.parentObjectId AS relatedObjectId,
+					a.parentObjectType AS relatedObjectType,
+				    u.mail as mail
+					FROM
+				  		AuditEvent a
+				  	JOIN AcmUser u ON a.userId = u.userId
+					WHERE
+				  		a.eventDate >= :lastRunDate
+				  	AND
+				  		a.fullEventType = 'com.armedia.acm.personAssociation.deleted'
+					ORDER BY
+				  		a.eventDate
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="participantsDeletedInComplaintRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
-                    SELECT u.userId AS user,
-                    CONCAT('Participants deleted in ', a.objectType, ' on ', a.eventDate) AS title,
-                    CONCAT('Participants deleted in ', a.objectType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
-                    'user' AS notificationType,
-                    a.objectId AS objectId,
-                    a.objectType AS objectType,
-                    '' AS objectName,
-                    'PARTICIPANT' AS objectTitle,
-                    u.mail as mail
-                    FROM
-                    AuditEvent a, AcmUser u
-                    WHERE
-                    a.userId = u.userId
-                    AND
-                    a.eventDate >= :lastRunDate
-                    AND
-                    a.fullEventType = 'com.armedia.acm.complaint.participants.deleted'
-                    ORDER BY
-                    a.eventDate
+    <bean id="participantAddedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
+	              	SELECT u.userId AS user,
+					CONCAT('Participant added in ', a.parentObjectType, ' on ', a.eventDate) AS title,
+					CONCAT('Participant added in ', a.parentObjectType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+					'user' AS notificationType,
+					a.objectId AS objectId,
+				    a.objectType AS objectType,
+					CONCAT(a.objectType, "_", a.objectId) AS objectName,
+					CONCAT(a.objectType, "_", a.objectId) AS objectTitle,
+					a.parentObjectId AS relatedObjectId,
+					a.parentObjectType AS relatedObjectType,
+					u.mail as mail
+					FROM
+					  AuditEvent a
+					JOIN AcmUser u ON a.userId = u.userId
+					WHERE
+					  a.eventDate >= :lastRunDate
+					AND
+					  a.fullEventType = 'com.armedia.acm.participant.created'
+					ORDER BY
+					  a.eventDate
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="participantsAddedInCaseFileRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
-                    SELECT u.userId AS user,
-                    CONCAT('Participants added in ', p.objectType, ' on ', a.eventDate) AS title,
-                    CONCAT('Participants added in ', p.objectType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
-                    'user' AS notificationType,
-                    a.objectId AS objectId,
-                    a.objectType AS objectType,
-                    '' AS objectName,
-                    'PARTICIPANT' AS objectTitle,
-                    u.mail as mail
-                    FROM
-                    AuditEvent a, AcmParticipant p, AcmUser u
-                    WHERE
-                    a.userId = u.userId
-                    AND
-                    a.eventDate >= :lastRunDate
-                    AND
-                    a.fullEventType = 'com.armedia.acm.casefile.participants.added'
-                    AND
-                    a.objectId = p.objectId
-                    AND
-                    a.objectType = p.objectType
-                    ORDER BY
-                    a.eventDate
+    <bean id="participantDeletedInComplaintRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
+	                SELECT u.userId AS user,
+				    CONCAT('Participants deleted in ', a.parentObjectType, ' on ', a.eventDate) AS title,
+					CONCAT('Participants deleted in ', a.parentObjectType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+					'user' AS notificationType,
+					a.objectId AS objectId,
+				    a.objectType AS objectType,
+					CONCAT(a.parentObjectType, "_", a.parentObjectId) AS objectName,
+					CONCAT(a.parentObjectType, "_", a.parentObjectId) AS objectTitle,
+					a.parentObjectId AS relatedObjectId,
+					a.parentObjectType AS relatedObjectType,
+					u.mail as mail
+					FROM
+					  AuditEvent a
+					JOIN AcmUser u ON a.userId = u.userId
+					WHERE
+					  a.eventDate >= :lastRunDate
+					AND
+					  a.fullEventType = 'com.armedia.acm.complaint.participant.deleted'
+					ORDER BY
+					  a.eventDate
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="participantsDeletedInCaseFileRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
-                    SELECT u.userId AS user,
-                    CONCAT('Participants deleted in ', a.objectType, ' on ', a.eventDate) AS title,
-                    CONCAT('Participants deleted in ', a.objectType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
-                    'user' AS notificationType,
-                    a.objectId AS objectId,
-                    a.objectType AS objectType,
-                    '' AS objectName,
-                    'PARTICIPANT' AS objectTitle,
-                    u.mail as mail
-                    FROM
-                    AuditEvent a, AcmUser u
-                    WHERE
-                    a.userId = u.userId
-                    AND
-                    a.eventDate >= :lastRunDate
-                    AND
-                    a.fullEventType = 'com.armedia.acm.casefile.participants.deleted'
-                    ORDER BY
-                    a.eventDate
+    <bean id="participantDeletedInCaseFileRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
+	                SELECT u.userId AS user,
+					CONCAT('Participants deleted in ', a.parentObjectType, ' on ', a.eventDate) AS title,
+					CONCAT('Participants deleted in ', a.parentObjectType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+					'user' AS notificationType,
+					a.objectId AS objectId,
+				    a.objectType AS objectType,
+					CONCAT(a.objectType, "_", a.objectId) AS objectName,
+					CONCAT(a.objectType, "_", a.objectId) AS objectTitle,
+					a.parentObjectId AS relatedObjectId,
+					a.parentObjectType AS relatedObjectType,
+					u.mail as mail
+					FROM
+					  AuditEvent a
+					JOIN AcmUser u ON a.userId = u.userId
+					WHERE
+					  a.eventDate >= :lastRunDate
+					AND
+					  a.fullEventType = 'com.armedia.acm.casefile.participant.deleted'
+					ORDER BY
+					  a.eventDate
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="calendarEventAddedRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
+    <bean id="calendarEventAddedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
                     SELECT u.userId AS user,
                     CONCAT('Calendar event added in ', a.objectType, ' on ', a.eventDate) AS title,
                     CONCAT('Calendar event added in ', a.objectType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
                     'user' AS notificationType,
                     a.objectId AS objectId,
                     a.objectType AS objectType,
-                    'CALENDAR_EVENT' AS objectName,
-                    'CALENDAR_EVENT' AS objectTitle,
+                    CONCAT('CALENDAR_EVENT_', a.objectId) AS objectName,
+                    CONCAT('CALENDAR_EVENT_', a.objectId) AS objectTitle,
+                    a.parentObjectId AS relatedObjectId,
+					a.parentObjectType AS relatedObjectType,
                     u.mail as mail
                     FROM
-                    AuditEvent a, AcmUser u
+				 	 AuditEvent a
+					JOIN AcmUser u ON a.userId = u.userId
                     WHERE
-                    a.userId = u.userId
+                    	a.eventDate >= :lastRunDate
                     AND
-                    a.eventDate >= :lastRunDate
-                    AND
-                    a.fullEventType = 'com.armedia.acm.outlook.calendar.event.added'
+                   		a.fullEventType = 'com.armedia.acm.outlook.calendar.event.added'
                     ORDER BY
-                    a.eventDate
+                    	a.eventDate
                 ]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<bean id="correspondenceAddedRule"
-		  class="com.armedia.acm.services.notification.model.BasicNotificationRule">
-		<property name="globalRule" value="true" />
-		<property name="queryType" value="CREATE" />
-		<property name="executor" ref="noopExecutor" />
-		<property name="jpaQuery">
-			<value>
-				<![CDATA[
+    <bean id="correspondenceAddedRule"
+          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+        <property name="globalRule" value="true"/>
+        <property name="queryType" value="CREATE"/>
+        <property name="executor" ref="noopExecutor"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
                     SELECT u.userId AS user,
-       				CONCAT('Correspondence added in ', c.containerObjectType, ' on ', a.eventDate) AS title,
-       				CONCAT('Correspondence added in ', c.containerObjectType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
-       				'user' AS notificationType,
-      				a.objectId AS objectId,
-       				a.objectType AS objectType,
-       				f.fileName AS objectName,
-       				f.fileName AS objectTitle,
-       				u.mail as mail
+  					CONCAT('Correspondence ', ecmf.fileName, ' added in ', a.parentObjectType, ' on ', a.eventDate) AS title,
+  					CONCAT('Correspondence ', ecmf.fileName, ' added in ', a.parentObjectType, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+  					'user' AS notificationType,
+  					a.objectId AS objectId,
+                    a.objectType AS objectType,
+  					ecmf.fileName AS objectName,
+  					ecmf.fileName AS objectTitle,
+  					a.parentObjectId AS relatedObjectId,
+					a.parentObjectType AS relatedObjectType,
+  					u.mail AS mail
 					FROM
- 					AuditEvent a, EcmFile f, AcmContainer c, AcmUser u
+				 	 AuditEvent a
+					JOIN AcmUser u ON a.userId = u.userId
+					JOIN EcmFile ecmf ON a.objectId = ecmf.fileId
 					WHERE
- 					a.userId = u.userId
+  						a.eventDate >= :lastRunDate
   					AND
- 					a.eventDate >= :lastRunDate
+  						a.fullEventType = 'com.armedia.acm.correspondence.file.added'
   					AND
- 					a.fullEventType = 'com.armedia.acm.correspondence.file.added'
-  					AND
-  					a.objectType = 'FILE'
-  					AND
-  					a.objectId = f.fileId
-  					AND
-  					f.container.id = c.id
+						ecmf.category = 'Correspondence'
+					AND
+                    	a.eventResult = 'success'
 					ORDER BY
-  					a.eventDate
+  						a.eventDate
   				]]>
-			</value>
-		</property>
-	</bean>
+            </value>
+        </property>
+    </bean>
 
-	<!-- Senders Definition -->
-	<bean id="emailNotificationSender"
-		class="com.armedia.acm.services.notification.service.EmailNotificationSender">
-		<property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter" />
-		<property name="propertyFileManager">
-			<bean class="com.armedia.acm.files.propertymanager.PropertyFileManager" />
-		</property>
-		<property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
-		<property name="muleContextManager" ref="muleContextManager" />
-	</bean>
+    <!-- Senders Definition -->
+    <bean id="emailNotificationSender"
+          class="com.armedia.acm.services.notification.service.EmailNotificationSender">
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+        <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
+    </bean>
 
-	<!-- Task Scheduler -->
-	<task:scheduler id="notificationTaskScheduler"
-		pool-size="1" />
-	<task:scheduled-tasks scheduler="notificationTaskScheduler">
-		<task:scheduled ref="notificationService" method="run"
-			fixed-delay="300000" />
-	</task:scheduled-tasks>
+    <!-- Task Scheduler -->
+    <task:scheduler id="notificationTaskScheduler"
+                    pool-size="1"/>
+    <task:scheduled-tasks scheduler="notificationTaskScheduler">
+        <task:scheduled ref="notificationService" method="run"
+                        fixed-delay="300000"/>
+    </task:scheduled-tasks>
 
-	<!-- Service Definition -->
-	<bean id="notificationFormatter"
-		class="com.armedia.acm.services.notification.service.NotificationFormatter">
-		<property name="notificationProperties" ref="notificationProperties" />
-		<property name="acmAppConfiguration" ref="acmApplication" />
-	</bean>
-	<bean id="notificationService"
-		class="com.armedia.acm.services.notification.service.NotificationServiceImpl">
-		<property name="batchRun" ref="notificationUserBatchRun" />
-		<property name="batchSize" ref="notificationUserBatchSize" />
-		<property name="purgeDays" ref="notificationPurgeDays" />
-		<property name="propertyFileManager">
-			<bean class="com.armedia.acm.files.propertymanager.PropertyFileManager" />
-		</property>
-		<property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
-		<property name="notificationDao" ref="notificationDao" />
-		<property name="notificationEventPublisher" ref="notificationEventPublisher" />
-		<property name="springContextHolder" ref="acmContextHolder" />
-		<property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter" />
-		<property name="notificationFormatter" ref="notificationFormatter" />
-	</bean>
+    <!-- Service Definition -->
+    <bean id="notificationFormatter"
+          class="com.armedia.acm.services.notification.service.NotificationFormatter">
+        <property name="notificationProperties" ref="notificationProperties"/>
+        <property name="acmAppConfiguration" ref="acmApplication"/>
+    </bean>
+    <bean id="notificationService"
+          class="com.armedia.acm.services.notification.service.NotificationServiceImpl">
+        <property name="batchRun" ref="notificationUserBatchRun"/>
+        <property name="batchSize" ref="notificationUserBatchSize"/>
+        <property name="purgeDays" ref="notificationPurgeDays"/>
+        <property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+        <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation"/>
+        <property name="notificationDao" ref="notificationDao"/>
+        <property name="notificationEventPublisher" ref="notificationEventPublisher"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="notificationFormatter" ref="notificationFormatter"/>
+    </bean>
 
 </beans>

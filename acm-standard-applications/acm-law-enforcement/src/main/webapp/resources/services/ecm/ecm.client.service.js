@@ -103,6 +103,11 @@ angular.module('services').factory('EcmService', ['$resource', 'Acm.StoreService
                 cache: false,
                 isArray: false
             }
+            , updateFileType: {
+                method: 'POST',
+                url: 'api/latest/service/ecm/file/:fileId/type/:fileType',
+                cache: false
+            }
 
         });
 

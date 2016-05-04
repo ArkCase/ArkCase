@@ -333,6 +333,7 @@
             {
               "name": "title",
               "field": "title_parseable",
+              "sortField": "title_parseable_lcs",
               "displayName": "cases.comp.tasks.table.columns.title",
               "headerCellFilter": "translate"
             },
@@ -461,7 +462,9 @@
           "subjectRegex": "(.*)\\$([^\\s]+)",
           "objectTypeRegexGroup": 1,
           "objectNumberRegexGroup": 2
-        }
+        },
+        "noteRequiredOnCheckin": false,
+        "allowParentOwnerToCancel": true
       }
     },
     {
@@ -706,7 +709,7 @@
             "name": "created",
             "displayName": "cases.comp.people.securityTags.table.columns.created",
             "headerCellFilter": "translate",
-			"cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+            "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>"
           },
           {
             "name": "creator",
@@ -721,6 +724,7 @@
       "id": "participants",
       "title": "Participants",
       "icon": "fa fa-users",
+      "className": "com.armedia.acm.services.participants.model.AcmParticipant",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -845,6 +849,7 @@
         {
           "name": "title",
           "field": "title_parseable",
+          "sortField": "title_parseable_lcs",
           "displayName": "cases.comp.tasks.table.columns.title",
           "headerCellFilter": "translate",
           "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
@@ -1162,6 +1167,7 @@
         },
         {
           "name": "title_parseable",
+		  "sortField": "title_parseable_lcs",
           "displayName": "cases.comp.merge.table.columns.title",
           "headerCellFilter": "translate",
           "width": 75
@@ -1223,6 +1229,7 @@
         },
         {
           "name": "title_parseable",
+		  "sortField": "title_parseable_lcs",
           "displayName": "cases.comp.addreference.grid.columns.title",
           "headerCellFilter": "translate"
         },

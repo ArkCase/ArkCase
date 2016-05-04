@@ -14,7 +14,10 @@ public class CaseFileSetCreatorHandler implements PipelineHandler<CaseFile, Case
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
-        entity.setCreator(pipelineContext.getAuthentication().getName());
+        if (pipelineContext.isNewCase())
+        {
+            entity.setCreator(pipelineContext.getAuthentication().getName());
+        }
     }
 
     @Override

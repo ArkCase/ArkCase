@@ -84,7 +84,7 @@
  */
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log'
     , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService'
-    , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', 'Authentication', 'Helper.NoteService', 'Object.NoteService' 
+    , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', 'Authentication', 'Helper.NoteService', 'Object.NoteService'
     , '$timeout', '$browser', '$location', 'Object.LockingService', 'ObjectService'
     , function ($q, $translate, $modal, $filter, $log
         , Store, Util, UtilDateService, ConfigService, LookupService
@@ -167,12 +167,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             ;
                         } else if (DocTree.isFileNode(node)) {
                             if (node.data.lock) {
-                                var lockedTitle = $translate.instant("common.directive.docTree.lockedTitle");
-                                var $span = $("<span class='ui-icon ui-icon-locked' title='" + lockedTitle + "'/>").appendTo($tdList.eq(1));
-                                $span.hover(function () {
-                                    $(this).tooltip('show');
-                                }, function () {
-                                    $(this).tooltip('hide');
+                                promiseGetUserFullName.then(function (userFullNames) {
+                                    var found = _.find(userFullNames, {id: node.data.lock.creator});
+                                    var userFullName = Util.goodMapValue(found, "name");
+                                    var lockedTitle = $translate.instant("common.directive.docTree.lockedTitle") + userFullName;
+                                    var $span = $("<span class='ui-icon ui-icon-locked' title='" + lockedTitle + "'/>").appendTo($tdList.eq(1));
+                                    $span.hover(function () {
+                                        $(this).tooltip('show');
+                                    }, function () {
+                                        $(this).tooltip('hide');
+                                    });
                                 });
                             }
                             var filter = $filter('capitalizeFirst');
@@ -188,8 +192,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             var $span = $("<span/>").appendTo($td6);
                             var $select = $("<select/>")
                                 .addClass('docversion inline')
-                                .appendTo($span)
-                                ;
+                                .appendTo($span);
 
                             if (Util.isArray(node.data.versionList)) {
                                 for (var i = 0; i < node.data.versionList.length; i++) {
@@ -197,8 +200,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     var $option = $("<option/>")
                                         .val(versionTag)
                                         .text(versionTag)
-                                        .appendTo($select)
-                                        ;
+                                        .appendTo($select);
 
                                     if (Util.goodValue(node.data.version) == versionTag) {
                                         $option.attr("selected", true);
@@ -397,8 +399,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 DocTree.Paging.relievePaging();
                             }
                         }
-                    })
-                ;
+                    });
 
                 DocTree.tree = DocTree.jqTree.fancytree("getTree");
                 var jqTreeBody = DocTree.jqTree.find("tbody");
@@ -1059,7 +1060,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             break;
                         case "checkout":
                             var fileId = node.data.objectId;
-                            LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE).then(
+                            LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
+                                ObjectService.LockTypes.CHECKOUT_LOCK).then(
                                 function (lockedFile) {
                                     DocTree._doDownload(node);
                                     DocTree.refreshTree();
@@ -1067,18 +1069,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             );
                             break;
                         case "checkin":
-                            var fileId = node.data.objectId;
-                            LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE).then(
-                                function (unlockedFile) {
-                                    var noteHelper = new HelperNoteService.Note();
-                                    var note = noteHelper.createNote(fileId, ObjectService.ObjectTypes.FILE, user);
-                                    Comment.openModal(note, node);
-                                }
-                            );
+                            Comment.openModal(node);
                             break;
                         case "cancelEditing":
                             var fileId = node.data.objectId;
-                            LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE).then(
+                            LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE,
+                                ObjectService.LockTypes.CANCEL_LOCK).then(
                                 function (unlockedFile) {
                                     // file is unlocked
                                     DocTree.refreshTree();
@@ -1153,10 +1149,17 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         case "edit":
                             break;
                         case "editWithWord":
-                            var absUrl = $location.absUrl();
-                            var baseHref = $browser.baseHref();
-                            var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
-                            ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + node.parent.data.objectId + "/" + node.data.objectId + ".docx");
+                            var fileId = node.data.objectId;
+                            LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
+                                ObjectService.LockTypes.WORD_EDIT_LOCK).then(
+                                function (lockedFile) {
+                                    var absUrl = $location.absUrl();
+                                    var baseHref = $browser.baseHref();
+                                    var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
+                                    ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + node.parent.data.objectId + "/" + node.data.objectId + ".docx");
+                                    DocTree.refreshTree();
+                                }
+                            );
                             break;
                         case "email":
                             Email.openModal(actNodes);
@@ -1320,23 +1323,28 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     if (Validator.validateNodes(nodes)) {
                         var countFolder = 0;
                         var countFile = 0;
+                        var hasFileRecord = false;
                         for (var i = 0; i < nodes.length; i++) {
                             if (DocTree.isFolderNode(nodes[i])) {
                                 countFolder++;
                             } else if (DocTree.isFileNode(nodes[i])) {
                                 countFile++;
+                                if (nodes[i].data.status == "RECORD") {
+                                    hasFileRecord = true;
+                                }
                             }
                         }
 
-                        if (0 < countFile && 0 >= countFolder) {              //file only menu
-                            menuResource = "menu.batch.files";
-                        } else if (0 >= countFile || 0 < countFolder) {       //folder only menu
+                        if (countFile > 0 && countFolder > 0) { // files and folders menu
+                            menuResource = (hasFileRecord ? "menu.batch.filesOrFoldersRecord" : "menu.batch.filesAndFolders");
+                        } else if (countFolder > 0) {       // folders only menu
                             menuResource = "menu.batch.folders";
-                        } else if (0 < countFile || 0 < countFolder) {        //mix file and folder menu
-                            menuResource = "menu.batch.filesAndFolders";
-
+                        } else if (countFile > 0) {        // files only menu
+                            menuResource = (hasFileRecord ? "menu.record.file" : "menu.batch.files");
                         }
+
                     }
+
                     return menuResource;
                 }
                 , getRecordResource: function (node) {
@@ -1796,7 +1804,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return dfd.promise();
                 }
-                , replaceFile: function (formData, fileNode, name) {
+                , replaceFile: function (formData, fileNode, name, doRefresh) {
+                    var refresh = true;
+                    if (doRefresh == false)
+                        refresh = false;
                     var dfd = $.Deferred();
                     if (!DocTree.isFileNode(fileNode)) {
                         dfd.reject();
@@ -1817,6 +1828,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 if (Validator.validateReplaceInfo(data)) {
                                     var replaceInfo = data;
 
+                                    //i think file will have different id because it is new file
                                     if (replaceInfo.fileId == fileId) {
                                         var folderList = DocTree.cacheFolderList.get(cacheKey);
                                         if (Validator.validateFolderList(folderList)) {
@@ -1843,19 +1855,19 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
                         }).then(
                             function (replacedFile) {
-                                if (replacedFile && fileNode) {
-                                    fileNode.data.version = replacedFile.version;
-                                    fileNode.data.versionList = replacedFile.versionList;
-                                    fileNode.renderTitle();
-                                    fileNode.setStatus("ok");
+                                if (refresh) {
+                                    if (replacedFile && fileNode) {
+                                        fileNode.renderTitle();
+                                        fileNode.setStatus("ok");
+                                    }
+                                    DocTree.refreshTree();
                                 }
-                                dfd.resolve();
-                                DocTree.refreshTree();
+                                dfd.resolve(replacedFile);
                             }
                             , function (errorData) {
                                 //fixme: App.View.MessageBoard.show($.t("doctree:error.replace-file"), Util.goodValue(response.errorMsg));
                                 DocTree.markNodeError(fileNode);
-                                dfd.reject();
+                                dfd.reject(errorData);
                             }
                         );
                     }
@@ -2712,6 +2724,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 }
             }
 
+            , replaceFileWithSelectedFile: function (node, files) {
+                var fileType = Util.goodValue(node.data.type);
+                if (!Util.isEmpty(fileType)) {
+                    DocTree.replaceFileNode = node;
+                    DocTree.uploadToFolderNode = node.parent;
+                    DocTree.uploadFileType = fileType;
+                    DocTree.uploadFileNew = false;
+                    return DocTree.doSubmitFormUploadFile(files, false);
+                }
+            }
             , _addFileNode: function (folderNode, name, type) {
                 var fileNode = folderNode.addChildren({
                     "title": $translate.instant("common.directive.docTree.waitUploading") + name,
@@ -2855,6 +2877,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     nodeData.data.objectType = Util.goodValue(folderData.objectType);
                     nodeData.data.created = Util.goodValue(folderData.created);
                     nodeData.data.creator = Util.goodValue(folderData.creator);
+                    nodeData.data.status = Util.goodValue(folderData.status);
 
                 }
                 return nodeData;
@@ -2926,7 +2949,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                 }
             }
-            , doSubmitFormUploadFile: function (files) {
+            , doSubmitFormUploadFile: function (files, doRefresh) {
+                var refresh = true;
+                if (doRefresh == false)
+                    refresh = false;
+                var dfd = $.Deferred();
                 var folderNode = DocTree.uploadToFolderNode;
                 var fileType = DocTree.uploadFileType;
                 var fd = new FormData();
@@ -2949,21 +2976,36 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                 var cacheKey = DocTree.getCacheKeyByNode(folderNode);
                 if (DocTree.uploadFileNew) {
-                    DocTree.Op.uploadFiles(fd, folderNode, names, fileType).always(function () {
-                        if (DocTree.uploadingCmd) {
-                            DocTree.Command.onPostCmd(DocTree.uploadingCmd.cmd, DocTree.uploadingCmd.actNodes);
-                            DocTree.uploadingCmd = null;
-                        }
-                    });
+                    DocTree.Op.uploadFiles(fd, folderNode, names, fileType)
+                        .then(function (data) {
+                                dfd.resolve(data);
+                            },
+                            function (error) {
+                                dfd.reject(error);
+                            })
+                        .always(function () {
+                            if (DocTree.uploadingCmd) {
+                                DocTree.Command.onPostCmd(DocTree.uploadingCmd.cmd, DocTree.uploadingCmd.actNodes);
+                                DocTree.uploadingCmd = null;
+                            }
+                        });
                 } else {
                     var replaceNode = DocTree.replaceFileNode;
-                    DocTree.Op.replaceFile(fd, replaceNode, names[0]).always(function () {
-                        if (DocTree.uploadingCmd) {
-                            DocTree.Command.onPostCmd(DocTree.uploadingCmd.cmd, DocTree.uploadingCmd.actNodes);
-                            DocTree.uploadingCmd = null;
-                        }
-                    });
+                    DocTree.Op.replaceFile(fd, replaceNode, names[0], refresh)
+                        .then(function (data) {
+                                dfd.resolve(data);
+                            },
+                            function (error) {
+                                dfd.reject(error);
+                            })
+                        .always(function () {
+                            if (DocTree.uploadingCmd) {
+                                DocTree.Command.onPostCmd(DocTree.uploadingCmd.cmd, DocTree.uploadingCmd.actNodes);
+                                DocTree.uploadingCmd = null;
+                            }
+                        });
                 }
+                return dfd.promise();
             }
             , _matchFileNode: function (type, name, fileNodes) {
                 var fileNode = null;
@@ -3211,6 +3253,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 solrData.modified = Util.goodValue(folderData.modified);
                 solrData.modifier = Util.goodValue(folderData.modifier);
                 solrData.name = Util.goodValue(folderData.name);
+                solrData.status = Util.goodValue(folderData.status);
                 if (!Util.isEmpty(folderData.parentFolderId, 0)) {
                     solrData.folderId = Util.goodValue(folderData.parentFolderId, 0);
                 } else if (!Util.isEmpty(folderData.folderId, 0)) {
@@ -3322,7 +3365,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 return "";
             }
             , _makeEmailDataForEmailWithLinks: function (emailAddresses, nodes, title) {
-                var emailNotifications = [];
                 var emailData = {};
                 emailData.subject = this._buildSubject();
                 emailData.title = Util.goodValue(title, $translate.instant("common.directive.docTree.email.defaultTitle"));
@@ -3331,8 +3373,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 emailData.emailAddresses = emailAddresses;
                 emailData.fileIds = Email._extractFileIds(nodes);
                 emailData.baseUrl = Email._makeBaseUrl();
-                emailNotifications.push(emailData);
-                return emailNotifications;
+                return emailData;
             }
             , _makeEmailDataForEmailWithAttachments: function (emailAddresses, nodes) {
                 var emailData = {};
@@ -3365,7 +3406,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 if (!Util.isEmpty(Email.arkcasePort)) {
                     url += ":" + Util.goodValue(Email.arkcasePort);
                 }
-                url += "arkcase" + Email.API_DOWNLOAD_DOCUMENT;
+                var baseHref = $browser.baseHref().slice(0, -1);
+                url += baseHref + Email.API_DOWNLOAD_DOCUMENT;
                 return url;
             }
             //, sentEmail: function (emailData) {
@@ -3412,11 +3454,15 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
         }; // end Email
 
         var Comment = {
-            openModal: function (note, node) {
-
+            openModal: function (node) {
+                var noteHelper = new HelperNoteService.Note();
+                var fileId = node.data.objectId;
+                var isNoteRequired = DocTree.treeConfig.noteRequiredOnCheckin;
+                var note = noteHelper.createNote(fileId, ObjectService.ObjectTypes.FILE, user);
                 var params = {
                     config: Util.goodMapValue(DocTree.treeConfig, "comment", {}),
-                    note: note
+                    note: note,
+                    isNoteRequired: isNoteRequired
                 };
 
                 var modalInstance = $modal.open({
@@ -3430,19 +3476,30 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
                     }
                 });
+
                 modalInstance.result.then(function (data) {
-                    data.note.created = Util.dateToIsoString(new Date(note.created));
-                    ObjectNoteService.saveNote(data.note).then(function () {
-                    });
-                    //replace file after comment is added
-                    DocTree.replaceFile(node);
-                }, function () {
-                    // comment is not added, replace file
-                    DocTree.replaceFile(node);
+                    DocTree.replaceFileWithSelectedFile(node, data.files)
+                        .then(function (result) {
+                                if (data.note.note != null && data.note.note.length > 0) {
+                                    //we have text in note so we will save the note
+                                    data.note.tag = result.version;
+                                    ObjectNoteService.saveNote(data.note);
+                                }
+                                var fileId = result.objectId;
+                                LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE,
+                                    ObjectService.LockTypes.CHECKIN_LOCK).then(function () {
+                                    DocTree.markNodeOk(node.parent);
+                                    node.parent.renderTitle();
+                                    DocTree.refreshTree();
+                                });
+                            },
+                            function () {
+                                DocTree.markNodeError(node);
+                            });
                 });
+
             }
         };
-
         var Ui = {
             dlgModal: function ($s, onClickBtnPrimary, onClickBtnDefault) {
                 var a = $s.html();
@@ -4100,7 +4157,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
         };
 
     }
-])
+]);
+
 angular.module('directives').controller('directives.DocTreeDndDialogController', ['$scope', '$modalInstance'
         , 'UtilService', 'OpTypes', 'params'
         , function ($scope, $modalInstance, Util, OpTypes, params) {
@@ -4216,12 +4274,22 @@ angular.module('directives').controller('directives.DocTreeCommentDialogControll
 
             $scope.config = params.config;
             $scope.note = params.note;
+            $scope.selectedFiles = [];
+            $scope.isNoteRequired = params.isNoteRequired;
+
+            /**
+             * Add files to files list
+             * @param files
+             */
+            $scope.selectFiles = function (files) {
+                $scope.selectedFiles = files;
+            };
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss();
             };
             $scope.onClickOk = function () {
-                $modalInstance.close({note: $scope.note});
+                $modalInstance.close({note: $scope.note, files: $scope.selectedFiles});
             };
         }
     ]

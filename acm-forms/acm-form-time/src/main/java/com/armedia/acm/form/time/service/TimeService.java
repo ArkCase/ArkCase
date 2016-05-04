@@ -149,8 +149,10 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 		
 		// Create timesheet folder (if not exist)
 		String rootFolder = (String) getTimesheetService().getProperties().get(TimesheetConstants.ROOT_FOLDER_KEY);
-		AcmContainer container = createContainer(rootFolder, timesheet.getUser().getUserId(), timesheet.getId(), TimesheetConstants.OBJECT_TYPE, getTimesheetService().createName(timesheet));
+		String timesheetTitle = getTimesheetService().createName(timesheet);
+		AcmContainer container = createContainer(rootFolder, timesheet.getUser().getUserId(), timesheet.getId(), TimesheetConstants.OBJECT_TYPE, timesheetTitle);
 		timesheet.setContainer(container);
+		timesheet.setTitle(timesheetTitle);
 		
 		AcmTimesheet saved = getTimesheetService().save(timesheet, submissionName);
 		

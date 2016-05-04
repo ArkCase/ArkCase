@@ -142,4 +142,10 @@
 			<column name="cm_class_name" type="VARCHAR(400)"/>
 		</addColumn>
 	</changeSet>
+
+	<changeSet id="11-add-title-in-acm-costsheet-table" author="nadica.cuculova">
+		<addColumn tableName="acm_costsheet">
+			<column name="cm_costsheet_title" type="VARCHAR(1024)"/>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

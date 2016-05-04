@@ -13,13 +13,10 @@ angular.module('time-tracking').controller('TimeTrackingController', ['$scope', 
             , resetObjectInfo: TimeTrackingInfoService.resetTimesheetInfo
             , getObjectInfo: TimeTrackingInfoService.getTimesheetInfo
             , updateObjectInfo: TimeTrackingInfoService.saveTimesheetInfo
-            , initComponentLinks: function (config) {
-                return HelperObjectBrowserService.createComponentLinks(config, ObjectService.ObjectTypes.TIMESHEET);
+            , getObjectTypeFromInfo: function (complaintInfo) {
+                return ObjectService.ObjectTypes.TIMESHEET;
             }
         });
 
-        //$scope.$on("collapsed", function(event, collapsed) {
-        //    $scope.linksShown = !collapsed;
-        //});
 	}
 ]);

@@ -7,7 +7,6 @@ import com.armedia.acm.plugins.complaint.model.ComplaintListView;
 import com.armedia.acm.plugins.complaint.model.TimePeriod;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +16,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -69,7 +67,7 @@ public class ComplaintDao extends AcmAbstractDao<Complaint>
         CriteriaBuilder builder = getEm().getCriteriaBuilder();
         CriteriaQuery<ComplaintListView> query = builder.createQuery(ComplaintListView.class);
         Root<ComplaintListView> clv = query.from(ComplaintListView.class);
-        query.select(clv).where(builder.greaterThanOrEqualTo(clv.<Date> get("created"), shiftDateFromToday(timePeriod.getNumOfDays())));
+        query.select(clv).where(builder.greaterThanOrEqualTo(clv.<Date>get("created"), shiftDateFromToday(timePeriod.getNumOfDays())));
 
         // TODO: parameterized order by
         query.orderBy(builder.desc(clv.get("created")));
@@ -99,6 +97,16 @@ public class ComplaintDao extends AcmAbstractDao<Complaint>
         TypedQuery<ComplaintListView> dbQuery = getEm().createQuery(query);
         List<ComplaintListView> results = dbQuery.getResultList();
         return results;
+    }
+
+    public Complaint findByComplaintNumber(String complaintNumber)
+    {
+        String queryText = "SELECT c FROM Complaint c WHERE c.complaintNumber = :complaintNumber";
+
+        TypedQuery<Complaint> findByNumberQuery = getEm().createQuery(queryText, Complaint.class);
+        findByNumberQuery.setParameter("complaintNumber", complaintNumber);
+
+        return findByNumberQuery.getSingleResult();
     }
 
     @Transactional

@@ -67,8 +67,18 @@ for (GrantedAuthority granted : authentication.getAuthorities())
 
 String childObjectFilterQuery = "{!frange l=1}sum(\$topLevel, \$dac)";
 
-message.setInboundProperty("isTopLevelObjectFilter", isTopLevelObjectFilter);
-message.setInboundProperty("childObjectDacFilter", URLEncoder.encode(childObjectDacFilter, StandardCharsets.UTF_8.displayName()));
-message.setInboundProperty("childObjectFilterQuery", URLEncoder.encode(childObjectFilterQuery, StandardCharsets.UTF_8.displayName()));
+boolean filterParentRef = message.getInboundProperty("filterParentRef");
+
+if (filterParentRef)
+{
+    message.setInboundProperty("isTopLevelObjectFilter", isTopLevelObjectFilter);
+    message.setInboundProperty("childObjectDacFilter", URLEncoder.encode(childObjectDacFilter, StandardCharsets.UTF_8.displayName()));
+    message.setInboundProperty("childObjectFilterQuery", URLEncoder.encode(childObjectFilterQuery, StandardCharsets.UTF_8.displayName()));
+} else
+{
+    message.setInboundProperty("isTopLevelObjectFilter", "");
+    message.setInboundProperty("childObjectDacFilter", "");
+    message.setInboundProperty("childObjectFilterQuery", "");
+}
 
 return payload;
