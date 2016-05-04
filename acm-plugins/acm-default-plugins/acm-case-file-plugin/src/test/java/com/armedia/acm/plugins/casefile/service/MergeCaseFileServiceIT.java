@@ -286,7 +286,7 @@ public class MergeCaseFileServiceIT
             }
         }
 
-        assertEquals(4, targetCase.getParticipants().size());
+        assertEquals(5, targetCase.getParticipants().size());
 
         assertNotNull(foundAssignee);
         assertEquals(auth.getName(), foundAssignee.getParticipantLdapId());
@@ -365,7 +365,7 @@ public class MergeCaseFileServiceIT
 
         CaseFile targetCase = caseFileDao.find(targetId);
 
-        assertEquals(5, targetCase.getParticipants().size());
+        assertEquals(6, targetCase.getParticipants().size());
 
         foundAssignee = null;
         for (AcmParticipant ap : targetCase.getParticipants())
