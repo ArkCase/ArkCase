@@ -22,15 +22,18 @@ import java.util.Date;
 @XmlRootElement
 @Entity
 @Table(name = "acm_object_lock")
-public class AcmObjectLock implements Serializable, AcmEntity {
+public class AcmObjectLock implements Serializable, AcmEntity
+{
     private static final long serialVersionUID = 4579477797364149888L;
 
-    public AcmObjectLock(long objectId, String objectType) {
+    public AcmObjectLock(long objectId, String objectType)
+    {
         this.objectId = objectId;
         this.objectType = objectType;
     }
 
-    public AcmObjectLock() {
+    public AcmObjectLock()
+    {
     }
 
     @Id
@@ -64,71 +67,99 @@ public class AcmObjectLock implements Serializable, AcmEntity {
     @Column(name = "cm_object_lock_modifier")
     private String modifier;
 
-    public Long getId() {
+    @Column(name = "cm_lock_type")
+    private String lockType;
+
+    public Long getId()
+    {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id)
+    {
         this.id = id;
     }
 
-    public Long getObjectId() {
+    public Long getObjectId()
+    {
         return objectId;
     }
 
-    public void setObjectId(Long objectId) {
+    public void setObjectId(Long objectId)
+    {
         this.objectId = objectId;
     }
 
-    public String getObjectType() {
+    public String getObjectType()
+    {
         return objectType;
     }
 
-    public void setObjectType(String objectType) {
+    public void setObjectType(String objectType)
+    {
         this.objectType = objectType;
     }
 
     @XmlTransient
     @Override
-    public Date getCreated() {
+    public Date getCreated()
+    {
         return created;
     }
 
     @Override
-    public void setCreated(Date created) {
+    public void setCreated(Date created)
+    {
         this.created = created;
     }
 
     @XmlTransient
     @Override
-    public String getCreator() {
+    public String getCreator()
+    {
         return creator;
     }
 
     @Override
-    public void setCreator(String creator) {
+    public void setCreator(String creator)
+    {
         this.creator = creator;
     }
 
     @XmlTransient
     @Override
-    public Date getModified() {
+    public Date getModified()
+    {
         return modified;
     }
 
     @Override
-    public void setModified(Date modified) {
+    public void setModified(Date modified)
+    {
         this.modified = modified;
     }
 
     @XmlTransient
     @Override
-    public String getModifier() {
+    public String getModifier()
+    {
         return modifier;
     }
 
     @Override
-    public void setModifier(String modifier) {
+    public void setModifier(String modifier)
+    {
         this.modifier = modifier;
     }
+
+    public String getLockType()
+    {
+        return lockType;
+    }
+
+    public void setLockType(String lockType)
+    {
+        this.lockType = lockType;
+    }
+
 }

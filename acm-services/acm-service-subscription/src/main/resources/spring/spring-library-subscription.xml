@@ -29,6 +29,7 @@
         <property name="subscriptionDao" ref="subscriptionDao"/>
         <property name="subscriptionEventDao" ref="subscriptionEventDao"/>
         <property name="subscriptionEventPublisher" ref="subscriptionEventPublisher"/>
+        <property name="subscriptionProperties" ref="subscriptionProperties"/>
     </bean>
 
     <bean id="subscriptionEventPublisher"
@@ -61,6 +62,7 @@
         <property name="properties">
             <props>
                 <prop key="subscription.batchUpdateFrequencyInMilliseconds">180000</prop>
+                <prop key="subscription.removed.event.types">com.armedia.acm.plugins.search.result</prop>
             </props>
         </property>
     </bean>

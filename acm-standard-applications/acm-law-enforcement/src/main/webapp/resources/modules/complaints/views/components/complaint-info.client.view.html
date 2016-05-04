@@ -15,12 +15,13 @@
                        e-ng-options="c.value as c.text for c in complaintTypes">{{objectInfo.complaintType ||
                         'Unknown'}}</a>
                 </div>
-                <small class="text-muted">Complaint Type</small>
+                <small class="text-muted">Type</small>
             </div>
             <!--<b>Priority: </b><a href="#" editable-select="objectInfo.priority" e-ng-options="p as p for p in priorities">{{ objectInfo.priority  || 'Unknown'}}</a>-->
             <!--<select ng-model="myselect" ng-options="o as o for o in myoptions"></select>-->
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{objectInfo.created | date: ('common.defaultDateUIFormat' | translate)}}</div>
+                <div class="h4 font-bold">{{objectInfo.created | date: ('common.defaultDateUIFormat' | translate)}}
+                </div>
                 <small class="text-muted">Created Date</small>
             </div>
             <div class="col-xs-12 col-md-4">

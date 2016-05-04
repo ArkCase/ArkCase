@@ -106,4 +106,7 @@ public interface NotificationConstants
     String ANCHOR_PLACEHOLDER = "${urlanchor}";
 
     String LAST_BATCH_RUN_PROPERTY_FILE = System.getProperty("user.home") + "/.arkcase/acm/notificationLastBatchUpdate.properties";
+
+    String BASE_URL_KEY = "arkcase.url.base";
+
 }

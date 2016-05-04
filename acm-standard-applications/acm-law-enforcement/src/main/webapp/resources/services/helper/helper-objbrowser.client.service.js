@@ -127,6 +127,12 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                         );
                     }
                 });
+
+                that.scope.$on("link-updated", function (event, linkParams) {
+                    if (that.scope.treeControl) {
+                        that.scope.treeControl.selectComponent(linkParams.objectType, linkParams.objectId, linkParams.linkId);
+                    }
+                });
             }
 
 
@@ -161,6 +167,11 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.getObjectInfo = arg.getObjectInfo;
                 that.updateObjectInfo = arg.updateObjectInfo;
                 that.initComponentLinks = arg.initComponentLinks;
+                that.initComponentLinksDefault = function (config) {
+                    var nodeType = Service.getCurrentObjectType();
+                    return Service.createComponentLinks(config, nodeType);
+                };
+
                 that.selectComponentLinks = arg.selectComponentLinks;
                 that.getObjectIdFromInfo = (arg.getObjectIdFromInfo) ? arg.getObjectIdFromInfo : function (objectInfo) {
                     return Util.goodMapValue(objectInfo, "id");
@@ -174,7 +185,9 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
                 ConfigService.getModuleConfig(that.moduleId).then(function (moduleConfig) {
                     that.scope.config = moduleConfig;
-                    that.scope.componentLinks = that.initComponentLinks(moduleConfig);
+                    if (that.initComponentLinks) {  //if initComponentLinks is not define, use initComponentLinksDefault but postpone after objectInfo retrieved
+                        that.scope.componentLinks = that.initComponentLinks(moduleConfig);
+                    }
                     that.scope.linksShown = Util.goodValue(moduleConfig.initialLinksShown, true);
                     return moduleConfig;
                 });
@@ -188,11 +201,19 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     var objectId = that.getObjectIdFromInfo(that.scope.objectInfo);
                     var objectType = that.getObjectTypeFromInfo(that.scope.objectInfo);
                     Service.updateObjectSetting(that.moduleId, linkId, objectId, objectType);
-                    var params = {id: objectId};
+
+                    var linkParams = {
+                        objectType: objectType
+                        , objectId: objectId
+                        , linkId: linkId
+                    };
+                    var rc = that.scope.$broadcast('link-updated', linkParams);
+
+                    var stateParams = {id: objectId};
                     if (!Util.isEmpty(objectType)) {
-                        params.type = objectType;
+                        stateParams.type = objectType;
                     }
-                    that.state.go(arg.moduleId + "." + linkId, params);
+                    that.state.go(arg.moduleId + "." + linkId, stateParams);
                 };
 
                 that.scope.linksShown = true;
@@ -244,7 +265,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     var objectId = Util.goodMapValue(selectedObject, "nodeId", null);
                     var objectType = Util.goodMapValue(selectedObject, "nodeType", null);
                     Service.updateObjectSetting(that.moduleId, that.scope.activeLinkId, objectId, objectType);
-                    if (that.selectComponentLinks) {
+                    if (that.selectComponentLinks && that.initComponentLinks) {     //initComponentLinks serves as flag to indicate initComponentLinks() has called
                         that.scope.componentLinks = that.selectComponentLinks(selectedObject);
                     }
 
@@ -268,6 +289,12 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                             function (objectInfo) {
                                 that.scope.progressMsg = null;
                                 that.scope.objectInfo = objectInfo;
+
+                                if (!that.initComponentLinks) {
+                                    that.initComponentLinks = that.initComponentLinksDefault;
+                                }
+                                that.scope.componentLinks = that.initComponentLinks(that.scope.config);
+
                                 that.scope.$broadcast('object-updated', objectInfo);
                                 return objectInfo;
                             }
@@ -699,6 +726,21 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
         Service.getCurrentObjectId = function () {
             var objectSetting = this.getCurrentObjectSetting();
             return objectSetting.objectId;
+        };
+
+        /**
+         * @ngdoc method
+         * @name getCurrentObjectType
+         * @methodOf services:Helper.ObjectBrowserService
+         *
+         * @description
+         * Get current object Type
+         *
+         * @returns {Object} Current object type.
+         */
+        Service.getCurrentObjectType = function () {
+            var objectSetting = this.getCurrentObjectSetting();
+            return objectSetting.objectType;
         };
 
 

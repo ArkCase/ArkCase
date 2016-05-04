@@ -11,7 +11,7 @@
             </column>
 
             <column name="cm_note_text" type="VARCHAR(4000)">
-                <constraints nullable = "false"/>
+                <constraints nullable="false"/>
             </column>
 
             <column name="cm_note_creator" type="VARCHAR(128)">
@@ -23,11 +23,11 @@
             </column>
 
             <column name="cm_parent_object_id" type="${fkIdType}">
-                <constraints nullable = "false"/>
+                <constraints nullable="false"/>
             </column>
 
             <column name="cm_parent_object_type" type="VARCHAR(128)">
-                <constraints nullable = "false"/>
+                <constraints nullable="false"/>
             </column>
         </createTable>
 
@@ -36,13 +36,14 @@
         </createIndex>
 
     </changeSet>
-    
+
     <changeSet id="02-note-table-add-type-column" author="riste.tutureski">
-    	<addColumn tableName="acm_note">
-    		<column name="cm_note_type" afterColumn="cm_note_text" beforeColumn="cm_note_creator" defaultValue="GENERAL" type="VARCHAR(1024)">
-    			<constraints nullable = "false"/>
-    		</column>
-    	</addColumn>
+        <addColumn tableName="acm_note">
+            <column name="cm_note_type" afterColumn="cm_note_text" beforeColumn="cm_note_creator" defaultValue="GENERAL"
+                    type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
     </changeSet>
 
     <changeSet id="03-acm_note-id" author="nebojsha.davidovikj">
@@ -55,4 +56,22 @@
             <column name="cm_seq_name" value="acm_note"></column>
         </insert>
     </changeSet>
+
+    <changeSet id="04-acm_note_tag" author="dragan.simonovski">
+        <addColumn tableName="acm_note">
+            <column name="cm_note_tag" type="varchar(1000)"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="05-acm_note-add-modified-and-modifier" author="ilinpetar">
+        <addColumn tableName="acm_note">
+            <column name="cm_note_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_note_modifier" type="VARCHAR(1024)" defaultValue="SYSTEM">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

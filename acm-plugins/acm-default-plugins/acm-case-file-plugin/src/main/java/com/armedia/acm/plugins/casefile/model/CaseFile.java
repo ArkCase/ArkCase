@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.casefile.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
@@ -59,7 +60,7 @@ import java.util.Optional;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.casefile.model.CaseFile")
-public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity
+public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity
 {
     private static final long serialVersionUID = -6035628455385955008L;
 
@@ -196,6 +197,9 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
 
     @Column(name = "cm_security_field")
     private String securityField;
+
+    @Column(name = "cm_legacy_system_id")
+    private String legacySystemId;
 
     @PrePersist
     protected void beforeInsert()
@@ -660,6 +664,18 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
                 + ", disposition='" + disposition + '\'' + ", priority='" + priority + '\'' + ", objectType='" + objectType + '\'' + ", participants=" + participants + ", dueDate=" + dueDate
                 + ", changeCaseStatus=" + changeCaseStatus + ", approvers=" + approvers + ", ecmFolderPath='" + ecmFolderPath + '\'' + ", personAssociations=" + personAssociations + ", milestones="
                 + milestones + ", originator=" + originator + ", restricted=" + restricted + ", childObjects=" + childObjects + ", container=" + container + ", courtroomName='" + courtroomName + '\''
-                + ", responsibleOrganization='" + responsibleOrganization + '\'' + ", nextCourtDate=" + nextCourtDate + '\'' + ", className='" + className + '}';
+                + ", responsibleOrganization='" + responsibleOrganization + '\'' + ", nextCourtDate=" + nextCourtDate + '\'' + ", className='" + className + ", legacySystemId='" + legacySystemId + "'}";
+    }
+
+    @Override
+    public String getLegacySystemId()
+    {
+        return legacySystemId;
+    }
+
+    @Override
+    public void setLegacySystemId(String legacySystemId)
+    {
+        this.legacySystemId = legacySystemId;
     }
 }

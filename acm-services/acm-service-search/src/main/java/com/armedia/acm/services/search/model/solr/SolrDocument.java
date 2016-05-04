@@ -85,6 +85,9 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
     private Long business_process_id_i;
     private String business_process_name_lcs;
 
+    ///for sorting related fieds///
+    private String title_parseable_lcs;
+
     @Override
     public String getId()
     {
@@ -581,6 +584,16 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         this.business_process_name_lcs = business_process_name_lcs;
     }
 
+    public String getTitle_parseable_lcs()
+    {
+        return title_parseable_lcs;
+    }
+
+    public void setTitle_parseable_lcs(String title_parseable_lcs)
+    {
+        this.title_parseable_lcs = title_parseable_lcs;
+    }
+
     @Override
     public String toString()
     {
@@ -608,6 +621,7 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
                 ", public_doc_b=" + public_doc_b +
                 ", protected_object_b=" + protected_object_b +
                 ", title_parseable='" + title_parseable + '\'' +
+                ", title_parseable_lcs='" + title_parseable_lcs + '\'' +
                 ", description_parseable='" + description_parseable + '\'' +
                 ", description_no_html_tags_parseable='" + description_no_html_tags_parseable + '\'' +
                 ", notes_no_html_tags_parseable='" + notes_no_html_tags_parseable + '\'' +

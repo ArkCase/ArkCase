@@ -303,11 +303,6 @@
             "uiIcon": "ui-icon-folder-open"
           },
           {
-            "title": "Rename <kbd>[F2]</kbd>",
-            "cmd": "rename",
-            "uiIcon": "ui-icon-pencil"
-          },
-          {
             "title": "Email",
             "cmd": "email",
             "uiIcon": "ui-icon-mail-closed",
@@ -413,6 +408,23 @@
             "cmd": "declare",
             "uiIcon": "ui-icon-locked"
           }
+        ],
+        "filesOrFoldersRecord": [
+          {
+            "title": "Cut <kbd>Ctrl+X</kbd>",
+            "cmd": "cut",
+            "uiIcon": "ui-icon-scissors"
+          },
+          {
+            "title": "Copy <kbd>Ctrl+C</kbd>",
+            "cmd": "copy",
+            "uiIcon": "ui-icon-copy"
+          },
+          {
+            "title": "Declare as Record(s)",
+            "cmd": "declare",
+            "uiIcon": "ui-icon-locked"
+          }
         ]
       },
       "noop": {
@@ -434,5 +446,48 @@
         "uiIcon": "ui-icon-pencil"
       }
     }
-  }
+  },
+  "resetCacheNames": [
+    {
+      "service": "Authentication",
+      "names": "SessionCacheNames",
+      "type": "session"
+    },
+    {
+      "service": "Acm.AppService",
+      "names": "SessionCacheNames",
+      "type": "session"
+    },
+    {
+      "service": "ConfigService",
+      "names": "SessionCacheNames",
+      "type": "session"
+    },
+    {
+      "service": "LookupService",
+      "names": "SessionCacheNames",
+      "type": "session"
+    },
+    {
+      "service": "Object.LookupService",
+      "names": "SessionCacheNames",
+      "type": "session"
+    },
+    {
+      "service": "Case.LookupService",
+      "names": "SessionCacheNames",
+      "type": "session"
+    },
+    {
+      "service": "Complaint.LookupService",
+      "names": "SessionCacheNames",
+      "type": "session"
+    },
+    {
+      "service": "ApplicationConfigService",
+      "names": "SessionCacheNames",
+      "type": "session"
+    }
+
+  ]
 }

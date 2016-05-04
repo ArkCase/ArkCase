@@ -11,30 +11,37 @@ import java.util.regex.Pattern;
 /**
  * Created by nebojsha on 25.06.2015.
  */
-public class CaseFileMailFilter {
+public class CaseFileMailFilter
+{
     private String caseNumberRegexPattern;
+    private String caseObjectTypeRegexPattern;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    public boolean accept(Message message) throws MessagingException {
+    public boolean accept(Message message) throws MessagingException
+    {
 
         String subject = message.getSubject();
         if (subject == null || subject.length() < 1)
             return false;
-        Pattern pattern = Pattern.compile(caseNumberRegexPattern);
+
+        Pattern pattern = Pattern.compile(String.format("%s %s", caseObjectTypeRegexPattern, caseNumberRegexPattern));
         Matcher matcher = pattern.matcher(subject);
 
         boolean matchesCaseFilter = matcher.find();
 
-        if ( log.isDebugEnabled())
-        {
-            log.debug("Message with subject '{}' matches a case number: {}", message.getSubject(), matchesCaseFilter);
-        }
+        log.debug("Message with subject '{}' matches a case number: {}", message.getSubject(), matchesCaseFilter);
 
         return matchesCaseFilter;
     }
 
-    public void setCaseNumberRegexPattern(String caseNumberRegexPattern) {
+    public void setCaseNumberRegexPattern(String caseNumberRegexPattern)
+    {
         this.caseNumberRegexPattern = caseNumberRegexPattern;
+    }
+
+    public void setCaseObjectTypeRegexPattern(String caseObjectTypeRegexPattern)
+    {
+        this.caseObjectTypeRegexPattern = caseObjectTypeRegexPattern;
     }
 }

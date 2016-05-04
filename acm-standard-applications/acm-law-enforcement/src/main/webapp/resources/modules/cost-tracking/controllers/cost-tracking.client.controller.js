@@ -13,14 +13,10 @@ angular.module('cost-tracking').controller('CostTrackingController', ['$scope', 
 			, resetObjectInfo: CostTrackingInfoService.resetCostsheetInfo
 			, getObjectInfo: CostTrackingInfoService.getCostsheetInfo
 			, updateObjectInfo: CostTrackingInfoService.saveCostsheetInfo
-			, initComponentLinks: function (config) {
-				return HelperObjectBrowserService.createComponentLinks(config, ObjectService.ObjectTypes.COSTSHEET);
+			, getObjectTypeFromInfo: function (complaintInfo) {
+				return ObjectService.ObjectTypes.COSTSHEET;
 			}
 		});
-
-		//$scope.$on("collapsed", function(event, collapsed) {
-		//	$scope.linksShown = !collapsed;
-		//});
 
 	}
 ]);

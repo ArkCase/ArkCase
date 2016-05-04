@@ -28,6 +28,7 @@ public class CaseFileEcmFolderHandler implements PipelineHandler<CaseFile, CaseF
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
+        log.trace("CaseFile entering CaseFileEcmFolderHandler : [{}]", entity);
         if (entity.getEcmFolderPath() != null)
         {
             try
@@ -43,6 +44,7 @@ public class CaseFileEcmFolderHandler implements PipelineHandler<CaseFile, CaseF
         {
             log.info("There is no need to create folder");
         }
+        log.trace("CaseFile exiting CaseFileEcmFolderHandler : [{}]", entity);
     }
 
     @Override

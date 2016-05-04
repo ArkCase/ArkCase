@@ -71,7 +71,8 @@ import static org.junit.Assert.*;
                 "/spring/spring-library-task.xml",
                 "/spring/spring-library-note.xml",
                 "/spring/spring-library-event.xml",
-                "/spring/test-case-file-context.xml"
+                "/spring/test-case-file-context.xml",
+                "/spring/spring-library-authentication-token.xml"
         }
 )
 
