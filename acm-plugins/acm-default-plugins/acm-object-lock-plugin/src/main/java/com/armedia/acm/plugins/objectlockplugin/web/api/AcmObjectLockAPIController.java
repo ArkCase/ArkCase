@@ -32,8 +32,8 @@ public class AcmObjectLockAPIController
     /**
      * This method locks object identified with objectId and objectType.
      *
-     * @param objectType object type
-     * @param objectId   object ID
+     * @param objectType     object type
+     * @param objectId       object ID
      * @param authentication Authentication
      * @return AcmObjectLock lock details
      * @throws MuleException
@@ -45,10 +45,13 @@ public class AcmObjectLockAPIController
     public AcmObjectLock lockObject(
             @PathVariable(value = "objectType") String objectType,
             @PathVariable(value = "objectId") Long objectId,
+            @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType,
+
             Authentication authentication
     ) throws MuleException, IOException
+
     {
-        return objectLockService.createLock(objectId, objectType, authentication);
+        return objectLockService.createLock(objectId, objectType, lockType, authentication);
     }
 
     /**
@@ -56,7 +59,7 @@ public class AcmObjectLockAPIController
      *
      * @param objectType object type
      * @param objectId   object ID
-     * @param auth Authentication
+     * @param auth       Authentication
      * @return solr response
      * @throws MuleException
      * @throws IOException
@@ -67,13 +70,14 @@ public class AcmObjectLockAPIController
     public String unlockObject(
             @PathVariable(value = "objectType") String objectType,
             @PathVariable(value = "objectId") Long objectId,
+            @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType,
             Authentication auth
     ) throws MuleException, IOException
     {
         try
         {
             //FIXME not sure if anyone can remove object lock or just owner, for now anyone can remove the lock
-            objectLockService.removeLock(objectId, objectType, auth);
+            objectLockService.removeLock(objectId, objectType, lockType, auth);
         } catch (AcmObjectLockException e)
         {
             return e.getMessage();

@@ -124,6 +124,7 @@ public class CostService extends FrevvoFormChargeAbstractService {
 		String uniqueFolderName = getFolderAndFilesUtils().createUniqueFolderName(folderName);
 		AcmContainer container = createContainer(rootFolder, costsheet.getUser().getUserId(), costsheet.getId(), CostsheetConstants.OBJECT_TYPE, uniqueFolderName);
 		costsheet.setContainer(container);
+		costsheet.setTitle(folderName);
 		
 		AcmCostsheet saved = getCostsheetService().save(costsheet, submissionName);
 		

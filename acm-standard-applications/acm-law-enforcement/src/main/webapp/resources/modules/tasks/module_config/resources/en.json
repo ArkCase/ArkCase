@@ -150,6 +150,7 @@
     "status.label": "Status",
     "associateNumber.label": "Associate with Complaint or Case",
     "associateNumber.placeholder": "Complaint or Case #",
+    "associateType.label": "Parent Type",
     "subject.label": "Subject",
     "taskStartDate.label": "Start Date",
     "dueDate.label": "Due Date",

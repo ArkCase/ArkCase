@@ -239,15 +239,17 @@
               "name": "details",
               "displayName": "cases.comp.details.table.columns.title",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div ng-bind-html='row.entity.details'></div>"
+              "cellTemplate": "<div ng-bind-html='row.entity.details' title='{{row.entity.details}}' class='ui-grid-cell-contents'></div>"
             },
             {
+              "width": 150,
               "name": "modified",
               "displayName": "cases.comp.details.table.columns.modified",
               "headerCellFilter": "translate",
               "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             },
             {
+              "width": 150,
               "name": "modifier",
               "displayName": "cases.comp.details.table.columns.modifier",
               "headerCellFilter": "translate"
@@ -308,9 +310,11 @@
               "name": "note",
               "displayName": "cases.comp.notes.table.columns.note",
               "headerCellFilter": "translate",
-              "enableCellEdit": false
+              "enableCellEdit": false,
+              "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.note}}' class='ui-grid-cell-contents'></div>"
             },
             {
+              "width": 150,
               "name": "created",
               "displayName": "cases.comp.notes.table.columns.created",
               "headerCellFilter": "translate",
@@ -318,6 +322,7 @@
               "enableCellEdit": false
             },
             {
+              "width": 150,
               "name": "creator",
               "displayName": "cases.comp.notes.table.columns.creator",
               "headerCellFilter": "translate",
@@ -333,10 +338,13 @@
             {
               "name": "title",
               "field": "title_parseable",
+              "sortField": "title_parseable_lcs",
               "displayName": "cases.comp.tasks.table.columns.title",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.title_parseable' title='{{row.entity.title_parseable}}' class='ui-grid-cell-contents'></div>"
             },
             {
+              "width": 150,
               "name": "assignee",
               "field": "assignee_s",
               "displayName": "cases.comp.tasks.table.columns.assignee",
@@ -344,6 +352,7 @@
               "lookup": "userFullNames"
             },
             {
+              "width": 150,
               "name": "due",
               "field": "due_tdt",
               "displayName": "cases.comp.tasks.table.columns.due",
@@ -462,7 +471,8 @@
           "objectTypeRegexGroup": 1,
           "objectNumberRegexGroup": 2
         },
-        "noteRequiredOnCheckin": false
+        "noteRequiredOnCheckin": false,
+        "allowParentOwnerToCancel": true
       }
     },
     {
@@ -722,6 +732,7 @@
       "id": "participants",
       "title": "Participants",
       "icon": "fa fa-users",
+      "className": "com.armedia.acm.services.participants.model.AcmParticipant",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -846,6 +857,7 @@
         {
           "name": "title",
           "field": "title_parseable",
+          "sortField": "title_parseable_lcs",
           "displayName": "cases.comp.tasks.table.columns.title",
           "headerCellFilter": "translate",
           "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
@@ -960,7 +972,7 @@
           "name": "eventDate",
           "displayName": "cases.comp.history.table.columns.eventDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.eventDate | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.eventDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
         },
         {
           "name": "userId",
@@ -1163,6 +1175,7 @@
         },
         {
           "name": "title_parseable",
+		  "sortField": "title_parseable_lcs",
           "displayName": "cases.comp.merge.table.columns.title",
           "headerCellFilter": "translate",
           "width": 75
@@ -1224,6 +1237,7 @@
         },
         {
           "name": "title_parseable",
+		  "sortField": "title_parseable_lcs",
           "displayName": "cases.comp.addreference.grid.columns.title",
           "headerCellFilter": "translate"
         },

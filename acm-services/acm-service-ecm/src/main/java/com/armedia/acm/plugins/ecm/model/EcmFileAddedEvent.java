@@ -2,6 +2,8 @@ package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.core.model.AcmEvent;
+import com.ctc.wstx.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 
 import java.util.Date;
@@ -20,8 +22,15 @@ public class EcmFileAddedEvent extends AcmEvent
 
         setSource(uploaded);
 
-        setEventType("com.armedia.acm.ecm.file.added");
-        setObjectType("FILE");
+        String fileType = uploaded.getFileType();
+        String ft = "";
+
+        if(StringUtils.isNotEmpty(fileType) && fileType.endsWith("_xml")){
+            ft = ".xml";
+        }
+
+        setEventType("com.armedia.acm.ecm.file.added" + ft);
+        setObjectType(EcmFileConstants.OBJECT_FILE_TYPE);
         setObjectId(uploaded.getFileId());
         setEventDate(new Date());
         setUserId(uploaded.getModifier());
