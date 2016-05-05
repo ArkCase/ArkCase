@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -8,8 +9,10 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
+import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
+import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
@@ -18,6 +21,8 @@ import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +40,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private AcmFolderDao folderDao;
     private FolderAndFilesUtils folderAndFilesUtils;
     private PipelineManager pipelineManager;
+    private FileEventPublisher fileEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -131,6 +137,27 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         ecmFile.getVersions().add(version);
 
         ecmFile = getEcmFileDao().save(ecmFile);
+
+        return ecmFile;
+    }
+
+
+    @Override
+    public EcmFile updateFileTransactionEventAware(
+            Authentication authentication,
+            EcmFile ecmFile,
+            InputStream fileInputStream)
+            throws MuleException
+    {
+        ecmFile = updateFileTransaction(authentication, ecmFile, fileInputStream);
+        String ipAddress = null;
+        if(authentication != null) {
+            if ( authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails) {
+                    ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+            }
+        }
+
+        getFileEventPublisher().publishFileActiveVersionSetEvent(ecmFile, authentication, ipAddress, true);
 
         return ecmFile;
     }
@@ -248,5 +275,15 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public void setPipelineManager(PipelineManager pipelineManager)
     {
         this.pipelineManager = pipelineManager;
+    }
+
+    public FileEventPublisher getFileEventPublisher()
+    {
+        return fileEventPublisher;
+    }
+
+    public void setFileEventPublisher(FileEventPublisher fileEventPublisher)
+    {
+        this.fileEventPublisher = fileEventPublisher;
     }
 }
