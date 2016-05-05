@@ -76,7 +76,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                         getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "location.updated");
                     }
 
-                    checkParticipants(existing, updatedComplaint);
+                    checkParticipants(existing, updatedComplaint, event.getIpAddress());
                 }
 
                 if (isAssigneeChanged(acmAssignment))
@@ -156,26 +156,26 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
         return false;
     }
 
-    private void checkParticipants(Complaint complaint, Complaint updatedComplaint)
+    private void checkParticipants(Complaint complaint, Complaint updatedComplaint, String ipAddress)
     {
         List<AcmParticipant> existing = complaint.getParticipants();
         List<AcmParticipant> updated = updatedComplaint.getParticipants();
 
-        Set<AcmParticipant> es = new HashSet<>(existing);
-        Set<AcmParticipant> us = new HashSet<>(updated);
-
-        if (us.addAll(es))
+        for (AcmParticipant participant : existing)
         {
-            // set is mutable
-            us = new HashSet<>(updated);
-
-            for (AcmParticipant participant : es)
+            if (!updated.contains(participant))
             {
-                if (!us.contains(participant))
-                {
-                    // participants deleted
-                    getComplaintEventPublisher().publishParticipantDeletedInComplaint(participant, updatedComplaint, "");
-                }
+                // participant deleted
+                getComplaintEventPublisher().publishParticipantsModifiedInComplaint(participant, updatedComplaint, ipAddress, "deleted");
+            }
+        }
+
+        for (AcmParticipant participant : updated)
+        {
+            if (!existing.contains(participant))
+            {
+                // participant added
+                getComplaintEventPublisher().publishParticipantsModifiedInComplaint(participant, updatedComplaint, ipAddress, "added");
             }
         }
     }

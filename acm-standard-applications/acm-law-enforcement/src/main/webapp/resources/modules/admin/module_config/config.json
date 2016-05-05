@@ -478,8 +478,8 @@
           "templateName": "application.module.config"
         },
         {
-          "title": "admin.application.name.title",
-          "templateName": "application.name.config"
+          "title": "admin.application.userName.config.title",
+          "templateName": "application-user-name.config"
         }
       ]
     },

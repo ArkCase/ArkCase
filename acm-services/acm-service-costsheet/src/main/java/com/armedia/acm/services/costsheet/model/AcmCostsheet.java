@@ -66,6 +66,9 @@ public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity, AcmSta
 	@Lob
     @Column(name = "cm_costsheet_details")
     private String details;
+
+	@Column(name = "cm_costsheet_title")
+	private String title;
 	
 	@Column(name = "cm_costsheet_creator")
 	private String creator;
@@ -209,6 +212,16 @@ public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity, AcmSta
 
 	public void setDetails(String details) {
 		this.details = details;
+	}
+
+	public String getTitle()
+	{
+		return title;
+	}
+
+	public void setTitle(String title)
+	{
+		this.title = title;
 	}
 
 	@Override

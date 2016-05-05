@@ -150,7 +150,18 @@ angular.module('services').factory('Object.SubscriptionService', ['$resource', '
                         var subscription = data;
                         var cacheSubscriptions = new Store.CacheFifo(Service.CacheNames.SUBSCRIPTION_DATA);
                         var cacheKey = userId + "." + objectType + "." + objectId;
-                        cacheSubscriptions.put(cacheKey, subscription);
+                        var subscriptions = cacheSubscriptions.get(cacheKey);
+                        if (subscriptions == null)
+                            subscriptions = [];
+                        //update subscription into subscriptions
+                        var index = _.findIndex(subscriptions, function (sub) {
+                            return Util.compare(sub.id, subscription.id);
+                        });
+                        if (index < 0)
+                            subscriptions.push(subscription);
+                        else
+                            subscriptions[index] = subscription;
+                        cacheSubscriptions.put(cacheKey, subscriptions);
                         return subscription;
                     }
                 }

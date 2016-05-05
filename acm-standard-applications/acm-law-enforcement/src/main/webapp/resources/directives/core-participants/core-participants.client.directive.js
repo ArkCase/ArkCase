@@ -114,16 +114,15 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                             participant.participantLdapId = data.participant.participantLdapId;
                             participant.participantType = data.participant.participantType;
                             participant.id = data.participant.id;
-                            saveObjectInfoAndRefresh();
                         }
                         else {
-                            scope.objectInfo.participants.push(scope.participant);
-                            ObjectParticipantService.addNewParticipant(scope.participant.participantLdapId,
-                                scope.participant.participantType, scope.participantsInit.objectType, $stateParams.id).then(
-                                function () {
-                                    refresh();
-                                });
+                            var participant = {};
+                            participant.participantLdapId = data.participant.participantLdapId;
+                            participant.participantType = data.participant.participantType;
+                            participant.className = scope.config.className;
+                            scope.objectInfo.participants.push(participant);
                         }
+                        saveObjectInfoAndRefresh();
                     });
                 };
 

@@ -28,6 +28,7 @@
         },
         {
           "name": "title_parseable",
+		  "sortField": "title_parseable_lcs",
           "displayName": "subscriptions.comp.grid.columns.event",
           "headerCellFilter": "translate"
         },

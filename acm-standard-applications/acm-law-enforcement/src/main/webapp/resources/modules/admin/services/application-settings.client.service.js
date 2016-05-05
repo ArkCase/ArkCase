@@ -13,8 +13,9 @@
 angular.module('admin').factory('Admin.ApplicationSettingsService', ['$http',
     function ($http) {
         return {
-            // properties constants
-            PROP_NAME :  'name',
+            PROPERTIES : {
+                DISPLAY_USERNAME: 'displayUserName'
+            },
 
 
             /**
@@ -31,7 +32,7 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', ['$http',
             getSettings: function () {
                 return $http({
                     method: 'GET',
-                    url: 'api/latest/plugin/admin/app-settings'
+                    url: 'api/latest/plugin/admin/app-properties'
                 });
             },
 
@@ -50,7 +51,7 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', ['$http',
             getProperty: function (propertyName) {
                 return $http({
                     method: 'GET',
-                    url: 'api/latest/plugin/admin/app-settings/' + propertyName
+                    url: 'api/latest/plugin/admin/app-properties/' + propertyName
                 });
             },
 
@@ -72,7 +73,7 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', ['$http',
 
                 return $http({
                     method: 'PUT',
-                    url: 'api/latest/plugin/admin/app-settings',
+                    url: 'api/latest/plugin/admin/app-properties',
                     data: data
                 });
             }

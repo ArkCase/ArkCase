@@ -15,6 +15,7 @@ import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
+import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.dao.IdentificationDao;
@@ -45,13 +46,14 @@ import java.util.List;
 public class CaseFileService extends FrevvoFormAbstractService
 {
 
-	private Logger LOG = LoggerFactory.getLogger(getClass());
-	private CaseFileFactory caseFileFactory;
-	private SaveCaseService saveCaseService;
-	private AcmHistoryDao acmHistoryDao;
-	private CaseFileDao caseFileDao;
-	private IdentificationDao identificationDao;
-	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
+    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private CaseFileFactory caseFileFactory;
+    private SaveCaseService saveCaseService;
+    private AcmHistoryDao acmHistoryDao;
+    private CaseFileDao caseFileDao;
+    private IdentificationDao identificationDao;
+    private FileWorkflowBusinessRule fileWorkflowBusinessRule;
+    private CaseFileEventUtility caseFileEventUtility;
 
     private RuntimeService activitiRuntimeService;
 
@@ -100,6 +102,7 @@ public class CaseFileService extends FrevvoFormAbstractService
         }
 
         // Save Case File to the database
+
         form = saveCaseFile(form);
 
         // Save Reference (Reinvestigation)
@@ -135,6 +138,8 @@ public class CaseFileService extends FrevvoFormAbstractService
                     getFileWorkflowBusinessRule(),
                     this);
         }
+
+        raiseCaseEvent();
 
         return true;
     }
@@ -205,18 +210,21 @@ public class CaseFileService extends FrevvoFormAbstractService
 
         // Init People information
         caseFileForm.setPeople(initPeople());
-     
+
         JSONObject json = createResponse(caseFileForm);
 
         return json;
     }
-	public IdentificationDao getIdentificationDao() {
-		return identificationDao;
-	}
 
-	public void setIdentificationDao(IdentificationDao personIdentificationDao) {
-		this.identificationDao = personIdentificationDao;
-	}
+    public IdentificationDao getIdentificationDao()
+    {
+        return identificationDao;
+    }
+
+    public void setIdentificationDao(IdentificationDao personIdentificationDao)
+    {
+        this.identificationDao = personIdentificationDao;
+    }
 
     private InitiatorPerson initInitiator()
     {
@@ -358,7 +366,7 @@ public class CaseFileService extends FrevvoFormAbstractService
 
             String oldCaseIdAsString = getRequest().getParameter("caseId");
             String oldCaseNumber = getRequest().getParameter("caseNumber");
-            String oldCaseTitle  = getRequest().getParameter("caseTitle");
+            String oldCaseTitle = getRequest().getParameter("caseTitle");
             Long oldCaseId = null;
             try
             {
@@ -394,6 +402,18 @@ public class CaseFileService extends FrevvoFormAbstractService
         }
 
         return form;
+    }
+
+    private void raiseCaseEvent()
+    {
+        // Take user id and ip address
+        String userId = getAuthentication().getName();
+        String ipAddress = (String) getRequest().getSession().getAttribute("acm_ip_address");
+        CaseFile caseFile = getCaseFile();
+        if (caseFile != null)
+        {
+            getCaseFileEventUtility().raiseEvent(getCaseFile(), getCaseFile().getStatus(), new Date(), ipAddress, userId, getAuthentication());
+        }
     }
 
     public CaseFileFactory getCaseFileFactory()
@@ -475,5 +495,15 @@ public class CaseFileService extends FrevvoFormAbstractService
             FunctionalAccessService functionalAccessService)
     {
         this.functionalAccessService = functionalAccessService;
+    }
+
+    public CaseFileEventUtility getCaseFileEventUtility()
+    {
+        return caseFileEventUtility;
+    }
+
+    public void setCaseFileEventUtility(CaseFileEventUtility caseFileEventUtility)
+    {
+        this.caseFileEventUtility = caseFileEventUtility;
     }
 }
