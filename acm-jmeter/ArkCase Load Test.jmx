@@ -476,21 +476,45 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
               </collectionProp>
             </HeaderManager>
             <hashTree/>
-            <com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.gui.JSONPathExtractorGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor" testname="Parse Application ID" enabled="true">
+            <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="Capture ArkCase Form Info" enabled="true">
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <boolProp name="resetInterpreter">false</boolProp>
+              <stringProp name="script">vars.put(&quot;acm.forms.cfg&quot;, prev.getResponseDataAsString());</stringProp>
+            </BeanShellPostProcessor>
+            <hashTree/>
+            <com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.gui.JSONPathExtractorGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor" testname="Identify Application ID" enabled="true">
               <stringProp name="VAR">acm.application.id</stringProp>
               <stringProp name="JSONPATH">$.[&apos;complaint.application.id&apos;]</stringProp>
               <stringProp name="DEFAULT"></stringProp>
-              <stringProp name="VARIABLE"></stringProp>
-              <stringProp name="SUBJECT">BODY</stringProp>
+              <stringProp name="VARIABLE">acm.forms.cfg</stringProp>
+              <stringProp name="SUBJECT">VAR</stringProp>
             </com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor>
             <hashTree/>
-            <com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.gui.JSONPathExtractorGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor" testname="Parse Complaint Type" enabled="true">
+            <com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.gui.JSONPathExtractorGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor" testname="Identify Form Type" enabled="true">
               <stringProp name="VAR">acm.form.type</stringProp>
               <stringProp name="JSONPATH">$.[&apos;complaint.type&apos;]</stringProp>
               <stringProp name="DEFAULT"></stringProp>
-              <stringProp name="VARIABLE"></stringProp>
-              <stringProp name="SUBJECT">BODY</stringProp>
+              <stringProp name="VARIABLE">acm.forms.cfg</stringProp>
+              <stringProp name="SUBJECT">VAR</stringProp>
             </com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor>
+            <hashTree/>
+            <BeanShellAssertion guiclass="BeanShellAssertionGui" testclass="BeanShellAssertion" testname="Validate Form Configuration" enabled="true">
+              <stringProp name="BeanShellAssertion.query">String[] varNames = { &quot;acm.application.id&quot;, &quot;acm.form.type&quot; };
+
+for (int i = 0 ; i &lt; varNames.length ; i++) {
+	String vn = varNames[i];
+	String v = vars.get(vn);
+	if ((v == null) || (v.length() &lt; 1)) {
+		Failure = true;
+		FailureMessage = &quot;The configuration &quot; + vn + &quot; is not set&quot;;
+		break;
+	}
+}</stringProp>
+              <stringProp name="BeanShellAssertion.filename"></stringProp>
+              <stringProp name="BeanShellAssertion.parameters"></stringProp>
+              <boolProp name="BeanShellAssertion.resetInterpreter">false</boolProp>
+            </BeanShellAssertion>
             <hashTree/>
           </hashTree>
         </hashTree>
