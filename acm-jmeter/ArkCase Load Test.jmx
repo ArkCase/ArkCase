@@ -570,6 +570,7 @@ vars.put(&quot;acm.data.date&quot;, new SimpleDateFormat(dateFmt).format(new Dat
           <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Sanitize TextArea Values" enabled="true">
             <stringProp name="BeanShellSampler.query">import java.io.*;
 import java.util.*;
+import org.apache.commons.lang3.*;
 
 // Make sure all textarea values are properly escaped
 Map newValues = new HashMap();
@@ -592,22 +593,20 @@ for (Map.Entry e : vars.entrySet()) {
 			if (line == null) break;
 
 			// We also HTML-escape the line
-			line = line.replace(&quot;&lt;&quot;, &quot;&amp;lt;&quot;);
-			line = line.replace(&quot;&gt;&quot;, &quot;&amp;gt;&quot;);
-			line = line.replace(&quot;&amp;&quot;, &quot;&amp;amp;&quot;);
-			line = line.replace(&quot;\&quot;&quot;, &quot;&amp;quot;&quot;);
-			// line = line.replace(&quot;&apos;&quot;, &quot;&amp;apos;&quot;);
+			line = StringEscapeUtils.escapeHtml4(line);
 	
 			// 1) first space on the line must be an &amp;nbsp;
 			// 2) last space on the line must be an &amp;nbsp;
 			// 3) may not have two consecutive spaces, but may have two consecutive &amp;nbsp;
 			if (line.startsWith(&quot; &quot;)) {
+				// We don&apos;t NEED to do the if() wrapper, but we do it for speed
 				/// Replace the leading space with &amp;nbsp;
 				line = line.replaceAll(&quot;^ &quot;, &quot;&amp;nbsp;&quot;);
 			}
 			// Replace consecutive spaces with space-&amp;nbsp;
 			line = line.replaceAll(&quot;  &quot;, &quot; &amp;nbsp;&quot;);
 			if (line.endsWith(&quot; &quot;)) {
+				// We don&apos;t NEED to do the if() wrapper, but we do it for speed
 				/// Replace the ending space with &amp;nbsp;
 				line = line.replaceAll(&quot; $&quot;, &quot;&amp;nbsp;&quot;);
 			}
@@ -620,7 +619,6 @@ for (Map.Entry e : vars.entrySet()) {
 			if (line.length() == 0) {
 				line = emptyLine;
 			}
-			// b.append(div).append(br).append(divEnd);
 			b.append(div).append(line).append(divEnd);
 		}
 	} finally {
