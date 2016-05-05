@@ -36,7 +36,7 @@ public class ClaimTaskAPIController {
         log.info("User [{}] is claiming workflow task with ID [{}]", authentication.getName(), taskId);
         try{
             AcmTask claimedTask = getTaskDao().claimTask(taskId, authentication.getName());
-            getTaskDao().save(claimedTask);
+            claimedTask=getTaskDao().save(claimedTask);
             publishTaskClaimEvent(authentication, httpSession, claimedTask, "claim", true);
             return claimedTask;
         }
@@ -59,7 +59,7 @@ public class ClaimTaskAPIController {
         log.info("User [{}] is unclaiming workflow task with ID [{}]", authentication.getName(), taskId);
         try{
             AcmTask unclaimedTask = getTaskDao().unclaimTask(taskId);
-            getTaskDao().save(unclaimedTask);
+            unclaimedTask=getTaskDao().save(unclaimedTask);
             publishTaskClaimEvent(authentication, httpSession, unclaimedTask, "unclaim", true);
             return unclaimedTask;
         }
