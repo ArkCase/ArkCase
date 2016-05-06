@@ -6,13 +6,14 @@ import com.armedia.acm.services.participants.model.ParticipantConstants;
 
 import java.util.Date;
 
-public class CaseFileParticipantDeletedEvent extends AcmEvent
+public class CaseFileParticipantsModifiedEvent extends AcmEvent
 {
 
     private static final long serialVersionUID = 2601901328541042900L;
-    private static final String EVENT_TYPE = "com.armedia.acm.casefile.participant.deleted";
+    private static final String EVENT_TYPE = "com.armedia.acm.casefile.participant";
+    private String eventStatus;
 
-    public CaseFileParticipantDeletedEvent(AcmParticipant source)
+    public CaseFileParticipantsModifiedEvent(AcmParticipant source)
     {
         super(source);
         setObjectType(ParticipantConstants.OBJECT_TYPE);
@@ -24,6 +25,11 @@ public class CaseFileParticipantDeletedEvent extends AcmEvent
     @Override
     public String getEventType()
     {
-        return EVENT_TYPE;
+        return String.format("%s.%s", EVENT_TYPE, eventStatus);
+    }
+
+    public void setEventStatus(String eventStatus)
+    {
+        this.eventStatus = eventStatus;
     }
 }
