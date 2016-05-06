@@ -40,7 +40,7 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
     private String filterMapping;
 
-    private String wordFileExtensionRegex;
+    private Pattern wordFileExtensionPattern;
 
     @Override
     public Resource getResource(String host, String path) throws NotAuthorizedException, BadRequestException
@@ -60,8 +60,7 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
     private String removeFileExtension(String path)
     {
         //remove word file extensions
-        Pattern r = Pattern.compile(wordFileExtensionRegex);
-        Matcher m = r.matcher(path);
+        Matcher m = wordFileExtensionPattern.matcher(path);
         if (m.find())
         {
             path = m.replaceFirst("");
@@ -123,9 +122,9 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         }
     }
 
-    public void setWordFileExtensionRegex(String wordFileExtensionRegex)
+    public void setWordFileExtensionPattern(Pattern wordFileExtensionPattern)
     {
-        this.wordFileExtensionRegex = wordFileExtensionRegex;
+        this.wordFileExtensionPattern = wordFileExtensionPattern;
     }
 
     public AcmWebDAVSecurityManager getSecurityManager()
