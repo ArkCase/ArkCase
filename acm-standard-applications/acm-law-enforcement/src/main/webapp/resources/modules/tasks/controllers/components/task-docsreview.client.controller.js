@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q', '$stateParams'
-    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'Task.InfoService', 'Helper.ObjectBrowserService'
-    , function ($scope, $q, $stateParams, Util, ConfigService, HelperUiGridService, TaskInfoService, HelperObjectBrowserService) {
+    , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'Task.InfoService', 'Helper.ObjectBrowserService', 'ObjectService'
+    , function ($scope, $q, $stateParams, Util, ConfigService, HelperUiGridService, TaskInfoService, HelperObjectBrowserService, ObjectService) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             moduleId: "tasks"
@@ -53,11 +53,17 @@ angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();
-
-            var targetType = Util.goodMapValue(rowEntity, "targetType");
-            var targetId = Util.goodMapValue(rowEntity, "targetId");
+            var targetType = Util.goodMapValue(rowEntity, "container.containerObjectType");
+            var targetId = Util.goodMapValue(rowEntity, "container.containerObjectId");
             gridHelper.showObject(targetType, targetId);
         };
+
+        $scope.onDownloadFile = function (event, rowEntity) {
+            event.preventDefault();
+            var targetType = ObjectService.ObjectTypes.FILE;
+            var targetId = Util.goodMapValue(rowEntity, "fileId");
+            gridHelper.showObject(targetType, targetId);
+        }
 
     }
 ]);
