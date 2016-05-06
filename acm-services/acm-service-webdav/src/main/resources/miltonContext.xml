@@ -21,6 +21,7 @@
         <property name="securityManager" ref="security.manager"/>
         <property name="maxAgeSeconds" value="300"/>
         <property name="filterMapping" value="webdav"/>
+        <property name="wordFileExtensionRegex" value="\.(doc|dot|docx|dotx|docm|dotm|docb)$"/>
     </bean>
 
     <bean id="milton.http.manager" class="io.milton.ent.config.HttpManagerBuilderEnt">
@@ -29,4 +30,5 @@
         <property name="buffering" value="never"/>
         <property name="enabledJson" value="false"/>
     </bean>
+
 </beans>
