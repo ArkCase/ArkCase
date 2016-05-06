@@ -610,13 +610,13 @@
           "name": "fileId",
           "displayName": "tasks.comp.docsreview.table.columns.fileId",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.fileId}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.container.containerObjectId}}</a>"
         },
         {
           "name": "fileName",
           "displayName": "tasks.comp.docsreview.table.columns.fileName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.fileName}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onDownloadFile($event, row.entity)'>{{row.entity.fileName}}</a>"
         },
         {
           "name": "created",
