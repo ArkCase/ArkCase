@@ -37,6 +37,11 @@
             <stringProp name="Argument.value">http://acm-frevvo:8082/frevvo</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="acm.user.agent" elementType="Argument">
+            <stringProp name="Argument.name">acm.user.agent</stringProp>
+            <stringProp name="Argument.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </elementProp>
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
@@ -281,7 +286,7 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
@@ -340,7 +345,7 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
@@ -398,7 +403,7 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
@@ -466,7 +471,7 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
@@ -714,7 +719,7 @@ vars.putAll(newValues);</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
@@ -832,7 +837,7 @@ vars.putAll(newValues);</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
@@ -944,7 +949,7 @@ vars.putAll(newValues);</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
@@ -1026,7 +1031,7 @@ vars.putAll(newValues);</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
@@ -1130,7 +1135,7 @@ vars.putAll(newValues);</stringProp>
                   </elementProp>
                   <elementProp name="User-Agent" elementType="Header">
                     <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                    <stringProp name="Header.value">${acm.user.agent}</stringProp>
                   </elementProp>
                 </collectionProp>
               </HeaderManager>
@@ -1853,7 +1858,7 @@ vars.putAll(newValues);</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
