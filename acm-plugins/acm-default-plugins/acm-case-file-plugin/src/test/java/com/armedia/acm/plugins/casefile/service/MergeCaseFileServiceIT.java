@@ -33,6 +33,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,7 +69,8 @@ import static org.junit.Assert.*;
                 "/spring/spring-library-task.xml",
                 "/spring/spring-library-note.xml",
                 "/spring/spring-library-event.xml",
-                "/spring/test-case-file-context.xml"
+                "/spring/test-case-file-context.xml",
+                "/spring/spring-library-authentication-token.xml"
         })
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT
@@ -93,6 +96,9 @@ public class MergeCaseFileServiceIT
 
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private Long sourceId;
     private Long targetId;
@@ -252,6 +258,8 @@ public class MergeCaseFileServiceIT
 
         CaseFile targetSaved = saveCaseService.saveCase(targetCaseFile, auth, ipAddress);
 
+        entityManager.flush();
+
         targetId = targetSaved.getId();
 
 
@@ -264,6 +272,8 @@ public class MergeCaseFileServiceIT
         mergeCaseOptions.setTargetCaseFileId(targetId);
 
         mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
+
+        entityManager.flush();
 
         CaseFile targetCase = caseFileDao.find(targetId);
         AcmParticipant foundAssignee = null;
@@ -321,6 +331,8 @@ public class MergeCaseFileServiceIT
 
         CaseFile targetSaved = saveCaseService.saveCase(targetCaseFile, auth, ipAddress);
 
+        entityManager.flush();
+
         targetId = targetSaved.getId();
 
 
@@ -328,7 +340,7 @@ public class MergeCaseFileServiceIT
         assertNotNull(sourceId);
         assertNotNull(targetId);
 
-        assertEquals(5, targetSaved.getParticipants().size());
+        assertEquals(4, targetSaved.getParticipants().size());
 
         AcmParticipant foundAssignee = null;
         for (AcmParticipant ap : targetSaved.getParticipants())
@@ -348,6 +360,8 @@ public class MergeCaseFileServiceIT
         mergeCaseOptions.setTargetCaseFileId(targetId);
 
         mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
+
+        entityManager.flush();
 
         CaseFile targetCase = caseFileDao.find(targetId);
 
