@@ -1,8 +1,9 @@
 package com.armedia.acm.tools.activemq;
 
+import org.apache.activemq.advisory.AdvisorySupport;
 import org.apache.activemq.broker.BrokerService;
-import org.apache.activemq.broker.region.Destination;
-import org.apache.activemq.command.ActiveMQDestination;
+import org.apache.activemq.command.ActiveMQMessage;
+import org.apache.activemq.command.ActiveMQTopic;
 import org.apache.activemq.pool.PooledConnectionFactory;
 import org.junit.After;
 import org.junit.Before;
@@ -16,23 +17,35 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
+import javax.jms.Queue;
 import javax.jms.Session;
-import java.util.Map;
+import javax.jms.Topic;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-        "/spring/spring-mule-activemq.xml"
+        "/spring/spring-mule-activemq.xml",
+        "/spring/spring-mule-activemq-test.xml",
+        "/spring/spring-library-property-file-manager.xml"
 })
+/**
+ * To see ActiveMQ flow control happening in this test, ensure the queue memory limit is set to "1 mb" in the
+ * spring-mule-activemq.xml file.  Then you will see output pause, and after a few seconds restart.
+ */
 public class ActiveMqIT
 {
     public transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private PooledConnectionFactory connectionFactory;
-
+    @Qualifier("jmsConnectionFactory")
+    private ConnectionFactory connectionFactory;
 
     @Autowired
     @Qualifier("broker")
@@ -44,10 +57,9 @@ public class ActiveMqIT
         assertNotNull(connectionFactory);
 
         assertNotNull(broker);
-        log.debug("broker class: {}", broker.getClass().getName());
 
         log.debug("start connection factory");
-        connectionFactory.start();
+        ((PooledConnectionFactory) connectionFactory).start();
     }
 
     @After
@@ -56,51 +68,37 @@ public class ActiveMqIT
         assertNotNull(connectionFactory);
 
         log.debug("stop connection factory");
-        connectionFactory.stop();
+        ((PooledConnectionFactory) connectionFactory).stop();
     }
 
     @Test
     public void sendMessages() throws Exception
     {
-        int maxConnections = connectionFactory.getMaxConnections();
-        log.info("maxConnections {}", maxConnections);
-        log.info("connection factory: {}", connectionFactory);
-
         String destination = "testQueue.in";
 
 
         JmsTemplate template = new JmsTemplate(connectionFactory);
-        JmsTemplate receive = new JmsTemplate(connectionFactory);
-        template.setDeliveryPersistent(false);
-
-
+        template.setDeliveryPersistent(true);
         template.setReceiveTimeout(500L);
         template.setExplicitQosEnabled(true);
         template.setTimeToLive(500L);
-        log.info("Transacted? {}", template.isSessionTransacted());
-        template.setSessionTransacted(true);
 
-        receive.setReceiveTimeout(500L);
+        Connection c = connectionFactory.createConnection();
+        Session session = c.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-        log.info("session acknowlege mode: {}", template.getSessionAcknowledgeMode());
-        log.info("auto: {}", Session.AUTO_ACKNOWLEDGE);
-        log.info("client: {}", Session.CLIENT_ACKNOWLEDGE);
-        log.info("transact: {}", Session.SESSION_TRANSACTED);
-        log.info("dups ok: {}", Session.DUPS_OK_ACKNOWLEDGE);
-        template.setSessionAcknowledgeMode(Session.DUPS_OK_ACKNOWLEDGE);
+        Queue testQueue = session.createQueue(destination);
+        ActiveMQTopic fulltopic = AdvisorySupport.getFullAdvisoryTopic(testQueue);
 
-        template.convertAndSend(destination, "test message");
+        createTopicListener(session, fulltopic);
 
+        ActiveMQTopic fastTopic = AdvisorySupport.getFastProducerAdvisoryTopic(testQueue);
+        createTopicListener(session, fastTopic);
 
-        Message received = receive.receive(destination);
-        log.info("received message: {}", received);
+        ActiveMQTopic slowTopic = AdvisorySupport.getSlowConsumerAdvisoryTopic(testQueue);
+        createTopicListener(session, slowTopic);
 
-        assertNotNull(received);
+        c.start();
 
-
-        Message second = receive.receive(destination);
-
-        assertNull(second);
 
         String base = "Grateful Dead";
         String kb500message = base;
@@ -113,43 +111,35 @@ public class ActiveMqIT
 
         final String largeMessage = kb500message;
 
-        for (int a = 1; a < 100; a++)
+        for (int a = 1; a < 500; a++)
         {
 
             log.info("Sending message # {}", a);
-
-
             template.convertAndSend(destination, largeMessage);
-
-
-            assertNotNull(broker.getBroker().getDestinations());
-
-
-            for (Map.Entry<ActiveMQDestination, Destination> dest : broker.getBroker().getDestinationMap().entrySet())
-            {
-                if (dest.getValue().getName().equals(destination))
-                {
-                    log.info("GC idle interval: {}", dest.getValue().getInactiveTimeoutBeforeGC());
-                    log.info("Destination queue size: {}", dest.getValue().getDestinationStatistics().getMessages().getCount());
-                    log.info("Desigination queue dequeues: {}", dest.getValue().getDestinationStatistics().getDequeues().getCount());
-                    log.info("Destination queue expired {}: ", dest.getValue().getDestinationStatistics().getExpired().getCount());
-                    log.info("Destinatin queue in flight: {}", dest.getValue().getDestinationStatistics().getInflight().getCount());
-                    log.info("Destination queue enqueues: {}", dest.getValue().getDestinationStatistics().getEnqueues().getCount());
-                }
-            }
-
-//
-            Message found = receive.receive(destination);
-
-
-            Thread.sleep(500);
-
-
-            assertNotNull(found);
-            found.acknowledge();
-
-
         }
 
     }
+
+    private void createTopicListener(Session session, Topic topic) throws JMSException
+    {
+        MessageConsumer consumerAdvisory = session.createConsumer(topic);
+        consumerAdvisory.setMessageListener(new MessageListener()
+        {
+            @Override
+            public void onMessage(Message message)
+            {
+                log.debug("Got a message on an advisory topic");
+                if (message instanceof ActiveMQMessage)
+                {
+                    ActiveMQMessage activeMQMessage = (ActiveMQMessage) message;
+                    log.debug("Destination: {}, data structure: {}",
+                            activeMQMessage.getDestination().getPhysicalName(),
+                            activeMQMessage.getDataStructure() == null ? "null" : activeMQMessage.getDataStructure().getClass().getName());
+
+                }
+
+            }
+        });
+    }
+
 }

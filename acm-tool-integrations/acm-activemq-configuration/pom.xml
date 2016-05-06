@@ -13,6 +13,13 @@
     <description>Define the ActiveMQ broker via Spring configuration</description>
 
     <dependencies>
+        <!-- arkcase -->
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-files-property-file-manager</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
         <!-- activemq -->
         <dependency>
             <groupId>org.apache.activemq</groupId>
