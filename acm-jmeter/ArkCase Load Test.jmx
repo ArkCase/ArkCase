@@ -229,7 +229,7 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
               </collectionProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${acm.url.arkcase.host}</stringProp>
-            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.port">${acm.url.arkcase.port}</stringProp>
             <stringProp name="HTTPSampler.connect_timeout"></stringProp>
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${acm.url.arkcase.protocol}</stringProp>
@@ -301,7 +301,7 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${acm.url.arkcase.host}</stringProp>
-            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.port">${acm.url.arkcase.port}</stringProp>
             <stringProp name="HTTPSampler.connect_timeout"></stringProp>
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${acm.url.arkcase.protocol}</stringProp>
@@ -359,7 +359,7 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
               </collectionProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${acm.url.arkcase.host}</stringProp>
-            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.port">${acm.url.arkcase.port}</stringProp>
             <stringProp name="HTTPSampler.connect_timeout"></stringProp>
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${acm.url.arkcase.protocol}</stringProp>
@@ -427,7 +427,7 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
               </collectionProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${acm.url.arkcase.host}</stringProp>
-            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.port">${acm.url.arkcase.port}</stringProp>
             <stringProp name="HTTPSampler.connect_timeout"></stringProp>
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${acm.url.arkcase.protocol}</stringProp>
