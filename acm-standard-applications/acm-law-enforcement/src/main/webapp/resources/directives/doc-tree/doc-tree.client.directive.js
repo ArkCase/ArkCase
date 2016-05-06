@@ -1156,12 +1156,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     var absUrl = $location.absUrl();
                                     var baseHref = $browser.baseHref();
                                     var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
-                                    var fileName = node.data.name;
+                                    var rs = Util.goodMapValue(DocTree.treeConfig, 'wordFileExtensionRegex', '\\.(doc|docx)$');
+                                    var re = new RegExp(rs, "i");
+                                    var hasExt = node.data.name.match(re);
                                     var fileExt = '';
-                                    if (fileName.endsWith('.docx'))
-                                        fileExt = '.docx';
-                                    else if (fileName.endsWith('.doc'))
-                                        fileExt = '.doc';
+                                    if (hasExt && hasExt[0])
+                                        fileExt = hasExt[0];
 
                                     ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + node.parent.data.objectId + "/" + node.data.objectId + fileExt);
                                     DocTree.refreshTree();
