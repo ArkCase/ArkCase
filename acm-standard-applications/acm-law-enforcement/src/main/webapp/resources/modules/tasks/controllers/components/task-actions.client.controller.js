@@ -156,6 +156,10 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                     function (taskInfo) {
                         $scope.$emit("report-object-updated", taskInfo);
                         return taskInfo;
+                    },
+                    function (error) {
+                        console.log(error);
+                        $scope.showErrorDialog(error);
                     }
                 );
             }
@@ -165,10 +169,30 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
+        $scope.showErrorDialog = function (error) {
+            $modal.open({
+                animation: true,
+                templateUrl: 'modules/tasks/views/components/task-actions-error-dialog.client.view.html',
+                controller: 'Tasks.ActionsErrorDialogController',
+                backdrop: 'static',
+                resolve: {
+                    errorMessage: function () {
+                        return error;
+                    }
+                }
+            });
+        }
     }
 ]);
-
-
+angular.module('tasks').controller('Tasks.ActionsErrorDialogController', ['$scope', '$modalInstance', 'errorMessage',
+        function ($scope, $modalInstance, errorMessage) {
+            $scope.errorMessage = errorMessage;
+            $scope.onClickOk = function () {
+                $modalInstance.dismiss('cancel');
+            };
+        }
+    ]
+);
 angular.module('tasks').controller('Tasks.RejectDialogController', ['$scope', '$modalInstance', 'aValue',
         function ($scope, $modalInstance, aValue) {
             $scope.valuePassed = aValue;
