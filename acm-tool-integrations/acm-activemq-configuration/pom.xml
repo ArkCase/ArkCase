@@ -13,6 +13,13 @@
     <description>Define the ActiveMQ broker via Spring configuration</description>
 
     <dependencies>
+        <!-- arkcase -->
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-files-property-file-manager</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
         <!-- activemq -->
         <dependency>
             <groupId>org.apache.activemq</groupId>
@@ -49,6 +56,22 @@
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-jms</artifactId>
+        </dependency>
+
+        <!-- test -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+
+        <!-- logging -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
         </dependency>
     </dependencies>
 
