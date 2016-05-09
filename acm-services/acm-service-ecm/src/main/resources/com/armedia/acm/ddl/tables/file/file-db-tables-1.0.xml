@@ -399,5 +399,11 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="50-acm_file-add-class-name" author="joseph.mcgrady">
+        <addColumn tableName="acm_file">
+            <column name="cm_class_name" type="VARCHAR(400)"></column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 
