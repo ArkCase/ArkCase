@@ -44,10 +44,10 @@ public class DeleteNoteByIdAPIController
             Note note = getNoteDao().find(id);
             try
             {
+                log.info("Deleting note by ID : [{}]", id);
+
                 JSONObject objectToReturnJSON = new JSONObject();
                 getNoteDao().deleteNoteById(id);
-                log.info("Deleting note by ID : [{}]", id);
-                log.debug("Note ID : [{}]", id);
 
                 ApplicationNoteEvent event = new ApplicationNoteEvent(note, "deleted", true, ipAddress);
                 getNoteEventPublisher().publishNoteEvent(event);
