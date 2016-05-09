@@ -133,6 +133,9 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Column(name = "cm_legacy_system_id")
     private String legacySystemId;
 
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
+
     @PrePersist
     protected void beforeInsert()
     {
@@ -404,5 +407,15 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public void setLegacySystemId(String legacySystemId)
     {
         this.legacySystemId = legacySystemId;
+    }
+
+    public String getClassName()
+    {
+        return className;
+    }
+
+    public void setClassName(String className)
+    {
+        this.className = className;
     }
 }
