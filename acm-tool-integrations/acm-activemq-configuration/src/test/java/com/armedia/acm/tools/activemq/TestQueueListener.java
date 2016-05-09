@@ -21,17 +21,7 @@ public class TestQueueListener implements MessageListener
     @JmsListener(destination = "testQueue.in")
     public void onMessage(Message message)
     {
-//        try
-//        {
         Integer sofar = received.incrementAndGet();
         log.info("got message # {}", sofar);
-//            if (message != null)
-//            {
-//                message.acknowledge();
-//            }
-//        } catch (JMSException e)
-//        {
-//            log.error("got a message of type [{}] but could not get the JMSDestination", message.getClass().getName());
-//        }
     }
 }
