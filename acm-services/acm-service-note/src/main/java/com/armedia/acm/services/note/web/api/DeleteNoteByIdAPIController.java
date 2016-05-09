@@ -17,40 +17,40 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpSession;
 
 
 @Controller
-@RequestMapping({ "/api/v1/plugin/note", "/api/latest/plugin/note" })
-public class DeleteNoteByIdAPIController {
+@RequestMapping({"/api/v1/plugin/note", "/api/latest/plugin/note"})
+public class DeleteNoteByIdAPIController
+{
 
     private NoteDao noteDao;
     private NoteEventPublisher noteEventPublisher;
-
-//MediaType.APPLICATION_JSON_VALUE
     private Logger log = LoggerFactory.getLogger(getClass());
+
     @RequestMapping(value = "/{noteId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String deleteNoteById(
-            @PathVariable("noteId") Long id
+            @PathVariable("noteId") Long id,
+            HttpSession session
 
-    ) throws AcmObjectNotFoundException, AcmUserActionFailedException {
-        if (log.isInfoEnabled()) {
-            log.info("Finding note with ID: " + id);
-        }
-
-        if(id != null){
-
+    ) throws AcmObjectNotFoundException, AcmUserActionFailedException
+    {
+        log.info("Finding note with ID : [{}]", id);
+        String ipAddress = (String) session.getAttribute("acm_ip_address");
+        if (id != null)
+        {
             Note note = getNoteDao().find(id);
             try
             {
                 JSONObject objectToReturnJSON = new JSONObject();
-
-                ApplicationNoteEvent event = new ApplicationNoteEvent(note, "deleted", true, "" );
-                getNoteEventPublisher().publishNoteEvent(event);
-
                 getNoteDao().deleteNoteById(id);
-                log.info("Deleting note by id '" + id + "'");
-                log.debug("Note ID : " + id);
+                log.info("Deleting note by ID : [{}]", id);
+                log.debug("Note ID : [{}]", id);
+
+                ApplicationNoteEvent event = new ApplicationNoteEvent(note, "deleted", true, ipAddress);
+                getNoteEventPublisher().publishNoteEvent(event);
 
                 objectToReturnJSON.put("deletedNoteId", id);
 
@@ -58,15 +58,14 @@ public class DeleteNoteByIdAPIController {
                 objectToReturn = objectToReturnJSON.toString();
 
                 return objectToReturn;
-            }
-            catch (PersistenceException e)
+            } catch (PersistenceException e)
             {
-                ApplicationNoteEvent event = new ApplicationNoteEvent(note, "deleted", false, "" );
+                ApplicationNoteEvent event = new ApplicationNoteEvent(note, "deleted", false, ipAddress);
                 getNoteEventPublisher().publishNoteEvent(event);
                 throw new AcmUserActionFailedException("Delete", "note", id, e.getMessage(), e);
             }
         }
-        throw new AcmObjectNotFoundException ("Could not find note", id, "", null);
+        throw new AcmObjectNotFoundException("Note", id, "Could not find note", null);
     }
 
     public NoteDao getNoteDao()
