@@ -158,7 +158,6 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                         return taskInfo;
                     },
                     function (error) {
-                        console.log(error);
                         $scope.showErrorDialog(error);
                     }
                 );
