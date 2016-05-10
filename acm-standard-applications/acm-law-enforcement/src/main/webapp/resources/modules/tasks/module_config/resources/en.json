@@ -158,7 +158,7 @@
     "subject.label": "Subject",
     "taskStartDate.label": "Start Date",
     "dueDate.label": "Due Date",
-    "datepicker.close": "Close",
+    "datepicker.close": "Done",
     "percentComplete.label": "% Complete",
     "notes.label": "Notes",
     "saveButton": "Save"

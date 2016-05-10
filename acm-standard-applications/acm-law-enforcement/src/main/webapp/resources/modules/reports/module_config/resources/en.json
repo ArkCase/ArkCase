@@ -27,7 +27,7 @@
       "exceptions": "Exceptions Report (Non-Compliance)"
     },
     "datepicker":{
-      "close": "Close"
+      "close": "Done"
     },
     "btn": {
       "generateReport": "Generate report"
