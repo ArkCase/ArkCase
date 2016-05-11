@@ -71,6 +71,7 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         solr.setParent_ref_s(in.getEventObjectId() + "-" + in.getEventObjectType());
 
         solr.setOwner_lcs(in.getSubscriptionOwner());
+        solr.setAdditionalProperty("related_subscription_ref_s", in.getRelatedSubscriptionId());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());

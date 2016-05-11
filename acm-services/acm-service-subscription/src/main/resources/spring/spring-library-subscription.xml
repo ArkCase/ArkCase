@@ -8,6 +8,8 @@
 
     <!--<task:scheduler id="subscriptionEventTaskScheduler" pool-size="1"/>-->
 
+    <task:executor id="deleteTaskExecutor" pool-size="1"/>
+
     <task:scheduler id="subscriptionTaskScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="subscriptionTaskScheduler">
         <task:scheduled
@@ -48,7 +50,7 @@
 
     <bean id="subscriptionToSolrTransformer"
           class="com.armedia.acm.services.subscription.service.SubscriptionToSolrTransformer">
-        <property name="subscriptiontDao" ref="subscriptionDao"/>
+        <property name="subscriptionDao" ref="subscriptionDao"/>
     </bean>
 
     <bean id="subscriptionProperties"
