@@ -51,3 +51,7 @@ body {
     color: #000000;
     color: rgba(0, 0, 0, 0.7);
 }
+
+div.content-one {
+    display: none;
+}
