@@ -10,17 +10,49 @@
     <meta charset="utf-8"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>ACM | ArkCase | User Interface</title>
-    
+    <c:if test="${warningEnabled}">
+
+        <!-- add jquery link -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+        <link rel="stylesheet"
+              href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    </c:if>
+
     <!-- Set the hash in localStorage, so when the user logs in the Angular application opens that state -->
     <script type="text/javascript">
-	    function addUrlHashToLocalStorage() {
-	        if (window.location.hash != '#!/welcome' && window.location.hash != '#!/goodbye') {
-	            localStorage.redirectURL = window.location.hash;
-	        } else {
-	            localStorage.removeItem('redirectURL');
-	        }
-	    }
-	    window.onload = addUrlHashToLocalStorage;
+        function addUrlHashToLocalStorage() {
+            if (window.location.hash != '#!/welcome' && window.location.hash != '#!/goodbye') {
+                localStorage.redirectURL = window.location.hash;
+            } else {
+                localStorage.removeItem('redirectURL');
+            }
+        }
+        window.onload = addUrlHashToLocalStorage;
+
+        <c:if test="${warningEnabled}">
+
+        $(function () {
+
+            $('#submit').attr('disabled', 'disabled');
+
+            $('#j_terms').click(function () {
+                if (!$(this).is(':checked')) {
+                    $('#submit').attr('disabled', 'disabled');
+                } else {
+                    $('#submit').removeAttr('disabled');
+                }
+            });
+            $('.expand-one').click(function () {
+                //$('.content-one').slideToggle('slow');
+                $("#dialog").dialog({
+                    modal: true,
+                    width: '80%'
+                });
+            });
+        });
+        </c:if>
+
     </script>
 
     <link rel="stylesheet" href="<%= request.getContextPath()%>/lib/bootstrap/dist/css/bootstrap.css">
@@ -39,15 +71,20 @@
     <c:if test='${not empty sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}'>
         <div class="alert alert-danger">${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}</div>
     </c:if>
-    
+
     <c:if test="${'1'.equals(param.login_error)}">
-    	<div class="alert alert-danger">Your session has expired!</div>
-    </c:if>
-    
-    <c:if test="${param.logout != null}">
-    	<div class="alert alert-success">You have been logged out successfully.</div>
+        <div class="alert alert-danger">Your session has expired!</div>
     </c:if>
 
+    <c:if test="${param.logout != null}">
+        <div class="alert alert-success">You have been logged out successfully.</div>
+    </c:if>
+
+    <c:if test="${warningEnabled}">
+
+        <div id="dialog" class="content-one"><p class="modal-body">${warningMessage}</p></div>
+
+    </c:if>
     <form id="login-form" action="<%= request.getContextPath()%>/j_spring_security_check" method="post">
         <div class="list-group">
             <div class="list-group-item">
@@ -67,6 +104,14 @@
                         class="form-control no-border"
                 >
             </div>
+            <c:if test="${warningEnabled}">
+
+                <!-- add an input checkbox -->
+                <div class="list-group-item">
+                    <input type="checkbox" id="j_terms"/>
+                    <label for="j_terms">I acknowledge <a href="#" class="expand-one">this warning.</a></label>
+                </div>
+            </c:if>
         </div>
         <button id="submit" type="submit" class="btn btn-lg btn-primary btn-block">Log In</button>
     </form>
