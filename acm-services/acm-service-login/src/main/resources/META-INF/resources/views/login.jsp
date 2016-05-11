@@ -30,29 +30,6 @@
         }
         window.onload = addUrlHashToLocalStorage;
 
-        <c:if test="${warningEnabled}">
-
-        $(function () {
-
-            $('#submit').attr('disabled', 'disabled');
-
-            $('#j_terms').click(function () {
-                if (!$(this).is(':checked')) {
-                    $('#submit').attr('disabled', 'disabled');
-                } else {
-                    $('#submit').removeAttr('disabled');
-                }
-            });
-            $('.expand-one').click(function () {
-                //$('.content-one').slideToggle('slow');
-                $("#dialog").dialog({
-                    modal: true,
-                    width: '80%'
-                });
-            });
-        });
-        </c:if>
-
     </script>
 
     <link rel="stylesheet" href="<%= request.getContextPath()%>/lib/bootstrap/dist/css/bootstrap.css">
@@ -125,4 +102,30 @@
     </div>
 </footer>
 </body>
+<c:if test="${warningEnabled}">
+    <script type="text/javascript">
+
+        $(function () {
+            $('#submit').attr('disabled', 'disabled');
+            $('#j_terms').click(function () {
+                if (!$(this).is(':checked')) {
+                    $('#submit').attr('disabled', 'disabled');
+                } else {
+                    $('#submit').removeAttr('disabled');
+                }
+            });
+            $('.expand-one').click(function () {
+                showPopup();
+            });
+            showPopup();
+        });
+        function showPopup() {
+            $("#dialog").dialog({
+                modal: true,
+                width: '80%'
+            });
+        }
+    </script>
+</c:if>
+
 </html>

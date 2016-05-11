@@ -5,7 +5,6 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:property-placeholder system-properties-mode="OVERRIDE" location="file:${user.home}/.arkcase/acm/login.properties"/>
     <bean id="loginWarningMessageService" class="com.armedia.acm.web.api.service.LoginWarningMessageServiceImpl">
         <property name="warningEnabled" value="${login.warning.enabled}"/>
         <property name="warningMessage" value="${login.warning.message}"/>
