@@ -35,6 +35,12 @@ public class ExecuteSolrQuery
     }
 
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow,
+                                              int maxRows, String sort, String rowQueryParameters, boolean filterParentRef) throws MuleException
+    {
+        return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, rowQueryParameters, filterParentRef, false);
+    }
+
+    public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow,
                                               int maxRows, String sort, String rowQueryParameters, boolean filterParentRef,
                                               boolean filterSubscriptionEvents) throws MuleException
     {
