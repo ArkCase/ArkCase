@@ -4,6 +4,7 @@ import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.model.SubscriptionConstants;
 import com.armedia.acm.services.subscription.service.SubscriptionEventPublisher;
+import com.armedia.acm.services.subscription.service.SubscriptionService;
 import com.armedia.acm.services.subscription.web.api.RemovingSubscriptionAPIController;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -43,9 +44,8 @@ public class RemovingSubscriptionAPIControllerTest extends EasyMockSupport {
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
     private RemovingSubscriptionAPIController mockRemovingSubscriptionAPIController;
-    private SubscriptionDao mockSubscriptionDao;
+    private SubscriptionService mockSubscriptionService;
     private AcmPlugin mockSubscriptionPlugin;
-    private SubscriptionEventPublisher mockSubscriptionEventPublisher;
     private MockHttpSession mockHttpSession;
 
     @Autowired
@@ -58,16 +58,14 @@ public class RemovingSubscriptionAPIControllerTest extends EasyMockSupport {
 
         mockRemovingSubscriptionAPIController = new RemovingSubscriptionAPIController();
 
-        mockSubscriptionDao = createMock(SubscriptionDao.class);
+        mockSubscriptionService = createMock(SubscriptionService.class);
         mockSubscriptionPlugin = createMock(AcmPlugin.class);
-        mockSubscriptionEventPublisher = createMock(SubscriptionEventPublisher.class);
         mockSubscriptionPlugin = createMock(AcmPlugin.class);
 
         mockHttpSession = new MockHttpSession();
 
-        mockRemovingSubscriptionAPIController.setSubscriptionDao(mockSubscriptionDao);
+        mockRemovingSubscriptionAPIController.setSubscriptionService(mockSubscriptionService);
         mockRemovingSubscriptionAPIController.setSubscriptionPlugin(mockSubscriptionPlugin);
-        mockRemovingSubscriptionAPIController.setSubscriptionEventPublisher(mockSubscriptionEventPublisher);
 
         mockMvc = MockMvcBuilders.standaloneSetup(mockRemovingSubscriptionAPIController).setHandlerExceptionResolvers(exceptionResolver).build();
         mockAuthentication = createMock(Authentication.class);
@@ -84,11 +82,9 @@ public class RemovingSubscriptionAPIControllerTest extends EasyMockSupport {
         prop.put(SubscriptionConstants.SUCCESS_MSG,"SUCCESS");
 
         expect(mockSubscriptionPlugin.getPluginProperties()).andReturn(prop).once();
-        expect(mockSubscriptionDao.deleteSubscription(userId,objectId,objectType)).andReturn(1);
-        mockSubscriptionDao.deleteSubscriptionEvents(userId, objectId, objectType);
+        expect(mockSubscriptionService.deleteSubscriptionForGivenObject(userId,objectId,objectType)).andReturn(1);
+        mockSubscriptionService.deleteSubscriptionEventsForGivenObject(userId, objectId, objectType);
         expectLastCall();
-
-        mockSubscriptionEventPublisher.publishSubscriptionDeletedEvent(userId,objectId,objectType,true);
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn(userId);

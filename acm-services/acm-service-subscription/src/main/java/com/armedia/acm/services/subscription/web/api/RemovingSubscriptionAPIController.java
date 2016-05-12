@@ -2,9 +2,8 @@ package com.armedia.acm.services.subscription.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
-import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.model.SubscriptionConstants;
-import com.armedia.acm.services.subscription.service.SubscriptionEventPublisher;
+import com.armedia.acm.services.subscription.service.SubscriptionService;
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +27,8 @@ import java.sql.SQLException;
 public class RemovingSubscriptionAPIController
 {
 
-    private SubscriptionDao subscriptionDao;
     private AcmPlugin subscriptionPlugin;
-    private SubscriptionEventPublisher subscriptionEventPublisher;
+    private SubscriptionService subscriptionService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -44,26 +42,20 @@ public class RemovingSubscriptionAPIController
             HttpSession httpSession
     ) throws AcmObjectNotFoundException, SQLException
     {
-
-        if (log.isInfoEnabled())
-        {
-            log.info("Removing subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "]");
-        }
-
-        int resultFromDeleteAction = getSubscriptionDao().deleteSubscription(userId, objectId, objectType);
+        log.info("Removing subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "]");
+        int resultFromDeleteAction = getSubscriptionService().deleteSubscriptionForGivenObject(userId, objectId, objectType);
 
         if (resultFromDeleteAction == SubscriptionConstants.NO_ROW_DELETED)
         {
             log.debug("Subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "] not found in the DB");
-            getSubscriptionEventPublisher().publishSubscriptionDeletedEvent(userId, objectId, objectType, false);
             String msg = (String) getSubscriptionPlugin().getPluginProperties().get(SubscriptionConstants.SUCCESS_MSG);
             return prepareJsonReturnMsg(msg, objectId);
         } else
         {
             log.debug("Subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "] successfully removed");
-            getSubscriptionDao().deleteSubscriptionEvents(userId, objectId, objectType);
+            getSubscriptionService().deleteSubscriptionEventsForGivenObject(userId, objectId, objectType);
             log.debug("Deleted all subscription events related to object '{}' with id '{}' for user '{}'", objectType, objectId, userId);
-            getSubscriptionEventPublisher().publishSubscriptionDeletedEvent(userId, objectId, objectType, true);
+
             String successMsg = (String) getSubscriptionPlugin().getPluginProperties().get(SubscriptionConstants.SUCCESS_MSG);
             return prepareJsonReturnMsg(successMsg, objectId);
         }
@@ -79,16 +71,6 @@ public class RemovingSubscriptionAPIController
         return objectToReturn;
     }
 
-    public SubscriptionEventPublisher getSubscriptionEventPublisher()
-    {
-        return subscriptionEventPublisher;
-    }
-
-    public void setSubscriptionEventPublisher(SubscriptionEventPublisher subscriptionEventPublisher)
-    {
-        this.subscriptionEventPublisher = subscriptionEventPublisher;
-    }
-
     public AcmPlugin getSubscriptionPlugin()
     {
         return subscriptionPlugin;
@@ -99,13 +81,13 @@ public class RemovingSubscriptionAPIController
         this.subscriptionPlugin = subscriptionPlugin;
     }
 
-    public SubscriptionDao getSubscriptionDao()
+    public SubscriptionService getSubscriptionService()
     {
-        return subscriptionDao;
+        return subscriptionService;
     }
 
-    public void setSubscriptionDao(SubscriptionDao subscriptionDao)
+    public void setSubscriptionService(SubscriptionService subscriptionService)
     {
-        this.subscriptionDao = subscriptionDao;
+        this.subscriptionService = subscriptionService;
     }
 }

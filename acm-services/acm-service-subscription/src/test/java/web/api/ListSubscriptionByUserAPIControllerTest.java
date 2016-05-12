@@ -3,6 +3,7 @@ package web.api;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
+import com.armedia.acm.services.subscription.service.SubscriptionService;
 import com.armedia.acm.services.subscription.web.api.ListSubscriptionByUserAPIController;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.EasyMockSupport;
@@ -49,7 +50,7 @@ public class ListSubscriptionByUserAPIControllerTest extends EasyMockSupport {
     private MockHttpSession mockHttpSession;
 
     private ListSubscriptionByUserAPIController mockListSubscriptionByUserAPIController;
-    private SubscriptionDao mockSubscriptionDao;
+    private SubscriptionService mockSubscriptionService;
     private AcmPlugin mockSubscriptionPlugin;
 
     @Autowired
@@ -61,12 +62,12 @@ public class ListSubscriptionByUserAPIControllerTest extends EasyMockSupport {
     public void setUp() throws Exception {
 
         mockListSubscriptionByUserAPIController = new ListSubscriptionByUserAPIController();
-        mockSubscriptionDao = createMock(SubscriptionDao.class);
+        mockSubscriptionService = createMock(SubscriptionService.class);
         mockSubscriptionPlugin = createMock(AcmPlugin.class);
 
         mockHttpSession = new MockHttpSession();
 
-        mockListSubscriptionByUserAPIController.setSubscriptionDao(mockSubscriptionDao);
+        mockListSubscriptionByUserAPIController.setSubscriptionService(mockSubscriptionService);
         mockListSubscriptionByUserAPIController.setSubscriptionPlugin(mockSubscriptionPlugin);
 
         mockMvc = MockMvcBuilders.standaloneSetup(mockListSubscriptionByUserAPIController).setHandlerExceptionResolvers(exceptionResolver).build();
@@ -97,7 +98,7 @@ public class ListSubscriptionByUserAPIControllerTest extends EasyMockSupport {
         subscriptionList.add(subscription);
         subscriptionList.add(subscription1);
 
-        expect(mockSubscriptionDao.getListOfSubscriptionsByUser(userId, startRow, maxRow)).andReturn(subscriptionList).atLeastOnce();
+        expect(mockSubscriptionService.getSubscriptionsByUser(userId, startRow, maxRow)).andReturn(subscriptionList).atLeastOnce();
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn(userId).atLeastOnce();

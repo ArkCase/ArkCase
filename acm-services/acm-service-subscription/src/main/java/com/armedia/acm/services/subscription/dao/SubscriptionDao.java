@@ -7,8 +7,6 @@ import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
 import com.armedia.acm.services.subscription.model.SubscriptionConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
@@ -134,21 +132,4 @@ public class SubscriptionDao extends AcmAbstractDao<AcmSubscription>
         return rowCount;
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @Async("deleteTaskExecutor")
-    public void deleteSubscriptionEvents(String userId, Long objectId, String objectType)
-    {
-        TypedQuery<AcmSubscriptionEvent> query = getEm().createQuery("select event from AcmSubscriptionEvent event where event.eventObjectType=:objectType " +
-                "and event.eventObjectId=:objectId and event.subscriptionOwner=:userId", AcmSubscriptionEvent.class);
-
-        query.setParameter("objectType", objectType);
-        query.setParameter("objectId", objectId);
-        query.setParameter("userId", userId);
-
-        List<AcmSubscriptionEvent> subscriptionEvents = query.getResultList();
-        for (AcmSubscriptionEvent event : subscriptionEvents)
-        {
-            getEm().remove(event);
-        }
-    }
 }
