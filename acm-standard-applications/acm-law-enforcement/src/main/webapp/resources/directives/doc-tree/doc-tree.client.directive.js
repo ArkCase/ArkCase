@@ -4130,10 +4130,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 });
                 DocTree.readOnly = ("true" === attrs.readOnly);
 
-                scope.treeControl = {
-                    refreshTree: DocTree.refreshTree
-                    , getSelectedNodes: DocTree.getSelectedNodes
-                };
+                if(angular.isDefined(scope.treeControl)) {
+                    scope.treeControl.refreshTree = DocTree.refreshTree;
+                    scope.treeControl.getSelectedNodes = DocTree.getSelectedNodes;
+                }
 
                 ConfigService.getModuleConfig("common").then(function (moduleConfig) {
                     var treeConfig = Util.goodMapValue(moduleConfig, "docTree", {});
