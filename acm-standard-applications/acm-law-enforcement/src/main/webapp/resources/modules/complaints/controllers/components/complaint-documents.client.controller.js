@@ -14,6 +14,8 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             }
         );
 
+        $scope.treeControl = {};
+
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
