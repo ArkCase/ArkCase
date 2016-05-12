@@ -72,7 +72,7 @@
     </amq:broker>
 
     <amq:connectionFactory id="amqConnectionFactory" brokerURL="${ark.activemq.transportConnectorURI}"
-                           watchTopicAdvisories="true"/>
+                           watchTopicAdvisories="true" trustAllPackages="true"/>
 
     <bean id="jmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
           destroy-method="stop" depends-on="broker">
