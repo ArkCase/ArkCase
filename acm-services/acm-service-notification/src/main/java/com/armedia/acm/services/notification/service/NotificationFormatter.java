@@ -39,6 +39,7 @@ public class NotificationFormatter
             String updatedNote = replaceObjectTypeLabel(notificationNote, objectTypeLabelPlaceholder,
                     notification.getParentType());
             notification.setNote(updatedNote);
+            notificationNote = updatedNote;
         }
 
         if (notificationNote != null && notificationNote.contains(anchorPlaceholder))

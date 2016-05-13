@@ -70,6 +70,12 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
                         AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "status.changed", event.getUserId(), true, event.getIpAddress());
                         getTaskEventPublisher().publishTaskEvent(taskEvent);
                     }
+
+                    if (isReworkDetailsChanged(existing, updatedTask))
+                    {
+                        AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "reworkdetails.changed", event.getUserId(), true, event.getIpAddress());
+                        getTaskEventPublisher().publishTaskEvent(taskEvent);
+                    }
                 }
 
                 if (isAssigneeChanged(acmAssignment))
@@ -141,6 +147,20 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
         {
             return !details.equals(updatedDetails);
         } else if (updatedDetails != null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isReworkDetailsChanged(AcmTask existing, AcmTask updatedTask)
+    {
+        String updatedReworkDetails = updatedTask.getReworkInstructions();
+        String reworkDetails = existing.getReworkInstructions();
+        if (updatedReworkDetails != null && reworkDetails != null)
+        {
+            return !reworkDetails.equals(updatedReworkDetails);
+        } else if (updatedReworkDetails != null)
         {
             return true;
         }

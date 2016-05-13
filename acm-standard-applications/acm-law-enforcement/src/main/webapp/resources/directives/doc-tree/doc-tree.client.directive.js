@@ -1060,7 +1060,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             break;
                         case "checkout":
                             var fileId = node.data.objectId;
-                            LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE).then(
+                            LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
+                                ObjectService.LockTypes.CHECKOUT_LOCK).then(
                                 function (lockedFile) {
                                     DocTree._doDownload(node);
                                     DocTree.refreshTree();
@@ -1072,7 +1073,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             break;
                         case "cancelEditing":
                             var fileId = node.data.objectId;
-                            LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE).then(
+                            LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE,
+                                ObjectService.LockTypes.CANCEL_LOCK).then(
                                 function (unlockedFile) {
                                     // file is unlocked
                                     DocTree.refreshTree();
@@ -1147,10 +1149,24 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         case "edit":
                             break;
                         case "editWithWord":
-                            var absUrl = $location.absUrl();
-                            var baseHref = $browser.baseHref();
-                            var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
-                            ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + node.parent.data.objectId + "/" + node.data.objectId + ".docx");
+                            var fileId = node.data.objectId;
+                            LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE,
+                                ObjectService.LockTypes.WORD_EDIT_LOCK).then(
+                                function (lockedFile) {
+                                    var absUrl = $location.absUrl();
+                                    var baseHref = $browser.baseHref();
+                                    var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
+                                    var rs = Util.goodMapValue(DocTree.treeConfig, 'wordFileExtensionRegex', '\\.(doc|docx)$');
+                                    var re = new RegExp(rs, "i");
+                                    var hasExt = node.data.name.match(re);
+                                    var fileExt = '';
+                                    if (hasExt && hasExt[0])
+                                        fileExt = hasExt[0];
+
+                                    ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + node.parent.data.objectId + "/" + node.data.objectId + fileExt);
+                                    DocTree.refreshTree();
+                                }
+                            );
                             break;
                         case "email":
                             Email.openModal(actNodes);
@@ -3477,7 +3493,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     ObjectNoteService.saveNote(data.note);
                                 }
                                 var fileId = result.objectId;
-                                LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE).then(function () {
+                                LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE,
+                                    ObjectService.LockTypes.CHECKIN_LOCK).then(function () {
                                     DocTree.markNodeOk(node.parent);
                                     node.parent.renderTitle();
                                     DocTree.refreshTree();
@@ -4113,10 +4130,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 });
                 DocTree.readOnly = ("true" === attrs.readOnly);
 
-                scope.treeControl = {
-                    refreshTree: DocTree.refreshTree
-                    , getSelectedNodes: DocTree.getSelectedNodes
-                };
+                if(angular.isDefined(scope.treeControl)) {
+                    scope.treeControl.refreshTree = DocTree.refreshTree;
+                    scope.treeControl.getSelectedNodes = DocTree.getSelectedNodes;
+                }
 
                 ConfigService.getModuleConfig("common").then(function (moduleConfig) {
                     var treeConfig = Util.goodMapValue(moduleConfig, "docTree", {});

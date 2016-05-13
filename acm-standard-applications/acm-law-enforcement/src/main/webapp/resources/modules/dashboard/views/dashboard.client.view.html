@@ -1,4 +1,4 @@
-<div ng-controller="DashboardController">
+<div>
     <div class="module-content">
         <div class="content-body">
             <div class="module-header">
@@ -8,16 +8,15 @@
                 </h3>
             </div>
             <div class="well-sm">
-            <div class="container-fluid">
-                <adf-dashboard
-                        name="{{dashboard.name}}"
-                        collapsible="{{dashboard.collapsible}}"
-                        maximizable="{{dashboard.maximizable}}"
-                        structure="{{dashboard.structure}}"
-                        adf-model="dashboard.model"
-                        adf-widget-filter="widgetFilter"/>
-
-            </div>
+                <div class="container-fluid">
+                    <adf-dashboard
+                            name="{{dashboard.name}}"
+                            collapsible="{{dashboard.collapsible}}"
+                            maximizable="{{dashboard.maximizable}}"
+                            structure="{{dashboard.structure}}"
+                            adf-model="dashboard.model"
+                            adf-widget-filter="widgetFilter"/>
+                </div>
             </div>
         </div>
     </div>

@@ -31,6 +31,9 @@
             class="com.armedia.acm.auth.AcmGrantedAuthoritiesMapper"
             init-method="initBean">
         <property name="applicationRoleToUserGroupProperties" ref="applicationRoleToUserGroupProperties"/>
+        <property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
     </bean>
 
     <bean id="acmAuthenticationManager" class="com.armedia.acm.auth.AcmAuthenticationManager">

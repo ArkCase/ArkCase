@@ -13,6 +13,9 @@ import io.milton.http.exceptions.BadRequestException;
 import io.milton.http.exceptions.NotAuthorizedException;
 import io.milton.resource.Resource;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity
  */
@@ -37,10 +40,13 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
     private String filterMapping;
 
+    private Pattern wordFileExtensionPattern;
+
     @Override
     public Resource getResource(String host, String path) throws NotAuthorizedException, BadRequestException
     {
-        path = path.replace(".docx", "");
+        path = removeFileExtension(path);
+
         String strippedPath = path.substring(path.indexOf(filterMapping) + filterMapping.length());
         if (strippedPath.endsWith("/"))
         {
@@ -49,7 +55,17 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
         ResourceHandler hanlder = getResourceHandler(strippedPath);
         return hanlder.getResource(host, strippedPath);
+    }
 
+    private String removeFileExtension(String path)
+    {
+        //remove word file extensions
+        Matcher m = wordFileExtensionPattern.matcher(path);
+        if (m.find())
+        {
+            path = m.replaceFirst("");
+        }
+        return path;
     }
 
     private ResourceHandler getResourceHandler(String path) throws BadRequestException
@@ -104,6 +120,11 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         {
             this.filterMapping = filterMapping + "/";
         }
+    }
+
+    public void setWordFileExtensionPattern(Pattern wordFileExtensionPattern)
+    {
+        this.wordFileExtensionPattern = wordFileExtensionPattern;
     }
 
     public AcmWebDAVSecurityManager getSecurityManager()
@@ -192,4 +213,5 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         }
 
     }
+
 }

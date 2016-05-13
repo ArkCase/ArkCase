@@ -219,10 +219,10 @@
       "module.config": {
         "title": "Module Configuration"
       },
-      "name.config": {
-        "title": "Name Configuration",
-        "userId.label": "Use user identifier to display user",
-        "username.label":"Use user name to display user",
+      "userName.config": {
+        "title": "User names display configuration",
+        "userId.label": "Use user identifier",
+        "userName.label": "Use full user name",
         "apply": "Apply"
       }
     },
