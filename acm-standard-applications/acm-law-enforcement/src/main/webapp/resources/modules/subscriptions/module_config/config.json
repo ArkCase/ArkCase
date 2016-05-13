@@ -28,6 +28,7 @@
         },
         {
           "name": "title_parseable",
+		  "sortField": "title_parseable_lcs",
           "displayName": "subscriptions.comp.grid.columns.event",
           "headerCellFilter": "translate"
         },
@@ -58,7 +59,7 @@
       ],
       "paginationPageSize": 20,
       "start": 0,
-      "filter": "\"Object Type\": SUBSCRIPTION_EVENT&owner_lcs:userId",
+      "filter": "\"Object Type\": SUBSCRIPTION_EVENT & \"Owner\": userId",
       "filterName": "Object Type",
       "reportFileName": "subscriptions"
     }
