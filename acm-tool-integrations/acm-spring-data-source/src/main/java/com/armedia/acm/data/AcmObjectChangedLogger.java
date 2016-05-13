@@ -10,7 +10,7 @@ public class AcmObjectChangedLogger
 {
     private transient Logger log = LoggerFactory.getLogger(getClass());
 
-    public void logObject(AcmObjectChangedEvent event)
+    public void logObject(AcmObjectEvent event)
     {
         log.info("Object changed: {}", event);
     }

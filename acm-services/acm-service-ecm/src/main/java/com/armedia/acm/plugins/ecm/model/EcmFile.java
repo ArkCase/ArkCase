@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
@@ -34,7 +35,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "acm_file")
-public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulEntity, AcmLegacySystemEntity
+public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulEntity, AcmLegacySystemEntity, AcmParentObjectInfo
 {
     private static final long serialVersionUID = -5177153023458655846L;
     private static final String OBJECT_TYPE = "FILE";
@@ -394,5 +395,17 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public void setLegacySystemId(String legacySystemId)
     {
         this.legacySystemId = legacySystemId;
+    }
+
+    @Override
+    public Long getParentObjectId()
+    {
+        return getContainer() != null ? getContainer().getContainerObjectId() : null;
+    }
+
+    @Override
+    public String getParentObjectType()
+    {
+        return getContainer() != null ? getContainer().getContainerObjectType() : null;
     }
 }

@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.services.participants.model.AcmParticipant;
@@ -12,8 +13,8 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name="acm_close_complaint_request")
-public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
+@Table(name = "acm_close_complaint_request")
+public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity, AcmParentObjectInfo
 {
     private static final long serialVersionUID = -6389711968453289552L;
 
@@ -42,7 +43,7 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType = CloseComplaintRequestConstants.OBJECT_TYPE;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({
             @JoinColumn(name = "cm_object_id"),
             @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
@@ -71,7 +72,7 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
 
     private void setupChildPointers()
     {
-        for ( AcmParticipant ap : getParticipants() )
+        for (AcmParticipant ap : getParticipants())
         {
             ap.setObjectId(getId());
             ap.setObjectType(CloseComplaintRequestConstants.OBJECT_TYPE);
@@ -184,6 +185,18 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
 
     @Override
     public String getObjectType()
+    {
+        return objectType;
+    }
+
+    @Override
+    public Long getParentObjectId()
+    {
+        return complaintId;
+    }
+
+    @Override
+    public String getParentObjectType()
     {
         return objectType;
     }
