@@ -60,6 +60,20 @@
         </property>
     </bean>
 
+    <bean id="acmObjectsNotifications"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.arkcase/acm/acmObjectsNotifications.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+            </props>
+        </property>
+    </bean>
+
     <bean id="acmDataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
         <property name="driverClassName" value="${acm.driverClassName}"/>
         <property name="url" value="${acm.url}"/>
@@ -148,6 +162,10 @@
 
     <bean id="acmObjectChangeNotifier" class="com.armedia.acm.data.AcmObjectChangedNotifier">
         <property name="objectEventChannel" ref="objectEventChannel"/>
+        <property name="includeClassNames" value="${acm_object.changed.notification.filter.include.classNames}"/>
+        <property name="includeObjectTypes" value="${acm_object.changed.notification.filter.include.object_types}"/>
+        <property name="includeParentObjectTypes" value="${acm_object.changed.notification.filter.include.parent_object_types}"/>
+
     </bean>
     <bean id="acmObjectChangedLogger" class="com.armedia.acm.data.AcmObjectChangedLogger"/>
 
@@ -156,7 +174,7 @@
 
 
     <bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>
-    <bean id="acmObjectChangeAdapter" class="com.armedia.acm.data.AcmObjectChangeAdapter">
+    <bean id="acmObjectChangeAdapter" class="com.armedia.acm.data.AcmObjectChangedAdapter">
         <property name="acmObjectChangedNotifier" ref="acmObjectChangeNotifier"/>
     </bean>
 

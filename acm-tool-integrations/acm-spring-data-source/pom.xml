@@ -13,7 +13,7 @@
     <description>This module contains the ACM data source Spring bean.</description>
 
     <dependencies>
-        <!-- String -->
+        <!-- Spring -->
         <dependency>
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-core</artifactId>

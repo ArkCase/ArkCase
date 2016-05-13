@@ -1,6 +1,7 @@
 package com.armedia.acm.services.subscription.model;
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -12,7 +13,8 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "acm_subscription_event")
-public class AcmSubscriptionEvent implements AcmObject, AcmEntity {
+public class AcmSubscriptionEvent implements AcmObject, AcmEntity,AcmParentObjectInfo
+{
 
     @Id
     @TableGenerator(name = "acm_subscription_event_gen",
@@ -187,5 +189,17 @@ public class AcmSubscriptionEvent implements AcmObject, AcmEntity {
     @JsonIgnore
     public Long getId() {
         return subscriptionEventId;
+    }
+
+    @Override
+    public Long getParentObjectId()
+    {
+        return eventObjectId;
+    }
+
+    @Override
+    public String getParentObjectType()
+    {
+        return eventObjectType;
     }
 }
