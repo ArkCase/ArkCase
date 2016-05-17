@@ -14,6 +14,8 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             }
         );
 
+        $scope.treeControl = {};
+        
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams

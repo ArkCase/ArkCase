@@ -5,6 +5,8 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
     , function ($scope, $stateParams, $modal
         , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, DocTreeService, PermissionsService) {
 
+        $scope.treeControl = {};
+        
         var componentHelper = new HelperObjectBrowserService.Component({
             moduleId: "tasks"
             , componentId: "attachments"
