@@ -62,6 +62,10 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, $scope.fileTypes);
         };
 
+        $scope.onInitTree = function(treeControl) {
+            $scope.treeControl = treeControl;
+        };
+
         $scope.onClickRefresh = function () {
             $scope.treeControl.refreshTree();
         };
