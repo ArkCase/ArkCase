@@ -62,11 +62,6 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             $scope.objectInfo = objectInfo;
             $scope.objectId = objectInfo.complaintId;
             $scope.assignee = ObjectModelService.getAssignee(objectInfo);
-
-
-            console.log("onObjectInfoRetrieved");
-            var a3 = $scope.treeControl;
-
         };
 
         $scope.onInitTree = function(treeControl) {
