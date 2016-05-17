@@ -399,5 +399,18 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="50-acm_file-add-class-name" author="joseph.mcgrady">
+        <addColumn tableName="acm_file">
+            <column name="cm_class_name" type="VARCHAR(400)"></column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="51-acm_file-add-not-null-and-default-to-class-name" author="joseph.mcgrady">
+        <addDefaultValue tableName="acm_file" columnName="cm_class_name" columnDataType="VARCHAR(400)"
+                         defaultValue="com.armedia.acm.plugins.ecm.model.EcmFile"/>
+        <addNotNullConstraint tableName="acm_file" columnName="cm_class_name" columnDataType="VARCHAR(400)"
+                              defaultNullValue="com.armedia.acm.plugins.ecm.model.EcmFile"/>
+    </changeSet>
+
 </databaseChangeLog>
 
