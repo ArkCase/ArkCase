@@ -2,45 +2,82 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:amq="http://activemq.apache.org/schema/core"
-       xsi:schemaLocation="
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-        http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.9.0.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.13.2.xsd">
 
 
     <!--*************************************************************************** -->
     <!-- ActiveMQ Configuration                                                     -->
     <!--*************************************************************************** -->
 
-    <amq:broker id="broker" useJmx="false" persistent="true">
+    <amq:broker id="broker" useJmx="false" persistent="true"
+                deleteAllMessagesOnStartup="${ark.activemq.deleteAllMessagesOnStartup}" enableStatistics="true">
         <amq:persistenceAdapter>
             <amq:kahaDB directory="${user.home}/.arkcase/activemq"/>
+
         </amq:persistenceAdapter>
+
+        <amq:destinationPolicy>
+            <amq:policyMap>
+                <amq:policyEntries>
+                    <amq:policyEntry queue=">" deadLetterStrategy="discarding"
+                                     advisoryWhenFull="true"
+                                     advisoryForFastProducers="true" memoryLimit="${ark.activemq.queueMemoryLimit}">
+                        <amq:deadLetterStrategy>
+                            <amq:discarding/>
+                        </amq:deadLetterStrategy>
+                    </amq:policyEntry>
+                    <amq:policyEntry topic=">" deadLetterStrategy="discarding"
+                                     advisoryWhenFull="true"
+                                     advisoryForFastProducers="true" memoryLimit="${ark.activemq.topicMemoryLimit}">
+                        <amq:deadLetterStrategy>
+                            <amq:discarding/>
+                        </amq:deadLetterStrategy>
+                    </amq:policyEntry>
+                </amq:policyEntries>
+
+            </amq:policyMap>
+        </amq:destinationPolicy>
+
         <amq:systemUsage>
+
+            <!-- NOTE Ensure the below limits are HIGHER than the memoryLimit in the destinationPolicy policyMap.
+                 Actually, the SUM of ALL the memoryLimit attributes in the policyMap must be LOWER than
+                 the systemUsage memory limits.
+            -->
             <amq:systemUsage>
                 <!-- memory usage is for non_persistent messages - limit is on memory -->
                 <amq:memoryUsage>
-                    <amq:memoryUsage limit="20 mb"/>
+                    <amq:memoryUsage limit="${ark.activemq.memoryUsageLimit}"/>
                 </amq:memoryUsage>
                 <!-- storeUsage is for persistent messages - the limit is applied to disk space  -->
                 <amq:storeUsage>
-                    <amq:storeUsage limit="128 mb"/>
+                    <amq:storeUsage limit="${ark.activemq.storeUsageLimit}"/>
                 </amq:storeUsage>
                 <!-- tempUsage is for temporary messages - limit is on disk space -->
                 <amq:tempUsage>
-                    <amq:tempUsage limit="128 mb"/>
+                    <amq:tempUsage limit="${ark.activemq.tempUsageLimit}"/>
                 </amq:tempUsage>
             </amq:systemUsage>
         </amq:systemUsage>
+
+        <amq:plugins>
+            <amq:timeStampingBrokerPlugin zeroExpirationOverride="1000" ttlCeiling="1000" futureOnly="false"/>
+        </amq:plugins>
+
         <amq:transportConnectors>
-            <amq:transportConnector uri="vm://localhost"/>
+            <amq:transportConnector uri="${ark.activemq.transportConnectorURI}"/>
         </amq:transportConnectors>
+
     </amq:broker>
 
-    <amq:connectionFactory id="amqConnectionFactory" brokerURL="vm://localhost"/>
+    <amq:connectionFactory id="amqConnectionFactory" brokerURL="${ark.activemq.transportConnectorURI}"
+                           watchTopicAdvisories="true" trustAllPackages="true"/>
 
     <bean id="jmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
           destroy-method="stop" depends-on="broker">
         <property name="connectionFactory" ref="amqConnectionFactory"/>
+        <property name="maxConnections" value="${ark.activemq.maxConnections}"/>
     </bean>
 
 </beans>

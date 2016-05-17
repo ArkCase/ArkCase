@@ -44,26 +44,12 @@ public class PropertyFileManager
         Properties p = new Properties();
         p.setProperty(key, value);
 
-        OutputStream fos = null;
-        try
+        try (OutputStream fos = new FileOutputStream(filename))
         {
-            fos = new FileOutputStream(filename);
             p.store(fos, "last updated");
         } catch (IOException e)
         {
             log.debug("could not create properties file: " + e.getMessage(), e);
-        } finally
-        {
-            if (fos != null)
-            {
-                try
-                {
-                    fos.close();
-                } catch (IOException e)
-                {
-                    log.warn("could not close properties file: " + e.getMessage(), e);
-                }
-            }
         }
     }
 
@@ -71,19 +57,16 @@ public class PropertyFileManager
     {
         if (propertiesMap != null && propertiesMap.size() > 0)
         {
-            FileInputStream in = null;
-            FileOutputStream out = null;
-            try
+
+            try (FileInputStream in = new FileInputStream(fileName);
+                 FileOutputStream out = new FileOutputStream(fileName))
             {
                 Properties p = new Properties();
 
                 if (!clean)
                 {
-                    in = new FileInputStream(fileName);
                     p.load(in);
                 }
-
-                out = new FileOutputStream(fileName);
 
                 for (Entry<String, String> entry : propertiesMap.entrySet())
                 {
@@ -94,29 +77,6 @@ public class PropertyFileManager
             } catch (IOException e)
             {
                 log.debug("Could not update properties file: " + e.getMessage(), e);
-            } finally
-            {
-                if (in != null)
-                {
-                    try
-                    {
-                        in.close();
-                    } catch (IOException e)
-                    {
-                        log.warn("Could not close input stream: " + e.getMessage(), e);
-                    }
-                }
-
-                if (out != null)
-                {
-                    try
-                    {
-                        out.close();
-                    } catch (IOException e)
-                    {
-                        log.warn("Could not close output stream: " + e.getMessage(), e);
-                    }
-                }
             }
         }
     }
@@ -125,16 +85,13 @@ public class PropertyFileManager
     {
         if (properties != null && properties.size() > 0)
         {
-            FileInputStream in = null;
-            FileOutputStream out = null;
-            try
+
+            try (FileInputStream in = new FileInputStream(fileName);
+                 FileOutputStream out = new FileOutputStream(fileName))
             {
-                in = new FileInputStream(fileName);
 
                 Properties p = new Properties();
                 p.load(in);
-
-                out = new FileOutputStream(fileName);
 
                 for (String key : properties)
                 {
@@ -145,29 +102,6 @@ public class PropertyFileManager
             } catch (IOException e)
             {
                 log.debug("Could not remove properties file: " + e.getMessage(), e);
-            } finally
-            {
-                if (in != null)
-                {
-                    try
-                    {
-                        in.close();
-                    } catch (IOException e)
-                    {
-                        log.warn("Could not close input stream: " + e.getMessage(), e);
-                    }
-                }
-
-                if (out != null)
-                {
-                    try
-                    {
-                        out.close();
-                    } catch (IOException e)
-                    {
-                        log.warn("Could not close output stream: " + e.getMessage(), e);
-                    }
-                }
             }
         }
     }
@@ -175,32 +109,19 @@ public class PropertyFileManager
     public String load(String filename, String key, String defaultValue)
     {
 
-        InputStream fis = null;
+
         Properties p = new Properties();
         String retval = defaultValue;
 
-        try
+        try (InputStream fis = new FileInputStream(filename))
         {
-            fis = new FileInputStream(filename);
             p.load(fis);
 
             retval = p.getProperty(key, defaultValue);
 
         } catch (IOException e)
         {
-            log.warn("file not found, using default last update time.");
-        } finally
-        {
-            if (fis != null)
-            {
-                try
-                {
-                    fis.close();
-                } catch (IOException e)
-                {
-                    log.warn("Could not close properties file: " + e.getMessage(), e);
-                }
-            }
+            log.warn("file [{}] not found, using default last update time.", filename);
         }
 
         return retval;
