@@ -5,6 +5,7 @@ import com.armedia.acm.data.AcmObjectChangelist;
 import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.dao.SubscriptionEventDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
+import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
 import com.armedia.acm.services.subscription.model.SubscriptionConstants;
 import com.armedia.acm.services.subscription.service.SubscriptionEventPublisher;
 import com.armedia.acm.services.subscription.service.SubscriptionService;
@@ -59,10 +60,10 @@ public class SubscriptionServiceImpl implements SubscriptionService
     @Override
     public void deleteSubscriptionEventsForGivenObject(String userId, Long objectId, String objectType)
     {
-        List<Object> deletedObjects = getSubscriptionEventDao().deleteSubscriptionEvents(userId, objectId, objectType);
+        List<AcmSubscriptionEvent> deletedObjects = getSubscriptionEventDao().deleteSubscriptionEvents(userId, objectId, objectType);
 
         AcmObjectChangelist changelist = new AcmObjectChangelist();
-        changelist.setDeletedObjects(deletedObjects);
+        changelist.getDeletedObjects().addAll(deletedObjects);
 
         getSubscriptionEventPublisher().publishDeletedSubscriptionEvents(changelist);
     }

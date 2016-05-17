@@ -4,6 +4,7 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 /**
@@ -16,17 +17,17 @@ public class SubscriptionEventDao extends AcmAbstractDao<AcmSubscriptionEvent> {
         return AcmSubscriptionEvent.class;
     }
 
-    public List<Object> deleteSubscriptionEvents(String userId, Long objectId, String objectType)
+    public List<AcmSubscriptionEvent> deleteSubscriptionEvents(String userId, Long objectId, String objectType)
     {
         // get all subscription events before deleting to publish AdmDatabaseChangesEvent later
-        Query query = getEm().createQuery("select event from AcmSubscriptionEvent event where event.eventObjectType=:objectType " +
-                "and event.eventObjectId=:objectId and event.subscriptionOwner=:userId");
+        TypedQuery<AcmSubscriptionEvent> query = getEm().createQuery("select event from AcmSubscriptionEvent event where event.eventObjectType=:objectType " +
+                "and event.eventObjectId=:objectId and event.subscriptionOwner=:userId", AcmSubscriptionEvent.class);
 
         query.setParameter("objectType", objectType);
         query.setParameter("objectId", objectId);
         query.setParameter("userId", userId);
 
-        List<Object> subscriptionEvents = query.getResultList();
+        List<AcmSubscriptionEvent> subscriptionEvents = query.getResultList();
 
         Query deleteQuery = getEm().createQuery("delete from AcmSubscriptionEvent event where event.eventObjectType=:objectType " +
                 "and event.eventObjectId=:objectId and event.subscriptionOwner=:userId");
