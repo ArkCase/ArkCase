@@ -100,9 +100,11 @@ public class ExchangeWebServicesOutlookDaoIT
             log.info("Date: " + item.getDateTimeReceived() + "; subject: " + item.getSubject() + "; from: " + ((EmailMessage) item).getFrom());
         }
 
-        //service.loadPropertiesForItems(mailItems.getItems(), new PropertySet(ItemSchema.Body));
+        if (!mailItems.getItems().isEmpty())
+        {
+            log.info("Body of first message: " + (mailItems.getItems().get(0).getBody()));
+        }
 
-        log.info("Body of first message: " + (mailItems.getItems().get(0).getBody()));
 
         mailItems = dao.findItems(
                 service, WellKnownFolderName.Inbox, new PropertySet(ItemSchema.Body, EmailMessageSchema.From), 0, 5, "subject", false, null);
@@ -135,7 +137,11 @@ public class ExchangeWebServicesOutlookDaoIT
         }
 
 
-        log.info("Body of first message: " + (items.getItems().get(0).getBody()));
+        if (!items.getItems().isEmpty())
+        {
+            log.info("Body of first message: " + (items.getItems().get(0).getBody()));
+        }
+
 
         items = dao.findItems(
                 service, WellKnownFolderName.Calendar, new PropertySet(ItemSchema.Subject, AppointmentSchema.Start, AppointmentSchema.AppointmentType), 0, 15,
