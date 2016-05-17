@@ -1265,7 +1265,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     var absUrl = $location.absUrl();
                                     var baseHref = $browser.baseHref();
                                     var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
-                                    ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + node.parent.data.objectId + "/" + node.data.objectId + ".docx");
+                                    var rs = Util.goodMapValue(DocTree.treeConfig, 'wordFileExtensionRegex', '\\.(doc|docx)$');
+                                    var re = new RegExp(rs, "i");
+                                    var hasExt = node.data.name.match(re);
+                                    var fileExt = '';
+                                    if (hasExt && hasExt[0])
+                                        fileExt = hasExt[0];
+
+                                    ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + node.parent.data.objectId + "/" + node.data.objectId + fileExt);
                                     DocTree.refreshTree();
                                 }
                             );
@@ -4225,6 +4232,13 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.Command.onPostCmd = ("undefined" != typeof attrs.onPostCmd) ? scope.onPostCmd() : (function () {});
                 DocTree.readOnly = ("true" === attrs.readOnly);
 
+
+                //jwu: it does not matter scope.treeControl is defined or not; it is defined here
+                //
+                //if(angular.isDefined(scope.treeControl)) {
+                //    scope.treeControl.refreshTree = DocTree.refreshTree;
+                //    scope.treeControl.getSelectedNodes = DocTree.getSelectedNodes;
+                //}
                 scope.treeControl = {
                     refreshTree: DocTree.refreshTree
                     , getSelectedNodes: DocTree.getSelectedNodes
@@ -4240,7 +4254,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.Column.setRenderers(DocTree.Column.getDefaultRenders());
 
                 //jwu: With scope.treeControl set above, according to Angular document, the host controller $scope.treeControl should be defined.
-                //     yet, it is not always be the case. It works sometimes and does not the other times. As a work around, scope.treeControl is
+                //     yet, it is not always the case. It works sometimes and does not the other times. As a work around, scope.treeControl is
                 //     passed as argument of onInitTree(). Parent controller need to assign it to its $scope.treeControl
                 if ("undefined" != typeof attrs.onInitTree) {
                     scope.onInitTree()(scope.treeControl);

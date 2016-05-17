@@ -32,7 +32,7 @@
                 <span translate>tasks.comp.actions.reject.button</span>
             </button>
             <button class="btn btn-sm btn-default" ng-click="onClickOutcome(outcome.name)"
-                    ng-repeat="outcome in ::objectInfo.availableOutcomes" ng-show="showBtnOutcomes">
+                    ng-repeat="outcome in objectInfo.availableOutcomes" ng-show="showBtnOutcomes">
                 {{outcome.description}}
             </button>
             <button class="btn btn-sm btn-default" ng-click="refresh()">
