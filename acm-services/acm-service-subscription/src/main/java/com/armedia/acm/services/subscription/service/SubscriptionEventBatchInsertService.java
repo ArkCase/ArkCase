@@ -6,6 +6,7 @@ import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.dao.SubscriptionEventDao;
 import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
+import com.armedia.acm.services.subscription.model.SubscriptionConstants;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.xmlbeans.SystemProperties;
@@ -39,40 +40,24 @@ public class SubscriptionEventBatchInsertService
     private SpringContextHolder springContextHolder;
     private Map<String, String> subscriptionProperties;
 
-    /**
-     * The default run date to use if this generator has never run before (or if the properties file that stores the
-     * last run date is missing)
-     */
-    private static final String DEFAULT_LAST_RUN_DATE = "1970-01-01T00:00:00Z";
-
-    /**
-     * The property key to use in the properties file that stores the last run date.
-     */
-    private static final String SUBSCRIPTION_EVENT_LAST_RUN_DATE_PROPERTY_KEY = "subscription.event.last.run.date";
-    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private Logger log = LoggerFactory.getLogger(getClass());
-
-    /**
-     * The property key to get all events that should not be saved  as AcmSubscriptionEvent
-     */
-    private static final String SUBSCRIPTION_EVENT_TYPES_TO_BE_REMOVED = "subscription.removed.event.types";
 
     // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration
     // folder ($HOME/.acm).
     public void insertNewSubscriptionEvents()
     {
         setFullPath(getUserHomeDir() + getLastBatchInsertPropertyFileLocation().replace("/", getFileSeparator()));
-        getAuditPropertyEntityAdapter().setUserId("SUBSCRIPTION-BATCH-INSERT");
+        getAuditPropertyEntityAdapter().setUserId(SubscriptionConstants.SUBSCRIPTION_USER);
 
         String lastRunDate = getPropertyFileManager().load(
                 getFullPath(),
-                SUBSCRIPTION_EVENT_LAST_RUN_DATE_PROPERTY_KEY,
-                DEFAULT_LAST_RUN_DATE);
-        DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+                SubscriptionConstants.SUBSCRIPTION_EVENT_LAST_RUN_DATE_PROPERTY_KEY,
+                SubscriptionConstants.DEFAULT_LAST_RUN_DATE);
+        DateFormat dateFormat = new SimpleDateFormat(SubscriptionConstants.DATE_FORMAT);
 
         try
         {
-            String eventTypesString = getSubscriptionProperties().get(SUBSCRIPTION_EVENT_TYPES_TO_BE_REMOVED);
+            String eventTypesString = getSubscriptionProperties().get(SubscriptionConstants.SUBSCRIPTION_EVENT_TYPES_TO_BE_REMOVED);
             List<String> eventsToBeRemoved = null;
             if (StringUtils.isNotEmpty(eventTypesString))
             {
@@ -107,7 +92,7 @@ public class SubscriptionEventBatchInsertService
         // store the current time as the last run date to use the next time this job runs.  This allows us to
         // scan only for objects updated since this date.
         String solrNow = dateFormat.format(new Date());
-        getPropertyFileManager().store(SUBSCRIPTION_EVENT_LAST_RUN_DATE_PROPERTY_KEY, solrNow, getFullPath());
+        getPropertyFileManager().store(SubscriptionConstants.SUBSCRIPTION_EVENT_LAST_RUN_DATE_PROPERTY_KEY, solrNow, getFullPath());
     }
 
     private Date getLastBatchRunDate(String lastRunDate, DateFormat dateFormat) throws ParseException
