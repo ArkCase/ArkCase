@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
+import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -26,6 +27,7 @@ public class FindCaseByIdAPIController
 
     private CaseFileDao caseFileDao;
     private ChangeCaseStatusDao changeCaseStatusDao;
+    private CaseFileEventUtility caseFileEventUtility;
 
     @PreAuthorize("hasPermission(#id, 'CASE_FILE', 'viewCaseDetailsPage')")
     @RequestMapping(
@@ -50,6 +52,7 @@ public class FindCaseByIdAPIController
             ChangeCaseStatus changeCaseStatus = getChangeCaseStatusDao().findByCaseId(retval.getId());
             retval.setChangeCaseStatus(changeCaseStatus);
 
+            caseFileEventUtility.raiseCaseFileViewed(retval, auth);
             return retval;
         } catch (PersistenceException e)
         {
@@ -75,5 +78,15 @@ public class FindCaseByIdAPIController
     public void setChangeCaseStatusDao(ChangeCaseStatusDao changeCaseStatusDao)
     {
         this.changeCaseStatusDao = changeCaseStatusDao;
+    }
+
+    public CaseFileEventUtility getCaseFileEventUtility()
+    {
+        return caseFileEventUtility;
+    }
+
+    public void setCaseFileEventUtility(CaseFileEventUtility caseFileEventUtility)
+    {
+        this.caseFileEventUtility = caseFileEventUtility;
     }
 }
