@@ -10,21 +10,19 @@ import java.util.Date;
 public class SubscriptionPersistenceEvent extends AcmEvent
 {
 
-    private static final String OBJECT_TYPE = "SUBSCRIPTION";
-
     public SubscriptionPersistenceEvent(AcmSubscription source) {
 
         super(source);
         setObjectId(source.getSubscriptionId());
         setEventDate(new Date());
         setUserId(source.getUserId());
-        setObjectType(OBJECT_TYPE);
+        setObjectType(SubscriptionConstants.OBJECT_TYPE);
     }
 
     @Override
     public String getObjectType()
     {
-        return OBJECT_TYPE;
+        return SubscriptionConstants.OBJECT_TYPE;
     }
 
 }
