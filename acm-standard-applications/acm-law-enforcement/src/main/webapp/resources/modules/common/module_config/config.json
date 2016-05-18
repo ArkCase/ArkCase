@@ -86,7 +86,7 @@
         "displayName": "common.directive.docTree.table.columns.status",
         "__todo__cellTemplate": "{{node.data.status}}",
         "width": "8%",
-        "index": 8
+        "index": 7
       }
     ],
     "menu": {
