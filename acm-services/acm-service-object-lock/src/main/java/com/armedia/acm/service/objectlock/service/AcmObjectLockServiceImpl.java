@@ -33,8 +33,8 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
     public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Authentication auth)
     {
 
-        log.debug("{} about to create object lock[objectId={}, objectType={}, lockType={}]", auth.getName(), objectId, objectType, lockType);
         AcmObjectLock existingLock = acmObjectLockDao.findLock(objectId, objectType);
+
         if (existingLock != null)
         {
             //if current user is same as creator of the lock than just return existingLock, else throw an exception
@@ -42,10 +42,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
             {
                 return existingLock;
             } else
-            {
-                log.warn("{} not able to create object lock[objectId={}, objectType={}, lockType={}]. Reason: Object Lock already exists for {}", auth.getName(), objectId, objectType, lockType, existingLock.getCreator());
                 throw new AcmObjectLockException("Lock already exist for different user.");
-            }
         }
 
         AcmObjectLock ol = new AcmObjectLock();
@@ -55,10 +52,9 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
         AcmObjectLock lock = acmObjectLockDao.save(ol);
 
-        log.info("{} created object lock[objectId={}, objectType={}, lockType={}]", auth.getName(), objectId, objectType, lockType);
-
         AcmObjectLockEvent event = new AcmObjectLockEvent(lock, auth.getName(), true);
         getApplicationEventPublisher().publishEvent(event);
+
         return lock;
     }
 

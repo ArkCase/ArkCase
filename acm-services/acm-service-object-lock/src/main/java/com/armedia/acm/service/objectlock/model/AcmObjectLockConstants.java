@@ -10,8 +10,6 @@ public interface AcmObjectLockConstants
     String CHECKIN_LOCK = "CHECKIN_LOCK";
     String CANCEL_LOCK = "CANCEL_LOCK";
     String OBJECT_LOCK = "OBJECT_LOCK";
-    /**
-     * this should be used when object needs to be locked for some long running tasks.
-     */
-    String LOCK_FOR_PROCESSING = "OBJECT_PROCESSING_LOCK";
+
+
 }
