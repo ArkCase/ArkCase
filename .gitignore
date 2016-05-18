@@ -15,11 +15,8 @@ atlassian-ide-plugin.xml
 .mule/
 
 # Package Files #
-*.jar
-*.war
-*.ear
-/acm-standard-applications/acm-law-enforcement/nbactions.xml
-**/partition-descriptor
+nbactions.xml
+partition-descriptor
 rebel.xml
 activemq-data
 logs
