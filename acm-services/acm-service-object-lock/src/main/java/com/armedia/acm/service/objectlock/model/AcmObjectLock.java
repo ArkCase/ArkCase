@@ -50,7 +50,6 @@ public class AcmObjectLock implements Serializable, AcmEntity
 
     @Column(name = "cm_object_id")
     private Long objectId;
-
     @Column(name = "cm_object_type")
     private String objectType;
 
