@@ -366,12 +366,11 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
             Properties props = new Properties();
             props.load(FileUtils.openInputStream(new File(applicationPrivilegesFile)));
 
-            Set<Object> privilegesKeys = props.keySet();
+            Set<String> privilegesKeys = props.stringPropertyNames();
             Map<String, String> priveleges = new HashMap<String, String>();
-            for (Object keyIter : privilegesKeys)
+            for (String keyIter : privilegesKeys)
             {
-                new HashMap<String, String>();
-                priveleges.put((String) keyIter, (String) props.get(keyIter));
+                priveleges.put(keyIter, props.getProperty(keyIter));
             }
 
             return priveleges;
