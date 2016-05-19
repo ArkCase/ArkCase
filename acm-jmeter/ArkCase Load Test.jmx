@@ -37,6 +37,11 @@
             <stringProp name="Argument.value">http://acm-frevvo:8082/frevvo</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="acm.user.agent" elementType="Argument">
+            <stringProp name="Argument.name">acm.user.agent</stringProp>
+            <stringProp name="Argument.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </elementProp>
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
@@ -229,7 +234,7 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
               </collectionProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${acm.url.arkcase.host}</stringProp>
-            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.port">${acm.url.arkcase.port}</stringProp>
             <stringProp name="HTTPSampler.connect_timeout"></stringProp>
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${acm.url.arkcase.protocol}</stringProp>
@@ -281,7 +286,7 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
@@ -301,7 +306,7 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${acm.url.arkcase.host}</stringProp>
-            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.port">${acm.url.arkcase.port}</stringProp>
             <stringProp name="HTTPSampler.connect_timeout"></stringProp>
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${acm.url.arkcase.protocol}</stringProp>
@@ -340,7 +345,7 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
@@ -359,7 +364,7 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
               </collectionProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${acm.url.arkcase.host}</stringProp>
-            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.port">${acm.url.arkcase.port}</stringProp>
             <stringProp name="HTTPSampler.connect_timeout"></stringProp>
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${acm.url.arkcase.protocol}</stringProp>
@@ -398,7 +403,7 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
@@ -427,7 +432,7 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
               </collectionProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${acm.url.arkcase.host}</stringProp>
-            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.port">${acm.url.arkcase.port}</stringProp>
             <stringProp name="HTTPSampler.connect_timeout"></stringProp>
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${acm.url.arkcase.protocol}</stringProp>
@@ -466,26 +471,50 @@ vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
             <hashTree/>
-            <com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.gui.JSONPathExtractorGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor" testname="Parse Application ID" enabled="true">
+            <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="Capture ArkCase Form Info" enabled="true">
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <boolProp name="resetInterpreter">false</boolProp>
+              <stringProp name="script">vars.put(&quot;acm.forms.cfg&quot;, prev.getResponseDataAsString());</stringProp>
+            </BeanShellPostProcessor>
+            <hashTree/>
+            <com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.gui.JSONPathExtractorGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor" testname="Identify Application ID" enabled="true">
               <stringProp name="VAR">acm.application.id</stringProp>
-              <stringProp name="JSONPATH">$.[&apos;plain_configuration.application.id&apos;]</stringProp>
+              <stringProp name="JSONPATH">$.[&apos;complaint.application.id&apos;]</stringProp>
               <stringProp name="DEFAULT"></stringProp>
-              <stringProp name="VARIABLE"></stringProp>
-              <stringProp name="SUBJECT">BODY</stringProp>
+              <stringProp name="VARIABLE">acm.forms.cfg</stringProp>
+              <stringProp name="SUBJECT">VAR</stringProp>
             </com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor>
             <hashTree/>
-            <com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.gui.JSONPathExtractorGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor" testname="Parse Complaint Type" enabled="true">
-              <stringProp name="VAR">acm.form.complaint</stringProp>
+            <com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor guiclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.gui.JSONPathExtractorGui" testclass="com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor" testname="Identify Form Type" enabled="true">
+              <stringProp name="VAR">acm.form.type</stringProp>
               <stringProp name="JSONPATH">$.[&apos;complaint.type&apos;]</stringProp>
               <stringProp name="DEFAULT"></stringProp>
-              <stringProp name="VARIABLE"></stringProp>
-              <stringProp name="SUBJECT">BODY</stringProp>
+              <stringProp name="VARIABLE">acm.forms.cfg</stringProp>
+              <stringProp name="SUBJECT">VAR</stringProp>
             </com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor>
+            <hashTree/>
+            <BeanShellAssertion guiclass="BeanShellAssertionGui" testclass="BeanShellAssertion" testname="Validate Form Configuration" enabled="true">
+              <stringProp name="BeanShellAssertion.query">String[] varNames = { &quot;acm.application.id&quot;, &quot;acm.form.type&quot; };
+
+for (int i = 0 ; i &lt; varNames.length ; i++) {
+	String vn = varNames[i];
+	String v = vars.get(vn);
+	if ((v == null) || (v.length() &lt; 1)) {
+		Failure = true;
+		FailureMessage = &quot;The configuration &quot; + vn + &quot; is not set&quot;;
+		break;
+	}
+}</stringProp>
+              <stringProp name="BeanShellAssertion.filename"></stringProp>
+              <stringProp name="BeanShellAssertion.parameters"></stringProp>
+              <boolProp name="BeanShellAssertion.resetInterpreter">false</boolProp>
+            </BeanShellAssertion>
             <hashTree/>
           </hashTree>
         </hashTree>
@@ -565,6 +594,7 @@ vars.put(&quot;acm.data.date&quot;, new SimpleDateFormat(dateFmt).format(new Dat
           <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Sanitize TextArea Values" enabled="true">
             <stringProp name="BeanShellSampler.query">import java.io.*;
 import java.util.*;
+import org.apache.commons.lang3.*;
 
 // Make sure all textarea values are properly escaped
 Map newValues = new HashMap();
@@ -587,22 +617,20 @@ for (Map.Entry e : vars.entrySet()) {
 			if (line == null) break;
 
 			// We also HTML-escape the line
-			line = line.replace(&quot;&lt;&quot;, &quot;&amp;lt;&quot;);
-			line = line.replace(&quot;&gt;&quot;, &quot;&amp;gt;&quot;);
-			line = line.replace(&quot;&amp;&quot;, &quot;&amp;amp;&quot;);
-			line = line.replace(&quot;\&quot;&quot;, &quot;&amp;quot;&quot;);
-			// line = line.replace(&quot;&apos;&quot;, &quot;&amp;apos;&quot;);
+			line = StringEscapeUtils.escapeHtml4(line);
 	
 			// 1) first space on the line must be an &amp;nbsp;
 			// 2) last space on the line must be an &amp;nbsp;
 			// 3) may not have two consecutive spaces, but may have two consecutive &amp;nbsp;
 			if (line.startsWith(&quot; &quot;)) {
+				// We don&apos;t NEED to do the if() wrapper, but we do it for speed
 				/// Replace the leading space with &amp;nbsp;
 				line = line.replaceAll(&quot;^ &quot;, &quot;&amp;nbsp;&quot;);
 			}
 			// Replace consecutive spaces with space-&amp;nbsp;
 			line = line.replaceAll(&quot;  &quot;, &quot; &amp;nbsp;&quot;);
 			if (line.endsWith(&quot; &quot;)) {
+				// We don&apos;t NEED to do the if() wrapper, but we do it for speed
 				/// Replace the ending space with &amp;nbsp;
 				line = line.replaceAll(&quot; $&quot;, &quot;&amp;nbsp;&quot;);
 			}
@@ -615,7 +643,6 @@ for (Map.Entry e : vars.entrySet()) {
 			if (line.length() == 0) {
 				line = emptyLine;
 			}
-			// b.append(div).append(br).append(divEnd);
 			b.append(div).append(line).append(divEnd);
 		}
 	} finally {
@@ -676,7 +703,7 @@ vars.putAll(newValues);</stringProp>
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${acm.url.frevvo.protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">${acm.url.frevvo.path}/web/tn/armedia/user/acm/app/${acm.application.id}/formtype/${acm.form.complaint}/popupform</stringProp>
+            <stringProp name="HTTPSampler.path">${acm.url.frevvo.path}/web/tn/armedia/user/acm/app/${acm.application.id}/formtype/${acm.form.type}/popupform</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -714,7 +741,7 @@ vars.putAll(newValues);</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
@@ -798,7 +825,7 @@ vars.putAll(newValues);</stringProp>
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${acm.url.frevvo.protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">${acm.url.frevvo.path}/web/tn/armedia/user/acm/app/${acm.application.id}/formtype/${acm.form.complaint}/embed</stringProp>
+            <stringProp name="HTTPSampler.path">${acm.url.frevvo.path}/web/tn/armedia/user/acm/app/${acm.application.id}/formtype/${acm.form.type}/embed</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -812,7 +839,7 @@ vars.putAll(newValues);</stringProp>
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="Referer" elementType="Header">
                   <stringProp name="Header.name">Referer</stringProp>
-                  <stringProp name="Header.value">${acm.url.frevvo}/web/tn/armedia/user/acm/app/${acm.application.id}/formtype/${acm.form.complaint}/popupform?container=false&amp;resize=true&amp;_formTz=America/New_York&amp;locale=en_US&amp;_data=(acm_ticket:%27${acm.ticket}%27,serviceBaseUrl:%27${acm.url.arkcase}%27,serviceExternalBaseUrl:%27${acm.url.arkcase}%27,redirectBaseUrl:%27${acm.url.arkcase}%27)</stringProp>
+                  <stringProp name="Header.value">${acm.url.frevvo}/web/tn/armedia/user/acm/app/${acm.application.id}/formtype/${acm.form.type}/popupform?container=false&amp;resize=true&amp;_formTz=${acm.client.tz}&amp;locale=en_US&amp;_data=(acm_ticket:%27${acm.ticket}%27,serviceBaseUrl:%27${acm.url.arkcase}%27,serviceExternalBaseUrl:%27${acm.url.arkcase}%27,redirectBaseUrl:%27${acm.url.arkcase}%27)</stringProp>
                 </elementProp>
                 <elementProp name="Accept-Language" elementType="Header">
                   <stringProp name="Header.name">Accept-Language</stringProp>
@@ -832,7 +859,7 @@ vars.putAll(newValues);</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
@@ -893,7 +920,7 @@ vars.putAll(newValues);</stringProp>
                 <elementProp name="_referrer_url" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.name">_referrer_url</stringProp>
-                  <stringProp name="Argument.value">${__urlencode(${acm.url.frevvo})}%2Fweb%2Ftn%2Farmedia%2Fuser%2Facm%2Fapp%2F${acm.application.id}%2Fformtype%2F${acm.form.complaint}%2Fpopupform%3Fcontainer%3Dfalse%26resize%3Dtrue%26_formTz%3DAmerica%2FNew_York%26locale%3Den_US%26_data%3D(acm_ticket%3A%2527${acm.ticket}%2527%2CserviceBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CserviceExternalBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CredirectBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527)</stringProp>
+                  <stringProp name="Argument.value">${__urlencode(${acm.url.frevvo})}%2Fweb%2Ftn%2Farmedia%2Fuser%2Facm%2Fapp%2F${acm.application.id}%2Fformtype%2F${acm.form.type}%2Fpopupform%3Fcontainer%3Dfalse%26resize%3Dtrue%26_formTz%3D${__urlencode(${acm.client.tz})}%26locale%3Den_US%26_data%3D(acm_ticket%3A%2527${acm.ticket}%2527%2CserviceBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CserviceExternalBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CredirectBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527)</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -905,7 +932,7 @@ vars.putAll(newValues);</stringProp>
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${acm.url.frevvo.protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">${acm.url.frevvo.path}/web/tn/armedia/user/acm/app/${acm.application.id}/formtype/${acm.form.complaint}</stringProp>
+            <stringProp name="HTTPSampler.path">${acm.url.frevvo.path}/web/tn/armedia/user/acm/app/${acm.application.id}/formtype/${acm.form.type}</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -920,7 +947,7 @@ vars.putAll(newValues);</stringProp>
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="Referer" elementType="Header">
                   <stringProp name="Header.name">Referer</stringProp>
-                  <stringProp name="Header.value">${acm.url.frevvo}/web/tn/armedia/user/acm/app/${acm.application.id}/formtype/${acm.form.complaint}/popupform?container=false&amp;resize=true&amp;_formTz=America/New_York&amp;locale=en_US&amp;_data=(acm_ticket:%27${acm.ticket}%27,serviceBaseUrl:%27${acm.url.arkcase}%27,serviceExternalBaseUrl:%27${acm.url.arkcase}%27,redirectBaseUrl:%27${acm.url.arkcase}%27)</stringProp>
+                  <stringProp name="Header.value">${acm.url.frevvo}/web/tn/armedia/user/acm/app/${acm.application.id}/formtype/${acm.form.type}/popupform?container=false&amp;resize=true&amp;_formTz=${acm.client.tz}&amp;locale=en_US&amp;_data=(acm_ticket:%27${acm.ticket}%27,serviceBaseUrl:%27${acm.url.arkcase}%27,serviceExternalBaseUrl:%27${acm.url.arkcase}%27,redirectBaseUrl:%27${acm.url.arkcase}%27)</stringProp>
                 </elementProp>
                 <elementProp name="Accept-Language" elementType="Header">
                   <stringProp name="Header.name">Accept-Language</stringProp>
@@ -944,7 +971,7 @@ vars.putAll(newValues);</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
@@ -998,7 +1025,7 @@ vars.putAll(newValues);</stringProp>
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="Referer" elementType="Header">
                   <stringProp name="Header.name">Referer</stringProp>
-                  <stringProp name="Header.value">${acm.url.frevvo}/web/tn/armedia/user/acm/app/${acm.application.id}/form/_Vu2OkPqNEeWzRY9yfsn5QA?typeId=${acm.form.complaint}&amp;locale=en_US,eng_US,eng,en&amp;_resize=true&amp;_referrer_url=${__urlencode(${acm.url.frevvo})}%2Fweb%2Ftn%2Farmedia%2Fuser%2Facm%2Fapp%2F${acm.application.id}%2Fformtype%2F${acm.form.complaint}%2Fpopupform%3Fcontainer%3Dfalse%26resize%3Dtrue%26_formTz%3DAmerica%2FNew_York%26locale%3Den_US%26_data%3D%28acm_ticket%3A%2527${acm.ticket}%2527%2CserviceBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CserviceExternalBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CredirectBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%29&amp;_iframe_id=${acm.iframe.id}&amp;_formTz=America%2FNew_York&amp;embed=true</stringProp>
+                  <stringProp name="Header.value">${acm.url.frevvo}/web/tn/armedia/user/acm/app/${acm.application.id}/form/${acm.form.id}?typeId=${acm.form.type}&amp;locale=en_US,eng_US,eng,en&amp;_resize=true&amp;_referrer_url=${__urlencode(${acm.url.frevvo})}%2Fweb%2Ftn%2Farmedia%2Fuser%2Facm%2Fapp%2F${acm.application.id}%2Fformtype%2F${acm.form.type}%2Fpopupform%3Fcontainer%3Dfalse%26resize%3Dtrue%26_formTz%3D${__urlencode(${acm.client.tz})}%26locale%3Den_US%26_data%3D%28acm_ticket%3A%2527${acm.ticket}%2527%2CserviceBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CserviceExternalBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CredirectBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%29&amp;_iframe_id=${acm.iframe.id}&amp;_formTz=${__urlencode(${acm.client.tz})}&amp;embed=true</stringProp>
                 </elementProp>
                 <elementProp name="Accept-Language" elementType="Header">
                   <stringProp name="Header.name">Accept-Language</stringProp>
@@ -1026,7 +1053,7 @@ vars.putAll(newValues);</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
@@ -1080,7 +1107,7 @@ vars.putAll(newValues);</stringProp>
               <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${acm.url.frevvo.protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-              <stringProp name="HTTPSampler.path">${acm.url.frevvo.path}/web/tn/armedia/user/acm/app/${acm.application.id}/form/${acm.form.id}/control/${acm.field.id}?_method=put&amp;_valueUpdate=true</stringProp>
+              <stringProp name="HTTPSampler.path">${acm.url.frevvo.path}/web/tn/armedia/user/acm/app/${acm.application.id}/form/${acm.form.id}/control/${acm.field.id}</stringProp>
               <stringProp name="HTTPSampler.method">POST</stringProp>
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -1094,7 +1121,7 @@ vars.putAll(newValues);</stringProp>
                 <collectionProp name="HeaderManager.headers">
                   <elementProp name="Referer" elementType="Header">
                     <stringProp name="Header.name">Referer</stringProp>
-                    <stringProp name="Header.value">${acm.url.frevvo}/web/tn/armedia/user/acm/app/_IgbIMDnTEeSjTrBIsoKK0g/form/_u2QdAPs_EeWmpZp7PNE8wQ?typeId=_JtTqMC7fEeS5l-bMPzqvwA&amp;locale=en_US,eng_US,eng,en&amp;_resize=true&amp;_referrer_url=${__urlencode(${acm.url.frevvo})}%2Fweb%2Ftn%2Farmedia%2Fuser%2Facm%2Fapp%2F_IgbIMDnTEeSjTrBIsoKK0g%2Fformtype%2F_JtTqMC7fEeS5l-bMPzqvwA%2Fpopupform%3Fcontainer%3Dfalse%26resize%3Dtrue%26_formTz%3DAmerica%2FNew_York%26locale%3Den_US%26_data%3D%28acm_ticket%3A%25277cbc61fa-a840-4cbd-86f4-c97541729d9f%2527%2CserviceBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CserviceExternalBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CredirectBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%29&amp;_iframe_id=w65aa&amp;_formTz=America%2FNew_York&amp;embed=true</stringProp>
+                    <stringProp name="Header.value">${acm.url.frevvo}/web/tn/armedia/user/acm/app/${acm.application.id}/form/${acm.form.id}?typeId=${acm.form.type}&amp;locale=en_US,eng_US,eng,en&amp;_resize=true&amp;_referrer_url=${__urlencode(${acm.url.frevvo})}%2Fweb%2Ftn%2Farmedia%2Fuser%2Facm%2Fapp%2F${acm.application.id}%2Fformtype%2F${acm.form.type}%2Fpopupform%3Fcontainer%3Dfalse%26resize%3Dtrue%26_formTz%3D${__urlencode(${acm.client.tz})}%26locale%3Den_US%26_data%3D%28acm_ticket%3A%2527${acm.ticket}%2527%2CserviceBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CserviceExternalBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CredirectBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%29&amp;_iframe_id=${acm.iframe.id}&amp;_formTz=${__urlencode(${acm.client.tz})}&amp;embed=true </stringProp>
                   </elementProp>
                   <elementProp name="Accept-Language" elementType="Header">
                     <stringProp name="Header.name">Accept-Language</stringProp>
@@ -1130,7 +1157,7 @@ vars.putAll(newValues);</stringProp>
                   </elementProp>
                   <elementProp name="User-Agent" elementType="Header">
                     <stringProp name="Header.name">User-Agent</stringProp>
-                    <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                    <stringProp name="Header.value">${acm.user.agent}</stringProp>
                   </elementProp>
                 </collectionProp>
               </HeaderManager>
@@ -1157,7 +1184,7 @@ vars.putAll(newValues);</stringProp>
                 <elementProp name="_referrer_url" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.name">_referrer_url</stringProp>
-                  <stringProp name="Argument.value">${acm.url.frevvo}/web/tn/armedia/user/acm/app/${acm.application.id}/formtype/${acm.form.complaint}/popupform?container=false&amp;resize=true&amp;_formTz=America/New_York&amp;locale=en_US&amp;_data=(acm_ticket:%27${acm.ticket}%27,serviceBaseUrl:%27${acm.url.arkcase}%27,serviceExternalBaseUrl:%27${acm.url.arkcase}%27,redirectBaseUrl:%27${acm.url.arkcase}%27)</stringProp>
+                  <stringProp name="Argument.value">${acm.url.frevvo}/web/tn/armedia/user/acm/app/${acm.application.id}/formtype/${acm.form.type}/popupform?container=false&amp;resize=true&amp;_formTz=${acm.client.tz}&amp;locale=en_US&amp;_data=(acm_ticket:%27${acm.ticket}%27,serviceBaseUrl:%27${acm.url.arkcase}%27,serviceExternalBaseUrl:%27${acm.url.arkcase}%27,redirectBaseUrl:%27${acm.url.arkcase}%27)</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -1806,7 +1833,7 @@ vars.putAll(newValues);</stringProp>
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${acm.url.frevvo.protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
-            <stringProp name="HTTPSampler.path">${acm.url.frevvo.path}/web/tn/armedia/user/acm/app/${acm.application.id}/form/${acm.form.id}?formAction=Submit&amp;typeId=${acm.form.complaint}&amp;locale=en_US,eng_US,eng,en&amp;_resize=true&amp;_referrer_url=${__urlencode(${acm.url.frevvo})}%2Fweb%2Ftn%2Farmedia%2Fuser%2Facm%2Fapp%2F${acm.application.id}%2Fformtype%2F${acm.form.complaint}%2Fpopupform%3Fcontainer%3Dfalse%26resize%3Dtrue%26_formTz%3DAmerica%2FNew_York%26locale%3Den_US%26_data%3D%28acm_ticket%3A%2527${acm.ticket}%2527%2CserviceBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CserviceExternalBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CredirectBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%29&amp;_iframe_id=${acm.iframe.id}&amp;_formTz=America%2FNew_York&amp;embed=true&amp;cname=Submit</stringProp>
+            <stringProp name="HTTPSampler.path">${acm.url.frevvo.path}/web/tn/armedia/user/acm/app/${acm.application.id}/form/${acm.form.id}?formAction=Submit&amp;typeId=${acm.form.type}&amp;locale=en_US,eng_US,eng,en&amp;_resize=true&amp;_referrer_url=${__urlencode(${acm.url.frevvo})}%2Fweb%2Ftn%2Farmedia%2Fuser%2Facm%2Fapp%2F${acm.application.id}%2Fformtype%2F${acm.form.type}%2Fpopupform%3Fcontainer%3Dfalse%26resize%3Dtrue%26_formTz%3D${__urlencode(${acm.client.tz})}%26locale%3Den_US%26_data%3D%28acm_ticket%3A%2527${acm.ticket}%2527%2CserviceBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CserviceExternalBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CredirectBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%29&amp;_iframe_id=${acm.iframe.id}&amp;_formTz=${__urlencode(${acm.client.tz})}&amp;embed=true&amp;cname=Submit</stringProp>
             <stringProp name="HTTPSampler.method">POST</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -1821,7 +1848,7 @@ vars.putAll(newValues);</stringProp>
               <collectionProp name="HeaderManager.headers">
                 <elementProp name="Referer" elementType="Header">
                   <stringProp name="Header.name">Referer</stringProp>
-                  <stringProp name="Header.value">${acm.url.frevvo}/web/tn/armedia/user/acm/app/_IgbIMDnTEeSjTrBIsoKK0g/form/__X7ykPf9EeWpRqzbnl-yWg?typeId=_JtTqMC7fEeS5l-bMPzqvwA&amp;locale=en_US,eng_US,eng,en&amp;_resize=true&amp;_referrer_url=${__urlencode(${acm.url.frevvo})}%2Fweb%2Ftn%2Farmedia%2Fuser%2Facm%2Fapp%2F_IgbIMDnTEeSjTrBIsoKK0g%2Fformtype%2F_JtTqMC7fEeS5l-bMPzqvwA%2Fpopupform%3Fcontainer%3Dfalse%26resize%3Dtrue%26_formTz%3DAmerica%2FNew_York%26locale%3Den_US%26_data%3D%28acm_ticket%3A%252741b17ea4-dc05-48cd-a1b9-1f8be05f597c%2527%2CserviceBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CserviceExternalBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CredirectBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%29&amp;_iframe_id=${acm.iframe.id}&amp;_formTz=America%2FNew_York&amp;embed=true</stringProp>
+                  <stringProp name="Header.value">${acm.url.frevvo}/web/tn/armedia/user/acm/app/${acm.application.id}/form/${acm.form.id}?typeId=${acm.form.type}&amp;locale=en_US,eng_US,eng,en&amp;_resize=true&amp;_referrer_url=${__urlencode(${acm.url.frevvo})}%2Fweb%2Ftn%2Farmedia%2Fuser%2Facm%2Fapp%2F${acm.application.id}%2Fformtype%2F${acm.form.type}%2Fpopupform%3Fcontainer%3Dfalse%26resize%3Dtrue%26_formTz%3D${__urlencode(${acm.client.tz})}%26locale%3Den_US%26_data%3D%28acm_ticket%3A%2527${acm.ticket}%2527%2CserviceBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CserviceExternalBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CredirectBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%29&amp;_iframe_id=${acm.iframe.id}&amp;_formTz=${__urlencode(${acm.client.tz})}&amp;embed=true</stringProp>
                 </elementProp>
                 <elementProp name="Accept-Language" elementType="Header">
                   <stringProp name="Header.name">Accept-Language</stringProp>
@@ -1853,7 +1880,7 @@ vars.putAll(newValues);</stringProp>
                 </elementProp>
                 <elementProp name="User-Agent" elementType="Header">
                   <stringProp name="Header.name">User-Agent</stringProp>
-                  <stringProp name="Header.value">Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>

@@ -1,8 +1,8 @@
 package com.armedia.acm.services.subscription.web.api;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
+import com.armedia.acm.services.subscription.service.SubscriptionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -22,10 +22,10 @@ import java.util.List;
 
 @Controller
 @RequestMapping({"/api/v1/service/subscription", "/api/latest/service/subscription"})
-public class GetUserSubscriptionAPIController {
+public class GetUserSubscriptionAPIController
+{
 
-    private SubscriptionDao subscriptionDao;
-
+    private SubscriptionService subscriptionService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/{userId}/{objType}/{objId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,23 +36,20 @@ public class GetUserSubscriptionAPIController {
             @PathVariable("objId") Long objectId,
             Authentication authentication,
             HttpSession httpSession
-    ) throws AcmUserActionFailedException {
+    ) throws AcmUserActionFailedException
+    {
+        log.info("Find subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "]");
 
-        if ( log.isInfoEnabled() )
-        {
-            log.info("Find subscription for user:"+userId+" on object['" + objectType + "]:[" + objectId + "]");
-        }
-
-        List<AcmSubscription> subscription = getSubscriptionDao().getSubscriptionByUserObjectIdAndType(userId, objectId, objectType);
-
-        return subscription;
+        return getSubscriptionService().getSubscriptionsByUserObjectIdAndType(userId, objectId, objectType);
     }
 
-    public SubscriptionDao getSubscriptionDao() {
-        return subscriptionDao;
+    public SubscriptionService getSubscriptionService()
+    {
+        return subscriptionService;
     }
 
-    public void setSubscriptionDao(SubscriptionDao subscriptionDao) {
-        this.subscriptionDao = subscriptionDao;
+    public void setSubscriptionService(SubscriptionService subscriptionService)
+    {
+        this.subscriptionService = subscriptionService;
     }
 }

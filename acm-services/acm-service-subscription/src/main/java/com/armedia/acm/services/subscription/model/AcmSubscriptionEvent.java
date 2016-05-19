@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "acm_subscription_event")
-public class AcmSubscriptionEvent implements AcmObject, AcmEntity,AcmParentObjectInfo
+public class AcmSubscriptionEvent implements AcmObject, AcmEntity, AcmParentObjectInfo
 {
 
     @Id
@@ -28,29 +28,29 @@ public class AcmSubscriptionEvent implements AcmObject, AcmEntity,AcmParentObjec
     @Column(name = "cm_event_id")
     private Long subscriptionEventId;
 
-    @Column(name="cm_event_object_type", insertable = true, updatable = false)
+    @Column(name = "cm_event_object_type", insertable = true, updatable = false)
     private String eventObjectType;
 
-    @Column(name="cm_event_object_id", insertable = true, updatable = false)
+    @Column(name = "cm_event_object_id", insertable = true, updatable = false)
     private Long eventObjectId;
 
-    @Column(name="cm_event_user")
+    @Column(name = "cm_event_user")
     private String eventUser;
 
-    @Column(name="cm_event_date")
+    @Column(name = "cm_event_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date eventDate;
 
-    @Column(name="cm_event_subscription_owner", nullable = false)
+    @Column(name = "cm_event_subscription_owner", nullable = false)
     private String subscriptionOwner;
 
-    @Column(name="cm_event_type", nullable = false)
+    @Column(name = "cm_event_type", nullable = false)
     private String eventType;
 
-    @Column(name="cm_event_object_name", nullable = false)
+    @Column(name = "cm_event_object_name", nullable = false)
     private String eventObjectName;
 
-    @Column(name="cm_event_object_number", nullable = false)
+    @Column(name = "cm_event_object_number", nullable = false)
     private String eventObjectNumber;
 
     @Column(name = "cm_event_creator", nullable = false, insertable = true, updatable = false)
@@ -67,127 +67,168 @@ public class AcmSubscriptionEvent implements AcmObject, AcmEntity,AcmParentObjec
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
+    @Column(name = "cm_subscription_id")
+    private String relatedSubscriptionId;
+
     @Override
-    public String getCreator() {
+    public String getCreator()
+    {
         return creator;
     }
 
     @Override
-    public void setCreator(String creator) {
+    public void setCreator(String creator)
+    {
         this.creator = creator;
     }
 
     @Override
-    public String getModifier() {
+    public String getModifier()
+    {
         return modifier;
     }
 
     @Override
-    public void setModifier(String modifier) {
+    public void setModifier(String modifier)
+    {
         this.modifier = modifier;
     }
 
     @Override
-    public Date getModified() {
+    public Date getModified()
+    {
         return modified;
     }
 
     @Override
-    public void setModified(Date modified) {
+    public void setModified(Date modified)
+    {
         this.modified = modified;
     }
 
     @Override
-    public Date getCreated() {
+    public Date getCreated()
+    {
         return created;
     }
 
     @Override
-    public void setCreated(Date created) {
+    public void setCreated(Date created)
+    {
         this.created = created;
     }
 
-    public Long getSubscriptionEventId() {
+    public Long getSubscriptionEventId()
+    {
         return subscriptionEventId;
     }
 
-    public void setSubscriptionEventId(Long subscriptionEventId) {
+    public void setSubscriptionEventId(Long subscriptionEventId)
+    {
         this.subscriptionEventId = subscriptionEventId;
     }
 
-    public String getEventObjectType() {
+    public String getEventObjectType()
+    {
         return eventObjectType;
     }
 
-    public void setEventObjectType(String eventObjectType) {
+    public void setEventObjectType(String eventObjectType)
+    {
         this.eventObjectType = eventObjectType;
     }
 
-    public Long getEventObjectId() {
+    public Long getEventObjectId()
+    {
         return eventObjectId;
     }
 
-    public void setEventObjectId(Long eventObjectId) {
+    public void setEventObjectId(Long eventObjectId)
+    {
         this.eventObjectId = eventObjectId;
     }
 
-    public String getEventUser() {
+    public String getEventUser()
+    {
         return eventUser;
     }
 
-    public void setEventUser(String eventUser) {
+    public void setEventUser(String eventUser)
+    {
         this.eventUser = eventUser;
     }
 
-    public Date getEventDate() {
+    public Date getEventDate()
+    {
         return eventDate;
     }
 
-    public void setEventDate(Date eventDate) {
+    public void setEventDate(Date eventDate)
+    {
         this.eventDate = eventDate;
     }
 
-    public String getSubscriptionOwner() {
+    public String getSubscriptionOwner()
+    {
         return subscriptionOwner;
     }
 
-    public void setSubscriptionOwner(String subscriptionOwner) {
+    public void setSubscriptionOwner(String subscriptionOwner)
+    {
         this.subscriptionOwner = subscriptionOwner;
     }
 
-    public String getEventType() {
+    public String getEventType()
+    {
         return eventType;
     }
 
-    public void setEventType(String eventType) {
+    public void setEventType(String eventType)
+    {
         this.eventType = eventType;
     }
 
-    public String getEventObjectName() {
+    public String getEventObjectName()
+    {
         return eventObjectName;
     }
 
-    public void setEventObjectName(String eventObjectName) {
+    public void setEventObjectName(String eventObjectName)
+    {
         this.eventObjectName = eventObjectName;
     }
 
-    public String getEventObjectNumber() {
+    public String getEventObjectNumber()
+    {
         return eventObjectNumber;
     }
 
-    public void setEventObjectNumber(String eventObjectNumber) {
+    public void setEventObjectNumber(String eventObjectNumber)
+    {
         this.eventObjectNumber = eventObjectNumber;
     }
 
-    @Override
-    @JsonIgnore
-    public String getObjectType() {
-        return "SUBSCRIPTION_EVENT";
+    public String getRelatedSubscriptionId()
+    {
+        return relatedSubscriptionId;
+    }
+
+    public void setRelatedSubscriptionId(String relatedSubscriptionId)
+    {
+        this.relatedSubscriptionId = relatedSubscriptionId;
     }
 
     @Override
     @JsonIgnore
-    public Long getId() {
+    public String getObjectType()
+    {
+        return SubscriptionConstants.OBJECT_TYPE_EVENT;
+    }
+
+    @Override
+    @JsonIgnore
+    public Long getId()
+    {
         return subscriptionEventId;
     }
 
