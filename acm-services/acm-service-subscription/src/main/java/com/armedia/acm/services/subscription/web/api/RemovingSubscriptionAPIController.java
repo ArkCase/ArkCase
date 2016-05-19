@@ -2,8 +2,8 @@ package com.armedia.acm.services.subscription.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
-import com.armedia.acm.services.subscription.dao.SubscriptionDao;
-import com.armedia.acm.services.subscription.service.SubscriptionEventPublisher;
+import com.armedia.acm.services.subscription.model.SubscriptionConstants;
+import com.armedia.acm.services.subscription.service.SubscriptionService;
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,20 +24,13 @@ import java.sql.SQLException;
 
 @Controller
 @RequestMapping({"/api/v1/service/subscription", "/api/latest/service/subscription"})
-public class RemovingSubscriptionAPIController {
+public class RemovingSubscriptionAPIController
+{
 
-    private SubscriptionDao subscriptionDao;
     private AcmPlugin subscriptionPlugin;
-    private SubscriptionEventPublisher subscriptionEventPublisher;
+    private SubscriptionService subscriptionService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
-
-    private final static String SUCCESS_MSG = "subscription.removed.successful";
-    private final static String SUBSCRIPTION_NOT_FOUND_MSG="subscription.not.found";
-
-    private final static String OBJECT_TYPE = "SUBSCRIPTION";
-
-    private final static int NO_ROW_DELETED = 0;
 
     @RequestMapping(value = "/{userId}/{objType}/{objId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -47,31 +40,29 @@ public class RemovingSubscriptionAPIController {
             @PathVariable("objId") Long objectId,
             Authentication authentication,
             HttpSession httpSession
-    ) throws AcmObjectNotFoundException, SQLException {
+    ) throws AcmObjectNotFoundException, SQLException
+    {
+        log.info("Removing subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "]");
+        int resultFromDeleteAction = getSubscriptionService().deleteSubscriptionForGivenObject(userId, objectId, objectType);
 
-        if ( log.isInfoEnabled() ) {
-            log.info("Removing subscription for user:"+userId+" on object['" + objectType + "]:[" + objectId + "]");
-        }
+        if (resultFromDeleteAction == SubscriptionConstants.NO_ROW_DELETED)
+        {
+            log.debug("Subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "] not found in the DB");
+            String msg = (String) getSubscriptionPlugin().getPluginProperties().get(SubscriptionConstants.SUCCESS_MSG);
+            return prepareJsonReturnMsg(msg, objectId);
+        } else
+        {
+            log.debug("Subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "] successfully removed");
+            getSubscriptionService().deleteSubscriptionEventsForGivenObject(userId, objectId, objectType);
+            log.debug("Deleted all subscription events related to object '{}' with id '{}' for user '{}'", objectType, objectId, userId);
 
-        int resultFromDeleteAction = 0;
-
-        resultFromDeleteAction = getSubscriptionDao().deleteSubscription(userId, objectId, objectType);
-
-        if ( resultFromDeleteAction == NO_ROW_DELETED ) {
-            if( log.isDebugEnabled() )
-                log.debug("Subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "] not found in the DB");
-            getSubscriptionEventPublisher().publishSubscriptionDeletedEvent(userId, objectId, objectType, false);
-            String msg = (String)getSubscriptionPlugin().getPluginProperties().get(SUCCESS_MSG);
-            return prepareJsonReturnMsg( msg, objectId );
-        } else {
-            log.debug("Subscription for user:"+userId+" on object['" + objectType + "]:[" + objectId + "] successfully removed");
-            getSubscriptionEventPublisher().publishSubscriptionDeletedEvent(userId, objectId, objectType, true);
-            String successMsg = (String)getSubscriptionPlugin().getPluginProperties().get(SUCCESS_MSG);
-            return prepareJsonReturnMsg( successMsg, objectId );
+            String successMsg = (String) getSubscriptionPlugin().getPluginProperties().get(SubscriptionConstants.SUCCESS_MSG);
+            return prepareJsonReturnMsg(successMsg, objectId);
         }
     }
 
-    private String prepareJsonReturnMsg( String msg,Long objectId ) {
+    private String prepareJsonReturnMsg(String msg, Long objectId)
+    {
         JSONObject objectToReturnJSON = new JSONObject();
         objectToReturnJSON.put("deletedSubscriptionId", objectId);
         objectToReturnJSON.put("Message", msg);
@@ -80,27 +71,23 @@ public class RemovingSubscriptionAPIController {
         return objectToReturn;
     }
 
-    public SubscriptionEventPublisher getSubscriptionEventPublisher() {
-        return subscriptionEventPublisher;
-    }
-
-    public void setSubscriptionEventPublisher(SubscriptionEventPublisher subscriptionEventPublisher) {
-        this.subscriptionEventPublisher = subscriptionEventPublisher;
-    }
-
-    public AcmPlugin getSubscriptionPlugin() {
+    public AcmPlugin getSubscriptionPlugin()
+    {
         return subscriptionPlugin;
     }
 
-    public void setSubscriptionPlugin(AcmPlugin subscriptionPlugin) {
+    public void setSubscriptionPlugin(AcmPlugin subscriptionPlugin)
+    {
         this.subscriptionPlugin = subscriptionPlugin;
     }
 
-    public SubscriptionDao getSubscriptionDao() {
-        return subscriptionDao;
+    public SubscriptionService getSubscriptionService()
+    {
+        return subscriptionService;
     }
 
-    public void setSubscriptionDao(SubscriptionDao subscriptionDao) {
-        this.subscriptionDao = subscriptionDao;
+    public void setSubscriptionService(SubscriptionService subscriptionService)
+    {
+        this.subscriptionService = subscriptionService;
     }
 }

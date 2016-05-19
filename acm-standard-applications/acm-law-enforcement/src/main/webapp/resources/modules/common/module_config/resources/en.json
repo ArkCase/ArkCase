@@ -45,6 +45,14 @@
       "noop": "(Select Item)",
       "editWithWord": "Edit in Word"
     },
+    "table.columns": {
+      "title": "Title",
+      "type": "Type",
+      "created": "Created",
+      "author": "Author",
+      "version": "Version",
+      "status": "Status"
+    },
     "dndDialog": {
       "title": "Drag and Drop",
       "radReplace.text": "Replace document (If more then one files are dropped, only first one is used)",

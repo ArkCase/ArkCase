@@ -68,6 +68,18 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         applicationEventPublisher.publishEvent(event);
     }
 
+    public void raiseCaseFileViewed(CaseFile source, Authentication authentication)
+    {
+        String ipAddress = null;
+        if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
+        {
+            ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+        }
+
+        CaseEvent event = new CaseEvent(source, ipAddress, authentication.getName(), CaseFileConstants.EVENT_TYPE_VIEWED, new Date(), true, authentication);
+        applicationEventPublisher.publishEvent(event);
+    }
+
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {

@@ -14,8 +14,6 @@ import java.util.Date;
 @Table(name = "acm_subscription")
 public class AcmSubscription implements AcmObject, AcmEntity {
 
-    public static final String OBJECT_TYPE = "SUBSCRIPTION";
-
     @Id
     @TableGenerator(name = "acm_subscription_gen",
             table = "acm_subscription_id",
@@ -149,7 +147,7 @@ public class AcmSubscription implements AcmObject, AcmEntity {
     @Override
     @JsonIgnore
     public String getObjectType() {
-        return OBJECT_TYPE;
+        return SubscriptionConstants.OBJECT_TYPE;
     }
 
     @Override
