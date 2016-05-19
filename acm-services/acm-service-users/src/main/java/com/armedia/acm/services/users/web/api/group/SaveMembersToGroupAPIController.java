@@ -8,7 +8,6 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.service.group.GroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Set;
@@ -39,8 +39,9 @@ public class SaveMembersToGroupAPIController
 
     @RequestMapping(value = "/group/{groupId}/members/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup saveSupervisorsToGroup(@RequestBody Set<AcmUser> members,
+    public AcmGroup saveMembersToGroup(@RequestBody Set<AcmUser> members,
                                            @PathVariable("groupId") String groupId,
+                                           @RequestParam(value = "addToAllParentGroups", required = false, defaultValue = "false") String addToAllParentGroups,
                                            Authentication auth) throws AcmUserActionFailedException
     {
         if (LOG.isInfoEnabled())
@@ -56,7 +57,7 @@ public class SaveMembersToGroupAPIController
 
 
             //We do not want members of subgroups to be added into all parent groups when the group is of type ADHOC!
-            if (!AcmGroupType.ADHOC_GROUP.equals(group.getType()))
+            if (Boolean.valueOf(addToAllParentGroups))
             {
                 // Add members for all parent groups
                 AcmGroup parent = group.getParentGroup();
