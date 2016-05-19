@@ -3,7 +3,11 @@
         <button class="btn btn-default" ng-click="createGroup()">
             <span translate>admin.security.organizationalHierarchy.createGroupDialog.title</span>
         </button>
-        <tree-table-view tree-data="data" on-lazy-load="onLazyLoad" config="cfg" on-add-members="onAddMembers" on-load-more="onLoadMore" total-groups="totalGroups"
-                         on-delete-group="onDeleteGroup" on-delete-members="onDeleteMembers" on-add-sub-group="onAddSubGroup" on-set-supervisor="onSetSupervisor"/>
+        <tree-table-view tree-data="data" on-lazy-load="onLazyLoad" config="cfg" on-add-members="onAddMembers"
+                         on-load-more="onLoadMore" total-groups="totalGroups"
+                         on-delete-group="onDeleteGroup" on-delete-members="onDeleteMembers"
+                         on-add-sub-group="onAddSubGroup" on-set-supervisor="onSetSupervisor"
+                         show-actions="true"
+                         show-supervisor="true" show-type="true"/>
     </div>
 </panel-view>
