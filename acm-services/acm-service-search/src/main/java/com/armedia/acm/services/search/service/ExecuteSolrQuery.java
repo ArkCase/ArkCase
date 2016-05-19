@@ -25,17 +25,24 @@ public class ExecuteSolrQuery
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow,
                                               int maxRows, String sort) throws MuleException
     {
-        return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, "", true);
+        return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, "", true, false);
     }
 
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow,
                                               int maxRows, String sort, String rowQueryParameters) throws MuleException
     {
-        return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, rowQueryParameters, true);
+        return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, rowQueryParameters, true, false);
     }
 
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow,
                                               int maxRows, String sort, String rowQueryParameters, boolean filterParentRef) throws MuleException
+    {
+        return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, rowQueryParameters, filterParentRef, false);
+    }
+
+    public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow,
+                                              int maxRows, String sort, String rowQueryParameters, boolean filterParentRef,
+                                              boolean filterSubscriptionEvents) throws MuleException
     {
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", solrQuery);
@@ -44,6 +51,7 @@ public class ExecuteSolrQuery
         headers.put("sort", sort);
         headers.put("acmUser", auth);
         headers.put("filterParentRef", filterParentRef);
+        headers.put("filterSubscriptionEvents", filterSubscriptionEvents);
         headers.put("rowQueryParametars", rowQueryParameters);
 
         MuleMessage response = getMuleContextManager().send(core.getMuleEndpointUrl(), "", headers);

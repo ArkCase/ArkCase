@@ -7,6 +7,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         , Util, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService
         , HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService) {
 
+
         Authentication.queryUserInfo().then(
             function (userInfo) {
                 $scope.user = userInfo.userId;
@@ -14,7 +15,24 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             }
         );
 
-        $scope.treeControl = {};
+        ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.COMPLAINT).then(
+            function (formTypes) {
+                $scope.fileTypes = $scope.fileTypes || [];
+                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));
+                return formTypes;
+            }
+        );
+        ObjectLookupService.getFileTypes().then(
+            function (fileTypes) {
+                $scope.fileTypes = $scope.fileTypes || [];
+                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
+                return fileTypes;
+            }
+        );
+
+        $scope.uploadForm = function (type, folderId, onCloseForm) {
+            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, $scope.fileTypes);
+        };
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -37,21 +55,6 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             $scope.allowParentOwnerToCancel = config.docTree.allowParentOwnerToCancel;
         };
 
-        ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.COMPLAINT).then(
-            function (formTypes) {
-                $scope.fileTypes = $scope.fileTypes || [];
-                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));
-                return formTypes;
-            }
-        );
-        ObjectLookupService.getFileTypes().then(
-            function (fileTypes) {
-                $scope.fileTypes = $scope.fileTypes || [];
-                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
-                return fileTypes;
-            }
-        );
-
 
         $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
         $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
@@ -61,9 +64,25 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             $scope.assignee = ObjectModelService.getAssignee(objectInfo);
         };
 
-        $scope.uploadForm = function (type, folderId, onCloseForm) {
-            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, $scope.fileTypes);
+        $scope.onInitTree = function(treeControl) {
+            $scope.treeControl = treeControl;
+
+            //Sample usage
+            //
+            //$scope.treeControl.addColumnRenderer({
+            //    name: "mimeType"
+            //    , model: ["mimeType"]
+            //    , renderer: function(element, node, columnDef, isReadOnly) {
+            //        //$(element).text(node.data.mimeType);
+            //
+            //        //var html = "<button onclick=\"alert('hello')\">Click me</button>";
+            //        var html = "<div onclick=\"alert('hello')\">Click me</div>";
+            //        $(element).html(html);
+            //    }
+            //});
+
         };
+
 
         $scope.onClickRefresh = function () {
             $scope.treeControl.refreshTree();

@@ -6,9 +6,9 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
-import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
 import com.armedia.acm.services.subscription.service.SubscriptionEventPublisher;
+import com.armedia.acm.services.subscription.service.SubscriptionService;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -50,7 +50,7 @@ public class CreateSubscriptionAPIController
 
     private final static int ZERO = 0;
 
-    private SubscriptionDao subscriptionDao;
+    private SubscriptionService subscriptionService;
     private AcmPlugin subscriptionPlugin;
     private ExecuteSolrQuery executeSolrQuery;
     private SubscriptionEventPublisher subscriptionEventPublisher;
@@ -69,15 +69,12 @@ public class CreateSubscriptionAPIController
     ) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException
     {
 
-        if (log.isInfoEnabled())
-        {
-            log.info("Creating subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "]");
-        }
+        log.info("Creating subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "]");
 
         AcmSubscription subscription = prepareSubscription(userId, objectType, objectId, authentication);
         try
         {
-            AcmSubscription addedSubscription = getSubscriptionDao().save(subscription);
+            AcmSubscription addedSubscription = getSubscriptionService().saveSubscription(subscription);
             getSubscriptionEventPublisher().publishSubscriptionCreatedEvent(addedSubscription, authentication, true);
             subscription = addedSubscription;
         } catch (Exception e)
@@ -85,14 +82,12 @@ public class CreateSubscriptionAPIController
             Throwable t = ExceptionUtils.getRootCause(e);
             if (t instanceof SQLIntegrityConstraintViolationException)
             {
-                if (log.isDebugEnabled())
-                    log.debug("Subscription on object['" + objectType + "]:[" + objectId + "] by user: " + userId + " already exists", e);
+                log.debug("Subscription on object['" + objectType + "]:[" + objectId + "] by user: " + userId + " already exists", e);
 
-                List<AcmSubscription> subscriptionList = getSubscriptionDao().getSubscriptionByUserObjectIdAndType(userId, objectId, objectType);
+                List<AcmSubscription> subscriptionList = getSubscriptionService().getSubscriptionsByUserObjectIdAndType(userId, objectId, objectType);
                 if (subscriptionList.isEmpty())
                 {
-                    if (log.isErrorEnabled())
-                        log.error("Constraint Violation Exception occurred while trying to create subscription on object[" + objectType + "]:[" + objectId + "] for user: " + userId, e);
+                    log.error("Constraint Violation Exception occurred while trying to create subscription on object[" + objectType + "]:[" + objectId + "] for user: " + userId, e);
                     throw new AcmCreateObjectFailedException(objectType, "Subscription for user: " + userId + " on object [" + objectType + "]:[" + objectId + "] was not inserted into the DB", e);
                 } else
                 {
@@ -100,8 +95,7 @@ public class CreateSubscriptionAPIController
                 }
             } else
             {
-                if (log.isErrorEnabled())
-                    log.error("Exception occurred while trying to create subscription on object[" + objectType + "]:[" + objectId + "] for user: " + userId, e);
+                log.error("Exception occurred while trying to create subscription on object[" + objectType + "]:[" + objectId + "] for user: " + userId, e);
 
                 getSubscriptionEventPublisher().publishSubscriptionCreatedEvent(subscription, authentication, false);
 
@@ -190,16 +184,6 @@ public class CreateSubscriptionAPIController
         this.subscriptionPlugin = subscriptionPlugin;
     }
 
-    public SubscriptionDao getSubscriptionDao()
-    {
-        return subscriptionDao;
-    }
-
-    public void setSubscriptionDao(SubscriptionDao subscriptionDao)
-    {
-        this.subscriptionDao = subscriptionDao;
-    }
-
     public ExecuteSolrQuery getExecuteSolrQuery()
     {
         return executeSolrQuery;
@@ -208,5 +192,15 @@ public class CreateSubscriptionAPIController
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
         this.executeSolrQuery = executeSolrQuery;
+    }
+
+    public SubscriptionService getSubscriptionService()
+    {
+        return subscriptionService;
+    }
+
+    public void setSubscriptionService(SubscriptionService subscriptionService)
+    {
+        this.subscriptionService = subscriptionService;
     }
 }
