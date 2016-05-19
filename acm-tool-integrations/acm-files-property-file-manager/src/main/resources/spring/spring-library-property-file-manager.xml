@@ -16,8 +16,10 @@
                 <value>file:${user.home}/.arkcase/acm/acmObjectsNotifications.properties</value>
                 <value>file:${user.home}/.arkcase/acm/acm-forms.properties</value>
                 <value>file:${user.home}/.arkcase/acm/acm-reports.properties</value>
+                <value>file:${user.home}/.arkcase/acm/activiti.properties</value>
                 <value>file:${user.home}/.arkcase/acm/adminPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/applicationRoleToUserGroup.properties</value>
+                <value>file:${user.home}/.arkcase/acm/arkcase-activemq.properties</value>
                 <value>file:${user.home}/.arkcase/acm/auditPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/capture.properties</value>
                 <value>file:${user.home}/.arkcase/acm/caseFilePlugin.properties</value>
@@ -33,10 +35,10 @@
                 <value>file:${user.home}/.arkcase/acm/notification.properties</value>
                 <value>file:${user.home}/.arkcase/acm/profilePlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/solr.properties</value>
+                <value>file:${user.home}/.arkcase/acm/sso/spring-config-armedia-sso.properties</value>
                 <value>file:${user.home}/.arkcase/acm/subscriptionPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/taskPlugin.properties</value>
-                <value>file:${user.home}/.arkcase/acm/activiti.properties</value>
-                <value>file:${user.home}/.arkcase/acm/sso/spring-config-armedia-sso.properties</value>
+                <value>file:${user.home}/.arkcase/acm/login.properties</value>
             </list>
         </property>
     </bean>

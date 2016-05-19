@@ -5,6 +5,8 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
     , function ($scope, $stateParams, $modal
         , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, DocTreeService, PermissionsService) {
 
+        $scope.treeControl = {};
+        
         var componentHelper = new HelperObjectBrowserService.Component({
             moduleId: "tasks"
             , componentId: "attachments"
@@ -60,6 +62,10 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
             return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, $scope.fileTypes);
+        };
+
+        $scope.onInitTree = function(treeControl) {
+            $scope.treeControl = treeControl;
         };
 
         $scope.onClickRefresh = function () {
