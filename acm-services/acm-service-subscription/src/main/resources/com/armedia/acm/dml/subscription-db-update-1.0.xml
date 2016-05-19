@@ -14,14 +14,14 @@
         </preConditions>
         <sql>
             <comment>Set value to records with cm_subscription_id NULL</comment>
-            UPDATE acm_subscription_event se
+            UPDATE acm_subscription_event
             SET cm_subscription_id =
             CONCAT((SELECT s.cm_subscription_id
             FROM acm_subscription as s
-            WHERE se.cm_event_subscription_owner = s.cm_user_id
-            AND se.cm_event_object_type = s.cm_object_type
-            AND se.cm_event_object_id = s.cm_object_id), '-SUBSCRIPTION')
-            WHERE se.cm_subscription_id IS NULL;
+            WHERE cm_event_subscription_owner = s.cm_user_id
+            AND cm_event_object_type = s.cm_object_type
+            AND cm_event_object_id = s.cm_object_id), '-SUBSCRIPTION')
+            WHERE cm_subscription_id IS NULL;
         </sql>
     </changeSet>
 
