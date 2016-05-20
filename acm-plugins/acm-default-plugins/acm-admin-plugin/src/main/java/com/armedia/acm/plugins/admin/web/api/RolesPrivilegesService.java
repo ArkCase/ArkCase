@@ -1,8 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 /**
  * Created by admin on 6/3/15.
@@ -112,8 +114,10 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
     /**
      * Update Role Privileges
      *
-     * @param roleName   Updated role name
-     * @param privileges List of role's privileges
+     * @param roleName
+     *            Updated role name
+     * @param privileges
+     *            List of role's privileges
      */
     public void updateRolePrivileges(String roleName, List<String> privileges) throws AcmRolesPrivilegesException
     {
@@ -143,11 +147,15 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
     /**
      * Create new role
      *
-     * @param roleName new role name
+     * @param roleName
+     *            new role name
      * @throws AcmRolesPrivilegesException
      */
     public void createRole(String roleName) throws AcmRolesPrivilegesException
     {
+
+        roleName = roleName.replaceAll("\\s+", "_");
+
         List<String> roles = loadRoles();
         // Check if new role presents in roles file
         boolean rolePresent = false;
@@ -244,7 +252,6 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
         }
     }
 
-
     /**
      * Remove privileges form list of roles
      *
@@ -334,7 +341,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
             Map<String, String> priveleges = new HashMap<String, String>();
             for (Object keyIter : privilegesKeys)
             {
-                Map<String, String> item = new HashMap<String, String>();
+                new HashMap<String, String>();
                 priveleges.put((String) keyIter, (String) props.get(keyIter));
             }
 
@@ -352,7 +359,8 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
     /**
      * Save list of roles
      *
-     * @param roles saved roles list
+     * @param roles
+     *            saved roles list
      * @throws AcmRolesPrivilegesException
      */
     private void saveRoles(List<String> roles) throws AcmRolesPrivilegesException
@@ -412,7 +420,8 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
     /**
      * Load specific role's privileges
      *
-     * @param roleName Role name
+     * @param roleName
+     *            Role name
      * @return map of privileges and descriptions
      * @throws AcmRolesPrivilegesException
      */
@@ -431,7 +440,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
             {
                 List<String> privileges = Arrays.asList(propPrivileges.split(","));
 
-                //Get all privileges with descriptions
+                // Get all privileges with descriptions
                 Properties allPrivilegesProps = new Properties();
                 allPrivilegesProps.load(FileUtils.openInputStream(new File(applicationPrivilegesFile)));
 
@@ -456,8 +465,10 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
     /**
      * Save role's privileges to the file
      *
-     * @param roleName   Role name
-     * @param privileges List of privileges
+     * @param roleName
+     *            Role name
+     * @param privileges
+     *            List of privileges
      */
     private void saveRolePrivileges(String roleName, List<String> privileges) throws AcmRolesPrivilegesException
     {
@@ -516,7 +527,6 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
         }
     }
 
-
     private void updateRolesPrivilegesConfig() throws AcmRolesPrivilegesException
     {
         try
@@ -549,9 +559,8 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
             Writer writer = null;
             try
             {
-                //writer = new FileWriter(new File(applicationRolesPrivilegesFile));
-                writer = new BufferedWriter(new OutputStreamWriter(
-                        new FileOutputStream(new File(applicationRolesPrivilegesFile)), StandardCharsets.UTF_8));
+                // writer = new FileWriter(new File(applicationRolesPrivilegesFile));
+                writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(applicationRolesPrivilegesFile)), StandardCharsets.UTF_8));
                 tmpl.process(privileges, writer);
             } finally
             {

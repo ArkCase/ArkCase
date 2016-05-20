@@ -96,6 +96,7 @@ angular.module('admin').controller('Admin.SelectPrivilegesController', ['$scope'
                         }
                     });
                     $scope.ok = function () {
+                        $scope.roleName = $scope.roleName.toUpperCase().replace(/\s+/g, "_");
                         $modalInstance.close($scope.roleName);
                     };
                     $scope.cancel = function () {
