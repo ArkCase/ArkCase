@@ -5,7 +5,7 @@ import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.model.CaseFileModifiedEvent;
-import com.armedia.acm.plugins.casefile.model.CaseFileParticipantDeletedEvent;
+import com.armedia.acm.plugins.casefile.model.CaseFileParticipantsModifiedEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,9 +43,10 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         applicationEventPublisher.publishEvent(event);
     }
 
-    public void raiseParticipantDeletedInCaseFile(AcmParticipant participant, CaseFile source, String ipAddress)
+    public void raiseParticipantsModifiedInCaseFile(AcmParticipant participant, CaseFile source, String ipAddress, String eventStatus)
     {
-        CaseFileParticipantDeletedEvent event = new CaseFileParticipantDeletedEvent(participant);
+        CaseFileParticipantsModifiedEvent event = new CaseFileParticipantsModifiedEvent(participant);
+        event.setEventStatus(eventStatus);
         event.setSucceeded(true);
         event.setIpAddress(ipAddress);
         event.setParentObjectId(source.getId());
@@ -64,6 +65,18 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         }
 
         CaseEvent event = new CaseEvent(source, ipAddress, authentication.getName(), CaseFileConstants.EVENT_TYPE_CREATED, new Date(), true, authentication);
+        applicationEventPublisher.publishEvent(event);
+    }
+
+    public void raiseCaseFileViewed(CaseFile source, Authentication authentication)
+    {
+        String ipAddress = null;
+        if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
+        {
+            ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+        }
+
+        CaseEvent event = new CaseEvent(source, ipAddress, authentication.getName(), CaseFileConstants.EVENT_TYPE_VIEWED, new Date(), true, authentication);
         applicationEventPublisher.publishEvent(event);
     }
 

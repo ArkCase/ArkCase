@@ -81,4 +81,15 @@ if (filterParentRef)
     message.setInboundProperty("childObjectFilterQuery", "");
 }
 
+String subscribedFilter = "{!join from=id to=related_subscription_ref_s}object_type_s:SUBSCRIPTION";
+boolean filterSubscriptionEvents = message.getInboundProperty("filterSubscriptionEvents");
+
+if(filterSubscriptionEvents)
+{
+    message.setInboundProperty("isSubscribed", subscribedFilter);
+} else
+{
+    message.setInboundProperty("isSubscribed", "");
+}
+
 return payload;

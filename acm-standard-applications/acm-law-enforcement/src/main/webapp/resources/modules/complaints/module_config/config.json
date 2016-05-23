@@ -360,7 +360,8 @@
               "field": "title_parseable",
 			  "sortField": "title_parseable_lcs",
               "displayName": "complaints.comp.tasks.table.columns.title",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.title_parseable' title='{{row.entity.title_parseable}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "assignee",
@@ -461,7 +462,8 @@
             {
               "name": "location.fullAddress",
               "displayName": "complaints.comp.locations.table.columns.address",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.location.fullAddress' title='{{row.entity.location.fullAddress}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "location.modified",
@@ -1053,7 +1055,7 @@
           "name": "eventDate",
           "displayName": "complaints.comp.history.table.columns.eventDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.eventDate | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.eventDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
         },
         {
           "name": "userId",

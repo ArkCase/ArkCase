@@ -11,6 +11,10 @@
     </bean> -->
     <bean id="security.manager" class="com.armedia.acm.webdav.AcmWebDAVSecurityManagerAdapter"/>
 
+    <bean id="wordExtensionPattern" class="java.util.regex.Pattern" factory-method="compile">
+        <constructor-arg value="\.(doc|dot|docx|dotx|docm|dotm|docb)$"/>
+    </bean>
+
     <bean id="resource.factory" class="com.armedia.acm.webdav.AcmFileSystemResourceFactory">
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
@@ -21,6 +25,7 @@
         <property name="securityManager" ref="security.manager"/>
         <property name="maxAgeSeconds" value="300"/>
         <property name="filterMapping" value="webdav"/>
+        <property name="wordFileExtensionPattern" ref="wordExtensionPattern"/>
     </bean>
 
     <bean id="milton.http.manager" class="io.milton.ent.config.HttpManagerBuilderEnt">
@@ -29,4 +34,5 @@
         <property name="buffering" value="never"/>
         <property name="enabledJson" value="false"/>
     </bean>
+
 </beans>

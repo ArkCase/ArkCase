@@ -4,10 +4,11 @@ angular.module('notifications').controller('Notifications.FacetedSearchControlle
         function ($scope) {
             $scope.$emit('req-component-config', 'notificationsFacetedSearch');
             $scope.$on('component-config', applyConfig)
-            function applyConfig(e, componentId, config) {
+            function applyConfig(e, componentId, config, user) {
                 if (componentId == 'notificationsFacetedSearch') {
                     $scope.config = config;
-                    $scope.filter = config.filter;
+                    var filter = config.filter;
+                    $scope.filter = filter.replace("userId", user.userId);
                 }
             }
         }

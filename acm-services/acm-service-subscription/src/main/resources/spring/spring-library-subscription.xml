@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:task="http://www.springframework.org/schema/task"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
 
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
     <!--<task:scheduler id="subscriptionEventTaskScheduler" pool-size="1"/>-->
+
+    <task:executor id="deleteTaskExecutor" pool-size="1"/>
 
     <task:scheduler id="subscriptionTaskScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="subscriptionTaskScheduler">
@@ -32,6 +34,12 @@
         <property name="subscriptionProperties" ref="subscriptionProperties"/>
     </bean>
 
+    <bean id="subscriptionService" class="com.armedia.acm.services.subscription.service.impl.SubscriptionServiceImpl">
+        <property name="subscriptionDao" ref="subscriptionDao"/>
+        <property name="subscriptionEventDao" ref="subscriptionEventDao"/>
+        <property name="subscriptionEventPublisher" ref="subscriptionEventPublisher"/>
+    </bean>
+
     <bean id="subscriptionEventPublisher"
           class="com.armedia.acm.services.subscription.service.SubscriptionEventPublisher"/>
 
@@ -48,7 +56,7 @@
 
     <bean id="subscriptionToSolrTransformer"
           class="com.armedia.acm.services.subscription.service.SubscriptionToSolrTransformer">
-        <property name="subscriptiontDao" ref="subscriptionDao"/>
+        <property name="subscriptionDao" ref="subscriptionDao"/>
     </bean>
 
     <bean id="subscriptionProperties"

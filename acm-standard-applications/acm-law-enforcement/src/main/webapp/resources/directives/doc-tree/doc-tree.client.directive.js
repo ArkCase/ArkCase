@@ -82,14 +82,14 @@
  </file>
  </example>
  */
-angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log'
+angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log', '$timeout'
     , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService'
     , 'EcmService', 'Ecm.EmailService', 'Ecm.RecordService', 'Authentication', 'Helper.NoteService', 'Object.NoteService'
-    , '$timeout', '$browser', '$location', 'Object.LockingService', 'ObjectService'
-    , function ($q, $translate, $modal, $filter, $log
+    , '$browser', '$location', 'Object.LockingService', 'ObjectService'
+    , function ($q, $translate, $modal, $filter, $log, $timeout
         , Store, Util, UtilDateService, ConfigService, LookupService
         , Ecm, EcmEmailService, EcmRecordService, Authentication, HelperNoteService, ObjectNoteService
-        , $timeout, $browser, $location, LockingService, ObjectService) {
+        , $browser, $location, LockingService, ObjectService) {
         var user = "";
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -99,7 +99,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
         );
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
+        //var promiseGetUserFullName = LookupService.getUserFullNames();
         var promiseGetUserFullName = LookupService.getUserFullNames();
+        promiseGetUserFullName.then(function (userFullNames) {
+            DocTree.userFullNames = userFullNames;
+            //refresh table?
+        });
         var promiseGetEmailParams = LookupService.getConfig("notification").then(function (data) {
             Email.arkcaseUrl = Util.goodValue(data["arkcase.url"]);
             Email.arkcasePort = Util.goodValue(data["arkcase.port"]);
@@ -155,79 +160,25 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         var node = data.node;
                         var $tdList = $(node.tr).find(">td");
                         // (index #0 is rendered by fancytree by adding the checkbox)
-                        // (index #1 is rendered by fancytree)
+                        // (index #2 is rendered by fancytree)
 
-                        ////$tdList.eq(1).html(DocTree.Source.getHtmlDocLink(node));
-                        //var $td1 = $("<td/>");
-                        //DocTree.Source.getHtmlDocLink(node).appendTo($td1);
-                        //$tdList.eq(1).replaceWith($td1);
-
-
-                        if (DocTree.isFolderNode(node)) {
-                            ;
-                        } else if (DocTree.isFileNode(node)) {
-                            if (node.data.lock) {
-                                promiseGetUserFullName.then(function (userFullNames) {
-                                    var found = _.find(userFullNames, {id: node.data.lock.creator});
-                                    var userFullName = Util.goodMapValue(found, "name");
-                                    var lockedTitle = $translate.instant("common.directive.docTree.lockedTitle") + userFullName;
-                                    var $span = $("<span class='ui-icon ui-icon-locked' title='" + lockedTitle + "'/>").appendTo($tdList.eq(1));
-                                    $span.hover(function () {
-                                        $(this).tooltip('show');
-                                    }, function () {
-                                        $(this).tooltip('hide');
-                                    });
-                                });
-                            }
-                            var filter = $filter('capitalizeFirst');
-                            var typeColumn = (DocTree.getDocumentTypeDisplayLabel(node.data.type));
-                            var filteredType = filter(typeColumn);
-
-                            $tdList.eq(3).text(filteredType); // document type is mapped (afdp-1249)
-
-                            var versionDate = UtilDateService.getDatePart(node.data.created);
-                            var versionUser = Util.goodValue(node.data.creator);
-
-                            var $td6 = $("<td/>");
-                            var $span = $("<span/>").appendTo($td6);
-                            var $select = $("<select/>")
-                                .addClass('docversion inline')
-                                .appendTo($span);
-
-                            if (Util.isArray(node.data.versionList)) {
-                                for (var i = 0; i < node.data.versionList.length; i++) {
-                                    var versionTag = node.data.versionList[i].versionTag;
-                                    var $option = $("<option/>")
-                                        .val(versionTag)
-                                        .text(versionTag)
-                                        .appendTo($select);
-
-                                    if (Util.goodValue(node.data.version) == versionTag) {
-                                        $option.attr("selected", true);
-
-                                        versionDate = UtilDateService.getDatePart(node.data.versionList[i].created);
-                                        versionUser = Util.goodValue(node.data.versionList[i].creator);
+                        if (DocTree.isFileNode(node)) {
+                            var columnDefs = Util.goodArray(DocTree.treeConfig.columnDefs);
+                            for(var i = 0; i < columnDefs.length; i++) {
+                                var columnDef = columnDefs[i];
+                                var colIdx = Util.goodValue(columnDef.index, -1);
+                                if (0 <= colIdx) {
+                                    var element = $tdList.eq(colIdx).get();
+                                    var renderer = DocTree.Column.findRenderer(columnDef.name);
+                                    if (renderer) {
+                                        renderer(element, node, columnDef, DocTree.readOnly);
                                     }
                                 }
                             }
-                            $tdList.eq(4).text(versionDate);
 
-                            promiseGetUserFullName.then(function (userFullNames) {
-                                var found = _.find(userFullNames, {id: versionUser});
-                                $tdList.eq(5).text(Util.goodMapValue(found, "name"));
-                            });
-
-                            if (DocTree.readOnly) {
-                                $tdList.eq(6).text(node.data.version);
-                            } else {
-                                $tdList.eq(6).replaceWith($td6);
-                            }
-
-                            $tdList.eq(7).text(node.data.status);
-
-                            $tdList.eq(1).addClass("");
-
-                        } else {  //non file, non folder
+                        } else if (DocTree.isFolderNode(node)) {
+                            ;
+                        } else {  //not file, not folder
                             $tdList.eq(0).text("");
                         }
                     }
@@ -405,6 +356,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 var jqTreeBody = DocTree.jqTree.find("tbody");
                 DocTree.ExternalDnd.startExternalDnd(jqTreeBody);
 
+                //todo: move to column renderer
                 jqTreeBody.on("change", "select.docversion", DocTree.onChangeVersion);
                 jqTreeBody.on("dblclick", "select.docversion", DocTree.onDblClickVersion);
 
@@ -862,8 +814,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 , containerObjectType: containerObjectType
                                 , containerObjectId: containerObjectId
                                 , totalChildren: -1
-                                //,folderId: 0
-                                //,"action": DocTree.Source.getHtmlAction()
                             })
                             .getTree();
                     }
@@ -894,11 +844,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             if (DocTree.NODE_TYPE_FOLDER == Util.goodValue(child.objectType)) {
                                 var nodeData = DocTree.Source.getDefaultFolderNode();
                                 DocTree._folderDataToNodeData(child, nodeData);
-//                        nodeData.lazy = true;
-//                        nodeData.expanded = false;
-//                        nodeData.cache = false;
-//                        nodeData.startRow = 0;
-//                        nodeData.totalChildren = -1;
                                 builder.addLeaf(nodeData);
 
                             }
@@ -959,6 +904,170 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                 }
             } //end Source
+
+
+            , CustomData: {
+                _items: []
+
+                , getItems: function() {
+                    return this._items;
+                }
+                , setItems: function(items) {
+                    this._items = items;
+                }
+                , addItem: function(item) {
+                    var find = _.find(this._items, function(anItem){
+                        return anItem == item;
+                    });
+                    if (!find) {
+                        this._items.push(item);
+                    }
+                }
+                , addData: function(data) {
+                    var arr = [];
+                    if (Util.isArray(data)) {
+                        arr = data;
+                    } else if ("string" == typeof data) {
+                        arr = [ data ];
+                    }
+
+                    var that = this;
+                    _.each(arr, function(item) {
+                        that.addItem(item);
+                    });
+                }
+
+            }
+
+            , Column: {
+                _renderers: []
+
+                , getRenderers: function() {
+                    return this._renderers;
+                }
+                , setRenderers: function(renderers) {
+                    this._renderers = renderers;
+                }
+
+                , addRenderer: function(name, renderer) {
+                    if (Util.isEmpty(renderer)) {
+                        this.removeRenderer(name);
+                        return;
+                    }
+
+                    var find = _.find(this._renderers, {name: name});
+                    if (find) {
+                        find.renderer = renderer;
+                    } else {
+                        this._renderers.push({name: name, renderer: renderer});
+                    }
+                }
+
+                , removeRenderer: function(name) {
+                    var i = this._findRendererIdx(name);
+                    this._removeRenderer(i);
+                }
+                , _removeRenderer: function(i) {
+                    if (0 <= i) {
+                        this._renderers.splice(i, 1);
+                    }
+                }
+                , _findRendererIdx: function(name) {
+                    for (var i = 0; i < this._renderers.length; i++) {
+                        var listener = this._renderers[i];
+                        if (listener.name == name) {
+                            return i;
+                        }
+                    }
+                    return -1;
+                }
+                , findRenderer: function(name) {
+                    var renderer = null;
+                    var find = _.find(this._renderers, {name: name});
+                    if (find) {
+                        renderer = find.renderer;
+                    }
+                    return renderer;
+                }
+
+                , getDefaultRenders: function() {
+                    return [
+                        {name: "checkbox", renderer: function(element, node, columnDef, isReadOnly) {
+                            ;
+                        }}
+                        , {name: "lock", renderer: function(element, node, columnDef, isReadOnly) {
+                            if (node.data.lock) {
+                                if (DocTree.userFullNames) {
+                                    var found = _.find(DocTree.userFullNames, {id: node.data.lock.creator});
+                                    var userFullName = Util.goodMapValue(found, "name");
+                                    var lockedTitle = $translate.instant("common.directive.docTree.lockedTitle") + userFullName;
+                                    var $span = $("<span class='ui-icon ui-icon-locked' title='" + lockedTitle + "'/>").appendTo($(element));
+                                    $span.hover(function () {
+                                        $(this).tooltip('show');
+                                    }, function () {
+                                        $(this).tooltip('hide');
+                                    });
+                                }
+                            }
+                            $(element).addClass("");
+                        }}
+                        , {name: "title", renderer: function(element, node, columnDef, isReadOnly) {
+                            ;
+                        }}
+                        , {name: "type", renderer: function(element, node, columnDef, isReadOnly) {
+                            var filter = $filter('capitalizeFirst');
+                            var typeColumn = (DocTree.getDocumentTypeDisplayLabel(node.data.type));
+                            var filteredType = filter(typeColumn);
+
+                            $(element).text(filteredType); // document type is mapped (afdp-1249)
+                        }}
+                        , {name: "created", renderer: function(element, node, columnDef, isReadOnly) {
+                            var versionDate = UtilDateService.getDatePart(node.data.created);
+                            $(element).text(versionDate);
+                        }}
+                        , {name: "author", renderer: function(element, node, columnDef, isReadOnly) {
+                            if (DocTree.userFullNames) {
+                                var versionUser = Util.goodValue(node.data.creator);
+                                var found = _.find(DocTree.userFullNames, {id: versionUser});
+                                $(element).text(Util.goodMapValue(found, "name"));
+                            }
+                        }}
+                        , {name: "version", renderer: function(element, node, columnDef, isReadOnly) {
+                            if (isReadOnly) {
+                                $(element).text(node.data.version);
+
+                            } else {
+                                var $td = $("<td/>");
+                                var $span = $("<span/>").appendTo($td);
+                                var $select = $("<select/>")
+                                    .addClass('docversion inline')
+                                    .appendTo($span);
+
+                                if (Util.isArray(node.data.versionList)) {
+                                    for (var v = 0; v < node.data.versionList.length; v++) {
+                                        var versionTag = node.data.versionList[v].versionTag;
+                                        var $option = $("<option/>")
+                                            .val(versionTag)
+                                            .text(versionTag)
+                                            .appendTo($select);
+
+                                        if (Util.goodValue(node.data.version) == versionTag) {
+                                            $option.attr("selected", true);
+
+                                            //versionDate = UtilDateService.getDatePart(node.data.versionList[v].created);
+                                            //versionUser = Util.goodValue(node.data.versionList[v].creator);
+                                        }
+                                    }
+                                }
+                                $(element).replaceWith($td);
+                            }
+                        }}
+                        , {name: "status", renderer: function(element, node, columnDef, isReadOnly) {
+                            $(element).text(node.data.status);
+                        }}
+                    ];
+                }
+            }
 
             , Command: {
                 onCommand: function (event, data) {
@@ -1156,7 +1265,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     var absUrl = $location.absUrl();
                                     var baseHref = $browser.baseHref();
                                     var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
-                                    ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + node.parent.data.objectId + "/" + node.data.objectId + ".docx");
+                                    var rs = Util.goodMapValue(DocTree.treeConfig, 'wordFileExtensionRegex', '\\.(doc|docx)$');
+                                    var re = new RegExp(rs, "i");
+                                    var hasExt = node.data.name.match(re);
+                                    var fileExt = '';
+                                    if (hasExt && hasExt[0])
+                                        fileExt = hasExt[0];
+
+                                    ITHit.WebDAV.Client.DocManager.EditDocument(appUrl + "webdav/" + node.parent.data.objectId + "/" + node.data.objectId + fileExt);
                                     DocTree.refreshTree();
                                 }
                             );
@@ -1177,7 +1293,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             if (!Util.isArrayEmpty(declareAsRecordData)) {
                                 DocTree.Op.declareAsRecord(nodesToDeclare, declareAsRecordData).done(function () {
                                     $timeout(function () {
-                                        DocTree.refreshTree()
+                                        DocTree.refreshTree();
                                     }, 1000);
                                 });
                             }
@@ -1672,13 +1788,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     var rc = callbackSuccess(folderList);
                                     dfd.resolve(rc);
                                 } else {
-                                    //fixme: App.View.MessageBoard.show($.t("doctree:error.retrieve-folder-list"), Util.goodValue(response.errorMsg));
                                     DocTree.markNodeError(folderNode);
                                     dfd.reject();
                                 }
                             }
                             , function (errorData) {
-                                //fixme: App.View.MessageBoard.show($.t("doctree:error.retrieve-folder-list"), Util.goodValue(response.errorMsg));
                                 DocTree.markNodeError(folderNode);
                                 dfd.reject();
                             }
@@ -1736,7 +1850,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                             }
                             , function (errorData) {
-                                //fixme: App.View.MessageBoard.show($.t("doctree:error.create-folder"), Util.goodValue(response.errorMsg));
                                 DocTree.markNodeError(newNode);
                                 dfd.reject();
                             }
@@ -1797,7 +1910,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 }
                             }
                             , function (errorData) {
-                                //fixme: App.View.MessageBoard.show($.t("doctree:error.upload-files"), Util.goodValue(response.errorMsg));
                                 dfd.reject();
                             }
                         );
@@ -1865,7 +1977,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 dfd.resolve(replacedFile);
                             }
                             , function (errorData) {
-                                //fixme: App.View.MessageBoard.show($.t("doctree:error.replace-file"), Util.goodValue(response.errorMsg));
                                 DocTree.markNodeError(fileNode);
                                 dfd.reject(errorData);
                             }
@@ -1952,7 +2063,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 dfd.resolve(copyFolderInfo);
                             }
                             , function (errorData) {
-                                //fixme: App.View.MessageBoard.show($.t("doctree:error.copy-folder"), Util.goodValue(data.errorMsg));
                                 DocTree.markNodeError(newNode);
                                 dfd.reject();
                             }
@@ -2031,7 +2141,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 dfd.resolve(copyFileInfo);
                             }
                             , function (errorData) {
-                                //fixme: App.View.MessageBoard.show($.t("doctree:error.copy-file"), Util.goodValue(response.errorMsg));
                                 DocTree.markNodeError(newNode);
                                 dfd.reject();
                             }
@@ -2157,7 +2266,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 dfd.resolve(moveFolderInfo);
                             }
                             , function (errorData) {
-                                //fixme: App.View.MessageBoard.show($.t("doctree:error.move-folder"), Util.goodValue(response.errorMsg));
                                 DocTree.markNodeError(frNode);
                                 dfd.reject();
                             }
@@ -2918,6 +3026,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
                         }
                     }
+
+                    _.each(DocTree.CustomData.getItems(), function(item){
+                        nodeData.data[item] = Util.goodValue(fileData[item]);
+                    });
                 }
                 return nodeData;
             }
@@ -4099,6 +4211,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 , objectId: '='
                 , fileTypes: '='
                 , uploadForm: '&'
+                , onInitTree: '&'
                 , onAllowCmd: '&'
                 , onPreCmd: '&'
                 , onPostCmd: '&'
@@ -4108,25 +4221,44 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             , link: function (scope, element, attrs) {
                 Ui.scope = scope;
 
-                DocTree.jqTree = $(element).find("table");
+                DocTree.jqTree = null;
                 DocTree.setObjType(scope.objectType);
                 DocTree.setObjId(scope.objectId);
                 DocTree.treeConfig = {};
                 DocTree.objectInfo = null;
-                DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function () {
-                }); //if not defined, do nothing
-                DocTree.Command.onAllowCmd = ("undefined" != typeof attrs.onAllowCmd) ? scope.onAllowCmd() : (function () {
-                });
-                DocTree.Command.onPreCmd = ("undefined" != typeof attrs.onPreCmd) ? scope.onPreCmd() : (function () {
-                });
-                DocTree.Command.onPostCmd = ("undefined" != typeof attrs.onPostCmd) ? scope.onPostCmd() : (function () {
-                });
+                DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function () {}); //if not defined, do nothing
+                DocTree.Command.onAllowCmd = ("undefined" != typeof attrs.onAllowCmd) ? scope.onAllowCmd() : (function () {});
+                DocTree.Command.onPreCmd = ("undefined" != typeof attrs.onPreCmd) ? scope.onPreCmd() : (function () {});
+                DocTree.Command.onPostCmd = ("undefined" != typeof attrs.onPostCmd) ? scope.onPostCmd() : (function () {});
                 DocTree.readOnly = ("true" === attrs.readOnly);
 
+
+                //jwu: it does not matter scope.treeControl is defined or not; it is defined here
+                //
+                //if(angular.isDefined(scope.treeControl)) {
+                //    scope.treeControl.refreshTree = DocTree.refreshTree;
+                //    scope.treeControl.getSelectedNodes = DocTree.getSelectedNodes;
+                //}
                 scope.treeControl = {
                     refreshTree: DocTree.refreshTree
                     , getSelectedNodes: DocTree.getSelectedNodes
+                    , addCommandHandler: function(args) {
+                        //DocTree.Command.addHandler(args.name, args.handler);
+                    }
+                    , addColumnRenderer: function(args) {
+                        DocTree.CustomData.addData(args.model);
+                        DocTree.Column.addRenderer(args.name, args.renderer);
+                    }
                 };
+
+                DocTree.Column.setRenderers(DocTree.Column.getDefaultRenders());
+
+                //jwu: With scope.treeControl set above, according to Angular document, the host controller $scope.treeControl should be defined.
+                //     yet, it is not always the case. It works sometimes and does not the other times. As a work around, scope.treeControl is
+                //     passed as argument of onInitTree(). Parent controller need to assign it to its $scope.treeControl
+                if ("undefined" != typeof attrs.onInitTree) {
+                    scope.onInitTree()(scope.treeControl);
+                }
 
                 ConfigService.getModuleConfig("common").then(function (moduleConfig) {
                     var treeConfig = Util.goodMapValue(moduleConfig, "docTree", {});
@@ -4134,25 +4266,67 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     return moduleConfig;
                 });
 
-                scope.$watchGroup(['treeConfig', 'objectInfo'], function (newValues, oldValues, scope) {
+                scope.$watchGroup(['treeConfig', 'objectInfo', 'fileTypes'], function (newValues, oldValues, scope) {
                     var treeConfig = newValues[0];
+                    var objectInfo = newValues[1];
+                    var fileTypes = newValues[2];
                     _.merge(DocTree.treeConfig, treeConfig);
 
-                    var objectInfo = newValues[1];
                     DocTree.objectInfo = objectInfo;
-                });
 
-                DocTree.create();
-                DocTree.makeDownloadDocForm(DocTree.jqTree);
-                DocTree.makeUploadDocForm(DocTree.jqTree);
+                    if (Util.isEmpty(DocTree.jqTree)) {
+                        if (Util.goodMapValue(DocTree.treeConfig, "columnDefs")) {
+                            var columnDefs = DocTree.treeConfig.columnDefs;
+                            var jqTable = $("<table/>")
+                                .addClass("table table-striped th-sortable table-hover")
+                                .appendTo($(element));
+                            var jqThead = $("<thead/>").appendTo(jqTable);
+                            var jqTrHead = $("<tr/>")
+                                .appendTo(jqThead);
+                            var jqTbody = $("<tbody/>").appendTo(jqTable);
+                            var jqTrBody = $("<tr/>")
+                                .appendTo(jqTbody);
 
-                scope.$watch('fileTypes', function (newValue, oldValue) {
-                    if (newValue) {
-                        DocTree.fileTypes = newValue;
-                        var jqTreeBody = DocTree.jqTree.find("tbody");
-                        DocTree.Menu.useContextMenu(jqTreeBody);
+                            var jqTh, jqTd;
+                            _.each(columnDefs, function(columnDef) {
+                                var name = columnDef.name;
+                                var field = Util.goodValue(columnDef.field, name);
+                                var cellTemplate = columnDef.cellTemplate;
+                                var displayName = $translate.instant(columnDef.displayName);
+                                var headTemplate = columnDef.headTemplate;
+                                if ("checkbox" == name) {
+                                    headTemplate = "<input type='checkbox'/>";
+                                }
+                                var width = Util.goodValue(columnDef.width, "10%");
+                                jqTh = $("<th/>")
+                                    .attr("width", width)
+                                    //.text(displayName)
+                                    .appendTo(jqTrHead);
+                                if (headTemplate) {
+                                    $(headTemplate).appendTo(jqTh);
+                                } else {
+                                    jqTh.text(displayName);
+                                }
+
+                                jqTd = $("<td/>")
+                                    .appendTo(jqTrBody);
+                            });
+
+                            DocTree.jqTree = jqTable;
+
+                            DocTree.create();
+                            DocTree.makeDownloadDocForm(DocTree.jqTree);
+                            DocTree.makeUploadDocForm(DocTree.jqTree);
+
+                            if (Util.goodValue(fileTypes)) {
+                                DocTree.fileTypes = fileTypes;
+                                var jqTreeBody = DocTree.jqTree.find("tbody");
+                                DocTree.Menu.useContextMenu(jqTreeBody);
+                            }
+                        }
                     }
-                }, true);
+
+                });
             }
         };
 

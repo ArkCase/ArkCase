@@ -5,8 +5,6 @@ package com.armedia.acm.services.users.web.api.group;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -152,20 +151,19 @@ public class GetGroupAPIController
     public String getTopLevelGroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
                                     @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
                                     @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+                                    @RequestParam(value = "groupSubtype", required = false, defaultValue = "") List<String> groupSubtype,
                                     Authentication auth,
                                     HttpSession httpSession) throws MuleException, Exception
     {
-        if (LOG.isInfoEnabled())
-        {
-            LOG.info("Taking all top level groups from Solr.");
-        }
+        LOG.info("Taking all top level groups from Solr.");
 
         String query = "object_type_s:GROUP AND -parent_id_s:* AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 
-        if (LOG.isDebugEnabled())
+        if (groupSubtype != null && !groupSubtype.isEmpty())
         {
-            LOG.debug("User '" + auth.getName() + "' is searching for '" + query + "'");
+            query += " AND object_sub_type_s:(" + String.join(" OR ", groupSubtype) + ")";
         }
+        LOG.debug("User [{}] is searching for [{}]", auth.getName(), query);
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", query);
@@ -176,7 +174,7 @@ public class GetGroupAPIController
 
         MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
 
-        LOG.debug("Response type: " + response.getPayload().getClass());
+        LOG.debug("Response type: [{}]", response.getPayload().getClass());
 
         if (response.getPayload() instanceof String)
         {

@@ -79,6 +79,7 @@ public class ClaimTaskAPIControllerTest extends EasyMockSupport
         Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
 
         expect(mockTaskDao.claimTask(eq(taskId), eq(userId))).andReturn(testTask);
+        expect(mockTaskDao.save(testTask)).andReturn(testTask);
         mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
 
         // MVC test classes must call getName() somehow
@@ -164,6 +165,7 @@ public class ClaimTaskAPIControllerTest extends EasyMockSupport
         Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
 
         expect(mockTaskDao.unclaimTask(eq(taskId))).andReturn(testTask);
+        expect(mockTaskDao.save(testTask)).andReturn(testTask);
         mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
 
         // MVC test classes must call getName() somehow

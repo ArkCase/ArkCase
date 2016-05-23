@@ -8,7 +8,7 @@ import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
 import com.armedia.acm.plugins.complaint.model.ComplaintFileAddedEvent;
 import com.armedia.acm.plugins.complaint.model.ComplaintListView;
 import com.armedia.acm.plugins.complaint.model.ComplaintModifiedEvent;
-import com.armedia.acm.plugins.complaint.model.ComplaintParticipantDeletedEvent;
+import com.armedia.acm.plugins.complaint.model.ComplaintParticipantsModifiedEvent;
 import com.armedia.acm.plugins.complaint.model.ComplaintPersistenceEvent;
 import com.armedia.acm.plugins.complaint.model.ComplaintSearchResultEvent;
 import com.armedia.acm.plugins.complaint.model.ComplaintUpdatedEvent;
@@ -108,9 +108,10 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(event);
     }
 
-    public void publishParticipantDeletedInComplaint(AcmParticipant participant, Complaint in, String ipAddress)
+    public void publishParticipantsModifiedInComplaint(AcmParticipant participant, Complaint in, String ipAddress, String eventStatus)
     {
-        ComplaintParticipantDeletedEvent event = new ComplaintParticipantDeletedEvent(participant);
+        ComplaintParticipantsModifiedEvent event = new ComplaintParticipantsModifiedEvent(participant);
+        event.setEventStatus(eventStatus);
         event.setSucceeded(true);
         event.setIpAddress(ipAddress);
         event.setParentObjectId(in.getComplaintId());

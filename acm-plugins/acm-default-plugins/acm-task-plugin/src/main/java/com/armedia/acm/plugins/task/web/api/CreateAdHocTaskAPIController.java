@@ -49,14 +49,11 @@ public class CreateAdHocTaskAPIController
         {
             in.setOwner(authentication.getName());
             // find the complaint id by name
-            String objectNumber;
             String parentObjectType = null;
             String obj;
-            Long objectId = 0L;
+            Long objectId = null;
             if (in.getAttachedToObjectName() != "")
             {
-                objectNumber = in.getAttachedToObjectName();
-                in.setAttachedToObjectName(objectNumber);
                 obj = getObjectsFromSolr(in.getAttachedToObjectType(), in.getAttachedToObjectName(), authentication, 0, 10, "", null);
                 if (obj != null && getSearchResults().getNumFound(obj) > 0)
                 {
@@ -64,11 +61,13 @@ public class CreateAdHocTaskAPIController
                     JSONObject result = results.getJSONObject(0);
                     objectId = getSearchResults().extractLong(result, SearchConstants.PROPERTY_OBJECT_ID_S);
                     parentObjectType = getSearchResults().extractString(result, SearchConstants.PROPERTY_OBJECT_TYPE_S);
+                } else
+                {
+                    in.setAttachedToObjectName(null);
+
                 }
-            } else
-            {
-                objectId = null;
             }
+
             if (objectId != null)
             {
                 in.setAttachedToObjectId(objectId);
