@@ -48,7 +48,7 @@ public class ListAssociatedTagsByObjectTypeAndIdAPIController {
             acmTags = retrieveTagList(acmAssociatedTags);
         } catch (AcmObjectNotFoundException e) {
             if (log.isDebugEnabled())
-                log.debug("No Associated Tags are Found for objectId: "+ objectId+" and objectType: "+objectType, e);
+                log.debug("No Associated Tags are Found for objectId: "+ objectId+" and objectType: "+objectType);
             return new ArrayList<>();
         }
         return acmTags;

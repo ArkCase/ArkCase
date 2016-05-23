@@ -14,6 +14,8 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             }
         );
 
+        $scope.treeControl = {};
+        
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
@@ -62,6 +64,10 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
             return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, $scope.fileTypes);
+        };
+
+        $scope.onInitTree = function(treeControl) {
+            $scope.treeControl = treeControl;
         };
 
         $scope.onClickRefresh = function () {

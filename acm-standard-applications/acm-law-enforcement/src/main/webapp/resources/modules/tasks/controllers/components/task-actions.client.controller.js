@@ -31,34 +31,36 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             $scope.showBtnComplete = false;
             $scope.showBtnReject = false;
             $scope.showBtnOutcomes = false;
-            if (!Util.isEmpty($scope.objectInfo.assignee)) {
-                if (Util.compare($scope.userId, $scope.objectInfo.assignee)) {
-                    if ($scope.objectInfo.adhocTask) {
-                        if (!Util.goodValue($scope.objectInfo.completed, false)) {
-                            $scope.showBtnSignature = true;
-                            $scope.showBtnDelete = true;
-                            $scope.showBtnComplete = true;
-                        }
-
-                        if (!Util.isEmpty($scope.objectInfo.owner) && !Util.isEmpty($scope.objectInfo.assignee)) {
-                            if (($scope.objectInfo.owner != $scope.objectInfo.assignee)) {
-                                $scope.showBtnSignature = true;
-                                $scope.showBtnReject = true;
-                            }
-                        }
-
-                    } else {
-                        if (!Util.goodValue($scope.objectInfo.completed, false)) {
-                            $scope.showBtnSignature = true;
-                            $scope.showBtnOutcomes = true;
-                        }
-                    }
-                }
-            }
-
 
             promiseQueryUser.then(function (userInfo) {
                 $scope.userId = userInfo.userId;
+
+                //we should wait for userId before we compare it with assignee
+                if (!Util.isEmpty($scope.objectInfo.assignee)) {
+                    if (Util.compare($scope.userId, $scope.objectInfo.assignee)) {
+                        if ($scope.objectInfo.adhocTask) {
+                            if (!Util.goodValue($scope.objectInfo.completed, false)) {
+                                $scope.showBtnSignature = true;
+                                $scope.showBtnDelete = true;
+                                $scope.showBtnComplete = true;
+                            }
+
+                            if (!Util.isEmpty($scope.objectInfo.owner) && !Util.isEmpty($scope.objectInfo.assignee)) {
+                                if (($scope.objectInfo.owner != $scope.objectInfo.assignee)) {
+                                    $scope.showBtnSignature = true;
+                                    $scope.showBtnReject = true;
+                                }
+                            }
+
+                        } else {
+                            if (!Util.goodValue($scope.objectInfo.completed, false)) {
+                                $scope.showBtnSignature = true;
+                                $scope.showBtnOutcomes = true;
+                            }
+                        }
+                    }
+                }
+
                 ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId).then(function (subscriptions) {
                     var found = _.find(subscriptions, {
                         userId: userInfo.userId,
@@ -156,6 +158,9 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                     function (taskInfo) {
                         $scope.$emit("report-object-updated", taskInfo);
                         return taskInfo;
+                    },
+                    function (error) {
+                        $scope.showErrorDialog(error);
                     }
                 );
             }
@@ -165,10 +170,30 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
+        $scope.showErrorDialog = function (error) {
+            $modal.open({
+                animation: true,
+                templateUrl: 'modules/tasks/views/components/task-actions-error-dialog.client.view.html',
+                controller: 'Tasks.ActionsErrorDialogController',
+                backdrop: 'static',
+                resolve: {
+                    errorMessage: function () {
+                        return error;
+                    }
+                }
+            });
+        }
     }
 ]);
-
-
+angular.module('tasks').controller('Tasks.ActionsErrorDialogController', ['$scope', '$modalInstance', 'errorMessage',
+        function ($scope, $modalInstance, errorMessage) {
+            $scope.errorMessage = errorMessage;
+            $scope.onClickOk = function () {
+                $modalInstance.dismiss('cancel');
+            };
+        }
+    ]
+);
 angular.module('tasks').controller('Tasks.RejectDialogController', ['$scope', '$modalInstance', 'aValue',
         function ($scope, $modalInstance, aValue) {
             $scope.valuePassed = aValue;

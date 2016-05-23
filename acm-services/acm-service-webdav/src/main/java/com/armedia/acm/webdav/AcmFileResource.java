@@ -127,7 +127,7 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
         try
         {
             Authentication auth = getResourceFactory().getSecurityManager().getSpringAuthentication();
-            getResourceFactory().getEcmFileTransaction().updateFileTransaction(auth, acmFile, in);
+            getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(auth, acmFile, in);
         } catch (MuleException e)
         {
             LOGGER.error("Error while uploading file via Mule.", e);

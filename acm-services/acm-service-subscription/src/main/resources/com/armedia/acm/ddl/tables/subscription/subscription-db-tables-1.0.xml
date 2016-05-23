@@ -129,4 +129,10 @@
         </insert>
     </changeSet>
 
+    <changeSet id="19-add_related_subscription_id" author="nadica.cuculova">
+        <addColumn tableName="acm_subscription_event">
+            <column name="cm_subscription_id" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

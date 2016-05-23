@@ -42,6 +42,12 @@ public interface EcmFileTransaction
             InputStream fileInputStream)
             throws MuleException;
 
+    EcmFile updateFileTransactionEventAware(
+            Authentication authentication,
+            EcmFile ecmFile,
+            InputStream fileInputStream)
+            throws MuleException;
+
     String downloadFileTransaction(EcmFile ecmFile) throws MuleException;
 
     InputStream downloadFileTransactionAsInputStream(EcmFile ecmFile) throws MuleException;

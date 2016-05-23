@@ -16,13 +16,17 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                 onSetSupervisor: '=',
                 config: '=',
                 totalGroups: '=',
+                showActions: '=',
+                showSupervisor: '=',
+                showType: '='
             },
             link: function (scope, element, attrs) {
+                var $tbl = $("#org");
                 var treeOptions = {
                     source: [],
                     click: function (event, data) {
                         if (scope.onSelect())
-                            scope.onSelect()(data.node.data);
+                            scope.onSelect()(data);
                     },
                     extensions: ["table"],
                     checkbox: false,
@@ -42,21 +46,31 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                         var node = data.node,
                             $tdList = $(node.tr).find(">td");
 
-                        if (node.data.object_sub_type_s != null) {
+                        if (!scope.showType) {
+                            hideColumn(1, "#type", $tdList)
+                        } else if (node.data.object_sub_type_s != null) {
                             $tdList.eq(1).text(node.data.object_sub_type_s);
                         }
-                        if (node.data.supervisor) {
+                        if (!scope.showSupervisor) {
+                            hideColumn(2, "#supervisorName", $tdList)
+                        } else if (node.data.supervisor) {
                             $tdList.eq(2).text(node.data.supervisor);
                         }
-                        if (node.data.object_sub_type_s == "ADHOC_GROUP") {
-                            $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs pull-left' type='button' ng-click='addSupervisor($event)' name='addSupervisor' title='Add/Edit Supervisor'><i class='fa fa-edit'></i></button>" +
-                                "<button class='btn btn-link btn-xs' type='button' ng-click='addSubgroup($event)' name='addSubgroup' title='Add Subgroup'><i class='fa fa-users'></i></button>" +
-                                "<button class='btn btn-link btn-xs' type='button' ng-click='pickUsersBtn($event)' name='addMembers' title='Add Members'><i class='fa fa-user'></i></button>" +
-                                "<button class='btn btn-link btn-xs' type='button' ng-click='removeGroupBtn($event)' name='removeGroup' title='Remove Group'><i class='fa fa-trash-o'></i></button>")(scope)
-                            );
-                        }
-                        if (node.data.isMember == true && node.parent.data.object_sub_type_s == "ADHOC_GROUP") {
-                            $tdList.eq(3).append($compile("<button class='btn btn-link btn-xs' type='button' ng-click='removeUserBtn($event)' name='removeMember' title='Remove Member'><i class='fa fa-trash-o'></i></button>")(scope));
+
+                        if (!scope.showActions) {
+                            hideColumn(3, "#actions", $tdList)
+                        } else {
+                            if (node.data.object_sub_type_s != "LDAP_GROUP") {
+                                $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='addSubgroup($event)' name='addSubgroup' title='Add Subgroup'><i class='fa fa-users'></i></button>" +
+                                    "<button class='btn btn-link btn-xs' type='button' ng-click='pickUsersBtn($event)' name='addMembers' title='Add Members'><i class='fa fa-user'></i></button>" +
+                                    "<button class='btn btn-link btn-xs' type='button' ng-click='removeGroupBtn($event)' name='removeGroup' title='Remove Group'><i class='fa fa-trash-o'></i></button>")(scope));
+                                if (scope.showSupervisor) {
+                                    $tdList.eq(3).append($compile("<button class='btn btn-link btn-xs pull-left' type='button' ng-click='addSupervisor($event)' name='addSupervisor' title='Add/Edit Supervisor'><i class='fa fa-edit'></i></button>")(scope));
+                                }
+                            }
+                            if (node.data.isMember == true && node.parent.data.object_sub_type_s != "LDAP_GROUP") {
+                                $tdList.eq(3).append($compile("<button class='btn btn-link btn-xs' type='button' ng-click='removeUserBtn($event)' name='removeMember' title='Remove Member'><i class='fa fa-trash-o'></i></button>")(scope));
+                            }
                         }
                     }
                 };
@@ -135,6 +149,11 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                     });
                 };
 
+                var hideColumn = function (index, $id, $tdList) {
+                    var colToHide = $tbl.find($id)
+                    colToHide.hide();
+                    $tdList.eq(index).hide();
+                }
             },
             templateUrl: 'directives/tree-view/org-hierarchy-tree-table.client.view.html'
         };

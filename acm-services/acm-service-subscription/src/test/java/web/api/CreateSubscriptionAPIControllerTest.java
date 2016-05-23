@@ -7,6 +7,8 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
 import com.armedia.acm.services.subscription.service.SubscriptionEventPublisher;
+import com.armedia.acm.services.subscription.service.SubscriptionService;
+import com.armedia.acm.services.subscription.service.impl.SubscriptionServiceImpl;
 import com.armedia.acm.services.subscription.web.api.CreateSubscriptionAPIController;
 import com.armedia.acm.services.subscription.web.api.RemovingSubscriptionAPIController;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -59,7 +61,7 @@ public class CreateSubscriptionAPIControllerTest extends EasyMockSupport {
     private MockHttpSession mockHttpSession;
 
     private CreateSubscriptionAPIController mockCreateSubscriptionAPIController;
-    private SubscriptionDao mockSubscriptionDao;
+    private SubscriptionService mockSubscriptionService;
     private AcmPlugin mockSubscriptionPlugin;
     private SubscriptionEventPublisher mockSubscriptionEventPublisher;
     private ExecuteSolrQuery mockExecuteSolrQuery;
@@ -73,14 +75,14 @@ public class CreateSubscriptionAPIControllerTest extends EasyMockSupport {
     public void setUp() throws Exception {
         mockCreateSubscriptionAPIController = new CreateSubscriptionAPIController();
 
-        mockSubscriptionDao = createMock(SubscriptionDao.class);
+        mockSubscriptionService = createMock(SubscriptionService.class);
         mockSubscriptionPlugin = createMock(AcmPlugin.class);
         mockSubscriptionEventPublisher = createMock(SubscriptionEventPublisher.class);
         mockAuthentication = createMock(Authentication.class);
         mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
         mockHttpSession = new MockHttpSession();
 
-        mockCreateSubscriptionAPIController.setSubscriptionDao(mockSubscriptionDao);
+        mockCreateSubscriptionAPIController.setSubscriptionService(mockSubscriptionService);
         mockCreateSubscriptionAPIController.setSubscriptionPlugin(mockSubscriptionPlugin);
         mockCreateSubscriptionAPIController.setSubscriptionEventPublisher(mockSubscriptionEventPublisher);
         mockCreateSubscriptionAPIController.setExecuteSolrQuery(mockExecuteSolrQuery);
@@ -115,7 +117,7 @@ public class CreateSubscriptionAPIControllerTest extends EasyMockSupport {
 
         expect(mockSubscriptionPlugin.getPluginProperties()).andReturn(prop).once();
         expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH,solrQuery,0, 1, "")).andReturn(jsonString).once();
-        expect(mockSubscriptionDao.save(capture(subscriptionToSave))).andReturn(subscription).anyTimes();
+        expect(mockSubscriptionService.saveSubscription(capture(subscriptionToSave))).andReturn(subscription).anyTimes();
 
        mockSubscriptionEventPublisher.publishSubscriptionCreatedEvent(subscription, mockAuthentication, true);
 
