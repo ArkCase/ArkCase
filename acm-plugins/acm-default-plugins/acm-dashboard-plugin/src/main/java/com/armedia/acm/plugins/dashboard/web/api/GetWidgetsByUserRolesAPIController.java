@@ -8,10 +8,10 @@ import com.armedia.acm.plugins.dashboard.model.DashboardConstants;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRole;
 import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
+import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
-
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -36,7 +35,7 @@ import java.util.stream.Collectors;
  */
 
 @Controller
-@RequestMapping({ "/api/v1/plugin/dashboard/widgets", "/api/latest/plugin/dashboard/widgets" })
+@RequestMapping({"/api/v1/plugin/dashboard/widgets", "/api/latest/plugin/dashboard/widgets"})
 public class GetWidgetsByUserRolesAPIController
 {
 
@@ -45,11 +44,12 @@ public class GetWidgetsByUserRolesAPIController
     private WidgetDao widgetDao;
     private DashboardPropertyReader dashboardPropertyReader;
     private WidgetEventPublisher eventPublisher;
+    private DashboardService dashboardService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<Widget> getDashboardConfig(Authentication authentication, HttpSession session)
+    public List<Widget> getWidgetsByUserAndRoles(Authentication authentication, HttpSession session)
             throws AcmWidgetException, AcmObjectNotFoundException
     {
 
@@ -65,15 +65,14 @@ public class GetWidgetsByUserRolesAPIController
             throw new AcmObjectNotFoundException("user", null, "Object not found", null);
         }
         List<Widget> retval = null;
-        boolean inserted = false;
         try
         {
-            retval = onlyUniqueValues(getWidgetDao().getAllWidgetsByRoles(roles));
+            retval = dashboardService.onlyUniqueValues(getWidgetDao().getAllWidgetsByRoles(roles));
             raiseGetEvent(authentication, session, retval, true);
             List<Widget> dashboardWidgetsOnly = dashboardPropertyReader.getDashboardWidgetsOnly();
-            return retval.stream().filter(w -> dashboardWidgetsOnly.contains(w)).collect(Collectors.toList());
-        }
-        catch (AcmObjectNotFoundException e)
+            List<Widget> result = retval.stream().filter(w -> dashboardWidgetsOnly.contains(w)).collect(Collectors.toList());
+            return result;
+        } catch (AcmObjectNotFoundException e)
         {
             // If there are no records for widgets into the DB ( when user logs in for the first time) we will read all widgets by user
             // roles from
@@ -88,8 +87,7 @@ public class GetWidgetsByUserRolesAPIController
             }
             raiseGetEvent(authentication, session, retval, true);
             return retval;
-        }
-        catch (Exception e1)
+        } catch (Exception e1)
         {
             if (log.isErrorEnabled())
             {
@@ -99,20 +97,6 @@ public class GetWidgetsByUserRolesAPIController
         }
     }
 
-    private List<Widget> onlyUniqueValues(List<Widget> widgets)
-    {
-        Set<Widget> widgetSet = new HashSet<>();
-        List<Widget> result = new ArrayList<>();
-        for (Widget widget : widgets)
-        {
-            widgetSet.add(widget);
-        }
-        for (Widget widget : widgetSet)
-        {
-            result.add(widget);
-        }
-        return result;
-    }
 
     private List<Widget> addAvailableWidgets(String userId, Authentication authentication)
     {
@@ -166,8 +150,7 @@ public class GetWidgetsByUserRolesAPIController
                         WidgetRole widgetRole;
                         widgetRole = addWidgetRoleIntoDB(widget, role);
                         getEventPublisher().publishWidgetRoleEvent(widgetRole, authentication, true, true);
-                    }
-                    else
+                    } else
                     {
                         WidgetRole widgetRole;
                         widgetRole = addWidgetRoleIntoDB(widget, role);
@@ -243,5 +226,15 @@ public class GetWidgetsByUserRolesAPIController
     public void setDashboardPropertyReader(DashboardPropertyReader dashboardPropertyReader)
     {
         this.dashboardPropertyReader = dashboardPropertyReader;
+    }
+
+    public DashboardService getDashboardService()
+    {
+        return dashboardService;
+    }
+
+    public void setDashboardService(DashboardService dashboardService)
+    {
+        this.dashboardService = dashboardService;
     }
 }
