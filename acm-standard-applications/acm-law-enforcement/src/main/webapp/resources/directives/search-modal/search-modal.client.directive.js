@@ -61,7 +61,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.disableSearchControls = (scope.disableSearch === 'true') ? true : false;
                 scope.searchQuery = '';
                 scope.minSearchLength = 3;
-                if(typeof(scope.config().showFacets) === 'undefined') {
+                if (typeof(scope.config().showFacets) === 'undefined') {
                     scope.config.showFacets = true;
                 }
                 else {
@@ -204,6 +204,9 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                     if (scope.gridOptions) {
                         if (scope.filter) {
                             scope.filters = 'fq=' + scope.filter;
+                        }
+                        if (attrs.startWildcardSearch) {
+                            scope.queryExistingItems();
                         }
                     }
                 }
