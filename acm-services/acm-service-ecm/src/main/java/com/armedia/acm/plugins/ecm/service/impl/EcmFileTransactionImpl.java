@@ -85,6 +85,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         pipelineContext.setFileByteArray(IOUtils.toByteArray(fileInputStream));
         pipelineContext.setOriginalFileName(originalFileName);
         pipelineContext.setContainer(container);
+        pipelineContext.setAuthentication(authentication);
 
         EcmFile ecmFile = new EcmFile();
         ecmFile.setFileMimeType(mimeType);
