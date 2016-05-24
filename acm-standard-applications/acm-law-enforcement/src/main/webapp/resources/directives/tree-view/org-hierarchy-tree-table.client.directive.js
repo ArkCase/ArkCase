@@ -60,7 +60,7 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                         if (!scope.showActions) {
                             hideColumn(3, "#actions", $tdList)
                         } else {
-                            if (node.data.object_sub_type_s != "LDAP_GROUP") {
+                            if (!node.data.isMember && node.data.object_sub_type_s != "LDAP_GROUP") {
                                 $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='addSubgroup($event)' name='addSubgroup' title='Add Subgroup'><i class='fa fa-users'></i></button>" +
                                     "<button class='btn btn-link btn-xs' type='button' ng-click='pickUsersBtn($event)' name='addMembers' title='Add Members'><i class='fa fa-user'></i></button>" +
                                     "<button class='btn btn-link btn-xs' type='button' ng-click='removeGroupBtn($event)' name='removeGroup' title='Remove Group'><i class='fa fa-trash-o'></i></button>")(scope));
@@ -68,7 +68,7 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile',
                                     $tdList.eq(3).append($compile("<button class='btn btn-link btn-xs pull-left' type='button' ng-click='addSupervisor($event)' name='addSupervisor' title='Add/Edit Supervisor'><i class='fa fa-edit'></i></button>")(scope));
                                 }
                             }
-                            if (node.data.isMember == true && node.parent.data.object_sub_type_s != "LDAP_GROUP") {
+                            if (node.data.isMember && node.parent.data.object_sub_type_s != "LDAP_GROUP") {
                                 $tdList.eq(3).append($compile("<button class='btn btn-link btn-xs' type='button' ng-click='removeUserBtn($event)' name='removeMember' title='Remove Member'><i class='fa fa-trash-o'></i></button>")(scope));
                             }
                         }
