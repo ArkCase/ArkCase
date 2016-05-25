@@ -341,7 +341,6 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
             Map<String, String> priveleges = new HashMap<String, String>();
             for (Object keyIter : privilegesKeys)
             {
-                new HashMap<String, String>();
                 priveleges.put((String) keyIter, (String) props.get(keyIter));
             }
 
