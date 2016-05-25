@@ -97,9 +97,13 @@ public class CreateAdHocTaskAPIController
     protected void publishAdHocTaskCreatedEvent(Authentication authentication, HttpSession httpSession, AcmTask created, boolean succeeded)
     {
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
-        String taskEvent = created.getStatus().equalsIgnoreCase(TaskConstants.STATE_CLOSED) ? "complete" : "create";
-        AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(created, taskEvent, authentication.getName(), succeeded, ipAddress);
+        AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(created, "create", authentication.getName(), succeeded, ipAddress);
         getTaskEventPublisher().publishTaskEvent(event);
+        if (created.getStatus().equalsIgnoreCase(TaskConstants.STATE_CLOSED))
+        {
+            event = new AcmApplicationTaskEvent(created, "complete", authentication.getName(), succeeded, ipAddress);
+            getTaskEventPublisher().publishTaskEvent(event);
+        }
     }
 
     public String getObjectsFromSolr(String objectType, String objectName, Authentication authentication, int startRow, int maxRows, String sortParams, String userId)
