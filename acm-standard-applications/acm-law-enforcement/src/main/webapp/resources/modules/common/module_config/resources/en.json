@@ -49,6 +49,7 @@
       "title": "Title",
       "type": "Type",
       "created": "Created",
+      "modified": "Modified",
       "author": "Author",
       "version": "Version",
       "status": "Status"
