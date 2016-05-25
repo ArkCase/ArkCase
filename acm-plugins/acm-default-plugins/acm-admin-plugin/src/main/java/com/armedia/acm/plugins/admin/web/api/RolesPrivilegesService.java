@@ -154,7 +154,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
     public void createRole(String roleName) throws AcmRolesPrivilegesException
     {
 
-        roleName = roleName.replaceAll("\\s+", "_");
+        roleName = roleName.toUpperCase().replaceAll("\\s+", "_");
 
         List<String> roles = loadRoles();
         // Check if new role presents in roles file
