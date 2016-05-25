@@ -1,11 +1,18 @@
 package com.armedia.acm.plugins.admin.web.api;
 
+import static com.armedia.acm.plugins.admin.web.api.RolePrivilegesConstants.PROP_APPLICATION_ROLES;
+import static com.armedia.acm.plugins.admin.web.api.RolePrivilegesConstants.ROLE_PREFIX;
+
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmRole;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.TransactionRequiredException;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,11 +30,15 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+
 /**
  * Created by admin on 6/3/15.
  */
-public class RolesPrivilegesService implements RolePrivilegesConstants
+public class RolesPrivilegesService
 {
+
     private Logger log = LoggerFactory.getLogger(getClass());
     private String applicationRolesFile;
     private String applicationPrivilegesFile;
@@ -35,6 +46,8 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
     private String applicationRolesPrivilegesTemplatesLocation;
     private String applicationRolesPrivilegesTemplateFile;
     private String applicationRolesPrivilegesFile;
+
+    private UserDao userDao;
 
     /**
      * Retrieve list of roles
@@ -78,7 +91,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
     {
         try
         {
-            List<String> roles = new ArrayList();
+            List<String> roles = new ArrayList<>();
             Properties props = new Properties();
             props.load(FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile)));
 
@@ -101,10 +114,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
 
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error(String.format("Can't load privilege's '%s' roles", privilegeName), e);
-            }
+            log.error(String.format("Can't load privilege's '%s' roles", privilegeName), e);
             throw new AcmRolesPrivilegesException(String.format("Can't load privilege's '%s' roles", privilegeName), e);
         }
     }
@@ -112,8 +122,10 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
     /**
      * Update Role Privileges
      *
-     * @param roleName   Updated role name
-     * @param privileges List of role's privileges
+     * @param roleName
+     *            Updated role name
+     * @param privileges
+     *            List of role's privileges
      */
     public void updateRolePrivileges(String roleName, List<String> privileges) throws AcmRolesPrivilegesException
     {
@@ -143,11 +155,19 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
     /**
      * Create new role
      *
-     * @param roleName new role name
+     * @param roleName
+     *            new role name
      * @throws AcmRolesPrivilegesException
      */
+    @Transactional
     public void createRole(String roleName) throws AcmRolesPrivilegesException
     {
+
+        if (!roleName.startsWith(ROLE_PREFIX))
+        {
+            roleName = ROLE_PREFIX + roleName;
+        }
+
         List<String> roles = loadRoles();
         // Check if new role presents in roles file
         boolean rolePresent = false;
@@ -166,6 +186,19 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
         {
             roles.add(roleName);
             saveRoles(roles);
+            AcmRole acmRole = new AcmRole();
+            acmRole.setRoleName(roleName);
+            acmRole.setRoleType("APPLICATION_ROLE");
+            try
+            {
+                userDao.saveAcmRole(acmRole);
+            } catch (IllegalArgumentException | TransactionRequiredException e)
+            {
+                roles.remove(roleName);
+                saveRoles(roles);
+                log.error("Can't save info into the roles file", e);
+                throw new AcmRolesPrivilegesException("Can't save info into the roles file", e);
+            }
         }
     }
 
@@ -217,7 +250,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
             {
                 // Search role name in role-privileges maps
                 String propPrivileges = rolesPrivileges.get(role);
-                List<String> privileges = new LinkedList();
+                List<String> privileges = new LinkedList<>();
                 if (propPrivileges != null && !propPrivileges.isEmpty())
                 {
                     privileges.addAll(Arrays.asList(propPrivileges.split(",")));
@@ -236,14 +269,10 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
             updateRolesPrivilegesConfig();
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Can't add roles to privileges", e);
-            }
+            log.error("Can't add roles to privileges", e);
             throw new AcmRolesPrivilegesException("Can't add roles to privileges", e);
         }
     }
-
 
     /**
      * Remove privileges form list of roles
@@ -261,7 +290,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
             {
                 // Search role name in role-privileges maps
                 String propPrivileges = rolesPrivileges.get(role);
-                List<String> privileges = new LinkedList();
+                List<String> privileges = new LinkedList<>();
                 if (propPrivileges != null && !propPrivileges.isEmpty())
                 {
                     privileges.addAll(Arrays.asList(propPrivileges.split(",")));
@@ -281,10 +310,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
             updateRolesPrivilegesConfig();
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Can't remove privileges from roles", e);
-            }
+            log.error("Can't remove privileges from roles", e);
             throw new AcmRolesPrivilegesException("Can't remove privileges from roles", e);
         }
     }
@@ -304,14 +330,11 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
             props.load(FileUtils.openInputStream(new File(applicationRolesFile)));
 
             String propRoles = props.getProperty(PROP_APPLICATION_ROLES);
-            List<String> roles = new LinkedList(Arrays.asList(propRoles.split(",")));
+            List<String> roles = Arrays.asList(propRoles.split(","));
             return roles;
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Can't load roles file", e);
-            }
+            log.error("Can't load roles file", e);
             throw new AcmRolesPrivilegesException("Can't load roles file", e);
         }
     }
@@ -330,21 +353,17 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
             Properties props = new Properties();
             props.load(FileUtils.openInputStream(new File(applicationPrivilegesFile)));
 
-            Set<Object> privilegesKeys = props.keySet();
+            Set<String> privilegesKeys = props.stringPropertyNames();
             Map<String, String> priveleges = new HashMap<String, String>();
-            for (Object keyIter : privilegesKeys)
+            for (String keyIter : privilegesKeys)
             {
-                Map<String, String> item = new HashMap<String, String>();
-                priveleges.put((String) keyIter, (String) props.get(keyIter));
+                priveleges.put(keyIter, props.getProperty(keyIter));
             }
 
             return priveleges;
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Can't load privileges file", e);
-            }
+            log.error("Can't load privileges file", e);
             throw new AcmRolesPrivilegesException("Can't load privileges file", e);
         }
     }
@@ -352,7 +371,8 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
     /**
      * Save list of roles
      *
-     * @param roles saved roles list
+     * @param roles
+     *            saved roles list
      * @throws AcmRolesPrivilegesException
      */
     private void saveRoles(List<String> roles) throws AcmRolesPrivilegesException
@@ -377,10 +397,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
             }
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Can't save info into the roles file", e);
-            }
+            log.error("Can't save info into the roles file", e);
             throw new AcmRolesPrivilegesException("Can't save info into the roles file", e);
         }
     }
@@ -389,7 +406,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
     {
         try
         {
-            Map<String, String> result = new HashMap();
+            Map<String, String> result = new HashMap<>();
             Properties props = new Properties();
             props.load(FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile)));
             for (Object keyIter : props.keySet())
@@ -401,10 +418,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
 
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Can't load roles privileges file", e);
-            }
+            log.error("Can't load roles privileges file", e);
             throw new AcmRolesPrivilegesException("Can't load roles privileges file", e);
         }
     }
@@ -412,7 +426,8 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
     /**
      * Load specific role's privileges
      *
-     * @param roleName Role name
+     * @param roleName
+     *            Role name
      * @return map of privileges and descriptions
      * @throws AcmRolesPrivilegesException
      */
@@ -431,7 +446,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
             {
                 List<String> privileges = Arrays.asList(propPrivileges.split(","));
 
-                //Get all privileges with descriptions
+                // Get all privileges with descriptions
                 Properties allPrivilegesProps = new Properties();
                 allPrivilegesProps.load(FileUtils.openInputStream(new File(applicationPrivilegesFile)));
 
@@ -445,10 +460,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
 
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error(String.format("Can't load role '%s' privileges from file", roleName), e);
-            }
+            log.error(String.format("Can't load role '%s' privileges from file", roleName), e);
             throw new AcmRolesPrivilegesException(String.format("Can't load role '%s' privileges from file", roleName), e);
         }
     }
@@ -456,8 +468,10 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
     /**
      * Save role's privileges to the file
      *
-     * @param roleName   Role name
-     * @param privileges List of privileges
+     * @param roleName
+     *            Role name
+     * @param privileges
+     *            List of privileges
      */
     private void saveRolePrivileges(String roleName, List<String> privileges) throws AcmRolesPrivilegesException
     {
@@ -479,10 +493,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
             }
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error(String.format("Can't save role '%s' privileges to file", roleName), e);
-            }
+            log.error(String.format("Can't save role '%s' privileges to file", roleName), e);
             throw new AcmRolesPrivilegesException(String.format("Can't save role '%s' privileges to file", roleName), e);
         }
     }
@@ -508,14 +519,10 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
             }
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Can't save roles privileges to file", e);
-            }
+            log.error("Can't save roles privileges to file", e);
             throw new AcmRolesPrivilegesException("Can't save roles privileges to file", e);
         }
     }
-
 
     private void updateRolesPrivilegesConfig() throws AcmRolesPrivilegesException
     {
@@ -549,9 +556,8 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
             Writer writer = null;
             try
             {
-                //writer = new FileWriter(new File(applicationRolesPrivilegesFile));
-                writer = new BufferedWriter(new OutputStreamWriter(
-                        new FileOutputStream(new File(applicationRolesPrivilegesFile)), StandardCharsets.UTF_8));
+                // writer = new FileWriter(new File(applicationRolesPrivilegesFile));
+                writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(applicationRolesPrivilegesFile)), StandardCharsets.UTF_8));
                 tmpl.process(privileges, writer);
             } finally
             {
@@ -563,10 +569,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
 
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Can't update roles privileges config file", e);
-            }
+            log.error("Can't update roles privileges config file", e);
             throw new AcmRolesPrivilegesException("Can't update roles privileges config file", e);
         }
     }
@@ -599,5 +602,15 @@ public class RolesPrivilegesService implements RolePrivilegesConstants
     public void setApplicationRolesPrivilegesFile(String applicationRolesPrivilegesFile)
     {
         this.applicationRolesPrivilegesFile = applicationRolesPrivilegesFile;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 }

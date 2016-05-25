@@ -96,6 +96,9 @@ angular.module('admin').controller('Admin.SelectPrivilegesController', ['$scope'
                         }
                     });
                     $scope.ok = function () {
+                        if (!$scope.roleName.startsWith("ROLE_")) {
+                            $scope.roleName = "ROLE_" + $scope.roleName;
+                        }
                         $modalInstance.close($scope.roleName);
                     };
                     $scope.cancel = function () {
