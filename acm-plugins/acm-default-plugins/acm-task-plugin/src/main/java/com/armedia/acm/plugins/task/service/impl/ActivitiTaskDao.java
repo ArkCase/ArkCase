@@ -202,6 +202,12 @@ public class ActivitiTaskDao implements TaskDao
             getParticipantDao().removeAllOtherParticipantsForObject(TaskConstants.OBJECT_TYPE, in.getTaskId(), in.getParticipants());
             in.setParticipants(getParticipantDao().saveParticipants(in.getParticipants()));
 
+            //Add any candidate Groups from the adhoc task to the activiti task.
+            if (in.getCandidateGroups() != null && in.getCandidateGroups().size() > 0)
+            {
+                getActivitiTaskService().addCandidateGroup(activitiTask.getId(), in.getCandidateGroups().get(0));
+            }
+
             return in;
         } catch (ActivitiException e)
         {
@@ -1258,10 +1264,8 @@ public class ActivitiTaskDao implements TaskDao
             acmTask.setAdhocTask(true);
         }
 
-        // only business process tasks can have a candidate group, so only check if the task is from a process.
-        // also, if the task already has an assignee, we don't care about the candidate group.  So, only
-        // lookup candidate groups for business process tasks with no assignee.
-        if (pid != null && acmTask.getAssignee() == null)
+        //if the task already has an assignee, we don't care about the candidate group.
+        if (acmTask.getAssignee() == null || acmTask.getAssignee().equals(""))
         {
             List<String> candidateGroups = findCandidateGroups(activitiTask.getId());
             acmTask.setCandidateGroups(candidateGroups);
