@@ -19,8 +19,9 @@ angular.module('audit').factory('AuditService', ['$http',
              * @methodOf audit.service:AuditService
              *
              * @description
-             * Audit
+             * Generic audit with provided type
              *
+             * @param {string} auditType audit type
              *
              * @returns {HttpPromise} Future info about generic Audit
              */
