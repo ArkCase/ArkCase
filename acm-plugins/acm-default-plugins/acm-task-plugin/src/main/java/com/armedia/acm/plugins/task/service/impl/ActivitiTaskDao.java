@@ -106,7 +106,9 @@ public class ActivitiTaskDao implements TaskDao
         Task activitiTask = getActivitiTaskService().createTaskQuery().taskId(in.getTaskId().toString()).singleResult();
         if (activitiTask != null)
         {
-            return updateExistingActivitiTask(in, activitiTask);
+            AcmTask acmTask = updateExistingActivitiTask(in, activitiTask);
+            objectChangedNotifier.notifyChange(ACTION_UPDATE, acmTask);
+            return acmTask;
         }
 
         // task must have been completed.  Try finding the historic task; but historical tasks can't be updated, so
