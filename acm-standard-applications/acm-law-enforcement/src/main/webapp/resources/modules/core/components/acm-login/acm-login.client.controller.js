@@ -1,9 +1,9 @@
 'use strict';
 
 var AcmLoginController = ["$q", "$scope", "$document", "$state", "$translate"
-    , "UtilService", "ConfigService", "Util.TimerService", "Authentication", "Acm.LoginService", "Dialog.BootboxService"
+    , "UtilService", "ConfigService", "Util.TimerService", "Authentication", "Acm.LoginService", "Dialog.BootboxService", "$rootScope"
     , function($q, $scope, $document, $state, $translate
-        , Util, ConfigService, UtilTimerService, Authentication, AcmLoginService, Dialog
+        , Util, ConfigService, UtilTimerService, Authentication, AcmLoginService, Dialog, $rootScope
     ) {
         var ctrl = this;
 
