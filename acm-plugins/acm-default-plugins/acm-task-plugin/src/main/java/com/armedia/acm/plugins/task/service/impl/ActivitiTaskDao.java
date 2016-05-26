@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.activiti.AcmTaskEvent;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.data.AcmObjectChangedNotifier;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -61,6 +62,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.armedia.acm.data.AcmObjectEventConstants.ACTION_DELETE;
+import static com.armedia.acm.data.AcmObjectEventConstants.ACTION_INSERT;
+import static com.armedia.acm.data.AcmObjectEventConstants.ACTION_UPDATE;
+
 
 public class ActivitiTaskDao implements TaskDao
 {
@@ -81,6 +86,7 @@ public class ActivitiTaskDao implements TaskDao
     private AcmContainerDao containerFolderDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private TaskEventPublisher taskEventPublisher;
+    private AcmObjectChangedNotifier objectChangedNotifier;
 
     @Override
     @Transactional
@@ -88,7 +94,9 @@ public class ActivitiTaskDao implements TaskDao
     {
         Task activitiTask = getActivitiTaskService().newTask();
 
-        return updateExistingActivitiTask(in, activitiTask);
+        AcmTask acmTask = updateExistingActivitiTask(in, activitiTask);
+        objectChangedNotifier.notifyChange(ACTION_INSERT, acmTask);
+        return acmTask;
     }
 
     @Override
@@ -290,6 +298,7 @@ public class ActivitiTaskDao implements TaskDao
 
         AcmTask retval = acmTaskFromActivitiTask(existingTask);
         retval = completeTask(retval, user, outcomePropertyName, outcomeId);
+
         return retval;
     }
 
@@ -470,8 +479,10 @@ public class ActivitiTaskDao implements TaskDao
                         includeTaskLocalVariables().
                         taskId(String.valueOf(taskId)).
                         singleResult();
-                return acmTaskFromActivitiTask(existingTask);
 
+                AcmTask acmTask = acmTaskFromActivitiTask(existingTask);
+                objectChangedNotifier.notifyChange(ACTION_UPDATE, acmTask);
+                return acmTask;
             } catch (ActivitiException e)
             {
                 log.info("Claiming task failed for task with ID: [{}]", taskId);
@@ -495,7 +506,9 @@ public class ActivitiTaskDao implements TaskDao
                         includeTaskLocalVariables().
                         taskId(String.valueOf(taskId)).
                         singleResult();
-                return acmTaskFromActivitiTask(existingTask);
+                AcmTask acmTask = acmTaskFromActivitiTask(existingTask);
+                objectChangedNotifier.notifyChange(ACTION_UPDATE, acmTask);
+                return acmTask;
             } catch (ActivitiException e)
             {
                 log.info("Unclaiming task failed for task with ID: [{}]", taskId);
@@ -847,7 +860,7 @@ public class ActivitiTaskDao implements TaskDao
             acmTask.setCompleted(true);
             String status = findTaskStatus(hti);
             acmTask.setStatus(status);
-
+            objectChangedNotifier.notifyChange(ACTION_UPDATE, acmTask);
             return acmTask;
         } catch (ActivitiException e)
         {
@@ -872,7 +885,7 @@ public class ActivitiTaskDao implements TaskDao
             acmTask.setCompleted(true);
             String status = findTaskStatus(hti, true);
             acmTask.setStatus(status);
-
+            objectChangedNotifier.notifyChange(ACTION_DELETE, acmTask);
             return acmTask;
         } catch (ActivitiException e)
         {
@@ -1506,5 +1519,10 @@ public class ActivitiTaskDao implements TaskDao
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)
     {
         this.taskEventPublisher = taskEventPublisher;
+    }
+
+    public void setObjectChangedNotifier(AcmObjectChangedNotifier objectChangedNotifier)
+    {
+        this.objectChangedNotifier = objectChangedNotifier;
     }
 }

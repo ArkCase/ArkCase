@@ -226,6 +226,7 @@
                 </entry>
             </map>
         </property>
+        <property name="objectChangedNotifier" ref="acmObjectChangedNotifier"/>
     </bean>
 
     <bean id="taskEventPublisher" class="com.armedia.acm.plugins.task.service.TaskEventPublisher"/>
