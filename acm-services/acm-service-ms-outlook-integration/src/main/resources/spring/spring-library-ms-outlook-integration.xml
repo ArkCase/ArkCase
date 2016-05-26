@@ -39,7 +39,6 @@
         <property name="systemUserEmail" value="${outlook.exchange.system_user_email}" />
         <property name="systemUserPass" value="${outlook.exchange.system_user_email_password}" />
         <property name="systemUserId" value="${outlook.exchange.system_user_id}" />
-        <property name="systemUserSyncEmail" value="${email.user}"/>
         <property name="authenticationTokenService" ref="authenticationTokenService" />
         <property name="authenticationTokenDao" ref="authenticationTokenDao" />
     </bean>

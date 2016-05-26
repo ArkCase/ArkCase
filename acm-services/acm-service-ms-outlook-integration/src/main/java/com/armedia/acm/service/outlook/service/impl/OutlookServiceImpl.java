@@ -55,14 +55,11 @@ import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
-import org.apache.commons.lang3.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
 import java.io.InputStream;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -85,7 +82,6 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     private String systemUserEmail;
     private String systemUserPass;
     private String systemUserId;
-    private String systemUserSyncEmail;
 
     private AuthenticationTokenService authenticationTokenService;
     private AuthenticationTokenDao authenticationTokenDao;
@@ -323,9 +319,6 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getHeader() + "\r\r" +
                 emailWithAttachmentsDTO.getBody() + "\r\r\r" + emailWithAttachmentsDTO.getFooter()));
         emailMessage.getBody().setBodyType(BodyType.Text);
-
-        String systemEmail = URLDecoder.decode(getSystemUserSyncEmail(), CharEncoding.UTF_8);
-        emailMessage.getToRecipients().add(systemEmail);
 
         if (emailWithAttachmentsDTO.getEmailAddresses() != null && !emailWithAttachmentsDTO.getEmailAddresses().isEmpty())
         {
@@ -868,16 +861,6 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     public void setSystemUserId(String systemUserId)
     {
         this.systemUserId = systemUserId;
-    }
-
-    public String getSystemUserSyncEmail()
-    {
-        return systemUserSyncEmail;
-    }
-
-    public void setSystemUserSyncEmail(String systemUserSyncEmail)
-    {
-        this.systemUserSyncEmail = systemUserSyncEmail;
     }
 
     public AuthenticationTokenService getAuthenticationTokenService()
