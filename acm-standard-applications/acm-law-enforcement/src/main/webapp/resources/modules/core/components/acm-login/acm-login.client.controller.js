@@ -1,9 +1,9 @@
 'use strict';
 
 var AcmLoginController = ["$q", "$scope", "$document", "$state", "$translate"
-    , "UtilService", "ConfigService", "Util.TimerService", "Authentication", "Acm.LoginService", "Dialog.BootboxService"
+    , "UtilService", "ConfigService", "Util.TimerService", "Authentication", "Acm.LoginService", "Dialog.BootboxService", "AuditService"
     , function($q, $scope, $document, $state, $translate
-        , Util, ConfigService, UtilTimerService, Authentication, AcmLoginService, Dialog
+        , Util, ConfigService, UtilTimerService, Authentication, AcmLoginService, Dialog, AuditService
     ) {
         var ctrl = this;
 
@@ -55,6 +55,7 @@ var AcmLoginController = ["$q", "$scope", "$document", "$state", "$translate"
         };
 
         ctrl.onIdleDetected = function () {
+            AuditService.genericAudit('com.armedia.acm.session.timeout');
             UtilTimerService.useTimer("AboutToLogout", ctrl.idleConfirm, function() {
                 removeCanceledConfirmDialog();
                 AcmLoginService.logout();
