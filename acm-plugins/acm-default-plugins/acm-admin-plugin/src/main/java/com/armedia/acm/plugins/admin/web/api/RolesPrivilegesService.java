@@ -163,6 +163,7 @@ public class RolesPrivilegesService
     public void createRole(String roleName) throws AcmRolesPrivilegesException
     {
 
+        roleName = roleName.toUpperCase().replaceAll("\\s+", "_");
         if (!roleName.startsWith(ROLE_PREFIX))
         {
             roleName = ROLE_PREFIX + roleName;
