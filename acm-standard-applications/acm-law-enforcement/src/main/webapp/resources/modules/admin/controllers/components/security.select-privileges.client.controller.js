@@ -96,6 +96,7 @@ angular.module('admin').controller('Admin.SelectPrivilegesController', ['$scope'
                         }
                     });
                     $scope.ok = function () {
+                        $scope.roleName = $scope.roleName.toUpperCase().replace(/\s+/g, "_");
                         if (!$scope.roleName.startsWith("ROLE_")) {
                             $scope.roleName = "ROLE_" + $scope.roleName;
                         }
