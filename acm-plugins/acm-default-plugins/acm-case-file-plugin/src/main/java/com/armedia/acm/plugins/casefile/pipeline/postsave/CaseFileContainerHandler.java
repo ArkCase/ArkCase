@@ -30,6 +30,7 @@ public class CaseFileContainerHandler implements PipelineHandler<CaseFile, CaseF
             entity.setContainer(container);
             entity.getContainer().setContainerObjectType(entity.getObjectType());
             entity.getContainer().setContainerObjectTitle(entity.getCaseNumber());
+            entity.getContainer().setContainerObjectTitle(entity.getTitle());
         }
 
         if (entity.getContainer().getFolder() == null)
