@@ -99,7 +99,7 @@ public class CreateAdHocTaskAPIController
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
         AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(created, "create", authentication.getName(), succeeded, ipAddress);
         getTaskEventPublisher().publishTaskEvent(event);
-        if (created.getStatus().equalsIgnoreCase(TaskConstants.STATE_CLOSED))
+        if (created.getStatus() != null && created.getStatus().equalsIgnoreCase(TaskConstants.STATE_CLOSED))
         {
             event = new AcmApplicationTaskEvent(created, "complete", authentication.getName(), succeeded, ipAddress);
             getTaskEventPublisher().publishTaskEvent(event);
