@@ -28,9 +28,15 @@ public class CaseFileContainerHandler implements PipelineHandler<CaseFile, CaseF
         {
             AcmContainer container = new AcmContainer();
             entity.setContainer(container);
+        }
+
+        if (entity.getContainer().getContainerObjectType() == null)
+        {
             entity.getContainer().setContainerObjectType(entity.getObjectType());
+        }
+        if (entity.getContainer().getContainerObjectTitle() == null)
+        {
             entity.getContainer().setContainerObjectTitle(entity.getCaseNumber());
-            entity.getContainer().setContainerObjectTitle(entity.getTitle());
         }
 
         if (entity.getContainer().getFolder() == null)
