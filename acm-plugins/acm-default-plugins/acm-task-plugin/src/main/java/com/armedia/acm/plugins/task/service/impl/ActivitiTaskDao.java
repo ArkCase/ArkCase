@@ -203,9 +203,13 @@ public class ActivitiTaskDao implements TaskDao
             in.setParticipants(getParticipantDao().saveParticipants(in.getParticipants()));
 
             //Add any candidate Groups from the adhoc task to the activiti task.
-            if (in.getCandidateGroups() != null && in.getCandidateGroups().size() > 0)
+            if (in.getCandidateGroups() != null && !in.getCandidateGroups().isEmpty())
             {
-                getActivitiTaskService().addCandidateGroup(activitiTask.getId(), in.getCandidateGroups().get(0));
+                List<String> candidateGroupList = in.getCandidateGroups();
+                for (String group : candidateGroupList)
+                {
+                    getActivitiTaskService().addCandidateGroup(activitiTask.getId(), group);
+                }
             }
 
             return in;
@@ -1265,7 +1269,7 @@ public class ActivitiTaskDao implements TaskDao
         }
 
         //if the task already has an assignee, we don't care about the candidate group.
-        if (acmTask.getAssignee() == null || acmTask.getAssignee().equals(""))
+        if (acmTask.getAssignee() == null || acmTask.getAssignee().isEmpty())
         {
             List<String> candidateGroups = findCandidateGroups(activitiTask.getId());
             acmTask.setCandidateGroups(candidateGroups);
