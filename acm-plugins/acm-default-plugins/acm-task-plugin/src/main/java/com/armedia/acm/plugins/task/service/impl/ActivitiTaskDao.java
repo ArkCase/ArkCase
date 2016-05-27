@@ -209,7 +209,11 @@ public class ActivitiTaskDao implements TaskDao
                 List<String> candidateGroupList = in.getCandidateGroups();
                 for (String group : candidateGroupList)
                 {
-                    getActivitiTaskService().addCandidateGroup(activitiTask.getId(), group);
+                    List<String> candidateGroups = findCandidateGroups(activitiTask.getId());
+                    if (!candidateGroups.contains(group))
+                    {
+                        getActivitiTaskService().addCandidateGroup(activitiTask.getId(), group);
+                    }
                 }
             }
 
