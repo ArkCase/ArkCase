@@ -8,7 +8,4 @@ public interface ParticipantConstants {
     String SUCCESS_DELETE_MSG = "Participant removed successfully";
     String USER_ACTION_DELETE = "DELETE ";
     String USER_ACTION_UPDATE = "ROLE UPDATE";
-    String PARTICIPANT_TYPE_GROUP = "owning group";
-    String SPECIAL_PARTICIPANT_TYPE = "*";
-
 }

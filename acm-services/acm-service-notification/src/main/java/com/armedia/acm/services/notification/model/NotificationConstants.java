@@ -116,6 +116,7 @@ public interface NotificationConstants
 
     String BASE_URL_KEY = "arkcase.url.base";
 
-
+    String PARTICIPANT_TYPE_GROUP = "owning group";
+    String SPECIAL_PARTICIPANT_TYPE = "*";
 
 }

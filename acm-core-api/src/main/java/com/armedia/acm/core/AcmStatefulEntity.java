@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.armedia.acm.core;
 
 /**
@@ -9,7 +6,6 @@ package com.armedia.acm.core;
  */
 public interface AcmStatefulEntity {
 
-	public String getStatus();
-	public void setStatus(String status);
-	
+	String getStatus();
+	void setStatus(String status);
 }

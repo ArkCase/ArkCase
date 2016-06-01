@@ -34,6 +34,12 @@ public class NotificationDao extends AcmAbstractDao<Notification>
         return Notification.class;
     }
 
+    @Override
+    public String getSupportedObjectType()
+    {
+        return NotificationConstants.OBJECT_TYPE;
+    }
+
     /*public Notification findNotificationsById(Long id)
     {
         Query notifications = getEntityManager().createQuery(
