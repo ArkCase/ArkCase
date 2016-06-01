@@ -92,6 +92,7 @@
         <property name="requestsLoggingHeadersEnabled" value="${audit.requests.logging.headers.enabled}"/>
         <property name="requestsLoggingCookiesEnabled" value="${audit.requests.logging.cookies.enabled}"/>
         <property name="requestsLoggingBodyEnabled" value="${audit.requests.logging.body.enabled}"/>
+        <property name="contentTypesToLog" value="#{'${audit.contentTypesToLog}'.split(',')}"/>
     </bean>
 
     <bean id="acmAuditDatabaseListener" class="com.armedia.acm.audit.listeners.AcmAuditDatabaseListener">
