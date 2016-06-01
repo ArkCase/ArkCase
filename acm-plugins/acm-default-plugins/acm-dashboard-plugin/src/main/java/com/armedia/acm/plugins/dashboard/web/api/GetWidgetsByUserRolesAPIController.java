@@ -54,10 +54,8 @@ public class GetWidgetsByUserRolesAPIController
     {
 
         String userId = authentication.getName();
-        if (log.isInfoEnabled())
-        {
-            log.info("Finding widgets for user  based on the user roles'" + userId + "'");
-        }
+
+        log.info("Finding widgets for user: [{}]  based on the user roles'", userId);
 
         List<AcmRole> roles = getUserDao().findAllRolesByUser(userId);
         if (roles == null)
@@ -81,18 +79,13 @@ public class GetWidgetsByUserRolesAPIController
             {
                 retval = addAvailableWidgets(userId, authentication);
             }
-            if (log.isInfoEnabled())
-            {
-                log.info("Roles added for User '" + userId + "' in DASHBOARD context to restrict available widgets.");
-            }
+            log.info("Roles added for user: [{}] in DASHBOARD context to restrict available widgets.", userId);
+
             raiseGetEvent(authentication, session, retval, true);
             return retval;
         } catch (Exception e1)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Exception occurred while raising an event or while reading widgets values");
-            }
+            log.error("Exception occurred while raising an event or while reading widgets values");
             throw new AcmWidgetException("Get widgets by user roles exception", e1);
         }
     }

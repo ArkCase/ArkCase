@@ -41,10 +41,7 @@ public class UserPreferenceService
         AcmUser user;
         if (widgetList.isEmpty())
         {
-            if (log.isWarnEnabled())
-            {
-                log.warn("No widgets are found!");
-            }
+            log.warn("No widgets are found!");
             throw new AcmObjectNotFoundException("User Preference", null, "Widgets not found", null);
         }
         try
@@ -52,10 +49,7 @@ public class UserPreferenceService
             module = getModule(preferredWidgets.getModuleName());
         } catch (AcmObjectNotFoundException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Module with module name " + preferredWidgets.getModuleName() + " is not found" + e.getMessage(), e);
-            }
+            log.error("Module with module name [{}]  is not found! Error msg: [{}]", preferredWidgets.getModuleName(), e.getMessage(), e);
             throw e;
         }
         user = userDao.findByUserId(userId);
@@ -64,20 +58,13 @@ public class UserPreferenceService
             upList = getUserPreferenceListByUserAndModule(user, module);
         } catch (AcmObjectNotFoundException e)
         {
-            if (log.isInfoEnabled())
-            {
-                log.info("No User Preference found for user: " + userId + " and module name: " + module.getModuleName());
-            }
+            log.info("No User Preference found for user: [{}] and module name: [{}]  ", userId, module.getModuleName());
         }
 
         try
         {
             int i = deleteOldUserPreferenceByUserAndModule(user, module);
-
-            if (log.isInfoEnabled())
-            {
-                log.info("Deleted " + i + " UserPreference records");
-            }
+            log.info("Deleted " + i + " UserPreference records");
             if (upList != null)
             {
                 upList.stream().forEach(userPreference -> {
@@ -86,10 +73,7 @@ public class UserPreferenceService
             }
         } catch (Exception e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Error occurred while deleting UserPreference records  " + e.getMessage(), e);
-            }
+            log.error("Error occurred while deleting UserPreference records. Error msg: [{}] ", e.getMessage(), e);
             if (upList != null)
             {
                 upList.stream().forEach(userPreference -> {
@@ -113,10 +97,7 @@ public class UserPreferenceService
     {
         if (!dashboardPropertyReader.getModuleNameList().contains(moduleName))
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Module with name: " + moduleName + " is not found!");
-            }
+            log.error("Module with name: [{}] is not found!", moduleName);
             throw new AcmObjectNotFoundException("User Preference", null, "Module not found!", null);
         }
         PreferredWidgetsDto preferredWidgetsDto = new PreferredWidgetsDto();
@@ -128,10 +109,8 @@ public class UserPreferenceService
             widgetList = userPreferenceDao.getUserPreferredListOfWidgetsByUserAndModuleName(userId, moduleName);
         } catch (AcmObjectNotFoundException e)
         {
-            if (log.isInfoEnabled())
-            {
-                log.info("No preferred widgets for user: " + userId + " and module: " + moduleName);
-            }
+
+            log.info("No preferred widgets for user: [{}] and module: [{}]", userId, moduleName);
             widgetList = getAllAllowedWidgetsForUser(userId);
         }
         widgetList.stream().forEach(widget -> widgetNamesList.add(widget.getWidgetName()));
@@ -148,16 +127,13 @@ public class UserPreferenceService
         try
         {
             result = onlyUniqueValues(widgetDao.getAllWidgetsByRoles(roles));
-            if (log.isInfoEnabled() && !result.isEmpty())
+            if (!result.isEmpty())
             {
-                log.info("All allowed widgets for the user: " + userId + " will be returned!");
+                log.info("All allowed widgets for the user: [{}] will be returned!", userId);
             }
         } catch (AcmObjectNotFoundException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("No widgets are allowed for the user: " + userId + "! " + e.getMessage(), e);
-            }
+            log.error("No widgets are allowed for the user: [{}]. Error msg: [{}] ", userId, e.getMessage(), e);
             throw e;
         }
         return result;
@@ -207,10 +183,7 @@ public class UserPreferenceService
                 widgets.add(w);
             } catch (AcmObjectNotFoundException e)
             {
-                if (log.isWarnEnabled())
-                {
-                    log.warn("Widget with widget name " + widgetName + " is not found!");
-                }
+                log.warn("Widget with widget name: [{}] is not found!", widgetName);
             }
         });
         return widgets;
