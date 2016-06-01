@@ -46,7 +46,7 @@ public class DashboardService
 
     public int setDashboardConfigForUserAndModule(AcmUser user, DashboardDto updateDashboardDto, String moduleName)
     {
-        return getDashboardDao().setDashboardConfigForUserAndModule(user, updateDashboardDto, moduleName);
+        return dashboardDao.setDashboardConfigForUserAndModule(user, updateDashboardDto, moduleName);
     }
 
     public DashboardDto prepareDashboardDto(Dashboard dashboard, boolean inserted, String module)
@@ -95,10 +95,7 @@ public class DashboardService
         {
             // to add <prop key="acm.deafultDashbolard">"some default long dashboard string"</prop> under
             // dashboardPluginProperties bean in spring-library-dashboard.xml and never get here?
-            if (log.isInfoEnabled())
-            {
-                log.info("dashboardPlugin.properties is missing, users will not have dashboard");
-            }
+            log.info("dashboardPlugin.properties is missing, users will not have dashboard");
         }
         return dashboardDao.save(d);
     }
@@ -134,10 +131,7 @@ public class DashboardService
         int retval = setDashboardConfigForUserAndModule(user, dashboardDto, moduleName);
         if (retval != 1)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Unable to update dashboard config because dashboard for user: " + userId + "is not found");
-            }
+            log.error("Unable to update dashboard config because dashboard for user: [{}] is not found", userId);
             throw new AcmObjectNotFoundException("dashboard", null, "Object not found", null);
         }
         return dashboardDao.getDashboardConfigForUserAndModuleName(user, moduleName);

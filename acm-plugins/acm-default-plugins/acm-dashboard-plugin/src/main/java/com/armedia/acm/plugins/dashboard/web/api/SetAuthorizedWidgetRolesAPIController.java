@@ -49,10 +49,8 @@ public class SetAuthorizedWidgetRolesAPIController
     {
         String userId = (String) authentication.getName();
 
-        if (log.isInfoEnabled())
-        {
-            log.info("Updating authorized roles for dashboard widget: '" + updateAuthorizedWidgetRoles.getWidgetName() + "'");
-        }
+        log.info("Updating authorized roles for dashboard widget: [{}]", updateAuthorizedWidgetRoles.getWidgetName());
+
         RolesGroupByWidgetDto result = null;
         try
         {
@@ -74,10 +72,9 @@ public class SetAuthorizedWidgetRolesAPIController
     protected RolesGroupByWidgetDto updateWidgetRolesAuthorization(RolesGroupByWidgetDto rolesGroupByWidgetDto) throws AcmUserActionFailedException
     {
         int i = getWidgetDao().deleteAllWidgetRolesByWidgetName(rolesGroupByWidgetDto.getWidgetName());
-        if (log.isInfoEnabled())
-        {
-            log.info("Deleted " + i + " WidgetRoles");
-        }
+
+        log.info("Deleted " + i + " WidgetRoles");
+
         List<AcmRole> allRoles = getUserDao().findAllRoles();
         List<AcmRole> rolesForUpdate = new ArrayList<>();
 
@@ -98,10 +95,7 @@ public class SetAuthorizedWidgetRolesAPIController
             return rolesGroupByWidgetDto;
         } catch (AcmWidgetException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Updating Authorized Roles for widget " + rolesGroupByWidgetDto.getWidgetName() + "", e);
-            }
+            log.error("Updating Authorized Roles for widget: [{}] ", rolesGroupByWidgetDto.getWidgetName(), e);
             throw new AcmUserActionFailedException("Update Authorized Roles for a Widget", "Dashboard", null, e.getMessage(), e);
         }
     }
