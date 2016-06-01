@@ -34,7 +34,7 @@
                     typeahead-no-results="noResults"
                 >
                 <tags-input
-                	ng-show= "isMultiFilter"
+                	ng-if= "isMultiFilter"
                     ng-model="searchQuery"
                     placeholder="{{searchPlaceholder}}"
                     display-property="tag_token_lcs"
