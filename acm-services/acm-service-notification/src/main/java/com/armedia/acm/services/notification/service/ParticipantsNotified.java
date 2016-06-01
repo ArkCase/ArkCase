@@ -1,27 +1,19 @@
 package com.armedia.acm.services.notification.service;
 
-import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
-import com.armedia.acm.plugins.casefile.model.CaseFile;
-import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
-import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
-import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
-import com.armedia.acm.plugins.task.exception.AcmTaskException;
-import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.model.TaskConstants;
-import com.armedia.acm.plugins.task.service.TaskDao;
+import com.armedia.acm.core.AcmNotifiableEntity;
+import com.armedia.acm.core.AcmNotificationReceiver;
+import com.armedia.acm.data.AcmNotificationDao;
+import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
-import com.armedia.acm.services.participants.model.AcmParticipant;
-import com.armedia.acm.services.participants.model.ParticipantConstants;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,12 +23,9 @@ import java.util.Set;
  */
 public class ParticipantsNotified implements UsersNotified
 {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-    private TaskDao taskDao;
     private UserDao userDao;
     private AcmGroupDao groupDao;
-    private CaseFileDao caseFileDao;
-    private ComplaintDao complaintDao;
+    private AcmDataService acmDataService;
 
     private Notification setNewNotification(Object obj[])
     {
@@ -69,55 +58,34 @@ public class ParticipantsNotified implements UsersNotified
     @Override
     public List<Notification> getNotifications(Object[] notification, Long parentObjectId, String parentObjectType)
     {
-        List<Notification> notifications = new ArrayList<>();
-
-        if (parentObjectType.equals(TaskConstants.OBJECT_TYPE))
-        {
-            try
-            {
-                AcmTask task = getTaskDao().findById(parentObjectId);
-                Set<AcmUser> receivers = filterParticipants(task.getParticipants());
-                notifications.addAll(setNotificationForUsers(notification, receivers));
-            } catch (AcmTaskException e)
-            {
-                logger.warn("Task not found", e);
-            }
-        } else if (parentObjectType.equals(CaseFileConstants.OBJECT_TYPE))
-        {
-            CaseFile caseFile = getCaseFileDao().find(parentObjectId);
-            if (caseFile != null)
-            {
-                Set<AcmUser> receivers = filterParticipants(caseFile.getParticipants());
-                notifications.addAll(setNotificationForUsers(notification, receivers));
-            }
-        } else if (parentObjectType.equals(ComplaintConstants.OBJECT_TYPE))
-        {
-            Complaint complaint = getComplaintDao().find(parentObjectId);
-            if (complaint != null)
-            {
-                Set<AcmUser> receivers = filterParticipants(complaint.getParticipants());
-                notifications.addAll(setNotificationForUsers(notification, receivers));
+        AcmNotificationDao notificationDao = getAcmDataService().getNotificationDaoByObjectType(parentObjectType);
+        if (notificationDao != null){
+            AcmNotifiableEntity entity = notificationDao.findEntity(parentObjectId);
+            if (entity != null){
+                Set<AcmNotificationReceiver> participants = entity.getReceivers();
+                Set<AcmUser> receivers = getUsers(participants);
+                return setNotificationForUsers(notification, receivers);
             }
         }
-        return notifications;
+        return Collections.emptyList();
     }
 
-    private Set<AcmUser> filterParticipants(List<AcmParticipant> participants)
+    private Set<AcmUser> getUsers(Set<AcmNotificationReceiver> participants)
     {
-        // We want only unique receivers
         Set<AcmUser> receivers = new HashSet<>();
-        for (AcmParticipant participant : participants)
+        for (AcmNotificationReceiver participant : participants)
         {
-            if (participant.getParticipantType().equals(ParticipantConstants.PARTICIPANT_TYPE_GROUP))
+            if (participant.getReceiverType().equals(NotificationConstants.PARTICIPANT_TYPE_GROUP))
             {
-                AcmGroup group = getGroupDao().findByName(participant.getParticipantLdapId());
+                AcmGroup group = getGroupDao().findByName(participant.getReceiverLdapId());
                 if (group != null)
                 {
                     receivers.addAll(group.getMembers());
                 }
-            } else if (!participant.getParticipantType().equals(ParticipantConstants.SPECIAL_PARTICIPANT_TYPE))
+
+            } else if (!participant.getReceiverType().equals(NotificationConstants.SPECIAL_PARTICIPANT_TYPE))
             {
-                AcmUser user = getUserDao().findByUserId(participant.getParticipantLdapId());
+                AcmUser user = getUserDao().findByUserId(participant.getReceiverLdapId());
                 if (user != null)
                 {
                     receivers.add(user);
@@ -140,14 +108,14 @@ public class ParticipantsNotified implements UsersNotified
         return notifications;
     }
 
-    public TaskDao getTaskDao()
+    public AcmDataService getAcmDataService()
     {
-        return taskDao;
+        return acmDataService;
     }
 
-    public void setTaskDao(TaskDao taskDao)
+    public void setAcmDataService(AcmDataService acmDataService)
     {
-        this.taskDao = taskDao;
+        this.acmDataService = acmDataService;
     }
 
     public UserDao getUserDao()
@@ -168,25 +136,5 @@ public class ParticipantsNotified implements UsersNotified
     public void setGroupDao(AcmGroupDao groupDao)
     {
         this.groupDao = groupDao;
-    }
-
-    public CaseFileDao getCaseFileDao()
-    {
-        return caseFileDao;
-    }
-
-    public void setCaseFileDao(CaseFileDao caseFileDao)
-    {
-        this.caseFileDao = caseFileDao;
-    }
-
-    public ComplaintDao getComplaintDao()
-    {
-        return complaintDao;
-    }
-
-    public void setComplaintDao(ComplaintDao complaintDao)
-    {
-        this.complaintDao = complaintDao;
     }
 }

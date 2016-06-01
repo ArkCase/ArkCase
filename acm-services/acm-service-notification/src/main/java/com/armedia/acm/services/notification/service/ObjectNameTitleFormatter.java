@@ -1,30 +1,17 @@
 package com.armedia.acm.services.notification.service;
 
-import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
-import com.armedia.acm.plugins.casefile.model.CaseFile;
-import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
-import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
-import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
-import com.armedia.acm.plugins.task.exception.AcmTaskException;
-import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.model.TaskConstants;
-import com.armedia.acm.plugins.task.service.TaskDao;
+import com.armedia.acm.core.AcmNotifiableEntity;
+import com.armedia.acm.data.AcmNotificationDao;
+import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by ncuculova
  */
 public class ObjectNameTitleFormatter implements CustomTitleFormatter
 {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-    private TaskDao taskDao;
-    private CaseFileDao caseFileDao;
-    private ComplaintDao complaintDao;
+    private AcmDataService acmDataService;
 
     @Override
     public String format(Notification notification)
@@ -34,68 +21,34 @@ public class ObjectNameTitleFormatter implements CustomTitleFormatter
         Long parentObjectId = notification.getRelatedObjectId() != null ?
                 notification.getRelatedObjectId() : notification.getParentId();
         String title = notification.getTitle();
-        String titleFormatted = null;
 
-        if (parentObjectType.equals(TaskConstants.OBJECT_TYPE))
+        if (title != null)
         {
-            try
+            AcmNotificationDao dao = getAcmDataService().getNotificationDaoByObjectType(parentObjectType);
+            if (dao != null)
             {
-                AcmTask task = getTaskDao().findById(parentObjectId);
-                titleFormatted = replacePlaceholder(task.getTitle(), title, NotificationConstants.NAME_LABEL);
-            } catch (AcmTaskException e)
-            {
-                logger.warn("Task not found", e);
-            }
-        } else if (parentObjectType.equals(CaseFileConstants.OBJECT_TYPE))
-        {
-            CaseFile caseFile = getCaseFileDao().find(parentObjectId);
-            if (caseFile != null)
-            {
-                titleFormatted = replacePlaceholder(caseFile.getCaseNumber(), title, NotificationConstants.NAME_LABEL);
-            }
-        } else if (parentObjectType.equals(ComplaintConstants.OBJECT_TYPE))
-        {
-            Complaint complaint = getComplaintDao().find(parentObjectId);
-            if (complaint != null)
-            {
-                titleFormatted = replacePlaceholder(complaint.getComplaintNumber(), title, NotificationConstants.NAME_LABEL);
+                AcmNotifiableEntity entity = dao.findEntity(parentObjectId);
+                if (entity != null)
+                {
+                    title = replacePlaceholder(entity.getNotifiableEntityTitle(), title, NotificationConstants.NAME_LABEL);
+                }
             }
         }
-        return titleFormatted;
+        return title;
     }
 
-
-    public String replacePlaceholder (String objectName, String titlePlaceholder, String placeholder){
+    private String replacePlaceholder(String objectName, String titlePlaceholder, String placeholder)
+    {
         return titlePlaceholder.replace(placeholder, objectName);
     }
 
-    public TaskDao getTaskDao()
+    public AcmDataService getAcmDataService()
     {
-        return taskDao;
+        return acmDataService;
     }
 
-    public void setTaskDao(TaskDao taskDao)
+    public void setAcmDataService(AcmDataService acmDataService)
     {
-        this.taskDao = taskDao;
-    }
-
-    public CaseFileDao getCaseFileDao()
-    {
-        return caseFileDao;
-    }
-
-    public void setCaseFileDao(CaseFileDao caseFileDao)
-    {
-        this.caseFileDao = caseFileDao;
-    }
-
-    public ComplaintDao getComplaintDao()
-    {
-        return complaintDao;
-    }
-
-    public void setComplaintDao(ComplaintDao complaintDao)
-    {
-        this.complaintDao = complaintDao;
+        this.acmDataService = acmDataService;
     }
 }

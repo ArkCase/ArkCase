@@ -1,6 +1,8 @@
 package com.armedia.acm.plugins.complaint.dao;
 
+import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.complaint.model.ComplaintListView;
@@ -24,7 +26,8 @@ import java.util.Optional;
 /**
  * Created by armdev on 4/4/14.
  */
-public class ComplaintDao extends AcmAbstractDao<Complaint>
+@Transactional
+public class ComplaintDao extends AcmAbstractDao<Complaint> implements AcmNotificationDao
 {
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
@@ -140,6 +143,18 @@ public class ComplaintDao extends AcmAbstractDao<Complaint>
 
     @Override
     public String getSupportedObjectType()
+    {
+        return ComplaintConstants.OBJECT_TYPE;
+    }
+
+    @Override
+    public AcmNotifiableEntity findEntity(Long id)
+    {
+        return find(id);
+    }
+
+    @Override
+    public String getSupportedNotifiableObjectType()
     {
         return ComplaintConstants.OBJECT_TYPE;
     }

@@ -46,11 +46,9 @@
     <bean id="notificationDao" class="com.armedia.acm.services.notification.dao.NotificationDao"/>
 
     <bean id="participantsNotified" class="com.armedia.acm.services.notification.service.ParticipantsNotified">
-        <property name="taskDao" ref="acmTaskDao"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="groupDao" ref="groupDao"/>
-        <property name="caseFileDao" ref="caseFileDao"/>
-        <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="acmDataService" ref="acmDataService"/>
     </bean>
 
     <bean id="notificationEventPublisher"
@@ -72,9 +70,7 @@
     <bean id="noopExecutor" class="com.armedia.acm.services.notification.service.NoopExecutor"/>
 
     <bean id="objectNameTitleFormatter" class="com.armedia.acm.services.notification.service.ObjectNameTitleFormatter">
-        <property name="taskDao" ref="acmTaskDao"/>
-        <property name="caseFileDao" ref="caseFileDao"/>
-        <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="acmDataService" ref="acmDataService"/>
     </bean>
 
     <bean id="acmNotificationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
