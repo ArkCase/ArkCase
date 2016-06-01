@@ -3,7 +3,7 @@
              xsi:schemaLocation="http://www.zeroturnaround.com http://www.zeroturnaround.com/alderaan/rebel-2_0.xsd">
 
     <classpath>
-        <dir name="${workspace.home}/ACM3/acm-plugins/acm-default-plugins/acm-profile-plugin/target/classes">
+        <dir name="${workspace.home}/ACM3/acm-plugins/acm-plugins-samples/hello-world-plugin/target/classes">
         </dir>
     </classpath>
 

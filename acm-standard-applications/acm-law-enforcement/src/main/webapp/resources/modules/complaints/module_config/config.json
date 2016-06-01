@@ -1177,7 +1177,9 @@
         {
           "name": "tally",
           "displayName": "complaints.comp.cost.table.columns.tally",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellFilter" : "currency",
+          "cellClass" : "text-right"
         },
         {
           "name": "modified",
