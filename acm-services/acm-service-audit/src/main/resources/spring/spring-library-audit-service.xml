@@ -44,6 +44,7 @@
                 <prop key="audit.mule.flows.logging.enabled">false</prop>
                 <prop key="audit.mule.flows.logging.message.enabled">false</prop>
                 <prop key="audit.mule.flows.logging.message.properties.enabled">false</prop>
+                <prop key="audit.contentTypesToLog">application/json,application/atom+xml,text/plain,text/csv,text/html</prop>
             </props>
         </property>
     </bean>
@@ -120,6 +121,7 @@
         <property name="muleFlowsLoggingMessageEnabled" value="${audit.mule.flows.logging.message.enabled}"/>
         <property name="muleFlowsLoggingMessagePropertiesEnabled"
                   value="${audit.mule.flows.logging.message.properties.enabled}"/>
+        <property name="contentTypesToLog" value="#{'${audit.contentTypesToLog}'.split(',')}"/>
     </bean>
 
 </beans>
