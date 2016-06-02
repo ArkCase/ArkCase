@@ -20,6 +20,12 @@ import java.util.stream.Collectors;
  */
 public class CSVReportGenerator extends ReportGenerator
 {
+    public static final String LF = "\n";
+    public static final String CR = "\r";
+    public static final String ENCLOSE_FORMATTER = "\"%s\"";
+    public static final String REPLACE_QUOTES_PATTERN = "\"";
+    public static final String REPLACEMENT_FOR_QUOTES_PATTERN = "\"\"";
+    public static final String QUOTES_CONSTANT = "\"";
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -79,10 +85,11 @@ public class CSVReportGenerator extends ReportGenerator
     }
 
     /**
-     * removes new lines and wrap value if contains SEPARATOR.
+     * Encloses new lines or value if contains SEPARATOR or if value contains ".
+     * for more information: https://tools.ietf.org/html/rfc4180
      *
      * @param value actual value
-     * @return value with removed new lines and wrapped if necessary. If null or empty string returns as is
+     * @return value with enclosed new lines, separator or ". If null or empty string returns as is
      */
     private String purifyForCSV(String value)
     {
@@ -90,12 +97,19 @@ public class CSVReportGenerator extends ReportGenerator
         {
             return value;
         }
-        //replace new lines with whitespace
-        value = value.replaceAll("[\n\r]", SearchConstants.NEW_LINE_REPLACEMENT);
-        //wrap field with "" if contains the separator
-        if (value.contains(SearchConstants.SEPARATOR_COMMA))
+        boolean shouldEnclose = false;
+        //if value contains " should be escaped with another "
+        if (value.contains(QUOTES_CONSTANT))
         {
-            value = String.format("%2$s%1$s%2$s", value, SearchConstants.WRAP_VALUE);
+            value = value.replaceAll(REPLACE_QUOTES_PATTERN, REPLACEMENT_FOR_QUOTES_PATTERN);
+            shouldEnclose = true;
+        }
+
+        //enclose field with "" if contains the separator, LF or CR
+        if (value.contains(SearchConstants.SEPARATOR_COMMA) || value.contains(LF) || value.contains(CR) || shouldEnclose)
+        {
+            //enclose the value
+            return String.format(ENCLOSE_FORMATTER, value);
         }
         return value;
     }
