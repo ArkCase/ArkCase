@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
  */
 public class CSVReportGenerator extends ReportGenerator
 {
-    public static final String LF = "\n";
-    public static final String CR = "\r";
-    public static final String ENCLOSE_FORMATTER = "\"%s\"";
-    public static final String REPLACE_QUOTES_PATTERN = "\"";
-    public static final String REPLACEMENT_FOR_QUOTES_PATTERN = "\"\"";
-    public static final String QUOTES_CONSTANT = "\"";
+    private static final String LF = "\n";
+    private static final String CR = "\r";
+    private static final String ENCLOSE_FORMATTER = "\"%s\"";
+    private static final String REPLACE_QUOTES_PATTERN = "\"";
+    private static final String REPLACEMENT_FOR_QUOTES_PATTERN = "\"\"";
+    private static final String QUOTES_CONSTANT = "\"";
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
