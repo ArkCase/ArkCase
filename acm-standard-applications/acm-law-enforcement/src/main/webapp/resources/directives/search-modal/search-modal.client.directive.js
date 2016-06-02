@@ -47,12 +47,14 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 config: '&',            //& : one way binding (read-only, can return key, value pair via a getter function)
                 modalInstance: '=',     //= : two way binding (read-write both, parent scope and directive's isolated scope have two way binding)
                 searchControl: '=?',    //=? : two way binding but property is optional
-                onItemsSelected: '=?'   //=? : two way binding but property is optional
+                onItemsSelected: '=?',   //=? : two way binding but property is optional
+                onNoDataMessage: '@'
             },
 
             link: function (scope, el, attrs) {
                 //dom operations
                 scope.header = Util.goodValue(scope.header, $translate.instant("common.directive.searchModal.header"));
+                scope.onNoDataMessage = Util.goodValue(scope.onNoDataMessage, $translate.instant("common.directive.searchModal.noData.text"));
                 scope.search = Util.goodValue(scope.search, $translate.instant("common.directive.searchModal.btnSearch.text"));
                 scope.ok = Util.goodValue(scope.ok, $translate.instant("common.directive.searchModal.btnOk.text"));
                 scope.cancel = Util.goodValue(scope.cancel, $translate.instant("common.directive.searchModal.btnCancel.text"));
@@ -89,12 +91,16 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.queryExistingItems = function () {
                     var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start);
                     if (query) {
+                        scope.showNoData = false;
                         SearchService.queryFilteredSearch({
                                 query: query
                             },
                             function (data) {
                                 updateFacets(data.facet_counts.facet_fields);
                                 scope.gridOptions.data = data.response.docs;
+                                if (scope.gridOptions.data.length < 1) {
+                                    scope.showNoData = true;
+                                }
                                 scope.gridOptions.totalItems = data.response.numFound;
                             });
                     }
@@ -215,12 +221,16 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 if (scope.defaultFilter) {
                     var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(scope.searchQuery + '*', scope.defaultFilter, scope.pageSize, 0);
                     if (query) {
+                        scope.showNoData = true;
                         SearchService.queryFilteredSearch({
                                 query: query
                             },
                             function (data) {
                                 updateFacets(data.facet_counts.facet_fields);
                                 scope.gridOptions.data = data.response.docs;
+                                if (scope.gridOptions.data.length < 1) {
+                                    scope.showNoData = true;
+                                }
                                 scope.gridOptions.totalItems = data.response.numFound;
                             });
                     }

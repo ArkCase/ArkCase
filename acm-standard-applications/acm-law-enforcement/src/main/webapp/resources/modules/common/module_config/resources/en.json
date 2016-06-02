@@ -114,7 +114,8 @@
     "btnSearch.text": "Search",
     "btnOk.text": "OK",
     "btnCancel.text": "Cancel",
-    "edtPlaceholder": "Type in to search"
+    "edtPlaceholder": "Type in to search",
+    "noData.text": "No Results"
   },
   "common.directive.coreNotes": {
     "title": "Notes",
