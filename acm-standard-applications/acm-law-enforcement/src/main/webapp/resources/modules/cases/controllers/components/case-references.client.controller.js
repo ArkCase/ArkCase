@@ -63,7 +63,13 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                        return $scope.modalConfig.searchFilter + "&fq=\"Object Id\":NOT " + $scope.currentObjectId;
+                        var filter = $scope.modalConfig.searchFilter + "&fq=\"Object Id\":NOT " + $scope.currentObjectId;
+                        if ($scope.gridOptions.data.length > 0) {
+                            for (var i = 0; i < $scope.gridOptions.data.length; i++) {
+                                filter += "&fq=\"Object Id\":NOT " + $scope.gridOptions.data[i].targetId;
+                            }
+                        }
+                        return filter;
                     },
                     $config: function () {
                         return $scope.modalConfig;
