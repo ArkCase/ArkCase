@@ -2,6 +2,7 @@ package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.search.model.SearchConstants;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -38,6 +39,7 @@ public class FacetedSearchService
      * The searchPlugin.properties must contain a property "search.time.period" which has a list of Solr time
      * specifications, like this:
      * <p>
+     *
      * <pre>
      *     ## Time periods used by the faceted search
      * search.time.period=[{"desc": "Previous Week", "value":"[NOW/DAY-7DAY TO *]"} \
@@ -46,32 +48,34 @@ public class FacetedSearchService
      * ]
      * </pre>
      * <p>
-     * Note, these time periods are stored as a JSON array, where each object in the array contains a
-     * description and a value.  The value must be a valid Solr time interval (see examples above).
+     * Note, these time periods are stored as a JSON array, where each object in the array contains a description and a
+     * value. The value must be a valid Solr time interval (see examples above).
      * </p>
      * <p>
      * The searchPlugin.properties should also have a list of facet specifications, like this:
      * </p>
+     *
      * <pre>
      * facet.date.modified_date_tdt=Modify Date
      * facet.modifier_lcs=Modify User
      * </pre>
      * <p>
-     * For each property that starts with "facet.date", this method will return one query parameter for each
-     * object in the search.time.period JSON array.  Based on the above example search.time.period, the return
-     * value includes query parameters for "Previous Week", "Previous Month" and "Previous Year" for the
-     * Solr field "modified_date_tdt".
+     * For each property that starts with "facet.date", this method will return one query parameter for each object in
+     * the search.time.period JSON array. Based on the above example search.time.period, the return value includes query
+     * parameters for "Previous Week", "Previous Month" and "Previous Year" for the Solr field "modified_date_tdt".
      * </p>
      * <p>
-     * For each property that starts with "facet" (but does not start with "facet.date") this method returns
-     * one query parameter: the facet.field specification for that property.
+     * For each property that starts with "facet" (but does not start with "facet.date") this method returns one query
+     * parameter: the facet.field specification for that property.
      * </p>
      * <p>
      * The return value will be sent to Solr as part of the faceted search query.
      * </p>
      *
-     * @return Facet field specifications suitable for sending to Solr.  Example: <p>
-     * facet.query="{!key='Birth Date, Previous Week'}birth_date_tdt:[NOW/DAY-7DAY TO *]&facet.field={!key='First Name'}first_name_s&facet.field={!key='Last Name'}last_name_s
+     * @return Facet field specifications suitable for sending to Solr. Example:
+     *         <p>
+     *         facet.query="{!key='Birth Date, Previous Week'}birth_date_tdt:[NOW/DAY-7DAY TO
+     *         *]&facet.field={!key='First Name'}first_name_s&facet.field={!key='Last Name'}last_name_s
      */
     public String getFacetKeys()
     {
@@ -97,18 +101,16 @@ public class FacetedSearchService
                             timePeriodJSONObject = timePeriodList.getJSONObject(i);
 
                             String timePeriod = URLEncoder.encode(
-                                    "{" + SearchConstants.SOLR_FACET_NAME_CHANGE_COMMAND + "'" + e.getValue() + ", " +
-                                            timePeriodJSONObject.getString(SearchConstants.TIME_PERIOD_DESCRIPTION) + "'}", SearchConstants.FACETED_SEARCH_ENCODING);
+                                    "{" + SearchConstants.SOLR_FACET_NAME_CHANGE_COMMAND + "'" + e.getValue() + ", " + timePeriodJSONObject.getString(SearchConstants.TIME_PERIOD_DESCRIPTION) + "'}",
+                                    SearchConstants.FACETED_SEARCH_ENCODING);
                             String timePeriodValue = URLEncoder.encode(timePeriodJSONObject.getString(SearchConstants.TIME_PERIOD_VALUE), SearchConstants.FACETED_SEARCH_ENCODING);
                             facetKeys.add(SearchConstants.FACET_QUERY + timePeriod + facetKey + SearchConstants.DOTS_SPLITTER + timePeriodValue);
-
 
                         }
                     } else
                     {
                         String encoded = URLEncoder.encode("{" + SearchConstants.SOLR_FACET_NAME_CHANGE_COMMAND + "'" + e.getValue() + "'}", SearchConstants.FACETED_SEARCH_ENCODING);
                         facetKeys.add(SearchConstants.FACET_FILED + encoded + facetKey);
-
 
                     }
                 }
@@ -125,22 +127,22 @@ public class FacetedSearchService
     /**
      * Convert a filter into a Solr-compatible search query parameter.
      * <p>
-     * If the filter is based on a facet name ("Last Name":Garcia), then the method looks up the corresponding
-     * facet property from searchPlugin.properties, and returns a proper Solr field search:
-     * fq={!field f=last_name_s}Garcia.
+     * If the filter is based on a facet name ("Last Name":Garcia), then the method looks up the corresponding facet
+     * property from searchPlugin.properties, and returns a proper Solr field search: fq={!field f=last_name_s}Garcia.
      * </p>
      * <p>
-     * If the filter is a Solr field name (not a facet name), like this: object_id_s:1401, then the return value
-     * is just the equivalent filter query: fq=object_id_s:1401.
+     * If the filter is a Solr field name (not a facet name), like this: object_id_s:1401, then the return value is just
+     * the equivalent filter query: fq=object_id_s:1401.
      * </p>
      * <p>
-     * In any case the return value is suitable for sending to Solr.  Each such filter will restrict the search
-     * results to only those records that meet the filter query.
+     * In any case the return value is suitable for sending to Solr. Each such filter will restrict the search results
+     * to only those records that meet the filter query.
      * </p>
      *
-     * @param filter A filter term; it can use either a facet name ("Last Name":Garcia), or a Solr field name (object_id_s:1401).
-     *               If the term uses a facet name, the searchPlugin.properties must have a corresponding property
-     *               starting with "facet.", i.e., facet.last_name_s=Last Name.
+     * @param filter
+     *            A filter term; it can use either a facet name ("Last Name":Garcia), or a Solr field name
+     *            (object_id_s:1401). If the term uses a facet name, the searchPlugin.properties must have a
+     *            corresponding property starting with "facet.", i.e., facet.last_name_s=Last Name.
      * @return A suitable Solr filter query clause that can be sent to Solr as is.
      */
     public String buildSolrQuery(String filter)
@@ -163,26 +165,31 @@ public class FacetedSearchService
     }
 
     /**
-     * Take the given query, and add a clause onto that query, such that the query excludes object types that should
-     * not be included in the search results.  Most searches should not include notifications or subscriptions, each
-     * of which have their own special modules.
+     * Take the given query, and add a clause onto that query, such that the query excludes object types that should not
+     * be included in the search results. Most searches should not include notifications or subscriptions, each of which
+     * have their own special modules.
      * <p>
      * The searchPlugin.properties must include a property named objects.to.exclude, like this:
+     *
      * <pre>
      *     objects.to.exclude=NOTIFICATION,SUBSCRIPTION_EVENT
      * </pre>
      * </p>
-     * <p>If this property is empty, no object types will be excluded.</p>
+     * <p>
+     * If this property is empty, no object types will be excluded.
+     * </p>
      * <p>
      * <p>
-     * Note, if the rowQueryParameters parameter indicates the search particularly wants to include an
-     * excluded type, then that type will not be excluded after all.  This allows a user to search precisely for
-     * an object type that would otherwise be excluded.
+     * Note, if the rowQueryParameters parameter indicates the search particularly wants to include an excluded type,
+     * then that type will not be excluded after all. This allows a user to search precisely for an object type that
+     * would otherwise be excluded.
      * </p>
      *
-     * @param query              The query to be updated so as to exclude object types that should not appear.
-     * @param rowQueryParameters Filters for the given query; if the filters specifically include a type in
-     *                           the objects.to.exclude property, then that object type will not be excluded after all.
+     * @param query
+     *            The query to be updated so as to exclude object types that should not appear.
+     * @param rowQueryParameters
+     *            Filters for the given query; if the filters specifically include a type in the objects.to.exclude
+     *            property, then that object type will not be excluded after all.
      * @return Updated query string to exclude any excluded types that are not specifically included by the query.
      */
     public String updateQueryWithExcludedObjects(String query, String rowQueryParameters)
@@ -203,19 +210,21 @@ public class FacetedSearchService
     }
 
     /**
-     * Post-process the Solr search results by replacing occurrences of event type keys with the corresponding
-     * event type name.  Event types are defined in the eventType.properties file like so:
+     * Post-process the Solr search results by replacing occurrences of event type keys with the corresponding event
+     * type name. Event types are defined in the eventType.properties file like so:
      * <p>
+     *
      * <pre>
      * eventType.com.armedia.acm.widget.created=New Widget Created
      * </pre>
      * </p>
      * <p>
-     * Given the above property, every occcurrence of "com.armedia.acm.widget.created" anywhere in the search
-     * results will be replaced by "New Widget Created".
+     * Given the above property, every occcurrence of "com.armedia.acm.widget.created" anywhere in the search results
+     * will be replaced by "New Widget Created".
      * </p>
      *
-     * @param solrResult Search results from Solr.
+     * @param solrResult
+     *            Search results from Solr.
      * @return The same search results, with event type keys replaced with event type names, as described above.
      */
     public String replaceEventTypeName(String solrResult)
@@ -266,8 +275,7 @@ public class FacetedSearchService
         return queryBuilder.toString();
     }
 
-    private void buildFacetFilter(StringBuilder queryBuilder, Map<String, Object> propertyMap, JSONArray jsonArray, String searchKey, String filterSplitByDot)
-            throws UnsupportedEncodingException
+    private void buildFacetFilter(StringBuilder queryBuilder, Map<String, Object> propertyMap, JSONArray jsonArray, String searchKey, String filterSplitByDot) throws UnsupportedEncodingException
     {
         String[] allORFilters = filterSplitByDot.contains("|") ? filterSplitByDot.split(SearchConstants.PIPE_SPLITTER) : null;
 
@@ -312,7 +320,8 @@ public class FacetedSearchService
 
         if (!isFacetFilter)
         {
-            queryBuilder.append(SearchConstants.SOLR_FILTER_QUERY_ATTRIBUTE_NAME).append(searchKey).append(SearchConstants.DOTS_SPLITTER).append(URLEncoder.encode(filterSplitByDot.trim(), SearchConstants.FACETED_SEARCH_ENCODING));
+            queryBuilder.append(SearchConstants.SOLR_FILTER_QUERY_ATTRIBUTE_NAME).append(searchKey).append(SearchConstants.DOTS_SPLITTER)
+                    .append(URLEncoder.encode(filterSplitByDot.trim(), SearchConstants.FACETED_SEARCH_ENCODING));
         }
     }
 
@@ -337,8 +346,8 @@ public class FacetedSearchService
                 if (isFirst)
                 {
                     isFirst = false;
-                    query += URLEncoder.encode(substitutionName + SearchConstants.DOTS_SPLITTER, SearchConstants.FACETED_SEARCH_ENCODING) +
-                            URLEncoder.encode("(" + value, SearchConstants.FACETED_SEARCH_ENCODING);
+                    query += URLEncoder.encode(substitutionName + SearchConstants.DOTS_SPLITTER, SearchConstants.FACETED_SEARCH_ENCODING)
+                            + URLEncoder.encode("(" + value, SearchConstants.FACETED_SEARCH_ENCODING);
                 } else
                 {
                     query += URLEncoder.encode(" OR ", SearchConstants.FACETED_SEARCH_ENCODING) + URLEncoder.encode(value, SearchConstants.FACETED_SEARCH_ENCODING);
@@ -364,13 +373,14 @@ public class FacetedSearchService
                 if (isFirst)
                 {
                     isFirst = false;
-                    // AFDP-1101 The term query parser is not what we want here; we want a field search. so use the field query parser.
-                    query += URLEncoder.encode("_query_:\"{!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING) +
-                            URLEncoder.encode(orFilter.trim() + "\"", SearchConstants.FACETED_SEARCH_ENCODING);
+                    // AFDP-1101 The term query parser is not what we want here; we want a field search. so use the
+                    // field query parser.
+                    query += URLEncoder.encode("_query_:\"{!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING)
+                            + URLEncoder.encode(orFilter.trim() + "\"", SearchConstants.FACETED_SEARCH_ENCODING);
                 } else
                 {
-                    query += URLEncoder.encode(" OR _query_:\"{!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING) +
-                            URLEncoder.encode(orFilter.trim() + "\"", SearchConstants.FACETED_SEARCH_ENCODING);
+                    query += URLEncoder.encode(" OR _query_:\"{!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING)
+                            + URLEncoder.encode(orFilter.trim() + "\"", SearchConstants.FACETED_SEARCH_ENCODING);
                 }
             } catch (UnsupportedEncodingException e1)
             {
@@ -382,13 +392,25 @@ public class FacetedSearchService
 
     private String createRegularANDQuerySubString(String filterKey, String filterValue)
     {
+        boolean isNegation = filterValue.startsWith(SearchConstants.OPERATOR_NOT);
+        if (isNegation)
+        {
+            filterValue = filterValue.replace(SearchConstants.OPERATOR_NOT, "").trim();
+        }
         String query = SearchConstants.SOLR_FILTER_QUERY_ATTRIBUTE_NAME;
         String substitutionName = filterKey.replaceFirst(SearchConstants.FACET_PRE_KEY, "");
         try
         {
-            // AFDP-1101 The term query parser is not what we want here; we want a field search. so use the field query parser.
-            query += URLEncoder.encode("{!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING) +
-                    URLEncoder.encode(filterValue, SearchConstants.FACETED_SEARCH_ENCODING);
+            // AFDP-1101 The term query parser is not what we want here; we want a field search. so use the field query
+            // parser.
+            if (isNegation)
+            {
+                query += URLEncoder.encode("NOT {!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING);
+            } else
+            {
+                query += URLEncoder.encode("{!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING);
+            }
+            query += URLEncoder.encode(filterValue, SearchConstants.FACETED_SEARCH_ENCODING);
         } catch (UnsupportedEncodingException e)
         {
             log.error("Encoding problem occur while building regular AND SOLR query sub-string", e);
@@ -404,19 +426,19 @@ public class FacetedSearchService
         for (int i = 0; i < jsonArray.length(); i++)
         {
             if (jsonArray.getJSONObject(i).getString(SearchConstants.TIME_PERIOD_DESCRIPTION).equals(filterValue.trim()))
+            {
                 value = jsonArray.getJSONObject(i).getString(SearchConstants.TIME_PERIOD_VALUE);
+            }
         }
         try
         {
-            query += URLEncoder.encode(substitutionName + SearchConstants.DOTS_SPLITTER, SearchConstants.FACETED_SEARCH_ENCODING) +
-                    URLEncoder.encode(value, SearchConstants.FACETED_SEARCH_ENCODING);
+            query += URLEncoder.encode(substitutionName + SearchConstants.DOTS_SPLITTER, SearchConstants.FACETED_SEARCH_ENCODING) + URLEncoder.encode(value, SearchConstants.FACETED_SEARCH_ENCODING);
         } catch (UnsupportedEncodingException e)
         {
             log.error("Encoding problem occur while building date AND SOLR query sub-string", e);
         }
         return query;
     }
-
 
     private String[] getObjectsToExclude()
     {
@@ -443,20 +465,17 @@ public class FacetedSearchService
         {
 
             // AFDP-1101: the filter line says, "if the user specifically requested a certain object type, then do not
-            // exclude it after all".  We have to check for the URL-encoded search term... Value sent to SOLR is like:
-            // {!field f=object_type_facet}NOTIFICATION - meaning to include objects of type NOTIFICATION.  The
+            // exclude it after all". We have to check for the URL-encoded search term... Value sent to SOLR is like:
+            // {!field f=object_type_facet}NOTIFICATION - meaning to include objects of type NOTIFICATION. The
             // URL-encoded version of this search term is "%21field+f%3Dobject_type_facet%7DNOTIFICATION"... so that's
             // what we exclude from the results of this stream.
-            subQuery = Arrays.stream(objectsToExcludeArray)
-                    .filter((String element) -> !queryParameters.contains("%21field+f%3D" + SearchConstants.PROPERTY_OBJECT_TYPE_FACET + "%7D" + element))
-                    .map((String element) -> "-" + SearchConstants.PROPERTY_OBJECT_TYPE + ":" + element)
-                    .reduce((String left, String right) -> left + " " + SearchConstants.OPERATOR_AND + " " + right)
+            subQuery = Arrays.stream(objectsToExcludeArray).filter((String element) -> !queryParameters.contains("%21field+f%3D" + SearchConstants.PROPERTY_OBJECT_TYPE_FACET + "%7D" + element))
+                    .map((String element) -> "-" + SearchConstants.PROPERTY_OBJECT_TYPE + ":" + element).reduce((String left, String right) -> left + " " + SearchConstants.OPERATOR_AND + " " + right)
                     .orElse("");
         }
 
         return subQuery;
     }
-
 
     public AcmPlugin getPluginSearch()
     {

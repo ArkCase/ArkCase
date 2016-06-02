@@ -44,7 +44,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
             var targetId = Util.goodMapValue(rowEntity, "targetId");
             gridHelper.showObject(targetType, targetId);
         };
-        
+
         ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
         	$scope.modalConfig = _.find(moduleConfig.components, {id: "referenceSearchGrid"});
             return moduleConfig;
@@ -63,7 +63,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                        return $scope.modalConfig.searchFilter;
+                        return $scope.modalConfig.searchFilter + "&fq=\"Object Id\":NOT " + $scope.currentObjectId;
                     },
                     $config: function () {
                         return $scope.modalConfig;
