@@ -57,6 +57,9 @@
                     <div ng-if="showNoData" style="text-align: center;">
                         {{onNoDataMessage}}
                     </div>
+                    <div ng-if="!showNoData && gridOptions.data.length < 1">
+                        &nbsp;
+                    </div>
                 </div>
             </div>
         </div>
