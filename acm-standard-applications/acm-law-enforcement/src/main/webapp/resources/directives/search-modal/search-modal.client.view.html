@@ -46,18 +46,17 @@
                 </ul>
             </div>
 
-            <div class="modal-right well-sm" ng-if="gridOptions.data">
-                <div ng-if="gridOptions.data.length > 0"
-                     ui-grid="gridOptions"
+            <div class="modal-right well-sm">
+                <div ui-grid="gridOptions"
                      ui-grid-resize-columns
                      ui-grid-pagination
                      ui-grid-selection
                      adjust-table-height="gridOptions.data.length"
                      ui-grid-auto-resize
                      class="grid">
-                </div>
-                <div ng-if="gridOptions.data.length < 1">
-                    {{onNoDataMessage}}
+                    <div ng-if="showNoData" style="text-align: center;">
+                        {{onNoDataMessage}}
+                    </div>
                 </div>
             </div>
         </div>

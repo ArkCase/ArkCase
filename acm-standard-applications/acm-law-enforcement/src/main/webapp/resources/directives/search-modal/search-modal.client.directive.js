@@ -91,12 +91,16 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.queryExistingItems = function () {
                     var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start);
                     if (query) {
+                        scope.showNoData = false;
                         SearchService.queryFilteredSearch({
                                 query: query
                             },
                             function (data) {
                                 updateFacets(data.facet_counts.facet_fields);
                                 scope.gridOptions.data = data.response.docs;
+                                if (scope.gridOptions.data.length < 1) {
+                                    scope.showNoData = true;
+                                }
                                 scope.gridOptions.totalItems = data.response.numFound;
                             });
                     }
@@ -217,12 +221,16 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 if (scope.defaultFilter) {
                     var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(scope.searchQuery + '*', scope.defaultFilter, scope.pageSize, 0);
                     if (query) {
+                        scope.showNoData = true;
                         SearchService.queryFilteredSearch({
                                 query: query
                             },
                             function (data) {
                                 updateFacets(data.facet_counts.facet_fields);
                                 scope.gridOptions.data = data.response.docs;
+                                if (scope.gridOptions.data.length < 1) {
+                                    scope.showNoData = true;
+                                }
                                 scope.gridOptions.totalItems = data.response.numFound;
                             });
                     }
