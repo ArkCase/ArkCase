@@ -116,6 +116,7 @@
           "name": "attachedToObjectName",
           "displayName": "dashboard.widgets.myTasks.table.header.caseId",
           "headerCellFilter": "translate",
+          "cellTemplate": "<a href='javascript:;' ng-click=\"grid.appScope.filterCaseId(row.entity.attachedToObjectName)\">{{COL_FIELD}}<\/a>", 
           "width": 100
         }
       ]

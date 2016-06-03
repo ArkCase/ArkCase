@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dashboard.my-tasks')
-    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
-        function ($scope, $translate, Authentication, DashboardService) {
+    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', '$state',
+        function ($scope, $translate, Authentication, DashboardService, $state) {
 
             var vm = this;
 
@@ -59,6 +59,13 @@ angular.module('dashboard.my-tasks')
                         vm.gridOptions.totalItems = data.length;
                     }
                 );
+            }
+            $scope.filterCaseId=function(input){
+                if(input == null){
+                    return;
+                    }
+                var caseId = input.split('_',2);
+                $state.go('cases.main', {id: caseId[1]});
             }
         }
     ]);
