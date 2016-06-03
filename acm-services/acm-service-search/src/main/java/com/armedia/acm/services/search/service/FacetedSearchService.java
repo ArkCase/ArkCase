@@ -405,7 +405,7 @@ public class FacetedSearchService
             // parser.
             if (isNegation)
             {
-                query += URLEncoder.encode("NOT {!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING);
+                query += URLEncoder.encode(SearchConstants.OPERATOR_NOT + " {!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING);
             } else
             {
                 query += URLEncoder.encode("{!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING);
