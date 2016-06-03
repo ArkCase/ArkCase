@@ -80,6 +80,7 @@ public interface SearchConstants
      */
     String OPERATOR_AND = "AND";
     String OPERATOR_OR = "OR";
+    String OPERATOR_NOT = "NOT";
 
     /**
      * Key in the properties file that hold name of the Solr properties for search objects by query
