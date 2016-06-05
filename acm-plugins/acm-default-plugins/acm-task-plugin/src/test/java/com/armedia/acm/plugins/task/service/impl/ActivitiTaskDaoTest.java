@@ -177,6 +177,11 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTaskQuery.taskId(taskId.toString())).andReturn(mockTaskQuery);
         expect(mockTaskQuery.singleResult()).andReturn(mockTask);
 
+        // find the candidate group
+        expect(mockTaskService.getIdentityLinksForTask(String.valueOf(taskId))).andReturn(Arrays.asList(mockCandidateGroup));
+        expect(mockCandidateGroup.getType()).andReturn(TaskConstants.IDENTITY_LINK_TYPE_CANDIDATE);
+        expect(mockCandidateGroup.getGroupId()).andReturn(candidateGroup).atLeastOnce();
+
         mockTask.setAssignee(assignee);
         mockTask.setPriority(30);
         mockTask.setDueDate(due);
