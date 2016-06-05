@@ -166,9 +166,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @JoinColumn(name = "cm_milestone_object_id", updatable = false, insertable = false)
     private List<AcmMilestone> milestones = new ArrayList<>();
 
-    @Transient
-    private PersonAssociation originator;
-
     @Column(name = "cm_case_restricted_flag", nullable = false)
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = Boolean.FALSE;
@@ -217,11 +214,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
             setStatus("DRAFT");
         }
 
-        if (getOriginator() != null)
-        {
-            personAssociationResolver(getOriginator());
-        }
-
         setupChildPointers();
     }
 
@@ -264,7 +256,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
 
         if (personAssoc.getPerson().getPersonAssociations() == null)
         {
-            personAssoc.getPerson().setPersonAssociations(new ArrayList<PersonAssociation>());
+            personAssoc.getPerson().setPersonAssociations(new ArrayList<>());
         }
 
         personAssoc.getPerson().getPersonAssociations().addAll(Arrays.asList(personAssoc));
@@ -308,15 +300,14 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
 
         if (found != null && found.isPresent())
         {
-            originator = found.get();
+            return found.get();
         }
 
-        return originator;
+        return null;
     }
 
     public void setOriginator(PersonAssociation originator)
     {
-        this.originator = originator;
 
         if (getPersonAssociations() == null)
         {
@@ -355,7 +346,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     public void setCaseNumber(String caseNumber)
     {
         this.caseNumber = caseNumber;
-        setupChildPointers();
     }
 
     public String getCaseType()
@@ -671,7 +661,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
                 + '\'' + ", incidentDate=" + incidentDate + ", created=" + created + ", creator='" + creator + '\'' + ", modified=" + modified + ", modifier='" + modifier + '\'' + ", closed=" + closed
                 + ", disposition='" + disposition + '\'' + ", priority='" + priority + '\'' + ", objectType='" + objectType + '\'' + ", participants=" + participants + ", dueDate=" + dueDate
                 + ", changeCaseStatus=" + changeCaseStatus + ", approvers=" + approvers + ", ecmFolderPath='" + ecmFolderPath + '\'' + ", personAssociations=" + personAssociations + ", milestones="
-                + milestones + ", originator=" + originator + ", restricted=" + restricted + ", childObjects=" + childObjects + ", container=" + container + ", courtroomName='" + courtroomName + '\''
+                + milestones + ", restricted=" + restricted + ", childObjects=" + childObjects + ", container=" + container + ", courtroomName='" + courtroomName + '\''
                 + ", responsibleOrganization='" + responsibleOrganization + '\'' + ", nextCourtDate=" + nextCourtDate + '\'' + ", className='" + className + ", legacySystemId='" + legacySystemId + "'}";
     }
 

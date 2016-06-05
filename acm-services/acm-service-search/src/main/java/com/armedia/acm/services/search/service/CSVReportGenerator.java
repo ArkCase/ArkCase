@@ -2,6 +2,7 @@ package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.services.search.model.ReportGenerator;
 import com.armedia.acm.services.search.model.SearchConstants;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -19,7 +20,12 @@ import java.util.stream.Collectors;
  */
 public class CSVReportGenerator extends ReportGenerator
 {
-
+    private static final String LF = "\n";
+    private static final String CR = "\r";
+    private static final String ENCLOSE_FORMATTER = "\"%s\"";
+    private static final String REPLACE_QUOTES_PATTERN = "\"";
+    private static final String REPLACEMENT_FOR_QUOTES_PATTERN = "\"\"";
+    private static final String QUOTES_CONSTANT = "\"";
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -38,7 +44,7 @@ public class CSVReportGenerator extends ReportGenerator
         {
             if (headerFields.has(field))
             {
-                headers.add(headerFields.getString(field));
+                headers.add(purifyForCSV(headerFields.getString(field)));
             } else
             {
                 log.warn("Field '{}' not found in searchPlugin.properties", field);
@@ -56,7 +62,7 @@ public class CSVReportGenerator extends ReportGenerator
             {
                 if (data.has(field))
                 {
-                    sb.append(data.getString(field));
+                    sb.append(purifyForCSV(data.getString(field)));
                 }
                 sb.append(SearchConstants.SEPARATOR_COMMA);
             }
@@ -76,6 +82,36 @@ public class CSVReportGenerator extends ReportGenerator
     {
         DateFormat formatter = new SimpleDateFormat("YYYY-MM-dd-HH-mm-ss");
         return String.format("%s-%s.csv", name, formatter.format(new Date()));
+    }
+
+    /**
+     * Encloses new lines or value if contains SEPARATOR or if value contains ".
+     * for more information: https://tools.ietf.org/html/rfc4180
+     *
+     * @param value actual value
+     * @return value with enclosed new lines, separator or ". If null or empty string returns as is
+     */
+    private String purifyForCSV(String value)
+    {
+        if (StringUtils.isEmpty(value))
+        {
+            return value;
+        }
+        boolean shouldEnclose = false;
+        //if value contains " should be escaped with another "
+        if (value.contains(QUOTES_CONSTANT))
+        {
+            value = value.replaceAll(REPLACE_QUOTES_PATTERN, REPLACEMENT_FOR_QUOTES_PATTERN);
+            shouldEnclose = true;
+        }
+
+        //enclose field with "" if contains the separator, LF or CR
+        if (value.contains(SearchConstants.SEPARATOR_COMMA) || value.contains(LF) || value.contains(CR) || shouldEnclose)
+        {
+            //enclose the value
+            return String.format(ENCLOSE_FORMATTER, value);
+        }
+        return value;
     }
 
 }

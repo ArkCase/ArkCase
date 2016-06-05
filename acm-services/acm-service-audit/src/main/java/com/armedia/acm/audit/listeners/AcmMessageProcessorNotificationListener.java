@@ -25,6 +25,7 @@ import org.slf4j.MDC;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -44,6 +45,7 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
     private boolean muleFlowsLoggingEnabled;
     private boolean muleFlowsLoggingMessageEnabled;
     private boolean muleFlowsLoggingMessagePropertiesEnabled;
+    private List<String> contentTypesToLog;
 
     @Override
     public void onNotification(MessageProcessorNotification notification)
@@ -162,9 +164,8 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
                 eventProperties.put("Base URL", abstractConnectedProcessor.getBaseUrl().toString());
             }
 
-            // TODO add alll content types that needs to be skipped
             if (isMuleFlowsLoggingMessageEnabled() && ((event.getMessage().getProperty("contentType", PropertyScope.INVOCATION) == null)
-                    || !((String) event.getMessage().getProperty("contentType", PropertyScope.INVOCATION)).contains("application/pdf")))
+                    || getContentTypesToLog().contains(event.getMessage().getProperty("contentType", PropertyScope.INVOCATION))))
             {
                 try
                 {
@@ -249,5 +250,15 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
     public void setMuleFlowsLoggingMessagePropertiesEnabled(boolean muleFlowsLoggingMessagePropertiesEnabled)
     {
         this.muleFlowsLoggingMessagePropertiesEnabled = muleFlowsLoggingMessagePropertiesEnabled;
+    }
+
+    public List<String> getContentTypesToLog()
+    {
+        return contentTypesToLog;
+    }
+
+    public void setContentTypesToLog(List<String> contentTypesToLog)
+    {
+        this.contentTypesToLog = contentTypesToLog;
     }
 }
