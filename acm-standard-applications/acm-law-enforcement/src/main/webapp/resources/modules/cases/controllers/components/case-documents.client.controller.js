@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', '$q'
+angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', '$q', '$timeout'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'DocTreeService'
     , 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService', 'Object.ModelService'
-    , function ($scope, $stateParams, $modal, $q
+    , function ($scope, $stateParams, $modal, $q, $timeout
         , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
         , HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService) {
 
@@ -39,15 +39,19 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
         ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE).then(
             function (formTypes) {
-                $scope.fileTypes = $scope.fileTypes || [];
-                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));
+                $timeout(function() {
+                    $scope.fileTypes = $scope.fileTypes || [];
+                    $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));
+                }, 0);
                 return formTypes;
             }
         );
         ObjectLookupService.getFileTypes().then(
             function (fileTypes) {
-                $scope.fileTypes = $scope.fileTypes || [];
-                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
+                $timeout(function() {
+                    $scope.fileTypes = $scope.fileTypes || [];
+                    $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
+                }, 0);
                 return fileTypes;
             }
         );
@@ -68,17 +72,61 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
         $scope.onInitTree = function(treeControl) {
             $scope.treeControl = treeControl;
-        };
 
-        $scope.onClickRefresh = function () {
-            $scope.treeControl.refreshTree();
-        };
+            //$scope.treeControl.addCommandHandler({
+            //    name: "sample"
+            //    , onAllowCmd: function(nodes) {
+            //        return "disable";
+            //    }
+            //    , onPreCmd: function(nodes, args) {
+            //        console.log("onPreCmd of sample command");
+            //        return false;
+            //    }
+            //    , onPostCmd: function(nodes, args) {
+            //        console.log("onPostCmd of sample command");
+            //    }
+            //    , execute: function(nodes, args) {
+            //        console.log("Possible to add onPreCmd code here");
+            //        var promise = this.prevHandler.execute(nodes, args);
+            //        $q.when(promise).then(function () {
+            //            console.log("Possible to add onPostCmd code here, too");
+            //        });
+            //        console.log("Possible to add onPostCmd code here");
+            //    }
+            //});
 
-        $scope.onAllowCmd = function (cmd, nodes) {
-            if (1 == nodes.length) {
-                var fileObject = nodes[0].data;
-                var lock = fileObject.lock;
-                if ("checkin" == cmd) {
+            $scope.treeControl.addCommandHandler({
+                name: "checkout"
+                , onAllowCmd: function(nodes) {
+                    var fileObject = nodes[0].data;
+                    var lock = fileObject.lock;
+                    if (lock) {
+                        return "disable";
+                    } else {
+                        var df = $q.defer();
+                        //check permission for lock
+                        PermissionsService.getActionPermission('lock', fileObject)
+                            .then(function success(hasPermission) {
+                                    if (hasPermission)
+                                        df.resolve("");
+                                    else
+                                        df.resolve("disable");
+
+                                },
+                                function error() {
+                                    df.resolve("disable");
+                                }
+                            );
+                        return df.promise;
+                    }
+                }
+            });
+
+            $scope.treeControl.addCommandHandler({
+                name: "checkin"
+                , onAllowCmd: function(nodes) {
+                    var fileObject = nodes[0].data;
+                    var lock = fileObject.lock;
                     if (!lock) {
                         //there is no lock so checkin should be disabled
                         return "disable";
@@ -118,7 +166,42 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                         return df.promise;
                     }
                 }
-                else if ("cancelEditing" == cmd) {
+            });
+
+
+            $scope.treeControl.addCommandHandler({
+                name: "editWithWord"
+                , onAllowCmd: function(nodes) {
+                    var fileObject = nodes[0].data;
+                    var lock = fileObject.lock;
+                    if (lock) {
+                        return "disable";
+                    } else {
+                        var df = $q.defer();
+                        //check permission for lock
+                        PermissionsService.getActionPermission('lock', fileObject)
+                            .then(function success(hasPermission) {
+                                    if (hasPermission)
+                                        df.resolve("");
+                                    else
+                                        df.resolve("disable");
+
+                                },
+                                function error() {
+                                    df.resolve("disable");
+                                }
+                            );
+                        return df.promise;
+                    }
+                }
+            });
+
+
+            $scope.treeControl.addCommandHandler({
+                name: "cancelEditing"
+                , onAllowCmd: function(nodes) {
+                    var fileObject = nodes[0].data;
+                    var lock = fileObject.lock;
                     if (!lock) {
                         //there is no lock so cancel is disabled
                         return "disable";
@@ -176,48 +259,14 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                         return df.promise;
                     }
                 }
-                else if ("checkout" == cmd || "editWithWord") {
-                    if (lock) {
-                        return "disable";
-                    } else {
-                        var df = $q.defer();
-                        //check permission for lock
-                        PermissionsService.getActionPermission('lock', fileObject)
-                            .then(function success(hasPermission) {
-                                    if (hasPermission)
-                                        df.resolve("");
-                                    else
-                                        df.resolve("disable");
+            });
 
-                                },
-                                function error() {
-                                    df.resolve("disable");
-                                }
-                            );
-                        return df.promise;
-                    }
-                }
-            }
         };
 
-        $scope.onPreCmd = function (cmd, nodes) {
-            //Usage example
-            //if ("newFolder" == cmd) {
-            //    //custom cmd process
-            //    return false; //false indicates don't do default command in core
-            //}
-            //
-            //if ("newFolder" == cmd) {
-            //    var df = $q.defer();
-            //    $timeout(function() {
-            //        //lengthy custom cmd process
-            //        df.resolve(true); //true to indicate continue with default command execution
-            //    }, 8000);
-            //    return df.promise;
-            //}
+        $scope.onClickRefresh = function () {
+            $scope.treeControl.refreshTree();
         };
 
-        $scope.onPostCmd = function (cmd, nodes) {
-        };
     }
+
 ]);
