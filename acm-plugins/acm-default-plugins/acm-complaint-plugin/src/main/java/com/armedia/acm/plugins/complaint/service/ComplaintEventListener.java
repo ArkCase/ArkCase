@@ -15,9 +15,7 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import org.springframework.context.ApplicationListener;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ComplaintEventListener implements ApplicationListener<AcmObjectHistoryEvent>
 {
@@ -46,7 +44,8 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
                 AcmAssignment acmAssignment = createAcmAssignment(updatedComplaint);
 
-                AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService().getAcmObjectHistory(updatedComplaint.getComplaintId(), ComplaintConstants.OBJECT_TYPE);
+                AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService().
+                        getAcmObjectHistory(updatedComplaint.getComplaintId(), ComplaintConstants.OBJECT_TYPE);
 
                 if (acmObjectHistoryExisting != null)
                 {
