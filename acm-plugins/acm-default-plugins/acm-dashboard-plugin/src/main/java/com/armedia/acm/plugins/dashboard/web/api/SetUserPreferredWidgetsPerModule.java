@@ -36,10 +36,8 @@ public class SetUserPreferredWidgetsPerModule
     {
         String ipAddress = (String) session.getAttribute("acm_ip_address");
         String userId = authentication.getName();
-        if (log.isInfoEnabled())
-        {
-            log.info("Setting widgets for user  based on the user preference for user: " + userId + "'");
-        }
+
+        log.info("Setting widgets for user  based on the user preference for user: [{}]", userId);
         return userPreferenceService.updateUserPreferenceWidgets(userId, in, ipAddress);
 
     }
