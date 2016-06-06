@@ -126,7 +126,10 @@ public class ActivitiTaskDao implements TaskDao
 
     private AcmTask updateExistingActivitiTask(AcmTask in, Task activitiTask) throws AcmTaskException
     {
-        activitiTask.setAssignee(in.getAssignee());
+        if (!in.getAssignee().isEmpty())
+        {
+            activitiTask.setAssignee(in.getAssignee());
+        }
         activitiTask.setOwner(in.getOwner());
         Integer activitiPriority = activitiPriorityFromAcmPriority(in.getPriority());
         activitiTask.setPriority(activitiPriority);
