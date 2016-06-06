@@ -99,7 +99,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
         );
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
-        //var promiseGetUserFullName = LookupService.getUserFullNames();
         var promiseGetUserFullName = LookupService.getUserFullNames();
         promiseGetUserFullName.then(function (userFullNames) {
             DocTree.userFullNames = userFullNames;
@@ -1023,6 +1022,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }}
                         , {name: "created", renderer: function(element, node, columnDef, isReadOnly) {
                             var versionDate = UtilDateService.getDatePart(node.data.created);
+                            $(element).text(versionDate);
+                        }}
+                        , {name: "modified", renderer: function(element, node, columnDef, isReadOnly) {
+                            var versionDate = UtilDateService.getDatePart(node.data.modified);
                             $(element).text(versionDate);
                         }}
                         , {name: "author", renderer: function(element, node, columnDef, isReadOnly) {
@@ -2176,6 +2179,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                                         var ver = {};
                                                         ver.versionTag = replaceInfo.versions[i].versionTag;
                                                         ver.created = replaceInfo.versions[i].created;
+                                                        ver.modified = replaceInfo.versions[i].modified;
                                                         ver.creator = replaceInfo.versions[i].creator;
                                                         folderList.children[replaced].versionList.push(ver);
                                                     }
@@ -3207,6 +3211,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     nodeData.data.objectType = Util.goodValue(folderData.objectType);
                     nodeData.data.created = Util.goodValue(folderData.created);
                     nodeData.data.creator = Util.goodValue(folderData.creator);
+                    nodeData.data.modified = Util.goodValue(folderData.modified);
                     nodeData.data.status = Util.goodValue(folderData.status);
 
                 }
@@ -3226,6 +3231,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     nodeData.data.objectType = Util.goodValue(fileData.objectType);
                     nodeData.data.created = Util.goodValue(fileData.created);
                     nodeData.data.creator = Util.goodValue(fileData.creator);
+                    nodeData.data.modified = Util.goodValue(fileData.modified);
                     nodeData.data.status = Util.goodValue(fileData.status);
                     nodeData.data.category = Util.goodValue(fileData.category);
                     nodeData.data.version = Util.goodValue(fileData.version);
