@@ -73,8 +73,18 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement caseTitleInput;
 	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[1]/div[1]/h4/form/div/span/button[1]")
 	WebElement caseTitleConfirmBtn;
-	
-	
+	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[1]/div/form/div/select")
+	WebElement caseTypeDropDown;
+	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[1]/div/form/div/select/option[10]")
+	WebElement caseTypeDrugTrafficking;
+	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[2]/div[1]/div/form/div/span/button[1]")
+	WebElement editCaseTypeConfirmBtn;
+	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[2]/div/form/div/select")
+	WebElement caseOwningGroupDropDown;
+	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[2]/div/form/div/select/option[5]")
+	WebElement ownigGroupACM_SUPERVISOR_DEV;
+	@FindBy(how=How.XPATH,using="/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[3]/div[2]/div/form/div/span/button[1]")
+	WebElement owningGroupConfirmBtn;
 
 	// case buttons
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[1]")
@@ -2450,5 +2460,49 @@ public class CasesPage extends ArkCaseTestBase {
 		
 		caseTitleConfirmBtn.click();
 	}
+	
+	
+	public void clickCaseTypeDropDown(){
+		
+		caseTypeDropDown.click();	
+	}
+	
+	
+	public void selectCaseTypeDrugTrafficking(){
+		
+		caseTypeDrugTrafficking.click();
+	
+	}
+	
+	public void clickCaseTypeConfirmButton(){
+		
+		editCaseTypeConfirmBtn.click();
+	}
+	
+	public void clickCaseOwningGroupDropDown(){
+		
+		
+		caseOwningGroupDropDown.click();
+		
+	}
+	
+	public void selectOwningGroupACM_SUPERVISOR_DEV(){
+		
+		ownigGroupACM_SUPERVISOR_DEV.click();
+	}
+	
+	
+	
+	public void clickOwningGroupConfirmBtn(){
+		
+		owningGroupConfirmBtn.click();
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 }

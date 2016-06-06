@@ -1547,7 +1547,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 		driver.navigate().refresh();
 		Thread.sleep(8000);
 		tasks.verifyWorkflowTableStatusClosed("Samuel Supervisor");
-		;
 		ArkCaseAuthentication.logOut(driver);
 	}
 
