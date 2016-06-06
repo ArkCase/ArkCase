@@ -26,10 +26,8 @@ public class ModuleEventPublisher implements ApplicationEventPublisherAware
 
     public void publishModuleCreated(Module source, Authentication authentication, String ipAddress, boolean succeeded)
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("Publishing a module name event. New Module Name Created Event.");
-        }
+
+        log.debug("Publishing a module name event. New Module Name Created Event.");
 
         String userId = authentication == null ? ModuleConstants.ON_BOOT_USER_NAME : authentication.getName();
         String ipAddr = ipAddress == null ? ModuleConstants.LOOPBACK_IP_ADDRESS : ipAddress;
