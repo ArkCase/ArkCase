@@ -4,13 +4,17 @@
 package com.armedia.acm.audit.service;
 
 import com.armedia.acm.audit.dao.AuditDao;
+import com.armedia.acm.audit.log4j2.ConfidentialDataConverter;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.systemlogger.ISystemLogger;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author riste.tutureski
@@ -26,6 +30,7 @@ public class AuditServiceImpl implements AuditService
     private boolean systemLogLoggerEnabled;
     private ISystemLogger systemLogger;
     private AuditDao auditDao;
+    private ConfidentialDataConverter confidentialDataConverter = ConfidentialDataConverter.newInstanceWithoutFormatters();
 
     /**
      * This method is called by scheduled task
@@ -48,7 +53,10 @@ public class AuditServiceImpl implements AuditService
     @Override
     public void audit(AuditEvent auditEvent)
     {
-        try {
+        try
+        {
+            convertConfidentialProperties(auditEvent);
+
             if (isDatabaseLoggerEnabled())
             {
                 auditDao.save(auditEvent);
@@ -57,8 +65,25 @@ public class AuditServiceImpl implements AuditService
             {
                 systemLogger.log(auditEvent.toString());
             }
-        } catch (Throwable t) {
+        }
+        catch (Throwable t)
+        {
             LOG.error("Error auditing event.", t);
+        }
+    }
+
+    private void convertConfidentialProperties(AuditEvent auditEvent)
+    {
+        for (Map.Entry<String, String> entry : auditEvent.getEventProperties().entrySet())
+        {
+            // convert by matching the value against the patterns
+            entry.setValue(confidentialDataConverter.convert(entry.getValue()));
+
+            // substitute value if the key contains 'password'
+            if (StringUtils.containsIgnoreCase(entry.getKey(), "password"))
+            {
+                entry.setValue(confidentialDataConverter.getSubstitution());
+            }
         }
     }
 
@@ -130,5 +155,22 @@ public class AuditServiceImpl implements AuditService
     public void setSystemLogLoggerEnabled(boolean systemLogLoggerEnabled)
     {
         this.systemLogLoggerEnabled = systemLogLoggerEnabled;
+    }
+
+    /**
+     * @return the confidentialDataConverter
+     */
+    public ConfidentialDataConverter getConfidentialDataConverter()
+    {
+        return confidentialDataConverter;
+    }
+
+    /**
+     * @param confidentialDataConverter
+     *            the confidentialDataConverter to set
+     */
+    public void setConfidentialDataConverter(ConfidentialDataConverter confidentialDataConverter)
+    {
+        this.confidentialDataConverter = confidentialDataConverter;
     }
 }
