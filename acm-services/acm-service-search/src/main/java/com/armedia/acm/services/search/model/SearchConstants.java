@@ -62,6 +62,8 @@ public interface SearchConstants
      */
     String SOLR_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
+    String ISO_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
     /**
      * Date format for date-only fields, where the UI does not send a time component, but only the date.
      */
