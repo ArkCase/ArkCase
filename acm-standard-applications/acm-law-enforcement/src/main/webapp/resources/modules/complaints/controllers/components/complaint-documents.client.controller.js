@@ -3,11 +3,11 @@
 angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
     , 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication', 'PermissionsService', 'Object.ModelService'
-    , 'DocTreeExt.Case'
+    , 'DocTreeExt.Core'
     , function ($scope, $stateParams, $modal, $q
         , Util, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService
         , HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService
-        , DocTreeExtCase) {
+        , DocTreeExtCore) {
 
 
         Authentication.queryUserInfo().then(
@@ -68,7 +68,10 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
 
         $scope.onInitTree = function(treeControl) {
             $scope.treeControl = treeControl;
-            DocTreeExtCase.onInitTree(treeControl, $scope);
+            DocTreeExtCore.handleCheckout(treeControl, $scope);
+            DocTreeExtCore.handleCheckin(treeControl, $scope);
+            DocTreeExtCore.handleEditWithWord(treeControl, $scope);
+            DocTreeExtCore.handleCancelEditing(treeControl, $scope);
         };
 
 
