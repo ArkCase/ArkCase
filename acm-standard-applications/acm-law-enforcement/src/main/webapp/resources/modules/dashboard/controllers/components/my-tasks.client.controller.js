@@ -60,12 +60,12 @@ angular.module('dashboard.my-tasks')
                     }
                 );
             }
-            $scope.filterCaseId=function(input){
+            vm.filterCaseId=function(input){
                 if(input == null){
                     return;
                     }
                 var caseId = input.split('_',2);
-                $state.go('cases.main', {id: caseId[1]});
+                return caseId[1];
             }
         }
     ]);
