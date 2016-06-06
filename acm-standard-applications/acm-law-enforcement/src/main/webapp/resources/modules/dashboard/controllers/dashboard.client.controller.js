@@ -5,6 +5,7 @@ angular.module('dashboard').controller('DashboardController', ['$scope', '$trans
         $scope.config = ConfigService.getModule({moduleId: 'dashboard'});
         $scope.$on('req-component-config', onConfigRequest);
 
+
         //Update all dashboard widget titles and descriptions
         _.forEach(dashboard.widgets, function (widget, widgetId) {
             widget.title = $translate.instant('dashboard.widgets.' + widgetId + '.title');
@@ -12,19 +13,6 @@ angular.module('dashboard').controller('DashboardController', ['$scope', '$trans
         });
 
         var widgetsPerRoles;
-        DashboardService.getWidgetsPerRoles(function (widgets) {
-            widgetsPerRoles = widgets;
-        });
-
-        $scope.widgetFilter = function (widget, type) {
-            var result = false;
-            angular.forEach(widgetsPerRoles, function (w) {
-                if (type === w.widgetName) {
-                    result = true;
-                }
-            });
-            return result;
-        };
 
         $scope.dashboard = {
             structure: '6-6',
@@ -38,9 +26,24 @@ angular.module('dashboard').controller('DashboardController', ['$scope', '$trans
         DashboardService.getConfig({moduleName: "DASHBOARD"}, function (data) {
             $scope.dashboard.model = angular.fromJson(data.dashboardConfig);
 
+            DashboardService.getWidgetsPerRoles(function (widgets) {
+                widgetsPerRoles = widgets;
+            });
+
+            $scope.widgetFilter = function (widget, type) {
+                var result = false;
+                angular.forEach(widgetsPerRoles, function (w) {
+                    if (type === w.widgetName) {
+                        result = true;
+                    }
+                });
+                return result;
+            };
+
             // Set Dashboard custom title
             $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
         });
+
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {
             DashboardService.saveConfig({
