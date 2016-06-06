@@ -319,6 +319,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getHeader() + "\r\r" +
                 emailWithAttachmentsDTO.getBody() + "\r\r\r" + emailWithAttachmentsDTO.getFooter()));
         emailMessage.getBody().setBodyType(BodyType.Text);
+        emailMessage.getToRecipients().add(systemUserEmail);
 
         if (emailWithAttachmentsDTO.getEmailAddresses() != null && !emailWithAttachmentsDTO.getEmailAddresses().isEmpty())
         {
