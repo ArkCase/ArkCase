@@ -2,10 +2,10 @@
 
 angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', '$q', '$timeout'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'DocTreeService'
-    , 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService', 'Object.ModelService', 'DocTreeExt.Case'
+    , 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService', 'Object.ModelService', 'DocTreeExt.Core'
     , function ($scope, $stateParams, $modal, $q, $timeout
         , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
-        , HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtCase) {
+        , HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtCore) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -72,8 +72,10 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
         $scope.onInitTree = function(treeControl) {
             $scope.treeControl = treeControl;
-
-            DocTreeExtCase.onInitTree(treeControl, $scope);
+            DocTreeExtCore.handleCheckout(treeControl, $scope);
+            DocTreeExtCore.handleCheckin(treeControl, $scope);
+            DocTreeExtCore.handleEditWithWord(treeControl, $scope);
+            DocTreeExtCore.handleCancelEditing(treeControl, $scope);
 
             //$scope.treeControl.addCommandHandler({
             //    name: "sample"

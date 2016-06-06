@@ -1721,24 +1721,37 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         //    }];
                     }
 
+                    //Check to see if there is a global handling, if there is, it would override specific handler
+                    var globalHandler = DocTree.Command.findHandler("global");
+                    var onAllowCmdGlobal = Util.goodMapValue(globalHandler, "onAllowCmd", null);
+                    var allowGlobal;
+                    if (onAllowCmdGlobal) {
+                        allowGlobal = onAllowCmdGlobal(nodes);
+                    }
+
                     _.each(menu, function (item) {
                         var allow = true;
-                        if (item.cmd) {
-                            var found = DocTree.Command.findHandler(item.cmd);
-                            var onAllowCmd = Util.goodMapValue(found, "onAllowCmd", null);
-                            if (onAllowCmd) {
-                                allow = onAllowCmd(nodes);
-                            }
+                        if (undefined !== allowGlobal) {
+                            allow = allowGlobal;
 
-                            //xxxx
-                            //backward compatibility
-                            else if (DocTree.oldCode) {
-                                if (DocTree.Command.onAllowCmd) {
-                                    allow = DocTree.Command.onAllowCmd(item.cmd, nodes);
+                        } else {
+                            if (item.cmd) {
+                                var found = DocTree.Command.findHandler(item.cmd);
+                                var onAllowCmd = Util.goodMapValue(found, "onAllowCmd", null);
+                                if (onAllowCmd) {
+                                    allow = onAllowCmd(nodes);
                                 }
                             }
-                            //////
                         }
+
+                        //xxxx
+                        //backward compatibility
+                        if (DocTree.oldCode) {
+                            if (DocTree.Command.onAllowCmd) {
+                                allow = DocTree.Command.onAllowCmd(item.cmd, nodes);
+                            }
+                        }
+                        //////
 
                         promiseArray.push(allow);
                         $q.when(allow).then(function (allowResult) {

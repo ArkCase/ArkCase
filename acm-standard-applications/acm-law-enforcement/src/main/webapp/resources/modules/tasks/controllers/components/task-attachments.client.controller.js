@@ -58,7 +58,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         $scope.onInitTree = function(treeControl) {
             $scope.treeControl = treeControl;
 
-            $scope.treeControl.addCommandHandler({
+            treeControl.addCommandHandler({
                 name: "remove"
                 , onAllowCmd: function(nodes) {
                     var len = 0;

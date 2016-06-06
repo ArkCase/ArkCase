@@ -2,15 +2,15 @@
 
 /**
  * @ngdoc service
- * @name services:DocTreeExt.Case
+ * @name services:DocTreeExt.Core
  *
  * @description
  *
- * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree-ext-case.client.service.js directives/doc-tree/doc-tree-ext-case.client.service.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree-ext-core.client.service.js directives/doc-tree/doc-tree-ext-core.client.service.js}
  *
  * DocTree extension for Case. The extension is also used by Complaint
  */
-angular.module('services').factory('DocTreeExt.Case', ['$q', 'UtilService', 'PermissionsService',
+angular.module('services').factory('DocTreeExt.Core', ['$q', 'UtilService', 'PermissionsService',
     function ($q, Util, PermissionsService) {
         var Service = {};
 
@@ -18,7 +18,7 @@ angular.module('services').factory('DocTreeExt.Case', ['$q', 'UtilService', 'Per
         /**
          * @ngdoc method
          * @name onInitTree
-         * @methodOf services:DocTreeExt.Case
+         * @methodOf services:DocTreeExt.Core
          *
          * @description
          * Initialize DocTree extension for Case and Complaint
@@ -27,7 +27,26 @@ angular.module('services').factory('DocTreeExt.Case', ['$q', 'UtilService', 'Per
          * @param {Object} scope  Angular scope
          *
          */
-        Service.onInitTree = function (treeControl, scope) {
+        //Service.onInitTree = function (treeControl, scope) {
+        //    Service.handleCheckout(treeControl, scope);
+        //    Service.handleCheckin(treeControl, scope);
+        //    Service.handleEditWithWord(treeControl, scope);
+        //    Service.handleCancelEditing(treeControl, scope);
+        //};
+
+        /**
+         * @ngdoc method
+         * @name handleCheckout
+         * @methodOf services:DocTreeExt.Core
+         *
+         * @description
+         * Add command handler for "checkout" to DocTree extension
+         *
+         * @param {Object} treeControl  Interface of functions to DocTree
+         * @param {Object} scope  Angular scope
+         *
+         */
+        Service.handleCheckout = function (treeControl, scope) {
             treeControl.addCommandHandler({
                 name: "checkout"
                 , onAllowCmd: function(nodes) {
@@ -54,7 +73,22 @@ angular.module('services').factory('DocTreeExt.Case', ['$q', 'UtilService', 'Per
                     }
                 }
             });
+        };
 
+
+        /**
+         * @ngdoc method
+         * @name handleCheckin
+         * @methodOf services:DocTreeExt.Core
+         *
+         * @description
+         * Add command handler for "checkin" to DocTree extension
+         *
+         * @param {Object} treeControl  Interface of functions to DocTree
+         * @param {Object} scope  Angular scope
+         *
+         */
+        Service.handleCheckin = function (treeControl, scope) {
             treeControl.addCommandHandler({
                 name: "checkin"
                 , onAllowCmd: function(nodes) {
@@ -100,8 +134,22 @@ angular.module('services').factory('DocTreeExt.Case', ['$q', 'UtilService', 'Per
                     }
                 }
             });
+        };
 
 
+        /**
+         * @ngdoc method
+         * @name handleEditWithWord
+         * @methodOf services:DocTreeExt.Core
+         *
+         * @description
+         * Add command handler for "editWithWord" to DocTree extension
+         *
+         * @param {Object} treeControl  Interface of functions to DocTree
+         * @param {Object} scope  Angular scope
+         *
+         */
+        Service.handleEditWithWord = function (treeControl, scope) {
             treeControl.addCommandHandler({
                 name: "editWithWord"
                 , onAllowCmd: function(nodes) {
@@ -128,8 +176,22 @@ angular.module('services').factory('DocTreeExt.Case', ['$q', 'UtilService', 'Per
                     }
                 }
             });
+        };
 
 
+        /**
+         * @ngdoc method
+         * @name handleCancelEditing
+         * @methodOf services:DocTreeExt.Core
+         *
+         * @description
+         * Add command handler for "cancelEditing" to DocTree extension
+         *
+         * @param {Object} treeControl  Interface of functions to DocTree
+         * @param {Object} scope  Angular scope
+         *
+         */
+        Service.handleCancelEditing = function (treeControl, scope) {
             treeControl.addCommandHandler({
                 name: "cancelEditing"
                 , onAllowCmd: function(nodes) {
