@@ -218,9 +218,11 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
          *
          * @param {String} name  Config name
          *
+         * @param {Array} arrBlackListPropertyNames if provided an array with property names to be omitted
+         *
          * @returns {Object} Promise
          */
-        Service.getConfig = function (name) {
+        Service.getConfig = function (name, arrBlackListPropertyNames) {
             var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
             var configMap = cacheConfigMap.get();
             var config = Util.goodMapValue(configMap, name, null);
@@ -231,6 +233,9 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                 , onSuccess: function (data) {
                     if (Service.validateConfig(data, name)) {
                         config = Util.omitNg(data);
+                        if (arrBlackListPropertyNames) {
+                            config = Util.deepOmit(data, arrBlackListPropertyNames);
+                        }
                         configMap = configMap || {};
                         configMap[name] = config;
                         cacheConfigMap.set(configMap);
