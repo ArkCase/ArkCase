@@ -37,8 +37,7 @@
  <example>
  <file name="index.html">
  <doc-tree object-type="objectType" object-id="objectId" tree-control="treeControl" file-types="fileTypes"
- upload-form="uploadForm" tree-config="treeConfig" object-info="objectInfo"
- on-allow-cmd="onAllowCmd" on-pre-cmd="onPreCmd" on-post-cmd="onPostCmd">
+ upload-form="uploadForm" tree-config="treeConfig" object-info="objectInfo">
  </doc-tree>
  </file>
  <file name="app.js">
@@ -230,7 +229,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 var name = data.input.val();
 
                                 if (DocTree.findSiblingNodeByName(data.node, name)) {
-                                    //fixme: Util.Dialog.alert($.t("doctree:error.duplicate-name"));
                                     data.node.remove();
                                     return false;
                                 }
@@ -2584,7 +2582,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 dfd.resolve(moveFileInfo);
                             }
                             , function (errorData) {
-                                //fixme: App.View.MessageBoard.show($.t("doctree:error.move-file"), Util.goodValue(response.errorMsg));
                                 DocTree.markNodeError(frNode);
                                 dfd.reject();
                             }
@@ -2669,7 +2666,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     dfd.resolve(deletedFolderId);
                                 }
                                 , function (errorData) {
-                                    //fixme: App.View.MessageBoard.show($.t("doctree:error.delete-folder"), Util.goodValue(response.errorMsg));
                                     DocTree.markNodeError(node);
                                     dfd.reject();
                                 }
@@ -2724,7 +2720,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     dfd.resolve(deletedFileId);
                                 }
                                 , function (errorData) {
-                                    //fixme: App.View.MessageBoard.show($.t("doctree:error.delete-file"), Util.goodValue(response.errorMsg));
                                     DocTree.markNodeError(node);
                                     dfd.reject();
                                 }
@@ -2800,7 +2795,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     dfd.resolve(renamedInfo);
                                 }
                                 , function (errorData) {
-                                    //fixme: App.View.MessageBoard.show($.t("doctree:error.rename-folder") + folderName, Util.goodValue(response.errorMsg));
                                     DocTree.markNodeError(node);
                                     dfd.reject();
                                 }
@@ -2850,7 +2844,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     dfd.resolve(renamedInfo);
                                 }
                                 , function (errorData) {
-                                    //fixme: App.View.MessageBoard.show($.t("doctree:error.rename-file") + fileName, Util.goodValue(response.errorMsg));
                                     DocTree.markNodeError(node);
                                     dfd.reject();
                                 }
@@ -2904,7 +2897,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     dfd.resolve();
                                 }
                                 , function (errorData) {
-                                    //fixme: App.View.MessageBoard.show($.t("doctree:error.set-version"), Util.goodValue(response.errorMsg));
                                     DocTree.markNodeError(fileNode);
                                     dfd.reject();
                                 }
