@@ -14,6 +14,26 @@ public class ComplaintPipelineContext extends AbstractPipelineContext
      */
     private Authentication authentication;
 
+    /**
+     * Flag showing whether new complaint is created.
+     */
+    private boolean newComplaint;
+
+    /**
+     * IP Address.
+     */
+    private String ipAddress;
+
+    public String getIpAddress()
+    {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress)
+    {
+        this.ipAddress = ipAddress;
+    }
+
     public Authentication getAuthentication()
     {
         return authentication;
@@ -22,5 +42,15 @@ public class ComplaintPipelineContext extends AbstractPipelineContext
     public void setAuthentication(Authentication authentication)
     {
         this.authentication = authentication;
+    }
+
+    public boolean isNewComplaint()
+    {
+        return newComplaint;
+    }
+
+    public void setNewComplaint(boolean newComplaint)
+    {
+        this.newComplaint = newComplaint;
     }
 }

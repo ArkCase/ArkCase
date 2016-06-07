@@ -8,6 +8,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+import microsoft.exchange.webservices.data.enumeration.DeleteMode;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,19 +20,17 @@ import org.slf4j.LoggerFactory;
 public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFilePipelineContext>
 {
     /**
+     * Logger instance.
+     */
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    /**
      * Auto create folder for case file flag.
      */
     private boolean autoCreateFolderForCaseFile;
-
     /**
      * Outlook calendar service
      */
     private OutlookContainerCalendarService outlookContainerCalendarService;
-
-    /**
-     * Logger instance.
-     */
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
@@ -52,13 +51,14 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
         }
         log.trace("CaseFile exiting CaseFileOutlookHandler : [{}]", entity);
 
-
     }
 
     @Override
     public void rollback(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
-        // TODO: delete Outlook/Calendar folder
+        log.info("Delete created calendar folder for '{}'", entity.getCaseNumber());
+        getOutlookContainerCalendarService().deleteFolder(entity.getContainer().getContainerObjectId(),
+                entity.getContainer().getCalendarFolderId(), DeleteMode.MoveToDeletedItems);
     }
 
     private void createOutlookFolder(CaseFile caseFile, CaseFilePipelineContext pipelineContext)
