@@ -23,10 +23,9 @@ import java.util.stream.Collectors;
  */
 public class FacetedSearchService
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AcmPlugin pluginSearch;
     private AcmPlugin pluginEventType;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     public String buildHiddenDocumentsFilter()
     {
@@ -392,7 +391,7 @@ public class FacetedSearchService
 
     private String createRegularANDQuerySubString(String filterKey, String filterValue)
     {
-        boolean isNegation = filterValue.startsWith(SearchConstants.OPERATOR_NOT);
+        boolean isNegation = filterValue.startsWith(SearchConstants.OPERATOR_NOT + SearchConstants.SEPARATOR_SPACE);
         if (isNegation)
         {
             filterValue = filterValue.replace(SearchConstants.OPERATOR_NOT, "").trim();
