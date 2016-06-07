@@ -8,31 +8,11 @@
  *
  * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree-ext-core.client.service.js directives/doc-tree/doc-tree-ext-core.client.service.js}
  *
- * DocTree extension for Case. The extension is also used by Complaint
+ * DocTree common extensions for core. Currently, a DocTree extension can add or customize tree table column or/and menu command.
  */
 angular.module('services').factory('DocTreeExt.Core', ['$q', 'UtilService', 'PermissionsService',
     function ($q, Util, PermissionsService) {
         var Service = {};
-
-
-        /**
-         * @ngdoc method
-         * @name onInitTree
-         * @methodOf services:DocTreeExt.Core
-         *
-         * @description
-         * Initialize DocTree extension for Case and Complaint
-         *
-         * @param {Object} treeControl  Interface of functions to DocTree
-         * @param {Object} scope  Angular scope
-         *
-         */
-        //Service.onInitTree = function (treeControl, scope) {
-        //    Service.handleCheckout(treeControl, scope);
-        //    Service.handleCheckin(treeControl, scope);
-        //    Service.handleEditWithWord(treeControl, scope);
-        //    Service.handleCancelEditing(treeControl, scope);
-        //};
 
         /**
          * @ngdoc method
