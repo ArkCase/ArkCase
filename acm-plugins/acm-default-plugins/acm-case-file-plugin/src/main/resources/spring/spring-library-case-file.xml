@@ -36,6 +36,8 @@
         <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
         <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
+        <property name="calendarService" ref="outlookContainerService"/>
+        <property name="shouldDeleteCalendarFolder" value="${complaint.delete_calendar_folder_after_complaint_closed}"/>
     </bean>
 
     <bean id="changeCaseFileStateService" class="com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService">
