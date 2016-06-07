@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.task.model;
 
+import com.armedia.acm.core.AcmNotifiableEntity;
+import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -13,9 +15,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystemEntity
+public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystemEntity, AcmNotifiableEntity
 {
     private static final long serialVersionUID = 8087833770464474147L;
 
@@ -58,6 +62,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     private List<TaskOutcome> availableOutcomes = new ArrayList<>();
     private TaskOutcome taskOutcome;
     private List<AcmParticipant> participants;
+    private Set<AcmNotificationReceiver> receivers = new HashSet<>();
 
     private AcmContainer container;
 
@@ -539,5 +544,23 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     public void setLegacySystemId(String legacySystemId)
     {
         this.legacySystemId = legacySystemId;
+    }
+
+    @Override
+    @JsonIgnore
+    public Set<AcmNotificationReceiver> getReceivers()
+    {
+        if(participants != null)
+        {
+            receivers.addAll(participants);
+        }
+        return receivers;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getNotifiableEntityTitle()
+    {
+        return title;
     }
 }
