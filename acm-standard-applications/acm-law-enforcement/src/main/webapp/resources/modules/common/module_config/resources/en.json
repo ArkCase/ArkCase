@@ -205,6 +205,6 @@
     "modal.dialogGroupPicker.header": "Search Group"
   },
   "common.comp.acmLogin": {
-    "confirmLogout": "For your protection, application is about to logout. Press Cancel to stay log in."
+    "confirmLogout": "For your protection, application is about to logout. Click Cancel to stay logged in."
   }
 }
