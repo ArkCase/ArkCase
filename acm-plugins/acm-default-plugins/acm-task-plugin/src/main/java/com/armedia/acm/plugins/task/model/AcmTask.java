@@ -23,7 +23,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     private String priority;
     private String title;
 
-    @JsonFormat(pattern = SearchConstants.ISO_DATE_TIME_FORMAT)
+    @JsonFormat(pattern = SearchConstants.ISO_DATE_FORMAT)
     private Date dueDate;
     private String attachedToObjectType;
     private String attachedToObjectName;
