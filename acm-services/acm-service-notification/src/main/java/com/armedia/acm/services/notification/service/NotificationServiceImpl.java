@@ -95,7 +95,7 @@ public class NotificationServiceImpl implements NotificationService
         do
         {
             Map<String, Object> properties = getJpaProperties(rule, lastRun);
-            notifications = getNotificationDao().executeQuery(properties, firstResult, maxResult, rule.getJpaQuery(), rule.getQueryType());
+            notifications = getNotificationDao().executeQuery(properties, firstResult, maxResult, rule);
 
             if (!notifications.isEmpty())
             {
