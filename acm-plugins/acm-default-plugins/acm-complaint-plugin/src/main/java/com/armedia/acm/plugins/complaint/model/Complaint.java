@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.complaint.model;
 
+import com.armedia.acm.core.AcmNotifiableEntity;
+import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
@@ -49,8 +51,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by armdev on 4/4/14.
@@ -60,7 +64,8 @@ import java.util.Optional;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.complaint.model.Complaint")
-public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity
+public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity,
+        AcmLegacySystemEntity, AcmNotifiableEntity
 {
     private static final long serialVersionUID = -1154137631399833851L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -149,6 +154,9 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({ @JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
     private List<AcmParticipant> participants = new ArrayList<>();
+
+    @Transient
+    private Set<AcmNotificationReceiver> receivers = new HashSet<>();
 
     @Column(name = "cm_due_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -592,5 +600,21 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     public void setLegacySystemId(String legacySystemId)
     {
         this.legacySystemId = legacySystemId;
+    }
+
+
+    @Override
+    @JsonIgnore
+    public Set<AcmNotificationReceiver> getReceivers()
+    {
+        receivers.addAll(participants);
+        return receivers;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getNotifiableEntityTitle()
+    {
+        return complaintNumber;
     }
 }

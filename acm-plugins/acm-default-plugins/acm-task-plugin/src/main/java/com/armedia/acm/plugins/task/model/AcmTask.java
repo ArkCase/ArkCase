@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.task.model;
 
+import com.armedia.acm.core.AcmNotifiableEntity;
+import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -13,9 +15,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystemEntity
+public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystemEntity, AcmNotifiableEntity
 {
     private static final long serialVersionUID = 8087833770464474147L;
 
@@ -58,6 +62,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     private List<TaskOutcome> availableOutcomes = new ArrayList<>();
     private TaskOutcome taskOutcome;
     private List<AcmParticipant> participants;
+    private Set<AcmNotificationReceiver> receivers = new HashSet<>();
 
     private AcmContainer container;
 
@@ -352,24 +357,24 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
         this.reviewDocumentFormXmlId = reviewDocumentFormXmlId;
     }
 
-    public void setDocumentUnderReview(EcmFile documentUnderReview)
-    {
-        this.documentUnderReview = documentUnderReview;
-    }
-
     public EcmFile getDocumentUnderReview()
     {
         return documentUnderReview;
     }
 
-    public void setChildObjects(List<ObjectAssociation> childObjects)
+    public void setDocumentUnderReview(EcmFile documentUnderReview)
     {
-        this.childObjects = childObjects;
+        this.documentUnderReview = documentUnderReview;
     }
 
     public List<ObjectAssociation> getChildObjects()
     {
         return childObjects;
+    }
+
+    public void setChildObjects(List<ObjectAssociation> childObjects)
+    {
+        this.childObjects = childObjects;
     }
 
     public Long getBusinessProcessId()
@@ -382,14 +387,14 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
         this.businessProcessId = businessProcessId;
     }
 
-    public void setOutcomeName(String outcomeName)
-    {
-        this.outcomeName = outcomeName;
-    }
-
     public String getOutcomeName()
     {
         return outcomeName;
+    }
+
+    public void setOutcomeName(String outcomeName)
+    {
+        this.outcomeName = outcomeName;
     }
 
     public List<TaskOutcome> getAvailableOutcomes()
@@ -433,24 +438,24 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
         this.participants = participants;
     }
 
-    public void setParentObjectId(Long parentObjectId)
-    {
-        this.parentObjectId = parentObjectId;
-    }
-
     public Long getParentObjectId()
     {
         return parentObjectId;
     }
 
-    public void setParentObjectType(String parentObjectType)
+    public void setParentObjectId(Long parentObjectId)
     {
-        this.parentObjectType = parentObjectType;
+        this.parentObjectId = parentObjectId;
     }
 
     public String getParentObjectType()
     {
         return parentObjectType;
+    }
+
+    public void setParentObjectType(String parentObjectType)
+    {
+        this.parentObjectType = parentObjectType;
     }
 
     public String getParentObjectTitle()
@@ -539,5 +544,23 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     public void setLegacySystemId(String legacySystemId)
     {
         this.legacySystemId = legacySystemId;
+    }
+
+    @Override
+    @JsonIgnore
+    public Set<AcmNotificationReceiver> getReceivers()
+    {
+        if(participants != null)
+        {
+            receivers.addAll(participants);
+        }
+        return receivers;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getNotifiableEntityTitle()
+    {
+        return title;
     }
 }

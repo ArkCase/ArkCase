@@ -97,5 +97,7 @@ public interface SearchConstants
 
     String SEPARATOR_COMMA = ",";
 
+    String SEPARATOR_SPACE = " ";
+
     Integer MAX_RESULT_ROWS = 100000;
 }

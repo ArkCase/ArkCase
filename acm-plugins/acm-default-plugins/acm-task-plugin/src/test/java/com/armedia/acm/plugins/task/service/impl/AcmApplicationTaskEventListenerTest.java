@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
@@ -111,6 +112,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
     @Test
     public void testAssigneeIsChanged()
     {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
         AcmTask jsonTask = getTask();
         String currentJsonObject = acmMarshaller.marshal(jsonTask);

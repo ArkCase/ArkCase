@@ -57,6 +57,7 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
 
         solr.setAdditionalProperty("parent_object_type_s", in.getParentType());
         solr.setAdditionalProperty("parent_object_id_i", in.getParentId());
+        solr.setParent_ref_s(String.format("%d-%s", in.getParentId(), in.getParentType()));
 
         return solr;
     }
@@ -75,6 +76,7 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
         solrDoc.setType_s(in.getType());
         solrDoc.setAdditionalProperty("parent_object_type_s", in.getParentType());
         solrDoc.setAdditionalProperty("parent_object_id_i", in.getParentId());
+        solrDoc.setParent_ref_s(String.format("%d-%s", in.getParentId(), in.getParentType()));
 
         return solrDoc;
     }
