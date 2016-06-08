@@ -79,7 +79,7 @@ angular.module('services').factory('DocTreeExt.Core', ['$q', 'UtilService', 'Per
                         return "disable";
                     }
                     else if (lock
-                        && lock.creator !== $scope.user) {
+                        && lock.creator !== scope.user) {
                         //there is lock on object but it is not by the user so checkin is disabled
                         return "disable";
                     }
