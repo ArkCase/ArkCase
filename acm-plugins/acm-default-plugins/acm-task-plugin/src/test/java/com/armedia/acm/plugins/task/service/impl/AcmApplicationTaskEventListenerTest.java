@@ -51,6 +51,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
 
     private static String getDate()
     {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         SimpleDateFormat formatter = new SimpleDateFormat(DateFormats.TASK_NAME_DATE_FORMAT);
         return formatter.format(new Date());
     }
@@ -58,7 +59,6 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
     @Before
     public void setUp()
     {
-
         taskEventListener = new AcmApplicationTaskEventListener();
         mockAcmObjectHistoryService = createMock(AcmObjectHistoryService.class);
         mockAcmObjectHistoryEventPublisher = createMock(AcmObjectHistoryEventPublisher.class);
@@ -112,7 +112,6 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
     @Test
     public void testAssigneeIsChanged()
     {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
         AcmTask jsonTask = getTask();
         String currentJsonObject = acmMarshaller.marshal(jsonTask);
