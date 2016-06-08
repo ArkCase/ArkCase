@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$stateParams', '$modal'
+angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$stateParams', '$modal', '$timeout'
     , 'UtilService', 'ConfigService', 'Authentication'
     , 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'ObjectService'
     , 'Helper.ObjectBrowserService'
-    , function ($scope, $state, $stateParams, $modal
+    , function ($scope, $state, $stateParams, $modal, $timeout
         , Util, ConfigService, Authentication
         , TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectService
         , HelperObjectBrowserService) {
@@ -130,6 +130,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                 TaskWorkflowService.completeTask($scope.objectInfo.taskId).then(
                     function (taskInfo) {
                         $scope.$emit("report-object-updated", taskInfo);
+                        $scope.$emit("report-tree-updated", taskInfo);
                         return taskInfo;
                     }
                 );
