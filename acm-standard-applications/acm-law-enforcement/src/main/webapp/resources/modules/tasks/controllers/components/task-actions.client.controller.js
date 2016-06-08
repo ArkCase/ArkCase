@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$stateParams', '$modal', '$timeout'
+angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'Authentication'
     , 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'ObjectService'
     , 'Helper.ObjectBrowserService'
-    , function ($scope, $state, $stateParams, $modal, $timeout
+    , function ($scope, $state, $stateParams, $modal
         , Util, ConfigService, Authentication
         , TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectService
         , HelperObjectBrowserService) {
