@@ -60,7 +60,7 @@ angular.module('dashboard.my-tasks')
                     }
                 );
             }
-            vm.filterCaseId=function(input){
+            vm.filterColumnId=function(input){
                 if(input == null){
                     return;
                     }
