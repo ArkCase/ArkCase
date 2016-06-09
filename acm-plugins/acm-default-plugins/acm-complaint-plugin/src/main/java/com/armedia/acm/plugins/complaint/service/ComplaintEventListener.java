@@ -28,6 +28,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     private AcmAssignmentDao acmAssignmentDao;
     private OutlookContainerCalendarService calendarService;
     private boolean shouldDeleteCalendarFolder;
+    private String complaintStatusClosed;
 
     @Override
     public void onApplicationEvent(AcmObjectHistoryEvent event)
@@ -72,7 +73,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                     if (isStatusChanged(existing, updatedComplaint))
                     {
                         String calId = updatedComplaint.getContainer().getCalendarFolderId();
-                        if (updatedComplaint.getStatus().equals(ComplaintConstants.COMPLAINT_STATUS_CLOSED) &&
+                        if (updatedComplaint.getStatus().equals(complaintStatusClosed) &&
                                 shouldDeleteCalendarFolder && calId != null){
 
                             //delete shared calendar if complaint closed
@@ -266,5 +267,15 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     public void setShouldDeleteCalendarFolder(boolean shouldDeleteCalendarFolder)
     {
         this.shouldDeleteCalendarFolder = shouldDeleteCalendarFolder;
+    }
+
+    public String getComplaintStatusClosed()
+    {
+        return complaintStatusClosed;
+    }
+
+    public void setComplaintStatusClosed(String complaintStatusClosed)
+    {
+        this.complaintStatusClosed = complaintStatusClosed;
     }
 }

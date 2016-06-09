@@ -348,6 +348,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     {
         // allow calendar deleting
         complaintEventListener.setShouldDeleteCalendarFolder(true);
+        complaintEventListener.setComplaintStatusClosed("CLOSED");
 
         AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
         Complaint jsonComplaint = getComplaint();
@@ -359,7 +360,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
 
         AcmObjectHistory currentHistory = new AcmObjectHistory();
         currentHistory.setObjectType(ComplaintConstants.OBJECT_TYPE);
-        jsonComplaint.setStatus(ComplaintConstants.COMPLAINT_STATUS_CLOSED);
+        jsonComplaint.setStatus("CLOSED");
         currentJsonObject = acmMarshaller.marshal(jsonComplaint);
         currentHistory.setObjectString(currentJsonObject);
 

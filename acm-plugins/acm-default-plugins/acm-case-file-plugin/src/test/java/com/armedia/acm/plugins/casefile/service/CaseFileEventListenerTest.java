@@ -297,6 +297,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
     {
         //allow calendar deleting
         caseFileEventListener.setShouldDeleteCalendarFolder(true);
+        caseFileEventListener.setCaseFileStatusClosed("CLOSED");
 
         AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
         CaseFile jsonCaseFile = getCase();
@@ -308,7 +309,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
 
         AcmObjectHistory currentHistory = new AcmObjectHistory();
         currentHistory.setObjectType(CaseFileConstants.OBJECT_TYPE);
-        jsonCaseFile.setStatus(CaseFileConstants.CASE_STATUS_CLOSED);
+        jsonCaseFile.setStatus("CLOSED");
         currentJsonObject = acmMarshaller.marshal(jsonCaseFile);
         currentHistory.setObjectString(currentJsonObject);
 

@@ -209,6 +209,7 @@
         <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
         <property name="calendarService" ref="outlookContainerService"/>
         <property name="shouldDeleteCalendarFolder" value="${complaint.delete_calendar_folder_after_complaint_closed}"/>
+        <property name="complaintStatusClosed" value="${complaint.status.closed}"/>
     </bean>
 
     <bean id="complaintDataAccessUpdateLocator"
