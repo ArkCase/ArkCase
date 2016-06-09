@@ -14,12 +14,15 @@ import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.CheckIfFileIsDownloaded;
 
 public class NewTaskTests extends ArkCaseTestBase {
+	
+	TaskPage task = PageFactory.initElements(driver, TaskPage.class);
+	TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
+	CheckIfFileIsDownloaded check=new CheckIfFileIsDownloaded();
 
 	@Test
 	public void addNewTaskCheckForLabelsAndFilds() throws IOException, InterruptedException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
 		task.newTask();
 		task.verifyTaskTitle();
 		task.verifySubjectTitleInput();
@@ -39,8 +42,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskStatusActive() throws IOException, InterruptedException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("MilanActiveMIlan");
@@ -71,8 +72,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskSelectFromCalendarStatusClosed() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("AutomateTestTaskTwo");
@@ -104,8 +103,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTasksStatusInactive() throws IOException, InterruptedException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("AutomateTestTaskThreeMilan");
@@ -135,8 +132,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskStatusActiveExedite() throws IOException, InterruptedException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("AutomateTestTaskFour");
@@ -165,7 +160,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskStatusActiveBadPercent() throws InterruptedException, IOException {
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("AutomateTestTask3");
@@ -188,7 +182,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskIfSubjectEmpty() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
 		task.newTask();
 		task.typeSubject("");
 		task.typeStartDate("03/18/2016");
@@ -208,7 +201,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void creteNewTaskIfStartDateIsEmpty() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
 		task.newTask();
 		task.typeSubject("AutomatedTAskTest4");
 		task.typeStartDate("");
@@ -228,7 +220,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void creteNewTaskIfDueDateIsEmpty() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
 		task.newTask();
 		task.typeSubject("AutomatedTAskTest5");
 		task.typeStartDate("03/19/2016");
@@ -248,8 +239,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskWithDefultUser() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.typeSubject("AutomatedTestFive123");
 		task.typeStartDate("03/19/2016");
@@ -278,7 +267,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskCheckPercentComplete() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("AutomatedTaskTest7");
@@ -300,8 +288,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskFerifyLabels() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("TestMilan");
@@ -334,8 +320,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskVerifyTaskList() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan1");
@@ -395,8 +379,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskVerifyTaskLinks() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilanVerify");
@@ -441,8 +423,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskFerifyandAddTaskDetails() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Sam Supervisor");
 		task.typeSubject("TestMilan3");
@@ -494,8 +474,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskFerifyAddNote() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan4");
@@ -538,8 +516,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskFerifyAddTag() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan5");
@@ -574,8 +550,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddSearchedTag() throws InterruptedException, IOException {
 		// create new task and add searched tag
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan5");
@@ -608,8 +582,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddNewFolderAndRename() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan6");
@@ -647,8 +619,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskCreateTwoFoldersCopyPaste() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan7");
@@ -695,8 +665,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskCreateTwoFoldersCutPaste() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan8");
@@ -742,8 +710,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddNewDocumentOtherSendEmail() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan9");
@@ -789,8 +755,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddNewDocumentWitnessRequestPdf() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan10");
@@ -834,8 +798,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddNewDocumentNoticeOfInvesstigation() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan11");
@@ -877,8 +839,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddNewDocumentSfSignatureDocx() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan12");
@@ -922,8 +882,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddNewDocumentEDelivery() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan13");
@@ -968,8 +926,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddNewDocumentGeneralReleaseXlsx() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan14");
@@ -1012,9 +968,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddNewDocumentMedicalReleaseDownload() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
-		CheckIfFileIsDownloaded check=new CheckIfFileIsDownloaded();
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan15");
@@ -1061,8 +1014,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddNewDocumentOtherRename() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan16");
@@ -1105,8 +1056,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddNewDocumentOtherReplace() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.typeSubject("TestMilan17");
 		task.typeStartDate("03/18/2016");
@@ -1154,8 +1103,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskAddNewDocumentOtherDeclareAsRecord() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan18");
@@ -1192,8 +1139,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskVerifyAndEditInformationRibbon() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan19");
@@ -1248,8 +1193,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskVerifyChnageAssigneeAndBack() throws InterruptedException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan20");
@@ -1289,8 +1232,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskVerifySubscribeUnscubscribe() throws InterruptedException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("sunscribe");
@@ -1315,8 +1256,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskVerifyClickComplete() throws InterruptedException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel SUpervisor");
 		task.typeSubject("TestComplete");
@@ -1334,8 +1273,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	public void createNewTaskVerifyIfCompleteTaskDoesNotShowInList() throws InterruptedException, IOException {
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("newtasakclickcomplete");
@@ -1369,8 +1306,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskVerifyIfDeletedIsStillShownInList() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("sunscribetestMilan");
@@ -1404,8 +1339,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskCheckAddDocumentAsignOtherUser() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("Acces Denide add document");
@@ -1439,8 +1372,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskCheckAceesDenideNotes() throws InterruptedException, IOException {
 		// verify if note can be added if is assigned another user
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("Acces Denide add note");
@@ -1473,8 +1404,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskCheckAccesDenideIftaskIsClosedAddNote() throws InterruptedException, IOException {
 		// verify if note can be added is task status is closed
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("Acces Denide add note");
@@ -1498,8 +1427,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskCheckAccessDenideIfTaskIsClosedAddDocument() throws InterruptedException, IOException {
 		// verify if document can be added if the task status is closed
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("Acces Denide");
@@ -1525,8 +1452,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskCompleteFerifyWorkFlow() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("WorkFlow");
@@ -1554,8 +1479,6 @@ public class NewTaskTests extends ArkCaseTestBase {
 	public void createNewTaskCompleteFerifyAccessDeniedDocumentDelete() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		task.newTask();
 		task.assignTo("Samuel Supervisor");
 		task.typeSubject("TestMilan1");

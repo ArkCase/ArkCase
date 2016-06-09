@@ -12,9 +12,19 @@
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
-        </configuration>
+         </configuration>
       </plugin>
-    </plugins>
+   <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>2.19.1</version>
+    <configuration>
+        <includes>
+            <test.include.pattern>**/*Test.java</test.include.pattern>
+        </includes>
+    </configuration>
+</plugin>
+      </plugins>
   </build>
   <dependencies>
   	<dependency>
@@ -31,17 +41,13 @@
     <groupId>junit</groupId>
     <artifactId>junit</artifactId>
     <version>4.12</version>
-</dependency>
+
+   </dependency>
 <dependency>
     <groupId>org.testng</groupId>
     <artifactId>testng</artifactId>
     <version>6.9.10</version>
 </dependency>
-<dependency>
-    <groupId>org.apache.maven.surefire</groupId>
-    <artifactId>surefire-api</artifactId>
-    <version>2.19.1</version>
-</dependency>
-  	
+	
   </dependencies>
 </project>

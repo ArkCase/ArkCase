@@ -13,18 +13,17 @@ import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.task.TaskPage;
 import com.armedia.arkcase.uitests.task.TasksPage;
 
-public class CaseWithTasksTests extends ArkCaseTestBase{
+public class CaseWithTasksTests extends ArkCaseTestBase {
 	
-	
-	
-	
+	CasePage casePom = PageFactory.initElements(driver, CasePage.class);
+	CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
+	TaskPage task = PageFactory.initElements(driver, TaskPage.class);
+	TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
+
 	@Test
 	public void createNewCaseAddTask() throws InterruptedException, IOException {
 		// create new case add task from case page,delete the case
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -114,10 +113,6 @@ public class CaseWithTasksTests extends ArkCaseTestBase{
 	public void createNewCaseAddTaskAddDeleteTagDeleteCase() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -215,10 +210,6 @@ public class CaseWithTasksTests extends ArkCaseTestBase{
 	public void createNewCaseAddTaskTaskDetailsDeleteCase() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -328,10 +319,6 @@ public class CaseWithTasksTests extends ArkCaseTestBase{
 	public void createNewCaseAddTaskAddDeleteNoteDeleteCase() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -436,10 +423,6 @@ public class CaseWithTasksTests extends ArkCaseTestBase{
 	public void createNewCaseAddTaskVerifyWorkflowTable() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -536,10 +519,6 @@ public class CaseWithTasksTests extends ArkCaseTestBase{
 	public void createNewCaseAddTaskVerifyHistoryTableDeleteCase() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -634,9 +613,6 @@ public class CaseWithTasksTests extends ArkCaseTestBase{
 	public void createNewCaseAsociateTaskWithCase() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -715,10 +691,6 @@ public class CaseWithTasksTests extends ArkCaseTestBase{
 	public void createNewCaseAddTaskEditInformationRibonOfTaskDeleteCase() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -835,10 +807,6 @@ public class CaseWithTasksTests extends ArkCaseTestBase{
 	public void createNewCaseAddTaskChangeAssigneeCheckButtonsAreDisplayed() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -941,10 +909,6 @@ public class CaseWithTasksTests extends ArkCaseTestBase{
 	public void createNewCaseAddTaskDeleteTaskTryToAddNote() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1045,10 +1009,6 @@ public class CaseWithTasksTests extends ArkCaseTestBase{
 	public void createNewCaseAddTaskDeleteTaskTryToAddDocument() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
-		TaskPage task = PageFactory.initElements(driver, TaskPage.class);
-		TasksPage tasks = PageFactory.initElements(driver, TasksPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1146,6 +1106,6 @@ public class CaseWithTasksTests extends ArkCaseTestBase{
 		Thread.sleep(3000);
 		ArkCaseAuthentication.logOut(driver);
 
-	}	
+	}
 
 }

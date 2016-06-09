@@ -11,6 +11,9 @@ import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 
 public class CasePeopleTests extends ArkCaseTestBase{
 
+	CasePage casePom = PageFactory.initElements(driver, CasePage.class);
+	CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
+	
 	@Test
 	public void createNewCaseExtortion() throws InterruptedException, IOException {
 		// create case type extortion and verify/edit/delete people initiator
@@ -18,8 +21,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// methods
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -175,8 +176,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// table
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -333,8 +332,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// address
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -493,8 +490,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// aliases table
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -651,8 +646,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 	public void createNewCasePayOff() throws InterruptedException, IOException {
 		// create case type payoff and verify/edit Complaintant section table
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -795,8 +788,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// create case type Pollution and verify/edit/delete complaintant
 		// organization
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -950,9 +941,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// create case type Pollution and verify/edit/delete complaintant type
 		// address
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
-		;
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1111,8 +1099,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 
 		// create case type Domestic Dispute and add alias in complaintant
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1275,8 +1261,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// methods
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1431,8 +1415,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// create case type Background Investigation add/delete person
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1533,8 +1515,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// create case type Background Investigation add/edit person
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1639,8 +1619,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// methods
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1749,8 +1727,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// organization
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1859,8 +1835,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// address
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -1968,8 +1942,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// alias
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2080,8 +2052,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// filters
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2171,8 +2141,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// name filter
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
@@ -2262,8 +2230,6 @@ public class CasePeopleTests extends ArkCaseTestBase{
 		// name filter
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		CasePage casePom = PageFactory.initElements(driver, CasePage.class);
-		CasesPage casesPom = PageFactory.initElements(driver, CasesPage.class);
 		casePom.newCase();
 		Thread.sleep(20000);
 		driver.switchTo().frame(casesPom.frameOne);
