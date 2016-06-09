@@ -219,6 +219,16 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 });
             }
 
+            , refresh: function () {
+                Tree.onReset()();
+                Tree.reset();
+
+                var treeInfo = Tree.Info.getTreeInfo();
+                treeInfo.sorter = Sorter.defaultSort;
+                treeInfo.filter = Filter.defaultFilter;
+                Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
+            }
+
             , _previousKey: null
             , _activeKey: null
             , getPreviousKey: function () {
@@ -879,6 +889,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     setTitle: Tree.setTitle
                     , select: Tree.select
                     , selectComponent: Tree.selectComponent
+                    , refresh: Tree.refresh
                 };
 
                 Tree.create();
@@ -920,13 +931,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 });
 
                 scope.onClickRefresh = function () {
-                    Tree.onReset()();
-                    Tree.reset();
-
-                    var treeInfo = Tree.Info.getTreeInfo();
-                    treeInfo.sorter = Sorter.defaultSort;
-                    treeInfo.filter = Filter.defaultFilter;
-                    Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
+                    Tree.refresh();
                 };
             }
         };
