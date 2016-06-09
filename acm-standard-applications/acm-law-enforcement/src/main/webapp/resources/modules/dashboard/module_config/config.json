@@ -114,7 +114,7 @@
         },
         {
           "name": "attachedToObjectName",
-          "displayName": "ID",
+          "displayName": "dashboard.widgets.myTasks.table.header.caseComplaintId",
           "headerCellFilter": "translate",
           "cellTemplate": "<a data-ui-sref=\"{{row.entity.attachedToObjectType | hyperlinkFilter:''}}.main({id: grid.appScope.myTasks.filterColumnId(row.entity.attachedToObjectName)})\">{{COL_FIELD | filterColumn:'_'}}<\/a>",
           "width": 100
