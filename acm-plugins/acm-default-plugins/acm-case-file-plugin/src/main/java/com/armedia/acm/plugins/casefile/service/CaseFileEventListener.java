@@ -28,6 +28,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     private AcmAssignmentDao acmAssignmentDao;
     private OutlookContainerCalendarService calendarService;
     private boolean shouldDeleteCalendarFolder;
+    private String caseFileStatusClosed;
 
     @Override
     public void onApplicationEvent(AcmObjectHistoryEvent event)
@@ -74,7 +75,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                     if (isStatusChanged(existing, updatedCaseFile))
                     {
                         String calId = updatedCaseFile.getContainer().getCalendarFolderId();
-                        if (updatedCaseFile.getStatus().equals(CaseFileConstants.CASE_STATUS_CLOSED)
+                        if (updatedCaseFile.getStatus().equals(caseFileStatusClosed)
                                 && shouldDeleteCalendarFolder && calId != null){
 
                             //delete shared calendar if case closed
@@ -247,5 +248,15 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     public void setShouldDeleteCalendarFolder(boolean shouldDeleteCalendarFolder)
     {
         this.shouldDeleteCalendarFolder = shouldDeleteCalendarFolder;
+    }
+
+    public String getCaseFileStatusClosed()
+    {
+        return caseFileStatusClosed;
+    }
+
+    public void setCaseFileStatusClosed(String caseFileStatusClosed)
+    {
+        this.caseFileStatusClosed = caseFileStatusClosed;
     }
 }

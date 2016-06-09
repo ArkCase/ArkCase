@@ -18,6 +18,4 @@ public interface CaseFileConstants
     String EVENT_TYPE_CREATED = "com.armedia.acm.casefile.created";
 
     String EVENT_TYPE_VIEWED = "com.armedia.acm.casefile.viewed";
-
-    String CASE_STATUS_CLOSED = "CLOSED";
 }
