@@ -27,8 +27,10 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement firtsCaseInCaseList;
 	// frames
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/iframe")
+	public
 	WebElement frameOne;
 	@FindBy(how = How.XPATH, using = "/html/body/iframe")
+	public
 	WebElement frameTwo;
 	// Information ribbon
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[1]/h3/span")
@@ -114,6 +116,7 @@ public class CasesPage extends ArkCaseTestBase {
 	WebElement caseDetails;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[3]/a")
 	WebElement casePeople;
+	public
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[4]/a")
 	WebElement caseDocuments;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/ul/li[5]/a")
@@ -146,9 +149,9 @@ public class CasesPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[1]/div/div/div/div[1]/div[1]/h4")
 	WebElement caseTitleDraft;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/iframe")
-	WebElement chnageCaseStausFrameOne;
+    public	WebElement chnageCaseStausFrameOne;
 	@FindBy(how = How.XPATH, using = "/html/body/iframe")
-	WebElement chnageCaseStatusFrameTwo;
+	public WebElement chnageCaseStatusFrameTwo;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[4]/div[2]/div/div[2]/table/tbody/tr")
 	WebElement caseSelectAprover;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/header/div/div/div/input")
@@ -178,6 +181,7 @@ public class CasesPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = " /html/body/div[5]/div[1]")
 	WebElement caseDetailsSavedPopup;
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[3]")
+	public
 	WebElement detailChangeStatusButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div[2]/div[9]/button[1]")
 	WebElement detailsInsertLink;

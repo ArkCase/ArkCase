@@ -12,11 +12,12 @@ import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
 
 public class UserProfileTests extends ArkCaseTestBase {
 
+	UserProfilePage user = PageFactory.initElements(driver, UserProfilePage.class);
+	
 	@Test
 	public void verifyUserProfilePageLabels() throws InterruptedException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		UserProfilePage user = PageFactory.initElements(driver, UserProfilePage.class);
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
@@ -56,7 +57,6 @@ public class UserProfileTests extends ArkCaseTestBase {
 	public void upploadPicture() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		UserProfilePage user = PageFactory.initElements(driver, UserProfilePage.class);
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
@@ -73,7 +73,6 @@ public class UserProfileTests extends ArkCaseTestBase {
 	public void editProfilePicTitle() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		UserProfilePage user = PageFactory.initElements(driver, UserProfilePage.class);
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
@@ -95,7 +94,6 @@ public class UserProfileTests extends ArkCaseTestBase {
 	public void editContactInformation() throws InterruptedException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		UserProfilePage user = PageFactory.initElements(driver, UserProfilePage.class);
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
@@ -139,7 +137,6 @@ public class UserProfileTests extends ArkCaseTestBase {
 	public void editCompanyDetail() throws InterruptedException, IOException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		UserProfilePage user = PageFactory.initElements(driver, UserProfilePage.class);
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
@@ -202,7 +199,6 @@ public class UserProfileTests extends ArkCaseTestBase {
 	public void editProfilePicTitleNull() throws InterruptedException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		UserProfilePage user = PageFactory.initElements(driver, UserProfilePage.class);
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
@@ -227,7 +223,6 @@ public class UserProfileTests extends ArkCaseTestBase {
 	public void editContactInformationNull() throws InterruptedException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		UserProfilePage user = PageFactory.initElements(driver, UserProfilePage.class);
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
@@ -270,7 +265,6 @@ public class UserProfileTests extends ArkCaseTestBase {
 	public void editCompanyDetailNull() throws InterruptedException {
 
 		ArkCaseAuthentication.logIn("samuel-acm", "Armedia#1", driver, baseUrl);
-		UserProfilePage user = PageFactory.initElements(driver, UserProfilePage.class);
 		user.verifyIfEditDashboardButtonIsEnabled();
 		user.arrowDownClick();
 		Thread.sleep(3000);
