@@ -2,10 +2,10 @@
 
 angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService'
-    , 'Object.ModelService', 'LookupService', 'Helper.ObjectBrowserService'
+    , 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Object.ModelService', 'LookupService', 'Helper.ObjectBrowserService'
     , function ($scope, $stateParams
         , Util, ConfigService, ObjectService, CaseInfoService, ComplaintInfoService, TaskInfoService
-        , ObjectModelService, LookupService, HelperObjectBrowserService) {
+        , CostTrackingInfoService, TimeTrackingInfoService, ObjectModelService, LookupService, HelperObjectBrowserService) {
 
         new HelperObjectBrowserService.Component({
             moduleId: "tasks"
@@ -35,7 +35,11 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
                 ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, $scope.parentCaseInfo.id);
             } else if ($scope.parentComplaintInfo) {
                 ObjectService.gotoUrl(ObjectService.ObjectTypes.COMPLAINT, $scope.parentComplaintInfo.complaintId);
-            } else {
+            }else if ($scope.parentCostsheetInfo){
+                ObjectService.gotoUrl(ObjectService.ObjectTypes.COSTSHEET, $scope.parentCostsheetInfo.id);
+            } else if ($scope.parentTimesheetInfo){
+                ObjectService.gotoUrl(ObjectService.ObjectTypes.TIMESHEET, $scope.parentTimesheetInfo.id);
+            }else {
                 $log.error('parentCaseInfo is undefined, cannot redirect to the parent case');
             }
         };
@@ -72,8 +76,23 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
                         return complaintInfo;
                     }
                 );
+            } else if (ObjectService.ObjectTypes.COSTSHEET == $scope.objectInfo.parentObjectType) {
+                CostTrackingInfoService.getCostsheetInfo($scope.objectInfo.parentObjectId).then(
+                    function (costsheetInfo) {
+                        $scope.parentCostsheetInfo = costsheetInfo;
+                        $scope.costsheetApprover = ObjectModelService.getParticipantByType(costsheetInfo, "approver");
+                        return costsheetInfo;
+                    }
+                );
+            }else if (ObjectService.ObjectTypes.TIMESHEET == $scope.objectInfo.parentObjectType) {
+                TimeTrackingInfoService.getTimesheetInfo($scope.objectInfo.parentObjectId).then(
+                    function(timesheetInfo){
+                        $scope.parentTimesheetInfo = timesheetInfo;
+                        $scope.timesheetApprover = ObjectModelService.getParticipantByType(timesheetInfo, "approver");
+                        return timesheetInfo;
+                    }
+                );
             }
         };
-
     }
 ]);
