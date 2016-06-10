@@ -4,6 +4,7 @@
 .acm
 .acm-ui
 target
+bin
 atlassian-ide-plugin.xml
 
 *.project
