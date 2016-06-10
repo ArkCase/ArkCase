@@ -36,10 +36,11 @@ public class ArkCaseTestBase {
 		fprofile.setPreference( "browser.download.manager.showWhenStarting", false );
 		fprofile.setPreference( "pdfjs.disabled", true );
 		driver = new FirefoxDriver(fprofile);
+		driver.manage().timeouts().implicitlyWait(13, TimeUnit.SECONDS);
 		baseUrl = "http://cloud.arkcase.com/";
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		driver.manage().window().maximize();
 		
+	
 		
 	}
 
