@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'MessageService', '$interval',
-    function ($q, $timeout, messageService, $interval) {
+angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Websockets.MessageHandler',
+    function ($q, $timeout, messageHandler) {
 
         var service = {}, listener = $q.defer(), socket = {
             client: null,
@@ -10,15 +10,15 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Mes
 
         service.RECONNECT_TIMEOUT = 30000;
         service.SOCKET_URL = "/arkcase/stomp";
-        service.LISTEN_TOPIC = "/topic/message";
-        service.LISTEN_TOPIC_OBJECTS = "/topic/objects/*";
+        service.LISTEN_TOPIC_OBJECTS = "/topic/objects/changed";
         service.MESSAGE_BROKER = "/app/print-message";
+        service.shouldStart = true;
 
         service.receive = function () {
             return listener.promise;
         };
 
-        service.send = function (message,destination) {
+        service.send = function (message, destination) {
             var id = Math.floor(Math.random() * 1000000);
             socket.stomp.send(destination, {
                 priority: 9
@@ -33,31 +33,35 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Mes
         };
 
         var startListener = function (frame) {
-            messageService.info("CONNECTED " + frame);
-            //subscribe to the topic
-            socket.stomp.subscribe(service.LISTEN_TOPIC, function (data) {
-                messageService.info(data);
-            });
+
             socket.stomp.subscribe(service.LISTEN_TOPIC_OBJECTS, function (data) {
-                messageService.info(data);
+                var message = JSON.parse(data.body);
+                $timeout(function () {
+                    messageHandler.handleMessage(message);
+
+                    //4 seconds delay so solr can index the object
+                }, 4000);
             });
-            //create timer for sending messaged to the broker
-            $interval(function () {
-                var message = {};
-                message.text = "Just a sample text with current time " + new Date();
-                service.send(message)
-            }, 10000, 0);
+
         };
 
         var initialize = function () {
+            //console.log('initialize');
             socket.client = new SockJS(service.SOCKET_URL);
             socket.stomp = Stomp.over(socket.client);
+            //connect() with headers and success callback
             socket.stomp.connect({}, startListener);
             socket.stomp.onclose = reconnect;
+
         };
 
-        initialize();
+        //temp check to start/stop websocket, we should read it from config file
+        if (service.shouldStart) {
+            initialize();
+        }
+
         return service;
     }]).run(function (WebSocketsListener) {
-    //this how we are bootstrap this servis to be started when everything starts
+    //this how we bootstrap this service to be started when everything starts
+    //we should check what is right approach to bootstrap the service
 });
