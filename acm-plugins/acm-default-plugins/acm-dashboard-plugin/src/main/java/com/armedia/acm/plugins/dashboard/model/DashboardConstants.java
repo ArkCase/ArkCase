@@ -23,6 +23,10 @@ public interface DashboardConstants
     String WIDGET_LIST = "widgetList";
     String COMMA_SPLITTER = ",";
 
+    String DASHBOARD_ROWS = "rows";
+    String DASHBOARD_COLUMNS = "columns";
+    String DASHBOARD_WIDGETS = "widgets";
+    String DASHBOARD_WIDGET_TYPE = "type";
 
 }
 

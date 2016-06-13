@@ -2,38 +2,40 @@
     <div class="module-content">
         <div class="module-header">
             <div class="well-sm clearfix">
-                <div class="col-sm-8">
-                    <div class="col-sm-3">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3">
                         <div>
                             <label><span translate>documentDetails.name</span></label>
                             {{ecmFile.fileName || 'Unknown'}}
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-6 col-md-3">
                         <div>
                             <label><span translate>documentDetails.creator</span></label>
                             {{::ecmFile.creator | mapKeyValue: userList:'object_id_s':'name' || 'Unknown'}}
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-6 col-md-3">
                         <div class="no-underline-and-blue-color">
                             <label><span translate>documentDetails.created</span></label>
                             {{::ecmFile.created | date : ('common.defaultDateUIFormat' | translate)  || 'Unknown'}}
                         </div>
                     </div>
-                    <div class="col-sm-3">
-                        <!--<div>
+                </div>
+                <div class="row">
+                    <!--<div class="col-sm-3">
+                        <div>
                             <label><span translate>documentDetails.assignee</span></label>
                             {{::assignee | mapKeyValue: userList:'object_id_s':'name' || 'Unknown'}}
-                        </div>-->
-                    </div>
-                    <div class="col-sm-3">
+                        </div>
+                    </div>-->
+                    <div class="col-sm-6 col-md-3">
                         <div>
                             <label><span translate>documentDetails.fileType</span></label>
-                            {{ecmFile.fileType || 'Unknown'}}
+                            {{fileType || 'Unknown'}}
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-6 col-md-3">
                         <div>
                             <label><span translate>documentDetails.status</span></label>
                             {{ecmFile.status || 'Unknown'}}

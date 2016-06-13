@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.complaint.service;
 
+import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
@@ -20,11 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public class SaveComplaintTransaction
 {
-    private ComplaintDao complaintDao;
-
-    private PipelineManager<Complaint, ComplaintPipelineContext> pipelineManager;
-
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private ComplaintDao complaintDao;
+    private PipelineManager<Complaint, ComplaintPipelineContext> pipelineManager;
 
     @Transactional
     public Complaint saveComplaint(
@@ -35,6 +34,13 @@ public class SaveComplaintTransaction
         ComplaintPipelineContext pipelineContext = new ComplaintPipelineContext();
         // populate the context
         pipelineContext.setAuthentication(authentication);
+        pipelineContext.setNewComplaint(complaint.getId() == null);
+        String ipAddress = null;
+        if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
+        {
+            ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+        }
+        pipelineContext.setIpAddress(ipAddress);
 
         pipelineManager.onPreSave(complaint, pipelineContext);
 

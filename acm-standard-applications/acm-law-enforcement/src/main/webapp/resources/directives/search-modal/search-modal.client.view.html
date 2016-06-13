@@ -26,7 +26,7 @@
         </div>
 
         <div class="modal-columns">
-            <div ng-if="config.showFacets"  class="modal-left">
+            <div ng-if="config.showFacets" class="modal-left">
                 <ul class="list-unstyled">
                     <li ng-repeat="facet in facets"
                         ng-if="facet.fields.length && facet.name!='Object Sub Type' && facet.name!= 'Object Type'">
@@ -54,9 +54,14 @@
                      adjust-table-height="gridOptions.data.length"
                      ui-grid-auto-resize
                      class="grid">
+                    <div ng-if="showNoData" style="text-align: center;">
+                        {{onNoDataMessage}}
+                    </div>
+                    <div ng-if="!showNoData && gridOptions.data.length < 1">
+                        &nbsp;
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

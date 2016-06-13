@@ -80,6 +80,7 @@ public interface SearchConstants
      */
     String OPERATOR_AND = "AND";
     String OPERATOR_OR = "OR";
+    String OPERATOR_NOT = "NOT";
 
     /**
      * Key in the properties file that hold name of the Solr properties for search objects by query
@@ -95,6 +96,8 @@ public interface SearchConstants
     String EXPORT_FIELDS = "export.fields";
 
     String SEPARATOR_COMMA = ",";
+
+    String SEPARATOR_SPACE = " ";
 
     Integer MAX_RESULT_ROWS = 100000;
 }

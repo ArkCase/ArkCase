@@ -30,17 +30,6 @@ import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
@@ -66,6 +55,15 @@ import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 4/20/15.
@@ -144,7 +142,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     }
 
     private void populateResultHeaderFields(OutlookResults<? extends OutlookItem> results, int start, int maxItems, String sortField, boolean sortAscending, int totalCount, boolean isMoreAvailable,
-            int nextStartRow)
+                                            int nextStartRow)
     {
         results.setTotalItems(totalCount);
         results.setMoreItemsAvailable(isMoreAvailable);
@@ -312,13 +310,16 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     }
 
     @Override
-    public void sendEmail(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user, Authentication authentication) throws Exception
+    public void sendEmail(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user, Authentication authentication)
+            throws Exception
     {
         ExchangeService service = connect(user);
         EmailMessage emailMessage = new EmailMessage(service);
         emailMessage.setSubject(emailWithAttachmentsDTO.getSubject());
-        emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getHeader() + "\r\r" + emailWithAttachmentsDTO.getBody() + "\r\r\r" + emailWithAttachmentsDTO.getFooter()));
+        emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getHeader() + "\r\r" +
+                emailWithAttachmentsDTO.getBody() + "\r\r\r" + emailWithAttachmentsDTO.getFooter()));
         emailMessage.getBody().setBodyType(BodyType.Text);
+        emailMessage.getToRecipients().add(systemUserEmail);
 
         if (emailWithAttachmentsDTO.getEmailAddresses() != null && !emailWithAttachmentsDTO.getEmailAddresses().isEmpty())
         {
@@ -726,7 +727,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             } else
             {
                 folderPermissionsToBeRemoved.remove(outlookFolderPermission);// this is existing permission and not to
-                                                                             // be removed
+                // be removed
             }
         }
 
@@ -858,6 +859,11 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         return systemUserId;
     }
 
+    public void setSystemUserId(String systemUserId)
+    {
+        this.systemUserId = systemUserId;
+    }
+
     public AuthenticationTokenService getAuthenticationTokenService()
     {
         return authenticationTokenService;
@@ -876,11 +882,6 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
     {
         this.authenticationTokenDao = authenticationTokenDao;
-    }
-
-    public void setSystemUserId(String systemUserId)
-    {
-        this.systemUserId = systemUserId;
     }
 
     public AcmContainerDao getAcmContainerDao()
