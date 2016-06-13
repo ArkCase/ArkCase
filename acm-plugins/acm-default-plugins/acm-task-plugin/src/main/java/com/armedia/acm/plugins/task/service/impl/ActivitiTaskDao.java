@@ -1,9 +1,10 @@
 package com.armedia.acm.plugins.task.service.impl;
 
-
 import com.armedia.acm.activiti.AcmTaskEvent;
+import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.data.AcmObjectChangedNotifier;
+import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -67,7 +68,7 @@ import static com.armedia.acm.data.AcmObjectEventConstants.ACTION_INSERT;
 import static com.armedia.acm.data.AcmObjectEventConstants.ACTION_UPDATE;
 
 
-public class ActivitiTaskDao implements TaskDao
+public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 {
     private RuntimeService activitiRuntimeService;
     private TaskService activitiTaskService;
@@ -94,9 +95,15 @@ public class ActivitiTaskDao implements TaskDao
     {
         Task activitiTask = getActivitiTaskService().newTask();
 
-        AcmTask acmTask = updateExistingActivitiTask(in, activitiTask);
-        objectChangedNotifier.notifyChange(ACTION_INSERT, acmTask);
-        return acmTask;
+        AcmTask out = updateExistingActivitiTask(in, activitiTask);
+        objectChangedNotifier.notifyChange(ACTION_INSERT, out);
+        if (out.getStatus().equalsIgnoreCase(TaskConstants.STATE_CLOSED))
+        {
+            String taskId = String.valueOf(out.getId());
+            getActivitiTaskService().complete(taskId);
+        }
+
+        return out;
     }
 
     @Override
@@ -111,13 +118,10 @@ public class ActivitiTaskDao implements TaskDao
             return acmTask;
         }
 
-        // task must have been completed.  Try finding the historic task; but historical tasks can't be updated, so
+        // task must have been completed. Try finding the historic task; but historical tasks can't be updated, so
         // even if we find it we have to throw an exception
         {
-            HistoricTaskInstance hti = getActivitiHistoryService().
-                    createHistoricTaskInstanceQuery().
-                    taskId(in.getTaskId().toString()).
-                    singleResult();
+            HistoricTaskInstance hti = getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(in.getTaskId().toString()).singleResult();
 
             if (hti == null)
             {
@@ -125,11 +129,9 @@ public class ActivitiTaskDao implements TaskDao
                 throw new AcmTaskException("No such task with id '" + in.getTaskId() + "'");
             } else
             {
-                throw new AcmTaskException("Task with id '" + in.getTaskId() + "' has already been completed and so " +
-                        "it cannot be updated.");
+                throw new AcmTaskException("Task with id '" + in.getTaskId() + "' has already been completed and so " + "it cannot be updated.");
             }
         }
-
 
     }
 
@@ -187,9 +189,9 @@ public class ActivitiTaskDao implements TaskDao
             in.setTaskId(Long.valueOf(activitiTask.getId()));
             in.setCreateDate(activitiTask.getCreateTime());
 
-            // AFDP-1876 save the assignee for the next task in the process to process-level variables.  The next
+            // AFDP-1876 save the assignee for the next task in the process to process-level variables. The next
             // assignee is to support business processes where the current assignee of a task can select the assignee
-            // for the next task.  This feature was added originally for the DoD Joint Staff EDTRM project.
+            // for the next task. This feature was added originally for the DoD Joint Staff EDTRM project.
             getActivitiTaskService().setVariable(activitiTask.getId(), TaskConstants.VARIABLE_NAME_NEXT_ASSIGNEE, in.getNextAssignee());
 
             // make sure an assignee participant is there, so the right data access can be set on the assignee...
@@ -203,14 +205,28 @@ public class ActivitiTaskDao implements TaskDao
             getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(in);
 
             // Now we have to check the assignee again, to be sure the Activiti task assignee is the "assignee"
-            // participant.  I know we're calling the same method twice!, to overwrite any changes the rules make to the
+            // participant. I know we're calling the same method twice!, to overwrite any changes the rules make to the
             // assignee... In short, Activiti controls the task assignee, not the assignment rules.
-            ensureCorrectAssigneeInParticipants(in);   // there's a good reason we call this again, see above
+            ensureCorrectAssigneeInParticipants(in); // there's a good reason we call this again, see above
 
-            // the rules (or the user) may have removed some participants.  We want to delete all participants other
+            // the rules (or the user) may have removed some participants. We want to delete all participants other
             // than the ones we just now validated.
             getParticipantDao().removeAllOtherParticipantsForObject(TaskConstants.OBJECT_TYPE, in.getTaskId(), in.getParticipants());
             in.setParticipants(getParticipantDao().saveParticipants(in.getParticipants()));
+
+            //Add any candidate Groups from the adhoc task to the activiti task.
+            if (in.getCandidateGroups() != null && !in.getCandidateGroups().isEmpty())
+            {
+                List<String> candidateGroupList = in.getCandidateGroups();
+                for (String group : candidateGroupList)
+                {
+                    List<String> candidateGroups = findCandidateGroups(activitiTask.getId());
+                    if (candidateGroups != null && !candidateGroups.contains(group))
+                    {
+                        getActivitiTaskService().addCandidateGroup(activitiTask.getId(), group);
+                    }
+                }
+            }
 
             return in;
         } catch (ActivitiException e)
@@ -272,8 +288,7 @@ public class ActivitiTaskDao implements TaskDao
     }
 
     @Override
-    public AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId, String outcomePropertyName, String outcomeId)
-            throws AcmTaskException
+    public AcmTask completeTask(Principal userThatCompletedTheTask, Long taskId, String outcomePropertyName, String outcomeId) throws AcmTaskException
     {
 
         verifyCompleteTaskArgs(userThatCompletedTheTask, taskId);
@@ -287,12 +302,7 @@ public class ActivitiTaskDao implements TaskDao
 
         String strTaskId = String.valueOf(taskId);
 
-        Task existingTask = getActivitiTaskService().
-                createTaskQuery().
-                includeProcessVariables().
-                includeTaskLocalVariables().
-                taskId(strTaskId).
-                singleResult();
+        Task existingTask = getActivitiTaskService().createTaskQuery().includeProcessVariables().includeTaskLocalVariables().taskId(strTaskId).singleResult();
 
         verifyTaskExists(taskId, existingTask);
 
@@ -303,7 +313,6 @@ public class ActivitiTaskDao implements TaskDao
 
         return retval;
     }
-
 
     @Override
     @Transactional
@@ -320,12 +329,7 @@ public class ActivitiTaskDao implements TaskDao
 
         String strTaskId = String.valueOf(taskId);
 
-        Task existingTask = getActivitiTaskService().
-                createTaskQuery().
-                includeProcessVariables().
-                includeTaskLocalVariables().
-                taskId(strTaskId).
-                singleResult();
+        Task existingTask = getActivitiTaskService().createTaskQuery().includeProcessVariables().includeTaskLocalVariables().taskId(strTaskId).singleResult();
 
         verifyTaskExists(taskId, existingTask);
 
@@ -370,13 +374,7 @@ public class ActivitiTaskDao implements TaskDao
 
         List<AcmTask> retval = new ArrayList<>();
 
-        List<Task> activitiTasks = getActivitiTaskService().
-                createTaskQuery().
-                taskAssignee(user).
-                includeProcessVariables().
-                includeTaskLocalVariables().
-                orderByDueDate().desc().
-                list();
+        List<Task> activitiTasks = getActivitiTaskService().createTaskQuery().taskAssignee(user).includeProcessVariables().includeTaskLocalVariables().orderByDueDate().desc().list();
 
         if (activitiTasks != null)
         {
@@ -393,7 +391,6 @@ public class ActivitiTaskDao implements TaskDao
             }
         }
 
-
         return retval;
     }
 
@@ -407,12 +404,7 @@ public class ActivitiTaskDao implements TaskDao
 
         List<AcmTask> retval = new ArrayList<>();
 
-        List<Task> activitiTasks = getActivitiTaskService().
-                createTaskQuery().
-                includeProcessVariables().
-                includeTaskLocalVariables().
-                orderByDueDate().desc().
-                list();
+        List<Task> activitiTasks = getActivitiTaskService().createTaskQuery().includeProcessVariables().includeTaskLocalVariables().orderByDueDate().desc().list();
 
         if (activitiTasks != null)
         {
@@ -442,12 +434,7 @@ public class ActivitiTaskDao implements TaskDao
 
         List<AcmTask> retval = new ArrayList<>();
 
-        List<Task> activitiTasks = getActivitiTaskService().
-                createTaskQuery().
-                includeProcessVariables().
-                includeTaskLocalVariables().
-                dueBefore(new Date()).
-                list();
+        List<Task> activitiTasks = getActivitiTaskService().createTaskQuery().includeProcessVariables().includeTaskLocalVariables().dueBefore(new Date()).list();
 
         if (activitiTasks != null)
         {
@@ -475,12 +462,7 @@ public class ActivitiTaskDao implements TaskDao
             try
             {
                 getActivitiTaskService().claim(String.valueOf(taskId), userId);
-                Task existingTask = getActivitiTaskService().
-                        createTaskQuery().
-                        includeProcessVariables().
-                        includeTaskLocalVariables().
-                        taskId(String.valueOf(taskId)).
-                        singleResult();
+                Task existingTask = getActivitiTaskService().createTaskQuery().includeProcessVariables().includeTaskLocalVariables().taskId(String.valueOf(taskId)).singleResult();
 
                 AcmTask acmTask = acmTaskFromActivitiTask(existingTask);
                 objectChangedNotifier.notifyChange(ACTION_UPDATE, acmTask);
@@ -502,12 +484,7 @@ public class ActivitiTaskDao implements TaskDao
             try
             {
                 getActivitiTaskService().unclaim(String.valueOf(taskId));
-                Task existingTask = getActivitiTaskService().
-                        createTaskQuery().
-                        includeProcessVariables().
-                        includeTaskLocalVariables().
-                        taskId(String.valueOf(taskId)).
-                        singleResult();
+                Task existingTask = getActivitiTaskService().createTaskQuery().includeProcessVariables().includeTaskLocalVariables().taskId(String.valueOf(taskId)).singleResult();
                 AcmTask acmTask = acmTaskFromActivitiTask(existingTask);
                 objectChangedNotifier.notifyChange(ACTION_UPDATE, acmTask);
                 return acmTask;
@@ -529,14 +506,11 @@ public class ActivitiTaskDao implements TaskDao
             try
             {
                 // get the process instance
-                ProcessInstance processInstance =
-                        getActivitiRuntimeService().createProcessInstanceQuery()
-                                .processInstanceId(processId)
-                                .singleResult();
+                ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().processInstanceId(processId).singleResult();
 
                 if (processInstance != null)
                 {
-                    //validate against provided parentId
+                    // validate against provided parentId
                     Long objectId = (Long) getActivitiRuntimeService().getVariable(processId, TaskConstants.VARIABLE_NAME_OBJECT_ID);
                     if (objectId == null)
                     {
@@ -546,20 +520,19 @@ public class ActivitiTaskDao implements TaskDao
                     {
                         log.info("provided ID [{}] and object ID from process instance match [{}]", objectId, parentId);
 
-                        //EDTRM-670	- delete the process instance, all tasks should be marked "TERMINATED" instead of "CLOSED"
-                        // set deleteReason to "TERMINATED" so that we can utilize it to set the status of tasks belonging to a "TERMINATED"
-                        //process as "TERMINATED" from historic task instance
+                        // EDTRM-670 - delete the process instance, all tasks should be marked "TERMINATED" instead of
+                        // "CLOSED"
+                        // set deleteReason to "TERMINATED" so that we can utilize it to set the status of tasks
+                        // belonging to a "TERMINATED"
+                        // process as "TERMINATED" from historic task instance
 
                         deleteReason = TaskConstants.STATE_TERMINATED;
                         getActivitiRuntimeService().deleteProcessInstance(processId, deleteReason);
 
-                        //retrieve historic task instances
-                        //update the status of completed task to "TERMINATED"
-                        List<HistoricTaskInstance> htis =
-                                getActivitiHistoryService().createHistoricTaskInstanceQuery()
-                                        .processInstanceId(processId)
-                                        .includeProcessVariables()
-                                        .includeTaskLocalVariables().list();
+                        // retrieve historic task instances
+                        // update the status of completed task to "TERMINATED"
+                        List<HistoricTaskInstance> htis = getActivitiHistoryService().createHistoricTaskInstanceQuery().processInstanceId(processId).includeProcessVariables()
+                                .includeTaskLocalVariables().list();
 
                         for (HistoricTaskInstance hti : htis)
                         {
@@ -594,13 +567,8 @@ public class ActivitiTaskDao implements TaskDao
 
         List<AcmTask> retval = new ArrayList<>();
 
-        List<Task> activitiTasks = getActivitiTaskService().
-                createTaskQuery().
-                includeProcessVariables().
-                includeTaskLocalVariables().
-                dueAfter(new Date()).
-                dueBefore(shiftDateFromToday(numberOfDaysFromToday.getNumOfDays())).
-                list();
+        List<Task> activitiTasks = getActivitiTaskService().createTaskQuery().includeProcessVariables().includeTaskLocalVariables().dueAfter(new Date())
+                .dueBefore(shiftDateFromToday(numberOfDaysFromToday.getNumOfDays())).list();
 
         if (activitiTasks != null)
         {
@@ -628,24 +596,15 @@ public class ActivitiTaskDao implements TaskDao
         }
         AcmTask retval;
 
-        Task activitiTask = getActivitiTaskService().
-                createTaskQuery().
-                taskId(String.valueOf(taskId)).
-                includeProcessVariables().
-                includeTaskLocalVariables().
-                singleResult();
+        Task activitiTask = getActivitiTaskService().createTaskQuery().taskId(String.valueOf(taskId)).includeProcessVariables().includeTaskLocalVariables().singleResult();
         if (activitiTask != null)
         {
             retval = acmTaskFromActivitiTask(activitiTask);
             return retval;
         } else
         {
-            HistoricTaskInstance hti = getActivitiHistoryService().
-                    createHistoricTaskInstanceQuery().
-                    taskId(String.valueOf(taskId)).
-                    includeProcessVariables().
-                    includeTaskLocalVariables().
-                    singleResult();
+            HistoricTaskInstance hti = getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(String.valueOf(taskId)).includeProcessVariables().includeTaskLocalVariables()
+                    .singleResult();
 
             if (hti != null)
             {
@@ -669,7 +628,7 @@ public class ActivitiTaskDao implements TaskDao
 
         // due to an Activiti issue, we have to retrieve the task local issues separately for each task instance.
         // if we ask for them at the query level (via "includeTaskLocalVariables") Activiti basically returns one big
-        // map, instead of one map per historic task instance.  Obviously the one big map will contain correct values
+        // map, instead of one map per historic task instance. Obviously the one big map will contain correct values
         // only for the last task retrieved.
         if (!adhoc)
         {
@@ -690,7 +649,8 @@ public class ActivitiTaskDao implements TaskDao
 
                     String taskId = historicTaskInstance.getId();
 
-                    // TODO: For now Role is empty. This is agreed with Dave. Once we have that information, we should add it here.
+                    // TODO: For now Role is empty. This is agreed with Dave. Once we have that information, we should
+                    // add it here.
                     String role = "";
                     Date startDate = historicTaskInstance.getStartTime();
                     Date endDate = historicTaskInstance.getEndTime();
@@ -750,20 +710,17 @@ public class ActivitiTaskDao implements TaskDao
 
     private boolean isTaskTerminated(HistoricTaskInstance historicTaskInstance)
     {
-        //EDTRM-670	- All tasks should be marked "TERMINATED" instead of "CLOSED"
-        //tasks belonging to a "TERMINATED" process will have delete reason set to "TERMINATED"
-        if (historicTaskInstance.getDeleteReason() != null && historicTaskInstance.getEndTime() != null
-                && historicTaskInstance.getDeleteReason().equals(TaskConstants.STATE_TERMINATED))
+        // EDTRM-670 - All tasks should be marked "TERMINATED" instead of "CLOSED"
+        // tasks belonging to a "TERMINATED" process will have delete reason set to "TERMINATED"
+        if (historicTaskInstance.getDeleteReason() != null && historicTaskInstance.getEndTime() != null && historicTaskInstance.getDeleteReason().equals(TaskConstants.STATE_TERMINATED))
         {
-            //make a check if the task is ad-hoc or not
+            // make a check if the task is ad-hoc or not
             if (historicTaskInstance.getProcessInstanceId() != null)
             {
-                HistoricProcessInstance historicProcessInstance =
-                        getActivitiHistoryService().createHistoricProcessInstanceQuery()
-                                .processInstanceId(historicTaskInstance.getProcessInstanceId())
-                                .singleResult();
+                HistoricProcessInstance historicProcessInstance = getActivitiHistoryService().createHistoricProcessInstanceQuery().processInstanceId(historicTaskInstance.getProcessInstanceId())
+                        .singleResult();
 
-                //deleted process instance endTime matches terminated tasks endTime to second offset
+                // deleted process instance endTime matches terminated tasks endTime to second offset
                 if (historicProcessInstance.getEndTime() != null)
                 {
                     Date processTerminatedDateTime = DateUtils.round(historicProcessInstance.getEndTime(), Calendar.SECOND);
@@ -785,8 +742,7 @@ public class ActivitiTaskDao implements TaskDao
         // For adhoc task, the status is DELETE in the tasks grid,
         // but if you click on the task and view it in task module, the state is CLOSED.
         // by default activiti sets deleteReason as "deleted" for deleted tasks
-        if (historicTaskInstance.getDeleteReason() != null && historicTaskInstance.getEndTime() != null
-                && historicTaskInstance.getDeleteReason().equals(TaskConstants.STATE_DELETED.toLowerCase()))
+        if (historicTaskInstance.getDeleteReason() != null && historicTaskInstance.getEndTime() != null && historicTaskInstance.getDeleteReason().equals(TaskConstants.STATE_DELETED.toLowerCase()))
         {
             return true;
         }
@@ -818,13 +774,8 @@ public class ActivitiTaskDao implements TaskDao
     {
         List<AcmTask> retval = new ArrayList<>();
 
-        List<HistoricTaskInstance> tasks = getActivitiHistoryService().
-                createHistoricTaskInstanceQuery().
-                includeProcessVariables().
-                includeTaskLocalVariables().
-                taskCreatedAfter(lastModified).
-                orderByTaskId().
-                asc().listPage(start, pageSize);
+        List<HistoricTaskInstance> tasks = getActivitiHistoryService().createHistoricTaskInstanceQuery().includeProcessVariables().includeTaskLocalVariables().taskCreatedAfter(lastModified)
+                .orderByTaskId().asc().listPage(start, pageSize);
 
         if (tasks != null)
         {
@@ -852,8 +803,7 @@ public class ActivitiTaskDao implements TaskDao
 
             getActivitiTaskService().complete(strTaskId);
 
-            HistoricTaskInstance hti =
-                    getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(strTaskId).singleResult();
+            HistoricTaskInstance hti = getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(strTaskId).singleResult();
 
             acmTask.setTaskStartDate(hti.getStartTime());
             acmTask.setCreateDate(hti.getStartTime());
@@ -878,8 +828,7 @@ public class ActivitiTaskDao implements TaskDao
         {
             getActivitiTaskService().deleteTask(strTaskId, deleteReason);
 
-            HistoricTaskInstance hti =
-                    getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(strTaskId).singleResult();
+            HistoricTaskInstance hti = getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(strTaskId).singleResult();
 
             acmTask.setTaskStartDate(hti.getStartTime());
             acmTask.setTaskFinishedDate(hti.getEndTime());
@@ -955,21 +904,15 @@ public class ActivitiTaskDao implements TaskDao
             // Using HistoricVariableInstance solves this issue and we'll use this until we find any
             // better solution for this issue
 
-            HistoricVariableInstance historicVariableInstance = getActivitiHistoryService().
-                    createHistoricVariableInstanceQuery().
-                    taskId(retval.getId().toString()).
-                    variableName(TaskConstants.VARIABLE_NAME_DETAILS).
-                    singleResult();
+            HistoricVariableInstance historicVariableInstance = getActivitiHistoryService().createHistoricVariableInstanceQuery().taskId(retval.getId().toString())
+                    .variableName(TaskConstants.VARIABLE_NAME_DETAILS).singleResult();
             if (historicVariableInstance != null)
             {
                 retval.setDetails((String) historicVariableInstance.getValue());
             }
 
-            historicVariableInstance = getActivitiHistoryService().
-                    createHistoricVariableInstanceQuery().
-                    taskId(retval.getId().toString()).
-                    variableName(TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS).
-                    singleResult();
+            historicVariableInstance = getActivitiHistoryService().createHistoricVariableInstanceQuery().taskId(retval.getId().toString()).variableName(TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS)
+                    .singleResult();
             if (historicVariableInstance != null)
             {
                 retval.setReworkInstructions((String) historicVariableInstance.getValue());
@@ -996,10 +939,8 @@ public class ActivitiTaskDao implements TaskDao
 
         if (log.isTraceEnabled())
         {
-            log.trace("Activiti task id '" + retval.getTaskId() + "' for object type '" +
-                    retval.getAttachedToObjectType() + "'" +
-                    ", object id '" + retval.getAttachedToObjectId() + "' found for user '" + retval.getAssignee()
-                    + "'");
+            log.trace("Activiti task id '" + retval.getTaskId() + "' for object type '" + retval.getAttachedToObjectType() + "'" + ", object id '" + retval.getAttachedToObjectId()
+                    + "' found for user '" + retval.getAssignee() + "'");
         }
 
         return retval;
@@ -1023,12 +964,14 @@ public class ActivitiTaskDao implements TaskDao
         log.info("Creating folder for task with ID: " + task.getId());
 
         if (task.getContainer() != null && task.getContainer().getFolder() != null)
+        {
             return;
+        }
 
         task = getTaskBusinessRule().applyRules(task);
 
-        // if the task doesn't have a container folder, the rules will set the EcmFolderPath.  If it does have
-        // one, the rules will leave EcmFolderPath null.  So only create a folder if EcmFolderPath is not null.
+        // if the task doesn't have a container folder, the rules will set the EcmFolderPath. If it does have
+        // one, the rules will leave EcmFolderPath null. So only create a folder if EcmFolderPath is not null.
 
         if (task.getEcmFolderPath() != null)
         {
@@ -1068,18 +1011,12 @@ public class ActivitiTaskDao implements TaskDao
         }
     }
 
-    private void findProcessNameAndTaskOutcomes(
-            AcmTask retval,
-            String processDefinitionId,
-            String processInstanceId,
-            String taskDefinitionKey)
+    private void findProcessNameAndTaskOutcomes(AcmTask retval, String processDefinitionId, String processInstanceId, String taskDefinitionKey)
     {
-        ProcessDefinition pd =
-                getActivitiRepositoryService().createProcessDefinitionQuery().processDefinitionId(processDefinitionId).singleResult();
+        ProcessDefinition pd = getActivitiRepositoryService().createProcessDefinitionQuery().processDefinitionId(processDefinitionId).singleResult();
         retval.setBusinessProcessName(pd.getName());
         retval.setAdhocTask(false);
-        retval.setBusinessProcessId(
-                processInstanceId == null ? null : Long.valueOf(processInstanceId));
+        retval.setBusinessProcessId(processInstanceId == null ? null : Long.valueOf(processInstanceId));
 
         List<FormProperty> formProperties = findFormPropertiesForTask(processDefinitionId, taskDefinitionKey);
         if (formProperties != null)
@@ -1172,12 +1109,12 @@ public class ActivitiTaskDao implements TaskDao
         acmTask.setPercentComplete(percentComplete);
 
         // AFDP-1876 Task next assignee field: for ad-hoc tasks (not part of a business process) the next assignee
-        // will be stored here in task local variables.  It's hard to imagine why a "next assignee" is needed for an
+        // will be stored here in task local variables. It's hard to imagine why a "next assignee" is needed for an
         // ad-hoc task - where you can just change the assignee directly - but we have this code here for
-        // consistency and to avoid surprises.  This way, every task can have a next assignee.
+        // consistency and to avoid surprises. This way, every task can have a next assignee.
         //
         // Note, if the task already has nextAssignee set, then the process-level variables had the next assignee,
-        // and we don't want to overwrite it here.  So only check the task local variables if the nextAssignee is null.
+        // and we don't want to overwrite it here. So only check the task local variables if the nextAssignee is null.
         if (acmTask.getNextAssignee() == null)
         {
             String nextAssignee = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_NEXT_ASSIGNEE);
@@ -1242,8 +1179,8 @@ public class ActivitiTaskDao implements TaskDao
             String details = (String) activitiTask.getTaskLocalVariables().get(TaskConstants.VARIABLE_NAME_DETAILS);
             acmTask.setDetails(details);
 
-            //only on rework task, first time rework instructions will be fetched from process variables
-            //otherwise, rework instruction will be fetched via task local variable
+            // only on rework task, first time rework instructions will be fetched from process variables
+            // otherwise, rework instruction will be fetched via task local variable
             String reworkInstructions = (String) activitiTask.getTaskLocalVariables().get(TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS);
             if (reworkInstructions != null)
             {
@@ -1273,22 +1210,17 @@ public class ActivitiTaskDao implements TaskDao
             acmTask.setAdhocTask(true);
         }
 
-        // only business process tasks can have a candidate group, so only check if the task is from a process.
-        // also, if the task already has an assignee, we don't care about the candidate group.  So, only
-        // lookup candidate groups for business process tasks with no assignee.
-        if (pid != null && acmTask.getAssignee() == null)
+        //if the task already has an assignee, we don't care about the candidate group.
+        if (acmTask.getAssignee() == null || acmTask.getAssignee().isEmpty())
         {
             List<String> candidateGroups = findCandidateGroups(activitiTask.getId());
             acmTask.setCandidateGroups(candidateGroups);
         }
 
-
         if (log.isTraceEnabled())
         {
-            log.trace("Activiti task id '" + acmTask.getTaskId() + "' for object type '" +
-                    acmTask.getAttachedToObjectType() + "'" +
-                    ", object id '" + acmTask.getAttachedToObjectId() + ", object number '" + acmTask.getAttachedToObjectName() + "' found for user '" + acmTask.getAssignee()
-                    + "'");
+            log.trace("Activiti task id '" + acmTask.getTaskId() + "' for object type '" + acmTask.getAttachedToObjectType() + "'" + ", object id '" + acmTask.getAttachedToObjectId()
+                    + ", object number '" + acmTask.getAttachedToObjectName() + "' found for user '" + acmTask.getAssignee() + "'");
         }
 
         List<AcmParticipant> participants = getParticipantDao().findParticipantsForObject("TASK", acmTask.getTaskId());
@@ -1303,16 +1235,13 @@ public class ActivitiTaskDao implements TaskDao
 
         if (candidates != null)
         {
-            List<String> retval = candidates.stream().filter(il -> TaskConstants.IDENTITY_LINK_TYPE_CANDIDATE.equals(il.getType()))
-                    .filter(il -> il.getGroupId() != null)
-                    .map(IdentityLink::getGroupId)
+            List<String> retval = candidates.stream().filter(il -> TaskConstants.IDENTITY_LINK_TYPE_CANDIDATE.equals(il.getType())).filter(il -> il.getGroupId() != null).map(IdentityLink::getGroupId)
                     .collect(Collectors.toList());
             return retval;
         }
 
         return null;
     }
-
 
     private Date shiftDateFromToday(int daysFromToday)
     {
@@ -1356,7 +1285,8 @@ public class ActivitiTaskDao implements TaskDao
                 acmTask.setDocumentUnderReview(docUnderReview);
             }
 
-            // AFDP-1876 if the task is part of a business process, the next assignee will be stored in process variables.
+            // AFDP-1876 if the task is part of a business process, the next assignee will be stored in process
+            // variables.
             acmTask.setNextAssignee((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_NEXT_ASSIGNEE));
 
             acmTask.setLegacySystemId((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID));
@@ -1393,14 +1323,14 @@ public class ActivitiTaskDao implements TaskDao
         this.activitiRepositoryService = activitiRepositoryService;
     }
 
-    public void setActivitiHistoryService(HistoryService activitiHistoryService)
-    {
-        this.activitiHistoryService = activitiHistoryService;
-    }
-
     public HistoryService getActivitiHistoryService()
     {
         return activitiHistoryService;
+    }
+
+    public void setActivitiHistoryService(HistoryService activitiHistoryService)
+    {
+        this.activitiHistoryService = activitiHistoryService;
     }
 
     public Map<String, Integer> getPriorityLevelToNumberMap()
@@ -1526,5 +1456,24 @@ public class ActivitiTaskDao implements TaskDao
     public void setObjectChangedNotifier(AcmObjectChangedNotifier objectChangedNotifier)
     {
         this.objectChangedNotifier = objectChangedNotifier;
+    }
+
+    @Override
+    public AcmNotifiableEntity findEntity(Long id)
+    {
+        try
+        {
+            return findById(id);
+        } catch (AcmTaskException e)
+        {
+            log.error("Task not found:", e);
+        }
+        return null;
+    }
+
+    @Override
+    public String getSupportedNotifiableObjectType()
+    {
+        return TaskConstants.OBJECT_TYPE;
     }
 }

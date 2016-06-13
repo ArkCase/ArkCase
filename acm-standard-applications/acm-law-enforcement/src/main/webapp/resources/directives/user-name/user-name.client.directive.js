@@ -9,8 +9,9 @@
  *
  * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/user-name/user-name.client.directive.js directives/user-name/user-name.client.directive.js}
  *
- * @param {string} userId User Identifier that displayed if application property ApplicationConfigService.PROPERTIES.NAME  = 'userId'
- * @param {string} userName User Name that displayed if application property ApplicationConfigService.PROPERTIES.NAME  = 'userName'
+ * @param {Object} user object containing data for directive
+ * @param {string} user.userId User Identifier that displayed if application property ApplicationConfigService.PROPERTIES.NAME  = 'userId'
+ * @param {string} user.userName User Name that displayed if application property ApplicationConfigService.PROPERTIES.NAME  = 'userName'
  *
  * The userName directive displays userId or full user name depends on application configuration.
  * If configuration settings not defined then it displays Full user name by default.
@@ -19,7 +20,18 @@
  * @example
  <example>
  <file name="index.html">
- <user-name userId="{{profile.userId}}" userName="{{profile.fullName}}"></user-name>
+ <user-name user"{{user}}"></user-name>
+ </file>
+ <file name="app.js">
+ angular.module('examples').controller('appController', ['$scope'
+ , function ($scope) {
+
+        $scope.user = {
+            userId: 'ann-acm',
+            userName: 'Ann Administrator'
+        }
+    }
+ ]);
  </file>
  </example>
  */
@@ -29,23 +41,18 @@ angular.module('directives').directive('userName', ['$q', 'ApplicationConfigServ
             restrict: 'E',
             transclude: true,
             scope: {
-                userName: '=',
-                userId: '='
+                user: '='
             },
 
             link: function (scope, element, attrs) {
 
-                var userName = null;
-                var userId = null;
+                var user = null;
+                scope.displayName = "";
 
-                scope.$watch('userName', function (newUserName) {
-                    userName = newUserName;
-                    update(scope, userName, userId);
-                });
-
-                scope.$watch('userId', function (newUserId) {
-                    userId = newUserId;
-                    update(scope, userName, userId);
+                scope.$watch('user', function (newUser) {
+                    if (newUser != null) {
+                        update(scope, newUser);
+                    }
                 });
             },
 
@@ -53,7 +60,7 @@ angular.module('directives').directive('userName', ['$q', 'ApplicationConfigServ
         };
 
 
-        function update(scope, userName, userId) {
+        function update(scope, user) {
             $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME)])
                 .then(function (result) {
                     var userNameProp = result[0];
@@ -61,12 +68,11 @@ angular.module('directives').directive('userName', ['$q', 'ApplicationConfigServ
                     // Display user Id as userName property equals to 'userId'
                     // otherwise display full user name
                     if (userNameProp == 'userId') {
-                        scope.displayName = userId;
+                        scope.displayName = user.userId;
                     } else {
-                        scope.displayName = userName;
+                        scope.displayName = user.userName;
                     }
                 });
         }
-
     }
 ]);

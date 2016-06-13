@@ -6,12 +6,13 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         var UUIDRegExString = ".*-UUID-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}";
 
         var UUIDRegEx = new RegExp(UUIDRegExString);
-        
+
         $scope.data = [];
         var groupsMap = {};
 
         $scope.config.$promise.then(function (config) {
             $scope.cfg = _.find(config.components, {id: 'usersPicker'});
+            $scope.cfgOrgHierarchy = _.find(config.components, {id: 'orgHierarchy'});
         });
 
         function createTreeData(groups) {
@@ -50,8 +51,14 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         }
 
         $scope.onLoadMore = function (currentPage, pageSize) {
+            var groupsPromise;
+            if ($scope.cfgOrgHierarchy && Util.isArray($scope.cfgOrgHierarchy.topLevelGroupTypes)) {
+                groupsPromise = organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize, $scope.cfgOrgHierarchy.topLevelGroupTypes);
+            }
+            else {
+                groupsPromise = organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize, []);
+            }
 
-            var groupsPromise = organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize);
 
             groupsPromise.then(function (payload) {
                 var tempGroups = payload.data.response.docs;

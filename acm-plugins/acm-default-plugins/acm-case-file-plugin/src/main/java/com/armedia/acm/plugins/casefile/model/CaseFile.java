@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.casefile.model;
 
+import com.armedia.acm.core.AcmNotifiableEntity;
+import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
@@ -50,8 +52,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Entity
 @Table(name = "acm_case_file")
@@ -60,7 +64,8 @@ import java.util.Optional;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.casefile.model.CaseFile")
-public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity
+public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
+        AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity, AcmNotifiableEntity
 {
     private static final long serialVersionUID = -6035628455385955008L;
 
@@ -125,6 +130,9 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     @JoinColumns({@JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
     private List<AcmParticipant> participants = new ArrayList<>();
 
+    @Transient
+    private Set<AcmNotificationReceiver> receivers = new HashSet<>();
+
     @Column(name = "cm_due_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dueDate;
@@ -157,9 +165,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     @OneToMany
     @JoinColumn(name = "cm_milestone_object_id", updatable = false, insertable = false)
     private List<AcmMilestone> milestones = new ArrayList<>();
-
-    @Transient
-    private PersonAssociation originator;
 
     @Column(name = "cm_case_restricted_flag", nullable = false)
     @Convert(converter = BooleanToStringConverter.class)
@@ -209,11 +214,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
             setStatus("DRAFT");
         }
 
-        if (getOriginator() != null)
-        {
-            personAssociationResolver(getOriginator());
-        }
-
         setupChildPointers();
     }
 
@@ -256,7 +256,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
 
         if (personAssoc.getPerson().getPersonAssociations() == null)
         {
-            personAssoc.getPerson().setPersonAssociations(new ArrayList<PersonAssociation>());
+            personAssoc.getPerson().setPersonAssociations(new ArrayList<>());
         }
 
         personAssoc.getPerson().getPersonAssociations().addAll(Arrays.asList(personAssoc));
@@ -300,15 +300,14 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
 
         if (found != null && found.isPresent())
         {
-            originator = found.get();
+            return found.get();
         }
 
-        return originator;
+        return null;
     }
 
     public void setOriginator(PersonAssociation originator)
     {
-        this.originator = originator;
 
         if (getPersonAssociations() == null)
         {
@@ -347,7 +346,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     public void setCaseNumber(String caseNumber)
     {
         this.caseNumber = caseNumber;
-        setupChildPointers();
     }
 
     public String getCaseType()
@@ -663,7 +661,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
                 + '\'' + ", incidentDate=" + incidentDate + ", created=" + created + ", creator='" + creator + '\'' + ", modified=" + modified + ", modifier='" + modifier + '\'' + ", closed=" + closed
                 + ", disposition='" + disposition + '\'' + ", priority='" + priority + '\'' + ", objectType='" + objectType + '\'' + ", participants=" + participants + ", dueDate=" + dueDate
                 + ", changeCaseStatus=" + changeCaseStatus + ", approvers=" + approvers + ", ecmFolderPath='" + ecmFolderPath + '\'' + ", personAssociations=" + personAssociations + ", milestones="
-                + milestones + ", originator=" + originator + ", restricted=" + restricted + ", childObjects=" + childObjects + ", container=" + container + ", courtroomName='" + courtroomName + '\''
+                + milestones + ", restricted=" + restricted + ", childObjects=" + childObjects + ", container=" + container + ", courtroomName='" + courtroomName + '\''
                 + ", responsibleOrganization='" + responsibleOrganization + '\'' + ", nextCourtDate=" + nextCourtDate + '\'' + ", className='" + className + ", legacySystemId='" + legacySystemId + "'}";
     }
 
@@ -677,5 +675,20 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     public void setLegacySystemId(String legacySystemId)
     {
         this.legacySystemId = legacySystemId;
+    }
+
+    @Override
+    @JsonIgnore
+    public Set<AcmNotificationReceiver> getReceivers()
+    {
+        receivers.addAll(participants);
+        return receivers;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getNotifiableEntityTitle()
+    {
+        return caseNumber;
     }
 }

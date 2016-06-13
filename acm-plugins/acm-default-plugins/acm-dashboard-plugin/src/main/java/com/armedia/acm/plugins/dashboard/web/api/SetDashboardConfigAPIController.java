@@ -60,10 +60,8 @@ public class SetDashboardConfigAPIController
             throw new AcmDashboardException("Module name:" + moduleName + "does  not exist");
         }
 
-        if (log.isInfoEnabled())
-        {
-            log.info("Updating dashboard configuration for user '" + userId + "'");
-        }
+        log.info("Updating dashboard configuration for user: [{}] '", userId);
+
         Dashboard d = null;
         try
         {
@@ -72,10 +70,7 @@ public class SetDashboardConfigAPIController
             int retval = dashboardService.setDashboardConfigForUserAndModule(user, updateDashboardDto, moduleName);
             if (retval != 1)
             {
-                if (log.isErrorEnabled())
-                {
-                    log.error("Unable to update dashboard config because dashboard for user: " + userId + "is not found");
-                }
+                log.error("Unable to update dashboard config because dashboard for user: [{}] is not found", userId);
                 throw new AcmObjectNotFoundException("dashboard", null, "Object not found", null);
             } else
             {

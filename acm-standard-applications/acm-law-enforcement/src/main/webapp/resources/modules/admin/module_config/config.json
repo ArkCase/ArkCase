@@ -379,6 +379,15 @@
       ],
       "paginationPageSize": 10,
       "start": 0
+    },
+    {
+      "id": "orgHierarchy",
+      "title": "Organization Hierarchy",
+      "enabled": "true",
+      "topLevelGroupTypes": [
+        "LDAP_GROUP",
+        "ADHOC_GROUP"
+      ]
     }
   ],
   "adminTree": [

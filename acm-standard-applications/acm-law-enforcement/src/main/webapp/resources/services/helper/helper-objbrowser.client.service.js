@@ -133,6 +133,16 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                         that.scope.treeControl.selectComponent(linkParams.objectType, linkParams.objectId, linkParams.linkId);
                     }
                 });
+
+                that.scope.$on('tree-updated', function (e, objectInfo) {
+                    if (that.scope.treeControl) {
+                        that.firstLoad = true;
+                        that.nodeId = undefined;
+
+                        Service.resetCurrentObjectSetting();
+                        that.scope.treeControl.refresh();
+                    }
+                });
             }
 
 
@@ -240,6 +250,10 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                             return error;
                         }
                     );
+                });
+
+                that.scope.$on('report-tree-updated', function (e, objectInfo) {
+                    that.scope.$broadcast('tree-updated', objectInfo);
                 });
 
                 that.scope.$on('report-object-updated', function (e, objectInfo) {
@@ -733,6 +747,21 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
             var objectSettingCache = new Store.Variable(Service.VariableNames.CURRENT_OBJECT_SETTING);
             var objectSetting = objectSettingCache.get();
             return objectSetting;
+        };
+
+
+        /**
+         * @ngdoc method
+         * @name resetCurrentObjectSetting
+         * @methodOf services:Helper.ObjectBrowserService
+         *
+         * @description
+         * Reset ObjectSetting
+         *
+         */
+        Service.resetCurrentObjectSetting = function () {
+            var objectSettingCache = new Store.Variable(Service.VariableNames.CURRENT_OBJECT_SETTING);
+            objectSettingCache.set(null);
         };
 
 
