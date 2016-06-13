@@ -55,7 +55,7 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
 
         };
 
-        //temp check to start/stop websocket, we should read it from config file
+        //temp check to start/stop websockets, we should read it from config file
         if (service.shouldStart) {
             initialize();
         }

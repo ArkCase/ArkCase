@@ -10,6 +10,8 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
 
         function handleMessage(message) {
 
+            //we need to filter messages for objects that we are not interested
+            //until we find out what to do with them
             if (message.className.indexOf('AcmObjectHistory') === -1
                 && message.className.indexOf('AcmAssignment') === -1
                 && message.className.indexOf('EcmFile') === -1
@@ -28,11 +30,6 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
                     publishMessage(message.parentObjectType, message.parentObjectId, 'UPDATE');
                 }
             }
-            else {
-                //console.log('Ignore events');
-            }
-            console.log('_storeCacheMap');
-            console.log($rootScope._storeCacheMap);
         }
 
         function handleCache(objectType, objectId, action) {
@@ -50,9 +47,7 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
                     objectType: objectType
                 };
                 $rootScope.$bus.publish(eventName, data);
-            }
-
-            if (action == 'UPDATE') {
+            } else {
                 var eventName = "object.changed/" + objectType + "/" + objectId;
                 $rootScope.$bus.publish(eventName, objectId);
             }
@@ -120,7 +115,7 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
 
         function getCacheInfoName(objectType) {
 
-            //all string are hardcoded
+            //all strings are hardcoded
             //we can create const service and use it here and in all places where items are stored in cache
 
             var cacheInfoStoreName = '';
