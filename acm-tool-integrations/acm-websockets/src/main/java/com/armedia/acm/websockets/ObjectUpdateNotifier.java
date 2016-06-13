@@ -26,6 +26,8 @@ public class ObjectUpdateNotifier
     public void notifyChange(Message<AcmObjectEvent> message)
     {
         AcmObjectEvent event = message.getPayload();
-        template.convertAndSend("/topic/objects/changed/" + event.getObjectType() + "/" + event.getObjectId(), event);
+        template.convertAndSend("/topic/objects/changed", event);
+        template.convertAndSend("/topic/objects/" + event.getObjectType() + "/" + event.getObjectId(), event);
+        template.convertAndSend("/topic/objects/changed/" + event.getUser(), event);
     }
 }
