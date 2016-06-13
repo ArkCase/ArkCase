@@ -63,13 +63,13 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                        var filter = $scope.modalConfig.searchFilter + "&fq=\"Object Id\":NOT " + $scope.currentObjectId;
+                        var filter = $scope.modalConfig.searchFilter + "&-object_id_s:" + $scope.currentObjectId;
                         if ($scope.gridOptions.data.length > 0) {
                             for (var i = 0; i < $scope.gridOptions.data.length; i++) {
-                                filter += "&fq=\"Object Id\":NOT " + $scope.gridOptions.data[i].targetId;
+                                filter += "&-object_id_s:" + $scope.gridOptions.data[i].targetId;
                             }
                         }
-                        return filter;
+                        return filter.replace(/&/gi, '%26');
                     },
                     $config: function () {
                         return $scope.modalConfig;
