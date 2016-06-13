@@ -63,10 +63,11 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                        var filter = $scope.modalConfig.searchFilter + "&-object_id_s:" + $scope.currentObjectId;
+                    	var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.currentObjectId + "-CASE_FILE";
                         if ($scope.gridOptions.data.length > 0) {
                             for (var i = 0; i < $scope.gridOptions.data.length; i++) {
-                                filter += "&-object_id_s:" + $scope.gridOptions.data[i].targetId;
+                                var data = $scope.gridOptions.data[i];
+                                filter += "&-id:" + data.targetId + "-" + data.targetType;
                             }
                         }
                         return filter.replace(/&/gi, '%26');
