@@ -30,7 +30,6 @@
         <module>acm-encryption</module>
         <module>acm-email</module>
         <module>acm-reload-properties</module>
-        <module>acm-snowbound-integration</module>
         <module>acm-ephesoft</module>
         <module>acm-pdf-utilities</module>
         <module>acm-form-configuration</module>
