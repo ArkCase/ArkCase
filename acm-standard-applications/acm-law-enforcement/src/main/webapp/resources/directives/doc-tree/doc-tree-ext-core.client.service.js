@@ -10,8 +10,8 @@
  *
  * DocTree common extensions for core. Currently, a DocTree extension can add or customize tree table column or/and menu command.
  */
-angular.module('services').factory('DocTreeExt.Core', ['$q', 'UtilService', 'PermissionsService',
-    function ($q, Util, PermissionsService) {
+angular.module('services').factory('DocTreeExt.Core', ['$q', 'UtilService', 'ObjectService', 'PermissionsService'
+    , function ($q, Util, ObjectService, PermissionsService) {
         var Service = {};
 
         /**
