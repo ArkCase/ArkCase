@@ -38,6 +38,7 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricIdentityLink;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
@@ -855,6 +856,16 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         retval.setTitle(hti.getName());
         retval.setAssignee(hti.getAssignee());
 
+        //set Candidate Groups if there are any
+        if (retval.getAssignee() == null)
+        {
+            List<String> candidateGroups = findHistoricCandidateGroups(hti.getId());
+            if (candidateGroups != null && !candidateGroups.isEmpty())
+            {
+                retval.setCandidateGroups(candidateGroups);
+            }
+        }
+
         if (hti.getProcessVariables() != null)
         {
             retval.setAttachedToObjectId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_ID));
@@ -1221,7 +1232,27 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 
         if (candidates != null)
         {
-            List<String> retval = candidates.stream().filter(il -> TaskConstants.IDENTITY_LINK_TYPE_CANDIDATE.equals(il.getType())).filter(il -> il.getGroupId() != null).map(IdentityLink::getGroupId)
+            List<String> retval = candidates.stream()
+                    .filter(il -> TaskConstants.IDENTITY_LINK_TYPE_CANDIDATE.equals(il.getType()))
+                    .filter(il -> il.getGroupId() != null)
+                    .map(IdentityLink::getGroupId)
+                    .collect(Collectors.toList());
+            return retval;
+        }
+
+        return null;
+    }
+
+
+    private List<String> findHistoricCandidateGroups(String taskId)
+    {
+        List<HistoricIdentityLink> candidates = getActivitiHistoryService().getHistoricIdentityLinksForTask(taskId);
+        if (candidates != null)
+        {
+            List<String> retval = candidates.stream()
+                    .filter(il -> TaskConstants.IDENTITY_LINK_TYPE_CANDIDATE.equalsIgnoreCase(il.getType()))
+                    .filter(il -> il.getGroupId() != null)
+                    .map(HistoricIdentityLink::getGroupId)
                     .collect(Collectors.toList());
             return retval;
         }
