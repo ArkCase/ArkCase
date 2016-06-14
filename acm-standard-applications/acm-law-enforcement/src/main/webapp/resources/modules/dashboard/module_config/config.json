@@ -116,6 +116,7 @@
           "name": "attachedToObjectName",
           "displayName": "dashboard.widgets.myTasks.table.header.caseId",
           "headerCellFilter": "translate",
+          "cellTemplate": "<a data-ui-sref=\"cases.main({id: grid.appScope.myTasks.filterCaseId(row.entity.attachedToObjectName)})\">{{COL_FIELD}}<\/a>", 
           "width": 100
         }
       ]

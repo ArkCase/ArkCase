@@ -1,7 +1,9 @@
 package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.activiti.AcmTaskEvent;
+import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -60,7 +62,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ActivitiTaskDao implements TaskDao
+public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 {
     private RuntimeService activitiRuntimeService;
     private TaskService activitiTaskService;
@@ -1307,14 +1309,14 @@ public class ActivitiTaskDao implements TaskDao
         this.activitiRepositoryService = activitiRepositoryService;
     }
 
-    public void setActivitiHistoryService(HistoryService activitiHistoryService)
-    {
-        this.activitiHistoryService = activitiHistoryService;
-    }
-
     public HistoryService getActivitiHistoryService()
     {
         return activitiHistoryService;
+    }
+
+    public void setActivitiHistoryService(HistoryService activitiHistoryService)
+    {
+        this.activitiHistoryService = activitiHistoryService;
     }
 
     public Map<String, Integer> getPriorityLevelToNumberMap()
@@ -1435,5 +1437,24 @@ public class ActivitiTaskDao implements TaskDao
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)
     {
         this.taskEventPublisher = taskEventPublisher;
+    }
+
+    @Override
+    public AcmNotifiableEntity findEntity(Long id)
+    {
+        try
+        {
+            return findById(id);
+        } catch (AcmTaskException e)
+        {
+            log.error("Task not found:", e);
+        }
+        return null;
+    }
+
+    @Override
+    public String getSupportedNotifiableObjectType()
+    {
+        return TaskConstants.OBJECT_TYPE;
     }
 }

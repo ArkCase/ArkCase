@@ -1,10 +1,8 @@
-/**
- * 
- */
 package com.armedia.acm.data.service;
 
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.data.AcmNotificationDao;
 
 /**
  * @author riste.tutureski
@@ -12,5 +10,7 @@ import com.armedia.acm.data.AcmAbstractDao;
  */
 public interface AcmDataService 
 {
-	public AcmAbstractDao<AcmStatefulEntity> getDaoByObjectType(String objectType);
+	AcmAbstractDao<AcmStatefulEntity> getDaoByObjectType(String objectType);
+
+	AcmNotificationDao getNotificationDaoByObjectType(String objectType);
 }

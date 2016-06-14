@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
@@ -50,6 +51,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
 
     private static String getDate()
     {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         SimpleDateFormat formatter = new SimpleDateFormat(DateFormats.TASK_NAME_DATE_FORMAT);
         return formatter.format(new Date());
     }
@@ -57,7 +59,6 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
     @Before
     public void setUp()
     {
-
         taskEventListener = new AcmApplicationTaskEventListener();
         mockAcmObjectHistoryService = createMock(AcmObjectHistoryService.class);
         mockAcmObjectHistoryEventPublisher = createMock(AcmObjectHistoryEventPublisher.class);
