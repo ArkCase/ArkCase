@@ -48,7 +48,6 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -259,7 +258,12 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
             personAssoc.getPerson().setPersonAssociations(new ArrayList<>());
         }
 
-        personAssoc.getPerson().getPersonAssociations().addAll(Arrays.asList(personAssoc));
+        if (!personAssoc.getPerson().getPersonAssociations().contains(personAssoc))
+        {
+            personAssoc.getPerson().getPersonAssociations().add(personAssoc);
+        }
+
+
     }
 
     @Override
