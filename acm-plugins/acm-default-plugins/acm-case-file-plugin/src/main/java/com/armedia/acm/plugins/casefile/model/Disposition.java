@@ -37,9 +37,6 @@ public class Disposition implements Serializable, AcmObject, AcmEntity
 {
     private static final long serialVersionUID = 7786267451369775524L;
 
-   // @Transient
-    //public static final String OBJECT_TYPE = "DISPOSITION";
-
     @Id
     @TableGenerator(name = "disposition_gen",
             table = "acm_disposition_id",
@@ -90,7 +87,6 @@ public class Disposition implements Serializable, AcmObject, AcmEntity
     private String className = this.getClass().getName();
 
     @Override
-    @JsonIgnore
     public String getObjectType() {
         return CaseFileConstants.OBJECT_TYPE_DISPOSITION;
     }
