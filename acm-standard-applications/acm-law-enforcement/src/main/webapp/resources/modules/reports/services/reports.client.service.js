@@ -41,6 +41,8 @@ angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService
                 if (params.stateSelected) {
                     reportUrl += "&caseStatus=" + params.stateSelected;
                 }
+                console.log("REPORT URL");
+                console.log(reportUrl);
                 return $sce.trustAsResourceUrl(reportUrl);
             }
         }

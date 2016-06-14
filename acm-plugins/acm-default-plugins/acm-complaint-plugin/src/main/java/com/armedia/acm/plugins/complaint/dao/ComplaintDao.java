@@ -7,7 +7,6 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.complaint.model.ComplaintListView;
 import com.armedia.acm.plugins.complaint.model.TimePeriod;
-import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +20,6 @@ import javax.persistence.criteria.Subquery;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by armdev on 4/4/14.
@@ -33,17 +31,6 @@ public class ComplaintDao extends AcmAbstractDao<Complaint> implements AcmNotifi
     @Override
     public Complaint save(Complaint toSave)
     {
-        if (toSave.getId() != null)
-        {
-            for (PersonAssociation personAssoc : toSave.getPersonAssociations())
-            {
-                Optional<PersonAssociation> found = personAssoc.getPerson().getPersonAssociations().stream().filter(pa -> pa.getId().equals(personAssoc.getId())).findFirst();
-                if (found == null || !found.isPresent())
-                {
-                    personAssoc.getPerson().getPersonAssociations().add(personAssoc);
-                }
-            }
-        }
         return super.save(toSave);
     }
 
