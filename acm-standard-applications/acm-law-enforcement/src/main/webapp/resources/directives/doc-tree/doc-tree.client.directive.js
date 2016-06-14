@@ -1387,7 +1387,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             name: "email",
                             execute: function (nodes, args) {
                                 var node = nodes[0];
-                                Email.openModal(actNodes);
+                                Email.openModal(nodes);
                             }
                         }
                         , {
@@ -1608,15 +1608,15 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             var menuResource = null;
                             var selNodes = DocTree.getSelectedNodes();
                             var batchMode = !Util.isArrayEmpty(selNodes);
-                            var actNodes = (batchMode) ? selNodes : [node];
+                            var nodes = (batchMode) ? selNodes : [node];
                             if (batchMode) {
-                                menuResource = DocTree.Menu.getBatchResource(selNodes);
+                                menuResource = DocTree.Menu.getBatchResource(nodes);
                             } else if ("RECORD" == Util.goodValue(node.data.status)) {
                                 menuResource = DocTree.Menu.getRecordResource(node);
                             } else {
                                 menuResource = DocTree.Menu.getBasicResource(node);
                             }
-                            var menu = DocTree.Menu.makeContextMenu(menuResource, actNodes);
+                            var menu = DocTree.Menu.makeContextMenu(menuResource, nodes);
 
                             $q.when(menu).then(function (menuResult) {
                                 $s.contextmenu("replaceMenu", menuResult);
