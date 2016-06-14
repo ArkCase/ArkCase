@@ -860,10 +860,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         if (retval.getAssignee() == null)
         {
             List<String> candidateGroups = findHistoricCandidateGroups(hti.getId());
-            if (candidateGroups != null && !candidateGroups.isEmpty())
-            {
-                retval.setCandidateGroups(candidateGroups);
-            }
+            retval.setCandidateGroups(candidateGroups);
         }
 
         if (hti.getProcessVariables() != null)
