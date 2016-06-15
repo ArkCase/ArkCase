@@ -13,7 +13,6 @@
         <property name="locations">
             <list>
                 <value>file:${user.home}/.arkcase/acm/acmEmailReceiver.properties</value>
-                <value>file:${user.home}/.arkcase/acm/acmObjectsNotifications.properties</value>
                 <value>file:${user.home}/.arkcase/acm/acm-forms.properties</value>
                 <value>file:${user.home}/.arkcase/acm/acm-reports.properties</value>
                 <value>file:${user.home}/.arkcase/acm/activiti.properties</value>

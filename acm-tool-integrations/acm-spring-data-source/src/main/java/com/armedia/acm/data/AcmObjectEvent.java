@@ -104,14 +104,15 @@ public class AcmObjectEvent
     @Override
     public String toString()
     {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Action: ").append(action)
-                .append(", Object Id: ").append(objectId)
-                .append(", Object Type: ").append(objectType)
-                .append(", Parent Object Id: ").append(parentObjectId)
-                .append(", Parent Object Type: ").append(parentObjectType)
-                .append(", Class Name: ").append(className)
-                .append(", User: ").append(user);
-        return sb.toString();
+        return "AcmObjectEvent{" +
+                "objectType='" + objectType + '\'' +
+                ", objectId=" + objectId +
+                ", user='" + user + '\'' +
+                ", action='" + action + '\'' +
+                ", className='" + className + '\'' +
+                ", parentObjectId=" + parentObjectId +
+                ", parentObjectType='" + parentObjectType + '\'' +
+                ", date=" + date +
+                '}';
     }
 }

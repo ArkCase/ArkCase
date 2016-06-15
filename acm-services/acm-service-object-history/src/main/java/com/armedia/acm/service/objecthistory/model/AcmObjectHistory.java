@@ -7,6 +7,7 @@ import com.armedia.acm.audit.model.NotAudited;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -197,12 +198,14 @@ public class AcmObjectHistory implements Serializable, AcmObject, AcmEntity, Acm
     }
 
     @Override
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Long getParentObjectId()
     {
         return objectId;
     }
 
     @Override
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String getParentObjectType()
     {
         return objectType;

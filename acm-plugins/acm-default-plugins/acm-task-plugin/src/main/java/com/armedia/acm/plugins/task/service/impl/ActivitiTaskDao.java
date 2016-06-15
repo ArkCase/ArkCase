@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.task.service.impl;
 import com.armedia.acm.activiti.AcmTaskEvent;
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.data.AcmObjectChangedNotifier;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
@@ -63,10 +62,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.armedia.acm.data.AcmObjectEventConstants.ACTION_DELETE;
-import static com.armedia.acm.data.AcmObjectEventConstants.ACTION_INSERT;
-import static com.armedia.acm.data.AcmObjectEventConstants.ACTION_UPDATE;
-
 
 public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 {
@@ -87,7 +82,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     private AcmContainerDao containerFolderDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private TaskEventPublisher taskEventPublisher;
-    private AcmObjectChangedNotifier objectChangedNotifier;
 
     @Override
     @Transactional
@@ -96,7 +90,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         Task activitiTask = getActivitiTaskService().newTask();
 
         AcmTask out = updateExistingActivitiTask(in, activitiTask);
-        objectChangedNotifier.notifyChange(ACTION_INSERT, out);
         if (out.getStatus().equalsIgnoreCase(TaskConstants.STATE_CLOSED))
         {
             String taskId = String.valueOf(out.getId());
@@ -114,7 +107,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         if (activitiTask != null)
         {
             AcmTask acmTask = updateExistingActivitiTask(in, activitiTask);
-            objectChangedNotifier.notifyChange(ACTION_UPDATE, acmTask);
             return acmTask;
         }
 
@@ -465,7 +457,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 Task existingTask = getActivitiTaskService().createTaskQuery().includeProcessVariables().includeTaskLocalVariables().taskId(String.valueOf(taskId)).singleResult();
 
                 AcmTask acmTask = acmTaskFromActivitiTask(existingTask);
-                objectChangedNotifier.notifyChange(ACTION_UPDATE, acmTask);
                 return acmTask;
             } catch (ActivitiException e)
             {
@@ -486,7 +477,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 getActivitiTaskService().unclaim(String.valueOf(taskId));
                 Task existingTask = getActivitiTaskService().createTaskQuery().includeProcessVariables().includeTaskLocalVariables().taskId(String.valueOf(taskId)).singleResult();
                 AcmTask acmTask = acmTaskFromActivitiTask(existingTask);
-                objectChangedNotifier.notifyChange(ACTION_UPDATE, acmTask);
                 return acmTask;
             } catch (ActivitiException e)
             {
@@ -812,7 +802,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             acmTask.setCompleted(true);
             String status = findTaskStatus(hti);
             acmTask.setStatus(status);
-            objectChangedNotifier.notifyChange(ACTION_UPDATE, acmTask);
             return acmTask;
         } catch (ActivitiException e)
         {
@@ -836,7 +825,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             acmTask.setCompleted(true);
             String status = findTaskStatus(hti, true);
             acmTask.setStatus(status);
-            objectChangedNotifier.notifyChange(ACTION_DELETE, acmTask);
             return acmTask;
         } catch (ActivitiException e)
         {
@@ -1451,11 +1439,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)
     {
         this.taskEventPublisher = taskEventPublisher;
-    }
-
-    public void setObjectChangedNotifier(AcmObjectChangedNotifier objectChangedNotifier)
-    {
-        this.objectChangedNotifier = objectChangedNotifier;
     }
 
     @Override
