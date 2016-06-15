@@ -1,13 +1,12 @@
 'use strict';
 
 angular.module('welcome').controller(
-    'WelcomeController',
-    [
+    'WelcomeController', [
         '$state',
         '$window',
         'Acm.LoginService',
         'Acm.AppService',
-        function ($state, $window, AcmLoginService, AcmAppService) {
+        function($state, $window, AcmLoginService, AcmAppService) {
             AcmLoginService.resetCaches();
             AcmLoginService.setLogin(true);
             AcmLoginService.setLastIdle();
@@ -33,9 +32,9 @@ angular.module('welcome').controller(
                 // redirect to hash passed in the URL of the login page
                 localStorage.removeItem("redirectUrl");
                 $window.location.href = AcmAppService
-                    .getAppUrl('home.html'
-                        + localStorage.redirectURL);
+                    .getAppUrl('home.html' + localStorage.redirectURL);
             } else {
                 $state.go("dashboard");
             }
-        }]);
+        }
+    ]);
