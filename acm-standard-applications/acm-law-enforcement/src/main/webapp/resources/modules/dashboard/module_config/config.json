@@ -116,7 +116,7 @@
           "name": "attachedToObjectName",
           "displayName": "dashboard.widgets.myTasks.table.header.caseComplaintId",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"{{row.entity.attachedToObjectType | hyperlinkFilter:''}}.main({id: grid.appScope.myTasks.filterColumnId(row.entity.attachedToObjectName)})\">{{COL_FIELD | filterColumn:'_'}}<\/a>",
+          "cellTemplate": "<button class='btn-link' ng-click='grid.appScope.myTasks.onClickCaseComplaintId(row.entity.attachedToObjectType,grid.appScope.myTasks.filterColumnId(row.entity.attachedToObjectName))'>{{COL_FIELD | filterColumn:'_'}}</button>",
           "width": 100
         }
       ]
