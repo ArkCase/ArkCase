@@ -97,7 +97,9 @@
       "header": "Choose User",
       "table.columns": {
         "name": "Name",
-        "id": "ID"
+        "type": "Type",
+        "title": "Title",
+        "id": "Username"
       }
     },
     "dialogGroupPicker": {
