@@ -4,7 +4,7 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import javax.persistence.CascadeType;
@@ -23,7 +23,6 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
@@ -33,6 +32,7 @@ import java.util.Date;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className")
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.casefile.model.Disposition")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Disposition implements Serializable, AcmObject, AcmEntity
 {
     private static final long serialVersionUID = 7786267451369775524L;

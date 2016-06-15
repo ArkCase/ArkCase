@@ -52,7 +52,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.person.model.Person")
-@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope=Person.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property="@UUID", scope=Person.class)
 public class Person implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
