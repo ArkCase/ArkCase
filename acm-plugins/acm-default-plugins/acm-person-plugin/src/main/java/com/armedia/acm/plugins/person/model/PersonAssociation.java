@@ -32,7 +32,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "acm_person_assoc")
-@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope=PersonAssociation.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property="@UUID", scope=PersonAssociation.class)
 public class PersonAssociation implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
