@@ -8,6 +8,7 @@ import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -421,12 +422,14 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     }
 
     @Override
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Long getParentObjectId()
     {
         return getContainer() != null ? getContainer().getContainerObjectId() : null;
     }
 
     @Override
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String getParentObjectType()
     {
         return getContainer() != null ? getContainer().getContainerObjectType() : null;

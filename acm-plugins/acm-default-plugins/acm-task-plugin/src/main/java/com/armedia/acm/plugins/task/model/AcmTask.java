@@ -1,8 +1,8 @@
 package com.armedia.acm.plugins.task.model;
 
-import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmNotificationReceiver;
+import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -444,6 +444,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
         this.parentObjectId = parentObjectId;
     }
 
+    @Override
     public Long getParentObjectId()
     {
         return parentObjectId;
@@ -552,7 +553,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     @JsonIgnore
     public Set<AcmNotificationReceiver> getReceivers()
     {
-        if(participants != null)
+        if (participants != null)
         {
             receivers.addAll(participants);
         }
