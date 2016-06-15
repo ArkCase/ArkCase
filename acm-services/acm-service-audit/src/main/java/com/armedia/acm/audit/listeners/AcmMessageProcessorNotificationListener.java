@@ -160,8 +160,13 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
             if (processor instanceof AbstractConnectedProcessor)
             {
                 AbstractConnectedProcessor abstractConnectedProcessor = (AbstractConnectedProcessor) processor;
-                eventProperties.put("Alfresco Repository Id", abstractConnectedProcessor.getRepositoryId().toString());
-                eventProperties.put("Base URL", abstractConnectedProcessor.getBaseUrl().toString());
+
+                String repositoryId = abstractConnectedProcessor.getRepositoryId() != null
+                        ? abstractConnectedProcessor.getRepositoryId().toString() : "null";
+                eventProperties.put("CMIS Repository Id", repositoryId);
+                String baseUrl = abstractConnectedProcessor.getBaseUrl() != null ? abstractConnectedProcessor.getBaseUrl().toString()
+                        : "null";
+                eventProperties.put("Base URL", baseUrl);
             }
 
             if (isMuleFlowsLoggingMessageEnabled() && ((event.getMessage().getProperty("contentType", PropertyScope.INVOCATION) == null)
