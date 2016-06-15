@@ -17,8 +17,8 @@ angular
             '$translateProvider',
             '$translatePartialLoaderProvider',
             '$httpProvider',
-            function ($locationProvider, $translateProvider,
-                      $translatePartialLoaderProvider, $httpProvider) {
+            function($locationProvider, $translateProvider,
+                     $translatePartialLoaderProvider, $httpProvider) {
                 $locationProvider.hashPrefix('!');
 
                 $httpProvider.interceptors.push(httpInterceptor);
@@ -27,7 +27,7 @@ angular
 
                 function noCacheInterceptor() {
                     return {
-                        request: function (config) {
+                        request: function(config) {
                             // Appends timestamp to url to avoid
                             // caching issues on IE
                             // only on GET requests with no explicit
@@ -35,11 +35,8 @@ angular
                             if (config.method == 'GET') {
                                 if (!config.cache) {
                                     var separator = config.url
-                                        .indexOf('?') === -1 ? '?'
-                                        : '&';
-                                    config.url += separator
-                                        + 'noCache='
-                                        + new Date().getTime();
+                                        .indexOf('?') === -1 ? '?' : '&';
+                                    config.url += separator + 'noCache=' + new Date().getTime();
                                 }
                             }
                             return config;
@@ -50,8 +47,7 @@ angular
                 // Initialize angular-translate
                 $translateProvider
                     .useLoader(
-                        '$translatePartialLoader',
-                        {
+                        '$translatePartialLoader', {
                             urlTemplate: 'api/latest/plugin/admin/labelmanagement/resource?ns={part}&lang={lang}'
                         });
 
@@ -115,46 +111,44 @@ angular
                         angular
                             .forEach(
                                 ApplicationConfiguration.suppressedErrorList,
-                                function (error) {
-                                    if (error.url == response.config.url
-                                        && error.status == response.status) {
+                                function(error) {
+                                    if (error.url == response.config.url && error.status == response.status) {
                                         isSuppressed = true;
                                     }
                                 });
                         return isSuppressed;
                     }
                 }
-            }]).run(
+            }
+        ]).run(
     ['$translate', '$translatePartialLoader',
-        function ($translate, $translatePartialLoader) {
+        function($translate, $translatePartialLoader) {
             $translatePartialLoader.addPart('core');
             $translatePartialLoader.addPart('welcome');
             $translate.refresh();
-        }]);
+        }
+    ]);
 
 // Load language info before start Angular application
 angular
     .element(document)
     .ready(
-        function () {
+        function() {
             $
                 .getJSON(
                     'api/latest/plugin/admin/labelmanagement/default-language',
-                    function (result) {
-                        ACM_SETTINGS.LANG = result.defaultLang
-                            || ACM_SETTINGS.LANG;
+                    function(result) {
+                        ACM_SETTINGS.LANG = result.defaultLang || ACM_SETTINGS.LANG;
                         angular
                             .bootstrap(
-                                document,
-                                [ApplicationConfiguration.applicationModuleName]);
+                                document, [ApplicationConfiguration.applicationModuleName]);
                     })
                 .fail(
-                    function () {
+                    function() {
                         // If language is missed then use
                         // default lang settings (en)
                         angular
                             .bootstrap(
-                                document,
-                                [ApplicationConfiguration.applicationModuleName]);
+                                document, [ApplicationConfiguration.applicationModuleName]);
                     });
         });
