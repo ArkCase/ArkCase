@@ -768,6 +768,16 @@
             "headerCellFilter": "translate"
           },
           {
+            "name": "object_type_s",
+            "displayName": "cases.comp.participants.dialogUserPicker.table.columns.type",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "title",
+            "displayName": "cases.comp.participants.dialogUserPicker.table.columns.title",
+            "headerCellFilter": "translate"
+          },
+          {
             "name": "object_id_s",
             "displayName": "cases.comp.participants.dialogUserPicker.table.columns.id",
             "headerCellFilter": "translate"
