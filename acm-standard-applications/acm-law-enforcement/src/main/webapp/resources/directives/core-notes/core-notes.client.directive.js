@@ -73,21 +73,23 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                 scope.$watchCollection('config', function (config, oldValue) {
                     if (!scope.notesInit.noteTitle) {
                         scope.notesInit.noteTitle = $translate.instant("common.directive.coreNotes.title");
-                        // if buttons were defined in config, try to use the getConfigurableButton method
-                        if (Util.goodArray(config.buttons)) {
-                            _.each(config.buttons, function(button) {
-                               gridHelper.addConfigurableButton(config, button);
-                            });
-                        } else {
-                            // no buttons were found in the config, use the default settings
-                            gridHelper.addButton(config, "edit");
-                            gridHelper.addButton(config, "delete");
+                        if (config) {
+                            // if buttons were defined in config, try to use the getConfigurableButton method
+                            if (Util.goodArray(config.buttons)) {
+                                _.each(config.buttons, function (button) {
+                                    gridHelper.addConfigurableButton(config, button);
+                                });
+                            } else {
+                                // no buttons were found in the config, use the default settings
+                                gridHelper.addButton(config, "edit");
+                                gridHelper.addButton(config, "delete");
+                            }
+                            gridHelper.setColumnDefs(config);
+                            gridHelper.setBasicOptions(config);
+                            gridHelper.disableGridScrolling(config);
+                            gridHelper.setUserNameFilter(promiseUsers);
+                            scope.retrieveGridData();
                         }
-                        gridHelper.setColumnDefs(config);
-                        gridHelper.setBasicOptions(config);
-                        gridHelper.disableGridScrolling(config);
-                        gridHelper.setUserNameFilter(promiseUsers);
-                        scope.retrieveGridData();
                     }
                 });
 
