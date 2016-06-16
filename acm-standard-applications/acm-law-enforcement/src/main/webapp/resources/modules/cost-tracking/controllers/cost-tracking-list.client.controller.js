@@ -7,16 +7,28 @@ angular.module('cost-tracking').controller('CostTrackingListController', ['$scop
         , Authentication, Util, ObjectService, HelperObjectBrowserService
         , CostTrackingListService, CostTrackingInfoService, ServCommService) {
 
-        //
-        // Check to see if complaint page is shown as a result returned by Frevvo
-        // Reset the tree cache so that new entry created by Frevvo can be shown.
-        // This is a temporary solution until UI and backend communication is implemented
-        //
-        var topics = ["new-costsheet"];
-        _.each(topics, function (topic) {
-            var data = ServCommService.popRequest("frevvo", topic);
-            if (data) {
-                CostTrackingListService.resetCostTrackingTreeData();
+        /*//
+         // Check to see if complaint page is shown as a result returned by Frevvo
+         // Reset the tree cache so that new entry created by Frevvo can be shown.
+         // This is a temporary solution until UI and backend communication is implemented
+         //
+         var topics = ["new-costsheet"];
+         _.each(topics, function (topic) {
+         var data = ServCommService.popRequest("frevvo", topic);
+         if (data) {
+         CostTrackingListService.resetCostTrackingTreeData();
+         }
+         });*/
+
+        //subscribe to the bus for the object
+        var eventName = "object.inserted";
+        $scope.$bus.subscribe(eventName, function (data) {
+            var frevvoRequest = ServCommService.popRequest("frevvo", "new-costsheet");
+            if (frevvoRequest) {
+                ObjectService.gotoUrl(ObjectService.ObjectTypes.COSTSHEET, data.objectId);
+            }
+            else {
+                MessageService.info(data.objectType + " with ID " + data.objectId + " was created.");
             }
         });
 
