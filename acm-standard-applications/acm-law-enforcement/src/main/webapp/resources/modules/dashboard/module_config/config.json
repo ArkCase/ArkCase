@@ -114,9 +114,9 @@
         },
         {
           "name": "attachedToObjectName",
-          "displayName": "dashboard.widgets.myTasks.table.header.caseId",
+          "displayName": "dashboard.widgets.myTasks.table.header.caseComplaintId",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"cases.main({id: grid.appScope.myTasks.filterCaseId(row.entity.attachedToObjectName)})\">{{COL_FIELD}}<\/a>", 
+          "cellTemplate": "<button class='btn-link' ng-click='grid.appScope.myTasks.onClickCaseComplaintId(row.entity.attachedToObjectType,grid.appScope.myTasks.filterColumnId(row.entity.attachedToObjectName))'>{{COL_FIELD | filterColumn:'_'}}</button>",
           "width": 100
         }
       ]
