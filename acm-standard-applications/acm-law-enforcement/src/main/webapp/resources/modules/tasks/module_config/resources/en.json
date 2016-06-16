@@ -30,6 +30,12 @@
       "assignee.label": "Assigned To",
       "owningGroup.label": "Owning Group"
     },
+    "costsheet": {
+      "approver.label": "Approver"
+    },
+    "timesheet":{
+      "approver.label": "Approver"
+    },
     "_xxx_courtRoomName": "Court Room Name:"
   },
   "tasks.comp.actions": {
@@ -41,7 +47,11 @@
     "complete.button": "Complete",
     "approve.button": "Approve Document",
     "rework.button": "Send for Rework",
-    "error.outcomeFieldMissing": "Cannot complete task because of missing required value"
+    "error.outcomeFieldMissing": "Cannot complete task because of missing required value",
+    "modal": {
+      "errorHeaderText": "Error",
+      "btnOk.text": "OK"
+    }
   },
   "tasks.comp.details": {
     "title": "Task Details",
@@ -123,12 +133,12 @@
       "createdBy": "Created By"
     },
     "modal": {
-    "title": "Tag",
-    "search": "Search for Tag",
-    "buttons": {
-          "cancel": "Cancel",
-          "ok": "Add Tag"
-     }
+      "title": "Tag",
+      "search": "Search for Tag",
+      "buttons": {
+        "cancel": "Cancel",
+        "ok": "Add Tag"
+      }
     },
     "message": {
       "tagExists": "Tag with that name or description or text already exists",
@@ -150,10 +160,11 @@
     "status.label": "Status",
     "associateNumber.label": "Associate with Complaint or Case",
     "associateNumber.placeholder": "Complaint or Case #",
+    "associateType.label": "Parent Type",
     "subject.label": "Subject",
     "taskStartDate.label": "Start Date",
     "dueDate.label": "Due Date",
-    "datepicker.close": "Close",
+    "datepicker.close": "Done",
     "percentComplete.label": "% Complete",
     "notes.label": "Notes",
     "saveButton": "Save"

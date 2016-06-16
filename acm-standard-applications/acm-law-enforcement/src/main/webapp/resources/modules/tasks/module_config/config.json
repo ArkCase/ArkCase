@@ -285,15 +285,17 @@
               "name": "details",
               "displayName": "tasks.comp.details.table.columns.details",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div ng-bind-html='row.entity.details'></div>"
+              "cellTemplate": "<div ng-bind-html='row.entity.details' title='{{row.entity.details}}' class='ui-grid-cell-contents'></div>"
             },
             {
+              "width": 150,
               "name": "createDate",
               "displayName": "tasks.comp.details.table.columns.modified",
               "headerCellFilter": "translate",
               "cellTemplate": "<div>{{ row.entity.createDate | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             },
             {
+              "width": 150,
               "name": "assignee",
               "displayName": "tasks.comp.details.table.columns.modifier",
               "headerCellFilter": "translate"
@@ -307,14 +309,17 @@
             {
               "name": "reworkInstructions",
               "displayName": "tasks.comp.reworkdetails.table.columns.title",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.reworkInstructions' title='{{row.entity.reworkInstructions}}' class='ui-grid-cell-contents'></div>"
             },
             {
+              "width": 150,
               "name": "taskStartDate",
               "displayName": "tasks.comp.reworkdetails.table.columns.modified",
               "headerCellFilter": "translate"
             },
             {
+              "width": 150,
               "name": "assignee",
               "displayName": "tasks.comp.reworkdetails.table.columns.modifier",
               "headerCellFilter": "translate"
@@ -359,9 +364,11 @@
               "name": "note",
               "displayName": "tasks.comp.notes.table.columns.note",
               "headerCellFilter": "translate",
-              "enableCellEdit": false
+              "enableCellEdit": false,
+              "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.note}}' class='ui-grid-cell-contents'></div>"
             },
             {
+              "width": 150,
               "name": "created",
               "displayName": "tasks.comp.notes.table.columns.created",
               "headerCellFilter": "translate",
@@ -369,6 +376,7 @@
               "enableCellEdit": false
             },
             {
+              "width": 150,
               "name": "creator",
               "displayName": "tasks.comp.notes.table.columns.creator",
               "headerCellFilter": "translate",
@@ -602,13 +610,13 @@
           "name": "fileId",
           "displayName": "tasks.comp.docsreview.table.columns.fileId",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.fileId}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.container.containerObjectId}}</a>"
         },
         {
           "name": "fileName",
           "displayName": "tasks.comp.docsreview.table.columns.fileName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.fileName}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onDownloadFile($event, row.entity)'>{{row.entity.fileName}}</a>"
         },
         {
           "name": "created",
@@ -789,7 +797,7 @@
           "name": "eventDate",
           "displayName": "tasks.comp.history.table.columns.eventDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.eventDate | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.eventDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
         },
         {
           "name": "userId",
@@ -948,6 +956,16 @@
         {
           "name": "Expedite",
           "id": "Expedite"
+        }
+      ],
+      "attachedToObjectType": [
+        {
+          "name": "Case File",
+          "id": "CASE_FILE"
+        },
+        {
+          "name": "Complaint",
+          "id": "COMPLAINT"
         }
       ],
       "data": {

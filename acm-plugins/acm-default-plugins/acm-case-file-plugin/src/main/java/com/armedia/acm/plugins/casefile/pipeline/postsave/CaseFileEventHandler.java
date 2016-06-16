@@ -28,7 +28,9 @@ public class CaseFileEventHandler implements PipelineHandler<CaseFile, CaseFileP
 
         if (pipelineContext.isNewCase())
         {
-            getCaseFileEventUtility().raiseCaseFileCreated(entity, pipelineContext.getAuthentication());
+            log.info("CaseFile is new : [{}]", entity);
+            //Not sure why we would need to raise an event here since the transaction is not complete
+            //getCaseFileEventUtility().raiseCaseFileCreated(entity, pipelineContext.getAuthentication());
         }
         log.trace("CaseFile exiting CaseFileEventHandler : [{}]", entity);
 

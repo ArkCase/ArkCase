@@ -14,7 +14,7 @@ angular.module('dashboard.my-complaints')
             var paginationOptions = {
                 pageNumber: 1,
                 pageSize: 5,
-                sortBy: 'name',
+                sortBy: 'complaintNumber',
                 sortDir: 'desc'
             };
             vm.gridOptions = {
@@ -23,29 +23,9 @@ angular.module('dashboard.my-complaints')
                 enableRowSelection: true,
                 enableSelectAll: false,
                 enableRowHeaderSelection: false,
-                useExternalPagination: true,
-                useExternalSorting: true,
                 multiSelect: false,
                 noUnselect: false,
-                columnDefs: [],
-                onRegisterApi: function (gridApi) {
-                    vm.gridApi = gridApi;
-
-                    vm.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
-                        if (sortColumns.length == 0) {
-                            paginationOptions.sort = null;
-                        } else {
-                            paginationOptions.sortBy = sortColumns[0].name;
-                            paginationOptions.sortDir = sortColumns[0].sort.direction;
-                        }
-                        getPage();
-                    });
-                    gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
-                        paginationOptions.pageNumber = newPage;
-                        paginationOptions.pageSize = pageSize;
-                        getPage();
-                    });
-                }
+                columnDefs: []
             };
 
 

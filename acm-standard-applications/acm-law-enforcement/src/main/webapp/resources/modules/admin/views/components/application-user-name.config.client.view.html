@@ -1,0 +1,27 @@
+<panel-view header="{{'admin.application.userName.config.title' | translate}}" collapsible="false">
+    <div ng-controller="Admin.UserNameConfigController">
+        <form>
+            <div class="radio">
+                <label>
+                    <input type="radio" ng-model="nameProperty" value="userName">
+                    <span translate>admin.application.userName.config.userName.label</span>
+                </label>
+            </div>
+
+            <div class="radio">
+                <label>
+                    <input type="radio" ng-model="nameProperty" value="userId">
+                    <span translate>admin.application.userName.config.userId.label</span>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <button
+                        ng-click="applyChanges()"
+                        class="btn btn-sm btn-primary" translate>
+                    admin.application.userName.config.apply
+                </button>
+            </div>
+        </form>
+    </div>
+</panel-view>

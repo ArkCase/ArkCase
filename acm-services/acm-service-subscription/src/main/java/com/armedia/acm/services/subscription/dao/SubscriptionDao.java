@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
 import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
+import com.armedia.acm.services.subscription.model.SubscriptionConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +22,6 @@ import java.util.List;
 public class SubscriptionDao extends AcmAbstractDao<AcmSubscription>
 {
     private Logger LOG = LoggerFactory.getLogger(getClass());
-
-    private final String AUDIT_ACTIVITY_RESULT_SUCCESS = "success";
 
     @Override
     protected Class<AcmSubscription> getPersistenceClass()
@@ -71,12 +70,12 @@ public class SubscriptionDao extends AcmAbstractDao<AcmSubscription>
         // this should be native query? Actually acm_audit_log table is mapped as JPA entity class AuditEvent
         // and I used this model.
         Query query = getEm().createQuery("SELECT aud.objectType, aud.objectId, "
-                + "aud.userId, aud.eventDate, aud.fullEventType, sub.userId, " + "sub.objectName, sub.objectTitle "
+                + "aud.userId, aud.eventDate, aud.fullEventType, sub.userId, " + "sub.objectName, sub.objectTitle, sub.subscriptionId "
                 + "FROM AuditEvent aud, AcmSubscription sub " + "WHERE sub.subscriptionObjectType = aud.objectType "
                 + "AND sub.objectId = aud.objectId " + "AND aud.eventResult =:activityResult " + "AND aud.eventDate >:lastRunDate "
                 + (eventsToBeRemoved != null ? "AND aud.fullEventType NOT IN :eventsToBeRemoved " : ""));
 
-        query.setParameter("activityResult", AUDIT_ACTIVITY_RESULT_SUCCESS);
+        query.setParameter("activityResult", SubscriptionConstants.AUDIT_ACTIVITY_RESULT_SUCCESS);
         query.setParameter("lastRunDate", lastRunDate);
         if (eventsToBeRemoved != null)
         {
@@ -97,6 +96,7 @@ public class SubscriptionDao extends AcmAbstractDao<AcmSubscription>
             subscriptionEvent.setSubscriptionOwner((String) row[i++]);
             subscriptionEvent.setEventObjectName((String) row[i++]);
             subscriptionEvent.setEventObjectNumber((String) row[i++]);
+            subscriptionEvent.setRelatedSubscriptionId(String.format("%d-%s", row[i++], SubscriptionConstants.OBJECT_TYPE));
             result.add(subscriptionEvent);
         }
         if (result.isEmpty())
@@ -131,4 +131,5 @@ public class SubscriptionDao extends AcmAbstractDao<AcmSubscription>
         }
         return rowCount;
     }
+
 }

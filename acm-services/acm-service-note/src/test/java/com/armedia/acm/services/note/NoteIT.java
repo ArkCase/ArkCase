@@ -3,7 +3,6 @@ package com.armedia.acm.services.note;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,27 +16,30 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-                                   "/spring/spring-library-note.xml",
-                                   "/spring/spring-library-data-source.xml",
-                                   "/spring/spring-library-context-holder.xml",
-                                   "/spring/spring-library-property-file-manager.xml",
-                                   "/spring/spring-library-acm-encryption.xml"
-                                  })
+@ContextConfiguration(locations =
+        {
+                "/spring/spring-library-note.xml",
+                "/spring/spring-library-data-source.xml",
+                "/spring/spring-library-context-holder.xml",
+                "/spring/spring-library-property-file-manager.xml",
+                "/spring/spring-library-acm-encryption.xml",
+                "/spring/spring-library-user-service.xml",
+                "/spring/spring-library-mule-context-manager.xml"
+        })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class NoteIT
 {
     @Autowired
     private NoteDao noteDao;
-    
+
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
 
     private Logger log = LoggerFactory.getLogger(getClass());
-    
+
     @Before
     public void setUp()
     {
@@ -50,7 +52,6 @@ public class NoteIT
     public void saveNote() throws Exception
     {
         Note n = new Note();
-        n.setId(123L);
         n.setCreator("testCreator");
         n.setCreated(new Date());
         n.setNote("testNote");
@@ -61,8 +62,8 @@ public class NoteIT
         assertNotNull(saved.getId());
         noteDao.deleteNoteById(saved.getId());
 
-        log.info("Note ID: " + saved.getId());        
+        log.info("Note ID: " + saved.getId());
     }
- 
-    
+
+
 }

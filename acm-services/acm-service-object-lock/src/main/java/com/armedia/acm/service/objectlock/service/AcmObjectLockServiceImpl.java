@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -31,9 +30,10 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
     @Override
     @Transactional
-    public AcmObjectLock createLock(Long objectId, String objectType, Authentication auth)
+    public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Authentication auth)
     {
 
+        log.debug("[{}] about to create object lock[objectId={}, objectType={}, lockType={}]", auth.getName(), objectId, objectType, lockType);
         AcmObjectLock existingLock = acmObjectLockDao.findLock(objectId, objectType);
 
         if (existingLock != null)
@@ -43,12 +43,16 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
             {
                 return existingLock;
             } else
+            {
+                log.warn("[{}] not able to create object lock[objectId={}, objectType={}, lockType={}]. Reason: Object lock already exists for: [{}]", auth.getName(), objectId, objectType, lockType, existingLock.getCreator());
                 throw new AcmObjectLockException("Lock already exist for different user.");
+            }
         }
 
         AcmObjectLock ol = new AcmObjectLock();
         ol.setObjectId(objectId);
         ol.setObjectType(objectType);
+        ol.setLockType(lockType);
 
         AcmObjectLock lock = acmObjectLockDao.save(ol);
 
@@ -60,12 +64,15 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
     @Override
     @Transactional
-    public void removeLock(Long objectId, String objectType, Authentication auth)
+    public void removeLock(Long objectId, String objectType, String lockType, Authentication auth)
     {
         AcmObjectLock ol = acmObjectLockDao.findLock(objectId, objectType);
         if (ol == null)
             throw new AcmObjectLockException("Error removing. Lock for [objectId, objectType] = [" + objectId + ", " + objectType + "] doesn't exists!");
+
         acmObjectLockDao.remove(ol);
+
+        ol.setLockType(lockType);
 
         AcmObjectUnlockEvent event = new AcmObjectUnlockEvent(ol, auth.getName(), true);
         getApplicationEventPublisher().publishEvent(event);

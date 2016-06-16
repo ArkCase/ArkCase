@@ -315,18 +315,18 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
         {
             EcmFile ecmFile = getEcmFile(entity, getFormName().toLowerCase());
 
-            Object form = null;
+            // if there is no ecmFile then we have to XML file to update so we can stop here.
+
             if (ecmFile != null)
             {
-                form = getExistingForm(ecmFile.getId(), c);
-            }
+                Object form = getExistingForm(ecmFile.getId(), c);
+                form = convertToFrevvoForm(entity, form);
 
-            form = convertToFrevvoForm(entity, form);
-
-            if (form != null)
-            {
-                String xml = convertFromObjectToXML(form);
-                updateXML(xml, ecmFile, auth);
+                if (form != null)
+                {
+                    String xml = convertFromObjectToXML(form);
+                    updateXML(xml, ecmFile, auth);
+                }
             }
         }
     }

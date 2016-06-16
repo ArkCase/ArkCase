@@ -38,6 +38,7 @@
         },
         {
           "name": "title_parseable",
+		  "sortField": "title_parseable_lcs",
           "displayName": "tags.comp.grid.columns.title",
           "headerCellFilter": "translate"
         },

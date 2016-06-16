@@ -39,13 +39,15 @@
         },
         {
           "name": "title_parseable",
+		  "sortField": "title_parseable_lcs",
           "displayName": "search.comp.grid.columns.title",
           "headerCellFilter": "translate"
         },
         {
           "name": "parent_number_lcs",
           "displayName": "search.comp.grid.columns.parent",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickParentObjLink($event, row.entity.parent_ref_s)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.parent_number_lcs}}>{{row.entity.parent_number_lcs}}</a>"
         },
         {
           "name": "assignee_full_name_lcs",

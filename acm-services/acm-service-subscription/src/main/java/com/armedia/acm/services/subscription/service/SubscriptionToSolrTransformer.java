@@ -14,17 +14,30 @@ import java.util.List;
  */
 public class SubscriptionToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmSubscription> {
 
-    private SubscriptionDao subscriptiontDao;
+    private SubscriptionDao subscriptionDao;
 
     @Override
     public List<AcmSubscription> getObjectsModifiedSince(Date lastModified, int start, int pageSize) {
-        return getSubscriptiontDao().findModifiedSince(lastModified,start,pageSize);
+        return getSubscriptionDao().findModifiedSince(lastModified,start,pageSize);
     }
 
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmSubscription in) {
-        // No implementation needed  because we don't want Subscription indexed in the SolrAdvancedSearch
-        return null;
+
+        SolrAdvancedSearchDocument doc = new SolrAdvancedSearchDocument();
+        doc.setId(String.format("%s-%s", in.getId(), in.getObjectType()));
+        doc.setObject_id_s(Long.toString(in.getId()));
+        doc.setObject_type_s(in.getObjectType());
+
+        doc.setCreate_date_tdt(in.getCreated());
+        doc.setCreator_lcs(in.getCreator());
+        doc.setModified_date_tdt(in.getModified());
+        doc.setModifier_lcs(in.getModifier());
+
+        doc.setParent_id_s(Long.toString(in.getObjectId()));
+        doc.setParent_type_s(in.getSubscriptionObjectType());
+        doc.setOwner_lcs(in.getUserId());
+        return doc;
     }
 
     @Override
@@ -69,11 +82,11 @@ public class SubscriptionToSolrTransformer implements AcmObjectToSolrDocTransfor
         return isSupported;
     }
 
-    public SubscriptionDao getSubscriptiontDao() {
-        return subscriptiontDao;
+    public SubscriptionDao getSubscriptionDao() {
+        return subscriptionDao;
     }
 
-    public void setSubscriptiontDao(SubscriptionDao subscriptiontDao) {
-        this.subscriptiontDao = subscriptiontDao;
+    public void setSubscriptionDao(SubscriptionDao subscriptionDao) {
+        this.subscriptionDao = subscriptionDao;
     }
 }

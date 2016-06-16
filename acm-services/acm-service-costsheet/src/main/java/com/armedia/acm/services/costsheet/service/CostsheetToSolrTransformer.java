@@ -20,8 +20,7 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmCostsheet>{
 
 	private AcmCostsheetDao acmCostsheetDao;
-	private CostsheetService costsheetService;
-	
+
 	@Override
 	public List<AcmCostsheet> getObjectsModifiedSince(Date lastModified, int start, int pageSize) 
 	{
@@ -42,7 +41,7 @@ public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer
 		SolrDocument solr = new SolrDocument();
 		
 		solr.setId(in.getId() + "-" + CostsheetConstants.OBJECT_TYPE);
-		solr.setName(getCostsheetService().createName(in));
+		solr.setName(in.getTitle());
 		solr.setObject_id_s(Long.toString(in.getId()));
 		solr.setObject_type_s(CostsheetConstants.OBJECT_TYPE);
 		solr.setParent_object_id_s(Long.toString(in.getParentId()));
@@ -88,11 +87,4 @@ public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer
 		this.acmCostsheetDao = acmCostsheetDao;
 	}
 
-	public CostsheetService getCostsheetService() {
-		return costsheetService;
-	}
-
-	public void setCostsheetService(CostsheetService costsheetService) {
-		this.costsheetService = costsheetService;
-	}
 }

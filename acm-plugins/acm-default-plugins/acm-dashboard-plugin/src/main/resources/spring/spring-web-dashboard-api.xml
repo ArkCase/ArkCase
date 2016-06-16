@@ -23,6 +23,7 @@
         <property name="userDao" ref="acmUserDao"/>
         <property name="dashboardPropertyReader" ref="dashboardPropertyReader"/>
         <property name="eventPublisher" ref="widgetEventPublisher"/>
+        <property name="dashboardService" ref="dashboardService"/>
     </bean>
 
     <bean id="getRolesByWidgets" class="com.armedia.acm.plugins.dashboard.web.api.GetRolesByWidgetsAPIController">
@@ -64,6 +65,8 @@
         <property name="dashboardDao" ref="acmDashboardDao"/>
         <property name="dashboardPlugin" ref="dashboardPlugin"/>
         <property name="userDao" ref="acmUserDao"/>
+        <property name="dashboardPropertyReader" ref="dashboardPropertyReader"/>
+        <property name="widgetDao" ref="acmWidgetDao"/>
     </bean>
 
     <bean id="setUserPreferredWidgetsPerModule"

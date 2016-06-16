@@ -1,0 +1,49 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+    <changeSet id="01-populate_subscription_id" author="nadica.cuculova" dbms="postgresql,oracle">
+        <preConditions onFail="WARN">
+            <and>
+                <tableExists tableName="acm_subscription_event"/>
+                <columnExists tableName="acm_subscription_event" columnName="cm_subscription_id"/>
+            </and>
+        </preConditions>
+        <sql>
+            <comment>Set value to records with cm_subscription_id NULL</comment>
+            UPDATE acm_subscription_event se
+            SET cm_subscription_id =
+            CONCAT((SELECT s.cm_subscription_id
+            FROM acm_subscription as s
+            WHERE se.cm_event_subscription_owner = s.cm_user_id
+            AND se.cm_event_object_type = s.cm_object_type
+            AND se.cm_event_object_id = s.cm_object_id), '-SUBSCRIPTION')
+            WHERE se.cm_subscription_id IS NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="02-populate_subscription_id_mssql" author="nadica.cuculova" dbms="mssql">
+        <preConditions onFail="WARN">
+            <and>
+                <tableExists tableName="acm_subscription_event"/>
+                <columnExists tableName="acm_subscription_event" columnName="cm_subscription_id"/>
+            </and>
+        </preConditions>
+        <sql>
+            <comment>Set value to records with cm_subscription_id NULL</comment>
+            UPDATE acm_subscription_event
+            SET cm_subscription_id =
+            CONCAT((SELECT s.cm_subscription_id
+            FROM acm_subscription as s
+            WHERE cm_event_subscription_owner = s.cm_user_id
+            AND cm_event_object_type = s.cm_object_type
+            AND cm_event_object_id = s.cm_object_id), '-SUBSCRIPTION')
+            WHERE cm_subscription_id IS NULL;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
+

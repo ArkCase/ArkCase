@@ -26,12 +26,21 @@
                                placeholder="{{ 'tasks.newTask.assignee.placeholder' | translate }}" id="assignee"
                                style="background-color: white;" ng-click="userSearch()" readonly>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-2">
+                        <label class="control-label">{{ 'tasks.newTask.associateType.label' | translate }}
+                            <select ng-model="config.data.attachedToObjectType"
+                                    ng-options="attachedToObjectType.id as attachedToObjectType.name for attachedToObjectType in config.attachedToObjectType"
+                                    class="form-control input-md">
+                            </select>
+                        </label>
+                    </div>
+                    <div class="col-sm-4">
                         <label for="associateNumber" translate> tasks.newTask.associateNumber.label </label>
                         <input type="text" id="associateNumber" ng-model="config.data.attachedToObjectName"
                                class="input-md form-control"
                                placeholder="{{ 'tasks.newTask.associateNumber.placeholder' | translate }}"
-                               id="complaintId">
+                               id="complaintId"
+                               ng-disabled="config.data.attachedToObjectType===''">
                     </div>
                 </div>
                 <div class="row">
