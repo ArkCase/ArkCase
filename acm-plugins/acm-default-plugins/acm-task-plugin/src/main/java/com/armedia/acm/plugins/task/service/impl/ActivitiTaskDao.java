@@ -63,6 +63,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
 public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 {
     private RuntimeService activitiRuntimeService;
@@ -90,7 +91,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         Task activitiTask = getActivitiTaskService().newTask();
 
         AcmTask out = updateExistingActivitiTask(in, activitiTask);
-
         if (out.getStatus().equalsIgnoreCase(TaskConstants.STATE_CLOSED))
         {
             String taskId = String.valueOf(out.getId());
@@ -107,7 +107,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         Task activitiTask = getActivitiTaskService().createTaskQuery().taskId(in.getTaskId().toString()).singleResult();
         if (activitiTask != null)
         {
-            return updateExistingActivitiTask(in, activitiTask);
+            AcmTask acmTask = updateExistingActivitiTask(in, activitiTask);
+            return acmTask;
         }
 
         // task must have been completed. Try finding the historic task; but historical tasks can't be updated, so
@@ -302,6 +303,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 
         AcmTask retval = acmTaskFromActivitiTask(existingTask);
         retval = completeTask(retval, user, outcomePropertyName, outcomeId);
+
         return retval;
     }
 
@@ -454,8 +456,9 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             {
                 getActivitiTaskService().claim(String.valueOf(taskId), userId);
                 Task existingTask = getActivitiTaskService().createTaskQuery().includeProcessVariables().includeTaskLocalVariables().taskId(String.valueOf(taskId)).singleResult();
-                return acmTaskFromActivitiTask(existingTask);
 
+                AcmTask acmTask = acmTaskFromActivitiTask(existingTask);
+                return acmTask;
             } catch (ActivitiException e)
             {
                 log.info("Claiming task failed for task with ID: [{}]", taskId);
@@ -474,7 +477,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             {
                 getActivitiTaskService().unclaim(String.valueOf(taskId));
                 Task existingTask = getActivitiTaskService().createTaskQuery().includeProcessVariables().includeTaskLocalVariables().taskId(String.valueOf(taskId)).singleResult();
-                return acmTaskFromActivitiTask(existingTask);
+                AcmTask acmTask = acmTaskFromActivitiTask(existingTask);
+                return acmTask;
             } catch (ActivitiException e)
             {
                 log.info("Unclaiming task failed for task with ID: [{}]", taskId);
@@ -799,7 +803,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             acmTask.setCompleted(true);
             String status = findTaskStatus(hti);
             acmTask.setStatus(status);
-
             return acmTask;
         } catch (ActivitiException e)
         {
@@ -823,7 +826,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             acmTask.setCompleted(true);
             String status = findTaskStatus(hti, true);
             acmTask.setStatus(status);
-
             return acmTask;
         } catch (ActivitiException e)
         {
