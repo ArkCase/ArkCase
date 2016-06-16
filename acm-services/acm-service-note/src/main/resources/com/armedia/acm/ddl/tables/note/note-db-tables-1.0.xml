@@ -63,5 +63,15 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="05-acm_note-add-modified-and-modifier" author="ilinpetar">
+        <addColumn tableName="acm_note">
+            <column name="cm_note_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_note_modifier" type="VARCHAR(1024)" defaultValue="SYSTEM">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

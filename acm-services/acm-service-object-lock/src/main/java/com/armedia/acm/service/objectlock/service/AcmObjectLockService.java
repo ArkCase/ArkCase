@@ -9,9 +9,9 @@ import org.springframework.security.core.Authentication;
  */
 public interface AcmObjectLockService
 {
-    AcmObjectLock createLock(Long objectId, String objectType, Authentication auth);
+    AcmObjectLock createLock(Long objectId, String objectType, String lockType, Authentication auth);
 
-    void removeLock(Long objectId, String objectType, Authentication auth);
+    void removeLock(Long objectId, String objectType, String lockType, Authentication auth);
 
     /**
      * queries documents which doesn't have lock.

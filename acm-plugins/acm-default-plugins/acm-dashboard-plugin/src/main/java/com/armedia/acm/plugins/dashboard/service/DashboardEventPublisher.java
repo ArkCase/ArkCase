@@ -25,10 +25,8 @@ public class DashboardEventPublisher implements ApplicationEventPublisherAware
 
     public void publishDashboardEvent(Dashboard source, Authentication authentication, boolean newDashboard, boolean succeeded)
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("Publishing a dashboard event.");
-        }
+        log.debug("Publishing a dashboard event.");
+
         DashboardPersistenceEvent dashboardPersistenceEvent = newDashboard ? new DashboardCreatedEvent(source) : new DashboardUpdatedEvent(source);
         dashboardPersistenceEvent.setSucceeded(succeeded);
         if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)

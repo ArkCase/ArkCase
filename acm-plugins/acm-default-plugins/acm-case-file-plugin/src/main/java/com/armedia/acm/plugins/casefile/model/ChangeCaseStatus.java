@@ -1,32 +1,47 @@
 /**
- * 
+ *
  */
 package com.armedia.acm.plugins.casefile.model;
 
+import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.AcmParentObjectInfo;
+import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.*;
-
-import com.armedia.acm.core.AcmObject;
-import com.armedia.acm.data.AcmEntity;
-import com.armedia.acm.services.participants.model.AcmParticipant;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  * @author riste.tutureski
- *
  */
 @Entity
-@Table(name="acm_change_case_status")
-public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
+@Table(name = "acm_change_case_status")
+public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity, AcmParentObjectInfo
+{
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
 
     @Id
@@ -40,24 +55,24 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "change_case_status_gen")
     @Column(name = "cm_change_case_status_id")
     private Long id;
-	
-	@Column(name = "cm_case_id")
+
+    @Column(name = "cm_case_id")
     private Long caseId;
-	
-	@Column(name = "cm_change_case_status_status")
+
+    @Column(name = "cm_change_case_status_status")
     private String status = "ACTIVE";
 
     @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType = ChangeCaseStatusConstants.OBJECT_TYPE;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({
             @JoinColumn(name = "cm_object_id"),
             @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
     })
     private List<AcmParticipant> participants = new ArrayList<>();
-	
-	@Column(name = "cm_change_case_status_created", nullable = false, insertable = true, updatable = false)
+
+    @Column(name = "cm_change_case_status_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
@@ -70,7 +85,7 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
 
     @Column(name = "cm_change_case_status_modifier")
     private String modifier;
-    
+
     @PrePersist
     public void beforeInsert()
     {
@@ -79,19 +94,19 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
 
     private void setupChildPointers()
     {
-        for ( AcmParticipant ap : getParticipants() )
+        for (AcmParticipant ap : getParticipants())
         {
             ap.setObjectId(getId());
             ap.setObjectType(ChangeCaseStatusConstants.OBJECT_TYPE);
         }
     }
-    
+
     @PreUpdate
     public void beforeUpdate()
     {
         setupChildPointers();
     }
-    
+
     public Long getId()
     {
         return id;
@@ -102,14 +117,16 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
         this.id = id;
     }
 
-	public Long getCaseId() {
-		return caseId;
-	}
+    public Long getCaseId()
+    {
+        return caseId;
+    }
 
-	public void setCaseId(Long caseId) {
-		this.caseId = caseId;
-	}
-    
+    public void setCaseId(Long caseId)
+    {
+        this.caseId = caseId;
+    }
+
     public String getStatus()
     {
         return status;
@@ -119,7 +136,7 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
     {
         this.status = status;
     }
-    
+
     public List<AcmParticipant> getParticipants()
     {
         return participants;
@@ -129,7 +146,7 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
     {
         this.participants = participants;
     }
-	
+
     @Override
     public Date getCreated()
     {
@@ -179,9 +196,23 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
     }
 
     @JsonIgnore
-	@Override
-	public String getObjectType() 
-	{
-		return objectType;
-	}
+    @Override
+    public String getObjectType()
+    {
+        return objectType;
+    }
+
+    @Override
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    public Long getParentObjectId()
+    {
+        return caseId;
+    }
+
+    @Override
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    public String getParentObjectType()
+    {
+        return CaseFileConstants.OBJECT_TYPE;
+    }
 }

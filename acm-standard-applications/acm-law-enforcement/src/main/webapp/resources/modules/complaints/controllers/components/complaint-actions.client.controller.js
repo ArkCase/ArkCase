@@ -25,6 +25,8 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
 
+            $scope.showCreateAndClose = ($scope.objectInfo.status !== "CLOSED");
+
             var group = ObjectModelService.getGroup(objectInfo);
             var assignee = ObjectModelService.getAssignee(objectInfo);
             var promiseGetApprovers = ComplaintLookupService.getApprovers(group, assignee);

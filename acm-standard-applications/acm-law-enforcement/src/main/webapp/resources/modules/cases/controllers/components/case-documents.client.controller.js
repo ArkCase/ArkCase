@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', '$q'
+angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', '$q', '$timeout'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'DocTreeService'
-    , 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService', 'Object.ModelService'
-    , function ($scope, $stateParams, $modal, $q
+    , 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService', 'Object.ModelService', 'DocTreeExt.Core'
+    , function ($scope, $stateParams, $modal, $q, $timeout
         , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
-        , HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService) {
+        , HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtCore) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -13,7 +13,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                 return userInfo;
             }
         );
-
+        
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
@@ -32,19 +32,24 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
 
         var onConfigRetrieved = function (config) {
             $scope.treeConfig = config.docTree;
+            $scope.allowParentOwnerToCancel = config.docTree.allowParentOwnerToCancel;
         };
 
         ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE).then(
             function (formTypes) {
-                $scope.fileTypes = $scope.fileTypes || [];
-                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));
+                $timeout(function() {
+                    $scope.fileTypes = $scope.fileTypes || [];
+                    $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));
+                }, 0);
                 return formTypes;
             }
         );
         ObjectLookupService.getFileTypes().then(
             function (fileTypes) {
-                $scope.fileTypes = $scope.fileTypes || [];
-                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
+                $timeout(function() {
+                    $scope.fileTypes = $scope.fileTypes || [];
+                    $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
+                }, 0);
                 return fileTypes;
             }
         );
@@ -63,100 +68,41 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
             return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, $scope.fileTypes);
         };
 
+        $scope.onInitTree = function(treeControl) {
+            $scope.treeControl = treeControl;
+            DocTreeExtCore.handleCheckout(treeControl, $scope);
+            DocTreeExtCore.handleCheckin(treeControl, $scope);
+            DocTreeExtCore.handleEditWithWord(treeControl, $scope);
+            DocTreeExtCore.handleCancelEditing(treeControl, $scope);
+
+            //$scope.treeControl.addCommandHandler({
+            //    name: "sample"
+            //    , onAllowCmd: function(nodes) {
+            //        return "disable";
+            //    }
+            //    , onPreCmd: function(nodes, args) {
+            //        console.log("onPreCmd of sample command");
+            //        return false;
+            //    }
+            //    , onPostCmd: function(nodes, args) {
+            //        console.log("onPostCmd of sample command");
+            //    }
+            //    , execute: function(nodes, args) {
+            //        console.log("Possible to add onPreCmd code here");
+            //        var promise = this.prevHandler.execute(nodes, args);
+            //        $q.when(promise).then(function () {
+            //            console.log("Possible to add onPostCmd code here, too");
+            //        });
+            //        console.log("Possible to add onPostCmd code here");
+            //    }
+            //});
+
+        };
+
         $scope.onClickRefresh = function () {
             $scope.treeControl.refreshTree();
         };
 
-        $scope.onAllowCmd = function (cmd, nodes) {
-            if (1 == nodes.length) {
-                if ("checkin" == cmd) {
-                    if (!nodes[0].data.lock) {
-                        return "disable";
-                    }
-                    else if (nodes[0].data.lock && nodes[0].data.lock.creator !== $scope.user) {
-                        return "disable";
-                    }
-                    else {
-                        var allowDeffered = $q.defer();
-                        //check permission for unlock
-                        PermissionsService.getActionPermission('unlock', nodes[0].data)
-                            .then(function success(hasPermission) {
-                                    if (hasPermission)
-                                        allowDeffered.resolve("");
-                                    else
-                                        allowDeffered.resolve("disable");
-                                },
-                                function error() {
-                                    allowDeffered.resolve("disable");
-                                }
-                            );
-                        return allowDeffered.promise;
-                    }
-                }
-                else if ("cancelEditing" == cmd) {
-                    if (!nodes[0].data.lock) {
-                        return "disable";
-                    }
-                    else {
-                        var allowDeffered = $q.defer();
-                        nodes[0].data.assignee = $scope.assignee;
-                        //check permission for unlock
-                        PermissionsService.getActionPermission('unlock', nodes[0].data)
-                            .then(function success(hasPermission) {
-                                    if (hasPermission)
-                                        allowDeffered.resolve("");
-                                    else
-                                        allowDeffered.resolve("disable");
-                                },
-                                function error() {
-                                    allowDeffered.resolve("disable");
-                                }
-                            );
-                        return allowDeffered.promise;
-                    }
-                }
-                else if ("checkout" == cmd) {
-                    if (nodes[0].data.lock) {
-                        return "disable";
-                    } else {
-                        var allowDeffered = $q.defer();
-                        //check permission for lock
-                        PermissionsService.getActionPermission('lock', nodes[0].data)
-                            .then(function success(hasPermission) {
-                                    if (hasPermission)
-                                        allowDeffered.resolve("");
-                                    else
-                                        allowDeffered.resolve("disable");
-
-                                },
-                                function error() {
-                                    allowDeffered.resolve("disable");
-                                }
-                            );
-                        return allowDeffered.promise;
-                    }
-                }
-            }
-        };
-
-        $scope.onPreCmd = function (cmd, nodes) {
-            //Usage example
-            //if ("newFolder" == cmd) {
-            //    //custom cmd process
-            //    return false; //false indicates don't do default command in core
-            //}
-            //
-            //if ("newFolder" == cmd) {
-            //    var df = $q.defer();
-            //    $timeout(function() {
-            //        //lengthy custom cmd process
-            //        df.resolve(true); //true to indicate continue with default command execution
-            //    }, 8000);
-            //    return df.promise;
-            //}
-        };
-
-        $scope.onPostCmd = function (cmd, nodes) {
-        };
     }
+
 ]);

@@ -45,6 +45,7 @@
         },
         {
           "name": "title_parseable",
+		  "sortField": "title_parseable_lcs",
           "displayName": "dashboard.widgets.myCases.table.header.title",
           "headerCellFilter": "translate",
           "enableSorting": true,
@@ -113,8 +114,9 @@
         },
         {
           "name": "attachedToObjectName",
-          "displayName": "dashboard.widgets.myTasks.table.header.caseId",
+          "displayName": "dashboard.widgets.myTasks.table.header.caseComplaintId",
           "headerCellFilter": "translate",
+          "cellTemplate": "<button class='btn-link' ng-click='grid.appScope.myTasks.onClickCaseComplaintId(row.entity.attachedToObjectType,grid.appScope.myTasks.filterColumnId(row.entity.attachedToObjectName))'>{{COL_FIELD | filterColumn:'_'}}</button>",
           "width": 100
         }
       ]

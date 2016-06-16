@@ -325,7 +325,7 @@ SearchBase.View = {
                             }
                         }
 
-                        return SearchBase.Service.facetSearchDeferred(si
+                        return SearchBase.Service.advancedSearchDeferred(si
                             ,postData
                             ,jtParams
                             ,sortMap

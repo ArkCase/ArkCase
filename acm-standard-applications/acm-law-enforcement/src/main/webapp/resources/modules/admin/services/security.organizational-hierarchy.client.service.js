@@ -56,17 +56,17 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', function
      * param {string} pageSize
      * @returns {HttpPromise} Future info about groups
      */
-    function getGroupsTopLevel(currentPage, pageSize) {
+    function getGroupsTopLevel(currentPage, pageSize, groupSubtype) {
         //s and n are 0 and 50 by default
         var start = 0, n = 50;
         if (pageSize) {
             if (currentPage)
-                start = (currentPage-1) * pageSize;
+                start = (currentPage - 1) * pageSize;
             n = pageSize;
         }
         return $http({
             method: 'GET',
-            url: 'api/latest/users/group/get/toplevel?n=' + n + '&start=' + start + '&s=name asc'
+            url: 'api/latest/users/group/get/toplevel?n=' + n + '&start=' + start + '&s=name asc' + '&groupSubtype=' + groupSubtype
         });
     }
 

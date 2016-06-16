@@ -43,4 +43,10 @@
         </insert>
     </changeSet>
 
+    <changeSet id="04-acm_object_lock_type" author="dragan.simonovski">
+        <addColumn tableName="acm_object_lock">
+            <column name="cm_lock_type" type="varchar(1000)"></column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

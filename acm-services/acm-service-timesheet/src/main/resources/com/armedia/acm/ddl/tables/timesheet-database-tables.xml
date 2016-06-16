@@ -140,4 +140,10 @@
             <column name="cm_seq_name" value="acm_time"></column>
         </insert>
     </changeSet>
+
+	<changeSet id="10-add-title-in-acm-timesheet-table" author="nadica.cuculova">
+		<addColumn tableName="acm_timesheet">
+			<column name="cm_timesheet_title" type="VARCHAR(1024)"/>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

@@ -22,9 +22,8 @@ public class FileEventPublisher implements ApplicationEventPublisherAware {
     }
 
     public void publishFileCreatedEvent( EcmFile source, Authentication auth, String ipAddress, boolean succeeded ) {
-        if ( log.isDebugEnabled() ) {
-            log.debug("Publishing a file created event.");
-        }
+
+        log.debug("Publishing a file created event.");
         EcmFileCreatedEvent fileCreatedEvent = new EcmFileCreatedEvent(source, auth.getName(), ipAddress);
         if ( auth.getDetails() != null && auth.getDetails() instanceof AcmAuthenticationDetails) {
             fileCreatedEvent.setIpAddress(((AcmAuthenticationDetails) auth.getDetails()).getRemoteAddress());
@@ -35,9 +34,8 @@ public class FileEventPublisher implements ApplicationEventPublisherAware {
     }
 
     public void publishFileDeletedEvent( EcmFile source, Authentication auth, String ipAddress, boolean succeeded ) {
-        if ( log.isDebugEnabled() ) {
-            log.debug("Publishing a file deleted event.");
-        }
+
+        log.debug("Publishing a file deleted event.");
         EcmFileDeletedEvent fileDeletedEvent = new EcmFileDeletedEvent(source,auth.getName(), ipAddress);
         fileDeletedEvent.setSucceeded(succeeded);
 
@@ -45,9 +43,8 @@ public class FileEventPublisher implements ApplicationEventPublisherAware {
     }
 
     public void publishFileCopiedEvent( EcmFile source, Authentication auth, String ipAddress, boolean succeeded ) {
-        if ( log.isDebugEnabled() ) {
-            log.debug("Publishing a file copied event.");
-        }
+
+        log.debug("Publishing a file copied event.");
         EcmFiledCopiedEvent filedCopiedEvent = new EcmFiledCopiedEvent(source,auth.getName(),ipAddress);
         filedCopiedEvent.setSucceeded(succeeded);
 
@@ -55,9 +52,8 @@ public class FileEventPublisher implements ApplicationEventPublisherAware {
     }
 
     public void publishFileMovedEvent( EcmFile source, Authentication auth, String ipAddress, boolean succeeded ) {
-        if ( log.isDebugEnabled() ) {
-            log.debug("Publishing a file moved event.");
-        }
+
+        log.debug("Publishing a file moved event.");
         EcmFileMovedEvent fileMovedEvent = new EcmFileMovedEvent(source,auth.getName(), ipAddress);
         fileMovedEvent.setSucceeded(succeeded);
 
@@ -65,9 +61,8 @@ public class FileEventPublisher implements ApplicationEventPublisherAware {
     }
 
     public void publishFileRenamedEvent( EcmFile source, Authentication auth, String ipAddress, boolean succeeded ) {
-        if ( log.isDebugEnabled() ) {
-            log.debug("Publishing a file renamed event.");
-        }
+
+        log.debug("Publishing a file renamed event.");
         EcmFileRenamedEvent fileRenamedEvent = new EcmFileRenamedEvent(source,auth.getName(),ipAddress);
         fileRenamedEvent.setSucceeded(succeeded);
 
@@ -75,9 +70,8 @@ public class FileEventPublisher implements ApplicationEventPublisherAware {
     }
 
     public void publishFileReplacedEvent( EcmFile source, Authentication auth, String ipAddress, boolean succeeded ) {
-        if ( log.isDebugEnabled() ) {
-            log.debug("Publishing a file replaced event.");
-        }
+
+        log.debug("Publishing a file replaced event.");
         EcmFileReplacedEvent fileReplacedEvent = new EcmFileReplacedEvent(source,auth.getName(),ipAddress);
         fileReplacedEvent.setSucceeded(succeeded);
 
@@ -85,10 +79,15 @@ public class FileEventPublisher implements ApplicationEventPublisherAware {
     }
 
     public void publishFileActiveVersionSetEvent( EcmFile source, Authentication auth, String ipAddress, boolean succeeded ) {
-        if ( log.isDebugEnabled() ) {
-            log.debug("Publishing a file replaced event.");
+
+        log.debug("Publishing a file active version set event.");
+        String userId = null;
+        if(auth != null) {
+            userId = auth.getName();
+        } else {
+            log.warn("Authentication not set, using null for user");
         }
-        EcmFileActiveVersionSetEvent fileActiveVersionSetEvent = new EcmFileActiveVersionSetEvent(source,auth.getName(),ipAddress);
+        EcmFileActiveVersionSetEvent fileActiveVersionSetEvent = new EcmFileActiveVersionSetEvent(source, userId, ipAddress);
         fileActiveVersionSetEvent.setSucceeded(succeeded);
         eventPublisher.publishEvent(fileActiveVersionSetEvent);
     }

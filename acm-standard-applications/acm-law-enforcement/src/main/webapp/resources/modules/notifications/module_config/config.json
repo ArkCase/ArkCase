@@ -59,7 +59,7 @@
       ],
       "paginationPageSize": 20,
       "start": 0,
-      "filter": "\"Object Type\": NOTIFICATION",
+      "filter": "\"Object Type\": NOTIFICATION & \"Owner\": userId",
       "filterName": "Object Type",
       "reportFileName": "notifications"
     }

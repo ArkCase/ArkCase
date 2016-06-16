@@ -51,7 +51,7 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
                     String json = acmObjectHistoryExisting.getObjectString();
                     AcmTask existing = (AcmTask) converter.unmarshall(json, AcmTask.class);
 
-                    acmAssignment.setOldAssignee(ParticipantUtils.getAssigneeIdFromParticipants(existing.getParticipants()));
+                    acmAssignment.setOldAssignee(existing.getAssignee());
 
                     if (isDetailsChanged(existing, updatedTask))
                     {
@@ -68,6 +68,12 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
                     if (isStatusChanged(existing, updatedTask))
                     {
                         AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "status.changed", event.getUserId(), true, event.getIpAddress());
+                        getTaskEventPublisher().publishTaskEvent(taskEvent);
+                    }
+
+                    if (isReworkDetailsChanged(existing, updatedTask))
+                    {
+                        AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "reworkdetails.changed", event.getUserId(), true, event.getIpAddress());
                         getTaskEventPublisher().publishTaskEvent(taskEvent);
                     }
                 }
@@ -141,6 +147,20 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
         {
             return !details.equals(updatedDetails);
         } else if (updatedDetails != null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isReworkDetailsChanged(AcmTask existing, AcmTask updatedTask)
+    {
+        String updatedReworkDetails = updatedTask.getReworkInstructions();
+        String reworkDetails = existing.getReworkInstructions();
+        if (updatedReworkDetails != null && reworkDetails != null)
+        {
+            return !reworkDetails.equals(updatedReworkDetails);
+        } else if (updatedReworkDetails != null)
         {
             return true;
         }

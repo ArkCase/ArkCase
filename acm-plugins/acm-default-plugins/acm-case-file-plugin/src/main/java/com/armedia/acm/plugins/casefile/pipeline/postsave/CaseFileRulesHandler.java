@@ -28,11 +28,11 @@ public class CaseFileRulesHandler implements PipelineHandler<CaseFile, CaseFileP
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
-        log.trace("CaseFile entering CaseFileRulesHandler : [{}]", entity);
+        log.info("CaseFile entering CaseFileRulesHandler : [{}]", entity);
 
         entity = saveRule.applyRules(entity);
 
-        log.trace("CaseFile exiting CaseFileRulesHandler : [{}]", entity);
+        log.info("CaseFile exiting CaseFileRulesHandler : [{}]", entity);
 
     }
 

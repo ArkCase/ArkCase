@@ -18,7 +18,6 @@ public interface SearchConstants
     String SOLR_FILTER_QUERY_ATTRIBUTE_NAME = "&fq=";
     String SOLR_FACET_NAME_CHANGE_COMMAND = "!key=";
 
-
     String TIME_PERIOD_KEY = "search.time.period";
     String TIME_PERIOD_DESCRIPTION = "desc";
     String TIME_PERIOD_VALUE = "value";
@@ -55,13 +54,13 @@ public interface SearchConstants
     String PROPERTY_PARENT_OBJECT_TYPE_S = "parent_object_type_s";
     String PROPERTY_PARENT_OBJECT_ID_I = "parent_object_id_i";
     String PROPERTY_PAGE_COUNT_I = "page_count_i";
+    String PROPERTY_OBJECT_TYPE_S = "object_type_s";
 
     String USER = "${user}";
     /**
-     * The date format SOLR expects.  Any other date format causes SOLR to throw an exception.
+     * The date format SOLR expects. Any other date format causes SOLR to throw an exception.
      */
     String SOLR_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-
 
     /**
      * Date format for date-only fields, where the UI does not send a time component, but only the date.
@@ -96,6 +95,8 @@ public interface SearchConstants
     String EXPORT_FIELDS = "export.fields";
 
     String SEPARATOR_COMMA = ",";
+
+    String SEPARATOR_SPACE = " ";
 
     Integer MAX_RESULT_ROWS = 100000;
 }
