@@ -71,11 +71,18 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                 var promiseUsers = gridHelper.getUsers();
 
                 scope.$watchCollection('config', function (config, oldValue) {
-                    if (!scope.notesInit.noteTitle)
+                    if (!scope.notesInit.noteTitle) {
                         scope.notesInit.noteTitle = $translate.instant("common.directive.coreNotes.title");
-                    if (config) {
-                        gridHelper.addButton(config, "edit");
-                        gridHelper.addButton(config, "delete");
+                        // if buttons were defined in config, try to use the getConfigurableButton method
+                        if (Util.goodArray(config.buttons)) {
+                            _.each(config.buttons, function(button) {
+                               gridHelper.addConfigurableButton(config, button);
+                            });
+                        } else {
+                            // no buttons were found in the config, use the default settings
+                            gridHelper.addButton(config, "edit");
+                            gridHelper.addButton(config, "delete");
+                        }
                         gridHelper.setColumnDefs(config);
                         gridHelper.setBasicOptions(config);
                         gridHelper.disableGridScrolling(config);
