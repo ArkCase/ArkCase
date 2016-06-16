@@ -44,17 +44,27 @@
           </elementProp>
           <elementProp name="acm.status.secondsPerForm" elementType="Argument">
             <stringProp name="Argument.name">acm.status.secondsPerForm</stringProp>
-            <stringProp name="Argument.value">300</stringProp>
+            <stringProp name="Argument.value">60</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="acm.status.totalThreads" elementType="Argument">
             <stringProp name="Argument.name">acm.status.totalThreads</stringProp>
-            <stringProp name="Argument.value">20</stringProp>
+            <stringProp name="Argument.value">10</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="acm.status.totalForms" elementType="Argument">
             <stringProp name="Argument.name">acm.status.totalForms</stringProp>
-            <stringProp name="Argument.value">1920</stringProp>
+            <stringProp name="Argument.value">1200</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="acm.cfg.connectTimeout" elementType="Argument">
+            <stringProp name="Argument.name">acm.cfg.connectTimeout</stringProp>
+            <stringProp name="Argument.value">60000</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="acm.cfg.requestTimeout" elementType="Argument">
+            <stringProp name="Argument.name">acm.cfg.requestTimeout</stringProp>
+            <stringProp name="Argument.value">300000</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -219,9 +229,14 @@ SampleResult.setResponseData(&quot;Counted &quot; + linenumber + &quot; fields f
           <hashTree/>
           <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Calculate Constant Field Values" enabled="true">
             <stringProp name="BeanShellSampler.query">// Set the client&apos;s timezone ID
-vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());
-
-// How many forms will we submit, total?
+vars.put(&quot;acm.client.tz&quot;, TimeZone.getDefault().getID());</stringProp>
+            <stringProp name="BeanShellSampler.filename"></stringProp>
+            <stringProp name="BeanShellSampler.parameters"></stringProp>
+            <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+          </BeanShellSampler>
+          <hashTree/>
+          <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Calculate Form Counts" enabled="true">
+            <stringProp name="BeanShellSampler.query">// How many forms will we submit, total?
 long totalForms = -1;
 try {
 	totalForms = Long.valueOf(vars.get(&quot;acm.status.totalForms&quot;));
@@ -269,8 +284,8 @@ log.info(&quot;Running the test with &quot; + totalThreads + &quot; for a total 
             </elementProp>
             <stringProp name="HTTPSampler.domain">${acm.url.arkcase.host}</stringProp>
             <stringProp name="HTTPSampler.port">${acm.url.arkcase.port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout">${acm.cfg.connectTimeout}</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">${acm.cfg.requestTimeout}</stringProp>
             <stringProp name="HTTPSampler.protocol">${acm.url.arkcase.protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">${acm.url.arkcase.path}/j_spring_security_check</stringProp>
@@ -279,6 +294,7 @@ log.info(&quot;Running the test with &quot; + totalThreads + &quot; for a total 
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.implementation">Java</stringProp>
             <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
             <stringProp name="TestPlan.comments">Detected the start of a redirect chain</stringProp>
@@ -341,8 +357,8 @@ log.info(&quot;Running the test with &quot; + totalThreads + &quot; for a total 
             </elementProp>
             <stringProp name="HTTPSampler.domain">${acm.url.arkcase.host}</stringProp>
             <stringProp name="HTTPSampler.port">${acm.url.arkcase.port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout">${acm.cfg.connectTimeout}</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">${acm.cfg.requestTimeout}</stringProp>
             <stringProp name="HTTPSampler.protocol">${acm.url.arkcase.protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">${acm.url.arkcase.path}/modules/frevvo/views/frevvo.client.view.html</stringProp>
@@ -351,6 +367,7 @@ log.info(&quot;Running the test with &quot; + totalThreads + &quot; for a total 
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.implementation">Java</stringProp>
             <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           </HTTPSamplerProxy>
@@ -399,8 +416,8 @@ log.info(&quot;Running the test with &quot; + totalThreads + &quot; for a total 
             </elementProp>
             <stringProp name="HTTPSampler.domain">${acm.url.arkcase.host}</stringProp>
             <stringProp name="HTTPSampler.port">${acm.url.arkcase.port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout">${acm.cfg.connectTimeout}</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">${acm.cfg.requestTimeout}</stringProp>
             <stringProp name="HTTPSampler.protocol">${acm.url.arkcase.protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">${acm.url.arkcase.path}/api/v1/authenticationtoken/</stringProp>
@@ -409,6 +426,7 @@ log.info(&quot;Running the test with &quot; + totalThreads + &quot; for a total 
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.implementation">Java</stringProp>
             <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           </HTTPSamplerProxy>
@@ -467,8 +485,8 @@ log.info(&quot;Running the test with &quot; + totalThreads + &quot; for a total 
             </elementProp>
             <stringProp name="HTTPSampler.domain">${acm.url.arkcase.host}</stringProp>
             <stringProp name="HTTPSampler.port">${acm.url.arkcase.port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout">${acm.cfg.connectTimeout}</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">${acm.cfg.requestTimeout}</stringProp>
             <stringProp name="HTTPSampler.protocol">${acm.url.arkcase.protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">${acm.url.arkcase.path}/api/latest/service/config/acm-forms</stringProp>
@@ -477,6 +495,7 @@ log.info(&quot;Running the test with &quot; + totalThreads + &quot; for a total 
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.implementation">Java</stringProp>
             <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
             <stringProp name="TestPlan.comments">We do this every time for every form in order to keep the sessions alive</stringProp>
@@ -558,85 +577,136 @@ for (int i = 0 ; i &lt; varNames.length ; i++) {
           <stringProp name="LoopController.loops">${acm.status.perThreadForms}</stringProp>
         </LoopController>
         <hashTree>
-          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Complaint Transaction" enabled="true">
-            <boolProp name="TransactionController.parent">false</boolProp>
-            <boolProp name="TransactionController.includeTimers">false</boolProp>
-          </TransactionController>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Form Constants" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="acm.data.user" elementType="Argument">
+                <stringProp name="Argument.name">acm.data.user</stringProp>
+                <stringProp name="Argument.value">Ann Administrator</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="acm.data.initiatorDeviceType" elementType="Argument">
+                <stringProp name="Argument.name">acm.data.initiatorDeviceType</stringProp>
+                <stringProp name="Argument.value">Home phone</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="acm.data.initiatorOrganizationType" elementType="Argument">
+                <stringProp name="Argument.name">acm.data.initiatorOrganizationType</stringProp>
+                <stringProp name="Argument.value">Corporation</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="acm.data.initiatorLocationType" elementType="Argument">
+                <stringProp name="Argument.name">acm.data.initiatorLocationType</stringProp>
+                <stringProp name="Argument.value">Business</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="acm.data.initiatorAliasType" elementType="Argument">
+                <stringProp name="Argument.name">acm.data.initiatorAliasType</stringProp>
+                <stringProp name="Argument.value">FKA</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="acm.data.category" elementType="Argument">
+                <stringProp name="Argument.name">acm.data.category</stringProp>
+                <stringProp name="Argument.value">Agricultural</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="acm.data.priority" elementType="Argument">
+                <stringProp name="Argument.name">acm.data.priority</stringProp>
+                <stringProp name="Argument.value">Low</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="acm.data.locationType" elementType="Argument">
+                <stringProp name="Argument.name">acm.data.locationType</stringProp>
+                <stringProp name="Argument.value">Home</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+          <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Form Data" enabled="true">
+            <stringProp name="filename">${csv.complaint.data}</stringProp>
+            <stringProp name="fileEncoding">UTF-8</stringProp>
+            <stringProp name="variableNames">acm.data.initiatorFirstName,acm.data.initiatorLastName,acm.data.rta_html_holder_initiator_desc,acm.data.initiatorDeviceValue,acm.data.initiatorOrganizationName,acm.data.initiatorLocationAddress,acm.data.initiatorLocationCity,acm.data.initiatorLocationState,acm.data.initiatorlocationZip,acm.data.initiatorAliasValue,acm.data.rta_html_holder_initiator_notes,acm.data.complaintTitle,acm.data.rta_html_holder_complaint_desc,acm.data.locationAddress,acm.data.locationCity,acm.data.locationState,acm.data.locationZip</stringProp>
+            <stringProp name="delimiter">,</stringProp>
+            <boolProp name="quotedData">true</boolProp>
+            <boolProp name="recycle">false</boolProp>
+            <boolProp name="stopThread">true</boolProp>
+            <stringProp name="shareMode">shareMode.group</stringProp>
+          </CSVDataSet>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Session Ping" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">${acm.url.arkcase.host}</stringProp>
+            <stringProp name="HTTPSampler.port">${acm.url.arkcase.port}</stringProp>
+            <stringProp name="HTTPSampler.connect_timeout">${acm.cfg.connectTimeout}</stringProp>
+            <stringProp name="HTTPSampler.response_timeout">${acm.cfg.requestTimeout}</stringProp>
+            <stringProp name="HTTPSampler.protocol">${acm.url.arkcase.protocol}</stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">${acm.url.arkcase.path}/modules/frevvo/views/frevvo.client.view.html</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.implementation">Java</stringProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
           <hashTree>
-            <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="Form Constants" enabled="true">
-              <collectionProp name="Arguments.arguments">
-                <elementProp name="acm.data.user" elementType="Argument">
-                  <stringProp name="Argument.name">acm.data.user</stringProp>
-                  <stringProp name="Argument.value">Ann Administrator</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+              <collectionProp name="HeaderManager.headers">
+                <elementProp name="Referer" elementType="Header">
+                  <stringProp name="Header.name">Referer</stringProp>
+                  <stringProp name="Header.value">${acm.url.arkcase}/home.html</stringProp>
                 </elementProp>
-                <elementProp name="acm.data.initiatorDeviceType" elementType="Argument">
-                  <stringProp name="Argument.name">acm.data.initiatorDeviceType</stringProp>
-                  <stringProp name="Argument.value">Home phone</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
+                <elementProp name="Accept-Language" elementType="Header">
+                  <stringProp name="Header.name">Accept-Language</stringProp>
+                  <stringProp name="Header.value">en-US,en;q=0.8,es;q=0.6</stringProp>
                 </elementProp>
-                <elementProp name="acm.data.initiatorOrganizationType" elementType="Argument">
-                  <stringProp name="Argument.name">acm.data.initiatorOrganizationType</stringProp>
-                  <stringProp name="Argument.value">Corporation</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
+                <elementProp name="DNT" elementType="Header">
+                  <stringProp name="Header.name">DNT</stringProp>
+                  <stringProp name="Header.value">1</stringProp>
                 </elementProp>
-                <elementProp name="acm.data.initiatorLocationType" elementType="Argument">
-                  <stringProp name="Argument.name">acm.data.initiatorLocationType</stringProp>
-                  <stringProp name="Argument.value">Business</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
+                <elementProp name="Accept-Encoding" elementType="Header">
+                  <stringProp name="Header.name">Accept-Encoding</stringProp>
+                  <stringProp name="Header.value">gzip, deflate, sdch</stringProp>
                 </elementProp>
-                <elementProp name="acm.data.initiatorAliasType" elementType="Argument">
-                  <stringProp name="Argument.name">acm.data.initiatorAliasType</stringProp>
-                  <stringProp name="Argument.value">FKA</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
+                <elementProp name="Accept" elementType="Header">
+                  <stringProp name="Header.name">Accept</stringProp>
+                  <stringProp name="Header.value">text/html</stringProp>
                 </elementProp>
-                <elementProp name="acm.data.category" elementType="Argument">
-                  <stringProp name="Argument.name">acm.data.category</stringProp>
-                  <stringProp name="Argument.value">Agricultural</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                </elementProp>
-                <elementProp name="acm.data.priority" elementType="Argument">
-                  <stringProp name="Argument.name">acm.data.priority</stringProp>
-                  <stringProp name="Argument.value">Low</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                </elementProp>
-                <elementProp name="acm.data.locationType" elementType="Argument">
-                  <stringProp name="Argument.name">acm.data.locationType</stringProp>
-                  <stringProp name="Argument.value">Home</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
+                <elementProp name="User-Agent" elementType="Header">
+                  <stringProp name="Header.name">User-Agent</stringProp>
+                  <stringProp name="Header.value">${acm.user.agent}</stringProp>
                 </elementProp>
               </collectionProp>
-            </Arguments>
+            </HeaderManager>
             <hashTree/>
-            <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Form Data" enabled="true">
-              <stringProp name="filename">${csv.complaint.data}</stringProp>
-              <stringProp name="fileEncoding">UTF-8</stringProp>
-              <stringProp name="variableNames">acm.data.initiatorFirstName,acm.data.initiatorLastName,acm.data.rta_html_holder_initiator_desc,acm.data.initiatorDeviceValue,acm.data.initiatorOrganizationName,acm.data.initiatorLocationAddress,acm.data.initiatorLocationCity,acm.data.initiatorLocationState,acm.data.initiatorlocationZip,acm.data.initiatorAliasValue,acm.data.rta_html_holder_initiator_notes,acm.data.complaintTitle,acm.data.rta_html_holder_complaint_desc,acm.data.locationAddress,acm.data.locationCity,acm.data.locationState,acm.data.locationZip</stringProp>
-              <stringProp name="delimiter">,</stringProp>
-              <boolProp name="quotedData">true</boolProp>
-              <boolProp name="recycle">false</boolProp>
-              <boolProp name="stopThread">true</boolProp>
-              <stringProp name="shareMode">shareMode.group</stringProp>
-            </CSVDataSet>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Ensure Session is Valid" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="49586">200</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">1</intProp>
+            </ResponseAssertion>
             <hashTree/>
-            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Calculate Field Values" enabled="true">
-              <stringProp name="BeanShellSampler.query">import java.text.*;
+          </hashTree>
+          <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Calculate Field Values" enabled="true">
+            <stringProp name="BeanShellSampler.query">import java.text.*;
 import java.util.*;
 
 // Set the date value
-Date date = new Date();
 String dateFmt = &quot;M/d/YYYY&quot;;
-vars.put(&quot;acm.data.date&quot;, new SimpleDateFormat(dateFmt).format(date));
-
-// Mark the start of the entire form operation
-vars.putObject(&quot;acm.state.formStart&quot;, date.getTime());</stringProp>
-              <stringProp name="BeanShellSampler.filename"></stringProp>
-              <stringProp name="BeanShellSampler.parameters"></stringProp>
-              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
-            </BeanShellSampler>
-            <hashTree/>
-            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Sanitize TextArea Values" enabled="true">
-              <stringProp name="BeanShellSampler.query">import java.io.*;
+vars.put(&quot;acm.data.date&quot;, new SimpleDateFormat(dateFmt).format(new Date()));</stringProp>
+            <stringProp name="BeanShellSampler.filename"></stringProp>
+            <stringProp name="BeanShellSampler.parameters"></stringProp>
+            <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+          </BeanShellSampler>
+          <hashTree/>
+          <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Sanitize TextArea Values" enabled="true">
+            <stringProp name="BeanShellSampler.query">import java.io.*;
 import java.util.*;
 import org.apache.commons.lang3.*;
 
@@ -696,6 +766,54 @@ for (Map.Entry e : vars.entrySet()) {
 }
 // Replace anything we&apos;ve changed
 vars.putAll(newValues);</stringProp>
+            <stringProp name="BeanShellSampler.filename"></stringProp>
+            <stringProp name="BeanShellSampler.parameters"></stringProp>
+            <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+          </BeanShellSampler>
+          <hashTree/>
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Random Pre-form Delay" enabled="true">
+            <intProp name="ActionProcessor.action">1</intProp>
+            <intProp name="ActionProcessor.target">0</intProp>
+            <stringProp name="ActionProcessor.duration">1</stringProp>
+          </TestAction>
+          <hashTree>
+            <BeanShellTimer guiclass="TestBeanGUI" testclass="BeanShellTimer" testname="Calculate random start delay" enabled="true">
+              <boolProp name="resetInterpreter">false</boolProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="script">String var = vars.get(&quot;acm.status.randomStartDelay&quot;);
+if (var != null) return 0;
+
+String spf = vars.get(&quot;acm.status.secondsPerForm&quot;);
+if (spf == null) return 0;
+long secondsPerForm = 0;
+try {
+	secondsPerForm = Long.valueOf(spf);
+} catch (Exception e) {
+	// Invalid number...
+	secondsPerForm = 0;
+}
+
+long delay = 0;
+if (secondsPerForm &gt; 0) {
+	// The delay shall be between 5 and 30 seconds
+	delay = (new Random(System.currentTimeMillis()).nextInt(25) + 5) * 1000;
+	log.info(&quot;Requests on thread &quot; + ctx.getThread().getThreadName() + &quot; will be staggered by &quot; + delay + &quot;ms&quot;);
+}
+
+vars.put(&quot;acm.status.randomStartDelay&quot;, String.valueOf(delay));
+return delay;</stringProp>
+            </BeanShellTimer>
+            <hashTree/>
+          </hashTree>
+          <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Complaint Transaction" enabled="true">
+            <boolProp name="TransactionController.parent">false</boolProp>
+            <boolProp name="TransactionController.includeTimers">false</boolProp>
+          </TransactionController>
+          <hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="Mark Form Start Time" enabled="true">
+              <stringProp name="BeanShellSampler.query">// Mark the start of the entire form operation
+vars.putObject(&quot;acm.state.formStart&quot;, System.currentTimeMillis());</stringProp>
               <stringProp name="BeanShellSampler.filename"></stringProp>
               <stringProp name="BeanShellSampler.parameters"></stringProp>
               <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
@@ -743,16 +861,17 @@ vars.putAll(newValues);</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${acm.url.frevvo.host}</stringProp>
               <stringProp name="HTTPSampler.port">${acm.url.frevvo.port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout">${acm.cfg.connectTimeout}</stringProp>
+              <stringProp name="HTTPSampler.response_timeout">${acm.cfg.requestTimeout}</stringProp>
               <stringProp name="HTTPSampler.protocol">${acm.url.frevvo.protocol}</stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
               <stringProp name="HTTPSampler.path">${acm.url.frevvo.path}/web/tn/armedia/user/acm/app/${acm.application.id}/formtype/${acm.form.type}/popupform</stringProp>
               <stringProp name="HTTPSampler.method">GET</stringProp>
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.implementation">Java</stringProp>
               <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
             </HTTPSamplerProxy>
@@ -865,16 +984,17 @@ vars.putAll(newValues);</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${acm.url.frevvo.host}</stringProp>
               <stringProp name="HTTPSampler.port">${acm.url.frevvo.port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout">${acm.cfg.connectTimeout}</stringProp>
+              <stringProp name="HTTPSampler.response_timeout">${acm.cfg.requestTimeout}</stringProp>
               <stringProp name="HTTPSampler.protocol">${acm.url.frevvo.protocol}</stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
               <stringProp name="HTTPSampler.path">${acm.url.frevvo.path}/web/tn/armedia/user/acm/app/${acm.application.id}/formtype/${acm.form.type}/embed</stringProp>
               <stringProp name="HTTPSampler.method">GET</stringProp>
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.implementation">Java</stringProp>
               <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
             </HTTPSamplerProxy>
@@ -972,16 +1092,17 @@ vars.putAll(newValues);</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${acm.url.frevvo.host}</stringProp>
               <stringProp name="HTTPSampler.port">${acm.url.frevvo.port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout">${acm.cfg.connectTimeout}</stringProp>
+              <stringProp name="HTTPSampler.response_timeout">${acm.cfg.requestTimeout}</stringProp>
               <stringProp name="HTTPSampler.protocol">${acm.url.frevvo.protocol}</stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
               <stringProp name="HTTPSampler.path">${acm.url.frevvo.path}/web/tn/armedia/user/acm/app/${acm.application.id}/formtype/${acm.form.type}</stringProp>
               <stringProp name="HTTPSampler.method">GET</stringProp>
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.implementation">Java</stringProp>
               <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
               <stringProp name="TestPlan.comments">Detected the start of a redirect chain</stringProp>
@@ -1051,16 +1172,17 @@ vars.putAll(newValues);</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${acm.url.frevvo.host}</stringProp>
               <stringProp name="HTTPSampler.port">${acm.url.frevvo.port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout">${acm.cfg.connectTimeout}</stringProp>
+              <stringProp name="HTTPSampler.response_timeout">${acm.cfg.requestTimeout}</stringProp>
               <stringProp name="HTTPSampler.protocol">${acm.url.frevvo.protocol}</stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
               <stringProp name="HTTPSampler.path">${acm.url.frevvo.path}/web/tn/armedia/user/acm/app/${acm.application.id}/form/${acm.form.id}/state</stringProp>
               <stringProp name="HTTPSampler.method">GET</stringProp>
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <stringProp name="HTTPSampler.implementation">Java</stringProp>
               <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
             </HTTPSamplerProxy>
@@ -1139,9 +1261,9 @@ long duration = now - start;
 long remaining = ((secondsPerForm * 1000) - duration);
 if (remaining &lt;= 0) return;
 
-// We&apos;re allowed to consume up to 80% of the remaining time in filling up the form fields,
+// We&apos;re allowed to consume up to 50% of the remaining time in filling up the form fields,
 // so we calculate how long that is, and divide it by the number of fields (remaining is in ms)
-long allFieldsWindow = ((remaining * 80) / 100);
+long allFieldsWindow = ((remaining * 50) / 100);
 long fieldWait = (allFieldsWindow / fieldsCount);
 vars.putObject(&quot;acm.status.fieldWait&quot;, fieldWait);
 log.info(&quot;Per field wait time calculated as &quot; + fieldWait + &quot; (remaining = &quot; + remaining + &quot;, secondsPerForm = &quot; + secondsPerForm + &quot;, fieldsCount = &quot; + fieldsCount + &quot;)&quot;);</stringProp>
@@ -1202,8 +1324,8 @@ vars.putObject(&quot;acm.state.currentFieldStart&quot;, System.currentTimeMillis
                 </elementProp>
                 <stringProp name="HTTPSampler.domain">${acm.url.frevvo.host}</stringProp>
                 <stringProp name="HTTPSampler.port">${acm.url.frevvo.port}</stringProp>
-                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout">${acm.cfg.connectTimeout}</stringProp>
+                <stringProp name="HTTPSampler.response_timeout">${acm.cfg.requestTimeout}</stringProp>
                 <stringProp name="HTTPSampler.protocol">${acm.url.frevvo.protocol}</stringProp>
                 <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
                 <stringProp name="HTTPSampler.path">${acm.url.frevvo.path}/web/tn/armedia/user/acm/app/${acm.application.id}/form/${acm.form.id}/control/${acm.field.id}</stringProp>
@@ -1212,6 +1334,7 @@ vars.putObject(&quot;acm.state.currentFieldStart&quot;, System.currentTimeMillis
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
                 <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
                 <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.implementation">Java</stringProp>
                 <boolProp name="HTTPSampler.monitor">false</boolProp>
                 <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
               </HTTPSamplerProxy>
@@ -1269,13 +1392,13 @@ vars.putObject(&quot;acm.state.currentFieldStart&quot;, System.currentTimeMillis
                 </BeanShellPreProcessor>
                 <hashTree/>
               </hashTree>
-              <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Dummy for delay" enabled="true">
+              <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Post-field wait" enabled="true">
                 <intProp name="ActionProcessor.action">1</intProp>
                 <intProp name="ActionProcessor.target">0</intProp>
                 <stringProp name="ActionProcessor.duration">1</stringProp>
               </TestAction>
               <hashTree>
-                <BeanShellTimer guiclass="TestBeanGUI" testclass="BeanShellTimer" testname="Wait a little before the next request" enabled="true">
+                <BeanShellTimer guiclass="TestBeanGUI" testclass="BeanShellTimer" testname="Calculate post-field wait" enabled="true">
                   <stringProp name="filename"></stringProp>
                   <stringProp name="parameters"></stringProp>
                   <boolProp name="resetInterpreter">false</boolProp>
@@ -1291,7 +1414,7 @@ if ((fieldWait != null) &amp;&amp; (start != null)) {
 	// Return the higher number between 0 (the minimum wait) and the remaining time in ms
 	long remaining = (fieldWait - duration);
 	// Log the remaining time?
-	log.info(&quot;Remaining wait time for field &quot; + vars.get(&quot;acm.field.cname&quot;) + &quot; = &quot; + remaining);
+	log.info(&quot;Thread &quot; + ctx.getThread().getThreadName() + &quot; remaining wait time for field &quot; + vars.get(&quot;acm.field.cname&quot;) + &quot; = &quot; + remaining);
 	return Math.max(0, remaining); 
 } else {
 	log.warn(&quot;No data to calculate remaining time&quot;);
@@ -1959,10 +2082,10 @@ if ((fieldWait != null) &amp;&amp; (start != null)) {
               </elementProp>
               <stringProp name="HTTPSampler.domain">${acm.url.frevvo.host}</stringProp>
               <stringProp name="HTTPSampler.port">${acm.url.frevvo.port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout">${acm.cfg.connectTimeout}</stringProp>
+              <stringProp name="HTTPSampler.response_timeout">${acm.cfg.requestTimeout}</stringProp>
               <stringProp name="HTTPSampler.protocol">${acm.url.frevvo.protocol}</stringProp>
-              <stringProp name="HTTPSampler.contentEncoding">utf-8</stringProp>
+              <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
               <stringProp name="HTTPSampler.path">${acm.url.frevvo.path}/web/tn/armedia/user/acm/app/${acm.application.id}/form/${acm.form.id}?formAction=Submit&amp;typeId=${acm.form.type}&amp;locale=en_US,eng_US,eng,en&amp;_resize=true&amp;_referrer_url=${__urlencode(${acm.url.frevvo})}%2Fweb%2Ftn%2Farmedia%2Fuser%2Facm%2Fapp%2F${acm.application.id}%2Fformtype%2F${acm.form.type}%2Fpopupform%3Fcontainer%3Dfalse%26resize%3Dtrue%26_formTz%3D${__urlencode(${acm.client.tz})}%26locale%3Den_US%26_data%3D%28acm_ticket%3A%2527${acm.ticket}%2527%2CserviceBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CserviceExternalBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%2CredirectBaseUrl%3A%2527${__urlencode(${acm.url.arkcase})}%2527%29&amp;_iframe_id=${acm.iframe.id}&amp;_formTz=${__urlencode(${acm.client.tz})}&amp;embed=true&amp;cname=Submit</stringProp>
               <stringProp name="HTTPSampler.method">POST</stringProp>
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
@@ -1970,6 +2093,7 @@ if ((fieldWait != null) &amp;&amp; (start != null)) {
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">true</boolProp>
               <boolProp name="HTTPSampler.BROWSER_COMPATIBLE_MULTIPART">true</boolProp>
+              <stringProp name="HTTPSampler.implementation">Java</stringProp>
               <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
             </HTTPSamplerProxy>
@@ -2015,18 +2139,26 @@ if ((fieldWait != null) &amp;&amp; (start != null)) {
                 </collectionProp>
               </HeaderManager>
               <hashTree/>
-            </hashTree>
-            <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Dummy for delay" enabled="true">
-              <intProp name="ActionProcessor.action">1</intProp>
-              <intProp name="ActionProcessor.target">0</intProp>
-              <stringProp name="ActionProcessor.duration">1</stringProp>
-            </TestAction>
-            <hashTree>
-              <BeanShellTimer guiclass="TestBeanGUI" testclass="BeanShellTimer" testname="Wait the remainder of the form time window" enabled="true">
-                <stringProp name="filename"></stringProp>
-                <stringProp name="parameters"></stringProp>
+              <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="BeanShell PreProcessor" enabled="true">
                 <boolProp name="resetInterpreter">false</boolProp>
-                <stringProp name="script">long now = System.currentTimeMillis();
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="script">log.info(&quot;Thread &quot; + ctx.getThread().getThreadName() + &quot; performing form submission&quot;);</stringProp>
+              </BeanShellPreProcessor>
+              <hashTree/>
+            </hashTree>
+          </hashTree>
+          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Post-form delay" enabled="true">
+            <intProp name="ActionProcessor.action">1</intProp>
+            <intProp name="ActionProcessor.target">0</intProp>
+            <stringProp name="ActionProcessor.duration">1</stringProp>
+          </TestAction>
+          <hashTree>
+            <BeanShellTimer guiclass="TestBeanGUI" testclass="BeanShellTimer" testname="Calculate post-submission wait" enabled="true">
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <boolProp name="resetInterpreter">false</boolProp>
+              <stringProp name="script">long now = System.currentTimeMillis();
 
 String spf = vars.get(&quot;acm.status.secondsPerForm&quot;);
 if (spf == null) return 0;
@@ -2048,12 +2180,11 @@ long duration = now - start;
 // How much time is left until we meet our time quota?
 // Return the higher number between 0 (the minimum wait) and the remaining time in ms
 long remaining = ((secondsPerForm * 1000) - duration);
-log.info(&quot;Remaining wait on this form: &quot; + remaining);
+log.info(&quot;Thread &quot; + ctx.getThread().getThreadName() + &quot; remaining wait on this form: &quot; + remaining);
 // Log the remaining time?
 return Math.max(0, remaining);</stringProp>
-              </BeanShellTimer>
-              <hashTree/>
-            </hashTree>
+            </BeanShellTimer>
+            <hashTree/>
           </hashTree>
         </hashTree>
         <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary" enabled="true">
@@ -2086,7 +2217,7 @@ return Math.max(0, remaining);</stringProp>
               <threadCounts>true</threadCounts>
             </value>
           </objProp>
-          <stringProp name="filename">C:\Users\drivera\Desktop\ACM3\acm-jmeter\test-results-100K-20160609-3.jtl</stringProp>
+          <stringProp name="filename">C:\Users\drivera\Desktop\ACM3\acm-jmeter\test-results-100K-20160615-2.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="Errors Detected" enabled="true">
