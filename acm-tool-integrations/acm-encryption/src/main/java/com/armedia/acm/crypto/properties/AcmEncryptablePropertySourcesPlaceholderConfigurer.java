@@ -1,7 +1,6 @@
 package com.armedia.acm.crypto.properties;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
-
 import org.bouncycastle.crypto.RuntimeCryptoException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,12 +57,11 @@ public class AcmEncryptablePropertySourcesPlaceholderConfigurer extends Property
         try
         {
             decryptedValue = encryptablePropertyUtils.decryptPropertyValue(originalValue);
-        }
-        catch (AcmEncryptionException e)
+        } catch (AcmEncryptionException e)
         {
             throw new RuntimeCryptoException("Failed to convert property value. Reason:" + e.getMessage());
         }
-        log.trace("Decrypted property value: {}", decryptedValue);
+//        log.trace("Decrypted property value: {}", decryptedValue);
         return decryptedValue;
     }
 
@@ -76,8 +74,7 @@ public class AcmEncryptablePropertySourcesPlaceholderConfigurer extends Property
     }
 
     /**
-     * @param encryptablePropertyUtils
-     *            the encryptablePropertyUtils to set
+     * @param encryptablePropertyUtils the encryptablePropertyUtils to set
      */
     public void setEncryptablePropertyUtils(AcmEncryptablePropertyUtils encryptablePropertyUtils)
     {
@@ -93,8 +90,7 @@ public class AcmEncryptablePropertySourcesPlaceholderConfigurer extends Property
     }
 
     /**
-     * @param propertiesEncryptionKeySize
-     *            the propertiesEncryptionKeySize to set
+     * @param propertiesEncryptionKeySize the propertiesEncryptionKeySize to set
      */
     public void setPropertiesEncryptionKeySize(int propertiesEncryptionKeySize)
     {
