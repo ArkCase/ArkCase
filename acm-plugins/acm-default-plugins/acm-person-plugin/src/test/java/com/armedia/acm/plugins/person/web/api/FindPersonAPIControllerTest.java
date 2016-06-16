@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.person.web.api;
 
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.Person;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -121,5 +121,5 @@ public class FindPersonAPIControllerTest extends EasyMockSupport
         verifyAll();
     }
 
-  
+
 }
