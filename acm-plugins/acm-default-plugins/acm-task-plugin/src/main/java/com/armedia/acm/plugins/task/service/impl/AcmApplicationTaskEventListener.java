@@ -51,7 +51,7 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
                     String json = acmObjectHistoryExisting.getObjectString();
                     AcmTask existing = (AcmTask) converter.unmarshall(json, AcmTask.class);
 
-                    acmAssignment.setOldAssignee(existing.getAssignee());
+                    acmAssignment.setOldAssignee(ParticipantUtils.getAssigneeIdFromParticipants(existing.getParticipants()));
 
                     if (isDetailsChanged(existing, updatedTask))
                     {
