@@ -2,7 +2,6 @@ package com.armedia.acm.crypto.properties;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.AcmCryptoUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,15 +43,14 @@ public class AcmEncryptablePropertyEncryptionProperties
         if (this.symmetricKey == null)
         {
             this.symmetricKey = encryptablePropertyUtils.decryptSymmetricKey();
-            log.debug("Decrypted symmetric key: {}", new String(this.symmetricKey, UTF8_CHARSET));
+//            log.debug("Decrypted symmetric key: {}", new String(this.symmetricKey, UTF8_CHARSET));
         }
 
         return symmetricKey;
     }
 
     /**
-     * @param symmetricKey
-     *            the symmetricKey to set
+     * @param symmetricKey the symmetricKey to set
      */
     public void setSymmetricKey(byte[] symmetricKey)
     {
@@ -68,8 +66,7 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionAlgorithm
-     *            the propertiesEncryptionAlgorithm to set
+     * @param propertiesEncryptionAlgorithm the propertiesEncryptionAlgorithm to set
      */
     public void setPropertiesEncryptionAlgorithm(String propertiesEncryptionAlgorithm)
     {
@@ -85,8 +82,7 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionBlockCipherMode
-     *            the propertiesEncryptionBlockCipherMode to set
+     * @param propertiesEncryptionBlockCipherMode the propertiesEncryptionBlockCipherMode to set
      */
     public void setPropertiesEncryptionBlockCipherMode(String propertiesEncryptionBlockCipherMode)
     {
@@ -102,8 +98,7 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionPadding
-     *            the propertiesEncryptionPadding to set
+     * @param propertiesEncryptionPadding the propertiesEncryptionPadding to set
      */
     public void setPropertiesEncryptionPadding(String propertiesEncryptionPadding)
     {
@@ -119,8 +114,7 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionKeySize
-     *            the propertiesEncryptionKeySize to set
+     * @param propertiesEncryptionKeySize the propertiesEncryptionKeySize to set
      */
     public void setPropertiesEncryptionKeySize(int propertiesEncryptionKeySize)
     {
@@ -136,8 +130,7 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionIVSize
-     *            the propertiesEncryptionIVSize to set
+     * @param propertiesEncryptionIVSize the propertiesEncryptionIVSize to set
      */
     public void setPropertiesEncryptionIVSize(int propertiesEncryptionIVSize)
     {
@@ -153,8 +146,7 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionMagicSize
-     *            the propertiesEncryptionMagicSize to set
+     * @param propertiesEncryptionMagicSize the propertiesEncryptionMagicSize to set
      */
     public void setPropertiesEncryptionMagicSize(int propertiesEncryptionMagicSize)
     {
@@ -170,8 +162,7 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionSaltSize
-     *            the propertiesEncryptionSaltSize to set
+     * @param propertiesEncryptionSaltSize the propertiesEncryptionSaltSize to set
      */
     public void setPropertiesEncryptionSaltSize(int propertiesEncryptionSaltSize)
     {
@@ -187,8 +178,7 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionPassPhraseIterations
-     *            the propertiesEncryptionPassPhraseIterations to set
+     * @param propertiesEncryptionPassPhraseIterations the propertiesEncryptionPassPhraseIterations to set
      */
     public void setPropertiesEncryptionPassPhraseIterations(int propertiesEncryptionPassPhraseIterations)
     {
@@ -204,8 +194,7 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param propertiesEncryptionPassPhraseHashAlgorithm
-     *            the propertiesEncryptionPassPhraseHashAlgorithm to set
+     * @param propertiesEncryptionPassPhraseHashAlgorithm the propertiesEncryptionPassPhraseHashAlgorithm to set
      */
     public void setPropertiesEncryptionPassPhraseHashAlgorithm(String propertiesEncryptionPassPhraseHashAlgorithm)
     {
@@ -221,8 +210,7 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param encryptedSymmetricKeyEncryptionAlgorithm
-     *            the encryptedSymmetricKeyEncryptionAlgorithm to set
+     * @param encryptedSymmetricKeyEncryptionAlgorithm the encryptedSymmetricKeyEncryptionAlgorithm to set
      */
     public void setEncryptedSymmetricKeyEncryptionAlgorithm(String encryptedSymmetricKeyEncryptionAlgorithm)
     {
@@ -238,8 +226,7 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param privateKeyEncryptionAlgorithm
-     *            the privateKeyEncryptionAlgorithm to set
+     * @param privateKeyEncryptionAlgorithm the privateKeyEncryptionAlgorithm to set
      */
     public void setPrivateKeyEncryptionAlgorithm(String privateKeyEncryptionAlgorithm)
     {
@@ -256,8 +243,7 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param privateKey
-     *            the privateKeyFilePath to set
+     * @param privateKeyFilePath the privateKeyFilePath to set
      */
     public void setPrivateKeyFilePath(String privateKeyFilePath)
     {
@@ -274,8 +260,7 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param encryptedSymmetricKeyFilePath
-     *            the encryptedSymmetricKeyFilePath to set
+     * @param encryptedSymmetricKeyFilePath the encryptedSymmetricKeyFilePath to set
      */
     public void setEncryptedSymmetricKeyFilePath(String encryptedSymmetricKeyFilePath)
     {
@@ -291,8 +276,7 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param cryptoUtils
-     *            the cryptoUtils to set
+     * @param cryptoUtils the cryptoUtils to set
      */
     public void setCryptoUtils(AcmCryptoUtils cryptoUtils)
     {
@@ -308,8 +292,7 @@ public class AcmEncryptablePropertyEncryptionProperties
     }
 
     /**
-     * @param encryptablePropertyUtils
-     *            the encryptablePropertyUtils to set
+     * @param encryptablePropertyUtils the encryptablePropertyUtils to set
      */
     public void setEncryptablePropertyUtils(AcmEncryptablePropertyUtils encryptablePropertyUtils)
     {
