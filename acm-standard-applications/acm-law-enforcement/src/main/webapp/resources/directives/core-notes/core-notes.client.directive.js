@@ -80,11 +80,11 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                                     gridHelper.addConfigurableButton(config, button);
                                 });
                                 // check if the config had an entry for 'edit'. If not, add in default edit button
-                                if (!hasEdit(config)) {
+                                if (!hasButton(config, "edit")) {
                                     gridHelper.addButton(config, "edit");
                                 }
                                 // check if the config had an entry for 'delete'. If not, add in default delete button
-                                if (!hasDelete(config)) {
+                                if (!hasButton(config, "delete")) {
                                     gridHelper.addButton(config, "delete");
                                 }
                             } else {
@@ -101,20 +101,10 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                     }
                 });
 
-                // check if the config file has an entry for an 'edit' button.
-                var hasEdit = function(config) {
+                // check if config file has an entry for any named button
+                var hasButton = function(config, name) {
                     _.each(config.buttons, function (button) {
-                        if (button.name == "edit") {
-                            return true;
-                        }
-                    });
-                    return false;
-                }
-
-                // check if the config file has an entry for a 'delete' button.
-                var hasDelete = function(config) {
-                    _.each(config.buttons, function (button) {
-                        if (button.name == "delete") {
+                        if (button.name == name) {
                             return true;
                         }
                     });
