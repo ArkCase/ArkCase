@@ -79,6 +79,14 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                                 _.each(config.buttons, function (button) {
                                     gridHelper.addConfigurableButton(config, button);
                                 });
+                                // check if the config had an entry for 'edit'. If not, add in default edit button
+                                if (!hasEdit(config)) {
+                                    gridHelper.addButton(config, "edit");
+                                }
+                                // check if the config had an entry for 'delete'. If not, add in default delete button
+                                if (!hasDelete(config)) {
+                                    gridHelper.addButton(config, "delete");
+                                }
                             } else {
                                 // no buttons were found in the config, use the default settings
                                 gridHelper.addButton(config, "edit");
@@ -92,6 +100,26 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
                         }
                     }
                 });
+
+                // check if the config file has an entry for an 'edit' button.
+                var hasEdit = function(config) {
+                    _.each(config.buttons, function (button) {
+                        if (button.name == "edit") {
+                            return true;
+                        }
+                    });
+                    return false;
+                }
+
+                // check if the config file has an entry for a 'delete' button.
+                var hasDelete = function(config) {
+                    _.each(config.buttons, function (button) {
+                        if (button.name == "delete") {
+                            return true;
+                        }
+                    });
+                    return false;
+                }
 
                 scope.retrieveGridData = function () {
                     if (Util.goodPositive(scope.notesInit.currentObjectId, false)) {
