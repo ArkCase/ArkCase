@@ -60,7 +60,7 @@
             "priority": "Priority",
             "dueDate": "Due",
             "status": "Status",
-            "caseId": "Case ID"
+            "caseComplaintId": "ID"
           }
         },
         "noDataMessage": "Currently there are no tasks info"

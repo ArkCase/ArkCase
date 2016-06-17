@@ -8,7 +8,6 @@ import com.armedia.acm.plugins.casefile.model.CaseByStatusDto;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.model.TimePeriod;
-import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by armdev on 8/26/14.
@@ -34,17 +32,6 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
     @Override
     public CaseFile save(CaseFile toSave)
     {
-        if (toSave.getId() != null)
-        {
-            for (PersonAssociation personAssoc : toSave.getPersonAssociations())
-            {
-                Optional<PersonAssociation> found = personAssoc.getPerson().getPersonAssociations().stream().filter(pa -> pa.getId().equals(personAssoc.getId())).findFirst();
-                if (found == null || !found.isPresent())
-                {
-                    personAssoc.getPerson().getPersonAssociations().add(personAssoc);
-                }
-            }
-        }
         return super.save(toSave);
     }
 

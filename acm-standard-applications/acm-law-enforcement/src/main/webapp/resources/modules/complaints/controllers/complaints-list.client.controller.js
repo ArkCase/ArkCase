@@ -2,24 +2,34 @@
 
 angular.module('complaints').controller('ComplaintsListController', ['$scope', '$state', '$stateParams', '$translate'
     , 'UtilService', 'ObjectService', 'Complaint.ListService', 'Complaint.InfoService', 'Helper.ObjectBrowserService'
-    , 'ServCommService'
+    , 'ServCommService', 'MessageService'
     , function ($scope, $state, $stateParams, $translate
         , Util, ObjectService, ComplaintListService, ComplaintInfoService, HelperObjectBrowserService
-        , ServCommService) {
+        , ServCommService, MessageService) {
 
-        //
-        // Check to see if complaint page is shown as a result returned by Frevvo
-        // Reset the tree cache so that new entry created by Frevvo can be shown.
-        // This is a temporary solution until UI and backend communication is implemented
-        //
-        var topics = ["new-complaint", "close-complaint"];
-        _.each(topics, function (topic) {
-            var data = ServCommService.popRequest("frevvo", topic);
-            if (data) {
-                ComplaintListService.resetComplaintsTreeData();
+        /*//
+         // Check to see if complaint page is shown as a result returned by Frevvo
+         // Reset the tree cache so that new entry created by Frevvo can be shown.
+         // This is a temporary solution until UI and backend communication is implemented
+         //
+         var topics = ["new-complaint", "close-complaint"];
+         _.each(topics, function (topic) {
+         var data = ServCommService.popRequest("frevvo", topic);
+         if (data) {
+         ComplaintListService.resetComplaintsTreeData();
+         }
+         });*/
+
+        var eventName = "object.inserted";
+        $scope.$bus.subscribe(eventName, function (data) {
+            var frevvoRequest = ServCommService.popRequest("frevvo", "new-complaint");
+            if (frevvoRequest) {
+                ObjectService.gotoUrl(ObjectService.ObjectTypes.COMPLAINT, data.objectId);
+            }
+            else {
+                MessageService.info(data.objectType + " with ID " + data.objectId + " was created");
             }
         });
-
 
         //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper
         new HelperObjectBrowserService.Tree({
