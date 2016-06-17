@@ -19,11 +19,11 @@ public class MessageReceiver
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @MessageMapping("/print-message")
-    public void messagePrinter(Message<Object> message, @Payload SampleMessage sampleMessage) throws Exception
+    public void messagePrinter(Message<Object> message) throws Exception
     {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
         Principal userPrincipal = headerAccessor.getUser();
 
-        log.info("Received Message from: {}, with content: {}", userPrincipal.getName(), sampleMessage.getText());
+        log.info("Received Message from: {}, with content: {}", userPrincipal.getName(), message.getPayload());
     }
 }
