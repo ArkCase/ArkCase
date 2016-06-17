@@ -585,11 +585,11 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 var disableButton = "";
                 if (readOnlyFn) {
                     // sets style display to none. Only setting ng-hide still resulted in a button outline showing
-                    disableButton = ' style="display: none;"';
+                    disableButton = " hidden-button";
                 }
 
-                var cellTemplate = "<a title='' class='inline animated btn btn-default btn-xs'"
-                    + " ng-click='grid.appScope." + clickFn + "(row.entity)'" + disableButton;
+                var cellTemplate = "<a title='' class='inline animated btn btn-default btn-xs" + disableButton + "'"
+                    + " ng-click='grid.appScope." + clickFn + "(row.entity)'";
 
                 cellTemplate += "><i class='" + icon + "'></i></a>";
 
