@@ -192,6 +192,10 @@
         </constructor-arg>
     </bean>
 
+    <bean id="taskChangeNotifier" class="com.armedia.acm.plugins.task.service.TaskChangeNotifier">
+        <property name="acmObjectChangedNotifier" ref="acmObjectChangeNotifier"/>
+    </bean>
+
     <bean id="acmTaskDao" class="com.armedia.acm.plugins.task.service.impl.ActivitiTaskDao">
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="activitiTaskService" ref="activitiTaskService"/>

@@ -8,16 +8,28 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
         , Authentication, Util, ObjectService, HelperObjectBrowserService
         , TimeTrackingListService, TimeTrackingInfoService, ServCommService) {
 
-        //
-        // Check to see if complaint page is shown as a result returned by Frevvo
-        // Reset the tree cache so that new entry created by Frevvo can be shown.
-        // This is a temporary solution until UI and backend communication is implemented
-        //
-        var topics = ["new-timesheet"];
-        _.each(topics, function (topic) {
-            var data = ServCommService.popRequest("frevvo", topic);
-            if (data) {
-                TimeTrackingListService.resetTimeTrackingTreeData();
+        /*//
+         // Check to see if complaint page is shown as a result returned by Frevvo
+         // Reset the tree cache so that new entry created by Frevvo can be shown.
+         // This is a temporary solution until UI and backend communication is implemented
+         //
+         var topics = ["new-timesheet"];
+         _.each(topics, function (topic) {
+         var data = ServCommService.popRequest("frevvo", topic);
+         if (data) {
+         TimeTrackingListService.resetTimeTrackingTreeData();
+         }
+         });*/
+
+        //subscribe to the bus for the object
+        var eventName = "object.inserted";
+        $scope.$bus.subscribe(eventName, function (data) {
+            var frevvoRequest = ServCommService.popRequest("frevvo", "new-timesheet");
+            if (frevvoRequest) {
+                ObjectService.gotoUrl(ObjectService.ObjectTypes.TIMESHEET, data.objectId);
+            }
+            else {
+                MessageService.info(data.objectType + " with ID " + data.objectId + " was created.");
             }
         });
 
