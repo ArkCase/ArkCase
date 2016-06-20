@@ -40,6 +40,22 @@ angular.module('services').factory('Object.ModelService', ['$q', '$resource', 'U
                 //    }
                 //}
                 //return assignee;
+            },
+            /**
+             * @ngdoc method
+             * @name getParticipantByType
+             * @methodOf services:Object.ModelService
+             *
+             * @description
+             * Search for participant type from object data
+             *
+             * @param {Object} objectInfo  Object data. Can be CaseFile, Complaint, Task, CostSheet, TimeSheet, ...
+             * @param {String} participantType The type of participant (assignee, approver, ...) we are searching
+             *
+             * @returns {String} Participant LDAP ID, or 'null' if not found
+             */
+            getParticipantByType: function (objectInfo, participantType) {
+                return _.result(_.find(Util.goodMapValue(objectInfo, "participants", []), {participantType: participantType}), "participantLdapId");
             }
 
             /**

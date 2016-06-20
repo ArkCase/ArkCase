@@ -172,13 +172,9 @@ public class RolesPrivilegesService
         List<String> roles = loadRoles();
         // Check if new role presents in roles file
         boolean rolePresent = false;
-        for (String roleIter : roles)
+        if (roles.contains(roleName))
         {
-            if (roleIter.equals(roleName))
-            {
-                rolePresent = true;
-                break;
-            }
+            rolePresent = true;
         }
         if (rolePresent)
         {
@@ -331,7 +327,7 @@ public class RolesPrivilegesService
             props.load(FileUtils.openInputStream(new File(applicationRolesFile)));
 
             String propRoles = props.getProperty(PROP_APPLICATION_ROLES);
-            List<String> roles = Arrays.asList(propRoles.split(","));
+            List<String> roles = new ArrayList<>(Arrays.asList(propRoles.split(",")));
             return roles;
         } catch (Exception e)
         {

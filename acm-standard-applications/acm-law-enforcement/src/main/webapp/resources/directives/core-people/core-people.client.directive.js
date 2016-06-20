@@ -182,43 +182,51 @@ angular.module('directives').directive('corePeople', ['$stateParams', '$q', '$tr
 
                 scope.retrieveGridData = function () {
                     var data = scope.objectInfo.personAssociations;
+
+                    // to avoid circular references some objects are serialized only as numbers (to point to original
+                    // reference id) not full objects
+                    data = _.filter(data, function (persAssoc) {
+                        return (typeof persAssoc === 'object');
+                    });
                     scope.gridOptions = scope.gridOptions || {};
                     scope.gridOptions.data = data;
 
                     for (var i = 0; i < scope.objectInfo.personAssociations.length; i++) {
                         var pa = scope.objectInfo.personAssociations[i];
 
-                        pa.acm$_contactMethods = {
-                            gridOptions: getGridOptions(configGridContactMethod)
-                        };
-                        pa.acm$_contactMethods.gridOptions.data = pa.person.contactMethods;
-                        _.each(pa.acm$_contactMethods.gridOptions.data, function (item) {
-                            item.acm$_paId = pa.id;
-                        });
+                        if (typeof pa === 'object') {
+                            pa.acm$_contactMethods = {
+                                gridOptions: getGridOptions(configGridContactMethod)
+                            };
+                            pa.acm$_contactMethods.gridOptions.data = pa.person.contactMethods;
+                            _.each(pa.acm$_contactMethods.gridOptions.data, function (item) {
+                                item.acm$_paId = pa.id;
+                            });
 
-                        pa.acm$_organizations = {
-                            gridOptions: getGridOptions(configGridOrganization)
-                        };
-                        pa.acm$_organizations.gridOptions.data = pa.person.organizations;
-                        _.each(pa.acm$_organizations.gridOptions.data, function (item) {
-                            item.acm$_paId = pa.id;
-                        });
+                            pa.acm$_organizations = {
+                                gridOptions: getGridOptions(configGridOrganization)
+                            };
+                            pa.acm$_organizations.gridOptions.data = pa.person.organizations;
+                            _.each(pa.acm$_organizations.gridOptions.data, function (item) {
+                                item.acm$_paId = pa.id;
+                            });
 
-                        pa.acm$_addresses = {
-                            gridOptions: getGridOptions(configGridAddress)
-                        };
-                        pa.acm$_addresses.gridOptions.data = pa.person.addresses;
-                        _.each(pa.acm$_addresses.gridOptions.data, function (item) {
-                            item.acm$_paId = pa.id;
-                        });
+                            pa.acm$_addresses = {
+                                gridOptions: getGridOptions(configGridAddress)
+                            };
+                            pa.acm$_addresses.gridOptions.data = pa.person.addresses;
+                            _.each(pa.acm$_addresses.gridOptions.data, function (item) {
+                                item.acm$_paId = pa.id;
+                            });
 
-                        pa.acm$_aliases = {
-                            gridOptions: getGridOptions(configGridAlias)
-                        };
-                        pa.acm$_aliases.gridOptions.data = pa.person.personAliases;
-                        _.each(pa.acm$_aliases.gridOptions.data, function (item) {
-                            item.acm$_paId = pa.id;
-                        });
+                            pa.acm$_aliases = {
+                                gridOptions: getGridOptions(configGridAlias)
+                            };
+                            pa.acm$_aliases.gridOptions.data = pa.person.personAliases;
+                            _.each(pa.acm$_aliases.gridOptions.data, function (item) {
+                                item.acm$_paId = pa.id;
+                            });
+                        }
                     }
                 };
 

@@ -134,6 +134,7 @@
 
     <!-- LDAP configuration API -->
     <bean id="ldapConfigurationService" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationService">
+        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
         <property name="ldapConfigurationTemplatesLocation"
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/ldap-config-templates/"/>
         <property name="ldapTemplateFile" value="spring-config-ldap.xml.ftl"/>
@@ -311,9 +312,7 @@
         <property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory"/>
         <property name="plainFormPropertiesLocation"
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/acm-forms-plain.properties"/>
-        <property name="propertyFileManager">
-            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
-        </property>
+        <property name="propertyFileManager" ref="propertyFileManager"/>
     </bean>
 
     <bean id="getPlainFormTargetsAPIController"

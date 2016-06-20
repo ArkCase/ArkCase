@@ -94,10 +94,11 @@ public interface NotificationConstants
     String TYPE_POPUP = "popup";
 
     /*
-     * When this string appears in a notification title or note to be e-mailed, it will be replaced with the
+     * When those strings appear in a notification title or note to be e-mailed, it will be replaced with the
      * appropriate label from notification.properties.
      */
     String OBJECT_TYPE_LABEL_PLACEHOLDER = "${objectTypeLabel}";
+    String PARENT_TYPE_LABEL_PLACEHOLDER = "${parentTypeLabel}";
 
     /**
      * When this string appears in a notification note to be e-mailed, it will be replaced with a URL to the
@@ -105,8 +106,17 @@ public interface NotificationConstants
      */
     String ANCHOR_PLACEHOLDER = "${urlanchor}";
 
+    /**
+     * When this string appears in notification's title it will be replaced with the objectName of COMPLAINT, CASE_FILE
+     * or TASK appropriate
+     */
+    String NAME_LABEL = "${nameLabel}";
+
     String LAST_BATCH_RUN_PROPERTY_FILE = System.getProperty("user.home") + "/.arkcase/acm/notificationLastBatchUpdate.properties";
 
     String BASE_URL_KEY = "arkcase.url.base";
+
+    String PARTICIPANT_TYPE_GROUP = "owning group";
+    String SPECIAL_PARTICIPANT_TYPE = "*";
 
 }
