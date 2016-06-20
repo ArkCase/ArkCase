@@ -5,5 +5,9 @@
 
 
     <bean id="acmCryptoUtils" class="com.armedia.acm.crypto.AcmCryptoUtilsImpl" scope="singleton"/>
+    
+    <bean id="acmEncryptablePropertyUtils" class="com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtilsImpl">
+        <property name="encryptionProperties" ref="acmEncryptablePropertyEncryptionProperties"/>
+    </bean>
 
 </beans>
