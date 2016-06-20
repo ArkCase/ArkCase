@@ -172,6 +172,27 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     {
         this.attachedToObjectId = attachedToObjectId;
     }
+    public void setParentObjectId(Long parentObjectId)
+    {
+        this.parentObjectId = parentObjectId;
+    }
+
+    @Override
+    public Long getParentObjectId()
+    {
+        return parentObjectId;
+    }
+
+    @Override
+    public String getParentObjectType()
+    {
+        return parentObjectType;
+    }
+
+    public void setParentObjectType(String parentObjectType)
+    {
+        this.parentObjectType = parentObjectType;
+    }
 
     public String getAssignee()
     {
@@ -437,28 +458,6 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;
-    }
-
-    public void setParentObjectId(Long parentObjectId)
-    {
-        this.parentObjectId = parentObjectId;
-    }
-
-    @Override
-    public Long getParentObjectId()
-    {
-        return parentObjectId;
-    }
-
-    @Override
-    public String getParentObjectType()
-    {
-        return parentObjectType;
-    }
-
-    public void setParentObjectType(String parentObjectType)
-    {
-        this.parentObjectType = parentObjectType;
     }
 
     public String getParentObjectTitle()
