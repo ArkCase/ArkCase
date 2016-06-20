@@ -5,6 +5,8 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
@@ -14,6 +16,7 @@ import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublis
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantConstants;
+import microsoft.exchange.webservices.data.enumeration.DeleteMode;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -28,7 +31,6 @@ import static org.junit.Assert.assertNotNull;
 
 public class CaseFileEventListenerTest extends EasyMockSupport
 {
-
     static final Long OBJECT_ID = 1234L;
     static final String OBJECT_NAME = "20150210_1234";
     static final String OBJECT_TITLE = "Title";
@@ -43,6 +45,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
     private AcmObjectHistoryEventPublisher mockAcmObjectHistoryEventPublisher;
     private CaseFileEventUtility mockCaseFileEventUtility;
     private AcmAssignmentDao mockAcmAssignmentDao;
+    private OutlookContainerCalendarService mockCalendarService;
     private CaseFileEventListener caseFileEventListener;
 
     @Before
@@ -53,11 +56,13 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         mockAcmObjectHistoryEventPublisher = createMock(AcmObjectHistoryEventPublisher.class);
         mockCaseFileEventUtility = createMock(CaseFileEventUtility.class);
         mockAcmAssignmentDao = createMock(AcmAssignmentDao.class);
+        mockCalendarService = createMock(OutlookContainerCalendarService.class);
 
         caseFileEventListener.setAcmObjectHistoryService(mockAcmObjectHistoryService);
         caseFileEventListener.setAcmObjectHistoryEventPublisher(mockAcmObjectHistoryEventPublisher);
         caseFileEventListener.setCaseFileEventUtility(mockCaseFileEventUtility);
         caseFileEventListener.setAcmAssignmentDao(mockAcmAssignmentDao);
+        caseFileEventListener.setCalendarService(mockCalendarService);
     }
 
     public CaseFile getCase()
@@ -70,6 +75,10 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         List<AcmParticipant> participants = new ArrayList<>();
         participants.add(participant);
 
+        AcmContainer container = new AcmContainer();
+        container.setContainerObjectId(1L);
+        container.setCalendarFolderId("cf1");
+
         CaseFile caseFile = new CaseFile();
         caseFile.setId(OBJECT_ID);
         caseFile.setCaseNumber(OBJECT_NAME);
@@ -78,7 +87,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         caseFile.setDetails(DETAILS);
         caseFile.setStatus(STATUS);
         caseFile.setParticipants(participants);
-        caseFile.setContainer(null);
+        caseFile.setContainer(container);
         return caseFile;
     }
 
@@ -284,6 +293,30 @@ public class CaseFileEventListenerTest extends EasyMockSupport
     }
 
     @Test
+    public void testCalendarDeleted()
+    {
+        //allow calendar deleting
+        caseFileEventListener.setShouldDeleteCalendarFolder(true);
+        caseFileEventListener.setCaseFileStatusClosed("CLOSED");
+
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        CaseFile jsonCaseFile = getCase();
+        String currentJsonObject = acmMarshaller.marshal(jsonCaseFile);
+
+        AcmObjectHistory previousHistory = new AcmObjectHistory();
+        previousHistory.setObjectType(CaseFileConstants.OBJECT_TYPE);
+        previousHistory.setObjectString(currentJsonObject);
+
+        AcmObjectHistory currentHistory = new AcmObjectHistory();
+        currentHistory.setObjectType(CaseFileConstants.OBJECT_TYPE);
+        jsonCaseFile.setStatus("CLOSED");
+        currentJsonObject = acmMarshaller.marshal(jsonCaseFile);
+        currentHistory.setObjectString(currentJsonObject);
+
+        runAndCheckCaseFileModifiedEventStatusClosed(currentHistory, previousHistory, "status.changed", jsonCaseFile);
+    }
+
+    @Test
     public void testDetailsChanged()
     {
         AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
@@ -356,6 +389,45 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         assertEquals(caseFile.getPriority(), caseCapture.getValue().getPriority());
         assertEquals(caseFile.getDetails(), caseCapture.getValue().getDetails());
         assertEquals(caseFile.getCaseNumber(), caseCapture.getValue().getCaseNumber());
+    }
+
+    public void runAndCheckCaseFileModifiedEventStatusClosed(AcmObjectHistory currentHistory, AcmObjectHistory previousHistory, String statusToCheck,
+                            CaseFile caseFile)
+    {
+        AcmObjectHistoryEvent event = new AcmObjectHistoryEvent(currentHistory);
+        event.setIpAddress(IP_ADDRESS);
+        event.setUserId(USER_ID);
+
+        expect(mockAcmObjectHistoryService.getAcmObjectHistory(OBJECT_ID, CaseFileConstants.OBJECT_TYPE)).andReturn(previousHistory);
+
+        Capture<CaseFile> caseCapture = Capture.newInstance();
+        Capture<String> ipAddressCapture = Capture.newInstance();
+        Capture<String> eventStatusCapture = Capture.newInstance();
+        Capture<Long> containerIdCapture = Capture.newInstance();
+        Capture<String> calendarIdCapture = Capture.newInstance();
+
+        mockCalendarService.deleteFolder(capture(containerIdCapture), capture(calendarIdCapture), eq(DeleteMode.MoveToDeletedItems));
+        expectLastCall().once();
+
+        mockCaseFileEventUtility.raiseCaseFileModifiedEvent(capture(caseCapture), capture(ipAddressCapture),
+                capture(eventStatusCapture));
+        expectLastCall().once();
+
+        replayAll();
+        caseFileEventListener.onApplicationEvent(event);
+
+        verifyAll();
+        assertEquals(statusToCheck, eventStatusCapture.getValue());
+        assertEquals(IP_ADDRESS, ipAddressCapture.getValue());
+        assertNotNull(caseCapture.getValue());
+        assertEquals(caseFile.getId(), caseCapture.getValue().getId());
+        assertEquals(caseFile.getStatus(), caseCapture.getValue().getStatus());
+        assertEquals(caseFile.getParticipants(), caseCapture.getValue().getParticipants());
+        assertEquals(caseFile.getPriority(), caseCapture.getValue().getPriority());
+        assertEquals(caseFile.getDetails(), caseCapture.getValue().getDetails());
+        assertEquals(caseFile.getCaseNumber(), caseCapture.getValue().getCaseNumber());
+        assertEquals(caseFile.getContainer().getContainerObjectId(), containerIdCapture.getValue());
+        assertEquals(caseFile.getContainer().getCalendarFolderId(), calendarIdCapture.getValue());
     }
 
 }

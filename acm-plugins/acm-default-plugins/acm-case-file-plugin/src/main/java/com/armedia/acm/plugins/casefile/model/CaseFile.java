@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.casefile.model;
 
+import com.armedia.acm.core.AcmNotifiableEntity;
+import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
@@ -46,12 +48,13 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Entity
 @Table(name = "acm_case_file")
@@ -60,7 +63,8 @@ import java.util.Optional;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.casefile.model.CaseFile")
-public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity
+public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
+        AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity, AcmNotifiableEntity
 {
     private static final long serialVersionUID = -6035628455385955008L;
 
@@ -124,6 +128,9 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({@JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
     private List<AcmParticipant> participants = new ArrayList<>();
+
+    @Transient
+    private Set<AcmNotificationReceiver> receivers = new HashSet<>();
 
     @Column(name = "cm_due_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -251,7 +258,12 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
             personAssoc.getPerson().setPersonAssociations(new ArrayList<>());
         }
 
-        personAssoc.getPerson().getPersonAssociations().addAll(Arrays.asList(personAssoc));
+        if (!personAssoc.getPerson().getPersonAssociations().contains(personAssoc))
+        {
+            personAssoc.getPerson().getPersonAssociations().add(personAssoc);
+        }
+
+
     }
 
     @Override
@@ -667,5 +679,20 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     public void setLegacySystemId(String legacySystemId)
     {
         this.legacySystemId = legacySystemId;
+    }
+
+    @Override
+    @JsonIgnore
+    public Set<AcmNotificationReceiver> getReceivers()
+    {
+        receivers.addAll(participants);
+        return receivers;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getNotifiableEntityTitle()
+    {
+        return caseNumber;
     }
 }

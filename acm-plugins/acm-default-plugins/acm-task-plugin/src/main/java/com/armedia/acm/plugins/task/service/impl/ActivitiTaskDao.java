@@ -1,7 +1,9 @@
 package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.activiti.AcmTaskEvent;
+import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -36,6 +38,7 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricIdentityLink;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
@@ -60,7 +63,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ActivitiTaskDao implements TaskDao
+
+public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 {
     private RuntimeService activitiRuntimeService;
     private TaskService activitiTaskService;
@@ -87,7 +91,6 @@ public class ActivitiTaskDao implements TaskDao
         Task activitiTask = getActivitiTaskService().newTask();
 
         AcmTask out = updateExistingActivitiTask(in, activitiTask);
-
         if (out.getStatus().equalsIgnoreCase(TaskConstants.STATE_CLOSED))
         {
             String taskId = String.valueOf(out.getId());
@@ -104,7 +107,8 @@ public class ActivitiTaskDao implements TaskDao
         Task activitiTask = getActivitiTaskService().createTaskQuery().taskId(in.getTaskId().toString()).singleResult();
         if (activitiTask != null)
         {
-            return updateExistingActivitiTask(in, activitiTask);
+            AcmTask acmTask = updateExistingActivitiTask(in, activitiTask);
+            return acmTask;
         }
 
         // task must have been completed. Try finding the historic task; but historical tasks can't be updated, so
@@ -302,6 +306,7 @@ public class ActivitiTaskDao implements TaskDao
 
         AcmTask retval = acmTaskFromActivitiTask(existingTask);
         retval = completeTask(retval, user, outcomePropertyName, outcomeId);
+
         return retval;
     }
 
@@ -454,8 +459,9 @@ public class ActivitiTaskDao implements TaskDao
             {
                 getActivitiTaskService().claim(String.valueOf(taskId), userId);
                 Task existingTask = getActivitiTaskService().createTaskQuery().includeProcessVariables().includeTaskLocalVariables().taskId(String.valueOf(taskId)).singleResult();
-                return acmTaskFromActivitiTask(existingTask);
 
+                AcmTask acmTask = acmTaskFromActivitiTask(existingTask);
+                return acmTask;
             } catch (ActivitiException e)
             {
                 log.info("Claiming task failed for task with ID: [{}]", taskId);
@@ -474,7 +480,8 @@ public class ActivitiTaskDao implements TaskDao
             {
                 getActivitiTaskService().unclaim(String.valueOf(taskId));
                 Task existingTask = getActivitiTaskService().createTaskQuery().includeProcessVariables().includeTaskLocalVariables().taskId(String.valueOf(taskId)).singleResult();
-                return acmTaskFromActivitiTask(existingTask);
+                AcmTask acmTask = acmTaskFromActivitiTask(existingTask);
+                return acmTask;
             } catch (ActivitiException e)
             {
                 log.info("Unclaiming task failed for task with ID: [{}]", taskId);
@@ -799,7 +806,6 @@ public class ActivitiTaskDao implements TaskDao
             acmTask.setCompleted(true);
             String status = findTaskStatus(hti);
             acmTask.setStatus(status);
-
             return acmTask;
         } catch (ActivitiException e)
         {
@@ -823,7 +829,6 @@ public class ActivitiTaskDao implements TaskDao
             acmTask.setCompleted(true);
             String status = findTaskStatus(hti, true);
             acmTask.setStatus(status);
-
             return acmTask;
         } catch (ActivitiException e)
         {
@@ -855,6 +860,13 @@ public class ActivitiTaskDao implements TaskDao
         retval.setPriority(taskPriority);
         retval.setTitle(hti.getName());
         retval.setAssignee(hti.getAssignee());
+
+        //set Candidate Groups if there are any
+        if (retval.getAssignee() == null)
+        {
+            List<String> candidateGroups = findHistoricCandidateGroups(hti.getId());
+            retval.setCandidateGroups(candidateGroups);
+        }
 
         if (hti.getProcessVariables() != null)
         {
@@ -1222,7 +1234,27 @@ public class ActivitiTaskDao implements TaskDao
 
         if (candidates != null)
         {
-            List<String> retval = candidates.stream().filter(il -> TaskConstants.IDENTITY_LINK_TYPE_CANDIDATE.equals(il.getType())).filter(il -> il.getGroupId() != null).map(IdentityLink::getGroupId)
+            List<String> retval = candidates.stream()
+                    .filter(il -> TaskConstants.IDENTITY_LINK_TYPE_CANDIDATE.equals(il.getType()))
+                    .filter(il -> il.getGroupId() != null)
+                    .map(IdentityLink::getGroupId)
+                    .collect(Collectors.toList());
+            return retval;
+        }
+
+        return null;
+    }
+
+
+    private List<String> findHistoricCandidateGroups(String taskId)
+    {
+        List<HistoricIdentityLink> candidates = getActivitiHistoryService().getHistoricIdentityLinksForTask(taskId);
+        if (candidates != null)
+        {
+            List<String> retval = candidates.stream()
+                    .filter(il -> TaskConstants.IDENTITY_LINK_TYPE_CANDIDATE.equalsIgnoreCase(il.getType()))
+                    .filter(il -> il.getGroupId() != null)
+                    .map(HistoricIdentityLink::getGroupId)
                     .collect(Collectors.toList());
             return retval;
         }
@@ -1310,14 +1342,14 @@ public class ActivitiTaskDao implements TaskDao
         this.activitiRepositoryService = activitiRepositoryService;
     }
 
-    public void setActivitiHistoryService(HistoryService activitiHistoryService)
-    {
-        this.activitiHistoryService = activitiHistoryService;
-    }
-
     public HistoryService getActivitiHistoryService()
     {
         return activitiHistoryService;
+    }
+
+    public void setActivitiHistoryService(HistoryService activitiHistoryService)
+    {
+        this.activitiHistoryService = activitiHistoryService;
     }
 
     public Map<String, Integer> getPriorityLevelToNumberMap()
@@ -1438,5 +1470,24 @@ public class ActivitiTaskDao implements TaskDao
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)
     {
         this.taskEventPublisher = taskEventPublisher;
+    }
+
+    @Override
+    public AcmNotifiableEntity findEntity(Long id)
+    {
+        try
+        {
+            return findById(id);
+        } catch (AcmTaskException e)
+        {
+            log.error("Task not found:", e);
+        }
+        return null;
+    }
+
+    @Override
+    public String getSupportedNotifiableObjectType()
+    {
+        return TaskConstants.OBJECT_TYPE;
     }
 }

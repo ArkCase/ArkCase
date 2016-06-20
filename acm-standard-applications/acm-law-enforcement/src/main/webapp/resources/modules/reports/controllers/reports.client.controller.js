@@ -43,6 +43,8 @@ angular.module('reports').controller('ReportsController', ['$scope', 'UtilServic
                 delete $scope.data.reports.PENTAHO_SERVER_PORT;
                 $scope.data.reportsHost = reportsConfig['PENTAHO_SERVER_URL'];
                 $scope.data.reportsPort = reportsConfig['PENTAHO_SERVER_PORT'];
+                $scope.data.reportsUser = reportsConfig['PENTAHO_SERVER_USER'];
+                $scope.data.reportsPassword = reportsConfig['PENTAHO_SERVER_PASSWORD'];
                 $scope.data.reportSelected = null;
             });
 

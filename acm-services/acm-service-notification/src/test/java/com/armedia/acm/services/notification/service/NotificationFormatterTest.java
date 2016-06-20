@@ -20,17 +20,12 @@ import static org.junit.Assert.assertEquals;
 
 public class NotificationFormatterTest extends EasyMockSupport
 {
-    private Properties mockProperties;
-
-    private AcmApplication mockAcmAppConfiguration;
-
-    private Notification notification;
-
-    private NotificationFormatter notificationFormatter;
-
-    private List<AcmObjectType> acmObjectTypes;
-
     private static final String BASE_URL = "/arkcase";
+    private Properties mockProperties;
+    private AcmApplication mockAcmAppConfiguration;
+    private Notification notification;
+    private NotificationFormatter notificationFormatter;
+    private List<AcmObjectType> acmObjectTypes;
 
     @Before
     public void setUp()
@@ -153,7 +148,7 @@ public class NotificationFormatterTest extends EasyMockSupport
     }
 
     /**
-     * Test when notification note is null
+     * Test when notification title is not null and contains OBJECT TYPE LABEL PLACEHOLDER
      */
     @Test
     public void replaceObjectTypeLabelInTitle()
@@ -161,9 +156,9 @@ public class NotificationFormatterTest extends EasyMockSupport
         String parentType = "CASE_FILE";
         String keyLabel = parentType + ".label";
         String expectedTitle = "Title with label placeholder: object_label";
-        notification.setNote(null);
         notification.setTitle("Title with label placeholder: " + NotificationConstants.OBJECT_TYPE_LABEL_PLACEHOLDER);
         notification.setParentType(parentType);
+        notification.setNote(null);
 
         expect(mockProperties.getProperty(keyLabel)).andReturn("object_label");
 
@@ -177,7 +172,7 @@ public class NotificationFormatterTest extends EasyMockSupport
     }
 
     /**
-     * Test when notification title is null and note contains OBJECT TYPE LABEL PLACEHOLDER
+     * Test when notification note is not null and the note contains OBJECT TYPE LABEL PLACEHOLDER
      */
     @Test
     public void replaceObjectTypeLabelInNote()
@@ -190,6 +185,55 @@ public class NotificationFormatterTest extends EasyMockSupport
         notification.setParentType(parentType);
 
         expect(mockProperties.getProperty(keyLabel)).andReturn("object_label");
+
+        // when
+        replayAll();
+        Notification updatedNotification = notificationFormatter.replaceFormatPlaceholders(notification);
+
+        // then
+        verifyAll();
+        assertEquals(updatedNotification.getNote(), expectedNote);
+    }
+
+    /**
+     * Test when notification title is not null and the contains PARENT TYPE LABEL PLACEHOLDER
+     */
+    @Test
+    public void replaceParentTypeLabelInTitle()
+    {
+        String relatedType = "CASE_FILE";
+        String keyLabel = relatedType + ".label";
+        String expectedTitle = "Title with label placeholder: parent_label";
+        // set note null to ensure we test the right method
+        notification.setNote(null);
+        notification.setTitle("Title with label placeholder: " + NotificationConstants.PARENT_TYPE_LABEL_PLACEHOLDER);
+        notification.setRelatedObjectType(relatedType);
+
+        expect(mockProperties.getProperty(keyLabel)).andReturn("parent_label");
+
+        // when
+        replayAll();
+        Notification updatedNotification = notificationFormatter.replaceFormatPlaceholders(notification);
+
+        // then
+        verifyAll();
+        assertEquals(updatedNotification.getTitle(), expectedTitle);
+    }
+
+    /**
+     * Test when notification note is not null and the note contains PARENT TYPE LABEL PLACEHOLDER
+     */
+    @Test
+    public void replaceParentTypeLabelInNote()
+    {
+        String relatedType = "CASE_FILE";
+        String keyLabel = relatedType + ".label";
+        String expectedNote = "Note with label placeholder: parent_label";
+        notification.setNote("Note with label placeholder: " + NotificationConstants.PARENT_TYPE_LABEL_PLACEHOLDER);
+        notification.setRelatedObjectType(relatedType);
+        // set title null to ensure we test the right method
+        notification.setTitle(null);
+        expect(mockProperties.getProperty(keyLabel)).andReturn("parent_label");
 
         // when
         replayAll();

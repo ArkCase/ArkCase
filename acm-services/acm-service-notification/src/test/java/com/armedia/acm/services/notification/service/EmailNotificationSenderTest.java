@@ -5,13 +5,20 @@ import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
+import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.notification.model.EmailNotificationDto;
+import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -21,16 +28,10 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.springframework.security.core.Authentication;
 
-import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
-import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
-import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
-import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
-import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
-import com.armedia.acm.services.notification.model.EmailNotificationDto;
-import com.armedia.acm.services.notification.model.Notification;
-import com.armedia.acm.services.notification.model.NotificationConstants;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class EmailNotificationSenderTest extends EasyMockSupport
 {
@@ -69,7 +70,7 @@ public class EmailNotificationSenderTest extends EasyMockSupport
     }
 
     @Test
-    public void testSendWhenException() throws MuleException
+    public void testSendWhenException() throws MuleException, AcmEncryptionException
     {
         setupEmailNotificationSender();
         Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
@@ -88,7 +89,7 @@ public class EmailNotificationSenderTest extends EasyMockSupport
     }
 
     @Test
-    public void testSend() throws MuleException
+    public void testSend() throws MuleException, AcmEncryptionException
     {
         // given
         setupEmailNotificationSender();
@@ -106,7 +107,7 @@ public class EmailNotificationSenderTest extends EasyMockSupport
     }
 
     @Test
-    public void testSendEmailNotificationWithLinks() throws MuleException
+    public void testSendEmailNotificationWithLinks() throws MuleException, AcmEncryptionException
     {
         final String email = "user_email";
         final String header = "header";
@@ -164,10 +165,10 @@ public class EmailNotificationSenderTest extends EasyMockSupport
         assertEquals(note, notification.getNote());
     }
 
-    private void setSendExpectations()
+    private void setSendExpectations() throws AcmEncryptionException
     {
-        //expect(propertyFileManager.load("", NotificationConstants.EMAIL_HOST_KEY, null)).andReturn("host_value");
-        //expect(propertyFileManager.load("", NotificationConstants.EMAIL_PORT_KEY, null)).andReturn("port_value");
+        // expect(propertyFileManager.load("", NotificationConstants.EMAIL_HOST_KEY, null)).andReturn("host_value");
+        // expect(propertyFileManager.load("", NotificationConstants.EMAIL_PORT_KEY, null)).andReturn("port_value");
         expect(propertyFileManager.load("", NotificationConstants.EMAIL_USER_KEY, null)).andReturn("email_user_value");
         expect(propertyFileManager.load("", NotificationConstants.EMAIL_PASSWORD_KEY, null)).andReturn("email_password_value");
         expect(propertyFileManager.load("", NotificationConstants.EMAIL_FROM_KEY, null)).andReturn("email_from_value");
@@ -176,13 +177,11 @@ public class EmailNotificationSenderTest extends EasyMockSupport
     private Map<String, Object> getMessageProps()
     {
         Map<String, Object> messageProps = new HashMap<>();
-        /*messageProps.put("host", "host_value");
-        messageProps.put("port", "port_value");
-        messageProps.put("user", "email_user_value");
-        messageProps.put("password", "email_password_value");
-        messageProps.put("from", "email_from_value");
-        messageProps.put("to", "user_email");
-        messageProps.put("subject", "title");*/
+        /*
+         * messageProps.put("host", "host_value"); messageProps.put("port", "port_value"); messageProps.put("user", "email_user_value");
+         * messageProps.put("password", "email_password_value"); messageProps.put("from", "email_from_value"); messageProps.put("to",
+         * "user_email"); messageProps.put("subject", "title");
+         */
         messageProps.put("emailInfo", emailInfo);
         messageProps.put("user", user);
         messageProps.put("authentication", null);

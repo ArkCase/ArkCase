@@ -23,10 +23,9 @@ import java.util.stream.Collectors;
  */
 public class FacetedSearchService
 {
+    private transient final Logger log = LoggerFactory.getLogger(this.getClass());
     private AcmPlugin pluginSearch;
     private AcmPlugin pluginEventType;
-
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     public String buildHiddenDocumentsFilter()
     {
@@ -392,25 +391,14 @@ public class FacetedSearchService
 
     private String createRegularANDQuerySubString(String filterKey, String filterValue)
     {
-        boolean isNegation = filterValue.startsWith(SearchConstants.OPERATOR_NOT);
-        if (isNegation)
-        {
-            filterValue = filterValue.replace(SearchConstants.OPERATOR_NOT, "").trim();
-        }
+
         String query = SearchConstants.SOLR_FILTER_QUERY_ATTRIBUTE_NAME;
         String substitutionName = filterKey.replaceFirst(SearchConstants.FACET_PRE_KEY, "");
         try
         {
             // AFDP-1101 The term query parser is not what we want here; we want a field search. so use the field query
             // parser.
-            if (isNegation)
-            {
-                query += URLEncoder.encode(SearchConstants.OPERATOR_NOT + " {!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING);
-            } else
-            {
-                query += URLEncoder.encode("{!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING);
-            }
-            query += URLEncoder.encode(filterValue, SearchConstants.FACETED_SEARCH_ENCODING);
+            query += URLEncoder.encode("{!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING) + URLEncoder.encode(filterValue, SearchConstants.FACETED_SEARCH_ENCODING);
         } catch (UnsupportedEncodingException e)
         {
             log.error("Encoding problem occur while building regular AND SOLR query sub-string", e);
