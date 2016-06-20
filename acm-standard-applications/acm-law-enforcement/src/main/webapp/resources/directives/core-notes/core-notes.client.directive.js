@@ -103,12 +103,15 @@ angular.module('directives').directive('coreNotes', ['$q', '$modal', '$translate
 
                 // check if config file has an entry for any named button
                 var hasButton = function(config, name) {
+                    var buttonPresent = false;
                     _.each(config.buttons, function (button) {
                         if (button.name == name) {
-                            return true;
+                            buttonPresent = true;
+                            //return false to break out of the loop
+                            return false;
                         }
                     });
-                    return false;
+                    return buttonPresent;
                 }
 
                 scope.retrieveGridData = function () {
