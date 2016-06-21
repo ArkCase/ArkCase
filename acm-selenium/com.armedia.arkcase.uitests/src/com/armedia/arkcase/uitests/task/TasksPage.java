@@ -1,5 +1,6 @@
 package com.armedia.arkcase.uitests.task;
 
+import java.awt.AWTException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -864,12 +865,12 @@ public class TasksPage extends ArkCaseTestBase {
 		detailsLinkInsertButton.click();
 	}
 
-	public void detailsInsertPicture() throws InterruptedException, IOException {
+	public void detailsInsertPicture() throws InterruptedException, IOException, AWTException {
 
 		detailsPicture.click();
 		Thread.sleep(2000);
 		detailsPictureBrowse.click();
-		ArkCaseTestUtils.uploadPicture();
+		ArkCaseTestUtils.uploadPNGPicture();
 		detailsInsertImageButton.click();
 		Thread.sleep(2000);
 	}
@@ -1034,7 +1035,7 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertEquals("Task State should be CLOSED", "CLOSED", stateTask.getText());
 	}
 
-	public void addNewDcumentOther() throws InterruptedException, IOException {
+	public void addNewDcumentOther() throws InterruptedException, IOException, AWTException {
 
 		Actions act = new Actions(driver);
 		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
@@ -1044,7 +1045,7 @@ public class TasksPage extends ArkCaseTestBase {
 		newDocument.click();
 		Thread.sleep(2000);
 		otherDocument.click();
-		ArkCaseTestUtils.uploadPicture();
+		ArkCaseTestUtils.uploadPNGPicture();
 		addedNewOther.click();
 
 	}
@@ -1080,7 +1081,7 @@ public class TasksPage extends ArkCaseTestBase {
 
 	}
 
-	public void replaceDocument() throws InterruptedException, IOException {
+	public void replaceDocument() throws InterruptedException, IOException, AWTException {
 
 		Actions act = new Actions(driver);
 		act.contextClick(addedNewOther).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
@@ -1088,7 +1089,7 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertEquals("Replace document name is wrong or right click is not working", "Replace Document",
 				replaceDocment.getText());
 		replaceDocment.click();
-		ArkCaseTestUtils.uploadPicture();
+		ArkCaseTestUtils.uploadPNGPicture();
 		addedNewOther.click();
 	}
 
@@ -1152,7 +1153,7 @@ public class TasksPage extends ArkCaseTestBase {
 		Actions act = new Actions(driver);
 		act.contextClick(addedNewOther).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
 		Thread.sleep(3000);
-		Assert.assertEquals("Delete document name is ", "Delete", deleteDocument.getText());
+		Assert.assertEquals("Delete document name is wrong or right click on document is not working", "Delete", deleteDocument.getText());
 		deleteDocument.click();
 
 	}
@@ -1235,7 +1236,7 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertTrue(secondFolderCreated.getText().equals(name));
 	}
 
-	public void addDocumentToFirstFolder() throws InterruptedException, IOException {
+	public void addDocumentToFirstFolder() throws InterruptedException, IOException, AWTException {
 
 		newFolderCreated.click();
 		Thread.sleep(3000);
@@ -1248,7 +1249,7 @@ public class TasksPage extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		otherDocument.click();
 		Thread.sleep(2000);
-		ArkCaseTestUtils.uploadPicture();
+		ArkCaseTestUtils.uploadPNGPicture();
 		Thread.sleep(3000);
 
 	}
@@ -1357,7 +1358,7 @@ public class TasksPage extends ArkCaseTestBase {
 		pasteDocument.click();
 	}
 
-	public void addNewDocumentWitness() throws InterruptedException, IOException {
+	public void addNewDocumentWitness() throws InterruptedException, IOException, AWTException {
 
 		Actions act = new Actions(driver);
 		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
@@ -1365,12 +1366,13 @@ public class TasksPage extends ArkCaseTestBase {
 		newDocument.click();
 		Thread.sleep(2000);
 		witnessInterview.click();
+		Thread.sleep(3000);
 		ArkCaseTestUtils.uploadPdf();
 		addedNewOther.click();
 
 	}
 
-	public void addNewDocumentNoticeOfInvestigation() throws InterruptedException, IOException {
+	public void addNewDocumentNoticeOfInvestigation() throws InterruptedException, IOException, AWTException {
 
 		Actions act = new Actions(driver);
 		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
@@ -1378,12 +1380,13 @@ public class TasksPage extends ArkCaseTestBase {
 		newDocument.click();
 		Thread.sleep(2000);
 		noticeOfInvestigation.click();
+		Thread.sleep(3000);
 		ArkCaseTestUtils.uploadPdf();
 		addedNewOther.click();
 
 	}
 
-	public void addNewDocumentSfSignature() throws InterruptedException, IOException {
+	public void addNewDocumentSfSignature() throws InterruptedException, IOException, AWTException {
 
 		Actions act = new Actions(driver);
 		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
@@ -1391,12 +1394,13 @@ public class TasksPage extends ArkCaseTestBase {
 		newDocument.click();
 		Thread.sleep(2000);
 		sfSignature.click();
+		Thread.sleep(3000);
 		ArkCaseTestUtils.uploadDocx();
 		addedNewOther.click();
 
 	}
 
-	public void addNewDocumentEDelevery() throws InterruptedException, IOException {
+	public void addNewDocumentEDelevery() throws InterruptedException, IOException, AWTException {
 
 		Actions act = new Actions(driver);
 		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
@@ -1404,12 +1408,13 @@ public class TasksPage extends ArkCaseTestBase {
 		newDocument.click();
 		Thread.sleep(2000);
 		eDelivery.click();
-		ArkCaseTestUtils.uploadDocx();
+		Thread.sleep(3000);
+	    ArkCaseTestUtils.uploadDocx();
 		Thread.sleep(3000);
 		addedNewOther.click();
 	}
 
-	public void addNewDocumentgeneralRelease() throws InterruptedException, IOException {
+	public void addNewDocumentgeneralRelease() throws InterruptedException, IOException, AWTException {
 
 		Actions act = new Actions(driver);
 		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
@@ -1417,11 +1422,12 @@ public class TasksPage extends ArkCaseTestBase {
 		newDocument.click();
 		Thread.sleep(2000);
 		generalRelease.click();
+		Thread.sleep(3000);
 		ArkCaseTestUtils.uploadXlsx();
 		Thread.sleep(3000);
 	}
 
-	public void addNewDocumentMedicalRelease() throws InterruptedException, IOException {
+	public void addNewDocumentMedicalRelease() throws InterruptedException, IOException, AWTException {
 
 		Actions act = new Actions(driver);
 		act.contextClick(root).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
@@ -1429,7 +1435,8 @@ public class TasksPage extends ArkCaseTestBase {
 		newDocument.click();
 		Thread.sleep(2000);
 		medicalRelease.click();
-		ArkCaseTestUtils.uploadXlsx();
+		Thread.sleep(3000);
+	   ArkCaseTestUtils.uploadXlsx();
 
 	}
 
