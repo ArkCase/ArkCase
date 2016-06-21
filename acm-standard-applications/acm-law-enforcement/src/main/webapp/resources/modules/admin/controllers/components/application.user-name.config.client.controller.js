@@ -23,9 +23,6 @@ angular.module('admin').controller('Admin.UserNameConfigController', ['$scope', 
                 oldPropertyValue = $scope.nameProperty;
             }
         }
-        $scope.close = function () {
-            $modalInstance.dismiss('cancel');
-        };
     }
 ]);
 
